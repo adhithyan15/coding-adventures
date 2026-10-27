@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C297-oidasu",
+    "language": "japanese",
+    "chapter": 297,
+    "sequence": 17840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2a747819d9c4d48"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:9d0eddd85727f8ba",
+  "lessonIds": [
+    "JA-C508-un",
+    "JA-C508-kouun",
+    "JA-C508-sainan",
+    "JA-C508-un-yoku",
+    "JA-C508-unmei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch508.txt",
+  "json": "japanese/narration/ch508.json",
+  "textHash": "fnv1a64:4c8a57f646797a82",
+  "jsonHash": "fnv1a64:97ea4333617492c1",
+  "findings": []
+}

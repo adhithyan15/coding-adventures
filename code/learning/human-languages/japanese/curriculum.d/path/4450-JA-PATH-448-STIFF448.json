@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-448-STIFF448",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-448-STIFF448"
+  ],
+  "after": []
+}

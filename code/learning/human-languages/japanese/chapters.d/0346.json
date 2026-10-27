@@ -1,0 +1,21 @@
+{
+  "chapter": 346,
+  "title": "This Time and Next Time",
+  "label": "ch:ja-this-time-and-next-time",
+  "canDo": "I can talk about this time, last time and next time.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R346-review-341-346",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can talk about this time, last time and next time.",
+    "assesses": [
+      "JA-LEX-C346-KONDO346-01",
+      "JA-LEX-C346-KONDO346-02",
+      "JA-LEX-C346-KONDO346-03",
+      "JA-LEX-C346-KONDO346-04",
+      "JA-LEX-C346-KONDO346-05"
+    ]
+  }
+}

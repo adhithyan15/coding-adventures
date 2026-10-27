@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:6e880e97a7b3fe29",
+  "lessonIds": [
+    "JA-C319-honne",
+    "JA-C319-tatemae",
+    "JA-C319-mitomeru",
+    "JA-C319-gokai-suru",
+    "JA-C319-honki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch319.txt",
+  "json": "japanese/narration/ch319.json",
+  "textHash": "fnv1a64:395f51dbd95977f3",
+  "jsonHash": "fnv1a64:8cd501d65e736d8c",
+  "findings": []
+}

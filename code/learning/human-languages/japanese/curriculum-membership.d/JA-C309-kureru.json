@@ -1,0 +1,11 @@
+{
+  "id": "JA-C309-kureru",
+  "pathSegment": "JA-PATH-309-OKURU309",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-309-OKURU309",
+      "order": 0
+    }
+  ]
+}

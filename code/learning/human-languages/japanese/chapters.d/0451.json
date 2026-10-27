@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Off to Work",
+  "label": "ch:ja-off-to-work",
+  "canDo": "I can talk about going to work and working late.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C451-zangyou-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can talk about going to work and working late.",
+    "assesses": [
+      "JA-LEX-C451-COMMUTE451-03",
+      "JA-LEX-C451-COMMUTE451-04",
+      "JA-LEX-C451-COMMUTE451-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C450-kanbyou-suru",
+    "language": "japanese",
+    "chapter": 450,
+    "sequence": 26280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20557f0455d37285"
+  },
+  "findings": []
+}

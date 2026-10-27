@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Regions and Borders",
+  "label": "ch:ja-regions-and-borders",
+  "canDo": "I can talk about regions, borders and dialects.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C409-hougen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about regions, borders and dialects.",
+    "assesses": [
+      "JA-LEX-C409-CHIIKI409-03",
+      "JA-LEX-C409-CHIIKI409-04",
+      "JA-LEX-C409-CHIIKI409-05"
+    ]
+  }
+}

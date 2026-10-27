@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C280-kisha",
+    "language": "japanese",
+    "chapter": 280,
+    "sequence": 16960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:716dbf4f1706f7de"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C524-jitsugen-suru",
+  "pathSegment": "JA-PATH-524-IMAGINE524",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-524-IMAGINE524",
+      "order": 4
+    }
+  ]
+}

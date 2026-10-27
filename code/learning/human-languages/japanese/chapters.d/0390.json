@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "On the Expressway",
+  "label": "ch:ja-on-the-expressway",
+  "canDo": "I can talk about driving on the expressway.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C390-oikosu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can talk about driving on the expressway.",
+    "assesses": [
+      "JA-LEX-C390-KOUSOKU390-03",
+      "JA-LEX-C390-KOUSOKU390-04",
+      "JA-LEX-C390-KOUSOKU390-05"
+    ]
+  }
+}

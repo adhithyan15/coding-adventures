@@ -1,0 +1,11 @@
+{
+  "id": "JA-C522-dokoka",
+  "pathSegment": "JA-PATH-522-SOME522",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-522-SOME522",
+      "order": 2
+    }
+  ]
+}

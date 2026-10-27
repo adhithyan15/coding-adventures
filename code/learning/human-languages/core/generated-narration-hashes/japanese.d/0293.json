@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:15096685bdbd256c",
+  "lessonIds": [
+    "JA-C293-hanabi",
+    "JA-C293-uchiageru",
+    "JA-C293-yatai",
+    "JA-C293-yozora",
+    "JA-C293-nigiwau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch293.txt",
+  "json": "japanese/narration/ch293.json",
+  "textHash": "fnv1a64:07cd2e0070678a83",
+  "jsonHash": "fnv1a64:eea5b9607c79ee84",
+  "findings": []
+}

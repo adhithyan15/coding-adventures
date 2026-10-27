@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C375-norikosu",
+    "language": "japanese",
+    "chapter": 375,
+    "sequence": 22180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:544257dc36cb7b70"
+  },
+  "findings": []
+}

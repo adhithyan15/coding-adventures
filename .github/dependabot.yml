@@ -26,10 +26,17 @@
 #   2. code/specs/fixtures/ocaml-toolchain/toolchain-lock.json
 #   3. the ACTIONS map in code/scripts/ocaml_toolchain_lock.py
 #
-# Dependabot edits only the first, so a bump touching `actions/checkout`,
-# `actions/upload-artifact` or `ocaml/setup-ocaml` WILL turn the "Validate
-# OCAML03 contract" check red. That is the contract working, not a broken
-# bot: update the other two in the same PR. Note also that the OCAML03
+# Dependabot edits only the first, so a bump touching `actions/checkout` or
+# `actions/upload-artifact` WILL turn the "Validate OCAML03 contract" check
+# red. That is the contract working, not a broken bot: update the other two
+# in the same PR.
+#
+# `ocaml/setup-ocaml` is different and is ignored below. A setup-ocaml bump
+# changes which opam release it installs (v3.9.0 installs opam 2.6.x), while
+# every OCaml job requires opam exactly 2.5.2, so it is an opam upgrade, not
+# a pin refresh. OCAML03 (Revision 2026-10-20) keeps the reviewed v3.7.0
+# commit and says Dependabot cannot refresh it. Move it only in a reviewed
+# OCAML03 contract change that updates the opam requirement too. Note also that the OCAML03
 # workflow's pins carry their version on the line ABOVE, not trailing --
 # its restricted YAML reader does not strip trailing comments.
 version: 2
@@ -47,6 +54,9 @@ updates:
       github-actions:
         patterns:
           - "*"
+    # setup-ocaml is pinned by the OCAML03 contract (see the header).
+    ignore:
+      - dependency-name: "ocaml/setup-ocaml"
     open-pull-requests-limit: 3
     commit-message:
       prefix: "chore(ci)"

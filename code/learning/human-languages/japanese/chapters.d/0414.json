@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "Hot, Damp Days",
+  "label": "ch:ja-hot-damp-days",
+  "canDo": "I can talk about heat, damp and sunshine on a trip.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C414-mabushii",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about heat, damp and sunshine on a trip.",
+    "assesses": [
+      "JA-LEX-C414-SHITSUDO414-03",
+      "JA-LEX-C414-SHITSUDO414-04",
+      "JA-LEX-C414-SHITSUDO414-05"
+    ]
+  }
+}

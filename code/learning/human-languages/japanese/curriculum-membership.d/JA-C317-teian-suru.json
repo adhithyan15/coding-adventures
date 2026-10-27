@@ -1,0 +1,11 @@
+{
+  "id": "JA-C317-teian-suru",
+  "pathSegment": "JA-PATH-317-SANSEI317",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-317-SANSEI317",
+      "order": 3
+    }
+  ]
+}

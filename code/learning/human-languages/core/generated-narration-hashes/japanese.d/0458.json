@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:5db914142db0542a",
+  "lessonIds": [
+    "JA-C458-bengoshi",
+    "JA-C458-koumuin",
+    "JA-C458-haiyuu",
+    "JA-C458-sakka",
+    "JA-C458-shokunin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch458.txt",
+  "json": "japanese/narration/ch458.json",
+  "textHash": "fnv1a64:7dbfdbb7fbbb484b",
+  "jsonHash": "fnv1a64:f0984867e85b8442",
+  "findings": []
+}

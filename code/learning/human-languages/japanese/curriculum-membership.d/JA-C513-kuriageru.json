@@ -1,0 +1,11 @@
+{
+  "id": "JA-C513-kuriageru",
+  "pathSegment": "JA-PATH-513-PLAN513",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-513-PLAN513",
+      "order": 2
+    }
+  ]
+}

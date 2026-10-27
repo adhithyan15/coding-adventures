@@ -1,0 +1,11 @@
+{
+  "id": "JA-C440-kichinto",
+  "pathSegment": "JA-PATH-440-CAREFUL440",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-440-CAREFUL440",
+      "order": 3
+    }
+  ]
+}

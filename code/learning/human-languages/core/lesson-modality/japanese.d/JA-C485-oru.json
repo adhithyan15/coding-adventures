@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C485-oru",
+    "language": "japanese",
+    "chapter": 485,
+    "sequence": 28250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bac8268a3cb72498"
+  },
+  "findings": []
+}

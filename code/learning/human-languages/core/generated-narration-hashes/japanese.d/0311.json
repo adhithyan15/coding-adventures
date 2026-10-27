@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:35a671a76c55b149",
+  "lessonIds": [
+    "JA-C311-omoide",
+    "JA-C311-koro",
+    "JA-C311-shounen",
+    "JA-C311-ushinau",
+    "JA-C311-furikaeru",
+    "JA-R311-review-307-311"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch311.txt",
+  "json": "japanese/narration/ch311.json",
+  "textHash": "fnv1a64:c3b80a6975bce79b",
+  "jsonHash": "fnv1a64:6a5f04aa3749cacb",
+  "findings": []
+}

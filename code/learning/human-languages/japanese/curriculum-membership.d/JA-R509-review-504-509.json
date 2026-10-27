@@ -1,0 +1,11 @@
+{
+  "id": "JA-R509-review-504-509",
+  "pathSegment": "JA-PATH-509-LOTTERY509",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-509-LOTTERY509",
+      "order": 5
+    }
+  ]
+}

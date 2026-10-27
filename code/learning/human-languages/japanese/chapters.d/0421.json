@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Haggling at the Market",
+  "label": "ch:ja-haggling-at-the-market",
+  "canDo": "I can talk about prices going up and down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C421-shouhin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about prices going up and down.",
+    "assesses": [
+      "JA-LEX-C421-NEGIRU421-03",
+      "JA-LEX-C421-NEGIRU421-04",
+      "JA-LEX-C421-NEGIRU421-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C485-jimi",
+  "pathSegment": "JA-PATH-485-CLOTH485",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-485-CLOTH485",
+      "order": 3
+    }
+  ]
+}

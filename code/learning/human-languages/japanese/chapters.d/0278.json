@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "Lightning",
+  "label": "ch:ja-lightning",
+  "canDo": "I can say what a storm struck and blew down.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C278-katamuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can say what a storm struck and blew down.",
+    "assesses": [
+      "JA-LEX-C278-INAZUMA278-03",
+      "JA-LEX-C278-INAZUMA278-04",
+      "JA-LEX-C278-INAZUMA278-05"
+    ]
+  }
+}

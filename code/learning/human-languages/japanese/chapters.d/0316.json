@@ -1,0 +1,21 @@
+{
+  "chapter": 316,
+  "title": "A Story to Pass On",
+  "label": "ch:ja-a-story-to-pass-on",
+  "canDo": "I can say what old stories and customs make me feel.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R316-review-final-316",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can say what old stories and customs make me feel.",
+    "assesses": [
+      "JA-LEX-C316-MONOGATARI316-01",
+      "JA-LEX-C316-MONOGATARI316-02",
+      "JA-LEX-C316-MONOGATARI316-03",
+      "JA-LEX-C316-MONOGATARI316-04",
+      "JA-LEX-C316-MONOGATARI316-05"
+    ]
+  }
+}

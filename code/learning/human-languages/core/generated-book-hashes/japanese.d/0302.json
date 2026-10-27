@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:a8e4c73a565d97e0",
+  "lessonIds": [
+    "JA-C302-yuurei",
+    "JA-C302-obake",
+    "JA-C302-uramu",
+    "JA-C302-densetsu",
+    "JA-C302-kamisama"
+  ],
+  "tex": "japanese/book/chapters/ch302-ghost-stories.tex"
+}

@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 292,
+  "title": "A Long Life",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3f6069168651f4dc",
+  "lessons": [
+    {
+      "id": "JA-C292-oiru",
+      "sequence": 17550,
+      "title": "おいる (oiru) — to grow old; to age",
+      "headword": "おいる",
+      "romanization": "oiru",
+      "gloss": "to grow old; to age",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eb7dba81ab62a17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a grave, then the Japanese for to pray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おいる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいる — oiru — \"to grow old; to age\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちも すこし おいました。 — chichi mo sukoshi oimashita — \"My father has aged a little too.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おいます, oimasu; an ichidan verb. Past (polite): そふが おいました。, sofu ga oimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいる (oiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi mo sukoshi oimashita — My father has aged a little too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi mo sukoshi oimashita* — My father has aged a little too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a grave, then the Japanese for to pray, then say oiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a grave, then the Japanese for to pray, then say *oiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おいる (oiru) mean? (\"To grow old; to age\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C292-oiru-type",
+              "prompt": "Say the Japanese for 'to grow old'.",
+              "assesses": [
+                "JA-LEX-C292-JINSEI292-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おいる",
+                "oiru"
+              ],
+              "feedback": {
+                "correct": "Right: おいる (oiru) is 'to grow old; to age'.",
+                "incorrect": "'To grow old' is おいる (oiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C292-toshiyori",
+      "sequence": 17560,
+      "title": "としより (toshiyori) — an old person; the elderly",
+      "headword": "としより",
+      "romanization": "toshiyori",
+      "gloss": "an old person; the elderly",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85796491b1f7ad0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pray, then the Japanese for to grow old."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: としより",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "としより — toshiyori — \"an old person; the elderly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その まちには としよりが おおいです。 — sono machi ni wa toshiyori ga ōi desu — \"There are many old people in that town.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "としより (toshiyori) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from toshi, \"years\", and yori, \"gathering\" (from yoru) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toshiyori",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toshiyori*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toshiyori, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toshiyori*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono machi ni wa toshiyori ga ōi desu — There are many old people in that town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono machi ni wa toshiyori ga ōi desu* — There are many old people in that town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pray, then the Japanese for to grow old, then say toshiyori again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pray, then the Japanese for to grow old, then say *toshiyori* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does としより (toshiyori) mean? (\"An old person; the elderly\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C292-toshiyori-type",
+              "prompt": "Say the Japanese for 'an old person'.",
+              "assesses": [
+                "JA-LEX-C292-JINSEI292-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "としより",
+                "toshiyori"
+              ],
+              "feedback": {
+                "correct": "Right: としより (toshiyori) is 'an old person; the elderly'.",
+                "incorrect": "'An old person' is としより (toshiyori)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C292-jinsei",
+      "sequence": 17570,
+      "title": "じんせい (jinsei) — a life; one's lifetime",
+      "headword": "じんせい",
+      "romanization": "jinsei",
+      "gloss": "a life; one's lifetime",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6b7b7287d22f879",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to grow old, then the Japanese for an old person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じんせい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じんせい — jinsei — \"a life; one's lifetime\"."
+            },
+            {
+              "kind": "speech",
+              "text": "日本人の じんせいは ながく なりました。 — nihonjin no jinsei wa nagaku narimashita — \"Japanese people's lives have grown longer.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じんせい (jinsei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jin, \"person\" (Middle Chinese nyin) and sei, \"life\" (srjaeng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jinsei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jinsei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jinsei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jinsei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nihonjin no jinsei wa nagaku narimashita — Japanese people's lives have grown longer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nihonjin no jinsei wa nagaku narimashita* — Japanese people's lives have grown longer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to grow old, then the Japanese for an old person, then say jinsei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to grow old, then the Japanese for an old person, then say *jinsei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じんせい (jinsei) mean? (\"A life; one's lifetime\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C292-jinsei-type",
+              "prompt": "Say the Japanese for 'a life'.",
+              "assesses": [
+                "JA-LEX-C292-JINSEI292-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じんせい",
+                "jinsei"
+              ],
+              "feedback": {
+                "correct": "Right: じんせい (jinsei) is 'a life; one's lifetime'.",
+                "incorrect": "'A life' is じんせい (jinsei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C292-shinu",
+      "sequence": 17580,
+      "title": "しぬ (shinu) — to die",
+      "headword": "しぬ",
+      "romanization": "shinu",
+      "gloss": "to die",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce3a9338866ff791",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an old person, then the Japanese for a life."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しぬ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しぬ — shinu — \"to die\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふの いぬが きょねん しにました。 — sofu no inu ga kyonen shinimashita — \"Grandfather's dog died last year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しにます, shinimasu; a godan verb. Past (polite): とりが しにました。, tori ga shinimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しぬ (shinu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu no inu ga kyonen shinimashita — Grandfather's dog died last year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu no inu ga kyonen shinimashita* — Grandfather's dog died last year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an old person, then the Japanese for a life, then say shinu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an old person, then the Japanese for a life, then say *shinu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しぬ (shinu) mean? (\"To die\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C292-shinu-type",
+              "prompt": "Say the Japanese for 'to die'.",
+              "assesses": [
+                "JA-LEX-C292-JINSEI292-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しぬ",
+                "shinu"
+              ],
+              "feedback": {
+                "correct": "Right: しぬ (shinu) is 'to die'.",
+                "incorrect": "'To die' is しぬ (shinu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C292-sasaeru",
+      "sequence": 17590,
+      "title": "ささえる (sasaeru) — to support; to hold up",
+      "headword": "ささえる",
+      "romanization": "sasaeru",
+      "gloss": "to support; to hold up",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5687e95a891485f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a life, then the Japanese for to die."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ささえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ささえる — sasaeru — \"to support; to hold up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かぞくが いつも ちちを ささえています。 — kazoku ga itsumo chichi o sasaete imasu — \"The family is always there for my father.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ささえます, sasaemasu; an ichidan verb. Past (polite): かぞくが そぼを ささえました。, kazoku ga sobo o sasaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ささえる (sasaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kazoku ga itsumo chichi o sasaete imasu — The family is always there for my father.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kazoku ga itsumo chichi o sasaete imasu* — The family is always there for my father.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a life, then the Japanese for to die, then say sasaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a life, then the Japanese for to die, then say *sasaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ささえる (sasaeru) mean? (\"To support; to hold up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C292-sasaeru-type",
+              "prompt": "Say the Japanese for 'to support'.",
+              "assesses": [
+                "JA-LEX-C292-JINSEI292-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ささえる",
+                "sasaeru"
+              ],
+              "feedback": {
+                "correct": "Right: ささえる (sasaeru) is 'to support; to hold up'.",
+                "incorrect": "'To support' is ささえる (sasaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

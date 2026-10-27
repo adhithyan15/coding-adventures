@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C506-haiboku",
+    "language": "japanese",
+    "chapter": 506,
+    "sequence": 29370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c9b05939b4179a7"
+  },
+  "findings": []
+}

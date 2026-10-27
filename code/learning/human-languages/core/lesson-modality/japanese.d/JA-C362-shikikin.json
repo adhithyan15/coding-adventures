@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C362-shikikin",
+    "language": "japanese",
+    "chapter": 362,
+    "sequence": 21370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f917d9055079e824"
+  },
+  "findings": []
+}

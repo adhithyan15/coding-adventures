@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:01704e834fe284d9",
+  "lessonIds": [
+    "JA-C467-nuu",
+    "JA-C467-amimono",
+    "JA-C467-someru",
+    "JA-C467-shishuu",
+    "JA-C467-kezuru",
+    "JA-R467-review-462-467"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch467.txt",
+  "json": "japanese/narration/ch467.json",
+  "textHash": "fnv1a64:bae4b735b56b2dd4",
+  "jsonHash": "fnv1a64:a425ad2ac953e1ee",
+  "findings": []
+}

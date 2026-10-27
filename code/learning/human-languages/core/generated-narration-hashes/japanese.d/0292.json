@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:3f6069168651f4dc",
+  "lessonIds": [
+    "JA-C292-oiru",
+    "JA-C292-toshiyori",
+    "JA-C292-jinsei",
+    "JA-C292-shinu",
+    "JA-C292-sasaeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch292.txt",
+  "json": "japanese/narration/ch292.json",
+  "textHash": "fnv1a64:08a5de637f3265a6",
+  "jsonHash": "fnv1a64:6de6eabd63dcc831",
+  "findings": []
+}

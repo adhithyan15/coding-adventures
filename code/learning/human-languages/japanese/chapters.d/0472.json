@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Ingredients",
+  "label": "ch:ja-ingredients",
+  "canDo": "I can name ingredients and seasonings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C472-daizu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can name ingredients and seasonings.",
+    "assesses": [
+      "JA-LEX-C472-INGR472-03",
+      "JA-LEX-C472-INGR472-04",
+      "JA-LEX-C472-INGR472-05"
+    ]
+  }
+}

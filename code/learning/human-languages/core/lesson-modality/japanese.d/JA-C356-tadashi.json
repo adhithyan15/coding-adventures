@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C356-tadashi",
+    "language": "japanese",
+    "chapter": 356,
+    "sequence": 21020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf6c5973285bf148"
+  },
+  "findings": []
+}
