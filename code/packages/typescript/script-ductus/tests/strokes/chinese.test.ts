@@ -231,12 +231,12 @@ describe("handwriting ductus", () => {
     // 141 -> 153: the twelve characters A1 vocabulary tranche d writes
     // (chapters 126-140), at most one a chapter, each right after the
     // word that anchors it: 以 些 音 吵 病 春 千 扫 重 节 每 半.
-    // 153 -> 158: the first characters the A2 core writes
-    // (chapters 147-151), one a chapter, each right after the word that
-    // anchors it: 后 月 正 过 到.
-    expect(chinese.letters).toHaveLength(158);
+    // 153 -> 163: the ten characters the A2 core writes
+    // (chapters 147-156), one a chapter, each right after the word that
+    // anchors it: 后 月 正 过 到 得 比 还 从 元.
+    expect(chinese.letters).toHaveLength(163);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      158,
+      163,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
