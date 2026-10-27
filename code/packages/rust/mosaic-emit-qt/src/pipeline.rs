@@ -1646,6 +1646,12 @@ struct EmitCtx<'a> {
     /// author one, so this namespace is synthesized the same way
     /// `next_drag_id`/`next_table_id` already are.
     next_elevation_id: Rc<Cell<usize>>,
+    /// Monotonic id counter for the direct children of a styled `Box`
+    /// (UI21 §2.2, rule 6). The box reads each child's implicit size by
+    /// id, and MIL has no way to author one. A counter of its own, rather
+    /// than [`next_elevation_id`]'s, keeps every `mosaicElevation<N>` /
+    /// `mosaicContent<N>` id that existed before this rule unchanged.
+    next_box_child_id: Rc<Cell<usize>>,
     /// Literal `group:` value → synthesized `ButtonGroup` QML id
     /// (`#13007`), for every group value shared by 2+ `HostRadio`s
     /// anywhere in the component. Computed once in `from_pipeline` via
@@ -2549,6 +2555,217 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         rect_lines,
         text_style: ts,
     }
+}
+
+// =====================================================================
+// Content-sized styled boxes (UI21 §2.2, rule 6)
+// =====================================================================
+//
+// A styled `Box [part]` lowers to a `Rectangle`. The lowering was written
+// for table cells, which always know their size: a threaded column width,
+// or an authored `width` / `height`. A region with no authored size, such as
+// every Engram screen region, got neither, so it published `0 x 0`. The
+// layout above it then gave it no room, and everything inside it was
+// invisible to the `ScrollView` that should have scrolled it.
+//
+// So an open axis is measured from the box's direct children:
+//
+// ```text
+//   Rectangle {                                         // the styled Box
+//       implicitWidth:  mosaicBoxChild0.implicitWidth  + left + right
+//       implicitHeight: mosaicBoxChild0.implicitHeight + top  + bottom
+//       ColumnLayout { id: mosaicBoxChild0; x: left; y: top; … }
+//   }
+// ```
+//
+// The children's *implicit* sizes, never `childrenRect`: a cell's content
+// anchors to the box (`anchors.fill: parent`), and `childrenRect` would read
+// that content's geometry, which is the box's own size, back into the box's
+// size. An implicit size never comes from the item's own geometry, so the
+// chain cannot close into a loop.
+
+/// A styled box's children, given the ids the box reads them by and the
+/// inset its padding asks for.
+struct MeasuredBoxChildren {
+    /// The children's QML, with an `id:` (and `x:` / `y:`) added where
+    /// needed.
+    children_qml: String,
+    /// One id per measured top-level child, in order.
+    ids: Vec<String>,
+}
+
+/// Name each top-level child of a styled box and inset it by the padding.
+///
+/// `children_qml` is what the children walker emitted at `depth`. A
+/// "top-level child" is an object opened while no other object is open,
+/// tracked by brace depth rather than indentation: an elevation wrapper
+/// writes its shadowed element at its own indentation, inside its braces
+/// (see [`qml_elevation_wrap`]), and indentation alone would read that
+/// element as a second sibling.
+///
+/// For each top-level object, looking only at its own property lines:
+///
+/// | object            | id                         | inset          |
+/// |-------------------|----------------------------|----------------|
+/// | `Repeater`        | none, not measured         | none           |
+/// | carries `id:`     | that id                    | as below       |
+/// | otherwise         | `mosaicBoxChild<N>`, added | as below       |
+///
+/// The inset is `x: left` / `y: top`, skipped for an edge of `0` and for an
+/// object that anchors itself (any `anchors.*` line) or already places
+/// itself on that axis. A `Repeater` has no implicit size, and the
+/// delegates it creates are parented to the box itself, out of reach of any
+/// id written here.
+///
+/// The editing is mechanical, on text this emitter wrote itself, one
+/// property per line. That is safe for the same reason
+/// [`inject_qml_child_line`] is.
+fn measure_box_children(
+    children_qml: &str,
+    depth: usize,
+    left: &str,
+    top: &str,
+    ctx: &EmitCtx,
+) -> MeasuredBoxChildren {
+    /// One top-level object: the index of its opening line, its element
+    /// name and its own property names (with the `id:` value, if any).
+    struct Block {
+        opening: usize,
+        element: String,
+        properties: Vec<String>,
+        id: Option<String>,
+    }
+
+    let lines: Vec<&str> = children_qml.split_inclusive('\n').collect();
+    let mut blocks: Vec<Block> = Vec::new();
+    let mut nesting = 0i32;
+    for (index, line) in lines.iter().enumerate() {
+        let text = line.trim_end_matches(['\n', '\r']);
+        let delta = qml_brace_delta(text);
+        if nesting == 0 && delta > 0 {
+            let element = text.trim().trim_end_matches('{').trim().to_string();
+            blocks.push(Block {
+                opening: index,
+                element,
+                properties: Vec::new(),
+                id: None,
+            });
+        } else if nesting == 1 {
+            if let (Some(block), Some(name)) =
+                (blocks.last_mut(), qml_top_level_property(text.trim_start()))
+            {
+                if name == "id" {
+                    block.id = text
+                        .split_once(':')
+                        .map(|(_, value)| value.trim().to_string());
+                }
+                block.properties.push(name.to_string());
+            }
+        }
+        nesting += delta;
+    }
+
+    let inner_pad = "    ".repeat(depth + 1);
+    let mut inserts: HashMap<usize, Vec<String>> = HashMap::new();
+    let mut ids = Vec::new();
+    for block in blocks {
+        if block.element == "Repeater" {
+            continue;
+        }
+        let mut added = Vec::new();
+        let id = match block.id {
+            Some(id) => id,
+            None => {
+                let value = ctx.next_box_child_id.get();
+                ctx.next_box_child_id.set(value + 1);
+                let id = format!("mosaicBoxChild{value}");
+                added.push(format!("id: {id}"));
+                id
+            }
+        };
+        ids.push(id);
+        let anchored = block
+            .properties
+            .iter()
+            .any(|name| name.starts_with("anchors."));
+        let places = |axis: &str| block.properties.iter().any(|name| name == axis);
+        if !anchored && left != "0" && !places("x") {
+            added.push(format!("x: {left}"));
+        }
+        if !anchored && top != "0" && !places("y") {
+            added.push(format!("y: {top}"));
+        }
+        if !added.is_empty() {
+            inserts.insert(block.opening, added);
+        }
+    }
+
+    let mut out = String::with_capacity(children_qml.len() + 64 * inserts.len());
+    for (index, line) in lines.iter().enumerate() {
+        out.push_str(line);
+        for added in inserts.get(&index).into_iter().flatten() {
+            out.push_str(&inner_pad);
+            out.push_str(added);
+            out.push('\n');
+        }
+    }
+    MeasuredBoxChildren {
+        children_qml: out,
+        ids,
+    }
+}
+
+/// The `implicitWidth` / `implicitHeight` lines a styled box needs on each
+/// axis its own lowering left unsized (UI21 §2.2, rule 6).
+///
+/// `rect_lines` are the box's lines from [`lower_styled_box`]. An axis that
+/// already has an `implicit*` line was sized by the author, or by a table's
+/// column-width thread, and keeps it. `padding` is `[left, top, right,
+/// bottom]`. With several children the size is their maximum, because the
+/// children of a Qt `Box` share its origin:
+///
+/// ```text
+///   one child    implicitWidth: a.implicitWidth + 8 + 8
+///   two          implicitWidth: Math.max(a.implicitWidth, b.implicitWidth) + 8 + 8
+/// ```
+///
+/// A box with no measurable child (no children, or only `For`s) gets
+/// nothing, as before.
+fn content_box_size_lines(
+    rect_lines: &[String],
+    ids: &[String],
+    padding: [&str; 4],
+) -> Vec<String> {
+    let [left, top, right, bottom] = padding;
+    if ids.is_empty() {
+        return Vec::new();
+    }
+    let extent = |property: &str| {
+        let terms: Vec<String> = ids.iter().map(|id| format!("{id}.{property}")).collect();
+        match terms.as_slice() {
+            [one] => one.clone(),
+            many => format!("Math.max({})", many.join(", ")),
+        }
+    };
+    let sized = |property: &str| {
+        rect_lines
+            .iter()
+            .any(|line| line.starts_with(&format!("{property}:")))
+    };
+    let mut lines = Vec::new();
+    if !sized("implicitWidth") {
+        lines.push(format!(
+            "implicitWidth: {} + {left} + {right}",
+            extent("implicitWidth")
+        ));
+    }
+    if !sized("implicitHeight") {
+        lines.push(format!(
+            "implicitHeight: {} + {top} + {bottom}",
+            extent("implicitHeight")
+        ));
+    }
+    lines
 }
 
 fn part_style_props<'a>(node: &LayoutNode, ctx: &'a EmitCtx<'_>) -> Option<&'a [StyleProp]> {
@@ -3735,12 +3952,13 @@ fn emit_styled_layout_container_qml(
         }
 
         let is_stack = node.tag == "Stack";
+        let parent = LayoutParent::of_container(&node.tag, spacing_of(&layout_lines));
         let children_qml = emit_qml_children_with_line(
             &node.children,
             depth + 1,
             is_stack,
             child_alignment.as_deref(),
-            MainAxis::of_container(&node.tag),
+            parent.as_ref(),
             child_ctx,
         )?;
         let mut out = String::new();
@@ -3799,12 +4017,14 @@ fn emit_styled_layout_container_qml(
         None if binds_root => Some(format!("{LAYOUT_ROOT_ID}Content")),
         other => other,
     };
+    let parent =
+        LayoutParent::of_container(&node.tag, spacing_of(&qml_layout_container_lines(props)));
     let children_qml = emit_qml_children_with_line(
         &node.children,
         depth + 2,
         node.tag == "Stack",
         child_alignment.as_deref(),
-        MainAxis::of_container(&node.tag),
+        parent.as_ref(),
         child_ctx,
     )?;
     let mut out = String::new();
@@ -4481,6 +4701,7 @@ fn emit_root(
         next_drag_id: Rc::new(Cell::new(0)),
         next_table_id: Rc::new(Cell::new(0)),
         next_elevation_id: Rc::new(Cell::new(0)),
+        next_box_child_id: Rc::new(Cell::new(0)),
         radio_group_slugs: &radio_group_slugs,
     };
     writeln!(out).unwrap();
@@ -4684,7 +4905,7 @@ fn emit_qml_tree(
         // as a single-Loader conditional with no else branch. The
         // `If`+`Else` sibling pairing happens in `emit_qml_children`
         // when walking a parent's children list.
-        "If" => return emit_if_qml(node, None, depth, ctx),
+        "If" => return emit_if_qml(node, None, depth, BranchHost::Plain, ctx),
         // UI29 §3.2 — a top-level `Else` (no preceding `If`) has no
         // semantic home. Emit a self-documenting QML comment rather
         // than erroring. Defensive: the grammar should prevent this,
@@ -4732,14 +4953,6 @@ fn emit_qml_tree(
                     .get(part)
                     .and_then(|base| part_elevation_tier(base));
                 let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
-                let mut out = String::new();
-                writeln!(out, "{pad}Rectangle {{").unwrap();
-                if let Some(id) = &elevation_id {
-                    writeln!(out, "{pad}    id: {id}").unwrap();
-                }
-                for line in &styled.rect_lines {
-                    writeln!(out, "{pad}    {line}").unwrap();
-                }
                 // Descend with the cell's text style in scope; the
                 // enclosing index is cleared so a nested table doesn't
                 // inherit this cell's width binding. `cell_fill_children`
@@ -4754,12 +4967,33 @@ fn emit_qml_tree(
                         Some(styled.text_style)
                     })
                 };
-                out.push_str(&emit_qml_children(
+                // The children come first: the box's implicit size is read
+                // from theirs (UI21 §2.2, rule 6).
+                let children_qml = emit_qml_children(
                     &node.children,
                     depth + 1,
                     /* is_stack = */ false,
                     &child_ctx,
-                )?);
+                )?;
+                let base = ctx.part_styles.get(part).map(Vec::as_slice).unwrap_or(&[]);
+                let (left, top, right, bottom) = qml_padding_edges(base);
+                let measured = measure_box_children(&children_qml, depth + 1, &left, &top, ctx);
+                let mut out = String::new();
+                writeln!(out, "{pad}Rectangle {{").unwrap();
+                if let Some(id) = &elevation_id {
+                    writeln!(out, "{pad}    id: {id}").unwrap();
+                }
+                for line in content_box_size_lines(
+                    &styled.rect_lines,
+                    &measured.ids,
+                    [&left, &top, &right, &bottom],
+                ) {
+                    writeln!(out, "{pad}    {line}").unwrap();
+                }
+                for line in &styled.rect_lines {
+                    writeln!(out, "{pad}    {line}").unwrap();
+                }
+                out.push_str(&measured.children_qml);
                 writeln!(out, "{pad}}}").unwrap();
                 if let Some(id) = &elevation_id {
                     out = qml_elevation_wrap(out, elevation, id, &pad);
@@ -4811,12 +5045,14 @@ fn emit_qml_tree(
     // than a bare `for` so that `If`+`Else` sibling pairs are recognised
     // (UI29 §3.2), and so that a `Row` / `Column` hands its children the
     // `Layout.fill*` lines their styles ask of it (UI21 §2.2).
+    // An unstyled layout writes no `spacing:` and keeps Qt's default.
+    let parent = LayoutParent::of_container(&node.tag, None);
     let children_qml = emit_qml_children_with_line(
         &node.children,
         depth + 1,
         is_stack,
         None,
-        MainAxis::of_container(&node.tag),
+        parent.as_ref(),
         ctx,
     )?;
 
@@ -5036,11 +5272,12 @@ fn emit_qml_children(
 ///
 /// - `child_line` -- one line every child receives (the parent's
 ///   `Layout.alignment`).
-/// - `main_axis` -- `Some` when the parent is a `RowLayout` /
+/// - `layout` -- `Some` when the parent is a `RowLayout` /
 ///   `ColumnLayout`. Each child then also receives the fills its own style
 ///   asks of that layout ([`layout_child_fill_lines`]): a lowered
 ///   `flex-grow`, and an axis-pinned `HostScroll`'s cross-axis fill
-///   (UI21 §2.2, rules 3 and 4).
+///   (UI21 §2.2, rules 3 and 4). An `If` child's multi-child branch body
+///   copies the layout's axis and spacing (rule 7).
 ///
 /// Why the parent writes these lines, not the child: `Layout.fillHeight`
 /// is an attached property of the *enclosing* layout. The same `flex-grow`
@@ -5052,11 +5289,22 @@ fn emit_qml_children_with_line(
     depth: usize,
     is_stack: bool,
     child_line: Option<&str>,
-    main_axis: Option<MainAxis>,
+    layout: Option<&LayoutParent>,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
+    // Rules 3 and 4 ask the parent layout for fills; a branch body's layout
+    // (rule 7) is sized by its `Loader` and has no room to hand out.
+    let main_axis = layout
+        .filter(|parent| parent.lowers_fills)
+        .map(|parent| parent.axis);
     let shared_grow = main_axis.and_then(|_| shared_flex_grow(children, ctx));
+    // Where an `If` child's branch body will sit (UI21 §2.2, rule 7).
+    let branch_host = match layout {
+        Some(parent) => BranchHost::Layout(parent),
+        None if is_stack => BranchHost::Stack,
+        None => BranchHost::Plain,
+    };
     let mut i = 0;
     while i < children.len() {
         let child = &children[i];
@@ -5070,7 +5318,7 @@ fn emit_qml_children_with_line(
             if else_sibling.is_some() {
                 i += 1; // consume the Else along with the If
             }
-            emit_if_qml(child, else_sibling, depth, ctx)?
+            emit_if_qml(child, else_sibling, depth, branch_host, ctx)?
         } else {
             emit_qml_tree(child, depth, ctx)?
         };
@@ -5165,6 +5413,68 @@ impl MainAxis {
             Self::Vertical => "Layout.fillHeight: true",
         }
     }
+
+    /// The Qt layout that stacks along this axis.
+    fn layout_element(self) -> &'static str {
+        match self {
+            Self::Horizontal => "RowLayout",
+            Self::Vertical => "ColumnLayout",
+        }
+    }
+}
+
+/// The `RowLayout` / `ColumnLayout` a run of children is emitted into, as
+/// far as the children walker needs to know it.
+///
+/// | field          | read by                                             |
+/// |----------------|-----------------------------------------------------|
+/// | `axis`         | the fill rules (3, 4) and a branch body (rule 7)    |
+/// | `spacing`      | a branch body, which repeats its parent's spacing   |
+/// | `lowers_fills` | the fill rules; off inside a branch body's layout   |
+struct LayoutParent {
+    axis: MainAxis,
+    /// The value of the layout's own `spacing:` line, or `None` when it
+    /// writes none and keeps Qt's default.
+    spacing: Option<String>,
+    /// Whether a child's style may ask this layout for `Layout.fill*`
+    /// (rules 3 and 4). A branch body's layout says no: its `Loader` sizes
+    /// it to its content, so it has no surplus to hand out (rule 7).
+    lowers_fills: bool,
+}
+
+impl LayoutParent {
+    /// The layout a `Row` / `Column` lowers to, given the `spacing` it
+    /// writes; `None` for any other container.
+    fn of_container(tag: &str, spacing: Option<String>) -> Option<Self> {
+        MainAxis::of_container(tag).map(|axis| Self {
+            axis,
+            spacing,
+            lowers_fills: true,
+        })
+    }
+}
+
+/// The `spacing:` value in a container's generated property lines, if one
+/// is there. Read back from the lines rather than recomputed from the
+/// style, so the branch body can never disagree with its parent.
+fn spacing_of(lines: &[String]) -> Option<String> {
+    lines
+        .iter()
+        .find_map(|line| line.strip_prefix("spacing: "))
+        .map(str::to_string)
+}
+
+/// What an `If` / `Else` branch body sits in, once its `Loader` is placed
+/// (UI21 §2.2, rule 7). Only the walker over the parent's children knows.
+#[derive(Clone, Copy)]
+enum BranchHost<'a> {
+    /// A `RowLayout` / `ColumnLayout`: the body stacks along its axis.
+    Layout(&'a LayoutParent),
+    /// A `Stack`: the walker anchors the `Loader` to the overlay.
+    Stack,
+    /// Anything else: a `Box`, a styled cell, a `For` delegate, a
+    /// control's content, the component root.
+    Plain,
 }
 
 /// A `flex-grow` value, parsed as CSS reads it: a finite number, which may
@@ -9522,12 +9832,14 @@ fn emit_for_qml(
 ///
 /// A `Component { ... }` must wrap a single top-level QML element. When
 /// the `If` body contains exactly one child we emit that child
-/// directly. When the body contains multiple children (or zero), we
-/// wrap them in an `Item { ... }` so the `Component` stays well-formed.
+/// directly. An empty body is an `Item { }`, and a body of several
+/// children is a layout chosen by `host`, where the `Loader`s sit (see
+/// [`emit_branch_body`]).
 fn emit_if_qml(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
     depth: usize,
+    host: BranchHost<'_>,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
@@ -9557,7 +9869,12 @@ fn emit_if_qml(
     }
     writeln!(out, "{inner_pad}active: {cond_expr}").unwrap();
     writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
-    out.push_str(&emit_branch_body(&if_node.children, depth + 2, &body_ctx)?);
+    out.push_str(&emit_branch_body(
+        &if_node.children,
+        depth + 2,
+        host,
+        &body_ctx,
+    )?);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
 
@@ -9569,7 +9886,12 @@ fn emit_if_qml(
         }
         writeln!(out, "{inner_pad}active: {neg_cond}").unwrap();
         writeln!(out, "{inner_pad}sourceComponent: Component {{").unwrap();
-        out.push_str(&emit_branch_body(&else_n.children, depth + 2, &body_ctx)?);
+        out.push_str(&emit_branch_body(
+            &else_n.children,
+            depth + 2,
+            host,
+            &body_ctx,
+        )?);
         writeln!(out, "{inner_pad}}}").unwrap();
         writeln!(out, "{pad}}}").unwrap();
     }
@@ -9587,26 +9909,114 @@ fn emit_if_qml(
 ///   branches can have empty bodies" wording).
 /// - `1 child`    → emit the child directly. The most common shape; no
 ///   extra wrapper means cleaner output.
-/// - `N > 1`      → wrap in an `Item { ... }` so the `Component` has a
-///   single root. Inside the `Item`, the N children are emitted
-///   normally.
+/// - `N > 1`      → wrap the N children in one layout (UI21 §2.2, rule 7).
+///
+/// ## Why a layout, and which one
+///
+/// The body is what the `Loader` measures: a `Loader` publishes its loaded
+/// item's implicit size, and the parent layout sizes the `Loader` from
+/// that. This used to be a bare `Item`, and a bare `Item` publishes
+/// `0 x 0` whatever it holds. It also piles its children on its origin. So
+/// a several-child branch was laid out zero pixels tall, with its children
+/// painted on top of each other over whatever came next. TaskApp's view
+/// switch (`If timeline … Else { If board … Else … }`) is one, and its
+/// whole main view collapsed inside its `ScrollView`.
+///
+/// A layout publishes the sum of its children's implicit sizes, and it
+/// stacks them. CSS lays a branch's children out as if they were the
+/// parent's own children, so the body copies the parent:
+///
+/// ```text
+///   host                       body
+///   ─────────────────────────  ───────────────────────────────────────
+///   RowLayout    (spacing s)   RowLayout    { spacing: s }
+///   ColumnLayout (spacing s)   ColumnLayout { spacing: s }
+///   Stack                      Item { }   -- unchanged; the Loader
+///                                            is anchored to the stack
+///   anything else              ColumnLayout { spacing: 0 }   -- block flow
+/// ```
+///
+/// When `s` is absent the parent keeps Qt's default spacing, and the body
+/// leaves its own at the same default.
+///
+/// A body whose only child is one `If` / `Else` pair takes `spacing: 0`
+/// whatever the host. Only one of its two `Loader`s is ever live, but an
+/// inactive `Loader` is still a visible, zero-size layout item, and a
+/// layout puts its spacing next to it all the same. With the host's 14px
+/// spacing the pair would carry a 14px gap that belongs to nothing.
+///
+/// ## What the body's children do not get
+///
+/// - **Fills.** The body's layout is sized by its `Loader`, to its own
+///   implicit size, so it has no surplus to hand out. Its children are
+///   walked with `lowers_fills: false`: a `flex-grow` inside a branch is
+///   not lowered and stays in the drop report, exactly as it does in a
+///   single-child body (rule 3).
+/// - **A cell's text fill.** Inside a styled cell, text asks to fill its
+///   parent (`anchors.fill: parent`, [`cell_text_style_lines`]). A layout
+///   child that anchors is undefined behaviour in Qt, so the fill is
+///   dropped here, for the body and everything under it. The cell's
+///   colour and font still travel.
 fn emit_branch_body(
     children: &[LayoutNode],
     depth: usize,
+    host: BranchHost<'_>,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     match children.len() {
-        0 => Ok(format!("{pad}Item {{ }}\n")),
-        1 => emit_qml_tree(&children[0], depth, ctx),
-        _ => {
+        0 => return Ok(format!("{pad}Item {{ }}\n")),
+        1 => return emit_qml_tree(&children[0], depth, ctx),
+        _ => {}
+    }
+    let (axis, host_spacing) = match host {
+        // A Z-overlay: the children are meant to share one origin, and the
+        // anchored `Loader` already gives the body the stack's size.
+        BranchHost::Stack => {
             let mut out = String::new();
             writeln!(out, "{pad}Item {{").unwrap();
             out.push_str(&emit_qml_children(children, depth + 1, false, ctx)?);
             writeln!(out, "{pad}}}").unwrap();
-            Ok(out)
+            return Ok(out);
         }
+        BranchHost::Layout(parent) => (parent.axis, parent.spacing.clone()),
+        BranchHost::Plain => (MainAxis::Vertical, Some("0".to_string())),
+    };
+    let lone_pair =
+        matches!(children, [first, second] if first.tag == "If" && second.tag == "Else");
+    let spacing = if lone_pair {
+        Some("0".to_string())
+    } else {
+        host_spacing
+    };
+    let body = LayoutParent {
+        axis,
+        spacing,
+        lowers_fills: false,
+    };
+    let body_ctx = EmitCtx {
+        text_style: ctx.text_style.clone().map(|mut text_style| {
+            text_style.fill_parent = false;
+            text_style
+        }),
+        ..ctx.clone()
+    };
+
+    let mut out = String::new();
+    writeln!(out, "{pad}{} {{", axis.layout_element()).unwrap();
+    if let Some(spacing) = &body.spacing {
+        writeln!(out, "{pad}    spacing: {spacing}").unwrap();
     }
+    out.push_str(&emit_qml_children_with_line(
+        children,
+        depth + 1,
+        false,
+        None,
+        Some(&body),
+        &body_ctx,
+    )?);
+    writeln!(out, "{pad}}}").unwrap();
+    Ok(out)
 }
 
 /// Build the QML expression for a `For`'s `each:` prop.
@@ -14857,14 +15267,17 @@ mod tests {
         );
     }
 
-    // -------- Test 45: If branch body wrapped in Item when multi-child --------
+    // -------- Test 45: If branch body wrapped in a layout when multi-child --------
 
     /// QML's `Component { ... }` requires exactly one top-level child.
-    /// A multi-child `If` body is wrapped in an `Item { ... }` so the
-    /// `Component` stays well-formed. A single-child body is emitted
-    /// inline without the wrapper to keep the output clean.
+    /// A multi-child `If` body is wrapped in one layout so the `Component`
+    /// stays well-formed and the body has an implicit size (UI21 §2.2,
+    /// rule 7). At the component root there is no parent layout, so the
+    /// body is CSS block flow: a `ColumnLayout` with no spacing. A
+    /// single-child body is emitted inline without the wrapper to keep the
+    /// output clean.
     #[test]
-    fn if_multi_child_body_wraps_in_item() {
+    fn if_multi_child_body_wraps_in_a_column_layout() {
         let m = component("X", vec![], vec![]);
         let text = |s: &str| LayoutNode {
             tag: "Text".to_string(),
@@ -14876,7 +15289,7 @@ mod tests {
             children: Vec::new(),
         };
 
-        // Multi-child If body → wrapped in Item.
+        // Multi-child If body → wrapped in a ColumnLayout.
         let l = LayoutDef {
             component_name: "X".to_string(),
             root: if_with_slot_when("show", vec![text("a"), text("b")]),
@@ -14893,12 +15306,19 @@ mod tests {
             "got:\n{}",
             result.output
         );
-        // And there must be an inner `Item {` wrapping them in addition
-        // to the root `Item { ... }` of the component itself, so we
-        // expect at least 2 occurrences of `Item {`.
+        // The body is one layout holding both texts, not a bare `Item`
+        // (which would publish 0 x 0 and pile them on its origin).
         assert!(
-            count_occurrences(&result.output, "Item {") >= 2,
-            "expected an inner Item wrapping multi-child If body in:\n{}",
+            result
+                .output
+                .contains("sourceComponent: Component {\n            ColumnLayout {\n                spacing: 0\n"),
+            "expected a ColumnLayout wrapping the multi-child If body in:\n{}",
+            result.output
+        );
+        assert_eq!(
+            count_occurrences(&result.output, "Item {"),
+            1,
+            "only the component root may be an Item in:\n{}",
             result.output
         );
     }
@@ -21860,5 +22280,384 @@ mod layout_growth_tests {
         assert!(scroll.contains(&"Layout.fillHeight: true"), "{out}");
         assert!(scroll.contains(&"Layout.fillWidth: true"), "{out}");
         assert!(dropped_style_properties(&model, &layout, &style).is_empty());
+    }
+}
+
+/// UI21 §2.2, rules 6 and 7: the content inside a bounded `ScrollView` must
+/// publish an implicit size, or the viewport has nothing to scroll.
+///
+/// Whether the emitted QML actually measures non-zero in Qt is checked by
+/// `code/scripts/qt-column-shell-scroll-render-check.qml` against the
+/// `content-sized-regions` fixture in CI. These tests pin the shape that
+/// measurement depends on.
+#[cfg(test)]
+mod content_sizing_tests {
+    use super::*;
+
+    const MIL: &str = "component X { slot title : text ; slot flag : bool ; slot other : bool ; }";
+
+    fn compile(mll: &str, msl: &str) -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let model = mosmodel_compiler::compile(MIL).expect("mil");
+        let layout = moslayout_compiler::compile(mll, Some(&model.descriptor_json)).expect("mll");
+        let style = mosstyle_compiler::compile(msl, Some(&layout.part_map_json))
+            .expect("msl")
+            .def;
+        (model.component, layout.def, style)
+    }
+
+    fn qml(mll: &str, msl: &str) -> String {
+        let (model, layout, style) = compile(mll, msl);
+        from_pipeline(&model, &layout, &style).expect("emit").output
+    }
+
+    fn dropped(mll: &str, msl: &str) -> Vec<(String, String)> {
+        let (model, layout, style) = compile(mll, msl);
+        dropped_style_properties(&model, &layout, &style)
+            .into_iter()
+            .map(|d| (d.part, d.name))
+            .collect()
+    }
+
+    /// The block opened by the first line containing `opening`, up to its
+    /// closing brace.
+    fn block<'a>(qml: &'a str, opening: &str) -> &'a str {
+        let start = qml
+            .find(opening)
+            .unwrap_or_else(|| panic!("{opening}:\n{qml}"));
+        let line_start = qml[..start].rfind('\n').map_or(0, |i| i + 1);
+        let indent = &qml[line_start..start];
+        let close = format!("\n{indent}}}\n");
+        let end = qml[start..].find(&close).expect("closing brace") + start + close.len();
+        &qml[line_start..end]
+    }
+
+    /// The property lines that belong to the block itself, one level in.
+    fn own_lines(block: &str) -> Vec<&str> {
+        let first = block.lines().next().unwrap();
+        let indent = first.len() - first.trim_start().len();
+        let own = " ".repeat(indent + 4);
+        block
+            .lines()
+            .filter_map(|line| line.strip_prefix(own.as_str()))
+            .filter(|line| !line.starts_with(' '))
+            .collect()
+    }
+
+    // ----------------------------------------------------------------- rule 6
+
+    /// The Engram region shape: a padded, painted `Box` around a `Column`,
+    /// with no size of its own. It measures its child and insets it.
+    #[test]
+    fn a_padded_styled_box_takes_its_size_from_its_content() {
+        let mll = "layout X { Column { Box [ region ] { Column { Text ( content : \"a\" ) Text ( content : \"b\" ) } } } }";
+        let msl =
+            "style X { part region { padding : 4 ; padding-top : 16 ; background : #ffffff ; } }";
+        let out = qml(mll, msl);
+        let rect = own_lines(block(&out, "        Rectangle {"));
+        assert!(
+            rect.contains(&"implicitWidth: mosaicBoxChild0.implicitWidth + 4 + 4"),
+            "{out}"
+        );
+        assert!(
+            rect.contains(&"implicitHeight: mosaicBoxChild0.implicitHeight + 16 + 4"),
+            "{out}"
+        );
+        assert!(!rect.iter().any(|l| l.contains("childrenRect")), "{out}");
+
+        let content = own_lines(block(&out, "            ColumnLayout {"));
+        assert!(content.contains(&"id: mosaicBoxChild0"), "{out}");
+        assert!(content.contains(&"x: 4"), "{out}");
+        assert!(content.contains(&"y: 16"), "{out}");
+
+        // The padding is lowered now, so a longhand is no longer a drop.
+        let drops = dropped(mll, msl);
+        assert!(
+            !drops.contains(&("region".to_string(), "padding-top".to_string())),
+            "{drops:?}"
+        );
+    }
+
+    /// `padding-bottom: 0` -- every Engram region's only style -- still
+    /// needs the measurement, and adds no inset.
+    #[test]
+    fn a_region_with_zero_padding_is_measured_without_an_inset() {
+        let out = qml(
+            "layout X { Column { Box [ region ] { Column { Text ( content : \"a\" ) } } } }",
+            "style X { part region { padding-bottom : 0 ; } }",
+        );
+        let rect = own_lines(block(&out, "        Rectangle {"));
+        assert!(
+            rect.contains(&"implicitHeight: mosaicBoxChild0.implicitHeight + 0 + 0"),
+            "{out}"
+        );
+        let content = own_lines(block(&out, "            ColumnLayout {"));
+        assert!(
+            !content
+                .iter()
+                .any(|l| l.starts_with("x:") || l.starts_with("y:")),
+            "{out}"
+        );
+    }
+
+    /// An axis the author sized keeps its size; only the open axis is
+    /// measured.
+    #[test]
+    fn an_authored_size_wins_over_the_content() {
+        let both = qml(
+            "layout X { Column { Box [ swatch ] { Text ( content : \"a\" ) } } }",
+            "style X { part swatch { width : 120 ; height : 40 ; background : #ffffff ; } }",
+        );
+        let rect = own_lines(block(&both, "        Rectangle {"));
+        assert!(rect.contains(&"implicitWidth: 120"), "{both}");
+        assert!(rect.contains(&"implicitHeight: 40"), "{both}");
+        assert!(!rect.iter().any(|l| l.contains("mosaicBoxChild")), "{both}");
+
+        let width_only = qml(
+            "layout X { Column { Box [ swatch ] { Text ( content : \"a\" ) } } }",
+            "style X { part swatch { width : 120 ; background : #ffffff ; } }",
+        );
+        let rect = own_lines(block(&width_only, "        Rectangle {"));
+        assert!(rect.contains(&"implicitWidth: 120"), "{width_only}");
+        assert!(
+            rect.contains(&"implicitHeight: mosaicBoxChild0.implicitHeight + 0 + 0"),
+            "{width_only}"
+        );
+        assert_eq!(
+            rect.iter()
+                .filter(|l| l.starts_with("implicitWidth:"))
+                .count(),
+            1,
+            "{width_only}"
+        );
+    }
+
+    /// The children of a Qt `Box` share its origin, so the box is as large
+    /// as the largest. A text that fills the box (a styled cell's text)
+    /// keeps its anchors and is not inset: its `anchors.margins` already
+    /// is the padding.
+    #[test]
+    fn several_children_take_the_largest_and_anchored_ones_keep_their_anchors() {
+        let out = qml(
+            "layout X { Column { Box [ stat ] { Text ( content : \"label\" ) Text ( content : \"value\" ) } } }",
+            "style X { part stat { padding : 8 ; color : #334155 ; } }",
+        );
+        let rect = own_lines(block(&out, "        Rectangle {"));
+        assert!(
+            rect.contains(
+                &"implicitWidth: Math.max(mosaicBoxChild0.implicitWidth, mosaicBoxChild1.implicitWidth) + 8 + 8"
+            ),
+            "{out}"
+        );
+        let label = own_lines(block(&out, "            Text {"));
+        assert!(label.contains(&"id: mosaicBoxChild0"), "{out}");
+        assert!(label.contains(&"anchors.fill: parent"), "{out}");
+        assert!(
+            !label
+                .iter()
+                .any(|l| l.starts_with("x:") || l.starts_with("y:")),
+            "{out}"
+        );
+    }
+
+    /// A table-style cell: an `If` / `Else` body anchored to the box. Both
+    /// `Loader`s are measured; only one is live, and an inactive `Loader`
+    /// reports 0, so the maximum is the live branch.
+    #[test]
+    fn a_cell_measures_both_conditional_loaders() {
+        let out = qml(
+            "layout X { Column { Box [ cell ] { If ( when: slot: flag ) { Text ( content : \"on\" ) } Else { Text ( content : \"off\" ) } } } }",
+            "style X { part cell { padding : 4 ; } }",
+        );
+        let rect = own_lines(block(&out, "        Rectangle {"));
+        assert!(
+            rect.contains(
+                &"implicitHeight: Math.max(mosaicBoxChild0.implicitHeight, mosaicBoxChild1.implicitHeight) + 4 + 4"
+            ),
+            "{out}"
+        );
+        let loader = own_lines(block(&out, "            Loader {"));
+        assert!(loader.contains(&"anchors.fill: parent"), "{out}");
+        assert!(loader.contains(&"id: mosaicBoxChild0"), "{out}");
+    }
+
+    /// A styled box with no children (a swatch, a bar) has nothing to
+    /// measure and is emitted as before.
+    #[test]
+    fn a_childless_box_gets_no_measurement() {
+        let out = qml(
+            "layout X { Column { Box [ bar ] { } } }",
+            "style X { part bar { height : 4 ; background : #000000 ; padding : 2 ; } }",
+        );
+        let rect = own_lines(block(&out, "        Rectangle {"));
+        assert!(!rect.iter().any(|l| l.contains("mosaicBoxChild")), "{out}");
+        assert_eq!(
+            rect.iter()
+                .filter(|l| l.starts_with("implicitWidth"))
+                .count(),
+            0,
+            "{out}"
+        );
+    }
+
+    /// The measurement reads top-level objects by brace depth: an
+    /// elevation wrapper's element shares the wrapper's indentation but is
+    /// inside it. An id a child already has is reused, and a `Repeater` is
+    /// neither measured nor inset.
+    #[test]
+    fn box_children_are_found_by_brace_depth_and_keep_their_ids() {
+        // Any context works: the helper uses only its id counter.
+        let signal_names = HashMap::new();
+        let part_styles = PartStyleMap {
+            entries: HashMap::new(),
+            slot_states: HashMap::new(),
+        };
+        let radio_group_slugs = HashMap::new();
+        let ctx = EmitCtx {
+            emits: &[],
+            signal_names: &signal_names,
+            part_styles: &part_styles,
+            col_widths_slot: None,
+            enclosing_index: None,
+            enclosing_item: None,
+            text_style: None,
+            inherited: InheritedStyle::default(),
+            cell_fill_children: false,
+            next_drag_id: Rc::new(Cell::new(0)),
+            next_table_id: Rc::new(Cell::new(0)),
+            next_elevation_id: Rc::new(Cell::new(0)),
+            next_box_child_id: Rc::new(Cell::new(0)),
+            radio_group_slugs: &radio_group_slugs,
+        };
+        let children = "    Item {
+        implicitWidth: mosaicElevation0.implicitWidth
+    Rectangle {
+        id: mosaicElevation0
+        color: \"#ffffff\"
+    }
+        MultiEffect {
+            source: mosaicElevation0
+        }
+    }
+    Item {
+        id: mosaicDragSource0
+        x: 3
+    }
+    Repeater {
+        model: rows
+    }
+";
+        let measured = measure_box_children(children, 1, "6", "2", &ctx);
+        assert_eq!(
+            measured.ids,
+            vec![
+                "mosaicBoxChild0".to_string(),
+                "mosaicDragSource0".to_string()
+            ]
+        );
+        // The wrapper is named and inset; the element inside it is not.
+        assert!(
+            measured.children_qml.starts_with(
+                "    Item {\n        id: mosaicBoxChild0\n        x: 6\n        y: 2\n"
+            ),
+            "{}",
+            measured.children_qml
+        );
+        assert_eq!(measured.children_qml.matches("x: 6").count(), 1);
+        // The drag source keeps its own `x` and gets only the `y` inset.
+        assert!(
+            measured.children_qml.contains(
+                "    Item {\n        y: 2\n        id: mosaicDragSource0\n        x: 3\n"
+            ),
+            "{}",
+            measured.children_qml
+        );
+        // The Repeater is untouched.
+        assert!(measured
+            .children_qml
+            .ends_with("    Repeater {\n        model: rows\n    }\n"));
+    }
+
+    // ----------------------------------------------------------------- rule 7
+
+    /// In a `Row`, a several-child branch is a `RowLayout` with the row's
+    /// spacing: CSS lays the branch's children out as the row's own.
+    #[test]
+    fn a_branch_in_a_row_is_a_row_layout_with_the_row_spacing() {
+        let out = qml(
+            "layout X { Row [ bar ] { If ( when: slot: flag ) { Text ( content : \"a\" ) Text ( content : \"b\" ) } } }",
+            "style X { part bar { gap : 12 ; } }",
+        );
+        let body = own_lines(block(&out, "sourceComponent: Component {"));
+        assert!(body.contains(&"RowLayout {"), "{out}");
+        let layout = own_lines(block(&out, "            RowLayout {"));
+        assert!(layout.contains(&"spacing: 12"), "{out}");
+    }
+
+    /// An unstyled `Column` keeps Qt's default spacing, and so does the
+    /// body.
+    #[test]
+    fn a_branch_in_an_unstyled_column_keeps_the_default_spacing() {
+        let out = qml(
+            "layout X { Column { If ( when: slot: flag ) { Text ( content : \"a\" ) Text ( content : \"b\" ) } } }",
+            "style X { }",
+        );
+        let layout = own_lines(block(&out, "            ColumnLayout {"));
+        assert!(!layout.iter().any(|l| l.starts_with("spacing")), "{out}");
+        assert!(!out.contains("        Item {\n"), "{out}");
+    }
+
+    /// TaskApp's nested view switch: a body that is one `If` / `Else` pair.
+    /// Only one `Loader` is live, so the parent's spacing would only add a
+    /// gap next to an empty one.
+    #[test]
+    fn a_lone_if_else_pair_body_has_no_spacing() {
+        let out = qml(
+            "layout X { Column [ shell ] { If ( when: slot: flag ) { Text ( content : \"a\" ) } Else { If ( when: slot: other ) { Text ( content : \"b\" ) } Else { Text ( content : \"c\" ) } } } }",
+            "style X { part shell { gap : 14 ; } }",
+        );
+        let layout = own_lines(block(&out, "            ColumnLayout {"));
+        assert!(layout.contains(&"spacing: 0"), "{out}");
+    }
+
+    /// In a `Stack` the walker anchors the `Loader` to the overlay and the
+    /// `Loader` resizes the body, so the body keeps its `Item`.
+    #[test]
+    fn a_branch_in_a_stack_stays_an_item() {
+        let out = qml(
+            "layout X { Stack { If ( when: slot: flag ) { Text ( content : \"a\" ) Text ( content : \"b\" ) } } }",
+            "style X { }",
+        );
+        assert!(
+            out.contains("sourceComponent: Component {\n                Item {\n"),
+            "{out}"
+        );
+    }
+
+    /// No fill reaches through a `Loader` (rule 3): the body is sized to
+    /// its content, so a `flex-grow` inside it has nothing to grow into and
+    /// stays in the report, as it does in a single-child body.
+    #[test]
+    fn flex_grow_inside_a_multi_child_branch_is_not_lowered() {
+        let mll = "layout X { Column { If ( when: slot: flag ) { Text [ grow ] ( content : \"a\" ) Text ( content : \"b\" ) } } }";
+        let msl = "style X { part grow { flex-grow : 1 ; } }";
+        let out = qml(mll, msl);
+        assert!(!out.contains("Layout.fillHeight"), "{out}");
+        assert!(
+            dropped(mll, msl).contains(&("grow".to_string(), "flex-grow".to_string())),
+            "{out}"
+        );
+    }
+
+    /// A layout child never anchors: a styled cell's text fill stops at a
+    /// multi-child body, while its colour still arrives.
+    #[test]
+    fn a_cell_text_inside_a_multi_child_branch_does_not_anchor() {
+        let out = qml(
+            "layout X { Column { Box [ cell ] { If ( when: slot: flag ) { Text ( content : \"a\" ) Text ( content : \"b\" ) } } } }",
+            "style X { part cell { padding : 4 ; color : #ff0000 ; } }",
+        );
+        let body = block(&out, "sourceComponent: Component {");
+        assert!(!body.contains("anchors.fill"), "{out}");
+        assert!(body.contains("color: \"#ff0000\""), "{out}");
     }
 }
