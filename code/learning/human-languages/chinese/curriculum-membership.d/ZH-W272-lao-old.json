@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W272-lao-old",
+  "pathSegment": "ZH-PATH-272-KIN272",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-272-KIN272",
+      "order": 2
+    }
+  ]
+}

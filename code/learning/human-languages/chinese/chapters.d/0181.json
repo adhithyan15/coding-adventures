@@ -1,0 +1,22 @@
+{
+  "chapter": 181,
+  "title": "Bed and Bath",
+  "label": "ch:zh-bed-and-bath",
+  "canDo": "I can name a quilt, a pillow, a bathroom and curtains, and count the rooms.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R181-review-176-181",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can name a quilt, a pillow, a bathroom and curtains, and count the rooms.",
+    "assesses": [
+      "ZH-LEX-C181-BED181-01",
+      "ZH-LEX-C181-BED181-02",
+      "ZH-LEX-C181-BED181-03",
+      "ZH-LEX-C181-BED181-04",
+      "ZH-LEX-C181-BED181-05",
+      "ZH-SCRIPT-JIAN-ROOM-01"
+    ]
+  }
+}

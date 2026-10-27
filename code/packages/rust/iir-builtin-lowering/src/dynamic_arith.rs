@@ -440,7 +440,7 @@ mod tests {
     /// result by its *pre-pass* hint and added the tagged word directly.
     /// `(10 + 20) + 12` produced `(30 << 3) + 12 = 252` on every tagged-word
     /// backend. Third instance of this bug class — see 0.32.0 (parameters) and
-    /// 0.33.0 (`dyn_car` results); the invariant is that a producer's recorded
+    /// 0.33.0 (`dyn_pair_first` results); the invariant is that a producer's recorded
     /// type must describe what the value IS after lowering, not what the
     /// frontend called it.
     #[test]

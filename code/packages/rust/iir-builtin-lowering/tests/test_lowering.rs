@@ -955,7 +955,7 @@ fn make_nil_instr(dest: &str) -> IIRInstr {
     IIRInstr::new(
         "call_builtin",
         Some(dest.into()),
-        vec![Operand::Var("make_nil".into())],
+        vec![Operand::Var("dyn_nil".into())],
         "ref<LispyPair>",
     )
 }

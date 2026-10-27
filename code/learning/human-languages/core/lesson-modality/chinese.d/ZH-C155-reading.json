@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C155-reading",
+    "language": "chinese",
+    "chapter": 155,
+    "sequence": 12620,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0124e0a22fc1a631"
+  },
+  "findings": []
+}

@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:197ce29d53d33c30",
+  "lessonIds": [
+    "ZH-C151-kandao",
+    "ZH-W151-dao-arrive",
+    "ZH-C151-result",
+    "ZH-C151-xuehui",
+    "ZH-C151-tingdong",
+    "ZH-C151-kandong",
+    "ZH-C151-zuowan",
+    "ZH-C151-practice"
+  ],
+  "tex": "chinese/book/chapters/ch151-seen-and-understood.tex"
+}

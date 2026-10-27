@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 265,
+  "title": "Shy or Brave",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:301042c07ce46c3a",
+  "lessons": [
+    {
+      "id": "ZH-C265-haixiu",
+      "sequence": 19870,
+      "title": "hàixiū — shy; bashful",
+      "headword": "hàixiū",
+      "romanization": "hàixiū",
+      "gloss": "shy; bashful",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbdcd556e4c9359e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for afraid that, then the Mandarin for as a matter of fact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hàixiū",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hàixiū — \"shy; bashful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nàge háizi hěn hàixiū — That child is shy."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hàixiū is built from hài 'to harm' and xiū 'shame', both inherited from Middle Chinese, hajH and sjuw (Guangyun, in Baxter's transcription), which glosses the first 'to harm' and the second 'shame'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hàixiū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hàixiū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hàixiū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hàixiū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nàge háizi hěn hàixiū — That child is shy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nàge háizi hěn hàixiū* — That child is shy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for afraid that, then the Mandarin for as a matter of fact, then say hàixiū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for afraid that, then the Mandarin for as a matter of fact, then say *hàixiū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hàixiū mean? (\"Shy; bashful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C265-yonggan",
+      "sequence": 19880,
+      "title": "yǒnggǎn — brave",
+      "headword": "yǒnggǎn",
+      "romanization": "yǒnggǎn",
+      "gloss": "brave",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc707c6d650c60a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for as a matter of fact, then the Mandarin for shy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yǒnggǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǒnggǎn — \"brave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā hěn yǒnggǎn — He's very brave."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: yǒng is said with a rising tone before gǎn, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǒnggǎn is built from yǒng and gǎn, both inherited from Middle Chinese, yowngX and kamX (Guangyun, in Baxter's transcription), which glosses the first 'fierce' and the second 'brave' and 'to dare'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒnggǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒnggǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒnggǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒnggǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā hěn yǒnggǎn — He's very brave.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā hěn yǒnggǎn* — He's very brave.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for as a matter of fact, then the Mandarin for shy, then say yǒnggǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for as a matter of fact, then the Mandarin for shy, then say *yǒnggǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yǒnggǎn mean? (\"Brave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C265-dafang",
+      "sequence": 19890,
+      "title": "dàfang — generous; open-handed",
+      "headword": "dàfang",
+      "romanization": "dàfang",
+      "gloss": "generous; open-handed",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45da432d444f4103",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for shy, then the Mandarin for brave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dàfang",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dàfang — \"generous; open-handed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ gēge hěn dàfang — My brother is very generous."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dàfang is built from 大 'big' and fāng 'square', both inherited from Middle Chinese, daH and pjang (Guangyun, in Baxter's transcription), which glosses the second 'the four quarters' and 'upright'. In the word the second loses its tone; how the pair came to mean generous is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàfang",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàfang*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàfang, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàfang*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ gēge hěn dàfang — My brother is very generous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ gēge hěn dàfang* — My brother is very generous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for shy, then the Mandarin for brave, then say dàfang again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for shy, then the Mandarin for brave, then say *dàfang* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dàfang mean? (\"Generous; open-handed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C265-xiaoqi",
+      "sequence": 19900,
+      "title": "小气 (xiǎoqì) — stingy; mean (with money)",
+      "headword": "小气",
+      "romanization": "xiǎoqì",
+      "gloss": "stingy; mean (with money)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf0e30f1c25f579d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for brave, then the Mandarin for generous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 小气",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "小气 — xiǎoqì — \"stingy; mean (with money)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他很小气 tā hěn xiǎoqì — He's stingy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "小气 (xiǎoqì) is built from 小 'small' and 气 'breath', both inherited from Middle Chinese, sjewX and khj+jH (Guangyun, in Baxter's transcription), which glosses the second 'breath'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎoqì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎoqì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎoqì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎoqì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā hěn xiǎoqì — He's stingy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā hěn xiǎoqì* — He's stingy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for brave, then the Mandarin for generous, then say xiǎoqì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for brave, then the Mandarin for generous, then say *xiǎoqì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 小气 (xiǎoqì) mean? (\"Stingy; mean (with money)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C265-jinzhang",
+      "sequence": 19910,
+      "title": "jǐnzhāng — nervous; tense",
+      "headword": "jǐnzhāng",
+      "romanization": "jǐnzhāng",
+      "gloss": "nervous; tense",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04a22f73cb782832",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for generous, then the Mandarin for stingy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jǐnzhāng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jǐnzhāng — \"nervous; tense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "míngtiān kǎoshì wǒ hěn jǐnzhāng — I have an exam tomorrow, and I'm nervous."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jǐnzhāng is built from jǐn 'tight' and zhāng 'to stretch', both inherited from Middle Chinese, kjinX and trjang (Guangyun, in Baxter's transcription), which glosses the first 'tightly bound' and the second 'to stretch out'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jǐnzhāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jǐnzhāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jǐnzhāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jǐnzhāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "míngtiān kǎoshì wǒ hěn jǐnzhāng — I have an exam tomorrow, and I'm nervous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *míngtiān kǎoshì wǒ hěn jǐnzhāng* — I have an exam tomorrow, and I'm nervous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for generous, then the Mandarin for stingy, then say jǐnzhāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for generous, then the Mandarin for stingy, then say *jǐnzhāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jǐnzhāng mean? (\"Nervous; tense\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R265-review-260-265",
+      "sequence": 19920,
+      "title": "Looking back: from What I Can Do to Shy or Brave",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from What I Can Do to Shy or Brave",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2089002e9215992a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for ability and what someone is capable of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ability, what someone is capable of, an expert, technique, to make progress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ability, what someone is capable of, an expert, technique, to make progress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "know-how, at one time, to study abroad, overseas, to experience for yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: know-how, at one time, to study abroad, overseas, to experience for yourself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tennis, table tennis, an opponent, to defeat, to cheer someone on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tennis, table tennis, an opponent, to defeat, to cheer someone on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a manager, to be in charge, to ask for time off, sick leave, annual leave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a manager, to be in charge, to ask for time off, sick leave, annual leave]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to turn down, a shame, sorry to say, afraid that, as a matter of fact",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to turn down, a shame, sorry to say, afraid that, as a matter of fact]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shy, brave, generous, stingy, nervous",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: shy, brave, generous, stingy, nervous]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "假 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 假 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ability? (nénglì.) What someone is capable of? (本事, běnshi.) An expert? (高手, gāoshǒu.) Technique? (jìshù.) To make progress? (jìnbù.) Know-how? (jīngyàn.) At one time? (céngjīng.) To study abroad? (liúxué.) Overseas? (国外, guówài.) To experience for yourself? (tǐyàn.) Tennis? (wǎngqiú.) Table tennis? (pīngpāngqiú.) An opponent? (对手, duìshǒu.) To defeat? (dǎbài.) To cheer someone on? (jiāyóu.) A manager? (jīnglǐ.) To be in charge? (fùzé.) To ask for time off? (请假, qǐngjià.) Sick leave? (病假, bìngjià.) Annual leave? (年假, niánjià.) To turn down? (jùjué.) A shame? (kěxī.) Sorry to say? (bàoqiàn.) Afraid that? (kǒngpà.) As a matter of fact? (qíshí.) Shy? (hàixiū.) Brave? (yǒnggǎn.) Generous? (dàfang.) Stingy? (小气, xiǎoqì.) Nervous? (jǐnzhāng.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W251-xie-write",
+    "language": "chinese",
+    "chapter": 251,
+    "sequence": 19175,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b63830b67500ed44",
+    "detachableSegments": [
+      "Script — a cover, then a turning hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

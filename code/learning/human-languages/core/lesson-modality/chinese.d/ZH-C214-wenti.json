@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C214-wenti",
+    "language": "chinese",
+    "chapter": 214,
+    "sequence": 16340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:809265cdfa46d55d"
+  },
+  "findings": []
+}

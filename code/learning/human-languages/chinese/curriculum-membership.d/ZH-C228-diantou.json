@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C228-diantou",
+  "pathSegment": "ZH-PATH-228-ACHE228",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-228-ACHE228",
+      "order": 6
+    }
+  ]
+}

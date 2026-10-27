@@ -50,11 +50,28 @@ use crate::state::StateRegister;
 use arithmetic::adders::full_adder;
 use logic_gates::gates::{and_gate, or_gate};
 
+fn pack_flag_bits(flags: [u8; 9]) -> u16 {
+    (flags[0] as u16)
+        | (1u16 << 1)
+        | ((flags[1] as u16) << 2)
+        | ((flags[2] as u16) << 4)
+        | ((flags[3] as u16) << 6)
+        | ((flags[4] as u16) << 7)
+        | ((flags[5] as u16) << 8)
+        | ((flags[6] as u16) << 9)
+        | ((flags[7] as u16) << 10)
+        | ((flags[8] as u16) << 11)
+}
+
 // ─── Register file struct ─────────────────────────────────────────────────────
 
 /// Complete Intel 8086 register file.
 ///
-/// All registers are stored as `u16` integers; flag bits as `u8` (0 or 1).
+/// Public integers are synchronized compatibility observers and instruction
+/// result wires; the private DFF arrays are architectural storage. CPU
+/// execution drives the observers from Q before evaluating an instruction and
+/// clocks result wires afterward. Explicit write helpers clock their selected
+/// DFF bank immediately; assigning a public field directly does not.
 /// Byte-access methods (AL/AH etc.) read/write the appropriate 8-bit half.
 ///
 /// # Example
@@ -127,12 +144,15 @@ impl RegisterFile8086 {
             register_state: std::array::from_fn(|_| StateRegister::new(16)),
             flag_state: std::array::from_fn(|_| StateRegister::new(1)),
         };
-        registers.clock_wires_into_state();
+        registers.clock_observers_into_state();
         registers
     }
 
-    /// Clock the public register/flag input wires into their D flip-flops.
-    pub(crate) fn clock_wires_into_state(&mut self) {
+    /// Clock the internal register/flag result wires into their D flip-flops.
+    ///
+    /// CPU execution calls this only after first driving the public observer
+    /// fields from Q and then evaluating one complete instruction.
+    pub(crate) fn clock_observers_into_state(&mut self) {
         let values = [
             self.ax, self.bx, self.cx, self.dx, self.si, self.di, self.sp, self.bp, self.cs,
             self.ds, self.ss, self.es, self.ip,
@@ -156,8 +176,76 @@ impl RegisterFile8086 {
         }
     }
 
-    /// Read all latched register and flag values for topology tests.
-    #[cfg(test)]
+    /// Drive every public compatibility observer from authoritative DFF Q.
+    pub(crate) fn synchronize_observers_from_state(&mut self) {
+        let (registers, flags) = self.latched_values();
+        [
+            &mut self.ax,
+            &mut self.bx,
+            &mut self.cx,
+            &mut self.dx,
+            &mut self.si,
+            &mut self.di,
+            &mut self.sp,
+            &mut self.bp,
+            &mut self.cs,
+            &mut self.ds,
+            &mut self.ss,
+            &mut self.es,
+            &mut self.ip,
+        ]
+        .into_iter()
+        .zip(registers)
+        .for_each(|(observer, value)| *observer = value);
+        [
+            &mut self.flag_cf,
+            &mut self.flag_pf,
+            &mut self.flag_af,
+            &mut self.flag_zf,
+            &mut self.flag_sf,
+            &mut self.flag_tf,
+            &mut self.flag_if,
+            &mut self.flag_df,
+            &mut self.flag_of,
+        ]
+        .into_iter()
+        .zip(flags)
+        .for_each(|(observer, value)| *observer = value);
+    }
+
+    fn clock_register(&mut self, index: usize, value: u16) {
+        self.register_state[index].write(value);
+    }
+
+    fn clock_flag_observers(&mut self) {
+        let flags = [
+            self.flag_cf,
+            self.flag_pf,
+            self.flag_af,
+            self.flag_zf,
+            self.flag_sf,
+            self.flag_tf,
+            self.flag_if,
+            self.flag_df,
+            self.flag_of,
+        ];
+        for (state, value) in self.flag_state.iter_mut().zip(flags) {
+            state.write(u16::from(value));
+        }
+    }
+
+    /// Count the DFF cells in the concrete register and FLAGS arrays.
+    pub(crate) fn dff_counts(&self) -> (usize, usize) {
+        let registers = self
+            .register_state
+            .iter()
+            .map(StateRegister::dff_count)
+            .sum();
+        let flags = self.flag_state.iter().map(StateRegister::dff_count).sum();
+        (registers, flags)
+    }
+
+    /// Read all authoritative latched register and flag Q values.
     pub(crate) fn latched_values(&self) -> ([u16; 13], [u8; 9]) {
         (
             std::array::from_fn(|index| self.register_state[index].read()),
@@ -172,6 +260,21 @@ impl RegisterFile8086 {
 
     /// Read a 16-bit general or index register by ModRM code (0–7).
     pub fn read16(&self, code: u8) -> u16 {
+        let state_index = match code & 7 {
+            0 => 0,
+            1 => 2,
+            2 => 3,
+            3 => 1,
+            4 => 6,
+            5 => 7,
+            6 => 4,
+            _ => 5,
+        };
+        self.register_state[state_index].read()
+    }
+
+    /// Read the current instruction result wire by ModRM code.
+    pub(crate) fn read16_wire(&self, code: u8) -> u16 {
         match code & 7 {
             0 => self.ax,
             1 => self.cx,
@@ -186,16 +289,41 @@ impl RegisterFile8086 {
 
     /// Write a 16-bit general or index register by ModRM code (0–7).
     pub fn write16(&mut self, code: u8, value: u16) {
-        match code & 7 {
-            0 => self.ax = value,
-            1 => self.cx = value,
-            2 => self.dx = value,
-            3 => self.bx = value,
-            4 => self.sp = value,
-            5 => self.bp = value,
-            6 => self.si = value,
-            _ => self.di = value,
-        }
+        let state_index = match code & 7 {
+            0 => {
+                self.ax = value;
+                0
+            }
+            1 => {
+                self.cx = value;
+                2
+            }
+            2 => {
+                self.dx = value;
+                3
+            }
+            3 => {
+                self.bx = value;
+                1
+            }
+            4 => {
+                self.sp = value;
+                6
+            }
+            5 => {
+                self.bp = value;
+                7
+            }
+            6 => {
+                self.si = value;
+                4
+            }
+            _ => {
+                self.di = value;
+                5
+            }
+        };
+        self.clock_register(state_index, value);
     }
 
     // ── 8-bit register access (ModRM encoding) ────────────────────────────────
@@ -214,6 +342,20 @@ impl RegisterFile8086 {
             5 => self.read8_high(1), // CH
             6 => self.read8_high(2), // DH
             _ => self.read8_high(3), // BH
+        }
+    }
+
+    /// Read the current 8-bit instruction result wire by ModRM code.
+    pub(crate) fn read8_wire(&self, code: u8) -> u8 {
+        match code & 7 {
+            0 => (self.ax & 0xff) as u8,
+            1 => (self.cx & 0xff) as u8,
+            2 => (self.dx & 0xff) as u8,
+            3 => (self.bx & 0xff) as u8,
+            4 => (self.ax >> 8) as u8,
+            5 => (self.cx >> 8) as u8,
+            6 => (self.dx >> 8) as u8,
+            _ => (self.bx >> 8) as u8,
         }
     }
 
@@ -267,6 +409,17 @@ impl RegisterFile8086 {
 
     /// Read a segment register by ModRM segment field (0–3).
     pub fn read_seg(&self, code: u8) -> u16 {
+        let state_index = match code & 3 {
+            0 => 11,
+            1 => 8,
+            2 => 10,
+            _ => 9,
+        };
+        self.register_state[state_index].read()
+    }
+
+    /// Read the current segment-register instruction result wire.
+    pub(crate) fn read_seg_wire(&self, code: u8) -> u16 {
         match code & 3 {
             0 => self.es,
             1 => self.cs,
@@ -277,12 +430,31 @@ impl RegisterFile8086 {
 
     /// Write a segment register by ModRM segment field (0–3).
     pub fn write_seg(&mut self, code: u8, value: u16) {
-        match code & 3 {
-            0 => self.es = value,
-            1 => self.cs = value,
-            2 => self.ss = value,
-            _ => self.ds = value,
-        }
+        let state_index = match code & 3 {
+            0 => {
+                self.es = value;
+                11
+            }
+            1 => {
+                self.cs = value;
+                8
+            }
+            2 => {
+                self.ss = value;
+                10
+            }
+            _ => {
+                self.ds = value;
+                9
+            }
+        };
+        self.clock_register(state_index, value);
+    }
+
+    /// Clock a new instruction-pointer value into its authoritative DFF bank.
+    pub fn set_ip(&mut self, value: u16) {
+        self.ip = value;
+        self.clock_register(12, value);
     }
 
     // ── FLAGS pack / unpack ───────────────────────────────────────────────────
@@ -300,6 +472,12 @@ impl RegisterFile8086 {
     ///
     /// Bit 1 is always 1 (8086 hardware invariant).
     pub fn pack_flags(&self) -> u16 {
+        let (_, flags) = self.latched_values();
+        pack_flag_bits(flags)
+    }
+
+    /// Pack current FLAGS result wires while evaluating an instruction.
+    pub(crate) fn pack_flags_wire(&self) -> u16 {
         let cf = or_gate(self.flag_cf, 0);
         let pf = or_gate(self.flag_pf, 0);
         let af = or_gate(self.flag_af, 0);
@@ -335,6 +513,7 @@ impl RegisterFile8086 {
         self.flag_if = and_gate(((flags >> 9) & 1) as u8, 1);
         self.flag_df = and_gate(((flags >> 10) & 1) as u8, 1);
         self.flag_of = and_gate(((flags >> 11) & 1) as u8, 1);
+        self.clock_flag_observers();
     }
 
     // ── Physical address computation ──────────────────────────────────────────
@@ -487,8 +666,8 @@ mod tests {
     #[test]
     fn read8_modrm_encoding() {
         let mut rf = RegisterFile8086::new();
-        rf.ax = 0x1234;
-        rf.cx = 0x5678;
+        rf.write16(0, 0x1234);
+        rf.write16(1, 0x5678);
         // ModRM 8-bit encoding: 0=AL, 1=CL, 4=AH, 5=CH
         assert_eq!(rf.read8(0), 0x34); // AL
         assert_eq!(rf.read8(1), 0x78); // CL
@@ -509,9 +688,7 @@ mod tests {
     #[test]
     fn pack_unpack_flags_roundtrip() {
         let mut rf = RegisterFile8086::new();
-        rf.flag_cf = 1;
-        rf.flag_zf = 1;
-        rf.flag_pf = 1;
+        rf.unpack_flags(0x47);
         let packed = rf.pack_flags();
         assert_eq!(packed & 1, 1); // CF
         assert_eq!((packed >> 1) & 1, 1); // always 1
@@ -522,6 +699,22 @@ mod tests {
         assert_eq!(rf2.flag_zf, 1);
         assert_eq!(rf2.flag_pf, 1);
         assert_eq!(rf2.flag_sf, 0);
+    }
+
+    #[test]
+    fn public_reads_ignore_divergent_observer_fields() {
+        let mut rf = RegisterFile8086::new();
+        rf.write16(0, 0x1234);
+        rf.write_seg(1, 0xabcd);
+        rf.unpack_flags(0x43);
+        rf.ax = 0xffff;
+        rf.cs = 0xffff;
+        rf.flag_cf = 0;
+        rf.flag_zf = 0;
+        assert_eq!(rf.read16(0), 0x1234);
+        assert_eq!(rf.read8(0), 0x34);
+        assert_eq!(rf.read_seg(1), 0xabcd);
+        assert_eq!(rf.pack_flags(), 0x43);
     }
 
     #[test]

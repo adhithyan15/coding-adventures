@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C219-qiwen",
+    "language": "chinese",
+    "chapter": 219,
+    "sequence": 17080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea735fc6e04d4b4f"
+  },
+  "findings": []
+}

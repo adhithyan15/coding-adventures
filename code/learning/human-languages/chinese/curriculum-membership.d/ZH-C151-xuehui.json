@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C151-xuehui",
+  "pathSegment": "ZH-PATH-151-RESULT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-151-RESULT",
+      "order": 3
+    }
+  ]
+}

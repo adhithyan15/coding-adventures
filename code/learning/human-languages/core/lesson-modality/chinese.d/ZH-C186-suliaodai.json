@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C186-suliaodai",
+    "language": "chinese",
+    "chapter": 186,
+    "sequence": 14460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0cf49d149d50933"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:5592b139dcfa44f8",
+  "lessonIds": [
+    "ZH-C165-dayi",
+    "ZH-W165-yi-clothes",
+    "ZH-C165-maoyi",
+    "ZH-C165-tiao",
+    "ZH-C165-qunzi",
+    "ZH-C165-weijin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch165.txt",
+  "json": "chinese/narration/ch165.json",
+  "textHash": "fnv1a64:4e4fcb8b4dfbc27e",
+  "jsonHash": "fnv1a64:56bb53a1be34927f",
+  "findings": []
+}

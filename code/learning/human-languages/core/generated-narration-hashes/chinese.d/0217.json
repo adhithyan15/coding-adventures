@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:289e5e6ba58c597f",
+  "lessonIds": [
+    "ZH-C217-meiguanxi",
+    "ZH-C217-dangran",
+    "ZH-C217-jide",
+    "ZH-C217-dating",
+    "ZH-C217-jiejue",
+    "ZH-R217-review-212-217",
+    "ZH-R217-review-final-217"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch217.txt",
+  "json": "chinese/narration/ch217.json",
+  "textHash": "fnv1a64:d33ff7f37401e7b6",
+  "jsonHash": "fnv1a64:55a818dda6d9d189",
+  "findings": []
+}

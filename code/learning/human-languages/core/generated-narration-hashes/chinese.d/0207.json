@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:bc75053f1a70629d",
+  "lessonIds": [
+    "ZH-C207-didian",
+    "ZH-W207-di-ground",
+    "ZH-C207-jihua",
+    "ZH-C207-anpai",
+    "ZH-C207-zhaoxiang",
+    "ZH-C207-jingdian"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch207.txt",
+  "json": "chinese/narration/ch207.json",
+  "textHash": "fnv1a64:adea7ddd8451a6c0",
+  "jsonHash": "fnv1a64:dc754fa992bfa63d",
+  "findings": []
+}

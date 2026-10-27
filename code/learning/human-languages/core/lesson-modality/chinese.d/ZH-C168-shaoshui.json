@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C168-shaoshui",
+    "language": "chinese",
+    "chapter": 168,
+    "sequence": 13540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e7759bdf835cb5e"
+  },
+  "findings": []
+}

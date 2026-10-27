@@ -59,6 +59,7 @@ use vm_core::{errors::VMError, value::Value, VMCore};
 // LANG84 phase 7a: the release path (`py-int-print`)
 // ---------------------------------------------------------------------------
 
+mod float_repr;
 mod frontend_error;
 mod int_lower;
 pub mod profiles;

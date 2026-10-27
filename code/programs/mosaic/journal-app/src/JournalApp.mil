@@ -8,19 +8,22 @@
 //   ┌ Journal ─────────────┬──────────────────────────────────┐
 //   │ [ New entry ]        │ Title                            │
 //   │ Thursday, 24 Sep     │ ┌──────────────────────────────┐ │
-//   │ ┌ First light  ★ ┐   │ │ First light                  │ │
-//   │ └ Walked to the… ┘   │ └──────────────────────────────┘ │
-//   │ Wednesday, 23 Sep    │ Entry                            │
-//   │ ┌ Rain ──────────┐   │ ┌──────────────────────────────┐ │
-//   │ └────────────────┘   │ │ Walked to the lighthouse …   │ │
-//   │                      │ └──────────────────────────────┘ │
-//   │                      │ [ Save ] [ Delete ] [ Cancel ]   │
+//   │ ┌ First light ───┐   │ │ First light                  │ │
+//   │ │ Walked to the… │   │ └──────────────────────────────┘ │
+//   │ └────────────────┘   │ Entry                            │
+//   │ [ Open ] ★           │ ┌──────────────────────────────┐ │
+//   │ Wednesday, 23 Sep    │ │ Walked to the lighthouse …   │ │
+//   │ ┌ Rain ──────────┐   │ └──────────────────────────────┘ │
+//   │ └────────────────┘   │ [ Save ] [ Delete ] [ Cancel ]   │
+//   │ [ Open ]             │                                  │
 //   └──────────────────────┴──────────────────────────────────┘
-//     RecordList (toolkit)          DraftEditor
+//     Cards (mosaic-pkg-card)       DraftEditor
 
 component JournalApp {
-  // RecordList rows [key, heading, title, subtitle, meta, badge], newest first;
-  // the day heading only on each day's first row.
+  // Rows [key, heading, title, subtitle, meta, badge, open-label], newest
+  // first; the day heading only on each day's first row. Drawn as Cards:
+  // title, subtitle and meta are the card; open-label ("Open First light")
+  // names the Open button beside it.
   slot timeline-rows : list<list<text>> ;
   // Key of the entry being edited; "" while writing a new one.
   slot selected-key : text ;

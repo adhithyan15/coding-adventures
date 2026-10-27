@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:e3698e9be110c094",
+  "lessonIds": [
+    "ZH-C170-guo",
+    "ZH-C170-chabei",
+    "ZH-W170-bei-cup",
+    "ZH-C170-shaozi",
+    "ZH-C170-chazi",
+    "ZH-C170-weibolu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch170.txt",
+  "json": "chinese/narration/ch170.json",
+  "textHash": "fnv1a64:dbd1cbf0de6e2811",
+  "jsonHash": "fnv1a64:34fc21616fea4cbe",
+  "findings": []
+}

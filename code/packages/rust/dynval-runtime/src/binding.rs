@@ -330,13 +330,15 @@ impl LangBinding for LispyBinding {
             "print" => Some(builtins::print),
             // Infrastructure builtins emitted by the IIR compiler
             // for type-preserving register copies (`_move`) and
-            // nil materialisation (`make_nil`).  These are not part
+            // nil materialisation (`dyn_nil`, LANG83 PR7f's name for the
+            // old `make_nil`).  These are not part
             // of the Lispy surface language but appear in the lowered
             // IIR for `if` and `let` forms.  See LANG20 PR 4.
             "_move" => Some(builtins::move_),
-            "make_nil" => Some(builtins::make_nil),
+            "dyn_nil" => Some(builtins::dyn_nil),
             // Closure / symbol / globals builtins (LANG20 PR 5).
-            // make_symbol      — quoted-symbol literal (`'foo`) lowering.
+            // dyn_symbol       — a symbol from a name (LANG83 PR7f's name
+            //                    for the old `make_symbol`).
             // make_closure     — `(lambda ...)` lowering — allocates a
             //                    user-fn closure with captures.
             // make_builtin_closure — wraps a bare builtin reference
@@ -347,7 +349,7 @@ impl LangBinding for LispyBinding {
             // module reference, dispatcher recursion) and are handled
             // as special opcodes in `twig-vm::dispatch` rather than as
             // context-free builtin fn pointers.
-            "make_symbol" => Some(builtins::make_symbol),
+            "dyn_symbol" => Some(builtins::dyn_symbol),
             "make_closure" => Some(builtins::make_closure),
             "make_builtin_closure" => Some(builtins::make_builtin_closure),
             // ── String builtins (LANG47) ────────────────────────────────

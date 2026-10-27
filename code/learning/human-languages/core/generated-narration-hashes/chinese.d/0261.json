@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:970f60d7de9a3016",
+  "lessonIds": [
+    "ZH-C261-jingyan",
+    "ZH-C261-cengjing",
+    "ZH-C261-liuxue-abroad",
+    "ZH-C261-guowai",
+    "ZH-C261-tiyan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch261.txt",
+  "json": "chinese/narration/ch261.json",
+  "textHash": "fnv1a64:00ddf9dae71dd8b6",
+  "jsonHash": "fnv1a64:6d3863357c862406",
+  "findings": []
+}

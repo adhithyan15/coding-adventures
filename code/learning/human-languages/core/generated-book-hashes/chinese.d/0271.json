@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:d3ac8c7c2c4bf056",
+  "lessonIds": [
+    "ZH-C271-jidong",
+    "ZH-C271-gandong",
+    "ZH-C271-chijing",
+    "ZH-C271-wuliao",
+    "ZH-C271-xinshi",
+    "ZH-R271-review-266-271"
+  ],
+  "tex": "chinese/book/chapters/ch271-moods.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:f85a971e06f2ba54",
+  "lessonIds": [
+    "ZH-C238-tiankong",
+    "ZH-C238-yueliang",
+    "ZH-C238-wuyun",
+    "ZH-C238-dahai",
+    "ZH-C238-caihong"
+  ],
+  "tex": "chinese/book/chapters/ch238-sea-and-sky.tex"
+}

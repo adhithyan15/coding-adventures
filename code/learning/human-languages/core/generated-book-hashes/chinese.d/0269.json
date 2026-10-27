@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:1aa6026f8500fe57",
+  "lessonIds": [
+    "ZH-C269-congxiao",
+    "ZH-C269-xian",
+    "ZH-W269-xian-first",
+    "ZH-C269-tongnian",
+    "ZH-C269-benlai",
+    "ZH-C269-wanju"
+  ],
+  "tex": "chinese/book/chapters/ch269-when-i-was-little.tex"
+}

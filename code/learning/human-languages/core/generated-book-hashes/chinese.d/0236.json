@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:5acfa7ae25000ae0",
+  "lessonIds": [
+    "ZH-C236-chuxian",
+    "ZH-W236-xian-appear",
+    "ZH-C236-faxian",
+    "ZH-C236-haipa",
+    "ZH-C236-xinghao",
+    "ZH-C236-chadianr"
+  ],
+  "tex": "chinese/book/chapters/ch236-something-odd.tex"
+}

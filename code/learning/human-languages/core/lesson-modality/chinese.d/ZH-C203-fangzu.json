@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C203-fangzu",
+    "language": "chinese",
+    "chapter": 203,
+    "sequence": 15790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87b9ea525d37971f"
+  },
+  "findings": []
+}

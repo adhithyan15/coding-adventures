@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C200-ruzhu",
+    "language": "chinese",
+    "chapter": 200,
+    "sequence": 15650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec2eca714a921c25"
+  },
+  "findings": []
+}

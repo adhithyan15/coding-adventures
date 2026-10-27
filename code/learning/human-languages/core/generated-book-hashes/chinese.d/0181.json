@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:4120d12f492c457a",
+  "lessonIds": [
+    "ZH-C181-beizi",
+    "ZH-C181-zhentou",
+    "ZH-C181-jian",
+    "ZH-W181-jian-room",
+    "ZH-C181-yushi",
+    "ZH-C181-chuanglian",
+    "ZH-R181-review-176-181"
+  ],
+  "tex": "chinese/book/chapters/ch181-bed-and-bath.tex"
+}

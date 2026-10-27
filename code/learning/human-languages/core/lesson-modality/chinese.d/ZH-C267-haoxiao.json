@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C267-haoxiao",
+    "language": "chinese",
+    "chapter": 267,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df031c6ffe61bbf1"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:2ae16c11a9ca5c8d",
+  "lessonIds": [
+    "ZH-C154-hai",
+    "ZH-W154-hai-still",
+    "ZH-C154-haishi",
+    "ZH-C154-huozhe",
+    "ZH-C154-bie",
+    "ZH-C154-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch154.txt",
+  "json": "chinese/narration/ch154.json",
+  "textHash": "fnv1a64:eb4debbcbe8de5b0",
+  "jsonHash": "fnv1a64:b102f5681abb2a6b",
+  "findings": []
+}

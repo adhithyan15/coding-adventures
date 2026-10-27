@@ -1,5 +1,5 @@
 // JournalApp.dark.msl — dark-theme styling for the app's own parts. The
-// timeline and editor style themselves (RecordList, DraftEditor); only the
+// lists and editor style themselves (Card, RecordList, DraftEditor); only the
 // two columns and the New-entry button are styled here (the shell has no
 // style: Flutter does not lower a background on the split view), with
 // properties every native backend lowers.
@@ -209,5 +209,67 @@ style JournalApp {
     border-color  : "#374151" ;
     border-radius : 4 ;
     font-size     : 14 ;
+  }
+  // The timeline's Cards: the day heading in RecordList's grey; each entry a
+  // frame holding the card and its Open button. The frame always has the
+  // same padding and a 1px border (the pane's own colour when not open), so
+  // opening an entry recolours it without moving anything. Card styles itself
+  // (mosaic-pkg-card), and a caller cannot restyle a dependency's parts
+  // (X-5), so the open entry's highlight is the frame around the card. The
+  // Open button wears Clear's style, and the open entry's wears RecordList's
+  // selected blue. Text parts carry colour and size only (#15276).
+  part timeline-list {
+    gap : 8 ;
+  }
+  part timeline-day {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
+  part timeline-entry {
+    padding       : 4 ;
+    gap           : 4 ;
+    border-width  : 1 ;
+    border-color  : "#111827" ;
+    border-radius : 4 ;
+  }
+  part timeline-entry-selected {
+    padding       : 4 ;
+    gap           : 4 ;
+    background    : "#1e3a8a" ;
+    border-width  : 1 ;
+    border-color  : "#3b82f6" ;
+    border-radius : 4 ;
+  }
+  part timeline-entry-actions {
+    gap : 8 ;
+  }
+  part timeline-entry-actions-selected {
+    gap : 8 ;
+  }
+  part timeline-entry-open {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part timeline-entry-open-selected {
+    padding       : 8 ;
+    background    : "#1e3a8a" ;
+    color         : "#dbeafe" ;
+    border-width  : 1 ;
+    border-color  : "#3b82f6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part timeline-entry-badge {
+    color     : "#fbbf24" ;
+    font-size : 12 ;
+  }
+  part timeline-entry-badge-selected {
+    color     : "#fbbf24" ;
+    font-size : 12 ;
   }
 }

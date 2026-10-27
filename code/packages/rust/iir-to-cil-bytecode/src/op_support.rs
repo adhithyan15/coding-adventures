@@ -24,8 +24,8 @@
 //!
 //! See `code/specs/LANG83-iir-standard-operation-registry.md`.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport};
-use OpSupport::Lowered;
+use interpreter_ir::op_registry::{support_from_table, OpSupport, NO_TAGGED_WORD_RUNTIME};
+use OpSupport::{Lowered, Refused};
 
 /// This backend's answer for every LANG83 standard operation.
 pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
@@ -34,10 +34,6 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("putchar", Lowered),
     ("print_str", Lowered),
     ("write_i64", Lowered),
-    // LANG83 PR6a — the textual path's own `__iir_write_f64` helper
-    // (`double.ToString("R")` digits, Python / JS layout).
-    ("write_f64_py", Lowered),
-    ("write_f64_js", Lowered),
     // ── Strings (LANG-FULL E4) ──────────────────────────────────────────────
     ("str_const", Lowered),
     ("str_len", Lowered),
@@ -83,10 +79,29 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_div", Lowered),
     ("f64_neg", Lowered),
     ("f64_signbit", Lowered),
+    // LANG83 PR7b — `f64_class` inline (three `cgt.un`s on the bits);
+    // `f64_digits` / `f64_exp10` call the class's synthetic helpers, which
+    // share the PR6a `"R"` digit parse (textual IL path only).
+    ("f64_class", Lowered),
+    ("f64_digits", Lowered),
+    ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),
     ("real_to_int_floor", Lowered),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // This backend's dynamic values are structural (lang-aot lowers pairs to
+    // `alloc`/`field_*` before it runs); it has no tagged-word runtime.
+    ("dyn_box_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_unbox_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_tag", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_new", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_first", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_rest", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_pair", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_symbol", Refused(NO_TAGGED_WORD_RUNTIME)),
     // ── Errors ──────────────────────────────────────────────────────────────
     ("trap", Lowered),
 ];

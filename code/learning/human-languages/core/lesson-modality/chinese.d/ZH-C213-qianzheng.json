@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C213-qianzheng",
+    "language": "chinese",
+    "chapter": 213,
+    "sequence": 16290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed7328c25aa13e16"
+  },
+  "findings": []
+}

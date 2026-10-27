@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C262-dabai",
+    "language": "chinese",
+    "chapter": 262,
+    "sequence": 19750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b29b990761acce23"
+  },
+  "findings": []
+}

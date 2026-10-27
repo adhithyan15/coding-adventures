@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:269b0c73c7b5b631",
+  "lessonIds": [
+    "ZH-C186-jiandao",
+    "ZH-C186-lajitong",
+    "ZH-C186-suliaodai",
+    "ZH-C186-pingzi",
+    "ZH-C186-chouti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch186.txt",
+  "json": "chinese/narration/ch186.json",
+  "textHash": "fnv1a64:89bfc0bf758c1479",
+  "jsonHash": "fnv1a64:f25bba1e7a43c884",
+  "findings": []
+}

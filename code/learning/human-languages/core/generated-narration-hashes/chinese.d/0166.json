@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:5fc5ac774228dfbd",
+  "lessonIds": [
+    "ZH-C166-kaishui",
+    "ZH-C166-xiawucha",
+    "ZH-W166-cha-tea",
+    "ZH-C166-hongcha",
+    "ZH-C166-chaye",
+    "ZH-C166-paocha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch166.txt",
+  "json": "chinese/narration/ch166.json",
+  "textHash": "fnv1a64:0a5cd2303e22edae",
+  "jsonHash": "fnv1a64:aa92d616aa197c27",
+  "findings": []
+}

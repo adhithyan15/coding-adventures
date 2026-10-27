@@ -106,7 +106,7 @@ There are **two** locators, and they disagree about how a package is found.
 |---|---|---|
 | Answers | "What is the unqualified tag `Grid`?" | "Inline `pkg::mosaic-pkg-grid::Grid` here" |
 | Finds a package by | Directory **name**: `mosaic-pkg-<key>`, then `<key>` | **Manifest name**, scanning every directory in every search root |
-| Gated by `[dependencies]` | Yes | **No.** Any package on the search path can be inlined |
+| Gated by `[dependencies]` | Yes | **No.** Any package on the search path can be inlined (closed by Phase 1b, §10) |
 | Order when two match | First search path wins | `read_dir` order, which the OS does not specify |
 | Version string | Read into `(dep_name, _ver)` and **ignored** | Not read |
 
@@ -1575,6 +1575,59 @@ locators, and gating `pkg::` references.
   `AmbiguousPackage`.
 
 **Out of scope:** the same as Phase 1.
+
+**Implementation status (2026-10-26).** The first rule is built; the
+`AmbiguousPackage` rule is not yet.
+
+- **The error.** `mosaic-package-resolver` has
+  `LayoutResolveError::UndeclaredPackageReference { consumer, package,
+  component, call_site, manifest_path, found_version }`. It names the
+  manifest to fix and, when the package is on the search path, the
+  requirement to add:
+
+  ```text
+  `JournalApp` mounts `pkg::mosaic-pkg-toolkit::Button` at
+  Column[root] > pkg::mosaic-pkg-toolkit::Button, but `mosaic-pkg-toolkit` is
+  not a declared dependency; add `mosaic-pkg-toolkit = "0.16.0"` to
+  [dependencies] in code/programs/mosaic/journal-app/mosaic-package.toml
+  ```
+
+- **Where the declared set comes from.**
+  - *A package component's own layout*, reached while inlining: that
+    package's manifest, which the resolver has already read to find the
+    component. This is always checked.
+  - *The layout being resolved*: the caller supplies the consumer's
+    manifest with `LayoutPackageResolver::with_consumer(manifest, path)`.
+    The artifact builder does this for every package build (and its
+    degradation analysis), and so does `mosaic-compile` when it is given a
+    package manifest. A layout resolved with no consumer manifest (a
+    standalone `mosaic-compile` of a loose `.mil`/`.mll` triple, or a test)
+    has no `[dependencies]` to check against. Only its nested package
+    references are checked.
+- **Self-references are allowed.** `pkg::<self>::C` names the package's
+  own export. Authors do not write it (UI34 §2.2), but the artifact
+  builder rewrites a package's bare sibling references to that form before
+  resolving. Bare sibling references inside a package component are local,
+  so they are never checked either.
+- **When it runs.** In the same pre-substitution walk as
+  `SlotBindingMissing` (UI34 §7), so one build reports every undeclared
+  package with every unbound slot, through the same `Multiple` error and
+  the same cap of 100.
+- **Divergences from the one-line rule above:**
+  - An undeclared package is reported **once per referencing manifest**, at
+    its first call site, not once per call site. The fix is one line in one
+    file, however many call sites there are.
+  - The call site is a path through the layout (`Tag[part] > Tag#n`), not
+    a source span, because the layout IR carries no spans. This matches
+    `SlotBindingMissing`.
+  - An undeclared reference to a package that is also missing from the
+    search path reports both `UndeclaredPackageReference` and
+    `PackageNotFound`.
+- **Repository guard.** The resolver's
+  `every_repository_layout_binds_every_required_slot` test resolves every
+  exported layout in the repository with its own manifest as the consumer.
+  When the check landed, every `pkg::` reference in the repository named
+  the package itself or a declared dependency, as §2.2 predicted.
 
 ### Phase 2 — the `.mospkg` format
 

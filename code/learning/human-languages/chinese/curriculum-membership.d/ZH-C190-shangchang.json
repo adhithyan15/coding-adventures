@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C190-shangchang",
+  "pathSegment": "ZH-PATH-190-TOWN190",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-190-TOWN190",
+      "order": 3
+    }
+  ]
+}

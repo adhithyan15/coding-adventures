@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C207-zhaoxiang",
+  "pathSegment": "ZH-PATH-207-PLACE207",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-207-PLACE207",
+      "order": 4
+    }
+  ]
+}

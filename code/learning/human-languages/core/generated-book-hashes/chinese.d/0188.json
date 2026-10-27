@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:4bad10ec81f06f52",
+  "lessonIds": [
+    "ZH-C188-youqian",
+    "ZH-W188-qian-money",
+    "ZH-C188-huaqian",
+    "ZH-C188-lingqian",
+    "ZH-C188-shengqian",
+    "ZH-C188-gou"
+  ],
+  "tex": "chinese/book/chapters/ch188-money-to-spend.tex"
+}

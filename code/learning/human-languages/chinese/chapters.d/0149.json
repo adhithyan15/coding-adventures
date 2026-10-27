@@ -1,0 +1,22 @@
+{
+  "chapter": 149,
+  "title": "Right Now",
+  "label": "ch:zh-right-now",
+  "canDo": "I can say what someone is doing right now.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C149-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what is going on right now with 在 and 正在 before a verb, two things at once with 一边 … 一边, and a happy coincidence with 正好, built on one new written character: 正.",
+    "assesses": [
+      "ZH-LEX-C149-ZHENGZAI-01",
+      "ZH-SCRIPT-ZHENG-01",
+      "ZH-GRAMMAR-ZAI-PROGRESSIVE-01",
+      "ZH-LEX-C149-ZHENGHAO-01",
+      "ZH-LEX-C149-YIBIAN-01",
+      "ZH-PERFORMANCE-NOW-01"
+    ]
+  }
+}

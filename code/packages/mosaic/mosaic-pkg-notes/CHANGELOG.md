@@ -6,6 +6,74 @@ the package follows semantic versioning.
 
 ## [Unreleased]
 
+## 0.3.0 — 2026-10-27 — composed from RecordList and DraftEditor (E3)
+
+E3 of `mosaic-editor-convergence-audit-v1.md` (probe C);
+[task-app-notes-ui-v1.md](../../../specs/task-app-notes-ui-v1.md)
+addendum v1.3. This release also carries the unreleased 0.2.x entries
+below it (the E2 gate, the `HostInput` body).
+
+### Changed — BREAKING: Notes is a composition
+
+- The note list is `pkg::mosaic-pkg-toolkit::RecordList`, and the title,
+  body and Save/Delete/Cancel actions are
+  `pkg::mosaic-pkg-draft-editor::DraftEditor` (0.2.0). Every slot of both
+  is bound at Notes' call site. Both packages are now declared in
+  `mosaic-package.toml`'s `[dependencies]` (`mosaic-pkg-toolkit = "0.16.0"`,
+  `mosaic-pkg-draft-editor = "0.2.0"`), which used to be empty.
+- **`note-rows` rows are RecordList's** `[key, heading, title, subtitle,
+  meta, badge]`, passed through unchanged. 0.2.0 rows were `[id, title]`;
+  a host moves the title to `[2]` and fills `[1]`, `[3]`, `[4]` and `[5]`
+  with `""` to keep one-line rows.
+- **Every label is a slot**, with no default: `new-note-label`,
+  `empty-hint`, `title-label`, `title-placeholder`, `body-label`,
+  `body-placeholder`, `task-label`, `task-placeholder`, `save-label`,
+  `delete-label` and `cancel-label`. The package draws no English. A
+  consumer that does not bind them no longer compiles.
+- An empty action label removes that button (DraftEditor's rule). A host
+  passes `delete-label: ""` for a new note that was never saved.
+- The title and body gain DraftEditor's visible labels, which are also
+  their accessible names.
+- The attach-to-task field stays Notes' own `HostInput`, now above the
+  editor, with a visible label (`notes-task-label`) that is also its
+  `a11y-label`. It had no accessible name beyond its placeholder.
+- Removed parts (now RecordList's and DraftEditor's): `notes-row-on`,
+  `notes-row-off`, `notes-title-input`, `notes-body-input`,
+  `notes-actions`, `notes-save`, `notes-delete`, `notes-cancel`. Added:
+  `notes-task-label`. A host test that found the body by
+  `notes-body-input` should match `draft-editor-body` by prefix (a later
+  mount of DraftEditor in the same app would be `draft-editor-body-m2`).
+- The body is still the multi-line `HostInput`, and Ctrl/Cmd+Enter still
+  saves: DraftEditor's `onSave` is forwarded to Notes' `onSave`. The eight
+  events and their payloads are unchanged.
+
+### Changed — the native gate's pins shrink from 12 to 10 per theme
+
+- Removed: Qt `text-align` on `notes-row-on` and `notes-row-off` (the row
+  buttons are gone; RecordList's rows ask for no `text-align`).
+- Moved: Qt and Flutter `min-height` from `notes-body-input` to
+  DraftEditor's `draft-editor-body`, the drop DraftEditor's own gate pins.
+- Kept: the list/editor flex split (SwiftUI 3, Qt 3, XAML 1, Flutter 1),
+  which PR-6 (`HostNavigationSplit`) removes. Composing adds no new drop.
+
+### Changed — tests, stories and documents
+
+- `package_compiles.rs`: the layout pins now assert the composition, the
+  declared dependencies, no literal English, and (on a React build, where
+  the mounts are inlined) the key comparison against `selectedNoteId`, the
+  Ctrl/Cmd+Enter save, the three accessible names and the label-gated
+  Delete.
+- The five stories use six-field rows and bind every label; "New unsaved
+  note" passes `delete-label: ""`.
+- Fixed stale comments in `mosaic-package.toml` and `src/lib.rs`, which
+  still said the body was the legacy `Input` because the kernel
+  `HostInput` was single-line; and in `Notes.mil`, which said a new
+  note's id is minted on Save (both hosts mint it on "+ New note").
+- The smoke crate's `Cargo.toml` version (0.1.0) now matches the package,
+  0.3.0.
+
+The entries below were unreleased under 0.2.0 and ship in 0.3.0.
+
 ### Added — a native-complete gate pinning today's 12 style drops (E2)
 
 - `tests/native_complete_gate.rs`, modelled on `mosaic-pkg-draft-editor`'s:

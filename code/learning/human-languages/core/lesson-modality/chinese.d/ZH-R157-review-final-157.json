@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R157-review-final-157",
+    "language": "chinese",
+    "chapter": 157,
+    "sequence": 12770,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1b4d3da6ca3d9a32"
+  },
+  "findings": []
+}

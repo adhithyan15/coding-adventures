@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C227-yudao",
+    "language": "chinese",
+    "chapter": 227,
+    "sequence": 17500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94b43a16682c2a12"
+  },
+  "findings": []
+}

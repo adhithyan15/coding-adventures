@@ -552,22 +552,44 @@ impl TaskMosaicApp {
         let sheet_rows = self.sheet_rows(&ids);
         let mut notes: Vec<_> = project.notes.values().collect();
         notes.sort_by_key(|note| note.title.to_lowercase());
+        // One row per note in the toolkit RecordList's shape, which Notes
+        // 0.3.0 mounts for its list (task-app-notes-ui-v1.md v1.3):
+        //
+        //   [0] key       the note id (selection compares it; never shown)
+        //   [1] heading   ""  notes are not grouped
+        //   [2] title     the title, or "Untitled" — an empty title would
+        //                     be an unnamed button
+        //   [3] subtitle  ""  ┐ RecordList leaves an empty field out, so
+        //   [4] meta      ""  │ each row stays one line, as it was when
+        //   [5] badge     ""  ┘ rows were [id, title]
         let note_rows = if self.state.view == ViewMode::Notes {
             notes
                 .iter()
                 .map(|note| {
                     vec![
                         note.id.to_string(),
+                        String::new(),
                         if note.title.trim().is_empty() {
                             "Untitled".to_string()
                         } else {
                             note.title.clone()
                         },
+                        String::new(),
+                        String::new(),
+                        String::new(),
                     ]
                 })
                 .collect::<Vec<_>>()
         } else {
             Vec::new()
+        };
+        // Delete is offered only for a note the project has saved. A new
+        // note's id is minted on "+ New note" (`new_note`), before the
+        // engine has heard of it, so "is an id selected" is not enough:
+        // ask the project. "" makes DraftEditor draw no Delete button.
+        let note_delete_label = match &self.state.selected_note_id {
+            Some(id) if project.notes.contains_key(id) => "Delete",
+            _ => "",
         };
 
         let checklists = self.checklist_props();
@@ -658,6 +680,7 @@ impl TaskMosaicApp {
             "note-body-value": self.state.note_body,
             "note-task-value": self.state.note_task_name,
             "note-error": self.state.note_error,
+            "note-delete-label": note_delete_label,
             "checklists-mode": if self.state.view == ViewMode::Checklists { "checklists" } else { "" },
             "checklists-title": "Checklists",
             "checklist-library-rows": checklists.library_rows,
@@ -2548,6 +2571,7 @@ mod tests {
         "note-body-value",
         "note-task-value",
         "note-error",
+        "note-delete-label",
         "checklists-mode",
         "checklists-title",
         "checklist-library-rows",
@@ -3908,6 +3932,66 @@ mod tests {
         let notes = &app.active_project().notes;
         assert_eq!(notes.len(), 1);
         assert!(notes.values().next().unwrap().attached_task.is_none());
+    }
+
+    // ── Notes 0.3.0 on RecordList and DraftEditor (E3) ────────────────────
+
+    #[test]
+    fn note_rows_have_record_list_s_six_fields() {
+        let mut app = notes_app();
+        send(&mut app, "noteTaskNameChange", json!({ "value": "" }));
+        send(&mut app, "saveNote", json!({}));
+        send(&mut app, "newNote", json!({}));
+        send(&mut app, "noteTitleChange", json!({ "value": "Agenda" }));
+        let props = send(&mut app, "saveNote", json!({}));
+
+        // [key, heading, title, subtitle, meta, badge], sorted by the stored
+        // title as before (so the untitled note, whose title is "", comes
+        // first); its displayed title is still "Untitled".
+        let rows = props["note-rows"].as_array().unwrap();
+        assert_eq!(rows.len(), 2);
+        for row in rows {
+            let row = row.as_array().unwrap();
+            assert_eq!(row.len(), 6, "{row:?}");
+            assert!(row[0].as_str().unwrap().starts_with("note-"));
+            for empty in [1, 3, 4, 5] {
+                assert_eq!(row[empty], "", "{row:?}");
+            }
+        }
+        assert_eq!(rows[0][2], "Untitled");
+        assert_eq!(rows[1][2], "Agenda");
+        // The selection key is the row's key, as RecordList compares it.
+        assert_eq!(props["selected-note-id"], rows[1][0]);
+    }
+
+    #[test]
+    fn delete_is_offered_only_for_a_saved_note() {
+        let mut app = notes_app();
+        // A new note: its id is minted, but the project has never seen it.
+        assert_eq!(app.update().props["note-delete-label"], "");
+        assert_ne!(app.update().props["selected-note-id"], "");
+
+        let saved = send(&mut app, "saveNote", json!({}));
+        assert_eq!(saved["note-delete-label"], "Delete");
+
+        // Closed, then reopened from the list: still a saved note.
+        assert_eq!(
+            send(&mut app, "cancelNote", json!({}))["note-delete-label"],
+            ""
+        );
+        let reopened = send(&mut app, "selectNote", json!({ "index": 0 }));
+        assert_eq!(reopened["note-delete-label"], "Delete");
+
+        // A second new note is unsaved again, and deleting the saved one
+        // closes the editor, which offers nothing.
+        assert_eq!(
+            send(&mut app, "newNote", json!({}))["note-delete-label"],
+            ""
+        );
+        send(&mut app, "selectNote", json!({ "index": 0 }));
+        let deleted = send(&mut app, "deleteNote", json!({}));
+        assert_eq!(deleted["note-delete-label"], "");
+        assert!(app.active_project().notes.is_empty());
     }
 
     #[test]

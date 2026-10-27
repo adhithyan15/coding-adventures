@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C233-miaotiao",
+    "language": "chinese",
+    "chapter": 233,
+    "sequence": 17800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0cfbecc50233c47"
+  },
+  "findings": []
+}

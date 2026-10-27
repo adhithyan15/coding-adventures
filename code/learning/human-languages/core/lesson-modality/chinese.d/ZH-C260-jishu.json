@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C260-jishu",
+    "language": "chinese",
+    "chapter": 260,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0dc12e3005bfc6d"
+  },
+  "findings": []
+}

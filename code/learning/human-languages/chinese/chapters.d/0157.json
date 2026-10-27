@@ -1,0 +1,22 @@
+{
+  "chapter": 157,
+  "title": "A Note About Tomorrow",
+  "label": "ch:zh-a-note-about-tomorrow",
+  "canDo": "I can understand a notice and a message, and write a connected reply.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R157-review-final-157",
+    "kind": "production",
+    "summary": "Complete ZH-R157-review-final-157: one dialogue across the A2 core, after reading a notice at work and a friend's message and writing a connected reply of four to six lines.",
+    "assesses": [
+      "ZH-LEX-C157-KAIHUI-01",
+      "ZH-LEX-C157-TONGZHI-01",
+      "ZH-LEX-C157-XIAOXI-01",
+      "ZH-LEX-C157-HUIFU-01",
+      "ZH-SKILL-READ-NOTICE-01"
+    ],
+    "note": "ZH-W157-reply proves the connected-composition stage: four to six lines that lean on each other, for a named reader (the friend who sent the message) and a real purpose (settling the appointment). Pinyin inside the reply is licensed for words whose characters the book has not taught."
+  }
+}

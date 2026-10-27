@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C245-baozhong",
+    "language": "chinese",
+    "chapter": 245,
+    "sequence": 18430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d7c84bc37b9b61a"
+  },
+  "findings": []
+}

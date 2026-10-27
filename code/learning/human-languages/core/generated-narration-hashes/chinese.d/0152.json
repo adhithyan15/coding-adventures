@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:a4bd5322b644d82b",
+  "lessonIds": [
+    "ZH-C152-de-complement",
+    "ZH-W152-de-complement",
+    "ZH-C152-de-grammar",
+    "ZH-C152-liuli",
+    "ZH-C152-bucuo",
+    "ZH-C152-qingchu",
+    "ZH-C152-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch152.txt",
+  "json": "chinese/narration/ch152.json",
+  "textHash": "fnv1a64:017d7ed7f6c8d601",
+  "jsonHash": "fnv1a64:b889669aff070c4f",
+  "findings": []
+}

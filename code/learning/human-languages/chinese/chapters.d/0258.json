@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Warm-Hearted",
+  "label": "ch:zh-warm-hearted",
+  "canDo": "I can say that someone is friendly, warm-hearted, patient or witty, and talk about their personality.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C258-xingge",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say that someone is friendly, warm-hearted, patient or witty, and talk about their personality.",
+    "assesses": [
+      "ZH-LEX-C258-KIND258-03",
+      "ZH-LEX-C258-KIND258-04",
+      "ZH-LEX-C258-KIND258-05"
+    ]
+  }
+}

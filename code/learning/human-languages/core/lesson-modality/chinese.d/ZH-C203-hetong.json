@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C203-hetong",
+    "language": "chinese",
+    "chapter": 203,
+    "sequence": 15810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad8a7a7ba103d7b1"
+  },
+  "findings": []
+}

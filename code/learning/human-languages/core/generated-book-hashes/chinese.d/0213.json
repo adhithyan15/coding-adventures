@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:10ea9c4888b9c330",
+  "lessonIds": [
+    "ZH-C213-qianzheng",
+    "ZH-C213-daoyou",
+    "ZH-C213-youke",
+    "ZH-C213-menpiao",
+    "ZH-C213-yilupingan"
+  ],
+  "tex": "chinese/book/chapters/ch213-a-trip-abroad.tex"
+}

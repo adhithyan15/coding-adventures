@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C164-xitou",
+  "pathSegment": "ZH-PATH-164-READY164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-164-READY164",
+      "order": 1
+    }
+  ]
+}

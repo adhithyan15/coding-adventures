@@ -1,5 +1,44 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: the CLR holds dynamic values as objects (through `lang-aot`'s structural lowering) and links no tagged-word runtime. A test comment names `dyn_pair_new` (was `dyn_cons`).
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's
+  builtin list, and the textual path no longer emits the IL helper
+  `__iir_write_f64(float64, int32)`: a module that calls either is refused on
+  both paths. The `"R"` digit parse `__iir_f64_shortest` and the two PR7b
+  helpers are unchanged.
+- Tests: the writer's stack-shape, call-site and layout-model tests are
+  replaced by `retired_float_writers_are_refused` and
+  `the_models_dotnet_r_style_matches_dotnet`; the IL model still runs the
+  PR7b helpers over the whole table in every `"R"` style.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- `trap` validates its kind with `exception_kind::is_trap_kind` (LANG83 PR7d
+  removed `is_registered_trap_kind` with the empty `LANGUAGE_TRAP_KINDS`
+  table); the accepted set is unchanged. Kind 7 is now `Trap.Unbound`, so its
+  `System.Exception` message is `Trap.Unbound` (was `Trap.ReferenceError`).
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The PR6a `"R"` digit parse is its own IL method,
+  `string __iir_f64_shortest(float64 ax, int32& e10)` (it returns `D` and
+  stores the exponent through the managed pointer), called by
+  `__iir_write_f64` (output unchanged) and by the new
+  `int64 __iir_f64_digits(float64)` (`Int64.Parse(D)`) and
+  `int64 __iir_f64_exp10(float64)`, each emitted only when used; 0 for ±0,
+  ±Infinity and NaN.
+- `f64_class` is inline: three `cgt.un`s on the masked raw bits, summed.
+- Tests: the IL model now follows `call`s between the helpers (with the
+  `int32&` write-back, `stind.i4`, `ldc.i8`, `and`, `cgt.un`, `conv.i8`,
+  `pop`) and compares integers exactly; it runs the writer (unchanged
+  output), both queries and the inline `f64_class` over the PR6a table in
+  every `"R"` layout. Structural here: there is no `dotnet`.
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 - `real_to_int_trunc` / `real_to_int_floor` range-check the (floored) operand

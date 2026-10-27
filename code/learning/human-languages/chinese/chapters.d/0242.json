@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Farm Animals and Bugs",
+  "label": "ch:zh-farm-animals-and-bugs",
+  "canDo": "I can name a pig, a goat, a snake, insects and mosquitoes.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C242-wenzi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can name a pig, a goat, a snake, insects and mosquitoes.",
+    "assesses": [
+      "ZH-LEX-C242-FARMANIMAL242-03",
+      "ZH-LEX-C242-FARMANIMAL242-04",
+      "ZH-LEX-C242-FARMANIMAL242-05"
+    ]
+  }
+}

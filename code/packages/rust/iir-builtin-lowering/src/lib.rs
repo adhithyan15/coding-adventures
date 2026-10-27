@@ -124,6 +124,9 @@ pub mod dynamic_arith;
 pub mod list_ops;
 pub mod closure_heap;
 pub mod immediates;
+// LANG83 PR7f-2: Lisp's truthiness, `not`, `equal?` and exit-code rules,
+// written as compiler-emitted IIR over the registry's dynamic-value primitives.
+pub mod lisp_semantics;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:de4613f14099d84c",
+  "lessonIds": [
+    "ZH-C216-zaogao",
+    "ZH-C216-qiguai",
+    "ZH-C216-tou",
+    "ZH-C216-jingcha",
+    "ZH-C216-baojing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch216.txt",
+  "json": "chinese/narration/ch216.json",
+  "textHash": "fnv1a64:3149f9854acd5e92",
+  "jsonHash": "fnv1a64:db4d4c229456bca5",
+  "findings": []
+}

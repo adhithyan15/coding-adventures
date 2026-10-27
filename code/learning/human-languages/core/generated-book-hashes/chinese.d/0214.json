@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:4abe3e7ed1433715",
+  "lessonIds": [
+    "ZH-C214-wenti",
+    "ZH-C214-gaosu",
+    "ZH-C214-mingbai",
+    "ZH-C214-banfa",
+    "ZH-C214-zenmeban"
+  ],
+  "tex": "chinese/book/chapters/ch214-asking-for-help.tex"
+}

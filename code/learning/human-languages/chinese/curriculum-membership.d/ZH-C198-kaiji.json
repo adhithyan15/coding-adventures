@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C198-kaiji",
+  "pathSegment": "ZH-PATH-198-PHONE198",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-198-PHONE198",
+      "order": 2
+    }
+  ]
+}

@@ -1,27 +1,31 @@
-//! LANG83 PR6a on the CLR textual (`emit_il`) path: `write_f64_py` /
-//! `write_f64_js`.
+//! LANG83 floats on the CLR textual (`emit_il`) path: the PR7b digit ops
+//! `f64_class`, `f64_digits` and `f64_exp10`.
 //!
-//! Both lower to `call void <Asm>Program::__iir_write_f64(float64, int32)`, a
-//! helper the module carries (see `il_text.rs`). It takes the shortest digits
-//! from `double.ToString("R", InvariantCulture)` and lays them out like Python
-//! or JavaScript.
+//! `f64_digits` / `f64_exp10` call two helpers the module carries
+//! (`__iir_f64_digits` / `__iir_f64_exp10`), which share one digit parse,
+//! `string __iir_f64_shortest(float64, int32&)` (see `il_text.rs`). It takes
+//! the shortest digits from `double.ToString("R", InvariantCulture)`.
 //!
-//! There is no `dotnet` here, so the helper is checked two ways:
+//! There is no `dotnet` here, so the helpers are checked two ways:
 //!
-//! 1. A **stack-depth model** walks every control-flow path of its IL. Each
+//! 1. A **stack-depth model** walks every control-flow path of their IL. Each
 //!    label is reached with an empty stack, no instruction underflows, the
-//!    peak fits `.maxstack`, and `ret` leaves nothing behind. CoreCLR rejects
-//!    an inconsistent stack shape at a join even when `ilasm` accepts it
-//!    (Perl 4a).
-//! 2. An **IL interpreter model** executes the helper. It implements the dozen
-//!    opcodes and the `System.*` members the helper uses. Its
-//!    `double.ToString("R")` is fed the same digits in several layouts: .NET
-//!    Core's own (`1E+16`, `1E-05`, `123.456`), all-scientific and all-fixed.
-//!    For every value in the table below the output must be Python's `repr`
-//!    and JavaScript's `String(x)`, as printed by host `python3` and `node`.
+//!    peak fits `.maxstack`, and `ret` leaves what the signature returns.
+//!    CoreCLR rejects an inconsistent stack shape at a join even when `ilasm`
+//!    accepts it (Perl 4a).
+//! 2. An **IL interpreter model** executes them. It implements the opcodes
+//!    and the `System.*` members the helpers use, follows the calls between
+//!    them (and the `int32&` write-back), and runs the inline `f64_class`
+//!    sequence. Its `double.ToString("R")` is fed the same digits in several
+//!    layouts: .NET Core's own (`1E+16`, `1E-05`, `123.456`), all-scientific
+//!    and all-fixed. For every value in the table below the answer must be
+//!    host `python3`'s `repr`, split at the digits.
 //!
-//! CI's CLR column runs the real thing once a language row emits these
-//! builtins.
+//! This file began as PR6a's `write_f64_py` / `write_f64_js` tests (the
+//! module's `__iir_write_f64(float64, int32)` helper). LANG83 PR7e removed
+//! both writers: a compiler lays a float out itself, and `lang-aot`'s
+//! `op_conformance` runs the PR6a table through the compilers' helpers (CI
+//! executes the CLR column).
 
 use std::collections::HashMap;
 
@@ -48,9 +52,15 @@ fn writes(builtin: &str, values: &[f64]) -> IIRModule {
     m
 }
 
-/// The helper's trimmed IL lines, from `.method` to its closing `}`.
-fn helper_lines(il: &str) -> Vec<String> {
-    let start = il.find(".method private static void __iir_write_f64").expect("the helper is emitted");
+
+/// The trimmed IL lines of the synthetic method `name`, from `.method` to
+/// its closing `}`.
+fn method_lines(il: &str, name: &str) -> Vec<String> {
+    let start = il
+        .match_indices(".method private static ")
+        .map(|(i, _)| i)
+        .find(|&i| il[i..].lines().next().unwrap().contains(&format!(" {name}(")))
+        .unwrap_or_else(|| panic!("{name} is emitted"));
     let mut lines = Vec::new();
     for l in il[start..].lines() {
         let l = l.trim().to_string();
@@ -90,9 +100,14 @@ const BRANCHES: &[&str] = &["beq", "bne.un", "blt", "bge", "bgt", "ble", "brfals
 fn effect(line: &str) -> (usize, usize) {
     let op = line.split_whitespace().next().unwrap();
     match op {
-        "ldarg" | "ldloc" | "ldloca" | "ldstr" | "ldc.i4" | "ldc.i4.0" | "ldc.i4.1" | "ldc.i4.m1" | "ldc.r8" => (0, 1),
-        "stloc" => (1, 0),
-        "add" | "sub" => (2, 1),
+        "ldarg" | "ldloc" | "ldloca" | "ldstr" | "ldc.i4" | "ldc.i4.0" | "ldc.i4.1" | "ldc.i4.m1" | "ldc.r8"
+        | "ldc.i8" => (0, 1),
+        "stloc" | "pop" => (1, 0),
+        "add" | "sub" | "and" | "cgt.un" => (2, 1),
+        "conv.i8" => (1, 1),
+        // LANG83 PR7b: the shared parse stores the exponent through its
+        // `int32&` parameter.
+        "stind.i4" => (2, 0),
         "beq" | "bne.un" | "blt" | "bge" | "bgt" | "ble" => (2, 0),
         "brfalse" | "brtrue" => (1, 0),
         "br" | "ret" => (0, 0),
@@ -101,8 +116,9 @@ fn effect(line: &str) -> (usize, usize) {
     }
 }
 
-/// Walk every path; returns the peak depth.
-fn assert_stack_shape(code: &[String]) -> usize {
+/// Walk every path of a method whose `ret` leaves `returns` values (0 for
+/// `void`, 1 otherwise); returns the peak depth.
+fn assert_stack_shape_returning(code: &[String], returns: usize) -> usize {
     let labels: HashMap<&str, usize> = code
         .iter()
         .enumerate()
@@ -132,7 +148,7 @@ fn assert_stack_shape(code: &[String]) -> usize {
         peak = peak.max(after);
         let op = line.split_whitespace().next().unwrap();
         if op == "ret" {
-            assert_eq!(after, 0, "a void method returns with an empty stack");
+            assert_eq!(after, returns, "`ret` leaves exactly the return value");
             continue;
         }
         if BRANCHES.contains(&op) {
@@ -152,52 +168,20 @@ fn assert_stack_shape(code: &[String]) -> usize {
     peak
 }
 
+/// LANG83 PR7e: `write_f64_py` / `write_f64_js` (the module's
+/// `__iir_write_f64` helper) are gone, so a module that still calls one is
+/// refused on both paths, and no helper is emitted.
 #[test]
-fn helper_keeps_an_empty_stack_at_every_join_and_fits_maxstack() {
-    let il = emit_il(&writes("write_f64_py", &[1.5]), &IIRClrConfig::new("Main")).expect("emit_il");
-    let lines = helper_lines(&il);
-    let declared: usize = lines
-        .iter()
-        .find_map(|l| l.strip_prefix(".maxstack "))
-        .and_then(|n| n.trim().parse().ok())
-        .expect(".maxstack");
-    let peak = assert_stack_shape(&body(&lines));
-    assert!(peak <= declared, "peak {peak} exceeds .maxstack {declared}");
-    // Labels are unique, so the helper cannot capture a user label.
-    let code = body(&lines);
-    let mut labels: Vec<&String> = code.iter().filter(|l| l.ends_with(':')).collect();
-    let total = labels.len();
-    labels.dedup();
-    assert_eq!(labels.len(), total);
-}
-
-#[test]
-fn call_sites_pass_the_float_and_a_layout_flag_and_the_helper_is_emitted_once() {
-    for (builtin, flag) in [("write_f64_py", "ldc.i4.0"), ("write_f64_js", "ldc.i4.1")] {
-        let il = emit_il(&writes(builtin, &[1.5, -2.0]), &IIRClrConfig::new("Main")).expect("emit_il");
-        let call = "call void MainProgram::__iir_write_f64(float64, int32)";
-        assert_eq!(il.matches(call).count(), 2, "{builtin}: one call per write");
-        assert_eq!(il.matches(".method private static void __iir_write_f64").count(), 1);
-        let lines: Vec<&str> = il.lines().map(str::trim).collect();
-        let at = lines.iter().position(|l| *l == call).unwrap();
-        assert_eq!(lines[at - 1], flag, "{builtin}");
+fn retired_float_writers_are_refused() {
+    for name in ["write_f64_py", "write_f64_js"] {
+        // An unknown builtin with no dest: the textual path's generic
+        // `call_builtin` arm refuses it (`lang-aot` refuses it earlier,
+        // naming it, through `validate_for_clr`).
+        assert!(emit_il(&writes(name, &[1.5]), &IIRClrConfig::new("Main")).is_err(), "{name}");
+        assert!(lower_iir_to_cil(&writes(name, &[1.5]), &IIRClrConfig::new("Main")).is_err(), "{name}");
     }
-    // No float printed, no helper.
-    let none = writes("write_f64_py", &[]);
+    let none = writes("write_i64", &[]);
     assert!(!emit_il(&none, &IIRClrConfig::new("Main")).unwrap().contains("__iir_write_f64"));
-}
-
-#[test]
-fn bad_operands_and_the_binary_path_are_refused() {
-    let mut m = writes("write_f64_py", &[]);
-    m.functions[0].instructions.insert(0, IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"));
-    m.functions[0].instructions.insert(1, IIRInstr::new("call_builtin", None, vec![v("write_f64_py"), v("n")], "void"));
-    assert!(emit_il(&m, &IIRClrConfig::new("Main")).is_err(), "an integer is not a float");
-    let mut clash = writes("write_f64_js", &[1.0]);
-    clash.functions.push(IIRFunction::new("__iir_write_f64", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
-    assert!(emit_il(&clash, &IIRClrConfig::new("Main")).is_err(), "the helper's name is reserved");
-    // The binary path targets the 32-bit simulator and does not lower PR6a.
-    assert!(lower_iir_to_cil(&writes("write_f64_py", &[1.5]), &IIRClrConfig::new("Main")).is_err());
 }
 
 // ── The IL interpreter model ────────────────────────────────────────────────
@@ -265,15 +249,35 @@ fn r_string(d: &str, e: i32, style: RStyle) -> String {
     }
 }
 
-/// Run the helper's IL for `x` with layout flag `js`. `shortest` gives the
-/// model's `ToString("R")` digits for |x|.
-fn run_helper(code: &[String], x: f64, js: bool, r: &dyn Fn(f64) -> String) -> String {
+/// Every synthetic method's instruction lines, by name — what a `call` to
+/// `<Asm>Program::__iir_*` runs in the model.
+type Methods = HashMap<String, Vec<String>>;
+
+/// The synthetic float methods `il` carries.
+fn methods_of(il: &str) -> Methods {
+    ["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"]
+        .iter()
+        .filter(|name| il.lines().any(|l| l.contains(".method private static ") && l.contains(&format!(" {name}("))))
+        .map(|name| (name.to_string(), body(&method_lines(il, name))))
+        .collect()
+}
+
+/// Run the synthetic method `name` with `args`; its output is appended to
+/// `out`. Returns the value `ret` leaves (if any) and every write the method
+/// made through an `int32&` argument, as `(caller local, value)`.
+fn run_method(
+    methods: &Methods,
+    name: &str,
+    args: Vec<Val>,
+    out: &mut String,
+    r: &dyn Fn(f64) -> String,
+) -> (Option<Val>, Vec<(String, Val)>) {
+    let code = &methods[name];
     let labels: HashMap<&str, usize> =
         code.iter().enumerate().filter_map(|(i, l)| l.strip_suffix(':').map(|n| (n, i))).collect();
     let mut locals: HashMap<String, Val> = HashMap::new();
-    let args = [Val::F(x), Val::I(i64::from(js))];
+    let mut byref_writes: Vec<(String, Val)> = Vec::new();
     let mut stack: Vec<Val> = Vec::new();
-    let mut out = String::new();
     let mut pc = 0;
     let mut steps = 0;
     let int = |v: Val| match v {
@@ -314,26 +318,52 @@ fn run_helper(code: &[String], x: f64, js: bool, r: &dyn Fn(f64) -> String) -> S
             "ldc.i4.1" => stack.push(Val::I(1)),
             "ldc.i4.m1" => stack.push(Val::I(-1)),
             "ldc.r8" => stack.push(Val::F(rest.parse().unwrap())),
-            "add" | "sub" => {
+            "ldc.i8" => stack.push(Val::I(rest.parse().unwrap())),
+            "add" | "sub" | "and" => {
                 let b = int(stack.pop().unwrap());
                 let a = int(stack.pop().unwrap());
-                stack.push(Val::I(if op == "add" { a + b } else { a - b }));
+                stack.push(Val::I(match op {
+                    "add" => a + b,
+                    "sub" => a - b,
+                    _ => a & b,
+                }));
+            }
+            "cgt.un" => {
+                let b = int(stack.pop().unwrap()) as u64;
+                let a = int(stack.pop().unwrap()) as u64;
+                stack.push(Val::I(i64::from(a > b)));
+            }
+            "conv.i8" => {
+                let v = int(stack.pop().unwrap());
+                stack.push(Val::I(v));
+            }
+            "pop" => {
+                stack.pop().unwrap();
+            }
+            "stind.i4" => {
+                let v = int(stack.pop().unwrap());
+                let Val::Addr(local) = stack.pop().unwrap() else { panic!("stind.i4 needs an address") };
+                assert!(i32::try_from(v).is_ok(), "int32 store of {v}");
+                byref_writes.push((local, Val::I(v)));
             }
             "beq" | "bne.un" | "blt" | "bge" | "bgt" | "ble" => {
                 let b = stack.pop().unwrap();
                 let a = stack.pop().unwrap();
-                let (x, y) = match (a, b) {
-                    (Val::F(x), Val::F(y)) => (x, y),
-                    (Val::I(x), Val::I(y)) => (x as f64, y as f64),
+                // Integers compare exactly (int64 bit patterns do not survive
+                // a round trip through f64); floats compare as IEEE.
+                let ord = match (&a, &b) {
+                    (Val::I(x), Val::I(y)) => Some(x.cmp(y)),
+                    (Val::F(x), Val::F(y)) => x.partial_cmp(y),
                     other => panic!("compare of {other:?}"),
                 };
+                use std::cmp::Ordering::{Equal, Greater, Less};
                 let cond = match op {
-                    "beq" => x == y,
-                    "bne.un" => x != y || x.is_nan() || y.is_nan(),
-                    "blt" => x < y,
-                    "bge" => x >= y,
-                    "bgt" => x > y,
-                    _ => x <= y,
+                    "beq" => ord == Some(Equal),
+                    "bne.un" => ord != Some(Equal),
+                    "blt" => ord == Some(Less),
+                    "bge" => matches!(ord, Some(Greater | Equal)),
+                    "bgt" => ord == Some(Greater),
+                    _ => matches!(ord, Some(Less | Equal)),
                 };
                 jump(cond, &mut pc);
             }
@@ -342,11 +372,21 @@ fn run_helper(code: &[String], x: f64, js: bool, r: &dyn Fn(f64) -> String) -> S
                 jump((v != 0) == (op == "brtrue"), &mut pc);
             }
             "br" => jump(true, &mut pc),
-            "ret" => return out,
+            "ret" => return (stack.pop(), byref_writes),
             "call" | "callvirt" | "newobj" => {
                 let member = line.rsplit_once("::").unwrap().1;
                 let (n_pop, _) = call_effect(&line);
                 let mut argv: Vec<Val> = stack.split_off(stack.len() - n_pop);
+                // A call to another synthetic method of the class.
+                if line.contains("Program::__iir_") {
+                    let callee = member.split('(').next().unwrap();
+                    let (result, writes) = run_method(methods, callee, argv, out, r);
+                    for (local, v) in writes {
+                        locals.insert(local, v);
+                    }
+                    stack.extend(result);
+                    continue;
+                }
                 let result = match member {
                     "Write(string)" => {
                         out.push_str(&string(argv.remove(0)));
@@ -358,6 +398,10 @@ fn run_helper(code: &[String], x: f64, js: bool, r: &dyn Fn(f64) -> String) -> S
                     }
                     "IsNegative(float64)" => match argv[0] {
                         Val::F(f) => Some(Val::I(i64::from(f.is_sign_negative()))),
+                        _ => panic!(),
+                    },
+                    "DoubleToInt64Bits(float64)" => match argv[0] {
+                        Val::F(f) => Some(Val::I(f.to_bits() as i64)),
                         _ => panic!(),
                     },
                     "IsInfinity(float64)" => match argv[0] {
@@ -520,27 +564,121 @@ const FLOAT_TABLE: &[(u64, &str, &str)] = &[
     (0x40B99E157689CA19, "6558.08384", "6558.08384"),
 ];
 
+/// The model's .NET `ToString("R")` style is the real one for the classic
+/// cases.
 #[test]
-fn helper_lays_out_every_r_string_style_like_python_and_javascript() {
-    let il = emit_il(&writes("write_f64_py", &[1.5]), &IIRClrConfig::new("Main")).expect("emit_il");
-    let code = body(&helper_lines(&il));
-    // Digits for |x|, from the oracle's own Python repr (so the model's
-    // `ToString("R")` is exactly as shortest as .NET's).
+fn the_models_dotnet_r_style_matches_dotnet() {
+    assert_eq!(r_string("1", 16, RStyle::DotNet), "1E+16");
+    assert_eq!(r_string("15", -7, RStyle::DotNet), "1.5E-07");
+    assert_eq!(r_string("123456", 2, RStyle::DotNet), "123.456");
+    assert_eq!(r_string("5", -324, RStyle::DotNet), "5E-324");
+}
+
+// ── LANG83 PR7b: f64_class / f64_digits / f64_exp10 ─────────────────────────
+
+/// One function per op, `name(x: f64) -> i64 { return <op> x }`, so the
+/// model can run each in isolation.
+fn digit_queries() -> IIRModule {
+    let mut m = IIRModule::new("Main", "test");
+    for op in ["f64_class", "f64_digits", "f64_exp10"] {
+        m.functions.push(IIRFunction::new(
+            format!("q_{op}"),
+            vec![("x".into(), "f64".into())],
+            "i64",
+            vec![
+                IIRInstr::new(op, Some("r".into()), vec![v("x")], "i64"),
+                IIRInstr::new("ret", None, vec![v("r")], "i64"),
+            ],
+        ));
+    }
+    m.functions.push(IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("ret", None, vec![v("z")], "i64"),
+    ]));
+    m.entry_point = Some("main".into());
+    m
+}
+
+/// `(class, D, e10)` read off host python3's `repr`.
+fn repr_digits(py: &str) -> (i64, i64, i64) {
+    match py.trim_start_matches('-') {
+        "inf" => (2, 0, 0),
+        "nan" => (3, 0, 0),
+        "0.0" => (0, 0, 0),
+        _ => {
+            let (d, e) = digits_of(py);
+            (1, d.parse().unwrap(), i64::from(e))
+        }
+    }
+}
+
+/// The three synthetic methods keep an empty stack at every join and fit
+/// `.maxstack`, and each is emitted once, only when used; both queries share
+/// ONE `__iir_f64_shortest`.
+#[test]
+fn pr7b_helpers_keep_the_stack_shape_and_share_one_parse() {
+    let il = emit_il(&digit_queries(), &IIRClrConfig::new("Main")).expect("emit_il");
+    for (name, returns) in [("__iir_f64_shortest", 1), ("__iir_f64_digits", 1), ("__iir_f64_exp10", 1)] {
+        let lines = method_lines(&il, name);
+        let declared: usize =
+            lines.iter().find_map(|l| l.strip_prefix(".maxstack ")).and_then(|n| n.trim().parse().ok()).unwrap();
+        let peak = assert_stack_shape_returning(&body(&lines), returns);
+        assert!(peak <= declared, "{name}: peak {peak} exceeds .maxstack {declared}");
+    }
+    assert_eq!(il.matches(" __iir_f64_shortest(float64 ax, int32& e10)").count(), 1);
+    assert!(!il.contains("__iir_write_f64"), "no writer (removed in PR7e)");
+    assert!(il.contains("call int64 MainProgram::__iir_f64_digits(float64)"), "{il}");
+    assert!(il.contains("call int64 MainProgram::__iir_f64_exp10(float64)"), "{il}");
+    assert_eq!(il.matches("cgt.un").count(), 3, "f64_class: three unsigned compares");
+    // Names are reserved; operands must be float64 in, int64 out.
+    let mut clash = digit_queries();
+    clash.functions.push(IIRFunction::new("__iir_f64_shortest", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
+    assert!(emit_il(&clash, &IIRClrConfig::new("Main")).is_err());
+    let mut bad = digit_queries();
+    bad.functions[0].params[0].1 = "i64".into();
+    assert!(emit_il(&bad, &IIRClrConfig::new("Main")).is_err(), "an integer is not a float");
+    // The binary path targets the 32-bit simulator and does not lower PR7b.
+    assert!(lower_iir_to_cil(&digit_queries(), &IIRClrConfig::new("Main")).is_err());
+}
+
+/// The model runs `__iir_f64_digits` / `__iir_f64_exp10` (through the shared
+/// parse) and the inline `f64_class` sequence over every table value, with
+/// `ToString("R")` in every layout, against host python3's `repr`.
+#[test]
+fn pr7b_helpers_match_python_repr_in_the_il_model() {
+    let il = emit_il(&digit_queries(), &IIRClrConfig::new("Main")).expect("emit_il");
+    let mut methods = methods_of(&il);
+    // The inline `f64_class` sequence, lifted out of `q_f64_class`: from the
+    // first load of the operand to the `conv.i8` (the operand is `ldarg 0`).
+    let at = il.find("'q_f64_class'(").expect("the user method is emitted");
+    let user: Vec<String> = il[at..].lines().map(|l| l.trim().to_string()).take_while(|l| l != "}").collect();
+    let class_body = body(&user[1..]);
+    let first = class_body.iter().position(|l| l.contains("DoubleToInt64Bits")).unwrap() - 1;
+    let last = class_body.iter().position(|l| l == "conv.i8").unwrap();
+    let mut seq: Vec<String> = class_body[first..=last].to_vec();
+    for l in &mut seq {
+        if l.starts_with("ldarg") || l.starts_with("ldloc") {
+            *l = "ldarg 0".to_string();
+        }
+    }
+    seq.push("ret".to_string());
+    methods.insert("class".to_string(), seq);
     let by_bits: HashMap<u64, &str> = FLOAT_TABLE.iter().map(|(b, py, _)| (b & !(1 << 63), *py)).collect();
     for style in [RStyle::DotNet, RStyle::Scientific, RStyle::Fixed] {
         let r = |ax: f64| {
             let (d, e) = digits_of(by_bits[&ax.to_bits()]);
             r_string(&d, e, style)
         };
-        for &(bits, py, js) in FLOAT_TABLE {
+        for &(bits, py, _) in FLOAT_TABLE {
             let x = f64::from_bits(bits);
-            assert_eq!(run_helper(&code, x, false, &r), py, "{style:?} python {x:e}");
-            assert_eq!(run_helper(&code, x, true, &r), js, "{style:?} javascript {x:e}");
+            let mut out = String::new();
+            let mut q = |name: &str| match run_method(&methods, name, vec![Val::F(x)], &mut out, &r).0 {
+                Some(Val::I(n)) => n,
+                other => panic!("{name}({x:e}) returned {other:?}"),
+            };
+            let got = (q("class"), q("__iir_f64_digits"), q("__iir_f64_exp10"));
+            assert_eq!(got, repr_digits(py), "{style:?} {x:e} ({py})");
+            assert!(out.is_empty(), "the queries print nothing");
         }
     }
-    // The model's .NET style is the real one for the classic cases.
-    assert_eq!(r_string("1", 16, RStyle::DotNet), "1E+16");
-    assert_eq!(r_string("15", -7, RStyle::DotNet), "1.5E-07");
-    assert_eq!(r_string("123456", 2, RStyle::DotNet), "123.456");
-    assert_eq!(r_string("5", -324, RStyle::DotNet), "5E-324");
 }

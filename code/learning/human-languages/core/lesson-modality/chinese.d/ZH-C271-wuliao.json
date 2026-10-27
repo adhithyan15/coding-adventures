@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C271-wuliao",
+    "language": "chinese",
+    "chapter": 271,
+    "sequence": 20210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84ca96f3a081270c"
+  },
+  "findings": []
+}

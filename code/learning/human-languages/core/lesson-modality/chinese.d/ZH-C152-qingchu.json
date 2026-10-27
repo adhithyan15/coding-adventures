@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C152-qingchu",
+    "language": "chinese",
+    "chapter": 152,
+    "sequence": 12410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e33c44ddc403a59b"
+  },
+  "findings": []
+}

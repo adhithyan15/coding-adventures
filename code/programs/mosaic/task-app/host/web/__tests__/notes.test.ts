@@ -125,4 +125,38 @@ describe("Notes on the web host", () => {
     send(controller, "saveNote");
     expect(notesOf(engine).legacy.body).toBe(shorter);
   });
+
+  // Notes 0.3.0 on RecordList and DraftEditor (E3; addendum v1.3).
+  it("builds note rows in RecordList's six-field shape", () => {
+    const { controller } = setup();
+    send(controller, "saveNote");
+    send(controller, "newNote");
+    send(controller, "noteTitleChange", { value: "Agenda" });
+    send(controller, "saveNote");
+    const rows = props(controller).noteRows as string[][];
+    expect(rows).toHaveLength(2);
+    for (const row of rows) {
+      expect(row).toHaveLength(6);
+      expect([row[1], row[3], row[4], row[5]]).toEqual(["", "", "", ""]);
+    }
+    expect(rows.map((row) => row[2]).sort()).toEqual(["Agenda", "Untitled"]);
+    // The open note is the row whose key matches, as RecordList compares.
+    const open = rows.find((row) => row[0] === props(controller).selectedNoteId);
+    expect(open?.[2]).toBe("Agenda");
+  });
+
+  it("offers Delete only for a note the engine has saved", () => {
+    const { controller } = setup();
+    // A new note's id is minted, but the engine has never seen it.
+    expect(props(controller).selectedNoteId).not.toBe("");
+    expect(props(controller).noteDeleteLabel).toBe("");
+    send(controller, "saveNote");
+    expect(props(controller).noteDeleteLabel).toBe("Delete");
+    send(controller, "cancelNote");
+    expect(props(controller).noteDeleteLabel).toBe("");
+    send(controller, "selectNote", { index: 0 });
+    expect(props(controller).noteDeleteLabel).toBe("Delete");
+    send(controller, "newNote");
+    expect(props(controller).noteDeleteLabel).toBe("");
+  });
 });

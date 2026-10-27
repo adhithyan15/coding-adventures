@@ -10,11 +10,12 @@
 //!      misread by the body. `lisp_arg_regs` now includes user-`call` arguments.
 //!   2. **Polymorphic result coercion** — the program exit sees a `call` typed
 //!      `any`; its runtime tag (int/bool/symbol/pair) is unknown at compile time,
-//!      so it is coerced by `__dyn_to_exit_code`, a RUNTIME tag switch
+//!      so it is coerced by the module's `__lisp_exit_code` (the runtime's
+//!      `__dyn_to_exit_code` before LANG83 PR7f-2), a RUN-TIME tag switch
 //!      (int → `>> 3`, `#t`/`#f`/nil → `1`/`0`/`0`, symbol/pair → verbatim).
 //!
 //! **Verified by RUNNING**: emit host IR, link `dynval_runtime.c` + the
-//! `gc-core-capi` staticlib (`dynval_runtime.c`'s `__dyn_cons` calls
+//! `gc-core-capi` staticlib (`dynval_runtime.c`'s `__dyn_pair_new` calls
 //! `__gc_alloc_kind`/`__gc_register_kind`, which only `gc-core-capi` defines —
 //! this file used to link `dynval_runtime.c` alone and fail with "Undefined
 //! symbols for architecture ...: ___gc_alloc_kind"), run with `clang`.

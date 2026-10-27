@@ -78,6 +78,12 @@ before C++ checkpoint loading: immutable owned values, duplicate/NUL names,
 lexical integer kinds and measured allocation envelopes. Parser validation is
 not a C++ training or seven-native exchange claim.
 
+NN51 adds [native C++ dense training](./native-cpp-dense-framework.md): paper
+gradients, independent ownership, finite candidate-loss publication, strict
+copied checkpoints and real full-state fresh/resumed commands. Native-local
+validation is recorded separately from actual three-platform CI and merge.
+Seven-native interchange remains a separate runner expansion.
+
 Every model family below starts with the smallest example that needs its new
 idea.
 

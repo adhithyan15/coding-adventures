@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "In the Country",
+  "label": "ch:zh-in-the-country",
+  "canDo": "I can talk about the countryside, farmers, working the land, picking fruit and camping.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C225-luying",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can talk about the countryside, farmers, working the land, picking fruit and camping.",
+    "assesses": [
+      "ZH-LEX-C225-FARM225-03",
+      "ZH-LEX-C225-FARM225-04",
+      "ZH-LEX-C225-FARM225-05"
+    ]
+  }
+}

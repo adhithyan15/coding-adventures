@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C160-ganhuo",
+  "pathSegment": "ZH-PATH-160-CHORE160",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-160-CHORE160",
+      "order": 3
+    }
+  ]
+}

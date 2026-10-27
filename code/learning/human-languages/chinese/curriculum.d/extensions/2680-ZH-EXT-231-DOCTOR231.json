@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-231-DOCTOR231",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can choose Chinese or Western medicine, register at the clinic, talk about the nurse and say what the doctor gave me.",
+  "prerequisites": []
+}

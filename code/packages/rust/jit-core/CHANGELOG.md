@@ -5,6 +5,49 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — #18417 — a builtin callback can fail the run
+
+- `GenericCirJit`'s `CALL_BUILTIN` stops the run right after a callback that has recorded an error in the error slot. A callback captures `error_handle()` to do that, since it returns a plain `Value` and cannot return an `Err`. Before, the run went on with the callback's placeholder result, and the error only surfaced when `JITCore` drained the slot at the end. The check is one mutex lock per builtin call. `error_handle`'s doc states the contract. New test `a_callback_that_records_an_error_stops_the_run`. `lang-aot`'s McCarthy `car` / `cdr` use it to fail on a non-pair.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`. `GenericCirJit` compiles a `call_builtin` only to a handler the embedder registered, and the LANG83 harnesses register no tagged-word runtime (`lang_aot::jit_lisp`'s McCarthy embedding registers its own callbacks; it is not the JIT column). `declared_support_matches_what_generic_jit_compiles` confirms the refusal.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- **Breaking:** `write_f64_py` / `write_f64_js` leave `OP_SUPPORT`, and the
+  `CALL_BUILTIN_F64` bytecode (0x51) that handed a float register to their
+  handler is removed. 0x51 stays unassigned, so stale bytecode naming it is an
+  unknown opcode and fails closed. A `call_builtin` that reads a float
+  register now refuses the function like any other non-float use of one.
+  `PARAM_F64`, `const_f64` and every float op are unchanged.
+- New `GenericCirJit::builtin_names()`: the registered builtins, sorted.
+- Tests: the PR6a float-register tests observe the bits through `ret_f64`
+  instead of a writer; `run_ieee` returns the result and prints only its sign
+  bit; `the_retired_call_builtin_f64_byte_is_an_unknown_opcode` and a
+  "retired float writer" refusal row replace the writer tests.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- No code change: `TRAP 7` reports its kind through
+  `exception_kind::trap_kind_name`, so the error slot now reads
+  `trap: Trap.Unbound` (was `trap: Trap.ReferenceError`) after LANG83 PR7d
+  renamed the kind.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- **New bytecodes `CLASS_F64` (0x5D), `DIGITS_F64` (0x5E), `EXP10_F64`
+  (0x5F)**, shaped like `SIGNBIT_F64`: a float register in, an ordinary
+  integer register out, computed by `vm_core::float_format` (the VM's own
+  core, so the tiers agree). 0x59–0x5C are the int⇄float conversion
+  bytecodes (below). The one-operand float ops now share an `f64_unary`
+  table; a dest that is also a float register is refused, as for
+  `f64_signbit`. A propagated float literal operand is accepted.
+- `OP_SUPPORT`: `f64_class`, `f64_digits`, `f64_exp10` are `Lowered`; the
+  declaration test types their result `i64`.
+- Tests: `f64_digit_queries_read_a_float_register`, refusal cases, and the
+  truncated-bytecode check for the three tags.
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 - `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` write `trap: Trap.ConvRange` to the

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W226-cao-grass",
+    "language": "chinese",
+    "chapter": 226,
+    "sequence": 17415,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:77ce41be7cf2e216",
+    "detachableSegments": [
+      "Script — the grass piece over 早"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

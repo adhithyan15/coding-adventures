@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C200-yuding",
+  "pathSegment": "ZH-PATH-200-HOTEL200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-200-HOTEL200",
+      "order": 1
+    }
+  ]
+}

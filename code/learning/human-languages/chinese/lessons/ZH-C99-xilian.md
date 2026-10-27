@@ -53,7 +53,7 @@ Two third tones in a row: xǐ is said with a rising tone before liǎn, though bo
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-*xǐliǎn* is built from 洗 'to wash' and liǎn 'face'. The first is inherited from Middle Chinese *sejX* (Guangyun, in Baxter's transcription); the dictionary has the second only as *leamX*, the name of a kind of stew, so how it came to mean face is not settled.
+*xǐliǎn* is built from 洗 'to wash' and liǎn 'face'. The first is inherited from Middle Chinese *sejX* (Guangyun, in Baxter's transcription); the dictionary glosses the second, *leamX*, as the name of a kind of stew, so how it came to mean face is not settled.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

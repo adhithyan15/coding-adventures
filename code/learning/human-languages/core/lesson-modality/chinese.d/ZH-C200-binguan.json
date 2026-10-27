@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C200-binguan",
+    "language": "chinese",
+    "chapter": 200,
+    "sequence": 15620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1543a3b4fff8b0e8"
+  },
+  "findings": []
+}

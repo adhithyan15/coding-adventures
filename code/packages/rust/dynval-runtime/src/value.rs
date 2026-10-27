@@ -251,7 +251,7 @@ impl LispyValue {
     /// `heap::car` / `cdr` / `as_closure` would then dereference
     /// an attacker-controlled address.
     ///
-    /// FFI entry points (`dyn_cons` etc.) are `unsafe extern "C"`
+    /// FFI entry points (`dyn_pair_new` etc.) are `unsafe extern "C"`
     /// and use this constructor inside their `unsafe` block.
     #[inline]
     pub const unsafe fn from_raw_bits(bits: u64) -> LispyValue {

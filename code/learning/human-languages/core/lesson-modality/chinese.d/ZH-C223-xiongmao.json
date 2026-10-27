@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C223-xiongmao",
+    "language": "chinese",
+    "chapter": 223,
+    "sequence": 17260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f4f75e602ccf230"
+  },
+  "findings": []
+}

@@ -8,6 +8,8 @@
 //!
 //! - Basic linking (happy path)
 //! - Error cases (Unresolved, TypeMismatch, DuplicateExport)
+//! - One owner per name (ConflictingExport, DuplicateModuleName,
+//!   UnresolvedEntryPoint — issue #18429)
 //! - Name collision renaming
 //! - Call instruction rewriting
 //! - `link_strict` behaviour
@@ -246,8 +248,11 @@ fn duplicate_export_detected() {
     m2.add_or_replace(make_fn("sqrt", vec![("x", "f64")], "f64"));
     m2.exports.push(IIRExport::new("sqrt"));
 
+    // Same-named modules collide on the (module, name) key, so this is a
+    // DuplicateExport (and, since #18429, also a DuplicateModuleName).
     let errs = link(&[m1, m2]).unwrap_err();
     assert!(errs.iter().any(|e| matches!(e, LinkError::DuplicateExport { function_name, .. } if function_name == "sqrt")));
+    assert!(errs.iter().any(|e| matches!(e, LinkError::DuplicateModuleName { .. })));
 }
 
 // ---------------------------------------------------------------------------
@@ -461,4 +466,173 @@ fn link_iir_linker_struct_api_matches_free_fn() {
     let names_free: std::collections::BTreeSet<&str> =
         via_free.functions.iter().map(|f| f.name.as_str()).collect();
     assert_eq!(names_struct, names_free);
+}
+
+// ---------------------------------------------------------------------------
+// Issue #18429 — names that could bind to more than one function
+// ---------------------------------------------------------------------------
+//
+// Each test below describes a link that used to "succeed" and then run the
+// wrong function.  The linker now refuses all three shapes.
+
+/// A module named `module` that exports one function `public` (backed by a
+/// function of the same name).
+fn exporter(module: &str, public: &str) -> IIRModule {
+    let mut m = IIRModule::new(module, "twig");
+    m.entry_point = None;
+    m.add_or_replace(make_fn(public, vec![], "void"));
+    m.exports.push(IIRExport::new(public));
+    m
+}
+
+#[test]
+fn two_modules_exporting_the_same_name_is_rejected() {
+    // Before #18429 both `foo`s kept the bare name and every `call foo`
+    // ran `left`'s — even inside `right`.
+    let errs = link(&[exporter("left", "foo"), exporter("right", "foo")]).unwrap_err();
+    assert!(
+        errs.iter().any(|e| matches!(
+            e,
+            LinkError::ConflictingExport { function_name, first_module, second_module }
+                if function_name == "foo" && first_module == "left" && second_module == "right"
+        )),
+        "got {errs:?}",
+    );
+}
+
+#[test]
+fn an_alias_that_clashes_with_another_modules_export_is_rejected() {
+    // The clash is on the *public* name: `left` exports `foo_impl` as `foo`.
+    let mut left = IIRModule::new("left", "twig");
+    left.entry_point = None;
+    left.add_or_replace(make_fn("foo_impl", vec![], "void"));
+    left.exports.push(IIRExport::new("foo_impl").with_alias("foo"));
+
+    let errs = link(&[left, exporter("right", "foo")]).unwrap_err();
+    assert!(errs.iter().any(|e| matches!(e, LinkError::ConflictingExport { .. })), "got {errs:?}");
+}
+
+#[test]
+fn distinct_aliases_of_same_named_functions_link() {
+    // Both modules have an internal `impl_fn`, exported under different
+    // public names — no public name is claimed twice, so this is fine.
+    let mut a = IIRModule::new("a", "twig");
+    a.entry_point = None;
+    a.add_or_replace(make_fn("impl_fn", vec![], "void"));
+    a.exports.push(IIRExport::new("impl_fn").with_alias("a_fn"));
+
+    let mut b = IIRModule::new("b", "twig");
+    b.entry_point = None;
+    b.add_or_replace(make_fn("impl_fn", vec![], "void"));
+    b.exports.push(IIRExport::new("impl_fn").with_alias("b_fn"));
+
+    let merged = link(&[a, b]).unwrap();
+    assert!(merged.get_function("a_fn").is_some());
+    assert!(merged.get_function("b_fn").is_some());
+}
+
+#[test]
+fn duplicate_names_inside_one_module_still_link() {
+    // Twig emits the user's `(define (main) …)` beside its synthesized
+    // top-level `main`, and may export `main`.  That is one module claiming
+    // its own name — not a cross-module conflict.
+    let mut app = IIRModule::new("app", "twig");
+    app.functions.push(make_fn("main", vec![], "user"));
+    app.functions.push(make_fn("main", vec![], "void"));
+    app.exports.push(IIRExport::new("main"));
+
+    let merged = link(&[app]).unwrap();
+    assert_eq!(merged.entry_point.as_deref(), Some("main"));
+    assert_eq!(merged.get_function("main").unwrap().return_type, "user");
+}
+
+#[test]
+fn duplicate_module_names_are_rejected() {
+    // Two modules called `util`.  Import rewrites are keyed by module name,
+    // so `b`'s import of `x` from `lib` would also override `a`'s own `x`.
+    let lib = exporter("lib", "x");
+
+    let mut a = IIRModule::new("util", "twig");
+    a.entry_point = None;
+    a.add_or_replace(make_fn("x", vec![], "void"));
+    a.add_or_replace(make_fn_calling("run_a", "x"));
+
+    let mut b = IIRModule::new("util", "twig");
+    b.entry_point = None;
+    b.imports.push(IIRImport::new("lib", "x", "any"));
+
+    let errs = link(&[lib, a, b]).unwrap_err();
+    assert!(
+        errs.iter().any(|e| matches!(
+            e,
+            LinkError::DuplicateModuleName { module_name } if module_name == "util"
+        )),
+        "got {errs:?}",
+    );
+}
+
+#[test]
+fn duplicate_module_name_is_reported_once_per_name() {
+    let mk = |name: &str| {
+        let mut m = IIRModule::new(name, "twig");
+        m.entry_point = None;
+        m
+    };
+    let errs = link(&[mk("u"), mk("u"), mk("u"), mk("v")]).unwrap_err();
+    let dups: Vec<_> = errs
+        .iter()
+        .filter(|e| matches!(e, LinkError::DuplicateModuleName { .. }))
+        .collect();
+    assert_eq!(dups.len(), 1, "got {errs:?}");
+}
+
+#[test]
+fn unresolved_entry_point_is_rejected() {
+    // `app` names `start` as its entry point but defines no `start`.
+    // `lib` has a *private* `start`; before #18429 the merged module
+    // started there.
+    let mut lib = IIRModule::new("lib", "twig");
+    lib.entry_point = None;
+    lib.add_or_replace(make_fn("start", vec![], "void"));
+
+    let mut app = IIRModule::new("app", "twig");
+    app.add_or_replace(make_fn("main", vec![], "void"));
+    app.entry_point = Some("start".into());
+
+    let errs = link(&[lib, app]).unwrap_err();
+    assert!(
+        errs.iter().any(|e| matches!(
+            e,
+            LinkError::UnresolvedEntryPoint { module_name, entry_point }
+                if module_name == "app" && entry_point == "start"
+        )),
+        "got {errs:?}",
+    );
+}
+
+#[test]
+fn entry_point_may_be_an_imported_function() {
+    // `app`'s entry point is the local name of an import — that resolves.
+    let lib = exporter("lib", "run");
+
+    let mut app = IIRModule::new("app", "twig");
+    app.imports.push(IIRImport::new("lib", "run", "any").with_local_alias("start"));
+    app.entry_point = Some("start".into());
+
+    let merged = link(&[lib, app]).unwrap();
+    assert_eq!(merged.entry_point.as_deref(), Some("run"));
+}
+
+#[test]
+fn only_the_effective_entry_point_is_checked() {
+    // The first module with an entry point wins; a later module's unused
+    // entry point is never consulted, so it is not an error.
+    let mut app = IIRModule::new("app", "twig");
+    app.add_or_replace(make_fn("main", vec![], "void"));
+
+    let mut lib = IIRModule::new("lib", "twig");
+    lib.entry_point = Some("nowhere".into());
+
+    let merged = link(&[app, lib]).unwrap();
+    assert_eq!(merged.entry_point.as_deref(), Some("main"));
 }

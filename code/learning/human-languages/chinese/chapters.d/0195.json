@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "At the Bank",
+  "label": "ch:zh-at-the-bank",
+  "canDo": "I can put money in and take it out, and talk about cards, PINs and bank accounts.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C195-zhanghu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can put money in and take it out, and talk about cards, PINs and bank accounts.",
+    "assesses": [
+      "ZH-LEX-C195-BANK195-03",
+      "ZH-LEX-C195-BANK195-04",
+      "ZH-LEX-C195-BANK195-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C184-laojia",
+  "pathSegment": "ZH-PATH-184-HOLIDAY184",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-184-HOLIDAY184",
+      "order": 3
+    }
+  ]
+}

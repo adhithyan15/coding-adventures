@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C211-ditu",
+    "language": "chinese",
+    "chapter": 211,
+    "sequence": 16210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1f3fba11f1e4d13"
+  },
+  "findings": []
+}

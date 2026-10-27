@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Do You Agree?",
+  "label": "ch:zh-do-you-agree",
+  "canDo": "I can say I agree or that I am against something, that I am in favour, that I am behind someone, and that I believe them.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C270-xiangxin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say I agree or that I am against something, that I am in favour, that I am behind someone, and that I believe them.",
+    "assesses": [
+      "ZH-LEX-C270-AGREE270-03",
+      "ZH-LEX-C270-AGREE270-04",
+      "ZH-LEX-C270-AGREE270-05"
+    ]
+  }
+}

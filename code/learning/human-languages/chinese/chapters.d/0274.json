@@ -1,0 +1,19 @@
+{
+  "chapter": 274,
+  "title": "Free Time",
+  "label": "ch:zh-free-time",
+  "canDo": "I can talk about skating, collecting things, what is all the rage, handicrafts and sports fans.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C274-qiumi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 274: I can talk about skating, collecting things, what is all the rage, handicrafts and sports fans.",
+    "assesses": [
+      "ZH-LEX-C274-FREE274-03",
+      "ZH-LEX-C274-FREE274-04",
+      "ZH-LEX-C274-FREE274-05"
+    ]
+  }
+}

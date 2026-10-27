@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:d3cf12079d67441d",
+  "lessonIds": [
+    "ZH-C264-jujue",
+    "ZH-C264-kexi",
+    "ZH-C264-baoqian",
+    "ZH-C264-kongpa",
+    "ZH-C264-qishi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch264.txt",
+  "json": "chinese/narration/ch264.json",
+  "textHash": "fnv1a64:5bf210e67bb6ba33",
+  "jsonHash": "fnv1a64:7abf7c9fa202f5b2",
+  "findings": []
+}

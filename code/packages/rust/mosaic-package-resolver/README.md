@@ -188,6 +188,46 @@ fix. (The build tool reruns those tests only when this crate or its
 dependencies change; a package build reaches the same check through
 `mosaic-package-artifact-builder`.)
 
+## Declared dependencies
+
+A `pkg::P::C` call site must name the referencing package itself or one of
+its declared `[dependencies]` (mosaic-package-publishing-v1 §10 Phase 1b).
+Otherwise the result is `UndeclaredPackageReference`:
+
+```text
+`ProbeApp` mounts `pkg::mosaic-pkg-lib::Card` at Column[app-root] >
+pkg::mosaic-pkg-lib::Card[hero], but `mosaic-pkg-lib` is not a declared
+dependency; add `mosaic-pkg-lib = "0.1.0"` to [dependencies] in
+…/probe-app/mosaic-package.toml
+```
+
+Without this check, any package on the search path could be inlined. Its
+version was never checked, and the build tool, which takes its edges from
+`[dependencies]`, never rebuilt the consumer when the package changed.
+
+- **Inside a package component**, the call sites are checked against that
+  package's own manifest. This always happens.
+- **In the layout being resolved**, the call sites are checked only when
+  the caller names the consumer:
+
+  ```rust
+  let resolver = LayoutPackageResolver::new(search_paths)
+      .with_consumer(&manifest, &package_root.join("mosaic-package.toml"));
+  ```
+
+  `mosaic-package-artifact-builder` does this for every package build.
+  Without `with_consumer`, the consumer's own references are accepted, as
+  before.
+- `pkg::<self>::C` is allowed. The artifact builder qualifies a package's
+  bare sibling references to that form.
+- Each undeclared package is reported once per manifest, at its first call
+  site. The message suggests the version found on the search path.
+- It runs in the same pre-substitution walk as `SlotBindingMissing`, so
+  both kinds of error come back together in one `Multiple`.
+- `every_repository_layout_binds_every_required_slot` resolves every
+  exported layout in the repository with its own manifest as the
+  consumer, so an undeclared reference fails this crate's tests.
+
 ## Kernel set
 
 The kernel is frozen per UI29 §2.4.  This crate hard-codes it as

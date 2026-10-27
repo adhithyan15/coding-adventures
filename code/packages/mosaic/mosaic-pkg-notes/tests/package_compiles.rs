@@ -4,8 +4,9 @@
 //! and declares the expected export; Notes.mil compiles via mosmodel;
 //! Notes.mll compiles against that interface via moslayout; Notes.dark.msl /
 //! Notes.light.msl each compile against the resulting part map via mosstyle.
-//! No cross-package dependency to pin (built entirely from kernel
-//! primitives, like mosaic-pkg-grid and mosaic-pkg-calendar).
+//! Since 0.3.0 Notes mounts the toolkit's RecordList and DraftEditor, so a
+//! few tests also build the package, which is where those mounts are
+//! inlined and their required slots checked.
 
 use std::fs;
 use std::path::PathBuf;
@@ -80,6 +81,19 @@ fn notes_mil_compiles() {
         "selected-note-id",
         "title-value",
         "body-value",
+        "task-name-value",
+        // 0.3.0: every label is a slot (no English in the package).
+        "new-note-label",
+        "empty-hint",
+        "title-label",
+        "title-placeholder",
+        "body-label",
+        "body-placeholder",
+        "task-label",
+        "task-placeholder",
+        "save-label",
+        "delete-label",
+        "cancel-label",
     ] {
         assert!(
             slot_names.contains(&expected),
@@ -123,37 +137,184 @@ fn notes_mll_compiles_against_its_interface() {
         .unwrap_or_else(|e| panic!("Notes.mll failed to compile via moslayout_compiler:\n{:#?}", e));
 }
 
+/// Notes' layout with every comment line removed, so a test can ask what the
+/// layout *does* without tripping over what its comments explain.
+fn layout_code() -> String {
+    read_source("Notes.mll")
+        .lines()
+        .filter(|line| !line.trim_start().starts_with("//"))
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+/// The package built for one backend, as the single emitted source file.
+///
+/// The per-file compiles above cannot see a composition: RecordList's and
+/// DraftEditor's layouts are inlined only by a package build, which is also
+/// where an unbound required slot of either is refused (UI13 §1).
+fn built_source(backend: mosaic_package_artifact_builder::Backend, file: &str) -> String {
+    use mosaic_package_artifact_builder::{build_package, BuildOptions};
+    let out = tempfile::TempDir::new().expect("temp dir");
+    build_package(&BuildOptions {
+        package_root: package_root(),
+        output_root: out.path().to_path_buf(),
+        backend,
+        emit_project: false,
+        theme: Some("light".to_string()),
+    })
+    .unwrap_or_else(|e| panic!("{backend:?} package build failed: {e}"));
+    let path = out.path().join(file);
+    fs::read_to_string(&path).unwrap_or_else(|e| panic!("failed to read {}: {e}", path.display()))
+}
+
 #[test]
-fn notes_mll_references_selected_note_id_in_camel_case() {
-    // Regression guard: found live-testing this package. A slot referenced
-    // bare inside a parenthesized expression must use its camelCase
-    // identifier (`selectedNoteId`) — the kebab-case `slot:` spelling
-    // (`selected-note-id`) compiles at every static layer (mosmodel/
-    // moslayout/mosstyle all accept it) but is silently wrong at runtime:
-    // the emitted JS parses `selected-note-id` as subtraction of three
-    // undefined identifiers, not one reference to the slot.
-    let src = read_source("Notes.mll");
-    assert!(
-        src.contains("selectedNoteId"),
-        "Notes.mll must reference the selected-note-id slot as `selectedNoteId` inside expressions"
+fn notes_mounts_record_list_and_draft_editor() {
+    // 0.3.0 (task-app-notes-ui-v1.md addendum v1.3): the list is the
+    // toolkit's RecordList and the title, body and actions are DraftEditor.
+    // The parts they replaced must not come back beside them.
+    let code = layout_code();
+    assert_eq!(
+        code.matches("pkg::mosaic-pkg-toolkit::RecordList").count(),
+        1
     );
+    assert_eq!(
+        code.matches("pkg::mosaic-pkg-draft-editor::DraftEditor")
+            .count(),
+        1
+    );
+    for retired in [
+        "notes-row-on",
+        "notes-row-off",
+        "notes-title-input",
+        "notes-body-input",
+        "notes-save",
+        "notes-delete",
+        "notes-cancel",
+    ] {
+        assert!(
+            !code.contains(retired),
+            "Notes.mll must not draw `{retired}` itself any more"
+        );
+    }
+}
+
+#[test]
+fn notes_declares_every_package_it_mounts() {
+    // A `pkg::` reference to a package the manifest does not declare is
+    // resolved today only because the search path happens to contain it.
+    let manifest: toml::Value = toml::from_str(
+        &fs::read_to_string(package_root().join("mosaic-package.toml")).expect("manifest"),
+    )
+    .expect("manifest parses");
+    let dependencies = manifest
+        .get("dependencies")
+        .and_then(|d| d.as_table())
+        .expect("[dependencies] must be a table");
+    let code = layout_code();
+    for package in ["mosaic-pkg-toolkit", "mosaic-pkg-draft-editor"] {
+        assert!(
+            code.contains(&format!("pkg::{package}::")),
+            "Notes mounts {package}"
+        );
+        assert!(
+            dependencies.contains_key(package),
+            "mosaic-package.toml must declare `{package}`, which Notes.mll mounts"
+        );
+    }
+}
+
+#[test]
+fn notes_draws_no_english_of_its_own() {
+    // Every label is a slot the host binds (0.3.0), as DraftEditor's are, so
+    // a host can localise Notes. A quoted string in the layout is a literal
+    // label.
+    let code = layout_code();
     assert!(
-        !src.contains("== selected-note-id"),
-        "Notes.mll must not reference the slot by its kebab-case name inside an expression"
+        !code.contains('"'),
+        "Notes.mll must take every label as a slot, found a literal in:\n{code}"
     );
 }
 
 #[test]
-fn notes_mll_uses_a_multiline_body_field() {
-    // The body is the kernel's text area (#15930), not a one-line field, and
-    // Ctrl/Cmd+Enter saves from it as the Save button does (UI25 §4).
-    let src = read_source("Notes.mll");
-    assert!(src.contains("HostInput [ notes-body-input ]"), "the kernel text area");
-    assert!(src.contains("multiline : true"), "Notes.mll must use a multiline body field");
-    assert_eq!(
-        src.matches("onCommit : emit: onSave").count(),
-        1,
-        "the body saves on Ctrl/Cmd+Enter"
+fn the_selection_compares_row_keys_with_the_selected_note_id() {
+    // Regression guard, found live-testing this package in 0.1.0: a slot
+    // named inside an expression must be its camelCase identifier. Written
+    // kebab-case it compiles everywhere and is silently wrong at runtime:
+    // `selected-note-id` is subtraction of three undefined identifiers.
+    // Since 0.3.0 the comparison is RecordList's (`row[0] == selectedKey`),
+    // and Notes binds `selected-key : slot: selected-note-id`. Substitution
+    // must turn that into the camelCase identifier, which only the built
+    // output shows.
+    let code = layout_code();
+    assert!(code.contains("selected-key : slot: selected-note-id"));
+    let tsx = built_source(
+        mosaic_package_artifact_builder::Backend::React,
+        "react/Notes.tsx",
+    );
+    assert!(
+        tsx.contains("row [ 0 ] == selectedNoteId"),
+        "RecordList's selection must compare against Notes' selectedNoteId:\n{tsx}"
+    );
+    assert!(!tsx.contains("selected - note - id") && !tsx.contains("selected-note-id ="));
+}
+
+#[test]
+fn the_body_is_multiline_and_saves_on_ctrl_or_cmd_enter() {
+    // The body is DraftEditor's text area, and its Ctrl/Cmd+Enter chord
+    // raises DraftEditor's onSave, which Notes forwards to its own onSave,
+    // exactly as the Save button does (UI25 §4).
+    let code = layout_code();
+    assert!(
+        code.contains("onSave : emit: onSave"),
+        "Notes must forward DraftEditor's onSave"
+    );
+    let tsx = built_source(
+        mosaic_package_artifact_builder::Backend::React,
+        "react/Notes.tsx",
+    );
+    let textarea = tsx
+        .lines()
+        .find(|line| line.contains("<textarea"))
+        .unwrap_or_else(|| panic!("the body must lower to a <textarea>:\n{tsx}"));
+    assert!(textarea.contains("value={bodyValue}"), "{textarea}");
+    assert!(textarea.contains("e.ctrlKey || e.metaKey"), "{textarea}");
+    assert!(
+        textarea.contains("dispatch({ type: \"save\" })"),
+        "{textarea}"
+    );
+}
+
+#[test]
+fn every_field_has_an_accessible_name_from_its_visible_label() {
+    // DraftEditor names its title and body by their label slots. The
+    // attach-to-task field is Notes' own, and used to have no name at all
+    // beyond its placeholder; it now takes its visible label as its name.
+    let code = layout_code();
+    assert!(code.contains("a11y-label : slot: task-label"));
+    assert!(code.contains("content : slot: task-label"));
+    let tsx = built_source(
+        mosaic_package_artifact_builder::Backend::React,
+        "react/Notes.tsx",
+    );
+    for name in ["taskLabel", "titleLabel", "bodyLabel"] {
+        assert!(
+            tsx.contains(&format!("aria-label={{{name}}}")),
+            "a field must be named by `{name}`:\n{tsx}"
+        );
+    }
+}
+
+#[test]
+fn delete_is_drawn_only_when_the_host_labels_it() {
+    // A host passes `delete-label: ""` for a new note that was never saved,
+    // and DraftEditor then draws no Delete button.
+    let tsx = built_source(
+        mosaic_package_artifact_builder::Backend::React,
+        "react/Notes.tsx",
+    );
+    assert!(
+        tsx.contains("{deleteLabel && ("),
+        "Delete must be gated on its label:\n{tsx}"
     );
 }
 

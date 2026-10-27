@@ -535,6 +535,10 @@ layout TaskApp {
             // package — TaskApp adds no shaping of its own, see Notes.mil
             // for the contract and task-app-notes-ui-v1.md for the scope.
             //
+            // Notes 0.3.0 draws no English, so its labels are written here,
+            // as Journal writes DraftEditor's. Delete is the exception: the
+            // host decides it (`note-delete-label`, "" for an unsaved note).
+            //
             // The one thing TaskApp adds is a refused Save's reason (E5),
             // composed above the package as Journal composes `draft-error`
             // above DraftEditor. Nothing was written; any other event
@@ -549,6 +553,17 @@ layout TaskApp {
               title-value : slot: note-title-value ,
               body-value : slot: note-body-value ,
               task-name-value : slot: note-task-value ,
+              new-note-label : "+ New note" ,
+              empty-hint : "Select a note, or start a new one." ,
+              title-label : "Title" ,
+              title-placeholder : "Untitled" ,
+              body-label : "Note" ,
+              body-placeholder : "Write something…" ,
+              task-label : "Attach to task" ,
+              task-placeholder : "Task name (optional)" ,
+              save-label : "Save" ,
+              delete-label : slot: note-delete-label ,
+              cancel-label : "Cancel" ,
               onSelectNote : emit: onSelectNote ,
               onNewNote : emit: onNewNote ,
               onTitleChange : emit: onNoteTitleChange ,

@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-200-HOTEL200",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-200-HOTEL200"
+  ],
+  "after": []
+}

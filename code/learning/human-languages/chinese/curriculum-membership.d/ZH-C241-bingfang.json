@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C241-bingfang",
+  "pathSegment": "ZH-PATH-241-WARD241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-241-WARD241",
+      "order": 1
+    }
+  ]
+}

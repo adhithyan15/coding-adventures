@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C171-yaokongqi",
+  "pathSegment": "ZH-PATH-171-SWITCH171",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-171-SWITCH171",
+      "order": 2
+    }
+  ]
+}

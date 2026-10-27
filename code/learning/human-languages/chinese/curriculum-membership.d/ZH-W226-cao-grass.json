@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W226-cao-grass",
+  "pathSegment": "ZH-PATH-226-LAKE226",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-226-LAKE226",
+      "order": 1
+    }
+  ]
+}

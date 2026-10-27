@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C157-xiaoxi",
+  "pathSegment": "ZH-PATH-157-NOTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-157-NOTE",
+      "order": 2
+    }
+  ]
+}

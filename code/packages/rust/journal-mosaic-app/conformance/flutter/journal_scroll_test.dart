@@ -79,15 +79,21 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull, reason: 'the pane must lay out cleanly');
 
-    // 2. The bottom-most row, by where it is drawn.
-    final rows = [
-      for (var n = 1; n <= _entries; n++) find.widgetWithText(ElevatedButton, 'Reach $n'),
-    ];
+    // 2. The bottom-most row, by where it is drawn. Timeline rows are
+    //    mosaic-pkg-card Cards, each opened by an "Open" button beside it. The
+    //    emitter wraps that button in `Semantics(label: "Open {title}", button:
+    //    true, excludeSemantics: true)`, so a row's button is found by that
+    //    label (every button's own text is "Open").
+    Finder openButton(int n) => find.byWidgetPredicate(
+          (w) => w is Semantics && w.properties.button == true && w.properties.label == 'Open Reach $n',
+          description: 'the Open button for "Reach $n"',
+        );
+    final rows = [for (var n = 1; n <= _entries; n++) openButton(n)];
     for (final row in rows) {
       expect(row, findsOneWidget);
     }
     final bottom = rows.reduce((a, b) => tester.getRect(a).top >= tester.getRect(b).top ? a : b);
-    final title = (tester.widget<Text>(find.descendant(of: bottom, matching: find.byType(Text))).data)!;
+    final title = tester.widget<Semantics>(bottom).properties.label!.substring('Open '.length);
     expect(
       tester.getRect(bottom).top,
       greaterThanOrEqualTo(_window.height),

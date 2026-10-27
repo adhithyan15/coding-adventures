@@ -763,11 +763,11 @@ pub fn symbol_append(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
 // would coerce booleans to integers in some IIR dialects; `_move`
 // is a typed-preserving identity.
 //
-// `make_nil` — return the nil singleton.  twig-ir-compiler emits
-// `call_builtin "make_nil"` everywhere a nil literal is needed
-// (since `nil` doesn't have an `Operand::Var(name)` representation
-// — it's a heap-derived value in Python, but an immediate in our
-// LispyValue scheme).  We return `LispyValue::NIL` directly.
+// `dyn_nil` — return the nil singleton (LANG83 PR7f's registry name; it
+// was `make_nil`).  twig-ir-compiler once emitted `call_builtin
+// "make_nil"` for every nil literal; it now emits `const 0 :
+// ref<LispyPair>`, which the dispatcher reads as nil, so this builtin is
+// reached only by hand-built IIR.  We return `LispyValue::NIL` directly.
 
 /// `(_move x)` — return `x` unchanged.  Used by twig-ir-compiler
 /// for type-preserving register copies in `if` / `let` lowering.
@@ -778,15 +778,16 @@ pub fn move_(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
     Ok(args[0])
 }
 
-/// `(make_nil)` — return the nil singleton.
-pub fn make_nil(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+/// `(dyn_nil)` — return the nil singleton.
+pub fn dyn_nil(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
     if !args.is_empty() {
-        return Err(arity_error("make_nil", 0, args.len()));
+        return Err(arity_error("dyn_nil", 0, args.len()));
     }
     Ok(LispyValue::NIL)
 }
 
-/// `(make_symbol name)` — return the symbol named by `name`.
+/// `(dyn_symbol name)` — return the symbol named by `name` (LANG83 PR7f's
+/// registry name; it was `make_symbol`).
 ///
 /// In our value-space convention, `name` is itself a symbol value
 /// (the dispatcher interns string-literal `const` operands and
@@ -796,13 +797,13 @@ pub fn make_nil(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
 /// for every `'foo` quoted-symbol literal in source; the explicit
 /// arity check here turns "wrong shape of args" into a clean
 /// `RuntimeError` rather than a silent miscompile.
-pub fn make_symbol(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+pub fn dyn_symbol(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
     if args.len() != 1 {
-        return Err(arity_error("make_symbol", 1, args.len()));
+        return Err(arity_error("dyn_symbol", 1, args.len()));
     }
     if !args[0].is_symbol() {
         return Err(RuntimeError::TypeError(format!(
-            "make_symbol: expected symbol arg, got {}",
+            "dyn_symbol: expected symbol arg, got {}",
             args[0],
         )));
     }
@@ -1457,7 +1458,7 @@ mod tests {
         assert!(print(&[i(1), i(2)]).is_err());
     }
 
-    // ── _move / make_nil ────────────────────────────────────────────
+    // ── _move / dyn_nil ────────────────────────────────────────────
 
     #[test]
     fn move_is_identity() {
@@ -1477,13 +1478,13 @@ mod tests {
     }
 
     #[test]
-    fn make_nil_returns_nil() {
-        assert_eq!(make_nil(&[]).unwrap(), LispyValue::NIL);
+    fn dyn_nil_returns_nil() {
+        assert_eq!(dyn_nil(&[]).unwrap(), LispyValue::NIL);
     }
 
     #[test]
-    fn make_nil_rejects_args() {
-        assert!(make_nil(&[i(1)]).is_err());
+    fn dyn_nil_rejects_args() {
+        assert!(dyn_nil(&[i(1)]).is_err());
     }
 
     // ── String builtins (LANG47) ─────────────────────────────────────

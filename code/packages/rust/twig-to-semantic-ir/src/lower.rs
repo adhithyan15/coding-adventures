@@ -26,6 +26,15 @@
 //! Name resolution at any point walks these in order:
 //! locals (innermost-first) → params → captures → module globals →
 //! module function names → builtins → unresolved (lowering error).
+//!
+//! That is TW00's "lexical scope wins" rule — lexical bindings, then the
+//! program's top-level definitions, then builtins — and it holds in
+//! **call position too**.  `(car p)` asks the same question as `car`:
+//! which binding does this name mean here?  Only the *node* differs
+//! (`IndirectCall` for a local or a value define, `DirectCall` for a
+//! function define, `BuiltinCall` for a builtin); see `lower_apply`.
+//! Before issue #18456 call position asked the builtin table first, so a
+//! user's `(define (car p) …)` never ran.
 
 use std::collections::HashSet;
 
@@ -603,10 +612,7 @@ impl Lowerer {
         let mut captures: Vec<String> = Vec::new();
         let mut capture_values: Vec<Expr> = Vec::new();
         for name in free {
-            if ctx.locals.iter().any(|n| n == &name)
-                || ctx.params.contains(&name)
-                || ctx.captures.contains(&name)
-            {
+            if ctx.is_lexical(&name) {
                 let v = self.resolve_varref(&name, ctx, &span)?;
                 captures.push(name.clone());
                 capture_values.push(v);
@@ -673,8 +679,77 @@ impl Lowerer {
             lowered_args.push(self.lower_expr(a, ctx)?);
         }
 
-        // Three cases for the function position:
+        // A named function position resolves in TW00's order — the same
+        // order `resolve_varref` uses for a name in value position:
+        //
+        // ```text
+        // row  the name is bound by…                    (name args…) lowers to
+        // 1    param / let / let* / lambda param /       IndirectCall on the local
+        //      capture (innermost first)
+        // 2    a top-level function define               DirectCall name
+        // 3    a top-level value define                  IndirectCall on the Global
+        // 4    the builtin table                         BuiltinCall name
+        // -    nothing                                   "unresolved name" error
+        // ```
+        //
+        // The first row that knows the name wins, so a definition always
+        // hides a builtin of the same name, and a local hides both:
+        //
+        // ```scheme
+        // (define (car p) 42)
+        // (car (cons 1 2))            ; row 2: DirectCall car    → 42
+        // (define (f car) (car 1))    ; row 1: IndirectCall param → f's argument
+        // (cdr (cons 1 2))            ; row 4: BuiltinCall cdr   → 2
+        // ```
+        //
+        // Issue #18456: this used to check row 4 first, then row 2, and only
+        // then rows 1 and 3 — so `(car (cons 1 2))` above called the builtin
+        // and returned 1, and a parameter named like a top-level function
+        // called the function instead of the argument.
+        //
+        // Special forms (`if`, `let`, `let*`, `lambda`, `begin`, `quote`,
+        // `match`) never reach this point: the parser has already turned
+        // them into their own AST nodes, so they stay syntax whatever the
+        // program defines.
         if let TExpr::VarRef(VarRef { name, .. }) = fn_expr {
+            // Row 1 — lexical.  The callee is whatever value the local
+            // holds, known only at run time.
+            if ctx.is_lexical(name) {
+                self.observed.add(Feature::Closures);
+                let target = self.resolve_varref(name, ctx, &span)?;
+                return Ok(Expr::IndirectCall {
+                    target: Box::new(target),
+                    args: lowered_args,
+                    effects: EffectSet::PURE,
+                    span,
+                });
+            }
+            // Row 2 — a top-level function: its name is a static target.
+            if self.function_names.contains(name) {
+                return Ok(Expr::DirectCall {
+                    fn_name: name.clone(),
+                    args: lowered_args,
+                    effects: EffectSet::PURE,
+                    span,
+                });
+            }
+            // Row 3 — a top-level value: call the closure the global holds.
+            // `(define car 5) (car p)` therefore calls 5 — a run-time
+            // "not a closure" error, as in Scheme — instead of quietly
+            // calling the builtin `car`.
+            if ctx.global_names.contains(name) {
+                self.observed.add(Feature::Closures);
+                let target = self.resolve_varref(name, ctx, &span)?;
+                return Ok(Expr::IndirectCall {
+                    target: Box::new(target),
+                    args: lowered_args,
+                    effects: EffectSet::PURE,
+                    span,
+                });
+            }
+
+            // Row 4 — builtins.  Only a name nothing above binds gets here.
+            //
             // SIR28 §2: `print(x)` lowers to `__sys_write__`, not a bare
             // `BuiltinCall("print", ...)`. `terminator: "none"` (write the
             // value with no added newline, no added separator) matches
@@ -705,25 +780,8 @@ impl Lowerer {
                     span,
                 });
             }
-            if self.function_names.contains(name) {
-                return Ok(Expr::DirectCall {
-                    fn_name: name.clone(),
-                    args: lowered_args,
-                    effects: EffectSet::PURE,
-                    span,
-                });
-            }
-            // Otherwise the name must resolve to a *value* (local /
-            // param / capture / global) — emit IndirectCall on that
-            // value.
-            self.observed.add(Feature::Closures);
-            let target = self.resolve_varref(name, ctx, &span)?;
-            return Ok(Expr::IndirectCall {
-                target: Box::new(target),
-                args: lowered_args,
-                effects: EffectSet::PURE,
-                span,
-            });
+            // Bound nowhere.
+            return Err(unresolved(name, &span));
         }
 
         // The function position is an arbitrary expression.  Lower
@@ -789,11 +847,7 @@ impl Lowerer {
                 span: span.clone(),
             });
         }
-        Err(TwigLowerError {
-            message: format!("unresolved name `{}`", name),
-            line: span.start_line,
-            column: span.start_col,
-        })
+        Err(unresolved(name, span))
     }
 
     // -------------------------------------------------------------------
@@ -802,6 +856,17 @@ impl Lowerer {
 
     fn span_at(&self, line: usize, column: usize) -> Span {
         Span::point(FILE, line, column)
+    }
+}
+
+/// The error for a name that no scope, definition or builtin binds —
+/// shared by value position ([`Lowerer::resolve_varref`]) and call
+/// position ([`Lowerer::lower_apply`]) so both report it identically.
+fn unresolved(name: &str, span: &Span) -> TwigLowerError {
+    TwigLowerError {
+        message: format!("unresolved name `{}`", name),
+        line: span.start_line,
+        column: span.start_col,
     }
 }
 
@@ -846,6 +911,16 @@ impl FunctionCtx {
         function_names: HashSet<String>,
     ) -> Self {
         Self::new(vec![], HashSet::new(), global_names, function_names)
+    }
+
+    /// `true` iff `name` is bound *lexically* here — by a `let`/`let*`,
+    /// a parameter, or a capture.  This is TW00's resolution row 1, which
+    /// beats every top-level definition and every builtin, in call
+    /// position as in value position.
+    fn is_lexical(&self, name: &str) -> bool {
+        self.locals.iter().any(|n| n == name)
+            || self.params.contains(name)
+            || self.captures.contains(name)
     }
 
     fn push_local(&mut self, name: String) {

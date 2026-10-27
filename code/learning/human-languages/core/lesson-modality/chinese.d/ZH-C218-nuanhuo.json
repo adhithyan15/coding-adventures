@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C218-nuanhuo",
+    "language": "chinese",
+    "chapter": 218,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:233425615d84a690"
+  },
+  "findings": []
+}

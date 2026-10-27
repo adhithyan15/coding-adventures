@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:89f40cb0585c0951",
+  "lessonIds": [
+    "ZH-C213-qianzheng",
+    "ZH-C213-daoyou",
+    "ZH-C213-youke",
+    "ZH-C213-menpiao",
+    "ZH-C213-yilupingan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch213.txt",
+  "json": "chinese/narration/ch213.json",
+  "textHash": "fnv1a64:c87e42009281ddd9",
+  "jsonHash": "fnv1a64:fe2b9efb5b06f864",
+  "findings": []
+}

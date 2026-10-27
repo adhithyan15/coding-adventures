@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Colours and Styles",
+  "label": "ch:zh-colours-and-styles",
+  "canDo": "I can name purple and brown, talk about styles, choose one and find the fitting room.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C210-xuan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can name purple and brown, talk about styles, choose one and find the fitting room.",
+    "assesses": [
+      "ZH-LEX-C210-STYLE210-03",
+      "ZH-LEX-C210-STYLE210-04",
+      "ZH-LEX-C210-STYLE210-05"
+    ]
+  }
+}

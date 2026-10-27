@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C232-zhuang",
+  "pathSegment": "ZH-PATH-232-HURT232",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-232-HURT232",
+      "order": 3
+    }
+  ]
+}

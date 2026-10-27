@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-234-RAIN234",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can put plans off, call them off, move them to another day, take a raincoat and shelter from the rain.",
+  "prerequisites": []
+}

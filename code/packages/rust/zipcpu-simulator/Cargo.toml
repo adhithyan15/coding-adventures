@@ -1,0 +1,10 @@
+[package]
+name = "zipcpu-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked bounded ZipCPU revision-3 functional simulator"
+license = "MIT"
+
+[lib]
+name = "zipcpu_simulator"
+path = "src/lib.rs"

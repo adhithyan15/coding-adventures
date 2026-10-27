@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C155-kaimen",
+    "language": "chinese",
+    "chapter": 155,
+    "sequence": 12600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6304d460f6c2e0e2"
+  },
+  "findings": []
+}

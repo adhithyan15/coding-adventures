@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Something Has Gone Wrong",
+  "label": "ch:zh-something-has-gone-wrong",
+  "canDo": "I can say something has gone wrong or is strange, that someone has stolen something, and call the police.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C216-baojing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say something has gone wrong or is strange, that someone has stolen something, and call the police.",
+    "assesses": [
+      "ZH-LEX-C216-WRONG216-03",
+      "ZH-LEX-C216-WRONG216-04",
+      "ZH-LEX-C216-WRONG216-05"
+    ]
+  }
+}

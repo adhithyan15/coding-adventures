@@ -179,6 +179,85 @@ fn array_substrate_map(
 }
 
 // ===========================================================================
+// Call arguments are a PARALLEL move
+// ===========================================================================
+//
+// A local `call f(a, b, c)` must leave `a` in x0, `b` in x1 and `c` in x2.
+// Each argument already sits in its own x-register, so the call is preceded
+// by a handful of `move {x,src} {x,i}`. Those moves are *parallel*: every
+// source is meant to be read with the value it held BEFORE any of them ran.
+// Emitting them one after another in argument order is only right when no
+// move overwrites a register that a later move still has to read.
+//
+// LANG83 PR7c-py's `__py_write_float` is exactly the shape that breaks the
+// naive order. Its first registers are `x` (x0, the parameter), `zero` (x1)
+// and `one` (x2), and it calls `__py_write_digits(d, n, zero, e1)`:
+//
+// ```text
+//   naive, in argument order            what real BEAM then holds
+//   move {x,d}    {x,0}                 x0 = d
+//   move {x,n}    {x,1}   ← clobbers    x1 = n        (zero is gone)
+//   move {x,1}    {x,2}   ← reads x1    x2 = n        (should be 0)
+//   move {x,e1}   {x,3}                 x3 = e1
+// ```
+//
+// So `from` arrived as `n` instead of `0`, and every run of digits that
+// starts at the leading digit printed nothing: `print(1.5)` wrote `.5`,
+// `print(0.25)` wrote `0.`, `print(1e16)` wrote `e+16` (CI, real OTP, PR
+// #18400). The call arm's comment had always claimed it "collects the pairs
+// first to avoid aliasing issues"; it never did.
+//
+// The fix is the textbook sequentialisation of a parallel move:
+//
+// 1. Drop the moves that are already in place (`src == dst`).
+// 2. Repeatedly emit a move whose destination no pending move still reads.
+//    Writing it cannot destroy anything anyone needs. Taking the FIRST such
+//    move each time means a call whose naive order was already safe keeps
+//    exactly the same instruction stream (byte-identical modules).
+// 3. When no move qualifies, what is left is a set of pure cycles (each
+//    destination is distinct and is also some pending source, so sources and
+//    destinations are the same set and nothing fans out). Break one by parking
+//    a destination's current value in a `scratch` register and redirecting
+//    its readers there, then go back to step 2.
+//
+// ```text
+//   call f(b, a) with a in x0, b in x1     (a swap: one 2-cycle)
+//   pending {x1→x0, x0→x1}: neither can go first
+//   move {x,0} {x,scratch}   park a        pending {x1→x0, scratch→x1}
+//   move {x,1} {x,0}         b → x0        pending {scratch→x1}
+//   move {x,scratch} {x,1}   a → x1        done
+// ```
+//
+// `scratch` must be a register no pending move reads AND no emitted move has
+// written: the caller passes one at or above both `next_reg` (every
+// variable's register lies below it) and the arity (every destination lies
+// below it). It is needed only for a cycle, so `None` is fine until one
+// appears; the function then returns `None` and the caller reports it.
+fn sequence_parallel_moves(moves: &[(u8, u8)], scratch: Option<u8>) -> Option<Vec<(u8, u8)>> {
+    let mut pending: Vec<(u8, u8)> = moves.iter().copied().filter(|(src, dst)| src != dst).collect();
+    let mut ordered = Vec::with_capacity(pending.len() + 1);
+    while !pending.is_empty() {
+        let safe = pending
+            .iter()
+            .position(|&(_, dst)| !pending.iter().any(|&(src, _)| src == dst));
+        if let Some(k) = safe {
+            ordered.push(pending.remove(k));
+            continue;
+        }
+        // Only cycles remain: park the first destination's value.
+        let parked = scratch?;
+        let (_, dst) = pending[0];
+        ordered.push((dst, parked));
+        for (src, _) in &mut pending {
+            if *src == dst {
+                *src = parked;
+            }
+        }
+    }
+    Some(ordered)
+}
+
+// ===========================================================================
 // BEAM opcode constants
 // ===========================================================================
 //
@@ -1406,6 +1485,10 @@ pub fn lower_iir_to_beam(
                     // set of variables it had to save. Only running the code,
                     // or asserting against THIS list, catches it.
                     | "array_len"
+                    // LANG83 PR7b: `f64_digits` / `f64_exp10` are a local
+                    // `call` to '__iir_f64_digits'/1 / '__iir_f64_exp10'/1,
+                    // which clobbers every X register like a call_ext.
+                    | "f64_digits" | "f64_exp10"
                     // BEAM08/issue #15332: `global_store` emits `erlang:put/2`
                     // via `call_ext` (previously `gc_bif2` — see the
                     // `"global_store"` match arm below for the full
@@ -1430,9 +1513,6 @@ pub fn lower_iir_to_beam(
                 // LANG83: `print_i64` now emits `call_ext io:format/2`.
                 Some(Operand::Var(name)) if matches!(
                     name.as_str(), "putchar" | "print_i64" | "write_i64" | "getchar" | "input_more"
-                        // LANG83 PR6a: a local `call` to '__iir_write_f64'/2,
-                        // which clobbers every X register like a call_ext.
-                        | "write_f64_py" | "write_f64_js"
                         | "input_i64" | "input_str"
                 ))) {
                 continue;
@@ -1520,31 +1600,36 @@ pub fn lower_iir_to_beam(
         });
     }
 
-    // ── Step 4b: LANG83 PR6a float writer (only when a float is printed) ──
+    // ── Step 4b: LANG83 PR7b digit queries ─────────────────────────────────
     //
     // Interned here, after every function's labels are reserved, so a module
-    // that prints no float keeps byte-identical atom/import/literal tables and
-    // label numbering. The helper's two preamble labels are reserved now (the
-    // call sites below need its entry label); its body is appended after the
-    // last user function.
-    let f64_beam: Option<lang83_f64::F64Beam> = if module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
-        i.op == "call_builtin"
-            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
-    }) {
-        if module.functions.iter().any(|f| f.name == "__iir_write_f64") {
+    // that asks for no digits keeps byte-identical atom/import/literal tables
+    // and label numbering. Each helper's two preamble labels are reserved now
+    // (the call sites below need the entry labels); the bodies are appended
+    // after the last user function. The shared digit parse
+    // '__iir_f64_shortest'/1 comes with either query.
+    let uses_op = |op: &str| module.functions.iter().flat_map(|f| &f.instructions).any(|i| i.op == op);
+    let (uses_digits, uses_exp10) = (uses_op("f64_digits"), uses_op("f64_exp10"));
+    let f64_beam: Option<lang83_f64::F64Beam> = if uses_digits || uses_exp10 {
+        if let Some(f) = module.functions.iter().find(|f| lang83_f64::HELPER_NAMES.contains(&f.name.as_str())) {
             return Err(IIRBeamError::InvalidOperand {
-                function: "__iir_write_f64".into(),
-                detail: "a module function may not take the synthetic float writer's name".into(),
+                function: f.name.clone(),
+                detail: "a module function may not take a synthetic float helper's name".into(),
             });
         }
         let overflow = || IIRBeamError::UnsupportedOp {
-            function: "__iir_write_f64".into(),
+            function: "__iir_f64_shortest".into(),
             op: "label counter overflow — module has too many labels".into(),
         };
-        let fi_label = label_counter.checked_add(1).ok_or_else(overflow)?;
-        let entry_label = fi_label.checked_add(1).ok_or_else(overflow)?;
-        label_counter = entry_label;
-        let lists_atom = atoms.intern("lists");
+        let mut helper = |name: &str, arity: u32| -> Result<lang83_f64::Helper, IIRBeamError> {
+            let fi_label = label_counter.checked_add(1).ok_or_else(overflow)?;
+            let entry_label = fi_label.checked_add(1).ok_or_else(overflow)?;
+            label_counter = entry_label;
+            Ok(lang83_f64::Helper { atom: atoms.intern(name), arity, fi_label, entry_label })
+        };
+        let shortest = helper("__iir_f64_shortest", 1)?;
+        let digits = if uses_digits { Some(helper("__iir_f64_digits", 1)?) } else { None };
+        let exp10 = if uses_exp10 { Some(helper("__iir_f64_exp10", 1)?) } else { None };
         let mut import = |m: u32, f: &str, arity: u32| {
             let fa = atoms.intern(f);
             imports.intern(m, fa, arity)
@@ -1552,19 +1637,15 @@ pub fn lower_iir_to_beam(
         let imp_float_to_list = import(erlang_atom, "float_to_list", 2);
         let imp_split = import(string_atom, "split", 2);
         let imp_list_to_integer = import(erlang_atom, "list_to_integer", 1);
-        let imp_duplicate = import(lists_atom, "duplicate", 2);
-        let imp_sublist = import(lists_atom, "sublist", 2);
-        let imp_nthtail = import(lists_atom, "nthtail", 2);
-        let imp_integer_to_list = import(erlang_atom, "integer_to_list", 1);
         let mut lits = HashMap::new();
         lits.insert("[short]", literal_pool.intern_term(lang83_f64::etf_short_option()));
         for text in lang83_f64::TEXT_LITERALS {
             lits.insert(*text, literal_pool.intern_term(lang83_f64::etf_string(text)));
         }
         Some(lang83_f64::F64Beam {
-            fn_atom: atoms.intern("__iir_write_f64"),
-            fi_label,
-            entry_label,
+            shortest,
+            digits,
+            exp10,
             atom_leading: atoms.intern("leading"),
             atom_trailing,
             imp_float_to_list,
@@ -1575,11 +1656,6 @@ pub fn lower_iir_to_beam(
             imp_sub: import_sub,
             imp_add: import_add,
             imp_trim: import_trim,
-            imp_duplicate,
-            imp_sublist,
-            imp_nthtail,
-            imp_integer_to_list,
-            imp_put_chars: import_put_chars,
             lits,
         })
     } else {
@@ -2600,7 +2676,7 @@ pub fn lower_iir_to_beam(
                 // `io:put_chars` has already reached it.
                 "trap" => {
                     let kind = match instr.srcs.as_slice() {
-                        [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k.clone(),
+                        [Operand::Str(k)] if interpreter_ir::exception_kind::is_trap_kind(k) => k.clone(),
                         other => return Err(IIRBeamError::InvalidOperand {
                             function: fn_name.clone(),
                             detail: format!("trap requires srcs = [Operand::Str(registered trap kind)], got {other:?}"),
@@ -3139,6 +3215,91 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_done as u64)]));
                 }
 
+                // ── LANG83 PR7b: the language-neutral float primitives ──────
+                //
+                // A BEAM float is always finite, so `f64_class` has only two
+                // answers: 0 for ±0.0, 1 for anything else (classes 2 and 3
+                // cannot occur; the validator already refuses a non-finite
+                // constant). Two exact compares against the literal-table
+                // zeros, like `f64_signbit` (OTP 27 keeps 0.0 and -0.0
+                // distinct for =:=, so both are tested):
+                //
+                //     is_eq_exact {f,L_neg0} {x,src} lit(0.0)
+                //     move        {i,0} {x,rd}
+                //     jump        {f,L_done}
+                //   L_neg0:
+                //     is_eq_exact {f,L_one} {x,src} lit(-0.0)
+                //     move        {i,0} {x,rd}
+                //     jump        {f,L_done}
+                //   L_one:
+                //     move        {i,1} {x,rd}
+                //   L_done:
+                //
+                // `src` is read by both tests before any path writes `rd`.
+                "f64_class" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "f64_class must have a dest".into(),
+                        }),
+                    };
+                    let src = BEAMOperand::x(operand_reg!(get_src!(instr, 0)));
+                    let l_neg0 = alloc_synth_label!("f64_class tests");
+                    let l_one = alloc_synth_label!("f64_class tests");
+                    let l_done = alloc_synth_label!("f64_class tests");
+                    for (zero, fail) in [(0.0f64, l_neg0), (-0.0f64, l_one)] {
+                        let mut eq = vec![BEAMOperand::f(fail), src.clone()];
+                        eq.extend(literal_operand(literal_pool.intern_f64(zero)));
+                        instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, eq));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![BEAMOperand::i(0), BEAMOperand::x(rd)]));
+                        instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(l_done)]));
+                        instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(fail as u64)]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![BEAMOperand::i(1), BEAMOperand::x(rd)]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(l_done as u64)]));
+                }
+
+                // `f64_digits` / `f64_exp10`: a local call to the module's own
+                // '__iir_f64_digits'/1 / '__iir_f64_exp10'/1 (see `lang83_f64`),
+                // which share the PR6a writer's `float_to_list(F, [short])`
+                // parse:
+                //
+                //   move  X  -> x0
+                //   call  1, '__iir_f64_digits'/1
+                //   move  x0 -> rd
+                "f64_digits" | "f64_exp10" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("{} must have a dest", instr.op),
+                        }),
+                    };
+                    let source = operand_reg!(get_src!(instr, 0));
+                    let helper = f64_beam.as_ref().and_then(|b| {
+                        if instr.op == "f64_digits" { b.digits.as_ref() } else { b.exp10.as_ref() }
+                    });
+                    let entry = helper.map(|h| h.entry_label).ok_or_else(|| IIRBeamError::UnsupportedOp {
+                        function: fn_name.clone(),
+                        op: format!("{}: no digit helper (internal error)", instr.op),
+                    })?;
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(source), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL, vec![
+                        BEAMOperand::u(1), BEAMOperand::f(entry),
+                    ]));
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
                 // ── Unary arithmetic: neg, not ──────────────────────────────
                 //
                 // Pattern: gc_bif1 {f,0} {u,live} {u,import_idx} {x,r} {x,rd}
@@ -3368,34 +3529,6 @@ pub fn lower_iir_to_beam(
                     ]));
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(1), BEAMOperand::u(import_put_chars as u64),
-                    ]));
-                    restore_live_across_imported_call!(cur_idx);
-                }
-                "call_builtin" if matches!(instr.srcs.first(),
-                    Some(Operand::Var(name)) if name == "write_f64_py" || name == "write_f64_js") => {
-                    // LANG83 PR6a: `'__iir_write_f64'(X, Layout)`, the module's
-                    // own float writer (see `lang83_f64`); layout 0 = Python
-                    // repr, 1 = JavaScript toString.
-                    //
-                    //   move  X        -> x0
-                    //   move  {i,0|1}  -> x1
-                    //   call  2, '__iir_write_f64'/2
-                    let source = operand_reg!(get_src!(instr, 1));
-                    let layout = u64::from(matches!(instr.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_js"));
-                    let entry = f64_beam.as_ref().map(|b| b.entry_label).ok_or_else(|| IIRBeamError::UnsupportedOp {
-                        function: fn_name.clone(),
-                        op: "write_f64_*: no '__iir_write_f64' helper (internal error)".into(),
-                    })?;
-                    let cur_idx = instr_idx - 1;
-                    save_live_across_imported_call!(cur_idx);
-                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::x(source), BEAMOperand::x(0),
-                    ]));
-                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::i(layout), BEAMOperand::x(1),
-                    ]));
-                    instrs.push(BEAMInstruction::new(OP_CALL, vec![
-                        BEAMOperand::u(2), BEAMOperand::f(entry),
                     ]));
                     restore_live_across_imported_call!(cur_idx);
                 }
@@ -4135,12 +4268,13 @@ pub fn lower_iir_to_beam(
                     let arg_srcs = &instr.srcs[1..];
                     let arity = arg_srcs.len() as u32;
 
-                    // Move each argument into x0, x1, …
-                    // We collect the (arg_reg, target_x) pairs first to avoid
-                    // aliasing issues (moving x1 → x0 then x0 → x1 would be
-                    // wrong if we emit eagerly).  For a simple sequential move
-                    // into fresh positions this is fine, but being explicit is
-                    // clearer.
+                    // Move each argument into x0, x1, … as ONE parallel move:
+                    // collect every (arg_reg, target_x) pair first, then let
+                    // `sequence_parallel_moves` order them so no move
+                    // overwrites a register a later one still reads (the
+                    // PR7c-py `__py_write_digits(d, n, zero, e1)` bug; see the
+                    // comment on that function).
+                    let mut arg_moves: Vec<(u8, u8)> = Vec::with_capacity(arg_srcs.len());
                     for (i, src) in arg_srcs.iter().enumerate() {
                         let arg_reg = operand_reg!(src);
                         // Bounds check: BEAM x-registers are 0..254; a call
@@ -4154,13 +4288,25 @@ pub fn lower_iir_to_beam(
                                 ),
                             });
                         }
-                        let target_x = i as u8;
-                        if arg_reg != target_x {
-                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                                BEAMOperand::x(arg_reg),
-                                BEAMOperand::x(target_x),
-                            ]));
+                        arg_moves.push((arg_reg, i as u8));
+                    }
+                    // The cycle-breaking scratch: above every variable's
+                    // register and every argument slot, and below x255.
+                    let scratch = meta.next_reg.max(arg_moves.len() as u8);
+                    let scratch = (scratch < u8::MAX).then_some(scratch);
+                    let ordered = sequence_parallel_moves(&arg_moves, scratch).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "call: its arguments form a register cycle and no scratch \
+                                 register remains below x255 to break it"
+                                .into(),
                         }
+                    })?;
+                    for (from, to) in ordered {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(from),
+                            BEAMOperand::x(to),
+                        ]));
                     }
 
                     // Emit the call.
@@ -5620,12 +5766,14 @@ pub fn lower_iir_to_beam(
     // LANG83 PR6a: the float writer, after the last user function.
     if let Some(b) = &f64_beam {
         lang83_f64::emit(b, mod_atom, &mut label_counter, &mut instrs).map_err(|op| {
-            IIRBeamError::UnsupportedOp { function: "__iir_write_f64".into(), op }
+            IIRBeamError::UnsupportedOp { function: "__iir_f64_shortest".into(), op }
         })?;
         // Exported like every function this backend emits: `ir-to-beam`
         // writes the Code chunk's function count as `exports.len()`, and the
         // loader rejects a module with more `func_info`s than that count.
-        exports.push(BEAMExport { function_atom_index: b.fn_atom, arity: 2, label: b.entry_label });
+        for h in b.helpers() {
+            exports.push(BEAMExport { function_atom_index: h.atom, arity: h.arity, label: h.entry_label });
+        }
     }
 
     instrs.push(BEAMInstruction::new(OP_INT_CODE_END, vec![]));
@@ -5660,27 +5808,21 @@ pub fn lower_iir_to_beam(
 // ===========================================================================
 
 // ===========================================================================
-// LANG83 PR6a — the module-local float writer `'__iir_write_f64'/2`
+// LANG83 PR6a / PR7b — the shortest round-trip digits
 // ===========================================================================
 //
-// `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
+// A module that uses `f64_digits` / `f64_exp10` gets extra functions. They are
+// exported, like every function this backend emits, because the Code chunk's
+// function count is the export count.
 //
-// ```text
-// move  X -> x0;  move {i,0|1} -> x1;  call 2, '__iir_write_f64'/2
-// ```
-//
-// and a module that prints a float gets one extra function. It is exported,
-// like every function this backend emits, because the Code chunk's function
-// count is the export count.
 // OTP 25+'s `erlang:float_to_list(F, [short])` prints the SHORTEST decimal
 // that reads back as `F` (Ryu, round-half-even ties; CI runs OTP 27). The
-// function reads that string's digits `D` and decimal exponent `E` back out,
-// because Erlang's own layout (`1.0e16`, `0.1`, `1.0e-5`) is neither Python's
-// nor JavaScript's, then prints the LANG83 layout piece by piece through
-// `io:put_chars/1`, the same `io` server every other output builtin uses:
+// shared parse reads that string's digits `D` and decimal exponent `E` back
+// out, because Erlang's own layout (`1.0e16`, `0.1`, `1.0e-5`) is not the
+// digits alone:
 //
 // ```erlang
-// '__iir_write_f64'(F, Js) ->
+// '__iir_f64_shortest'(F) ->
 //     L0 = float_to_list(F, [short]),                 % "-1.5e-7", "100.0", "-0.0"
 //     {Neg, L} = case L0 of [$- | T] -> {1, T}; _ -> {0, L0} end,
 //     [M | R1] = string:split(L, "e"),
@@ -5690,36 +5832,56 @@ pub fn lower_iir_to_beam(
 //     All = case R2 of [] -> I; [Fr] -> I ++ Fr end,
 //     D1 = string:trim(All, leading, "0"),
 //     LZ = length(All) - length(D1),
-//     D = string:trim(D1, trailing, "0"),             % the digits
-//     N = length(D),
+//     D = string:trim(D1, trailing, "0"),             % the digits ([] for ±0.0)
 //     E = ILen - 1 - LZ + Exp,                        % exponent of hd(D)
-//     Neg =:= 1 andalso not (Js =:= 1 andalso N =:= 0) andalso put_chars("-"),
-//     if N =:= 0 -> put_chars(Js =:= 1 ? "0" : "0.0");      % ±0.0
-//        fixed (-4 =< E < 16 Python, -6 =< E < 21 JS) -> ...;
-//        true -> sci ...
-//     end.
+//     [Neg, E | D].
+// '__iir_f64_digits'(X) -> case '__iir_f64_shortest'(X) of [_, _ | []] -> 0;
+//                                                          [_, _ | D]  -> list_to_integer(D) end.
+// '__iir_f64_exp10'(X)  -> case '__iir_f64_shortest'(X) of [_, _ | []] -> 0;
+//                                                          [_, E | _]  -> E end.
 // ```
 //
 // BEAM has no `inf` or `nan` float: the emulator raises `badarith` before one
 // can exist, so there are no arms for them. `-0.0` is a distinct float since
-// OTP 27 and `float_to_list` keeps its `-`.
+// OTP 27 and `float_to_list` keeps its `-`. `f64_class` needs no helper (two
+// compares inline).
 //
 // Registers: every value that must survive an imported call lives in a Y
 // slot. The frame is `allocate`d and every slot is initialised to nil before
 // the first call, so a GC never scans garbage (BEAM07). Every test and BIF
 // reads X registers only. Each `gc_bif` names a Live count that covers
-// exactly the X registers still needed. The unit tests execute this function
-// on an opcode-and-BIF model (`lang83_pr6a.rs`).
+// exactly the X registers still needed. The unit tests execute these
+// functions on an opcode-and-BIF model (`lang83_pr6a.rs`).
+//
+// History: PR6a wrote the parse inside the float writer
+// `'__iir_write_f64'(F, Js)`, which then laid `D` out in Python's or
+// JavaScript's style through `io:put_chars/1` for `write_f64_py` /
+// `write_f64_js`. PR7b split it at the digits; LANG83 PR7e removed the
+// writer, because a backend may not carry a language's layout. A compiler
+// lays a float out itself, in its own module.
 mod lang83_f64 {
     use super::*;
 
-    /// The interned atoms, imports and literals the helper uses, and its two
-    /// preamble labels. Built only for a module that prints a float, so no
-    /// other module's tables change.
-    pub(super) struct F64Beam {
-        pub fn_atom: u32,
+    /// One synthetic function: its name atom, arity and two preamble labels.
+    pub(super) struct Helper {
+        pub atom: u32,
+        pub arity: u32,
         pub fi_label: u32,
         pub entry_label: u32,
+    }
+
+    /// The names a module function may not take (LANG83 PR7b).
+    pub(super) const HELPER_NAMES: &[&str] = &["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"];
+
+    /// The interned atoms, imports and literals the helpers use, and their
+    /// preamble labels. Built only for a module that asks for a float's
+    /// digits, so no other module's tables change. The shared parse
+    /// '__iir_f64_shortest'/1 is always present; each query only when the
+    /// module uses it.
+    pub(super) struct F64Beam {
+        pub shortest: Helper,
+        pub digits: Option<Helper>,
+        pub exp10: Option<Helper>,
         pub atom_leading: u32,
         pub atom_trailing: u32,
         pub imp_float_to_list: u32,
@@ -5730,18 +5892,20 @@ mod lang83_f64 {
         pub imp_sub: u32,
         pub imp_add: u32,
         pub imp_trim: u32,
-        pub imp_duplicate: u32,
-        pub imp_sublist: u32,
-        pub imp_nthtail: u32,
-        pub imp_integer_to_list: u32,
-        pub imp_put_chars: u32,
         /// Literal-table indices, keyed by the literal's text (`"[short]"`
         /// for the option list, otherwise the character list itself).
         pub lits: HashMap<&'static str, u32>,
     }
 
-    /// The character-list literals the helper prints or splits on.
-    pub(super) const TEXT_LITERALS: &[&str] = &["e", ".", "0", "-", "0.0", "0.", ".0", "e-", "e+"];
+    impl F64Beam {
+        /// Every function emitted, in emission order.
+        pub(super) fn helpers(&self) -> impl Iterator<Item = &Helper> {
+            std::iter::once(&self.shortest).chain(self.digits.iter()).chain(self.exp10.iter())
+        }
+    }
+
+    /// The character-list literals the parse splits on or trims.
+    pub(super) const TEXT_LITERALS: &[&str] = &["e", ".", "0"];
 
     /// ETF (`131`-prefixed) encoding of the character list `s`
     /// (`STRING_EXT`: tag 107, u16 length, the bytes).
@@ -5760,20 +5924,18 @@ mod lang83_f64 {
         out
     }
 
-    /// Y slots.
-    const JS: u8 = 0;
-    const NEG: u8 = 1;
-    /// The sign-stripped string, later reused for |E|, E+1 and the zero pad.
-    const SCRATCH: u8 = 2;
-    const EXP: u8 = 3;
-    const MANT: u8 = 4;
-    const ILEN: u8 = 5;
-    const ALL: u8 = 6;
-    const DIGITS: u8 = 7;
-    const E: u8 = 8;
-    const N: u8 = 9;
+    /// Y slots of `'__iir_f64_shortest'/1`.
+    const NEG: u8 = 0;
+    /// The sign-stripped string.
+    const SCRATCH: u8 = 1;
+    const EXP: u8 = 2;
+    const MANT: u8 = 3;
+    const ILEN: u8 = 4;
+    const ALL: u8 = 5;
+    const DIGITS: u8 = 6;
+    const E: u8 = 7;
     /// Frame size.
-    pub(super) const N_Y: u8 = 10;
+    pub(super) const N_Y: u8 = 8;
 
     struct Asm<'a> {
         out: &'a mut Vec<BEAMInstruction>,
@@ -5803,16 +5965,6 @@ mod lang83_f64 {
         fn call_ext(&mut self, arity: u64, import: u32) {
             self.ins(OP_CALL_EXT, vec![BEAMOperand::u(arity), BEAMOperand::u(u64::from(import))]);
         }
-        /// `io:put_chars(<literal>)`.
-        fn put_lit(&mut self, text: &'static str) {
-            self.lit(text, BEAMOperand::x(0));
-            self.call_ext(1, self.b.imp_put_chars);
-        }
-        /// `io:put_chars(Y)`.
-        fn put_y(&mut self, y: u8) {
-            self.mv(BEAMOperand::y(y), BEAMOperand::x(0));
-            self.call_ext(1, self.b.imp_put_chars);
-        }
         fn jump(&mut self, l: u32) {
             self.ins(OP_JUMP, vec![BEAMOperand::f(l)]);
         }
@@ -5835,24 +5987,44 @@ mod lang83_f64 {
         BEAMOperand::i(n as u64)
     }
 
-    /// Append `'__iir_write_f64'/2` to `out`. `labels` is the module's label
-    /// counter (the helper's internal labels are taken from it).
+    /// Append every helper `b` names to `out`: the shared parse, then the
+    /// two digit queries when present. `labels` is the
+    /// module's label counter (the helpers' internal labels come from it).
     pub(super) fn emit(
         b: &F64Beam,
         mod_atom: u32,
         labels: &mut u32,
         out: &mut Vec<BEAMInstruction>,
     ) -> Result<(), String> {
+        emit_shortest(b, mod_atom, labels, out)?;
+        for (h, digits) in [(&b.digits, true), (&b.exp10, false)] {
+            if let Some(h) = h {
+                emit_query(b, h, digits, mod_atom, labels, out)?;
+            }
+        }
+        Ok(())
+    }
+
+    /// `func_info` and the entry label of `h`.
+    fn preamble(a: &mut Asm, h: &Helper, mod_atom: u32) {
+        a.bind(h.fi_label);
+        a.ins(OP_FUNC_INFO, vec![BEAMOperand::a(mod_atom), BEAMOperand::a(h.atom), BEAMOperand::u(u64::from(h.arity))]);
+        a.bind(h.entry_label);
+    }
+
+    /// `'__iir_f64_shortest'(F) -> [Neg, E | D]` (LANG83 PR7b): the PR6a
+    /// writer's digit parse, moved here so the two digit queries share it. `Neg` is 1 when `float_to_list` printed a
+    /// `-`, `D` the shortest digits as a character list (`[]` for ±0.0) and
+    /// `E` the exponent of `hd(D)`. The result is two cons cells, built after
+    /// a `test_heap 4, 0` (every value is in a Y slot by then).
+    fn emit_shortest(b: &F64Beam, mod_atom: u32, labels: &mut u32, out: &mut Vec<BEAMInstruction>) -> Result<(), String> {
         let (x, y) = (BEAMOperand::x, BEAMOperand::y);
         let mut a = Asm { out, labels, b };
-        a.bind(b.fi_label);
-        a.ins(OP_FUNC_INFO, vec![BEAMOperand::a(mod_atom), BEAMOperand::a(b.fn_atom), BEAMOperand::u(2)]);
-        a.bind(b.entry_label);
-        a.ins(OP_ALLOCATE, vec![BEAMOperand::u(u64::from(N_Y)), BEAMOperand::u(2)]);
+        preamble(&mut a, &b.shortest, mod_atom);
+        a.ins(OP_ALLOCATE, vec![BEAMOperand::u(u64::from(N_Y)), BEAMOperand::u(1)]);
         for slot in 0..N_Y {
             a.mv(BEAMOperand::a(0), y(slot));
         }
-        a.mv(x(1), y(JS));
 
         // L0 = float_to_list(F, [short]); peel a leading '-'.
         a.lit("[short]", x(1));
@@ -5922,138 +6094,57 @@ mod lang83_f64 {
         a.mv(y(EXP), x(0));
         a.bif2(2, b.imp_add, x(1), x(0), x(1));
         a.mv(x(1), y(E));
-        // D = trim(D1, trailing, "0"); N = length(D).
+        // D = trim(D1, trailing, "0").
         a.mv(y(DIGITS), x(0));
         a.mv(BEAMOperand::a(b.atom_trailing), x(1));
         a.lit("0", x(2));
         a.call_ext(3, b.imp_trim);
         a.mv(x(0), y(DIGITS));
-        a.bif1(1, b.imp_length, x(0), x(1));
-        a.mv(x(1), y(N));
 
-        // The sign: always in Python; in JavaScript not for -0.
-        let (no_minus, put_minus) = (a.label()?, a.label()?);
-        a.mv(y(NEG), x(0));
-        a.test(OP_IS_EQ_EXACT, no_minus, x(0), int(1));
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, put_minus, x(0), int(1));
-        a.mv(y(N), x(0));
-        a.test(OP_IS_EQ_EXACT, put_minus, x(0), int(0));
-        a.jump(no_minus);
-        a.bind(put_minus);
-        a.put_lit("-");
-        a.bind(no_minus);
-
-        // ±0: no digits survive the trims.
-        let (nonzero, zero_py, ret) = (a.label()?, a.label()?, a.label()?);
-        a.mv(y(N), x(0));
-        a.test(OP_IS_EQ_EXACT, nonzero, x(0), int(0));
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, zero_py, x(0), int(1));
-        a.put_lit("0");
-        a.jump(ret);
-        a.bind(zero_py);
-        a.put_lit("0.0");
-        a.jump(ret);
-        a.bind(nonzero);
-
-        // Fixed when Lo =< E < Hi: (-6, 21) for JavaScript, (-4, 16) for Python.
-        let (py_range, fixed, sci) = (a.label()?, a.label()?, a.label()?);
+        // [Neg, E | D]
+        a.ins(OP_TEST_HEAP, vec![BEAMOperand::u(4), BEAMOperand::u(0)]);
         a.mv(y(E), x(1));
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, py_range, x(0), int(1));
-        a.test(OP_IS_GE, sci, x(1), int(-6));
-        a.test(OP_IS_LT, sci, x(1), int(21));
-        a.jump(fixed);
-        a.bind(py_range);
-        a.test(OP_IS_GE, sci, x(1), int(-4));
-        a.test(OP_IS_LT, sci, x(1), int(16));
-        a.bind(fixed);
-        let (at_least_one, fraction) = (a.label()?, a.label()?);
-        a.test(OP_IS_LT, at_least_one, x(1), int(0));
-        // E < 0: "0." ++ duplicate(-E - 1, $0) ++ D
-        a.put_lit("0.");
-        a.mv(int(-1), x(0));
-        a.mv(y(E), x(1));
-        a.bif2(2, b.imp_sub, x(0), x(1), x(0));
-        a.mv(int(i64::from(b'0')), x(1));
-        a.call_ext(2, b.imp_duplicate);
-        a.call_ext(1, b.imp_put_chars);
-        a.put_y(DIGITS);
-        a.jump(ret);
-        a.bind(at_least_one);
-        // E1 = E + 1 integer places.
-        a.mv(y(E), x(0));
-        a.mv(int(1), x(1));
-        a.bif2(2, b.imp_add, x(0), x(1), x(2));
-        a.mv(y(N), x(3));
-        a.test(OP_IS_GE, fraction, x(2), x(3));
-        // Integral: D ++ duplicate(E1 - N, $0), then ".0" in Python.
-        a.bif2(4, b.imp_sub, x(2), x(3), x(4));
-        a.mv(x(4), y(SCRATCH));
-        a.put_y(DIGITS);
-        a.mv(y(SCRATCH), x(0));
-        a.mv(int(i64::from(b'0')), x(1));
-        a.call_ext(2, b.imp_duplicate);
-        a.call_ext(1, b.imp_put_chars);
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, ret, x(0), int(0));
-        a.put_lit(".0");
-        a.jump(ret);
-        a.bind(fraction);
-        // sublist(D, E1) ++ "." ++ nthtail(E1, D)
-        a.mv(x(2), y(SCRATCH));
-        a.mv(y(DIGITS), x(0));
-        a.mv(y(SCRATCH), x(1));
-        a.call_ext(2, b.imp_sublist);
-        a.call_ext(1, b.imp_put_chars);
-        a.put_lit(".");
-        a.mv(y(SCRATCH), x(0));
-        a.mv(y(DIGITS), x(1));
-        a.call_ext(2, b.imp_nthtail);
-        a.call_ext(1, b.imp_put_chars);
-        a.jump(ret);
-
-        // Scientific: d[.ddd]e±X, Python padding X to two digits.
-        a.bind(sci);
-        let (exponent, e_positive, e_abs, e_digits) = (a.label()?, a.label()?, a.label()?, a.label()?);
-        a.mv(y(DIGITS), x(0));
-        a.mv(int(1), x(1));
-        a.call_ext(2, b.imp_sublist);
-        a.call_ext(1, b.imp_put_chars);
-        a.mv(y(N), x(0));
-        a.test(OP_IS_LT, exponent, int(1), x(0));
-        a.put_lit(".");
-        a.mv(y(DIGITS), x(0));
-        a.ins(OP_GET_LIST, vec![x(0), x(1), x(2)]);
-        a.mv(x(2), x(0));
-        a.call_ext(1, b.imp_put_chars);
-        a.bind(exponent);
-        a.mv(y(E), x(0));
-        a.test(OP_IS_LT, e_positive, x(0), int(0));
-        a.put_lit("e-");
-        a.mv(int(0), x(0));
-        a.mv(y(E), x(1));
-        a.bif2(2, b.imp_sub, x(0), x(1), x(0));
-        a.mv(x(0), y(SCRATCH));
-        a.jump(e_abs);
-        a.bind(e_positive);
-        a.put_lit("e+");
-        a.mv(y(E), x(0));
-        a.mv(x(0), y(SCRATCH));
-        a.bind(e_abs);
-        a.mv(y(JS), x(0));
-        a.test(OP_IS_EQ_EXACT, e_digits, x(0), int(0));
-        a.mv(y(SCRATCH), x(0));
-        a.test(OP_IS_LT, e_digits, x(0), int(10));
-        a.put_lit("0");
-        a.bind(e_digits);
-        a.mv(y(SCRATCH), x(0));
-        a.call_ext(1, b.imp_integer_to_list);
-        a.call_ext(1, b.imp_put_chars);
-
-        a.bind(ret);
+        a.mv(y(DIGITS), x(2));
+        a.ins(OP_PUT_LIST, vec![x(1), x(2), x(0)]);
+        a.mv(y(NEG), x(1));
+        a.ins(OP_PUT_LIST, vec![x(1), x(0), x(0)]);
         a.ins(OP_DEALLOCATE, vec![BEAMOperand::u(u64::from(N_Y))]);
+        a.ins(OP_RETURN, vec![]);
+        Ok(())
+    }
+
+    /// `'__iir_f64_digits'(X)` / `'__iir_f64_exp10'(X)` (LANG83 PR7b): call
+    /// the shared parse; `0` when it found no digits (±0.0 — BEAM has no
+    /// infinities or NaN), otherwise `list_to_integer(D)` or `E`.
+    fn emit_query(
+        b: &F64Beam,
+        h: &Helper,
+        digits: bool,
+        mod_atom: u32,
+        labels: &mut u32,
+        out: &mut Vec<BEAMInstruction>,
+    ) -> Result<(), String> {
+        let x = BEAMOperand::x;
+        let mut a = Asm { out, labels, b };
+        preamble(&mut a, h, mod_atom);
+        // A zero-slot frame: it saves the continuation pointer for the call.
+        a.ins(OP_ALLOCATE, vec![BEAMOperand::u(0), BEAMOperand::u(1)]);
+        a.ins(OP_CALL, vec![BEAMOperand::u(1), BEAMOperand::f(b.shortest.entry_label)]);
+        a.ins(OP_GET_LIST, vec![x(0), x(1), x(2)]);
+        a.ins(OP_GET_LIST, vec![x(2), x(3), x(4)]);
+        let has_digits = a.label()?;
+        a.ins(OP_IS_NIL, vec![BEAMOperand::f(has_digits), x(4)]);
+        a.mv(int(0), x(0));
+        a.ins(OP_DEALLOCATE, vec![BEAMOperand::u(0)]);
+        a.ins(OP_RETURN, vec![]);
+        a.bind(has_digits);
+        if digits {
+            a.mv(x(4), x(0));
+            a.call_ext(1, b.imp_list_to_integer);
+        } else {
+            a.mv(x(3), x(0));
+        }
+        a.ins(OP_DEALLOCATE, vec![BEAMOperand::u(0)]);
         a.ins(OP_RETURN, vec![]);
         Ok(())
     }

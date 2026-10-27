@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C209-anquan",
+    "language": "chinese",
+    "chapter": 209,
+    "sequence": 16090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:767882d9e23dc533"
+  },
+  "findings": []
+}

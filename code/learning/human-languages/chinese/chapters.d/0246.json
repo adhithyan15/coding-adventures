@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Out in the Hills",
+  "label": "ch:zh-out-in-the-hills",
+  "canDo": "I can talk about a village, a bridge, stones, a pond and rowing a boat.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C246-huachuan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can talk about a village, a bridge, stones, a pond and rowing a boat.",
+    "assesses": [
+      "ZH-LEX-C246-HILLS246-03",
+      "ZH-LEX-C246-HILLS246-04",
+      "ZH-LEX-C246-HILLS246-05"
+    ]
+  }
+}

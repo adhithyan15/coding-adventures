@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:86d5c5327adae236",
+  "lessonIds": [
+    "ZH-C206-lou",
+    "ZH-C206-ceng",
+    "ZH-C206-shanglou",
+    "ZH-C206-bangongshi",
+    "ZH-C206-qiantai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch206.txt",
+  "json": "chinese/narration/ch206.json",
+  "textHash": "fnv1a64:b53c61bbc735262e",
+  "jsonHash": "fnv1a64:6f6db0ca5afe0f70",
+  "findings": []
+}

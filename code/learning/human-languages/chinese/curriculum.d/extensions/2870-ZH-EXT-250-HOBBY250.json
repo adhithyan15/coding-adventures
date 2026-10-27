@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-250-HOBBY250",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask about hobbies and interests, and talk about novels, stories and playing chess.",
+  "prerequisites": []
+}

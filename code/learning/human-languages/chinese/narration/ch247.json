@@ -1,0 +1,914 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 247,
+  "title": "Back From a Trip",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d5fbea848b0a4257",
+  "lessons": [
+    {
+      "id": "ZH-C247-jingli",
+      "sequence": 18490,
+      "title": "jīnglì — an experience (something lived through)",
+      "headword": "jīnglì",
+      "romanization": "jīnglì",
+      "gloss": "an experience (something lived through)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72488e5119bcb163",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a pond, then the Mandarin for to row a boat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jīnglì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīnglì — \"an experience (something lived through)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè cì lǚyóu shì yí cì hěn hǎo de jīnglì — This trip was a great experience."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīnglì is built from jīng 'to pass through' and lì 'to go through', both inherited from Middle Chinese, keng and lek (Guangyun, in Baxter's transcription), which glosses the second 'to pass' and 'to go'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīnglì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīnglì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīnglì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīnglì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè cì lǚyóu shì yí cì hěn hǎo de jīnglì — This trip was a great experience.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè cì lǚyóu shì yí cì hěn hǎo de jīnglì* — This trip was a great experience.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a pond, then the Mandarin for to row a boat, then say jīnglì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a pond, then the Mandarin for to row a boat, then say *jīnglì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jīnglì mean? (\"An experience (something lived through)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C247-yukuai",
+      "sequence": 18500,
+      "title": "yúkuài — pleasant; cheerful",
+      "headword": "yúkuài",
+      "romanization": "yúkuài",
+      "gloss": "pleasant; cheerful",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03d6b20eb0f64c86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to row a boat, then the Mandarin for something lived through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yúkuài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yúkuài — \"pleasant; cheerful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhōumò wǒmen wán de hěn yúkuài — We had a lovely time at the weekend."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yúkuài is built from yú 'glad' and 快 'pleased', both inherited from Middle Chinese, yu and khwaejH (Guangyun, in Baxter's transcription), which glosses the first 'pleased' and 'happy' and the second 'to one's liking' and 'glad'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yúkuài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yúkuài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yúkuài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yúkuài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōumò wǒmen wán de hěn yúkuài — We had a lovely time at the weekend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōumò wǒmen wán de hěn yúkuài* — We had a lovely time at the weekend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to row a boat, then the Mandarin for something lived through, then say yúkuài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to row a boat, then the Mandarin for something lived through, then say *yúkuài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yúkuài mean? (\"Pleasant; cheerful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C247-techan",
+      "sequence": 18510,
+      "title": "tèchǎn — a local speciality; a regional product",
+      "headword": "tèchǎn",
+      "romanization": "tèchǎn",
+      "gloss": "a local speciality; a regional product",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91ab437cdb0dec2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for something lived through, then the Mandarin for pleasant and cheerful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tèchǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tèchǎn — \"a local speciality; a regional product\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhèr de tèchǎn hěn hǎochī — The local specialities here are delicious."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tèchǎn is built from tè 'special' and chǎn 'to produce', both inherited from Middle Chinese, dok and sreanX (Guangyun, in Baxter's transcription), which glosses the first 'a bull' and 'alone' and the second 'to give birth'; the ch of chǎn is not the regular outcome of that form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tèchǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tèchǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tèchǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tèchǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr de tèchǎn hěn hǎochī — The local specialities here are delicious.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr de tèchǎn hěn hǎochī* — The local specialities here are delicious.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for something lived through, then the Mandarin for pleasant and cheerful, then say tèchǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for something lived through, then the Mandarin for pleasant and cheerful, then say *tèchǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tèchǎn mean? (\"A local speciality; a regional product\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C247-jinianpin",
+      "sequence": 18520,
+      "title": "jìniànpǐn — souvenir",
+      "headword": "jìniànpǐn",
+      "romanization": "jìniànpǐn",
+      "gloss": "souvenir",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0d41861310b0279",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for pleasant and cheerful, then the Mandarin for a local speciality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jìniànpǐn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jìniànpǐn — \"souvenir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ mǎile liǎng ge jìniànpǐn — I bought two souvenirs."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jìniànpǐn is built from jì 'to record', niàn 'to think of' and pǐn 'an article', all inherited from Middle Chinese, kiX, nemH and phimX (Guangyun, in Baxter's transcription), which glosses the second 'to think' and the third 'a kind' and 'a rank'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìniànpǐn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìniànpǐn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìniànpǐn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìniànpǐn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ mǎile liǎng ge jìniànpǐn — I bought two souvenirs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ mǎile liǎng ge jìniànpǐn* — I bought two souvenirs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for pleasant and cheerful, then the Mandarin for a local speciality, then say jìniànpǐn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for pleasant and cheerful, then the Mandarin for a local speciality, then say *jìniànpǐn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jìniànpǐn mean? (\"Souvenir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C247-huiyi",
+      "sequence": 18530,
+      "title": "huíyì — to recall; to think back on",
+      "headword": "huíyì",
+      "romanization": "huíyì",
+      "gloss": "to recall; to think back on",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4430561f85e542df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a local speciality, then the Mandarin for a souvenir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: huíyì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huíyì — \"to recall; to think back on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ chángcháng huíyì nà cì lǚyóu — I often think back to that trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huíyì is built from 回 'to return' and yì 'to remember'. The first is inherited from Middle Chinese hwoj (Guangyun, in Baxter's transcription); the dictionary glosses the second, 'ik there, 'to think of'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huíyì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huíyì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huíyì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huíyì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ chángcháng huíyì nà cì lǚyóu — I often think back to that trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ chángcháng huíyì nà cì lǚyóu* — I often think back to that trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a local speciality, then the Mandarin for a souvenir, then say huíyì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a local speciality, then the Mandarin for a souvenir, then say *huíyì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does huíyì mean? (\"To recall; to think back on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R247-review-242-247",
+      "sequence": 18540,
+      "title": "Looking back: from Farm Animals and Bugs to Back From a Trip",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Farm Animals and Bugs to Back From a Trip",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14ca82ec36bd5b9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a pig and a goat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pig, a goat, a snake, a bug, a mosquito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pig, a goat, a snake, a bug, a mosquito]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "climate, a snowflake, to change over time, to freeze over, temperature",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: climate, a snowflake, to change over time, to freeze over, temperature]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a typhoon, a rain shower, who knows, in case, to carry on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a typhoon, a rain shower, who knows, in case, to carry on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "body temperature, to be catching, a face mask, mood, to look after yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: body temperature, to be catching, a face mask, mood, to look after yourself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a village, a bridge, a stone, a pond, to row a boat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a village, a bridge, a stone, a pond, to row a boat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something lived through, pleasant and cheerful, a local speciality, a souvenir, to think back on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something lived through, pleasant and cheerful, a local speciality, a souvenir, to think back on]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A pig? (zhū.) A goat? (shānyáng.) A snake? (shé.) A bug? (chóngzi.) A mosquito? (wénzi.) Climate? (气候, qìhòu.) A snowflake? (雪花, xuěhuā.) To change over time? (biànhuà.) To freeze over? (jiébīng.) Temperature? (wēndù.) A typhoon? (táifēng.) A rain shower? (zhènyǔ.) Who knows? (shuōbudìng.) In case? (wànyī.) To carry on? (jìxù.) Body temperature? (tǐwēn.) To be catching? (chuánrǎn.) A face mask? (kǒuzhào.) Mood? (xīnqíng.) To look after yourself? (bǎozhòng.) A village? (cūnzi.) A bridge? (qiáo.) A stone? (shítou.) A pond? (chítáng.) To row a boat? (huáchuán.) Something lived through? (jīnglì.) Pleasant and cheerful? (yúkuài.) A local speciality? (tèchǎn.) A souvenir? (jìniànpǐn.) To think back on? (huíyì.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R247-review-final-247",
+      "sequence": 18550,
+      "title": "Back From a Trip — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4464bee1e20ed935",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for something lived through and pleasant and cheerful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something lived through, pleasant and cheerful, a local speciality, a souvenir, to think back on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something lived through, pleasant and cheerful, a local speciality, a souvenir, to think back on]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Something lived through? (jīnglì.) Pleasant and cheerful? (yúkuài.) A local speciality? (tèchǎn.) A souvenir? (jìniànpǐn.) To think back on? (huíyì.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

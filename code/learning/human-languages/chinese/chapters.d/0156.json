@@ -1,0 +1,23 @@
+{
+  "chapter": 156,
+  "title": "Price List",
+  "label": "ch:zh-price-list",
+  "canDo": "I can find prices in a price list and an advert.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C156-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Reading a shop's price list and an advert, prices written in 元 and said in kuài, the price, free of charge and an advert, built on one new written character: 元.",
+    "assesses": [
+      "ZH-LEX-C156-YUAN-01",
+      "ZH-SCRIPT-YUAN-MONEY-01",
+      "ZH-LEX-C156-JIAQIAN-01",
+      "ZH-LEX-C156-MIANFEI-01",
+      "ZH-LEX-C156-GUANGGAO-01",
+      "ZH-SKILL-READ-PRICE-LIST-01",
+      "ZH-PERFORMANCE-PRICES-01"
+    ]
+  }
+}

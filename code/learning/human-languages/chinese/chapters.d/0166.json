@@ -1,0 +1,20 @@
+{
+  "chapter": 166,
+  "title": "Tea Time",
+  "label": "ch:zh-tea-time",
+  "canDo": "I can ask for boiled water, afternoon tea, black tea and tea leaves, and make the tea.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C166-paocha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can ask for boiled water, afternoon tea, black tea and tea leaves, and make the tea.",
+    "assesses": [
+      "ZH-LEX-C166-TEA166-01",
+      "ZH-LEX-C166-TEA166-03",
+      "ZH-LEX-C166-TEA166-04",
+      "ZH-LEX-C166-TEA166-05"
+    ]
+  }
+}

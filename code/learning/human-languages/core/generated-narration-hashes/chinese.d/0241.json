@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:c44a65179d2e8454",
+  "lessonIds": [
+    "ZH-C241-zhuyuan",
+    "ZH-C241-bingfang",
+    "ZH-C241-shoushu",
+    "ZH-C241-chuyuan",
+    "ZH-C241-huifu-recover",
+    "ZH-R241-review-236-241"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch241.txt",
+  "json": "chinese/narration/ch241.json",
+  "textHash": "fnv1a64:2c55071ce7eefe20",
+  "jsonHash": "fnv1a64:f4a90d32b2d4db58",
+  "findings": []
+}

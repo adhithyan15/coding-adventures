@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C175-guizi",
+  "pathSegment": "ZH-PATH-175-FURN175",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-175-FURN175",
+      "order": 4
+    }
+  ]
+}

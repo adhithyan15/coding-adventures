@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W263-jia-leave",
+    "language": "chinese",
+    "chapter": 263,
+    "sequence": 19795,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8397a01db2f09fe9",
+    "detachableSegments": [
+      "Script — the person piece, then two narrow pieces"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

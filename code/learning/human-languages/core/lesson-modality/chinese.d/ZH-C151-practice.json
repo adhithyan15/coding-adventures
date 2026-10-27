@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C151-practice",
+    "language": "chinese",
+    "chapter": 151,
+    "sequence": 12350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dffcaf8f32eab05"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "An Invitation",
+  "label": "ch:zh-an-invitation",
+  "canDo": "I can invite people, send my regards, and talk about an evening party, a get-together and who pays.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C173-qingke",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can invite people, send my regards, and talk about an evening party, a get-together and who pays.",
+    "assesses": [
+      "ZH-LEX-C173-INVITE173-03",
+      "ZH-LEX-C173-INVITE173-04",
+      "ZH-LEX-C173-INVITE173-05"
+    ]
+  }
+}

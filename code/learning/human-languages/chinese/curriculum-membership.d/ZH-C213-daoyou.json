@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C213-daoyou",
+  "pathSegment": "ZH-PATH-213-TRIP213",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-213-TRIP213",
+      "order": 1
+    }
+  ]
+}

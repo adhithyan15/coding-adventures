@@ -131,6 +131,13 @@ branches, direction-sensitive nullification, calls, returns, and complete-state
 transactional traces. Its package and Spec 07au explicitly backlog the
 remaining problem-state, privileged, MMU, cache, FPU, and system facilities.
 
+The checked ZipCPU revision-3 functional core pins one no-CIS configuration
+with two complete register banks, exact CC/PC/interrupt/image state,
+big-endian memory transactions, typed transactional lifecycle operations, and
+separately reproducible C++-simulator and Verilated-RTL evidence corpora. Spec
+07be keeps caches, MMU, peripherals, bus timing and physical-device claims in
+later bounded cells.
+
 Start with the [architecture overview](./code/specs/00-architecture.md),
 [deep CPU architecture](./code/specs/D00-deep-cpu-architecture.md), and
 [computing-stack learning guide](./code/learning/computer-architecture/computing-stack.md).

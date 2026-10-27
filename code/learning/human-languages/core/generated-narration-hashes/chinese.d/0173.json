@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:f9a2ce7d524042b0",
+  "lessonIds": [
+    "ZH-C173-yaoqing",
+    "ZH-C173-wenhou",
+    "ZH-W173-hou-wait",
+    "ZH-C173-wanhui",
+    "ZH-C173-juhui",
+    "ZH-C173-qingke"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch173.txt",
+  "json": "chinese/narration/ch173.json",
+  "textHash": "fnv1a64:04bb9b6e765e29a9",
+  "jsonHash": "fnv1a64:3660e6ee85f3261e",
+  "findings": []
+}

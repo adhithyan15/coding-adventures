@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C255-jiaban",
+  "pathSegment": "ZH-PATH-255-PARTTIME255",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-255-PARTTIME255",
+      "order": 4
+    }
+  ]
+}

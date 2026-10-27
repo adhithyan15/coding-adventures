@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "How Often",
+  "label": "ch:zh-how-often",
+  "canDo": "I can say what I do as a rule, every time, regularly, now and then and normally.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C162-tongchang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say what I do as a rule, every time, regularly, now and then and normally.",
+    "assesses": [
+      "ZH-LEX-C162-OFTEN162-03",
+      "ZH-LEX-C162-OFTEN162-04",
+      "ZH-LEX-C162-OFTEN162-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:23cd2f48e70db05a",
+  "lessonIds": [
+    "ZH-C245-tiwen",
+    "ZH-C245-chuanran",
+    "ZH-C245-kouzhao",
+    "ZH-C245-xinqing",
+    "ZH-C245-baozhong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch245.txt",
+  "json": "chinese/narration/ch245.json",
+  "textHash": "fnv1a64:7d0b18b885b4d112",
+  "jsonHash": "fnv1a64:31063ae2a0320777",
+  "findings": []
+}

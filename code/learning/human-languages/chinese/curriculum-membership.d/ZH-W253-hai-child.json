@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W253-hai-child",
+  "pathSegment": "ZH-PATH-253-GRAND253",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-253-GRAND253",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C221-lingxia",
+  "pathSegment": "ZH-PATH-221-SNOW221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-221-SNOW221",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 231,
+  "title": "Seeing a Doctor",
+  "label": "ch:zh-seeing-a-doctor",
+  "canDo": "I can choose Chinese or Western medicine, register at the clinic, talk about the nurse and say what the doctor gave me.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C231-kaiyao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can choose Chinese or Western medicine, register at the clinic, talk about the nurse and say what the doctor gave me.",
+    "assesses": [
+      "ZH-LEX-C231-DOCTOR231-01",
+      "ZH-LEX-C231-DOCTOR231-03",
+      "ZH-LEX-C231-DOCTOR231-04",
+      "ZH-LEX-C231-DOCTOR231-05"
+    ]
+  }
+}

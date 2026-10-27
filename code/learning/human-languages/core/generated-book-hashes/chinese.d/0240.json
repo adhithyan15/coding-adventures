@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:c556aeb674a3a871",
+  "lessonIds": [
+    "ZH-C240-shengbing",
+    "ZH-C240-fayan",
+    "ZH-C240-zhong",
+    "ZH-C240-tu",
+    "ZH-C240-laduzi"
+  ],
+  "tex": "chinese/book/chapters/ch240-feeling-ill.tex"
+}

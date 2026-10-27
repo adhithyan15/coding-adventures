@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C149-zai-progressive",
+  "pathSegment": "ZH-PATH-149-NOW",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-149-NOW",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:1f67f2a497338e5b",
+  "lessonIds": [
+    "ZH-C148-xia-ge-yue",
+    "ZH-W148-yue-month",
+    "ZH-C148-yao-future",
+    "ZH-C148-xia-xingqi",
+    "ZH-C148-shang-ge-yue",
+    "ZH-C148-dasuan",
+    "ZH-C148-jianglai",
+    "ZH-C148-practice"
+  ],
+  "tex": "chinese/book/chapters/ch148-next-month.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:593ec452ec88364e",
+  "lessonIds": [
+    "ZH-C222-zhaoliang",
+    "ZH-C222-kesou",
+    "ZH-C222-sangzi",
+    "ZH-C222-dapenti",
+    "ZH-C222-nanshou"
+  ],
+  "tex": "chinese/book/chapters/ch222-under-the-weather.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C157-tongzhi",
+    "language": "chinese",
+    "chapter": 157,
+    "sequence": 12720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3a6701147b68923"
+  },
+  "findings": []
+}

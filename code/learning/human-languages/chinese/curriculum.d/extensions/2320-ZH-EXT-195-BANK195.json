@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-195-BANK195",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can put money in and take it out, and talk about cards, PINs and bank accounts.",
+  "prerequisites": []
+}

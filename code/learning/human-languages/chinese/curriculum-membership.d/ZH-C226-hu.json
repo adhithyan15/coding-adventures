@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C226-hu",
+  "pathSegment": "ZH-PATH-226-LAKE226",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-226-LAKE226",
+      "order": 2
+    }
+  ]
+}

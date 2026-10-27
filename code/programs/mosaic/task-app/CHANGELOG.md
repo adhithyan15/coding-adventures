@@ -7,6 +7,20 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.13` accumulate here until the next version is
 cut.
 
+### Changed
+
+- **Notes is built from the shared list and editor (E3).** The Notes view
+  mounts `mosaic-pkg-notes` 0.3.0, which draws its list with the toolkit's
+  `RecordList` and its title, body and Save/Delete/Cancel with
+  `DraftEditor`. The fields gain visible labels ("Title", "Note", "Attach to
+  task") that are also their accessible names; the attach-to-task field had
+  no name before. Every label is now written at TaskApp's Notes mount, not
+  inside the package. **Delete is shown only for a saved note:** the new
+  `note-delete-label` slot is "Delete" for a note the project has saved and
+  empty for a new one, so no Delete button appears on a note that does not
+  exist yet. `note-rows` rows are RecordList's six fields. Ctrl/Cmd+Enter
+  still saves from the body. Spec: `task-app-notes-ui-v1.md`, addendum v1.3.
+
 ### Fixed
 
 - **A refused note Save says why (E5).** Saving a note whose *Attach to task*

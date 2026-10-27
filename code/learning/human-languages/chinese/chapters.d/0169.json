@@ -1,0 +1,22 @@
+{
+  "chapter": 169,
+  "title": "Early and Late",
+  "label": "ch:zh-early-and-late",
+  "canDo": "I can talk about first thing in the morning, an afternoon nap, dusk, staying up and the dead of night.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-R169-review-164-169",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can talk about first thing in the morning, an afternoon nap, dusk, staying up and the dead of night.",
+    "assesses": [
+      "ZH-LEX-C169-EARLY169-01",
+      "ZH-LEX-C169-EARLY169-02",
+      "ZH-LEX-C169-EARLY169-03",
+      "ZH-LEX-C169-EARLY169-04",
+      "ZH-LEX-C169-EARLY169-05",
+      "ZH-SCRIPT-JIAO-SLEEP-01"
+    ]
+  }
+}

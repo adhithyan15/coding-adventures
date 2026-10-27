@@ -16,7 +16,7 @@
 //!       if !is_nil goto recurse
 //!       ret box 0                           ;; nil ⇒ boxed length 0
 //!     recurse:
-//!       rest = cdr(lst)                     ;; → field_load[1] / dyn_cdr
+//!       rest = cdr(lst)                     ;; → field_load[1] / dyn_pair_rest
 //!       sub  = __dyn_list_length(rest)      ;; recurse (boxed result)
 //!       ret (+ 1 sub)                       ;; DYNAMIC add (E6d-2) → boxed
 //!   }
@@ -30,7 +30,7 @@
 //!       if !(ni == 0) goto recurse          ;; TYPED cmp_eq → raw bool
 //!       ret car(lst)                        ;; base: the n-th element
 //!     recurse:
-//!       rest = cdr(lst)                     ;; → field_load[1] / dyn_cdr
+//!       rest = cdr(lst)                     ;; → field_load[1] / dyn_pair_rest
 //!       ret __dyn_list_ref(rest, box(ni-1)) ;; TYPED sub, re-box for the call
 //!   }
 //! ```
@@ -825,7 +825,7 @@ fn rewrite_assoc_calls(f: &mut IIRFunction) {
 ///
 /// The key comparison must produce a **raw machine bool** to feed `jmp_if_false`.
 /// The `equal?` builtin lowers differently across the managed / runtime paths
-/// (`dyn_equal` on native) and its result is not a plain branch bool, so — exactly
+/// (`__lisp_equal` on native) and its result is not a plain branch bool, so — exactly
 /// as `list-ref` does for its index — this V1 helper **unboxes both keys to `i64`**
 /// and compares with a typed `cmp_eq`. That restricts V1 `assoc` to **integer
 /// keys** (every E6d-3b proof so far uses integer atoms); symbol keys arrive with

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W236-xian-appear",
+    "language": "chinese",
+    "chapter": 236,
+    "sequence": 17935,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f218885911d05c3e",
+    "detachableSegments": [
+      "Script — a narrow left piece, then 见"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
