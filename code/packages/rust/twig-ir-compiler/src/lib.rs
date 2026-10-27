@@ -1597,7 +1597,26 @@ mod tests {
         })
     }
 
-    /// Every register a typed op reads was only ever written with that kind.
+    /// The kinds `i` trusts its operands to be, if any.
+    ///
+    /// Besides the typed ops above, a `mov` or `ret` with a concrete hint is
+    /// a claim about the register it reads: `mov y ← _or [str]` tells a
+    /// native backend that `_or` holds a string, and `ret _or [i64]` makes
+    /// the function's callers believe it returns one.  Checking those too
+    /// is what catches a wrong join type that flows through a `let` or a
+    /// function return before it reaches a typed op (#18448).
+    fn trusted_operand_kinds(i: &IIRInstr) -> Option<Vec<&str>> {
+        if let Some(kinds) = typed_operand_kinds(&i.op) {
+            return Some(kinds.to_vec());
+        }
+        match i.op.as_str() {
+            "mov" | "ret" if i.type_hint != "any" => Some(vec![i.type_hint.as_str()]),
+            _ => None,
+        }
+    }
+
+    /// Every register a typed op (or typed `mov` / `ret`) reads was only
+    /// ever written with that kind.
     fn assert_typed_ops_sound(src: &str) {
         for f in module(src).functions {
             let mut writers: HashMap<&str, Vec<&str>> = HashMap::new();
@@ -1610,7 +1629,7 @@ mod tests {
                 }
             }
             for i in &f.instructions {
-                let Some(kinds) = typed_operand_kinds(&i.op) else { continue };
+                let Some(kinds) = trusted_operand_kinds(i) else { continue };
                 for (src, kind) in i.srcs.iter().zip(kinds.iter()) {
                     let Operand::Var(r) = src else { continue };
                     let w = writers.get(r.as_str()).cloned().unwrap_or_default();
@@ -1790,6 +1809,140 @@ mod tests {
         assert_ne!(f.params[1].0, "x", "{f:?}");
         let ret = f.instructions.iter().rfind(|i| i.op == "ret").unwrap();
         assert_eq!(ret.srcs[0], Operand::Var(f.params[1].0.clone()), "{f:?}");
+    }
+
+    // ---- A join temporary keeps only a type every writer agrees on (#18448) --
+    //
+    // `if`, `and`, `or` and `match` each funnel several paths into one
+    // register — a *join temporary* — with one `mov` per path:
+    //
+    // ```text
+    // (or (< 1 2) 5)     mov _or ← cond   [bool]   ; truthy path
+    //                    mov _or ← 5      [i64]    ; falsy path
+    // ```
+    //
+    // The register's type has to be true on *every* path, so it is the
+    // writers' consensus: the common type if they all agree, else none at
+    // all.  `and`, `or` and `match` used to keep whichever type the last
+    // `mov` recorded (`i64` above), so `(+ (or (< 1 2) 5) 1)` became a
+    // typed `add [i64]` on `#t`.  Every writer counts — the `#f` of a
+    // short-circuiting `and`, the truthy test value of an `or`, and the
+    // `nil` a `match` starts from in case no arm matches.
+
+    /// Programs whose join writers DISAGREE.  Each one used to hand a typed
+    /// op, a typed `mov` or a typed `ret` a register holding another kind.
+    /// The twig-vm tests (`dispatch.rs`) run the same shapes end to end.
+    const JOIN_PROGRAMS: &[&str] = &[
+        // The issue body.
+        "(let ((y (or 5 \"s\"))) (string-length y))",
+        "(define c 3) (let ((y (match c (x 5) (_ \"s\")))) (string-length y))",
+        "(+ (or \"s\" 5) 1)",
+        // The issue comment.
+        "(+ (or (< 1 2) 5) 1)",
+        "(let ((s (or (< 1 2) \"abc\"))) (string-length s))",
+        "(union T (A (v : int)) (B)) \
+         (let ((s (match (A 1) ((A v) 7) (_ \"abc\")))) (string-length s))",
+        "(define c #t) (and c 5)",
+        "(define c #t) (let ((y (and c 5))) y)",
+        // A wrong join type escaping through a function's return type.
+        "(define (f) (or (< 1 2) 5)) (+ (f) 1)",
+        "(define (f c) (and c \"abc\")) (string-length (f #t))",
+        "(define (f) (or 7 \"abc\")) (let ((s (f))) (string-length s))",
+        // `or` nested inside `and`, and `and` nested inside `or`.
+        "(let ((y (and (< 1 2) (or (< 1 2) 5)))) y)",
+        "(+ (and (< 1 2) (or (< 2 1) 5) 7) 1)",
+        "(+ (or (and (< 1 2) 5) 6) 1)",
+        "(let ((s (or (and (< 1 2) \"a\") \"b\"))) (string-length s))",
+        // `match`: every arm agrees, but the `nil` initialiser (the value
+        // when no arm matches) does not.
+        "(+ (match 5 (x 1)) 1)",
+        "(union T (A (v : int)) (B)) (+ (match (B) ((A v) 7)) 1)",
+        "(union T (A (v : int)) (B)) \
+         (let ((s (match (B) ((A v) \"abc\")))) (string-length s))",
+        // `#f` short-circuit paths.
+        "(+ (or #f 5) 1)",
+        "(let ((s (or #f 5 \"abc\"))) (string-length s))",
+        "(let ((y (and #f 5))) y)",
+        "(let ((s (and (< 1 2) \"abc\"))) (string-length s))",
+        "(define (f) (and #f 5)) (f)",
+    ];
+
+    #[test]
+    fn join_programs_never_feed_a_typed_op_the_wrong_kind() {
+        for src in JOIN_PROGRAMS {
+            assert_registers_sound(src);
+        }
+    }
+
+    /// The type hint on `main`'s final `ret`.
+    fn main_ret_type(src: &str) -> String {
+        main_instrs(src).iter().rfind(|i| i.op == "ret").unwrap().type_hint.clone()
+    }
+
+    #[test]
+    fn disagreeing_join_falls_back_to_the_dynamic_op() {
+        // `+` and `string-length` on an untyped join become the dynamic
+        // builtins, which check the value's kind at run time.
+        for (src, typed_op) in [
+            ("(+ (or (< 1 2) 5) 1)", "add"),
+            ("(+ (or #f 5) 1)", "add"),
+            ("(+ (match 5 (x 1)) 1)", "add"),
+            ("(let ((s (or (< 1 2) \"abc\"))) (string-length s))", "str_len"),
+            (
+                "(union T (A (v : int)) (B)) \
+                 (let ((s (match (A 1) ((A v) 7) (_ \"abc\")))) (string-length s))",
+                "str_len",
+            ),
+        ] {
+            let m = module(src);
+            assert!(
+                !m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == typed_op)),
+                "{src}: {m:#?}"
+            );
+        }
+        // `(and c 5)` can be 5: it is not a `bool`.
+        assert_eq!(main_ret_type("(define c #t) (and c 5)"), "any");
+        assert_eq!(main_ret_type("(and (< 1 2) 5)"), "any");
+        assert_eq!(main_ret_type("(or (< 1 2) 5)"), "any");
+        assert_eq!(main_ret_type("(match 5 (x 1))"), "any");
+    }
+
+    #[test]
+    fn agreeing_join_keeps_its_type() {
+        // When every writer agrees the type is kept, so the typed fast
+        // paths are not lost.
+        for src in [
+            "(and (< 1 2) (< 2 3))",
+            "(and (< 1 2) #f)",
+            "(and #f #t)",
+            "(or (< 1 2) #f)",
+            "(or #f (< 2 1))",
+            "(or (and (< 1 2) (< 2 3)) (< 3 4))",
+            "(and (or (< 1 2) #f) (< 2 3))",
+        ] {
+            assert_eq!(main_ret_type(src), "bool", "{src}");
+            assert_registers_sound(src);
+        }
+        for src in [
+            "(match 5 (_ nil))",
+            "(union T (A (v : int)) (B)) (match (B) ((A v) nil) (_ nil))",
+        ] {
+            assert_eq!(main_ret_type(src), "ref<LispyPair>", "{src}");
+            assert_registers_sound(src);
+        }
+        for (src, typed_op) in [
+            ("(+ (or 1 2) 3)", "add"),
+            ("(+ (or 1 (or 2 3)) 4)", "add"),
+            ("(let ((s (or \"a\" \"b\"))) (string-length s))", "str_len"),
+            ("(+ (if (< 1 2) (or 1 2) 3) 4)", "add"),
+        ] {
+            assert!(
+                main_instrs(src).iter().any(|i| i.op == typed_op),
+                "{src}: {:#?}",
+                main_instrs(src)
+            );
+            assert_registers_sound(src);
+        }
     }
 
     // ---- Module code gets no call-site string inference ---------------

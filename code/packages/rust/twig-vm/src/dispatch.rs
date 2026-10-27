@@ -4197,6 +4197,81 @@ mod tests {
         assert_eq!(run_int("(let ((_n1 \"s\")) (+ 1 (string-length _n1)))"), Some(2));
     }
 
+    // ── A join temporary keeps only a consensus type (#18448) ───────
+    //
+    // `and` / `or` / `match` used to type their result register with
+    // whichever path was compiled last, so a typed op could read a value
+    // of another kind.  The VM's typed string ops check their operand and
+    // raised `str_len: expected str …`; a native backend trusts the hint
+    // and would read the bytes of `#t` or `7` as a string.  Now the result
+    // is untyped whenever the paths disagree, and the dynamic builtin runs.
+    // The twig-ir-compiler tests check the same programs' IR.
+
+    fn run_err(src: &str) -> String {
+        match run_source(src) {
+            Ok(v) => panic!("{src}: expected a run-time error, got {v:?}"),
+            Err(e) => format!("{e:?}"),
+        }
+    }
+
+    #[test]
+    fn string_op_on_a_disagreeing_join_is_the_dynamic_builtin() {
+        // Each value really is not a string, so the program must fail —
+        // but in the dynamic `string-length`, not the typed `str_len` that
+        // a native backend would have run unchecked.
+        for src in [
+            // The issue body and comment.
+            "(let ((y (or 5 \"s\"))) (string-length y))",
+            "(define c 3) (let ((y (match c (x 5) (_ \"s\")))) (string-length y))",
+            "(let ((s (or (< 1 2) \"abc\"))) (string-length s))",
+            "(union T (A (v : int)) (B)) \
+             (let ((s (match (A 1) ((A v) 7) (_ \"abc\")))) (string-length s))",
+            // `and` inside `or`, a `#f` short circuit, a `match` falling
+            // through to its `nil`, and a wrong function return type.
+            "(let ((s (or (and (< 1 2) 5) \"b\"))) (string-length s))",
+            "(let ((s (or #f 5 \"abc\"))) (string-length s))",
+            "(union T (A (v : int)) (B)) \
+             (let ((s (match (B) ((A v) \"abc\")))) (string-length s))",
+            "(define (f) (or 7 \"abc\")) (let ((s (f))) (string-length s))",
+        ] {
+            let e = run_err(src);
+            assert!(e.contains("string-length"), "{src}: {e}");
+            assert!(!e.contains("str_len"), "{src}: {e}");
+        }
+    }
+
+    #[test]
+    fn join_results_are_right_on_every_path() {
+        // Each path of each join, including the ones whose type differs
+        // from the other paths', yields the right value.
+        for (src, want) in [
+            ("(let ((s (or (< 2 1) \"abc\"))) (string-length s))", 3),
+            ("(+ (or #f 5) 1)", 6),
+            ("(+ (or 1 \"s\") 1)", 2),
+            ("(+ (and (< 1 2) 5) 1)", 6),
+            ("(define c #t) (+ (and c 5) 1)", 6),
+            ("(+ (or (and (< 2 1) 5) 6) 1)", 7),
+            ("(+ (and (< 1 2) (or (< 2 1) 5) 7) 1)", 8),
+            ("(+ (and (< 1 2) (or (< 2 1) 5)) 1)", 6),
+            ("(let ((s (and (< 1 2) \"abc\"))) (string-length s))", 3),
+            (
+                "(union T (A (v : int)) (B)) \
+                 (let ((s (match (B) ((A v) 7) (_ \"abc\")))) (string-length s))",
+                3,
+            ),
+            ("(union T (A (v : int)) (B)) (+ (match (A 1) ((A v) 7)) 1)", 8),
+            ("(+ (match 5 (x 1)) 1)", 2),
+            // Agreeing paths keep the typed fast path and are still right.
+            ("(+ (or 1 2) 3)", 4),
+            ("(+ (or #f 2) 3)", 5),
+            ("(let ((s (or \"ab\" \"c\"))) (string-length s))", 2),
+            ("(if (and (< 1 2) (< 2 3)) 1 0)", 1),
+            ("(if (or (< 2 1) #f) 1 0)", 0),
+        ] {
+            assert_eq!(run_int(src), Some(want), "{src}");
+        }
+    }
+
     // ── Error paths ─────────────────────────────────────────────────
 
     #[test]

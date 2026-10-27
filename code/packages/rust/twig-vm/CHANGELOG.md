@@ -1,5 +1,25 @@
 # Changelog — twig-vm
 
+## Unreleased — #18448: end-to-end tests for join result types
+
+### Tests
+
+- `string_op_on_a_disagreeing_join_is_the_dynamic_builtin` runs 8 programs
+  in which `or` or `match` (and `and` nested in `or`) joins a string with
+  another kind, and `string-length` reads the result while it holds the
+  other kind. Before the `twig-ir-compiler` fix the join was typed `str`,
+  so the typed `str_len` ran and raised
+  `str_len: expected str at srcs[0], got 5`. On the native backends,
+  which trust the hint, that was type confusion. Now the dynamic
+  `string-length` builtin runs and reports the real kind error. All 8
+  failed before the fix.
+- `join_results_are_right_on_every_path` checks the values of 17 `and` /
+  `or` / `match` programs. Each path of each join is covered, including
+  short-circuit `#f` paths, a `match` falling through to `nil`, and joins
+  whose paths agree and so keep the typed fast path. It is a regression
+  guard and passed before the fix too: the VM's typed arithmetic dispatches
+  to the dynamic builtins, so it gives the right value either way.
+
 ## Unreleased — #18439: end-to-end tests for per-binding registers
 
 ### Tests
