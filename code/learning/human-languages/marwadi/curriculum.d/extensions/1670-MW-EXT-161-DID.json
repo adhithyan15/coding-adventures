@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-161-DID",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I ate, drank, did and took, with the ending that agrees with the thing, and write the letter ढ from काढणो.",
+  "prerequisites": [
+    "MW-EXT-160-CAME"
+  ]
+}

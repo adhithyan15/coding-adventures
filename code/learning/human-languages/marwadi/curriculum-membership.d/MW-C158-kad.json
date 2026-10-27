@@ -1,0 +1,11 @@
+{
+  "id": "MW-C158-kad",
+  "pathSegment": "MW-PATH-158-ASK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-158-ASK",
+      "order": 2
+    }
+  ]
+}

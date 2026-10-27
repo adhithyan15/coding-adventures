@@ -1,0 +1,18 @@
+{
+  "chapter": 160,
+  "title": "Came and Got Up",
+  "label": "ch:mw-a2-came-and-got-up",
+  "canDo": "I can say that someone came, got up, sat down or arrived, with the ending that agrees with them.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-R160-came-and-got-up",
+    "kind": "production",
+    "summary": "Complete MW-R160-came-and-got-up: say who came, who got up and who arrived, for a man, a woman and more than one.",
+    "assesses": [
+      "MW-GRAMMAR-C160-AYO-01",
+      "MW-GRAMMAR-C160-PAST-YO-01"
+    ]
+  }
+}

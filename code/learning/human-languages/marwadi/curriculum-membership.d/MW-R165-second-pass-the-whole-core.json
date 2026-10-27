@@ -1,0 +1,11 @@
+{
+  "id": "MW-R165-second-pass-the-whole-core",
+  "pathSegment": "MW-PATH-165-NOTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-165-NOTE",
+      "order": 3
+    }
+  ]
+}

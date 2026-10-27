@@ -1,0 +1,11 @@
+{
+  "id": "MW-R160-came-and-got-up",
+  "pathSegment": "MW-PATH-160-CAME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-160-CAME",
+      "order": 2
+    }
+  ]
+}

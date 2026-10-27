@@ -1,0 +1,18 @@
+{
+  "chapter": 152,
+  "title": "He and That",
+  "label": "ch:mw-a2-he-and-that",
+  "canDo": "I can say who he is, point at this and that, and still contrast, offer a choice and give a reason.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-R152-he-and-that",
+    "kind": "production",
+    "summary": "Complete MW-R152-he-and-that: say who he is, tell this from that, and contrast, choose and give a reason with them.",
+    "assesses": [
+      "MW-GRAMMAR-C152-VO-HE-01",
+      "MW-GRAMMAR-C152-VO-THAT-01"
+    ]
+  }
+}

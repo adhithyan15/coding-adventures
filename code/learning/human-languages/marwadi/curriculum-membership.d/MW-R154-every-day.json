@@ -1,0 +1,11 @@
+{
+  "id": "MW-R154-every-day",
+  "pathSegment": "MW-PATH-154-PRESENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-154-PRESENT",
+      "order": 3
+    }
+  ]
+}

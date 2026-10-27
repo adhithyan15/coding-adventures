@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-159-WENT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that someone is at home, and that I or someone else went somewhere.",
+  "prerequisites": [
+    "MW-EXT-158-ASK"
+  ]
+}

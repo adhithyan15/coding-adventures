@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-152-HE-THAT",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say who he is, point at this and that, and still contrast, offer a choice and give a reason.",
+  "prerequisites": [
+    "MW-EXT-151-JOINING"
+  ]
+}

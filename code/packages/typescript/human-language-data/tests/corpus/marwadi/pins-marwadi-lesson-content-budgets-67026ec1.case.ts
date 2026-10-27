@@ -38,7 +38,11 @@ it("pins Marwadi lesson-content budgets", () =>
     //
     // 897 -> 901: chapter 151 adds four source-verified joining lessons. Each
     // remains below five minutes and declares no idiom, sense or culture claim.
-    lessons: 901,
+    //
+    // 901 -> 962: the A2 core, chapters 152-165: 26 grammar, 12 word, 6 letter,
+    // 2 reading and 15 review lessons. None introduces an idiom, a sense or a
+    // culture claim.
+    lessons: 962,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,

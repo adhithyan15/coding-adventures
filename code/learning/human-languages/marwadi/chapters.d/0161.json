@@ -1,0 +1,21 @@
+{
+  "chapter": 161,
+  "title": "What I Did",
+  "label": "ch:mw-a2-what-i-did",
+  "canDo": "I can say what I ate, drank, did and took, with the ending that agrees with the thing, and write the letter ढ from काढणो.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "MW-R161-what-i-did",
+    "kind": "production",
+    "summary": "Complete MW-R161-what-i-did: say what you ate, drank, did, took and drew, with म्हैं, and write ढ.",
+    "assesses": [
+      "MW-GRAMMAR-C161-MHAI-AGENT-01",
+      "MW-GRAMMAR-C161-OBJ-AGREE-01",
+      "MW-GRAMMAR-C161-KIYO-LIYO-01",
+      "MW-LEX-C161-VERB161-01",
+      "MW-SCRIPT-C161-DDHA-01"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "MW-EXT-164-NOTICE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a dairy's notice of opening days and hours, with a price, and decide when to go.",
+  "prerequisites": [
+    "MW-EXT-163-PLAN"
+  ]
+}

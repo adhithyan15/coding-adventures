@@ -94,6 +94,22 @@ capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
 measurable.
 
+Chapters 152--165 add the track's first grammar, one form a lesson. The learner
+can now say **वो**, *he* or *that*; *am, is* and *are* with **हूं, आप** and
+**वो**; what they do, what he does and what the polite *you* does every day, for consonant and
+vowel stems alike; whose a thing is with **म्हारो / म्हारी**; where it is with
+**मांय, माथै, कनै**, and where someone comes from with **सूं**. They can
+negate with **कोनी**, forbid with **मत**, ask a yes-or-no question by voice and
+answer it with **हां सा / कोनी सा**, say who went, came or got up, say what
+they themselves ate, drank, did and took (with **म्हैं**, agreeing with the thing), say
+what they will and will not do tomorrow, and read a dairy notice and a
+neighbour's note well enough to act on them. Six more letters are written,
+each from a word just learned: **ऊ ध झ ओ ढ फ**. What stays untaught is named
+in the changelog: forms no reachable Marwari source prints -- **वा, वै, थे,
+आपां**, the past copula, most futures and the noun genitive -- wait for a source
+rather than being invented. With 962 lessons and 640 headwords, all five A2
+spine nodes are realized but the A2 vocabulary is not: that is still not A2.
+
 Marwadi has no single external pre-A1-to-C2 examination ladder suitable for the
 book's completion contract. The project therefore maps it to CEFR through its
 checked-in four-skill Marwadi assessment equivalent. Most timed papers, rubrics,

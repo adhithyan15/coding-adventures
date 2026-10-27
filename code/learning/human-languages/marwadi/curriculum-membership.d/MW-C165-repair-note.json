@@ -1,0 +1,11 @@
+{
+  "id": "MW-C165-repair-note",
+  "pathSegment": "MW-PATH-165-NOTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-165-NOTE",
+      "order": 1
+    }
+  ]
+}
