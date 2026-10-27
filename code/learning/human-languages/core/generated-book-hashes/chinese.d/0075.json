@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:cbbabf73e1a0ef7e",
+  "lessonIds": [
+    "ZH-C75-kuaile",
+    "ZH-W75-le-joy",
+    "ZH-C75-shengri",
+    "ZH-C75-dangao",
+    "ZH-C75-liwu",
+    "ZH-C75-song"
+  ],
+  "tex": "chinese/book/chapters/ch75-celebrating.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W58-ji-machine",
+  "pathSegment": "ZH-PATH-58-THINGS58",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-58-THINGS58",
+      "order": 1
+    }
+  ]
+}

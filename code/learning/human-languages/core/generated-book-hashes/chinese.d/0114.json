@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:b1fe22eb1ce7790a",
+  "lessonIds": [
+    "ZH-C114-maidan",
+    "ZH-C114-fu",
+    "ZH-C114-xianjin",
+    "ZH-C114-shuaka",
+    "ZH-C114-zhaoqian"
+  ],
+  "tex": "chinese/book/chapters/ch114-paying.tex"
+}

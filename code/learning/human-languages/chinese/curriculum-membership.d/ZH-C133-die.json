@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C133-die",
+  "pathSegment": "ZH-PATH-133-HOUSE133",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-133-HOUSE133",
+      "order": 5
+    }
+  ]
+}

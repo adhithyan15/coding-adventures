@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C100-tushuguan",
+    "language": "chinese",
+    "chapter": 100,
+    "sequence": 8080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed19d99e027cfe93"
+  },
+  "findings": []
+}

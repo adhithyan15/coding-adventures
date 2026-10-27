@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W44-che",
+    "language": "chinese",
+    "chapter": 44,
+    "sequence": 3675,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c8cafe9d0d24aa84",
+    "detachableSegments": [
+      "Script — four strokes, the vertical last"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

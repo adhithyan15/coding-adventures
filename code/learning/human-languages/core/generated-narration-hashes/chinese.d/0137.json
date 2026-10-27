@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:92b25eb259ab6662",
+  "lessonIds": [
+    "ZH-C137-jieri",
+    "ZH-W137-jie-joint",
+    "ZH-C137-chunjie",
+    "ZH-C137-guonian",
+    "ZH-C137-fangjia",
+    "ZH-C137-jiaqi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch137.txt",
+  "json": "chinese/narration/ch137.json",
+  "textHash": "fnv1a64:877262c4e7284acb",
+  "jsonHash": "fnv1a64:25189b637ebdd404",
+  "findings": []
+}

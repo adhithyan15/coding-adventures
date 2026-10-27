@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-108-SHOP108",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "ZH-EXT-108-SHOP108"
+  ],
+  "after": []
+}

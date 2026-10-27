@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:618f1ffc0f168f22",
+  "lessonIds": [
+    "ZH-C115-xiaoxin",
+    "ZH-W115-xin-heart",
+    "ZH-C115-xiyan",
+    "ZH-C115-jinzhi",
+    "ZH-C115-zhuyi",
+    "ZH-C115-weixian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch115.txt",
+  "json": "chinese/narration/ch115.json",
+  "textHash": "fnv1a64:ae07a1e76fdea9a7",
+  "jsonHash": "fnv1a64:7c43abeb9e2c17ac",
+  "findings": []
+}

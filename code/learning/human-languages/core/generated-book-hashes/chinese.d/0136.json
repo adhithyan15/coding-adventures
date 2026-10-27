@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:e429848721b8649b",
+  "lessonIds": [
+    "ZH-C136-qingtian",
+    "ZH-C136-yintian",
+    "ZH-C136-guafeng",
+    "ZH-C136-dalei",
+    "ZH-C136-liangkuai"
+  ],
+  "tex": "chinese/book/chapters/ch136-because-of-the-weather.tex"
+}

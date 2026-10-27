@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 33,
+  "title": "The Rest of the Family",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:6487cc949f004631",
+  "lessons": [
+    {
+      "id": "ZH-C33-nan",
+      "sequence": 3100,
+      "title": "男 (nán) — male",
+      "headword": "男",
+      "romanization": "nán",
+      "gloss": "male",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:623efcea3fb6a10b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for elder sister, then the Mandarin for younger brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 男",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "男 — nán — \"male\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我有一个男同学 wǒ yǒu yí ge nán tóngxué — One of my classmates is a boy."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 男 (nán) — a field on top, built like 日 with a cross inside, and below it a two-stroke piece meaning strength. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "男 (nán) is inherited from Middle Chinese nom (Guangyun, in Baxter's transcription), glossed 'a man'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yǒu yí ge nán tóngxué — One of my classmates is a boy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yǒu yí ge nán tóngxué* — One of my classmates is a boy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for elder sister, then the Mandarin for younger brother, then say nán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for elder sister, then the Mandarin for younger brother, then say *nán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 男 (nán) mean? (\"Male\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W33-nan",
+      "sequence": 3105,
+      "title": "男 (nán) — a field above, strength below",
+      "headword": "男",
+      "romanization": "nán",
+      "gloss": "男 — a field above, strength below",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b06d786edf30baf5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a field above, strength below",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a field above, strength below and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nán — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nán* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "日 口."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — rì, kǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *rì*, *kǒu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a field above, strength below",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "男 (nán)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, top before bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The top piece, a field, five strokes. A vertical down the left. A horizontal across the top that turns down the right side. The short horizontal across the middle. The short vertical down the middle. Then the horizontal that closes the bottom. It is 日 with a cross inside instead of a single bar."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom piece, strength, two strokes. A horizontal that turns down and hooks to the left, then a long left-falling stroke through it."
+            },
+            {
+              "kind": "speech",
+              "text": "5 + 2 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "男 (nán), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 男, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces in 男 (nán)? (Two — the field, then strength.) Which character you know does the field look like? (日, with a cross inside.) Which stroke closes the field? (The bottom horizontal, the fifth.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 男 (nán), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C33-nanren",
+      "sequence": 3110,
+      "title": "男人 (nánrén) — man",
+      "headword": "男人",
+      "romanization": "nánrén",
+      "gloss": "man",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73197687ebe599bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for younger brother, then the Mandarin for male."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 男人",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "男人 — nánrén — \"man\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我家有三个男人 wǒ jiā yǒu sān ge nánrén — There are three men in my family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "男人 (nánrén) is built from 男 (nán) 'male' and 人 'person', both inherited from Middle Chinese, nom and nyin (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nánrén",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nánrén*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nánrén, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nánrén*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ jiā yǒu sān ge nánrén — There are three men in my family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ jiā yǒu sān ge nánrén* — There are three men in my family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for younger brother, then the Mandarin for male, then say nánrén again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for younger brother, then the Mandarin for male, then say *nánrén* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 男人 (nánrén) mean? (\"Man\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C33-nuren",
+      "sequence": 3120,
+      "title": "女人 (nǚrén) — woman",
+      "headword": "女人",
+      "romanization": "nǚrén",
+      "gloss": "woman",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b96cdaf8d873f99c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for male, then the Mandarin for man."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 女人",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "女人 — nǚrén — \"woman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我家有四个女人 wǒ jiā yǒu sì ge nǚrén — There are four women in my family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "女人 (nǚrén) is built from 女 'female' and 人 'person', both inherited from Middle Chinese, nrjoX and nyin (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǚrén",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǚrén*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǚrén, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǚrén*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ jiā yǒu sì ge nǚrén — There are four women in my family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ jiā yǒu sì ge nǚrén* — There are four women in my family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for male, then the Mandarin for man, then say nǚrén again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for male, then the Mandarin for man, then say *nǚrén* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 女人 (nǚrén) mean? (\"Woman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C33-meimei",
+      "sequence": 3130,
+      "title": "mèimei — younger sister",
+      "headword": "mèimei",
+      "romanization": "mèimei",
+      "gloss": "younger sister",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2a63c06fd32dae7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for man, then the Mandarin for woman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mèimei",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mèimei — \"younger sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ mèimei shì xiǎoxuésheng — My little sister is at primary school."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mèimei is inherited from Middle Chinese mwojH (Guangyun, in Baxter's transcription), where it is glossed with the word for sisters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mèimei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mèimei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mèimei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mèimei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ mèimei shì xiǎoxuésheng — My little sister is at primary school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ mèimei shì xiǎoxuésheng* — My little sister is at primary school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for man, then the Mandarin for woman, then say mèimei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for man, then the Mandarin for woman, then say *mèimei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mèimei mean? (\"Younger sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C33-haizi",
+      "sequence": 3140,
+      "title": "háizi — child",
+      "headword": "háizi",
+      "romanization": "háizi",
+      "gloss": "child",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84d33baad54d6784",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for woman, then the Mandarin for younger sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: háizi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "háizi — \"child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tāmen yǒu sān ge háizi — They have three children."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "háizi is built from hái 'child' and the noun ending zi. The first is inherited from Middle Chinese hoj (Guangyun, in Baxter's transcription), glossed 'a newborn child'; the ending is tsiX, 'child', the same piece as the one in 儿子."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háizi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háizi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háizi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háizi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāmen yǒu sān ge háizi — They have three children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāmen yǒu sān ge háizi* — They have three children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for woman, then the Mandarin for younger sister, then say háizi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for woman, then the Mandarin for younger sister, then say *háizi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does háizi mean? (\"Child\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

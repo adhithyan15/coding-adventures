@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C72-kaiche",
+  "pathSegment": "ZH-PATH-72-TRAVEL72",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-72-TRAVEL72",
+      "order": 2
+    }
+  ]
+}

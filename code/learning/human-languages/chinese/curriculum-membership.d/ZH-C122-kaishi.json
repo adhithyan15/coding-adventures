@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C122-kaishi",
+  "pathSegment": "ZH-PATH-122-HOURS122",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-122-HOURS122",
+      "order": 1
+    }
+  ]
+}

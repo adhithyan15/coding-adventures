@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C90-practice",
+  "pathSegment": "ZH-PATH-90-CAN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-90-CAN",
+      "order": 5
+    }
+  ]
+}

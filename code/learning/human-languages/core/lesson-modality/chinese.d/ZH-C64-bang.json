@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C64-bang",
+    "language": "chinese",
+    "chapter": 64,
+    "sequence": 5320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:733b9d2db13329ca"
+  },
+  "findings": []
+}

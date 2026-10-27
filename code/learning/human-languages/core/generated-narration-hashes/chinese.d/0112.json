@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:b75d7bd6ee002c66",
+  "lessonIds": [
+    "ZH-C112-chukou",
+    "ZH-W112-chu",
+    "ZH-C112-rukou",
+    "ZH-C112-tui",
+    "ZH-C112-la",
+    "ZH-C112-louti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch112.txt",
+  "json": "chinese/narration/ch112.json",
+  "textHash": "fnv1a64:788af212f4d84757",
+  "jsonHash": "fnv1a64:302348a566a3c689",
+  "findings": []
+}

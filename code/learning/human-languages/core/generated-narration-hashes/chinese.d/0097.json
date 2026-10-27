@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:f87863acd65b35e5",
+  "lessonIds": [
+    "ZH-C97-xiaoshi",
+    "ZH-W97-shi-time",
+    "ZH-C97-meitian",
+    "ZH-C97-yihou",
+    "ZH-C97-reading",
+    "ZH-W97-my-own-line"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch97.txt",
+  "json": "chinese/narration/ch97.json",
+  "textHash": "fnv1a64:6eff8f8b4c1d6aed",
+  "jsonHash": "fnv1a64:20789184e1f5c1b6",
+  "findings": []
+}

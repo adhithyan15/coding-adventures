@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C45-mingtian",
+  "pathSegment": "ZH-PATH-45-TODAY45",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-45-TODAY45",
+      "order": 6
+    }
+  ]
+}

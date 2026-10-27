@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C120-ding",
+  "pathSegment": "ZH-PATH-120-TAKEAWAY120",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-120-TAKEAWAY120",
+      "order": 1
+    }
+  ]
+}

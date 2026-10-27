@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C65-guan",
+    "language": "chinese",
+    "chapter": 65,
+    "sequence": 5400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54b1f3feeb3327c6"
+  },
+  "findings": []
+}

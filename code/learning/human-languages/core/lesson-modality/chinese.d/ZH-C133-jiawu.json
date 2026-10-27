@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C133-jiawu",
+    "language": "chinese",
+    "chapter": 133,
+    "sequence": 10520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90d9d82fda89a9a9"
+  },
+  "findings": []
+}

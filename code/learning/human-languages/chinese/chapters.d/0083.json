@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Running Late",
+  "label": "ch:zh-running-late",
+  "canDo": "I can ask if somebody is free, and say early, right away, too late and late.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C83-chidao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: I can ask if somebody is free, and say early, right away, too late and late.",
+    "assesses": [
+      "ZH-LEX-C83-WAIT83-03",
+      "ZH-LEX-C83-WAIT83-04",
+      "ZH-LEX-C83-WAIT83-05"
+    ]
+  }
+}
