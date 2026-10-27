@@ -615,6 +615,14 @@ struct StyleCompositionOptions<'a> {
     theme: Option<&'a str>,
     tokens: &'a mosstyle_compiler::TokenOverrides,
     backend: Option<Backend>,
+    /// The manifest of the package whose layout is being composed, and where
+    /// it was read from. When present, the layout's own `pkg::P::C`
+    /// references must name that package or one of its `[dependencies]`
+    /// (mosaic-package-publishing-v1 §10 Phase 1b,
+    /// `LayoutPackageResolver::with_consumer`). `None` for a loose triple
+    /// with no manifest, whose nested package references are still checked
+    /// against their own packages' manifests.
+    consumer: Option<(&'a MosaicPackage, &'a Path)>,
 }
 
 /// Compile MIL, MLL, and MSL sources into one package-composed component.
@@ -662,6 +670,7 @@ pub fn compose_component_with_tokens(
             theme,
             tokens,
             backend: None,
+            consumer: None,
         },
     )
 }
@@ -730,6 +739,7 @@ pub fn compose_component_with_model_and_tokens(
             theme,
             tokens,
             backend: None,
+            consumer: None,
         },
         None,
     )
@@ -756,6 +766,7 @@ pub fn compose_component_with_model_in_package(
     manifest: &MosaicPackage,
     backend: Backend,
 ) -> Result<ComposedComponent, BuildError> {
+    let manifest_path = package_root.join("mosaic-package.toml");
     let package_tokens = load_package_tokens(
         package_root,
         manifest,
@@ -772,6 +783,7 @@ pub fn compose_component_with_model_in_package(
             theme,
             tokens: &package_tokens,
             backend: Some(backend),
+            consumer: Some((manifest, &manifest_path)),
         },
         Some((&manifest.package.name, &manifest.components.exports)),
     )
@@ -809,6 +821,7 @@ fn compose_component_with_model_and_style_options(
         &mut layout,
         &model.descriptor_json,
         package_search_paths,
+        style_options.consumer,
     )?;
     let slot_states = slot_state_axes(&model.component);
     let own_style = mosstyle_compiler::compile_with_tokens_and_slot_states(
@@ -2721,6 +2734,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 theme: opts.theme.as_deref(),
                 tokens: &package_tokens,
                 backend: Some(opts.backend),
+                consumer: Some((&manifest, &manifest_path)),
             };
             let composed = compose_component_with_backend_tokens(
                 component,
@@ -3543,6 +3557,7 @@ fn build_package_inner(
         theme: opts.theme.as_deref(),
         tokens: &package_tokens,
         backend: Some(opts.backend),
+        consumer: Some((&manifest, &manifest_path)),
     };
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
@@ -5569,10 +5584,14 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         format!("style {component} {{ }}")
     };
 
+    // No consumer manifest: shell emission never sees the manifest (see
+    // `host_effects` above), and every layout it recompiles here was
+    // already composed, with the manifest, by the per-component loop.
     let shell_style_options = StyleCompositionOptions {
         theme,
         tokens,
         backend: Some(backend),
+        consumer: None,
     };
     let composed = compose_component_with_backend_tokens(
         component,
@@ -10082,9 +10101,17 @@ fn resolve_layout_package_references(
     layout_out: &mut moslayout_compiler::CompileOutput,
     descriptor_json: &str,
     package_search_paths: &[PathBuf],
+    consumer: Option<(&MosaicPackage, &Path)>,
 ) -> Result<Vec<mosaic_package_resolver::PartRename>, BuildError> {
-    let resolver =
+    // With the consumer's manifest, the layout's own `pkg::` references must
+    // be declared in it (publishing-v1 §10 Phase 1b); the resolver checks
+    // every package component it inlines against that package's manifest
+    // either way.
+    let mut resolver =
         mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec());
+    if let Some((manifest, manifest_path)) = consumer {
+        resolver = resolver.with_consumer(manifest, manifest_path);
+    }
     let renames = resolver
         .resolve_with_renames(&mut layout_out.def)
         .map_err(|e| BuildError::PackageReferenceError {
@@ -10259,10 +10286,13 @@ fn collect_dependency_component_style_parts(
         style_options.backend,
         style_options.tokens,
     )?;
+    // The dependency's layout is resolved below as a consumer in its own
+    // right, so its references are checked against its own manifest.
     let dependency_style_options = StyleCompositionOptions {
         theme: style_options.theme,
         tokens: &dependency_tokens,
         backend: style_options.backend,
+        consumer: Some((&manifest, &manifest_path)),
     };
 
     let src_dir = package_root.join("src");
@@ -10307,6 +10337,7 @@ fn collect_dependency_component_style_parts(
         &mut layout_out,
         &mosmodel_out.descriptor_json,
         package_search_paths,
+        dependency_style_options.consumer,
     )?;
 
     let slot_states = slot_state_axes(&mosmodel_out.component);
@@ -11881,6 +11912,129 @@ version = "1"
                 }
             }
         }
+    }
+
+    /// A package build refuses a `pkg::P::C` reference to a package its
+    /// manifest does not declare (mosaic-package-publishing-v1 §10 Phase
+    /// 1b), at both levels:
+    ///
+    /// ```text
+    ///   mosaic-pkg-shell ──pkg::──▶ mosaic-pkg-accent ──pkg::──▶ mosaic-pkg-dot
+    ///   └ declares accent? ┘        └ declares dot? ┘
+    /// ```
+    ///
+    /// A loose triple composed with no manifest has no declared set, so it
+    /// is not checked at the top level, as before.
+    #[test]
+    fn a_package_build_refuses_an_undeclared_package_reference() {
+        let build = |shell_deps: &[(&str, &str)], accent_deps: &[(&str, &str)]| {
+            let workspace = TempDir::new().unwrap();
+            let dot = workspace.path().join("mosaic-pkg-dot");
+            write_package_manifest(&dot, "mosaic-pkg-dot", &["Dot"], &[]);
+            write_component_sources(
+                &dot,
+                "Dot",
+                "component Dot { }",
+                "layout Dot { Box [ dot-root ] { } }",
+                "style Dot { }",
+            );
+            let accent = workspace.path().join("mosaic-pkg-accent");
+            write_package_manifest(&accent, "mosaic-pkg-accent", &["Accent"], accent_deps);
+            write_component_sources(
+                &accent,
+                "Accent",
+                "component Accent { }",
+                "layout Accent { Column [ accent-root ] { pkg::mosaic-pkg-dot::Dot } }",
+                "style Accent { }",
+            );
+            let shell = workspace.path().join("mosaic-pkg-shell");
+            write_package_manifest(&shell, "mosaic-pkg-shell", &["Shell"], shell_deps);
+            write_component_sources(
+                &shell,
+                "Shell",
+                "component Shell { }",
+                "layout Shell { Column [ shell-root ] { pkg::mosaic-pkg-accent::Accent } }",
+                "style Shell { }",
+            );
+            let out = TempDir::new().unwrap();
+            let result = build_package(&BuildOptions {
+                package_root: shell.clone(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Html,
+                emit_project: false,
+                theme: None,
+            });
+            (workspace, result)
+        };
+        let refused = |result: Result<BuildResult, BuildError>, package: &str, manifest: &Path| {
+            match result {
+                Err(BuildError::PackageReferenceError { error, .. }) => assert!(
+                    error.contains(&format!(
+                        "but `{package}` is not a declared dependency; add `{package} = \"0.1.0\"` \
+                         to [dependencies] in {}",
+                        manifest.display()
+                    )),
+                    "{error}"
+                ),
+                other => panic!("expected an undeclared `{package}`, got {other:?}"),
+            }
+        };
+
+        let accent = [("mosaic-pkg-accent", "0.1.0")];
+        let dot = [("mosaic-pkg-dot", "0.1.0")];
+        let (_ws, result) = build(&accent, &dot);
+        result.expect("every reference is declared");
+
+        let (ws, result) = build(&[], &dot);
+        refused(
+            result,
+            "mosaic-pkg-accent",
+            &ws.path().join("mosaic-pkg-shell/mosaic-package.toml"),
+        );
+
+        let (ws, result) = build(&accent, &[]);
+        refused(
+            result,
+            "mosaic-pkg-dot",
+            &ws.path().join("mosaic-pkg-accent/mosaic-package.toml"),
+        );
+
+        // The same consumer as a loose triple: no manifest, so only the
+        // nested reference (declared here) is checked.
+        let (ws, _) = build(&[], &dot);
+        let model = mosmodel_compiler::compile("component Shell { }").unwrap();
+        compose_component_with_model(
+            "Shell",
+            model,
+            "layout Shell { Column [ shell-root ] { pkg::mosaic-pkg-accent::Accent } }",
+            "style Shell { }",
+            &[ws.path().to_path_buf()],
+            None,
+        )
+        .expect("a loose triple has no [dependencies] to check");
+
+        // With its manifest, `compose_component_with_model_in_package`
+        // (what `mosaic-compile --package-manifest` calls) checks it.
+        let shell_root = ws.path().join("mosaic-pkg-shell");
+        let manifest = parse_manifest(&shell_root.join("mosaic-package.toml")).unwrap();
+        let model = mosmodel_compiler::compile("component Shell { }").unwrap();
+        let error = compose_component_with_model_in_package(
+            "Shell",
+            model,
+            "layout Shell { Column [ shell-root ] { pkg::mosaic-pkg-accent::Accent } }",
+            "style Shell { }",
+            &[ws.path().to_path_buf()],
+            None,
+            &shell_root,
+            &manifest,
+            Backend::Html,
+        )
+        .expect_err("the shell does not declare accent");
+        refused(
+            Err(error),
+            "mosaic-pkg-accent",
+            &shell_root.join("mosaic-package.toml"),
+        );
     }
 
     // -----------------------------------------------------------------------
