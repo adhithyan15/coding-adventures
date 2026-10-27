@@ -67,6 +67,20 @@ one packed stable-Q value per DFF; simulator-owned writes reconstruct and
 clock the sequential primitive. Installed-program origin and length are
 lifecycle metadata and are not included in the DFF count.
 
+The HALT latch Q output is the sole architectural halt authority. State
+snapshots, execution control, checked preflight, result construction, and
+restore all read or clock that Q bit directly. The historical public
+`halted: bool` field remains only as a source-compatible observation mirror:
+execution operations repair it from Q before use and refresh it after
+clocking Q, and caller mutation of the mirror cannot clock or otherwise alter
+architectural state. New callers must use `halted()` when they need the
+authoritative value.
+
+`physical_storage_inventory()` reports memory, register-file, and HALT DFF
+counts by inspecting the actual owned storage containers. Its independently
+summed total must equal `FLIP_FLOP_COUNT`; returning the topology constant as
+its own evidence is not a completion test.
+
 ## Normative Rust API
 
 ```rust
@@ -111,10 +125,12 @@ hashes PC/nPC, all 56 physical registers, CWP, depth, PSR, Y, every memory
 byte, halt, and installed range; expected failures must leave the complete
 machine intact.
 
-Separate lifecycle suites cover exact topology, deterministic reset, complete
-restore, typed direct boundaries, `%g0`, halt clocking, full results, invalid
-load/state atomicity, transactional rollback, every Bicc predicate over every
-condition-code combination, and divide-cc overflow edges.
+Separate lifecycle suites cover independently inventoried exact topology,
+deterministic reset, complete restore, typed direct boundaries, `%g0`, HALT-Q
+authority under deliberate compatibility-mirror divergence, halt clocking,
+full results, invalid load/state atomicity, transactional rollback, every Bicc
+predicate over every condition-code combination, and divide-cc overflow
+edges.
 
 Completion requires:
 

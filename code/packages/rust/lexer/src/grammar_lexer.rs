@@ -61,7 +61,8 @@ use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 
 use grammar_tools::token_grammar::{
-    ModeTransition, TokenDefinition, TokenGrammar, TransitionAction,
+    ModeTransition, TokenDefinition, TokenGrammar, TokenGuard, TransitionAction,
+    TransitionCondition,
 };
 
 use crate::token::{
@@ -384,6 +385,9 @@ struct CompiledPattern {
     /// Optional alias — when set, tokens matching this pattern are emitted
     /// with the alias as their type name instead of `name`.
     alias: Option<String>,
+
+    /// LANG84 E1 position guard; the pattern is skipped where it fails.
+    guard: TokenGuard,
 }
 
 /// Compile a list of token definitions into anchored regex patterns.
@@ -411,9 +415,73 @@ fn compile_patterns(definitions: &[TokenDefinition], case_sensitive: bool) -> Ve
                 name: defn.name.clone(),
                 pattern: compiled,
                 alias: defn.alias.clone(),
+                guard: defn.guard,
             }
         })
         .collect()
+}
+
+// ===========================================================================
+// LANG84 E1/E8: position and adjacency facts
+// ===========================================================================
+
+/// Where the cursor is, for E1 definition guards.
+#[derive(Clone, Copy)]
+struct PositionFacts {
+    input_start: bool,
+    line_start: bool,
+}
+
+impl PositionFacts {
+    /// Whether a definition with `guard` may be tried here.
+    fn allows(self, guard: TokenGuard) -> bool {
+        match guard {
+            TokenGuard::None => true,
+            TokenGuard::LineStart => self.line_start,
+            TokenGuard::InputStart => self.input_start,
+        }
+    }
+}
+
+/// What a transition rule's E8 `if` conditions read about the token just
+/// emitted. All three facts are recorded by the caller around the match.
+///
+/// `space_before` is a fact here rather than read from `token.flags` because
+/// the built-in `NEWLINE` token carries no flags (F11 hands its gap on to the
+/// *next* token instead), yet `on NEWLINE if space_before` must still see the
+/// trivia before the line break (`a ⏎` with a trailing space). Reading the
+/// pending gap for NEWLINE leaves every emitted token's flags unchanged.
+#[derive(Clone, Copy)]
+struct TokenFacts {
+    /// Trivia (F11 `TOKEN_PRECEDED_BY_SPACE`) came right before the token.
+    space_before: bool,
+    /// The token's first character was at a line start (E1).
+    line_start: bool,
+    /// The character right after the token, or `None` at end of input.
+    next_char: Option<char>,
+}
+
+impl TokenFacts {
+    /// Whether `condition` holds for `token`.
+    ///
+    /// `space_after` treats end of input as a separator: nothing is adjacent.
+    /// Whitespace is the ASCII set Ruby's lexer uses (space, tab, `\n`, `\r`,
+    /// vertical tab, form feed).
+    fn holds(self, condition: TransitionCondition) -> bool {
+        let space_before = self.space_before;
+        let space_after = match self.next_char {
+            None => true,
+            Some(c) => matches!(c, ' ' | '\t' | '\n' | '\r' | '\u{0b}' | '\u{0c}'),
+        };
+        match condition {
+            TransitionCondition::SpaceBefore => space_before,
+            TransitionCondition::NoSpaceBefore => !space_before,
+            TransitionCondition::SpaceAfter => space_after,
+            TransitionCondition::NoSpaceAfter => !space_after,
+            TransitionCondition::LineStart => self.line_start,
+            TransitionCondition::NotLineStart => !self.line_start,
+        }
+    }
 }
 
 // ===========================================================================
@@ -701,6 +769,7 @@ impl<'a> GrammarLexer<'a> {
                         .build()
                         .unwrap(),
                     alias: defn.alias.clone(),
+                    guard: defn.guard,
                 }
             })
             .collect();
@@ -989,10 +1058,14 @@ impl<'a> GrammarLexer<'a> {
     /// Try to match and consume a skip pattern at the current position.
     /// Returns true if something was skipped.
     fn try_skip(&mut self) -> bool {
+        let position = self.position_facts();
         let remaining = &self.source[self.byte_pos..];
         // Compute everything from the immutable borrow first, then mutate, so
         // the `&self.source` borrow does not conflict with `&mut self`.
         let matched: Option<(usize, bool)> = self.skip_patterns.iter().find_map(|p| {
+            if !position.allows(p.guard) {
+                return None;
+            }
             p.pattern.find(remaining).map(|m| {
                 let s = m.as_str();
                 let has_line_terminator =
@@ -1080,8 +1153,12 @@ impl<'a> GrammarLexer<'a> {
     ///
     /// Returns `(name, alias, matched_text)` or `None`.
     fn try_match_token(&self) -> Option<(String, Option<String>, String)> {
+        let position = self.position_facts();
         let remaining = &self.source[self.byte_pos..];
         for p in &self.patterns {
+            if !position.allows(p.guard) {
+                continue;
+            }
             if let Some(m) = p.pattern.find(remaining) {
                 return Some((
                     p.name.clone(),
@@ -1101,12 +1178,16 @@ impl<'a> GrammarLexer<'a> {
     ///
     /// Returns `(name, alias, matched_text)` or `None`.
     fn try_match_token_in_group(&self, group_name: &str) -> Option<(String, Option<String>, String)> {
+        let position = self.position_facts();
         let remaining = &self.source[self.byte_pos..];
         let patterns = match self.group_patterns.get(group_name) {
             Some(p) => p,
             None => &self.patterns, // fallback to default
         };
         for p in patterns {
+            if !position.allows(p.guard) {
+                continue;
+            }
             if let Some(m) = p.pattern.find(remaining) {
                 return Some((p.name.clone(), p.alias.clone(), m.as_str().to_string()));
             }
@@ -1117,12 +1198,34 @@ impl<'a> GrammarLexer<'a> {
         // remain exclusive, preserving F04 semantics for XML-style grammars.
         if group_name != "default" && self.inheriting_modes.contains(group_name) {
             for p in &self.patterns {
+                if !position.allows(p.guard) {
+                    continue;
+                }
                 if let Some(m) = p.pattern.find(remaining) {
                     return Some((p.name.clone(), p.alias.clone(), m.as_str().to_string()));
                 }
             }
         }
         None
+    }
+
+    // -----------------------------------------------------------------------
+    // LANG84 E1: where the cursor is
+    // -----------------------------------------------------------------------
+
+    /// The two position facts E1 guards read, for the current cursor.
+    ///
+    /// "Line start" is offset 0 or "the previous character is `\n`". That is
+    /// one array read, and it is the same no matter which rule consumed the
+    /// previous text (a token, a skip pattern, the built-in `NEWLINE`, or the
+    /// built-in whitespace rule) — everything before the cursor has been
+    /// consumed. `\r\n` ends in `\n`, so it counts; a lone `\r` does not,
+    /// which matches how the lexer counts lines.
+    fn position_facts(&self) -> PositionFacts {
+        PositionFacts {
+            input_start: self.char_pos == 0,
+            line_start: self.char_pos == 0 || self.chars[self.char_pos - 1] == '\n',
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -1171,6 +1274,11 @@ impl<'a> GrammarLexer<'a> {
         }
     }
 
+    /// Whether `token` carries the F11 space-before flag.
+    fn has_space_before(token: &Token) -> bool {
+        token.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_SPACE != 0
+    }
+
     /// Apply the declarative mode transition table after `token` is emitted (F10).
     ///
     /// The first rule whose trigger token, optional `in MODE` guard, and
@@ -1183,9 +1291,16 @@ impl<'a> GrammarLexer<'a> {
     /// - `EnableSkip` / `DisableSkip` — toggle `skip_enabled`.
     ///
     /// No-op when the table is empty (F04 behaviour).
-    fn apply_transitions(&mut self, token: &Token) {
+    ///
+    /// LANG84 E8 adds two things:
+    ///
+    /// - a rule's `if` conditions, read from `facts` (computed by the caller,
+    ///   who knows where the token started and what follows it), must all
+    ///   hold, or the rule is skipped like one whose `in MODE` guard fails;
+    /// - the `Refuse` action stops lexing with an error at the token.
+    fn apply_transitions(&mut self, token: &Token, facts: TokenFacts) -> Result<(), LexerError> {
         if self.transitions.is_empty() {
-            return;
+            return Ok(());
         }
         let key = Self::transition_key(token);
         let active = self
@@ -1212,6 +1327,9 @@ impl<'a> GrammarLexer<'a> {
                     continue;
                 }
             }
+            if !rule.conditions.iter().all(|c| facts.holds(*c)) {
+                continue;
+            }
             matched = Some(rule.actions.clone());
             break;
         }
@@ -1232,9 +1350,20 @@ impl<'a> GrammarLexer<'a> {
                     }
                     TransitionAction::EnableSkip => self.skip_enabled = true,
                     TransitionAction::DisableSkip => self.skip_enabled = false,
+                    TransitionAction::Refuse => {
+                        return Err(LexerError {
+                            message: format!(
+                                "token {} ({:?}) is not supported in mode '{}' by this grammar",
+                                key, token.value, active
+                            ),
+                            line: token.line,
+                            column: token.column,
+                        });
+                    }
                 }
             }
         }
+        Ok(())
     }
 
     // -----------------------------------------------------------------------
@@ -1308,7 +1437,13 @@ impl<'a> GrammarLexer<'a> {
                     column: self.column,
                     type_name: None, flags: None,
                 };
-                self.apply_transitions(&newline);
+                let facts = TokenFacts {
+                    // The gap is still pending: NEWLINE does not take it.
+                    space_before: self.space_before_next,
+                    line_start: self.position_facts().line_start,
+                    next_char: self.chars.get(self.char_pos + 1).copied(),
+                };
+                self.apply_transitions(&newline, facts)?;
                 tokens.push(newline);
                 self.advance();
                 self.note_builtin_newline();
@@ -1347,6 +1482,9 @@ impl<'a> GrammarLexer<'a> {
                     base
                 }
             };
+            // LANG84 E8: whether this token starts a line, read before the
+            // cursor moves past it.
+            let token_line_start = self.position_facts().line_start;
             if let Some((name, alias, matched)) = self.try_match_token_in_group(&active_group) {
                 if range_start.is_some() && matched.is_empty() {
                     return Err(LexicalError::Invalid("zero-width token match"));
@@ -1545,7 +1683,12 @@ impl<'a> GrammarLexer<'a> {
                     // F10: the declarative table is the default; a registered
                     // callback runs first (above) and the table refines.
                     if let Some(t) = main_token_for_trans {
-                        self.apply_transitions(&t);
+                        let facts = TokenFacts {
+                            space_before: Self::has_space_before(&t),
+                            line_start: token_line_start,
+                            next_char: self.chars.get(self.char_pos).copied(),
+                        };
+                        self.apply_transitions(&t, facts)?;
                     }
                 } else {
                     self.bracket_depths.update(&token.value);
@@ -1563,7 +1706,12 @@ impl<'a> GrammarLexer<'a> {
                     }
                     // F10: consult the declarative table before the token is
                     // moved into `tokens`, so the new mode governs the NEXT match.
-                    self.apply_transitions(&token);
+                    let facts = TokenFacts {
+                        space_before: Self::has_space_before(&token),
+                        line_start: token_line_start,
+                        next_char: self.chars.get(self.char_pos).copied(),
+                    };
+                    self.apply_transitions(&token, facts)?;
                     self.last_emitted_token = Some(token.clone());
                     tokens.push(token);
                 }

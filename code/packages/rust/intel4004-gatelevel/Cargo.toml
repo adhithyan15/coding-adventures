@@ -8,3 +8,7 @@ description = "Gate-level Intel 4004 CPU simulator — all computation routes th
 logic-gates = { path = "../logic-gates" }
 arithmetic = { path = "../arithmetic" }
 intel4004-simulator = { path = "../intel4004-simulator" }
+
+[dev-dependencies]
+quote = "1"
+syn = { version = "2", features = ["full"] }

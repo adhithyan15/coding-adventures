@@ -160,6 +160,17 @@ impl RegisterFile {
     pub fn reset(&mut self) {
         *self = Self::new();
     }
+
+    /// Count the DFF cells in the concrete register and control arrays.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.phys.iter().map(|word| word.len()).sum::<usize>()
+            + self.pc.len()
+            + self.npc.len()
+            + self.y.len()
+            + self.psr.len()
+            + self.cwp.len()
+            + self.save_depth.len()
+    }
 }
 
 #[cfg(test)]

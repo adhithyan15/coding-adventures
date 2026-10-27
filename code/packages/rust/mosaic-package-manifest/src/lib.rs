@@ -68,7 +68,8 @@
 //! | `InvalidPackageName`    | `package.name` or a dependency key not kebab-case     |
 //! | `InvalidComponentName`  | an entry in `components.exports` not PascalCase       |
 //! | `InvalidKernelVersion`  | `kernel.version` is anything other than `"1"`         |
-//! | `InvalidSemverString`   | `package.version` or a dependency value not semver-y  |
+//! | `InvalidSemverString`   | `package.version` or a dependency value not strict SemVer |
+//! | `UnsupportedVersionRequirement` | a dependency value uses `~`, `>=`, `*`, a range, … |
 //! | `InvalidInitialWindowSize` | either `[app]` initial-window dimension is zero |
 //! | `InvalidDisplayName`    | `[app].display-name` is empty, too long, or has control characters |
 //! | `InvalidBundleIdentifier` | `[app].bundle-identifier` is not reverse DNS |
@@ -83,8 +84,21 @@
 //! Each error is *one cause, one variant* — no compound errors, no batched
 //! collection.  The first thing wrong with the manifest is the only thing
 //! the caller hears about; fixing it and re-running is the workflow.
+//!
+//! ## Versions are the one place the parser interprets
+//!
+//! A `[dependencies]` value is a *requirement*, and a requirement the
+//! resolver cannot evaluate is worse than none: it reads like a promise
+//! and checks nothing. So the parser goes one step past shape here and
+//! accepts exactly the two forms the resolver implements — a bare version
+//! (caret) and `=version` (exact) — refusing `~`, `>=`, `*` and ranges
+//! with their own error. See the [`version`] module, and
+//! mosaic-package-publishing-v1 §7.4.
 
 pub mod layouts;
+pub mod version;
+
+pub use version::{PreReleaseId, Version, VersionReq, VersionReqError};
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
@@ -321,8 +335,17 @@ pub enum ManifestError {
     /// `kernel.version` was something other than `"1"`.
     InvalidKernelVersion(String),
     /// A version string (in `[package].version` or a `[dependencies]` value)
-    /// did not match the semver-like regex.
+    /// was not strict SemVer 2.0.0 without build metadata (see [`Version`]).
     InvalidSemverString(String),
+    /// A `[dependencies]` value used a requirement form v1 does not support:
+    /// an operator (`~`, `^`, `>=`, `<`), a wildcard (`*`, `1.x`), a partial
+    /// version (`1.2`) or a range (`>=1, <2`). Only a bare version (caret)
+    /// and `=version` (exact) are accepted (mosaic-package-publishing-v1
+    /// §7.4).
+    UnsupportedVersionRequirement {
+        dependency: String,
+        requirement: String,
+    },
     /// `[app]` declared a desktop window outside the portable positive
     /// signed-32-bit range accepted by every target window API.
     InvalidInitialWindowSize { width: u32, height: u32 },
@@ -416,9 +439,20 @@ impl std::fmt::Display for ManifestError {
                     "invalid kernel version `{v}` (only \"1\" is currently supported)"
                 )
             }
-            Self::InvalidSemverString(v) => {
-                write!(f, "invalid semver-like version string `{v}`")
-            }
+            Self::InvalidSemverString(v) => write!(
+                f,
+                "invalid version string `{v}` (must be strict SemVer, e.g. `0.16.0` or `1.0.0-rc.1`)"
+            ),
+            Self::UnsupportedVersionRequirement {
+                dependency,
+                requirement,
+            } => write!(
+                f,
+                "unsupported version requirement `{dependency} = \"{requirement}\"`: \
+                 write a bare version such as \"0.16.0\" (compatible releases) or \
+                 \"=0.16.0\" (exactly that release); operators, wildcards and \
+                 ranges are not supported"
+            ),
             Self::InvalidInitialWindowSize { width, height } => write!(
                 f,
                 "invalid `[app]` initial window size {width}x{height} (both dimensions must be between 1 and 2147483647)"
@@ -702,15 +736,6 @@ fn manifest_target_path_re() -> &'static Regex {
     })
 }
 
-fn semver_re() -> &'static Regex {
-    static RE: OnceLock<Regex> = OnceLock::new();
-    // Semver-like: MAJOR.MINOR.PATCH with an optional pre-release suffix.
-    // We deliberately don't pull in the full `semver` crate — the manifest
-    // shape only needs the *string form* to look right; the kernel loader
-    // can do real version-range arithmetic when it resolves dependencies.
-    RE.get_or_init(|| Regex::new(r"^\d+\.\d+\.\d+(-[A-Za-z0-9.-]+)?$").unwrap())
-}
-
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -908,7 +933,10 @@ fn validate_package(raw: RawPackage) -> Result<PackageMeta, ManifestError> {
     if !kebab_case_re().is_match(&name) {
         return Err(ManifestError::InvalidPackageName(name));
     }
-    if !semver_re().is_match(&version) {
+    // Strict SemVer, by the same parser a dependency's requirement is
+    // compared with — a version the resolver could not compare against
+    // would make every requirement on this package unsatisfiable.
+    if Version::parse(&version).is_none() {
         return Err(ManifestError::InvalidSemverString(version));
     }
     if description.is_empty() {
@@ -948,14 +976,30 @@ fn validate_components(raw: RawComponents) -> Result<ComponentsSection, Manifest
 fn validate_dependencies(
     raw: HashMap<String, String>,
 ) -> Result<HashMap<String, String>, ManifestError> {
-    // Each (key, value) pair is a (package-name, semver) pair and gets
-    // exactly the same validation as `[package]`.
-    for (dep_name, dep_version) in &raw {
+    // Each (key, value) pair is a (package-name, requirement) pair. The
+    // name gets the same kebab-case check as `[package].name`. The value
+    // must be one of the two requirement forms the resolver implements
+    // (`version::VersionReq`): anything else is refused here, at parse,
+    // rather than discovered — or worse, silently ignored — at resolve.
+    //
+    // The map keeps the requirement *text*, so existing consumers see the
+    // string they wrote; `VersionReq::parse` on a value from a parsed
+    // manifest cannot fail.
+    for (dep_name, requirement) in &raw {
         if !kebab_case_re().is_match(dep_name) {
             return Err(ManifestError::InvalidPackageName(dep_name.clone()));
         }
-        if !semver_re().is_match(dep_version) {
-            return Err(ManifestError::InvalidSemverString(dep_version.clone()));
+        match VersionReq::parse(requirement) {
+            Ok(_) => {}
+            Err(VersionReqError::Malformed) => {
+                return Err(ManifestError::InvalidSemverString(requirement.clone()));
+            }
+            Err(VersionReqError::Unsupported) => {
+                return Err(ManifestError::UnsupportedVersionRequirement {
+                    dependency: dep_name.clone(),
+                    requirement: requirement.clone(),
+                });
+            }
         }
     }
     Ok(raw)
@@ -1696,6 +1740,78 @@ version = "1"
             matches!(err, ManifestError::InvalidSemverString(_)),
             "got {err:?}"
         );
+    }
+
+    // ---- Requirement strings (mosaic-package-publishing-v1 §7.4) ----
+
+    /// A minimal manifest with one dependency on `mosaic-pkg-grid`.
+    fn with_requirement(requirement: &str) -> Result<MosaicPackage, ManifestError> {
+        parse(&format!(
+            "[package]\nname = \"x\"\nversion = \"0.1.0\"\ndescription = \"x\"\n\
+             license = \"MIT\"\n[components]\nexports = []\n[dependencies]\n\
+             mosaic-pkg-grid = \"{requirement}\"\n[kernel]\nversion = \"1\"\n"
+        ))
+    }
+
+    #[test]
+    fn accepts_caret_and_exact_requirements_and_keeps_the_text() {
+        for requirement in ["0.3.0", "=0.3.0", "1.0.0-rc.1", "=1.0.0-rc.1", "0.0.1"] {
+            let pkg = with_requirement(requirement)
+                .unwrap_or_else(|e| panic!("{requirement:?} should be accepted: {e}"));
+            assert_eq!(pkg.dependencies["mosaic-pkg-grid"], requirement);
+        }
+    }
+
+    #[test]
+    fn refuses_operators_wildcards_and_ranges_by_name() {
+        for requirement in [
+            "~0.3.0",
+            "^0.3.0",
+            ">=0.3.0",
+            "<1.0.0",
+            "*",
+            "0.x",
+            "0.3",
+            ">=0.3.0, <0.4.0",
+        ] {
+            let err = with_requirement(requirement).expect_err(requirement);
+            assert_eq!(
+                err,
+                ManifestError::UnsupportedVersionRequirement {
+                    dependency: "mosaic-pkg-grid".into(),
+                    requirement: requirement.into(),
+                },
+                "{requirement:?}"
+            );
+            let message = err.to_string();
+            assert!(
+                message.contains("mosaic-pkg-grid") && message.contains("=0.16.0"),
+                "the message names the dependency and shows the supported forms: {message}"
+            );
+        }
+    }
+
+    #[test]
+    fn refuses_non_strict_semver_requirements_and_package_versions() {
+        for requirement in ["01.3.0", "0.3.0+build", "=0.03.0", "0.3.0-"] {
+            assert!(
+                matches!(
+                    with_requirement(requirement),
+                    Err(ManifestError::InvalidSemverString(_))
+                ),
+                "{requirement:?}"
+            );
+        }
+        // `[package].version` is held to the same parser the resolver
+        // compares with. The old shape regex let all three of these through.
+        for version in ["01.0.0", "1.0.0-a..b", "1.0.0-01"] {
+            let err = parse(&format!(
+                "[package]\nname = \"x\"\nversion = \"{version}\"\ndescription = \"x\"\n\
+                 license = \"MIT\"\n[components]\nexports = []\n[kernel]\nversion = \"1\"\n"
+            ))
+            .expect_err(version);
+            assert_eq!(err, ManifestError::InvalidSemverString(version.into()));
+        }
     }
 
     #[test]
