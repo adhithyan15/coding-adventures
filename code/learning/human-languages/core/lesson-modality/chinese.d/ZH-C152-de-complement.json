@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C152-de-complement",
+    "language": "chinese",
+    "chapter": 152,
+    "sequence": 12360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcdd3e061a110a9a"
+  },
+  "findings": []
+}
