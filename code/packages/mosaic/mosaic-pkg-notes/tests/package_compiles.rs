@@ -173,8 +173,15 @@ fn notes_mounts_record_list_and_draft_editor() {
     // toolkit's RecordList and the title, body and actions are DraftEditor.
     // The parts they replaced must not come back beside them.
     let code = layout_code();
-    assert_eq!(code.matches("pkg::mosaic-pkg-toolkit::RecordList").count(), 1);
-    assert_eq!(code.matches("pkg::mosaic-pkg-draft-editor::DraftEditor").count(), 1);
+    assert_eq!(
+        code.matches("pkg::mosaic-pkg-toolkit::RecordList").count(),
+        1
+    );
+    assert_eq!(
+        code.matches("pkg::mosaic-pkg-draft-editor::DraftEditor")
+            .count(),
+        1
+    );
     for retired in [
         "notes-row-on",
         "notes-row-off",
@@ -184,7 +191,10 @@ fn notes_mounts_record_list_and_draft_editor() {
         "notes-delete",
         "notes-cancel",
     ] {
-        assert!(!code.contains(retired), "Notes.mll must not draw `{retired}` itself any more");
+        assert!(
+            !code.contains(retired),
+            "Notes.mll must not draw `{retired}` itself any more"
+        );
     }
 }
 
@@ -202,7 +212,10 @@ fn notes_declares_every_package_it_mounts() {
         .expect("[dependencies] must be a table");
     let code = layout_code();
     for package in ["mosaic-pkg-toolkit", "mosaic-pkg-draft-editor"] {
-        assert!(code.contains(&format!("pkg::{package}::")), "Notes mounts {package}");
+        assert!(
+            code.contains(&format!("pkg::{package}::")),
+            "Notes mounts {package}"
+        );
         assert!(
             dependencies.contains_key(package),
             "mosaic-package.toml must declare `{package}`, which Notes.mll mounts"
@@ -234,7 +247,10 @@ fn the_selection_compares_row_keys_with_the_selected_note_id() {
     // output shows.
     let code = layout_code();
     assert!(code.contains("selected-key : slot: selected-note-id"));
-    let tsx = built_source(mosaic_package_artifact_builder::Backend::React, "react/Notes.tsx");
+    let tsx = built_source(
+        mosaic_package_artifact_builder::Backend::React,
+        "react/Notes.tsx",
+    );
     assert!(
         tsx.contains("row [ 0 ] == selectedNoteId"),
         "RecordList's selection must compare against Notes' selectedNoteId:\n{tsx}"
@@ -248,15 +264,24 @@ fn the_body_is_multiline_and_saves_on_ctrl_or_cmd_enter() {
     // raises DraftEditor's onSave, which Notes forwards to its own onSave,
     // exactly as the Save button does (UI25 §4).
     let code = layout_code();
-    assert!(code.contains("onSave : emit: onSave"), "Notes must forward DraftEditor's onSave");
-    let tsx = built_source(mosaic_package_artifact_builder::Backend::React, "react/Notes.tsx");
+    assert!(
+        code.contains("onSave : emit: onSave"),
+        "Notes must forward DraftEditor's onSave"
+    );
+    let tsx = built_source(
+        mosaic_package_artifact_builder::Backend::React,
+        "react/Notes.tsx",
+    );
     let textarea = tsx
         .lines()
         .find(|line| line.contains("<textarea"))
         .unwrap_or_else(|| panic!("the body must lower to a <textarea>:\n{tsx}"));
     assert!(textarea.contains("value={bodyValue}"), "{textarea}");
     assert!(textarea.contains("e.ctrlKey || e.metaKey"), "{textarea}");
-    assert!(textarea.contains("dispatch({ type: \"save\" })"), "{textarea}");
+    assert!(
+        textarea.contains("dispatch({ type: \"save\" })"),
+        "{textarea}"
+    );
 }
 
 #[test]
@@ -267,7 +292,10 @@ fn every_field_has_an_accessible_name_from_its_visible_label() {
     let code = layout_code();
     assert!(code.contains("a11y-label : slot: task-label"));
     assert!(code.contains("content : slot: task-label"));
-    let tsx = built_source(mosaic_package_artifact_builder::Backend::React, "react/Notes.tsx");
+    let tsx = built_source(
+        mosaic_package_artifact_builder::Backend::React,
+        "react/Notes.tsx",
+    );
     for name in ["taskLabel", "titleLabel", "bodyLabel"] {
         assert!(
             tsx.contains(&format!("aria-label={{{name}}}")),
@@ -280,8 +308,14 @@ fn every_field_has_an_accessible_name_from_its_visible_label() {
 fn delete_is_drawn_only_when_the_host_labels_it() {
     // A host passes `delete-label: ""` for a new note that was never saved,
     // and DraftEditor then draws no Delete button.
-    let tsx = built_source(mosaic_package_artifact_builder::Backend::React, "react/Notes.tsx");
-    assert!(tsx.contains("{deleteLabel && ("), "Delete must be gated on its label:\n{tsx}");
+    let tsx = built_source(
+        mosaic_package_artifact_builder::Backend::React,
+        "react/Notes.tsx",
+    );
+    assert!(
+        tsx.contains("{deleteLabel && ("),
+        "Delete must be gated on its label:\n{tsx}"
+    );
 }
 
 // ---------------------------------------------------------------------------
