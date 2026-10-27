@@ -9,6 +9,7 @@ resolver = "2"
 exclude = ["os-kernel"]
 members = [
     "avr-classic-simulator",
+    "superh2-simulator",
     "cortex-m4-gatelevel",
     "v8-test262",
     "browser-bookmarks",
