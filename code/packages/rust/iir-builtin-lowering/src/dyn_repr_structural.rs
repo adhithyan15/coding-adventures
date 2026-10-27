@@ -238,7 +238,7 @@ fn seeded_lisp_functions(module: &IIRModule, include_heap_bodies: bool) -> HashS
         // **nullary** tagged function — `((LAMBDA () (ATOM 7)))` has no params
         // to inspect, so its caller's `call` was not recognised as tagged and
         // the entry coerced the result with the static `dyn_unbox_int` (`>> 3`)
-        // instead of the runtime tag switch `dyn_to_exit_code`. `#t` is the
+        // instead of the run-time tag switch (`__lisp_exit_code` today). `#t` is the
         // whole word `0b101`, so `5 >> 3 = 0`: the program reported FALSE for a
         // true predicate, with no diagnostic. The declared return type is the
         // other half of the signature and says so.

@@ -1,5 +1,12 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- New module `lisp_semantics`: Lisp's truthiness, `not`, `equal?` and exit-code coercion written as IIR over the LANG83 PR7f dynamic-value primitives. Truthiness (`(tag ≠ 3) × (tag ≠ 1)`) and `not` (`5 − 2 × truthy`) expand inline (`expand_inline_rules`), every instruction typed `i64`, so a function using them stays JIT-compilable; `equal?` (`__lisp_equal`, recursive) and the run-time exit-code switch (`__lisp_exit_code`) are module-local functions appended once, only when called (`add_used_helpers`). Names are the lowering's own `__lisp_*` namespace, never a runtime's.
+- `lower_dyn_repr` marks each use where it used to emit `dyn_truthy` / `dyn_not` / `dyn_equal` / `dyn_to_exit_code` (runtime calls) and then writes the rules out with `lisp_semantics`. It now also rewrites `equal?` itself (unconditionally; it has no machine meaning), and sets aside any helper already in the module while it classifies, so re-running it never boxes a helper's constants.
+- `lower_heap_builtins_runtime` no longer renames `equal?` to `dyn_equal`; it only retypes its result `ref<any>`.
+- Tests: the four rules run on a reference machine over every kind of value against the rules stated independently; helpers are added once and only when called; only registry primitives and plain control flow appear; the inline rules keep a function `FullyTyped`; the full pass leaves no language-semantic call; dyn_repr's unit tests count the marked rules.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - The native runtime-call path (`lower_heap_builtins_runtime`, `lower_dyn_repr`, the list and closure helpers) emits the LANG83 PR7f registry names: `cons` / `car` / `cdr` / `pair?` / `null?` now become `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil` (they were `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p`). The generated code is otherwise unchanged.

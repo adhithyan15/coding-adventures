@@ -2010,9 +2010,9 @@ fn end_to_end_mccarthy_cons_car_returns_7_via_lang_aot() {
 // ---------------------------------------------------------------------------
 // McCarthy Lisp ATOM/EQ + COND (L3b-2c-2) — tagged predicates drive a branch.
 //
-// `(ATOM x)` lowers to `not(pair?(x))` → `__dyn_not(__dyn_is_pair)`;
-// a `COND` predicate's tagged `#t`/`#f` is normalised by `__dyn_truthy`
-// for `jmp_if_false`.  The integer atoms box (`5` → 40) so `pair?` reads the
+// `(ATOM x)` lowers to `not(pair?(x))` → Lisp `not` (inline IIR since LANG83
+// PR7f-2) over `__dyn_is_pair`; a `COND` predicate's tagged `#t`/`#f` is
+// normalised by Lisp truthiness (inline IIR) for `jmp_if_false`.  The integer atoms box (`5` → 40) so `pair?` reads the
 // int tag, not the heap tag.  Two programs distinguish the branches:
 //   (COND ((ATOM 5) 7) (5 9))          → ATOM of an int is true  → 7
 //   (COND ((ATOM (CONS 1 2)) 7) (5 9)) → ATOM of a pair is false → 9

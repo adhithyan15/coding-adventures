@@ -1,5 +1,9 @@
 # Changelog — `aarch64-backend`
 
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- `V1_BUILTINS` drops `dyn_not`, `dyn_equal`, `dyn_truthy` and `dyn_to_exit_code` (now compiler-emitted IIR); a module that still calls one is refused. Test `lisp_semantic_builtins_are_not_in_the_table`; `dyn_pair_test_tag_and_nil_lower` replaces the predicate/truthy and exit-code tests.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives: `Lowered` for all but `dyn_symbol` (a `BL __dyn_<name>` through `V1_BUILTINS`), `Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)` for `dyn_symbol`.

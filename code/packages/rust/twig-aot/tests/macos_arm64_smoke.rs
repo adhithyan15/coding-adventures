@@ -1152,7 +1152,7 @@ fn backend_pipeline_produces_bytes_for_simple_function() {
 ///       <collect>                       ; runs while `clo` is a live precise root
 ///       arg = dyn_box_int(0)            ; the (ignored) call argument
 ///       r   = call_closure(clo, arg)    ; __cap_id(41, 0) = 41 — reads the CAPTURE
-///       ret dyn_to_exit_code(r)         ; 41
+///       ret dyn_unbox_int(r)            ; 41
 /// ```
 ///
 /// After `lower_closures_to_heap`, `clo` is a `ref<any>` cons chain held live
@@ -1235,11 +1235,14 @@ fn end_to_end_closure_captured_env_survives_collect() {
                 vec![Operand::Var("clo".into()), Operand::Var("arg".into())],
                 "any",
             ),
-            // Coerce the polymorphic closure result to the process exit code.
+            // The closure returns the captured integer, so its exit code is the
+            // unboxed value. (This was the runtime's `dyn_to_exit_code` switch,
+            // a Lisp rule the lowering now writes as module IIR — LANG83 PR7f-2;
+            // the integer case of that switch is exactly `dyn_unbox_int`.)
             IIRInstr::new(
                 "call_builtin",
                 Some("e".into()),
-                vec![Operand::Var("dyn_to_exit_code".into()), Operand::Var("r".into())],
+                vec![Operand::Var("dyn_unbox_int".into()), Operand::Var("r".into())],
                 "i64",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("e".into())], "i64"),

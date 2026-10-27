@@ -1,4 +1,8 @@
 # Changelog — iir-to-llvm
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- `DYN_BUILTINS` drops `dyn_equal`, `dyn_not`, `dyn_truthy` and `dyn_to_exit_code` (now compiler-emitted IIR: inline truthiness and `not`, module functions `@__lisp_equal` / `@__lisp_exit_code`).
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `DYN_BUILTINS`: `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil` (calls to `@__dyn_pair_new` …), and `dyn_tag` → `@__dyn_tag` is new.

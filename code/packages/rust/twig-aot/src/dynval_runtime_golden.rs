@@ -44,9 +44,6 @@ extern "C" {
     fn __dyn_pair_first(pair: u64) -> u64;
     fn __dyn_pair_rest(pair: u64) -> u64;
     fn __dyn_is_pair(v: u64) -> u64;
-    fn __dyn_not(v: u64) -> u64;
-    fn __dyn_truthy(v: u64) -> i64;
-    fn __dyn_equal(a: u64, b: u64) -> u64;
     fn __dyn_symbol(name: *const u8, len: i64) -> u64;
 
     fn __dyn_tag_int() -> u64;
@@ -171,64 +168,14 @@ fn c_pair_p_returns_tagged_booleans() {
 }
 
 // ---------------------------------------------------------------------------
-// 6. not — false iff #f or nil.
+// 6–7. not, truthiness and equal? are no longer in the runtime.
 // ---------------------------------------------------------------------------
-
-#[test]
-fn c_not_follows_lispy_truthiness() {
-    let t = LispyValue::TRUE.bits();
-    let f = LispyValue::FALSE.bits();
-    let nil = unsafe { __dyn_nil() };
-    assert_eq!(unsafe { __dyn_not(f) }, t, "not(#f) = #t");
-    assert_eq!(unsafe { __dyn_not(nil) }, t, "not(nil) = #t");
-    assert_eq!(unsafe { __dyn_not(t) }, f, "not(#t) = #f");
-    // 0 is a *truthy* integer in lispy — not(0) = #f.
-    assert_eq!(unsafe { __dyn_not(__dyn_box_int(0)) }, f, "not(0) = #f");
-}
-
-/// `dyn_truthy` returns a RAW machine 0/1 (for `jmp_if_false`): false iff
-/// `#f` or nil, true for everything else (including the integer 0 and pairs).
-#[test]
-fn c_truthy_returns_raw_bool() {
-    let nil = unsafe { __dyn_nil() };
-    assert_eq!(unsafe { __dyn_truthy(LispyValue::FALSE.bits()) }, 0, "truthy(#f) = 0");
-    assert_eq!(unsafe { __dyn_truthy(nil) }, 0, "truthy(nil) = 0");
-    assert_eq!(unsafe { __dyn_truthy(LispyValue::TRUE.bits()) }, 1, "truthy(#t) = 1");
-    // A boxed integer 0 is truthy (only #f and nil are false).
-    assert_eq!(unsafe { __dyn_truthy(__dyn_box_int(0)) }, 1, "truthy(0) = 1");
-    // A cons cell (pair) is truthy.
-    let pair = unsafe { __dyn_pair_new(__dyn_box_int(1), nil) };
-    assert_eq!(unsafe { __dyn_truthy(pair) }, 1, "truthy(pair) = 1");
-}
-
-// ---------------------------------------------------------------------------
-// 7. equal? — structural deep equality.
-// ---------------------------------------------------------------------------
-
-#[test]
-fn c_equal_atoms() {
-    let t = LispyValue::TRUE.bits();
-    let f = LispyValue::FALSE.bits();
-    assert_eq!(unsafe { __dyn_equal(__dyn_box_int(5), __dyn_box_int(5)) }, t);
-    assert_eq!(unsafe { __dyn_equal(__dyn_box_int(5), __dyn_box_int(6)) }, f);
-    assert_eq!(unsafe { __dyn_equal(__dyn_nil(), __dyn_nil()) }, t);
-}
-
-#[test]
-fn c_equal_structural_pairs() {
-    // (1 . 2) equals a freshly-built (1 . 2) even though the pointers differ.
-    let p1 = unsafe { __dyn_pair_new(__dyn_box_int(1), __dyn_box_int(2)) };
-    let p2 = unsafe { __dyn_pair_new(__dyn_box_int(1), __dyn_box_int(2)) };
-    let p3 = unsafe { __dyn_pair_new(__dyn_box_int(1), __dyn_box_int(3)) };
-    assert_eq!(unsafe { __dyn_equal(p1, p2) }, LispyValue::TRUE.bits(), "(1.2)=(1.2)");
-    assert_eq!(unsafe { __dyn_equal(p1, p3) }, LispyValue::FALSE.bits(), "(1.2)≠(1.3)");
-    // A pair and an atom are never equal.
-    assert_eq!(
-        unsafe { __dyn_equal(p1, __dyn_box_int(1)) },
-        LispyValue::FALSE.bits(),
-        "pair ≠ atom",
-    );
-}
+//
+// `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code` were
+// Lisp's rules in the runtime until LANG83 PR7f-2. The Lisp-family lowering
+// now writes them as module IIR (`iir_builtin_lowering::lisp_semantics`,
+// whose own tests check them against the rules over every kind of value);
+// the runtime keeps only the representation.
 
 // ---------------------------------------------------------------------------
 // 8. Symbols — interning gives same name ⇒ same id, with the symbol tag.
@@ -247,9 +194,6 @@ fn c_symbol_interns_consistently() {
     // Correct tag, and the id lives in the high 32 bits.
     assert_eq!(foo1 & TAG_BITS, TAG_SYMBOL, "symbol wrong tag");
     assert_eq!(bar & TAG_BITS, TAG_SYMBOL, "symbol wrong tag");
-    // Two distinct symbols are not `equal?`; a symbol equals itself.
-    assert_eq!(unsafe { __dyn_equal(foo1, foo2) }, LispyValue::TRUE.bits());
-    assert_eq!(unsafe { __dyn_equal(foo1, bar) }, LispyValue::FALSE.bits());
 }
 
 #[test]

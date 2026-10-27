@@ -425,10 +425,11 @@ struct LlvmStringLiteralRef {
 /// | `dyn_box_int`     | `__dyn_box_int`     | int → tagged word                    |
 /// | `dyn_unbox_int`   | `__dyn_unbox_int`   | tagged word → int                    |
 /// | `dyn_nil`         | `__dyn_nil`         | nil                                  |
-/// | `dyn_equal`       | `__dyn_equal`       | `equal?` (unregistered; LANG83 PR7f) |
-/// | `dyn_not`         | `__dyn_not`         | `not` (unregistered)                 |
-/// | `dyn_truthy`      | `__dyn_truthy`      | `COND` test (unregistered)           |
-/// | `dyn_to_exit_code`| `__dyn_to_exit_code`| exit coercion (unregistered)         |
+///
+/// Lisp's `equal?`, `not`, truthiness and exit coercion were rows here too
+/// (`dyn_equal`, `dyn_not`, `dyn_truthy`, `dyn_to_exit_code`) until LANG83
+/// PR7f-2. They are one language family's rules, so the Lisp-family lowering
+/// now writes them as module IIR over the rows above.
 const DYN_BUILTINS: &[(&str, &str, usize)] = &[
     ("dyn_pair_new", "__dyn_pair_new", 2),
     ("dyn_pair_first", "__dyn_pair_first", 1),
@@ -436,12 +437,8 @@ const DYN_BUILTINS: &[(&str, &str, usize)] = &[
     ("dyn_is_pair", "__dyn_is_pair", 1),
     ("dyn_is_nil", "__dyn_is_nil", 1),
     ("dyn_tag", "__dyn_tag", 1),
-    ("dyn_equal", "__dyn_equal", 2),
-    ("dyn_not", "__dyn_not", 1),
-    ("dyn_truthy", "__dyn_truthy", 1),
     ("dyn_box_int", "__dyn_box_int", 1),
     ("dyn_unbox_int", "__dyn_unbox_int", 1),
-    ("dyn_to_exit_code", "__dyn_to_exit_code", 1),
     ("dyn_nil", "__dyn_nil", 0),
 ];
 
@@ -4396,7 +4393,7 @@ fn lower_jmp_if(
         } else if cond_ty == "void" {
             // McCarthy W12b-3: a `COND` whose clause test is a tagged-word lisp
             // predicate carries NO operand type on `jmp_if_*` (type_hint "void");
-            // the condition is the `i64` 0/1 from `dyn_truthy`. Compare it
+            // the condition is the `i64` 0/1 from Lisp truthiness (inline since LANG83 PR7f-2). Compare it
             // against zero to get the `i1` — `trunc void …` would be invalid.
             let i1 = state.fresh("tobool");
             out.push_str(&format!("  {i1} = icmp ne i64 {cond_op}, 0\n"));

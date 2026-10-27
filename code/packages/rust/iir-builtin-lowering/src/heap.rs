@@ -470,10 +470,11 @@ pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
 // word) and a symbol as `const Var(name) : symbol` (which `intern_symbols`
 // turns into a tagged immediate), so neither reaches the runtime as a call.
 //
-// `pair?` / `not` / `equal?` (the `ATOM`/`EQ` predicates) ARE renamed as of
-// L3b-2c-2 — they consume/produce tagged `LispyValue`s, which the
-// representation pass (`lower_dyn_repr`) has set up by the time the native
-// backend runs.
+// `pair?` (half of `ATOM`) IS renamed, since L3b-2c-2: it consumes/produces
+// tagged values, which the representation pass (`lower_dyn_repr`) has set up
+// by the time the native backend runs. `not` and `equal?` are Lisp's rules,
+// not representation, so since LANG83 PR7f-2 `lower_dyn_repr` writes them as
+// the module's own IIR (`__lisp_not` inline, `__lisp_equal` a function).
 
 /// The frontend→native-runtime builtin renames (LANG77 / L3b-2b, L3b-2c-2).
 const RUNTIME_RENAMES: &[(&str, &str)] = &[
@@ -481,16 +482,17 @@ const RUNTIME_RENAMES: &[(&str, &str)] = &[
     ("cons", "dyn_pair_new"),
     ("car", "dyn_pair_first"),
     ("cdr", "dyn_pair_rest"),
-    // L3b-2c-2 — the predicates (ATOM = pair? + not; EQ = equal?).
+    // L3b-2c-2 — the pair test (ATOM = not(pair?)).
     //
-    // `pair?` and `equal?` are unambiguous lisp builtins (no machine meaning),
-    // so the rename is safe here. `not` is NOT renamed here: it is also a
+    // `pair?` is an unambiguous lisp builtin (no machine meaning), so the
+    // rename is safe here. `equal?` (EQ) is Lisp's own rule and is not a
+    // runtime call (LANG83 PR7f-2; see `lower_heap_function_runtime`).
+    // `not` is NOT renamed here: it is also a
     // *numeric* builtin (machine boolean-not, used by Twig), so renaming it
     // unconditionally would hijack Twig's `not`. McCarthy's `not` (the second
     // half of `ATOM` = `not(pair?)`) is renamed *type-directed* in
     // `dyn_repr` — only when its argument is a `dyn_*` result.
     ("pair?", "dyn_is_pair"),
-    ("equal?", "dyn_equal"),
     // `null?` — the empty-list test. The structural path lowers this to the
     // `is_null` opcode, but that emits a compare-against-**zero**, and in the
     // tagged runtime representation nil is the whole-word constant 1. So the
@@ -515,7 +517,7 @@ const RUNTIME_RESULT_HINT: &str = "ref<any>";
 /// Also retypes the instruction's result to `"ref<any>"` (was left at
 /// whatever bare hint the frontend gave it, almost always `"any"`). Every
 /// renamed builtin produces a genuine tagged dynamic value — the result of
-/// `dyn_pair_first`/`dyn_pair_new`/`dyn_pair_rest`/`dyn_is_pair`/`dyn_equal`/`dyn_is_nil` is
+/// `dyn_pair_first`/`dyn_pair_new`/`dyn_pair_rest`/`dyn_is_pair`/`dyn_is_nil` (and `equal?`) is
 /// never a placeholder, in any source language. Without this, a downstream
 /// pass that only recognises boxed-ness by type hint (`dynamic_arith.rs`'s
 /// `is_boxed`) sees the frontend's bare `"any"` and — after #11026 gated
@@ -529,6 +531,15 @@ const RUNTIME_RESULT_HINT: &str = "ref<any>";
 pub fn lower_heap_function_runtime(fn_: &mut IIRFunction) {
     for instr in &mut fn_.instructions {
         if instr.op != "call_builtin" {
+            continue;
+        }
+        // `equal?` is Lisp's structural equality, not a representation
+        // primitive, so it has no runtime call (LANG83 PR7f-2):
+        // `lower_dyn_repr` turns it into a call of the module's own
+        // `__lisp_equal`. Its result is still a tagged boolean, so it is typed
+        // `ref<any>` here, where the other tagged results are.
+        if matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "equal?") {
+            instr.type_hint = RUNTIME_RESULT_HINT.to_string();
             continue;
         }
         // The builtin name is always `srcs[0] = Var(name)`.  Rewrite it in
@@ -993,27 +1004,39 @@ mod tests {
 
     #[test]
     fn runtime_renames_atom_eq_predicates() {
-        // L3b-2c-2: pair?/equal? are renamed here (unambiguous lisp builtins).
+        // L3b-2c-2: pair? is renamed here (an unambiguous lisp builtin).
         // `not` is renamed type-directed in dyn_repr (it is also a numeric
         // builtin), so it is NOT renamed by this pass — see
-        // `runtime_leaves_not_for_type_directed_rename`.
-        for (name, renamed) in [
-            ("pair?", "dyn_is_pair"),
-            ("equal?", "dyn_equal"),
-        ] {
-            let instr = IIRInstr::new(
-                "call_builtin",
-                Some("%r".into()),
-                vec![Operand::Var(name.into()), Operand::Var("%x".into())],
-                "any",
-            );
-            let mut m = make_module(vec![instr]);
-            lower_heap_builtins_runtime(&mut m);
-            assert_eq!(
-                builtin_name(&m.functions[0].instructions[0]), renamed,
-                "{name} must be renamed to {renamed}",
-            );
-        }
+        // `runtime_leaves_not_for_type_directed_rename`. `equal?` keeps its
+        // name for dyn_repr's `__lisp_equal` (LANG83 PR7f-2) — see
+        // `runtime_leaves_equal_for_the_lisp_helper`.
+        let instr = IIRInstr::new(
+            "call_builtin",
+            Some("%r".into()),
+            vec![Operand::Var("pair?".into()), Operand::Var("%x".into())],
+            "any",
+        );
+        let mut m = make_module(vec![instr]);
+        lower_heap_builtins_runtime(&mut m);
+        assert_eq!(builtin_name(&m.functions[0].instructions[0]), "dyn_is_pair");
+    }
+
+    /// LANG83 PR7f-2: `equal?` is not a runtime call any more. This pass
+    /// leaves the name for `lower_dyn_repr` (which calls the module's own
+    /// `__lisp_equal`) and only retypes the tagged-boolean result `ref<any>`.
+    #[test]
+    fn runtime_leaves_equal_for_the_lisp_helper() {
+        let instr = IIRInstr::new(
+            "call_builtin",
+            Some("%r".into()),
+            vec![Operand::Var("equal?".into()), Operand::Var("%x".into()), Operand::Var("%y".into())],
+            "any",
+        );
+        let mut m = make_module(vec![instr]);
+        lower_heap_builtins_runtime(&mut m);
+        let out = &m.functions[0].instructions[0];
+        assert_eq!(builtin_name(out), "equal?");
+        assert_eq!(out.type_hint, "ref<any>");
     }
 
     #[test]

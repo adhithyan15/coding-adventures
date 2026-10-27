@@ -264,7 +264,17 @@ Error categories (one `FrontendError` enum per frontend, mapped into
 
 1. Every emitted instruction MUST be either a LANG83 registry entry (Op or
    Builtin) whose status is not `Later`, or a pre-registry instruction that
-   the registry does not gate.
+   the registry does not gate. The pre-registry set is shrinking. Since
+   LANG83 PR7f-1 a dynamic value (an integer, nil, a symbol, a boolean or a
+   pair in one tagged word) is built and taken apart with the registered
+   `Dynamic` builtins (`dyn_pair_new`, `dyn_tag`, …), not with unregistered
+   `dyn_*` names. Since PR7f-2 a language's truthiness, `not`, equality and
+   exit code over those values are module code its compiler emits, never a
+   runtime call. What remains is the source-level builtin vocabulary the
+   Lisp-family and CAS frontends still emit (`+`, `cons`, `null?`,
+   `equal?`, …), which the backend pipelines translate after
+   `check_module_for`; LANG83 PR7f-3 moves that translation into the
+   frontends, and a new frontend MUST NOT add to it.
 2. A new operation a frontend needs is added to the LANG83 registry first, in
    its own PR, with every backend's `op_support` declaration. The frontend PR
    that emits it comes after.

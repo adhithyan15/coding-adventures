@@ -65,9 +65,9 @@ two translation units:
   is what lets *any* dynamically typed frontend (Twig, McCarthy Lisp, the CAS
   languages) compile pairs and interned symbols to a native binary. The
   primitives were `__dyn_cons` / `car` / `cdr` / `pair_p` / `null_p` /
-  `make_symbol` before PR7f. The file still holds the Lisp-semantic helpers
-  `__dyn_truthy` / `__dyn_equal` / `__dyn_not` / `__dyn_to_exit_code`, which
-  are not registry operations.
+  `make_symbol` before PR7f. It holds no language's rules: Lisp truthiness,
+  `not`, `equal?` and the exit coercion (`__dyn_truthy` … until LANG83
+  PR7f-2) are written by the Lisp-family lowering as IIR in each module.
 
 The C lisp runtime and the Rust `dynval-runtime` crate (used by the VM/JIT)
 are two implementations of one documented ABI. The `dynval_runtime_golden`

@@ -19,6 +19,7 @@
 //! | `float_table_matches_host_python3_and_node` | the PR6a expected strings (the oracle the PR7e helper cases print) are what host `python3` (`repr`) and `node` (`String(x)`) print today, whenever they are installed |
 //! | `harness_builtins_name_no_language` | LANG83 PR7e: no builtin a conformance runner registers names a source language |
 //! | `pr7b_ops_are_lowered_on_every_backend` | LANG83 PR7b: `f64_class`, `f64_digits` and `f64_exp10` are lowered on all nine backends, the PR7b cases run on every executable column, and BEAM compiles the finite ones |
+//! | `pr7f2_lisp_rules_are_module_code_over_the_primitives` | LANG83 PR7f-2: Lisp's truthiness, `not`, `equal?` and exit code, written as IIR by `iir_builtin_lowering::lisp_semantics` over the dynamic-value primitives, print what `dynval-runtime`'s Rust value model says on LLVM and native x86-64, and no tagged-word backend knows a language-semantic builtin |
 //! | `pr7f_dynamic_values_run_on_the_tagged_word_backends` | LANG83 PR7f: the dynamic-value primitives are lowered exactly on the three tagged-word backends (native x86-64 and AArch64, LLVM) and refused, before any pass runs, everywhere else; the PR7f case runs on LLVM and native x86-64 whenever they are present |
 //! | `float_digits_table_matches_host_python3` | the PR7b expected digits are host `python3`'s `repr` split at the digits, whenever it is installed |
 //! | `flush_before_trap_is_proven_on_every_executable_column` | a program that writes (unflushed) output and then traps keeps that output, and the trap kind is observed, on every column that can run it |
@@ -193,6 +194,81 @@ fn builtin_to(name: &str, d: &str, args: &[&str], ty: &str) -> IIRInstr {
 
 /// The dynamic-value type hint (LANG83 PR7f): a tagged word.
 const DYN: &str = "ref<any>";
+
+/// The values the PR7f-2 Lisp-rule case tests, in order: an integer 0 and 7,
+/// nil, `#t`, `#f`, the pairs `(1 . 2)` (twice, separately allocated) and
+/// `(1 . 3)`, the list `(1 2)` (twice), and the symbols `A` (twice) and `B`.
+const LISP_RULE_VALUES: [&str; 13] = ["i0", "i7", "nil", "t", "f", "p12", "p12b", "p13", "l", "lb", "sa", "sa2", "sb"];
+/// Truthiness and `not` are printed for these values …
+const LISP_RULE_TESTED: [&str; 7] = ["i0", "i7", "nil", "t", "f", "p12", "sa"];
+/// … the exit code for these (a pair's or symbol's code is its word, which
+/// is not portable across runs) …
+const LISP_RULE_EXITS: [&str; 5] = ["i7", "t", "f", "nil", "i0"];
+/// … and `equal?` for these pairs of values.
+const LISP_RULE_EQUAL: [(&str, &str); 12] = [
+    ("p12", "p12b"),
+    ("p12", "p13"),
+    ("l", "lb"),
+    ("i7", "i7"),
+    ("i7", "i0"),
+    ("p12", "i7"),
+    ("nil", "nil"),
+    ("l", "p12"),
+    ("sa", "sa2"),
+    ("sa", "sb"),
+    ("t", "t"),
+    ("t", "f"),
+];
+
+/// LANG83 PR7f-2: Lisp's four value rules as the Lisp lowering writes them —
+/// truthiness and `not` inline, `equal?` and the exit code as module
+/// functions — over values built with the dynamic-value primitives. The
+/// module is complete before any pass: `lisp_semantics` expands and appends
+/// exactly what `lower_dyn_repr` would.
+fn lisp_rules_program() -> IIRModule {
+    use iir_builtin_lowering::lisp_semantics::{self, EQUAL, EXIT_CODE, NOT, TRUTHY};
+    let boxed = |d: &str, n: i64| vec![int(&format!("{d}.n"), n), builtin_to("dyn_box_int", d, &[&format!("{d}.n")], DYN)];
+    let symbol = |d: &str, name: &str| IIRInstr::new("const", Some(d.into()), vec![var(name)], "symbol");
+    let mut b = Vec::new();
+    b.extend(boxed("i0", 0));
+    b.extend(boxed("i7", 7));
+    b.extend(boxed("one", 1));
+    b.extend(boxed("two", 2));
+    b.extend(boxed("three", 3));
+    b.push(builtin_to("dyn_nil", "nil", &[], DYN));
+    b.push(builtin_to("dyn_is_nil", "t", &["nil"], DYN));
+    b.push(builtin_to("dyn_is_nil", "f", &["i0"], DYN));
+    b.push(builtin_to("dyn_pair_new", "p12", &["one", "two"], DYN));
+    b.push(builtin_to("dyn_pair_new", "p12b", &["one", "two"], DYN));
+    b.push(builtin_to("dyn_pair_new", "p13", &["one", "three"], DYN));
+    b.push(builtin_to("dyn_pair_new", "l.tail", &["two", "nil"], DYN));
+    b.push(builtin_to("dyn_pair_new", "l", &["one", "l.tail"], DYN));
+    b.push(builtin_to("dyn_pair_new", "lb.tail", &["two", "nil"], DYN));
+    b.push(builtin_to("dyn_pair_new", "lb", &["one", "lb.tail"], DYN));
+    b.push(symbol("sa", "A"));
+    b.push(symbol("sa2", "A"));
+    b.push(symbol("sb", "B"));
+    for x in LISP_RULE_TESTED {
+        b.push(lisp_semantics::call(&format!("{x}.truthy"), TRUTHY, &[x], "i64"));
+        b.push(print_i64(&format!("{x}.truthy")));
+        b.push(lisp_semantics::call(&format!("{x}.not"), NOT, &[x], DYN));
+        b.push(print_i64(&format!("{x}.not")));
+    }
+    for x in LISP_RULE_EXITS {
+        b.push(lisp_semantics::call(&format!("{x}.exit"), EXIT_CODE, &[x], "i64"));
+        b.push(print_i64(&format!("{x}.exit")));
+    }
+    for (k, (x, y)) in LISP_RULE_EQUAL.iter().enumerate() {
+        b.push(lisp_semantics::call(&format!("eq{k}"), EQUAL, &[x, y], DYN));
+        b.push(print_i64(&format!("eq{k}")));
+    }
+    let mut module = program(b);
+    for f in &mut module.functions {
+        lisp_semantics::expand_inline_rules(f);
+    }
+    lisp_semantics::add_used_helpers(&mut module);
+    module
+}
 
 /// LANG83 PR7f: every dynamic-value primitive but `dyn_symbol`, each result
 /// printed as an integer. Atoms are boxed explicitly with `dyn_box_int`, so
@@ -1453,6 +1529,18 @@ fn cases() -> Vec<Case> {
             expect: Expect::Stdout("41\n-7\n7\n0\n1\n5\n3\n5\n3\n2"),
         },
         Case {
+            name: "Lisp truthiness, not, equal? and exit code as module IIR (PR7f-2)",
+            build: lisp_rules_program,
+            // Truthiness and `not` (#t = 5, #f = 3) of 0, 7, nil, #t, #f,
+            // (1 . 2) and A; the exit codes of 7, #t, #f, nil and 0; then
+            // `equal?` of each LISP_RULE_EQUAL pair.
+            expect: Expect::Stdout(
+                "1\n3\n1\n3\n0\n5\n1\n3\n0\n5\n1\n3\n1\n3\n\
+                 7\n1\n0\n0\n0\n\
+                 5\n3\n5\n5\n3\n3\n5\n3\n5\n3\n5\n3",
+            ),
+        },
+        Case {
             // No backend lowers a symbol built from a literal: a symbol reaches
             // the tagged-word backends as an interned `const … : symbol`. So
             // this case is refused everywhere, before any pass runs.
@@ -2203,8 +2291,12 @@ fn refused_ops_are_rejected_at_compile_time() {
             // 1. The shared check names exactly the refused ops.
             let err = check_module_for(backend, &case.module())
                 .expect_err("a module using a refused op must not pass check_module_for");
+            // A refusal is listed once per (function, op); a case whose
+            // module has several functions (PR7f-2's Lisp helpers) can name
+            // one op in more than one of them.
             let mut named: Vec<&str> = err.refusals.iter().map(|r| r.op).collect();
             named.sort_unstable();
+            named.dedup();
             assert_eq!(named, refused, "{backend}: case `{}`", case.name);
             // 2. The backend's own compile entry point refuses it the same way,
             //    before any lowering pass. Only the host's native backend has a
@@ -2432,6 +2524,79 @@ fn pr7b_ops_are_lowered_on_every_backend() {
         }
         eprintln!("LANG83 PR7b `{}` proven on {ran:?}", case.name);
     }
+}
+
+/// LANG83 PR7f-2: the Lisp-rule case's expected output is what
+/// `dynval-runtime`'s Rust value model (the VM's `LispyValue`, the former C
+/// runtime's twin) says — so the compiler-written rules agree with the
+/// runtime rules they replace — and the case runs on LLVM and native x86-64
+/// whenever they are present. No tagged-word backend lowers the old
+/// language-semantic builtins any more.
+#[test]
+fn pr7f2_lisp_rules_are_module_code_over_the_primitives() {
+    use dynval_runtime::{builtins, intern, LispyValue};
+    let value = |name: &str| -> LispyValue {
+        let pair = |a, b| builtins::cons(&[a, b]).expect("cons");
+        let list = || pair(LispyValue::int(1), pair(LispyValue::int(2), LispyValue::NIL));
+        match name {
+            "i0" => LispyValue::int(0),
+            "i7" => LispyValue::int(7),
+            "nil" => LispyValue::NIL,
+            "t" => LispyValue::TRUE,
+            "f" => LispyValue::FALSE,
+            "p12" | "p12b" => pair(LispyValue::int(1), LispyValue::int(2)),
+            "p13" => pair(LispyValue::int(1), LispyValue::int(3)),
+            "l" | "lb" => list(),
+            "sa" | "sa2" => LispyValue::symbol(intern("A")),
+            "sb" => LispyValue::symbol(intern("B")),
+            other => panic!("{other}"),
+        }
+    };
+    assert_eq!(LISP_RULE_VALUES.len(), 13);
+    let word = |v: LispyValue| v.bits() as i64;
+    let mut want = Vec::new();
+    for x in LISP_RULE_TESTED {
+        want.push(value(x).is_truthy() as i64);
+        want.push(word(builtins::not(&[value(x)]).expect("not")));
+    }
+    for x in LISP_RULE_EXITS {
+        let v = value(x);
+        want.push(match v.as_int() {
+            Some(n) => n,
+            None if v.is_true() => 1,
+            None => 0,
+        });
+    }
+    for (x, y) in LISP_RULE_EQUAL {
+        want.push(word(builtins::equal_p(&[value(x), value(y)]).expect("equal?")));
+    }
+    let want: Vec<String> = want.iter().map(i64::to_string).collect();
+    let corpus = cases();
+    let case = corpus.iter().find(|c| c.name.ends_with("(PR7f-2)")).expect("the PR7f-2 case");
+    let Expect::Stdout(expected) = case.expect else { panic!("stdout case") };
+    assert_eq!(expected, want.join("\n"), "the case's expectation is the Rust value model's");
+
+    let mut required = Vec::new();
+    if clang_ok() {
+        required.push("Llvm");
+    }
+    if cfg!(target_os = "linux") {
+        required.push("NativeAot");
+    }
+    let ran = execute_everywhere(case);
+    for column in &required {
+        assert!(ran.contains(column), "{}: did not run on {column} (ran {ran:?})", case.name);
+    }
+    // The rules are module code: the LLVM module defines `__lisp_equal` and
+    // `__lisp_exit_code` and calls no runtime rule.
+    let ll = lang_aot::compile_iir_to_llvm(case.module(), "opconf", "x86_64-unknown-linux-gnu").expect("llvm");
+    for defined in ["@__lisp_equal(", "@__lisp_exit_code("] {
+        assert!(ll.contains(&format!("define i64 {defined}")), "{defined} is defined in the module");
+    }
+    for gone in ["__dyn_truthy", "__dyn_not", "__dyn_equal", "__dyn_to_exit_code"] {
+        assert!(!ll.contains(gone), "{gone} is no longer a runtime call");
+    }
+    eprintln!("LANG83 PR7f-2 `{}` proven on {ran:?}", case.name);
 }
 
 /// LANG83 PR7f: the dynamic-value primitives are calls into the tagged-word

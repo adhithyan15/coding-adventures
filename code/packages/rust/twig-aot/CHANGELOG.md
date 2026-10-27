@@ -1,4 +1,9 @@
 # Changelog — `twig-aot`
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).
+- `macos_arm64_smoke`'s closure-capture test coerces its integer result with `dyn_unbox_int` (it called `dyn_to_exit_code`).
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `runtime/dynval_runtime.c`: `__dyn_cons` / `__dyn_car` / `__dyn_cdr` / `__dyn_pair_p` / `__dyn_null_p` / `__dyn_make_symbol` are renamed `__dyn_pair_new` / `__dyn_pair_first` / `__dyn_pair_rest` / `__dyn_is_pair` / `__dyn_is_nil` / `__dyn_symbol` (LANG83 PR7f's registry names, which the native backends map to `__` + name). New `int64_t __dyn_tag(uint64_t)`: the value's three-bit tag.

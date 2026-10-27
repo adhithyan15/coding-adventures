@@ -1111,7 +1111,7 @@ With helpers, a new language's float output changes no backend at all.
 | `Trap.ReferenceError` (id 7) | `exception_kind.rs`, `twig_runtime.c` kind table, this spec | javascript-iir-compiler | **Language-named.** The condition, reading an unbound name, is neutral (Python `NameError`, a Lisp unbound variable). Renamed `Trap.Unbound`, keeping **id 7**, in PR7d. *Landed.* |
 | `LANGUAGE_TRAP_KINDS` (empty) | `exception_kind.rs`, "Trap semantics" above, LANG84 C7.4 | none | **A language-specific mechanism** (`Ruby.ZeroDivisionError`). Retired in PR7d. A compiler maps a language's error onto a neutral kind. A catchable language exception is a value the frontend builds once AOT00 T2 exceptions land; it is never an IIR trap kind. *Landed:* the table, `LANGUAGE_TRAP_KIND_ID_BASE` and `is_registered_trap_kind` are gone. |
 | `py_float_div`, `py_name_error`, `py_print_float`, `py_print_empty`, `py_print_two_floats`, `py_print_three_floats` | `python-iir-compiler/src/lib.rs`, registered on the VM only by the LANG79 pilot's `compile_source` | the LANG79 pilot path | **Language-specific**, unregistered, VM only. Retired in PR7g: the pilot entry points move onto the release path (`f64_div` with a `b == 0` check that traps `Trap.DivZero`; `trap Trap.Unbound`; the PR7b print helper). |
-| `dyn_truthy`, `dyn_equal`, `dyn_not`, `dyn_to_exit_code` | `iir-builtin-lowering/src/dyn_repr.rs`, lispy-runtime | Twig, McCarthy Lisp (through the `+`/`cons`/`null?` lowering) | **Language-specific semantics in a runtime op.** Lisp truthiness (only nil and `#f` are false), `equal?`'s structural equality and Lisp's exit-code coercion are each one language family's rules. Replaced in PR7f by neutral representation primitives plus compiler-emitted helpers (below). |
+| `dyn_truthy`, `dyn_equal`, `dyn_not`, `dyn_to_exit_code` | `iir-builtin-lowering/src/dyn_repr.rs`, lispy-runtime | Twig, McCarthy Lisp (through the `+`/`cons`/`null?` lowering) | **Language-specific semantics in a runtime op.** Lisp truthiness (only nil and `#f` are false), `equal?`'s structural equality and Lisp's exit-code coercion are each one language family's rules. Replaced in PR7f by neutral representation primitives plus compiler-emitted helpers (below). *Landed in PR7f-2:* truthiness and `not` inline, `__lisp_equal` and `__lisp_exit_code` module functions; the four are gone from the runtime and every backend (see "What PR7f-2 landed"). |
 | `dyn_cons`, `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol` | `dyn_repr.rs`, `heap.rs`, lispy-runtime | Twig, McCarthy Lisp | **Neutral semantics, Lisp vocabulary.** A two-field heap cell and a nil sentinel are a representation, not a language rule. Renamed in PR7f to `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil` and `dyn_symbol`, then registered. *Landed in PR7f-1,* with the new `dyn_tag` and the existing `dyn_box_int` / `dyn_unbox_int` (see "What PR7f-1 landed"). |
 | Source-level builtin names `+ - * / % = < <= > >= cons car cdr pair? null? equal? not` | emitted as `call_builtin` by twig-ir-compiler, mccarthy-lisp, and the seven CAS frontends (axiom, maple, macsyma, derive, reduce, wolfram, maxima); rewritten by the shared `iir-builtin-lowering` pass | as listed | **Source vocabulary reaching the IIR.** The module is not neutral until that pass runs, and the pass's `is_lisp_function_call` and `rename_lisp_not` know Lisp. PR7f moves the translation into the frontends: the shared pass becomes a compiler-side library those frontends call, and the module they hand to a backend holds registry ops only. |
 | `print_i64`, `putchar`, `getchar`, `print_str`, `write_i64`, `str_*`, `i64_*`, `cmp_*`, `f64_*` arithmetic and math, `int_to_real`, `real_to_int_*`, `trap`, `Trap.Bounds` … `Trap.User` | registry | many | **Neutral.** They stay. `print_i64` appends `\n`, a convenience every integer-printing frontend uses; it is not a language rule. |
@@ -1651,6 +1651,79 @@ the frontends.
   covers registry ops, builtins and trap kinds; it is noted here for a
   later pass.
 
+**What PR7f-2 landed, and where it diverged from the plan above.**
+
+- *The rules are compiler-emitted IIR.* `iir-builtin-lowering`'s new
+  `lisp_semantics` module writes Lisp's four value rules over the PR7f-1
+  primitives:
+
+  | Rule | Emitted as | Built from |
+  | --- | --- | --- |
+  | truthiness (false iff nil or `#f`) | inline, 6 instructions: `(tag ≠ 3) × (tag ≠ 1)` | `dyn_tag`, `const`, `cmp_ne`, `mul` |
+  | `not` | inline, 9 more: `5 − 2 × truthy` (the words of `#t` / `#f`) | the above, `sub` |
+  | `equal?` | `__lisp_equal(a, b)`, a recursive module function | `dyn_tag`, `dyn_pair_first`, `dyn_pair_rest`, `cmp_eq` on the words, `call` |
+  | exit code | `__lisp_exit_code(x)`, a module function | `dyn_tag`, `dyn_unbox_int`, `cmp_eq`, `mov` |
+
+  `lower_dyn_repr` (the tagged-word pass the native, LLVM and McCarthy-JIT
+  pipelines run) marks each use with a `call` of the rule's name while it
+  classifies registers — exactly where it emitted `dyn_truthy` /
+  `dyn_not` / `dyn_equal` / `dyn_to_exit_code` before — then expands the two
+  inline rules and appends the two functions a module calls, once each.
+  `equal?` is no longer renamed by `lower_heap_builtins_runtime`; it keeps its
+  name (retyped `ref<any>`) for `lower_dyn_repr`. The helpers are appended
+  after the pass's analysis, and a module that already holds them has them
+  set aside while it is classified, so the pass never boxes their constants.
+- *Divergence: two rules are inline, not helper functions.* A probe of
+  `JITCore::is_compiled` over the McCarthy JIT test programs showed that a
+  `call` of a helper sends its caller to the interpreter tier (the generic
+  JIT has no `call` bytecode): `main` of `(ATOM 7)` and the lambda of
+  `((LAMBDA (X) (ATOM X)) 7)` had compiled before. Inline, every instruction
+  typed `i64`, they still compile. `equal?` must recurse, so `main` of
+  `(EQ 7 7)` / `(EQ 7 8)` and the lambda of `((LAMBDA (X Y) (EQ X Y)) 3 3)`
+  now run on the interpreter tier — the only change in the compiled set,
+  with the same results. The exit-code switch applies only to a `call`'s
+  result, so its caller already contained a call. The helper functions
+  contain `jmp`/`label`, so they are `PartiallyTyped` and run on the
+  interpreter tier too.
+- *Removed everywhere.* `__dyn_truthy`, `__dyn_not`, `__dyn_equal` and
+  `__dyn_to_exit_code` leave `dynval_runtime.c` (and its golden test); the
+  four rows leave the x86-64 and AArch64 `V1_BUILTINS` and iir-to-llvm's
+  `DYN_BUILTINS`, so a module that still calls one is refused at compile
+  time; `jit_lisp` drops its four callbacks and registers `dyn_tag` and
+  `dyn_is_nil` instead; `lang-aot`'s narrowing evidence lists drop them.
+  None of the four was a registry entry, so no `op_support` row changed.
+- *Names and linkage.* The helpers are `__lisp_equal` and
+  `__lisp_exit_code`, the Lisp lowering's own namespace: no linked runtime
+  exports `__lisp_*` (the runtimes use `__twig_*`, `__dyn_*`, `__gc_*`, the
+  LLVM float helpers `__iir_*`), so no runtime symbol can be bound in their
+  place. `helper_names_avoid_runtime_namespaces` pins that.
+- *Typing.* Helper parameters and the pair fields they read are `ref<any>`,
+  so the precise collector treats them as roots; a native function entry
+  polls a safepoint, and a compacting collection there must relocate the
+  pairs `__lisp_equal` walks. The atom comparison is typed `i64`: a
+  `ref<any>`-typed `cmp_eq` was accepted by LLVM but refused by the native
+  x86-64 backend (a comparison's hint is its operand type).
+- *Step budgets.* The runners that execute this IIR are the native and LLVM
+  executables (no budget), `jit_lisp`'s JIT (fuel counts backward jumps; the
+  rules add none) and its vm-core interpreter tier (no instruction cap). The
+  `lang_matrix` VM and JIT columns run Lisp-family programs through the
+  structural lowering, which this PR does not touch. So no budget changed.
+- *Tests.* `lisp_semantics` runs the four rules on a reference machine over
+  every kind of value — integers (0 included), nil, `#t`, `#f`, symbols,
+  pairs equal in structure but not identity, nested lists — against the
+  rules stated independently. `op_conformance`'s new case prints the four
+  rules over the same kinds of value on LLVM and native x86-64, and
+  `pr7f2_lisp_rules_are_module_code_over_the_primitives` checks its expected
+  output against `dynval-runtime`'s Rust `LispyValue` (`is_truthy`,
+  `builtins::not`, `builtins::equal_p`), the twin of the removed C, and that
+  the LLVM module defines the helpers and references no removed runtime
+  rule. Every `lang_matrix` row and every McCarthy LLVM / native / JIT test
+  prints what it printed before.
+- *Not moved yet.* The managed backends (WASM, JVM, CLR, BEAM) still lower
+  the source-level `pair?`, `not` and `equal?` builtins in their own code
+  (their value model is structural, and `lower_dyn_repr_structural` leaves
+  those names for them). That is PR7f-3's "source-level builtin names".
+
 ### Migration, as a PR sequence
 
 Each PR keeps main green on all nine columns. None removes an op while
@@ -1708,8 +1781,8 @@ anything still emits it.
      runtime and `dynval-runtime` together). *Landed;* see "What PR7f-1
      landed" under "Other replacements".
    - **PR7f-2** — the language-semantic runtime calls (`dyn_truthy`,
-     `dyn_equal`, `dyn_not`, `dyn_to_exit_code`) become module-local
-     helpers built from the primitives.
+     `dyn_equal`, `dyn_not`, `dyn_to_exit_code`) become compiler-emitted
+     IIR built from the primitives. *Landed;* see "What PR7f-2 landed".
    - **PR7f-3** — the source-name translation moves into the frontends.
 8. **PR7g — retire the LANG79 Python pilot builtins** (`py_*`) by putting
    `compile_source` on the release path.
@@ -1718,7 +1791,11 @@ anything still emits it.
 
 PR7b–PR7e touch `interpreter-ir`, which `twig-vm` depends on, so each runs
 the local Miri script per CLAUDE.md. (`iir-to-*`, `jit-core` and `vm-core`
-are not in `twig-vm`'s graph.)
+are not in `twig-vm`'s graph.) PR7f-1 touches `interpreter-ir`,
+`dynval-runtime`, `twig-ir-compiler` and `twig-vm` itself, all in the graph
+(`cargo tree -p twig-vm -i <crate>`), so the script applies. PR7f-2 touches
+none of them: `iir-builtin-lowering`, `lang-aot`, `twig-aot`, the native and
+LLVM backends are not in `twig-vm`'s graph.
 
 ## What PR1a deliberately does not do
 

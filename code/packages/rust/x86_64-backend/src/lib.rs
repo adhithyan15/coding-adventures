@@ -438,17 +438,13 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // e.g. the result of dynamic arithmetic re-entering the lisp value world.
     // `uint64_t __dyn_box_int(int64_t)`.
     BuiltinSig { name: "dyn_box_int", n_args: 1, returns: true },
-    // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
-    // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
+    // LANG77 L3b-2c-2 — the pair and nil tests (return tagged #t/#f). Lisp's
+    // `not`, `equal?`, truthiness and exit coercion were runtime calls here
+    // too (`dyn_not`, `dyn_equal`, `dyn_truthy`, `dyn_to_exit_code`) until
+    // LANG83 PR7f-2; they are language rules, so the Lisp-family lowering now
+    // writes them as IIR and this table no longer has them.
     BuiltinSig { name: "dyn_is_pair",   n_args: 1, returns: true },
     BuiltinSig { name: "dyn_is_nil",    n_args: 1, returns: true },
-    BuiltinSig { name: "dyn_not",       n_args: 1, returns: true },
-    BuiltinSig { name: "dyn_equal",     n_args: 2, returns: true },
-    BuiltinSig { name: "dyn_truthy",    n_args: 1, returns: true },
-    // LANG77 W13b — the universal program-exit coercion for a polymorphic
-    // (lambda / `any`) result: dispatch on the runtime tag.
-    // `int64_t __dyn_to_exit_code(uint64_t)`.
-    BuiltinSig { name: "dyn_to_exit_code", n_args: 1, returns: true },
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
     BuiltinSig { name: "str_eq", n_args: 2, returns: true },
@@ -3062,47 +3058,34 @@ mod tests {
     }
 
     #[test]
-    fn dyn_atom_eq_predicates_and_truthy_lower() {
-        // L3b-2c-2: ATOM = not(pair?), normalised via dyn_truthy; plus EQ.
+    fn dyn_pair_test_tag_and_nil_lower() {
+        // L3b-2c-2 / LANG83 PR7f: the pair test, the tag number and nil are
+        // runtime calls (`__dyn_is_pair`, `__dyn_tag`, `__dyn_nil`).
         let ir = vec![
             instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
             call_builtin(Some("p"), "dyn_is_pair", &["x"]),
-            call_builtin(Some("a"), "dyn_not", &["p"]),
-            call_builtin(Some("t"), "dyn_truthy", &["a"]),
-            call_builtin(Some("e"), "dyn_equal", &["x", "x"]),
-            instr("ret_u64", None, vec![Op::Var("e".into())]),
+            call_builtin(Some("t"), "dyn_tag", &["p"]),
+            call_builtin(Some("n"), "dyn_nil", &[]),
+            instr("ret_u64", None, vec![Op::Var("t".into())]),
         ];
         let (bytes, relocs) =
             compile_function_with_relocs(&fn_ctx("preds", &[], "u64"), &ir, X86_64Abi::SysV)
                 .expect("predicates must lower");
         assert!(!bytes.is_empty());
         let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
-        for want in [
-            "__dyn_is_pair", "__dyn_not",
-            "__dyn_truthy", "__dyn_equal",
-        ] {
+        for want in ["__dyn_is_pair", "__dyn_tag", "__dyn_nil"] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
 
-    /// W14b (F7): the universal exit coercion `dyn_to_exit_code` — the program
-    /// boundary for a polymorphic lambda result — lowers to a call into the runtime.
+    /// LANG83 PR7f-2: Lisp's truthiness, `not`, `equal?` and exit coercion
+    /// are no longer runtime calls (each Lisp-family compiler writes them as
+    /// IIR), so this backend no longer knows their names.
     #[test]
-    fn dyn_to_exit_code_lowers() {
-        let ir = vec![
-            instr("const_u64", Some("x"), vec![Op::Int(5 << 3)]),
-            call_builtin(Some("r"), "dyn_to_exit_code", &["x"]),
-            instr("ret_u64", None, vec![Op::Var("r".into())]),
-        ];
-        let (bytes, relocs) =
-            compile_function_with_relocs(&fn_ctx("exit_coerce", &[], "u64"), &ir, X86_64Abi::SysV)
-                .expect("to_exit_code must lower");
-        assert!(!bytes.is_empty());
-        let symbols: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
-        assert!(
-            symbols.contains(&"__dyn_to_exit_code"),
-            "missing __dyn_to_exit_code: {symbols:?}",
-        );
+    fn lisp_semantic_builtins_are_not_in_the_table() {
+        for name in ["dyn_truthy", "dyn_not", "dyn_equal", "dyn_to_exit_code"] {
+            assert!(lookup_builtin(name).is_none(), "{name} must not be a builtin");
+        }
     }
 
     #[test]

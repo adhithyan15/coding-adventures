@@ -60,7 +60,7 @@ fn mccarthy_core_runs_natively_on_macos() {
 fn mccarthy_lambda_runs_natively_on_macos() {
     if !ld_available() { eprintln!("no system linker — skipping"); return; }
     // F7 — `LAMBDA`: arg boxed across the call, polymorphic result coerced at exit
-    // by `__dyn_to_exit_code`. Native AOT is the seventh backend to run these.
+    // by the module's `__lisp_exit_code`. Native AOT is the seventh backend to run these.
     assert_eq!(run("((LAMBDA (X) X) 5)", "n_lam_id"), 5);
     assert_eq!(run("((LAMBDA (X) (CAR X)) (CONS 7 9))", "n_lam_car"), 7);
     assert_eq!(run("((LAMBDA (X) (CDR X)) (CONS 7 9))", "n_lam_cdr"), 9);
