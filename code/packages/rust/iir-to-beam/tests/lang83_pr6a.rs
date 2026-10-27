@@ -336,6 +336,8 @@ fn run_at(m: &BEAMModule, entry: usize, args: &[Val], out: &mut String, short: &
                     let r = match name.as_str() {
                         "erlang:-/2" => int(a) - int(b),
                         "erlang:+/2" => int(a) + int(b),
+                        // LANG83 PR7c-py: the call-argument tests' callee.
+                        "erlang:*/2" => int(a) * int(b),
                         other => panic!("bif {other} not modelled"),
                     };
                     (Val::Int(r), &ops[at])
@@ -688,4 +690,122 @@ fn pr7b_digit_queries_match_python_repr_on_the_model() {
             assert!(out.is_empty(), "the queries print nothing");
         }
     }
+}
+
+// ── LANG83 PR7c-py: a call's arguments are one parallel move ────────────────
+//
+// `__py_write_float` calls `__py_write_digits(d, n, zero, e1)` with `zero` in
+// x1, so moving the arguments in order (`n → x1` first, then `x1 → x2`) handed
+// the callee `n` where it expected `0`. On real OTP every digit run that
+// starts at the leading digit printed nothing (`print(1.5)` wrote `.5`; CI on
+// PR #18400). The model executes moves one at a time, exactly like BEAM, so
+// it catches the clobber as soon as something runs such a call.
+
+/// `main() { v0 = 1; v1 = 2; …; r = f(v[srcs[0]], v[srcs[1]], …); return r }`
+/// where `f(a, b, c, …)` returns the decimal number `abc…`.
+///
+/// `main` has no parameters, so `v0, v1, …` take x0, x1, … in order (the
+/// lowering numbers registers by first appearance) — every `srcs` choice
+/// sends some argument from one argument slot to another.
+fn call_module(pool: usize, srcs: &[usize]) -> BEAMModule {
+    let mut main = Vec::new();
+    for k in 0..pool {
+        main.push(IIRInstr::new("const", Some(format!("v{k}")), vec![Operand::Int(k as i64 + 1)], "i64"));
+    }
+    let mut call = vec![v("f")];
+    call.extend(srcs.iter().map(|k| v(&format!("v{k}"))));
+    main.push(IIRInstr::new("call", Some("r".into()), call, "i64"));
+    main.push(IIRInstr::new("ret", None, vec![v("r")], "i64"));
+
+    let params: Vec<(String, String)> = (0..srcs.len()).map(|i| (format!("a{i}"), "i64".into())).collect();
+    let mut f = vec![
+        IIRInstr::new("const", Some("ten".into()), vec![Operand::Int(10)], "i64"),
+        IIRInstr::new("const", Some("acc".into()), vec![Operand::Int(0)], "i64"),
+    ];
+    for (name, _) in &params {
+        f.push(IIRInstr::new("mul", Some("acc".into()), vec![v("acc"), v("ten")], "i64"));
+        f.push(IIRInstr::new("add", Some("acc".into()), vec![v("acc"), v(name)], "i64"));
+    }
+    f.push(IIRInstr::new("ret", None, vec![v("acc")], "i64"));
+
+    let module = IIRModule {
+        name: "args".into(),
+        functions: vec![IIRFunction::new("main", vec![], "i64", main), IIRFunction::new("f", params, "i64", f)],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+        release: None,
+    };
+    assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
+    lower_iir_to_beam(&module, &IIRBeamConfig::new("args")).expect("lowers")
+}
+
+/// The `x → x` moves `main` emits right before its `call`: the argument
+/// shuffle, as `(from, to)` register pairs.
+fn argument_moves(m: &BEAMModule) -> Vec<(u64, u64)> {
+    let code = &m.instructions;
+    let call = code.iter().position(|i| i.opcode == OP_CALL).expect("main's call");
+    code[..call]
+        .iter()
+        .rev()
+        .take_while(|i| i.opcode == OP_MOVE && i.operands[0].tag == BEAMTag::X)
+        .map(|i| (i.operands[0].value, i.operands[1].value))
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect()
+}
+
+fn run_call(m: &BEAMModule) -> i64 {
+    let no_floats = |f: f64| -> String { panic!("no float is printed here ({f})") };
+    match run_fn(m, "main", &[], &mut String::new(), &no_floats) {
+        Val::Int(n) => n,
+        other => panic!("main returned {other:?}"),
+    }
+}
+
+/// The exact shape that broke `print(1.5)` on BEAM: the third argument lives
+/// in x1, which the second argument's move overwrites.
+#[test]
+fn pr7c_py_write_digits_call_shape_keeps_its_zero_argument() {
+    // v3 → x0, v4 → x1, v1 (x1!) → x2, v2 (x2!) → x3:
+    // write_digits(d, n, zero, one) in `__py_write_float`'s scientific branch.
+    let m = call_module(5, &[3, 4, 1, 2]);
+    assert_eq!(run_call(&m), 4523, "f(d, n, zero, one) must receive zero and one, not n twice");
+}
+
+/// Every way of passing four arguments drawn (with repetition) from five
+/// registers x0..x4 — 625 calls: shifts, swaps, rotations, duplicates, the
+/// identity. Each one hands `f` exactly the values named.
+#[test]
+fn every_arrangement_of_call_arguments_reaches_the_callee_intact() {
+    let mut cycles = 0;
+    for code in 0..5usize.pow(4) {
+        let srcs: Vec<usize> = (0..4).map(|i| code / 5usize.pow(3 - i) % 5).collect();
+        let m = call_module(5, &srcs);
+        let expected = srcs.iter().fold(0, |acc, k| acc * 10 + (*k as i64 + 1));
+        assert_eq!(run_call(&m), expected, "f({srcs:?})");
+
+        // A call whose in-order moves were already safe (no move writes a
+        // register a LATER move reads) keeps exactly those moves, so every
+        // module that worked before this fix lowers byte-for-byte the same.
+        let naive: Vec<(u64, u64)> = srcs
+            .iter()
+            .enumerate()
+            .map(|(i, k)| (*k as u64, i as u64))
+            .filter(|(from, to)| from != to)
+            .collect();
+        let safe = naive.iter().enumerate().all(|(i, (_, to))| naive[i + 1..].iter().all(|(from, _)| from != to));
+        let moves = argument_moves(&m);
+        if safe {
+            assert_eq!(moves, naive, "f({srcs:?}): a safe order is left alone");
+        } else {
+            // Otherwise the only extra moves are the parks that break
+            // cycles, one per cycle: four slots hold at most two (2 swaps).
+            assert!(moves.len() <= naive.len() + 2, "f({srcs:?}): {moves:?}");
+            cycles += usize::from(moves.len() > naive.len());
+        }
+    }
+    assert!(cycles > 0, "some arrangement is a pure register cycle (a swap)");
 }
