@@ -29,7 +29,17 @@
   desktop, Android and iPadOS now match `timeline-entry-open` (prefix) and
   the accessible name `Open {title}` (Compose `contentDescription`, the
   XCUITest `label`), where they used to match `record-list-title` and its
-  text.
+  text. A Card row is about 220px tall in the declared 1100×760 window, so
+  the second entry starts below the fold (misfit M7). Compose's
+  `JournalUiTest` therefore scrolls the pane before it asserts each row or
+  the empty state: back to the top, then down with the `ScrollBy` semantics
+  action, at most 40 steps of 200px, until the node is displayed. It still
+  requires `assertIsDisplayed`, not `assertExists`, and never calls
+  `performScrollTo()` (EM-11). `JournalScrollUiTest` and
+  `journal_scroll_test.dart` find rows by the button's accessible name
+  (`contentDescription`, and the Flutter `Semantics` label), since every
+  button's text is now "Open". The Android test reaches rows through
+  semantics and XCUITest's taps scroll on their own, so neither scrolls.
 
 - **iPadOS UI test.** New `conformance/swiftui-ios/JournalUiTests.swift`, an
   XCUITest that CI compiles into the iOS project (`--ios-ui-test`) and runs on

@@ -1,12 +1,13 @@
 // JournalApp.mll — layout.
 //
 //   HostNavigationSplit [ app-shell ]          pane: the timeline; detail: the editor
-//     Column [ timeline ]
-//       HostButton [ new-entry ]
-//       search, Starred only, tags and journals (J4a–J4f)
-//       If (has-on-this-day) toolkit RecordList   (on this day, J4c)
-//       If (timeline-empty)  toolkit EmptyState
-//       Else                 For each row: a mosaic-pkg-card Card + Open button
+//     HostScroll [ timeline-scroll ]           the pane scrolls (JO-5)
+//       Column [ timeline ]
+//         HostButton [ new-entry ]
+//         search, Starred only, tags and journals (J4a–J4f)
+//         If (has-on-this-day) toolkit RecordList   (on this day, J4c)
+//         If (timeline-empty)  toolkit EmptyState
+//         Else                 For each row: a mosaic-pkg-card Card + Open button
 //     Column [ editor ]
 //       DraftEditor                            (title, body, Save/Delete/Cancel)
 //
@@ -19,6 +20,21 @@ layout JournalApp {
     pane-width : 300 ,
     collapse : auto
   ) {
+    // The pane scrolls (JO-5). A native window scrolls nothing unless the
+    // layout says so, and the pane grows without bound: the timeline, the
+    // tags and the journals all grow with the data. Without this, entries
+    // past the first two or so were below the fold of the declared
+    // 1100x760 window on every native backend, with no scrollbar, no
+    // keyboard scroll and no gesture to reach them (only search could).
+    // The web never showed it, because a browser page scrolls by default.
+    // TaskApp hit the same bug and fixed it the same way (#14734).
+    //
+    // Card rows (Mosaic backlog item 4) are about 220px tall in that window,
+    // so with them the SECOND entry already starts below the fold: this
+    // scroll is what keeps every entry reachable (misfit M7).
+    //
+    // Wrapping from OUTSIDE the column keeps its padding inside the
+    // scroll, so the last row keeps its breathing room at the end.
     HostScroll [ timeline-scroll ] {
       Column [ timeline ] {
         HostButton [ new-entry ] (
@@ -123,8 +139,10 @@ layout JournalApp {
         If ( when: slot: export-status ) {
           Text [ export-status ] ( content : slot: export-status )
         }
-        // On this day (J4c): a second RecordList mount (#15959), above the
+        // On this day (J4c): the app's one RecordList mount, above the
         // timeline, only when earlier years have entries on today's date.
+        // (It was the second mount, suffixed `-m2` by #15959, while the
+        // timeline was a RecordList too.)
         If ( when: slot: has-on-this-day ) {
           Text [ on-this-day-title ] (
             content : "On this day" ,
