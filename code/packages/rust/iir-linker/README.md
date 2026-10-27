@@ -51,6 +51,27 @@ assert!(merged.imports.is_empty()); // self-contained
 | `verify_imports(module, providers)` | Pre-flight: check imports without merging. |
 | `IIRLinker::new().link(modules)` | Struct API (same as `link`). |
 
+## Renaming and function references
+
+When two modules define the same private function name, the first module
+keeps the bare name and later ones are renamed to `"<module>::name"`.
+Renaming is only safe if every *reference* to the old name follows, so the
+linker rewrites each module's function-name operands through that module's
+rename map (its own renamed functions plus its imports):
+
+| Op | Operand rewritten |
+|----|-------------------|
+| `call` | `srcs[0]` — callee name (`Operand::Var`) |
+| `alloc_closure` | `srcs[0]` — closure body name (`Operand::Str`) |
+| `task_spawn` | `srcs[0]` — callee |
+| `group_spawn` | `srcs[1]` — spawned function |
+
+The merged `entry_point` is mapped the same way.  Data operands such as
+`const(Str(..))`, `global_load`/`global_store` names and `catch` kinds are
+left alone.  This matters for Twig in particular: every module numbers its
+lambdas from `__lambda_0`, so without the `alloc_closure` rewrite a second
+module's closures would run the first module's lambda body (issue #18421).
+
 ## Error types
 
 ```text

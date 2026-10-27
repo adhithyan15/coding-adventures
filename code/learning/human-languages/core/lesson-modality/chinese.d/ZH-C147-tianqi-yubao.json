@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C147-tianqi-yubao",
+    "language": "chinese",
+    "chapter": 147,
+    "sequence": 12050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:416feb24a4e10220"
+  },
+  "findings": []
+}

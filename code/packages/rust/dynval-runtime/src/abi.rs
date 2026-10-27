@@ -17,7 +17,7 @@
 //!
 //! System-V x86_64 / AAPCS64 / RV64 ELF psABI for the platform.
 //! Standard C calling convention — the JIT codegen knows how to
-//! emit a direct call (`call dyn_cons` on x86_64; `bl dyn_cons`
+//! emit a direct call (`call dyn_pair_new` on x86_64; `bl dyn_pair_new`
 //! on AArch64).
 //!
 //! ## Error handling
@@ -37,8 +37,8 @@
 //!
 //! ## What's locked
 //!
-//! - Symbol names: `dyn_cons`, `dyn_car`, `dyn_cdr`,
-//!   `dyn_make_symbol`, `dyn_make_closure`,
+//! - Symbol names: `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`,
+//!   `dyn_symbol`, `dyn_make_closure`,
 //!   `dyn_apply_closure`.  Adding a new operation gets a new
 //!   symbol; renaming an existing one is a breaking ABI change.
 //! - Argument and return types: all `u64` (values), `*const u8`
@@ -62,7 +62,7 @@ use crate::value::LispyValue;
 // Cons cell operations
 // ---------------------------------------------------------------------------
 
-/// `dyn_cons(car, cdr) -> u64` — allocate a cons cell and
+/// `dyn_pair_new(car, cdr) -> u64` — allocate a cons cell and
 /// return the tagged `LispyValue` bits.
 ///
 /// # Safety
@@ -72,23 +72,23 @@ use crate::value::LispyValue;
 /// `LispyValue::NIL.bits()` or `LispyValue::int(n).bits()`).  An
 /// arbitrary `u64` whose low 3 bits happen to equal `0b111`
 /// would form a fake heap pointer; storing it in the new cell
-/// and later passing the cell through `dyn_car` would
+/// and later passing the cell through `dyn_pair_first` would
 /// dereference an attacker-chosen address.
 #[no_mangle]
-pub unsafe extern "C" fn dyn_cons(car: u64, cdr: u64) -> u64 {
+pub unsafe extern "C" fn dyn_pair_new(car: u64, cdr: u64) -> u64 {
     // SAFETY: caller upholds that both bits are valid LispyValues.
     let car_v = unsafe { LispyValue::from_raw_bits(car) };
     let cdr_v = unsafe { LispyValue::from_raw_bits(cdr) };
     heap::alloc_cons(car_v, cdr_v).bits()
 }
 
-/// `dyn_car(pair) -> u64` — extract the first element of a
+/// `dyn_pair_first(pair) -> u64` — extract the first element of a
 /// cons cell.
 ///
 /// # Safety
 ///
 /// `pair` must be the bits of a value previously returned by
-/// `dyn_cons`.  An arbitrary `u64` with low 3 bits = `0b111`
+/// `dyn_pair_new`.  An arbitrary `u64` with low 3 bits = `0b111`
 /// would form a fake heap pointer that the function dereferences.
 ///
 /// # Panics
@@ -97,30 +97,30 @@ pub unsafe extern "C" fn dyn_cons(car: u64, cdr: u64) -> u64 {
 /// JIT/AOT codegen emits a type guard before this call; the
 /// panic indicates the speculation was wrong (JIT bug or stale IC).
 #[no_mangle]
-pub unsafe extern "C" fn dyn_car(pair: u64) -> u64 {
+pub unsafe extern "C" fn dyn_pair_first(pair: u64) -> u64 {
     let v = unsafe { LispyValue::from_raw_bits(pair) };
     // SAFETY: caller upholds that `pair` is a valid LispyValue.
     unsafe { heap::car(v) }
-        .unwrap_or_else(|| panic!("dyn_car: argument {:#x} is not a cons cell", pair))
+        .unwrap_or_else(|| panic!("dyn_pair_first: argument {:#x} is not a cons cell", pair))
         .bits()
 }
 
-/// `dyn_cdr(pair) -> u64` — extract the rest of a cons cell.
+/// `dyn_pair_rest(pair) -> u64` — extract the rest of a cons cell.
 ///
 /// # Safety
 ///
-/// Same contract as [`dyn_car`]: `pair` must be the bits of a
-/// value previously returned by `dyn_cons`.
+/// Same contract as [`dyn_pair_first`]: `pair` must be the bits of a
+/// value previously returned by `dyn_pair_new`.
 ///
 /// # Panics
 ///
-/// Same as [`dyn_car`].
+/// Same as [`dyn_pair_first`].
 #[no_mangle]
-pub unsafe extern "C" fn dyn_cdr(pair: u64) -> u64 {
+pub unsafe extern "C" fn dyn_pair_rest(pair: u64) -> u64 {
     let v = unsafe { LispyValue::from_raw_bits(pair) };
     // SAFETY: caller upholds that `pair` is a valid LispyValue.
     unsafe { heap::cdr(v) }
-        .unwrap_or_else(|| panic!("dyn_cdr: argument {:#x} is not a cons cell", pair))
+        .unwrap_or_else(|| panic!("dyn_pair_rest: argument {:#x} is not a cons cell", pair))
         .bits()
 }
 
@@ -128,7 +128,7 @@ pub unsafe extern "C" fn dyn_cdr(pair: u64) -> u64 {
 // Symbol interning
 // ---------------------------------------------------------------------------
 
-/// `dyn_make_symbol(bytes, len) -> u64` — intern a symbol from
+/// `dyn_symbol(bytes, len) -> u64` — intern a symbol from
 /// a UTF-8 byte slice and return the tagged immediate symbol value.
 ///
 /// # Safety
@@ -137,11 +137,11 @@ pub unsafe extern "C" fn dyn_cdr(pair: u64) -> u64 {
 /// must be valid UTF-8 (the intern table requires owned `String`s);
 /// invalid UTF-8 panics.
 #[no_mangle]
-pub unsafe extern "C" fn dyn_make_symbol(bytes: *const u8, len: usize) -> u64 {
+pub unsafe extern "C" fn dyn_symbol(bytes: *const u8, len: usize) -> u64 {
     // SAFETY: caller upholds (bytes, len) describes a live byte slice.
     let slice = unsafe { std::slice::from_raw_parts(bytes, len) };
     let name = std::str::from_utf8(slice)
-        .unwrap_or_else(|e| panic!("dyn_make_symbol: invalid UTF-8: {e}"));
+        .unwrap_or_else(|e| panic!("dyn_symbol: invalid UTF-8: {e}"));
     let id = intern::intern(name);
     LispyValue::symbol(id).bits()
 }
@@ -241,7 +241,7 @@ pub unsafe extern "C" fn dyn_apply_closure(
 ///
 /// # Safety
 ///
-/// Same contract as [`dyn_car`]: `closure` must be the bits of
+/// Same contract as [`dyn_pair_first`]: `closure` must be the bits of
 /// a valid `LispyValue` previously produced by this crate.
 ///
 /// # Panics
@@ -265,15 +265,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn dyn_cons_round_trip() {
+    fn dyn_pair_new_round_trip() {
         // SAFETY: the inputs are bits of valid LispyValues
         // (LispyValue::int constructors).
-        let v = unsafe { dyn_cons(LispyValue::int(1).bits(), LispyValue::int(2).bits()) };
+        let v = unsafe { dyn_pair_new(LispyValue::int(1).bits(), LispyValue::int(2).bits()) };
         let pair = unsafe { LispyValue::from_raw_bits(v) };
         assert!(pair.is_heap());
         unsafe {
-            assert_eq!(dyn_car(v), LispyValue::int(1).bits());
-            assert_eq!(dyn_cdr(v), LispyValue::int(2).bits());
+            assert_eq!(dyn_pair_first(v), LispyValue::int(1).bits());
+            assert_eq!(dyn_pair_rest(v), LispyValue::int(2).bits());
         }
     }
 
@@ -286,19 +286,19 @@ mod tests {
     // `binding::tests`.
 
     #[test]
-    fn dyn_make_symbol_interns() {
+    fn dyn_symbol_interns() {
         let bytes = b"abi_symbol_test";
-        let v = unsafe { dyn_make_symbol(bytes.as_ptr(), bytes.len()) };
+        let v = unsafe { dyn_symbol(bytes.as_ptr(), bytes.len()) };
         let val = unsafe { LispyValue::from_raw_bits(v) };
         assert!(val.is_symbol());
         // Same name interns to the same id.
-        let v2 = unsafe { dyn_make_symbol(bytes.as_ptr(), bytes.len()) };
+        let v2 = unsafe { dyn_symbol(bytes.as_ptr(), bytes.len()) };
         assert_eq!(v, v2);
     }
 
     #[test]
-    fn dyn_make_symbol_handles_empty_bytes() {
-        let v = unsafe { dyn_make_symbol(b"".as_ptr(), 0) };
+    fn dyn_symbol_handles_empty_bytes() {
+        let v = unsafe { dyn_symbol(b"".as_ptr(), 0) };
         let val = unsafe { LispyValue::from_raw_bits(v) };
         assert!(val.is_symbol());
         assert_eq!(val.as_symbol(), Some(SymbolId::EMPTY));
@@ -324,7 +324,7 @@ mod tests {
     }
 
     // `dyn_apply_closure` panic tests are intentionally omitted
-    // for the same reason as `dyn_car` / `dyn_cdr` (panic-
+    // for the same reason as `dyn_pair_first` / `dyn_pair_rest` (panic-
     // across-FFI is UB).  The closure validation logic
     // (`heap::is_closure`) is tested via the binding tests.
 }
