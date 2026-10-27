@@ -14136,6 +14136,26 @@ fn compiler_reserved_lisp_names_are_refused_at_the_source_and_in_the_pipeline() 
     let err = twig_aot::compile_module_linux_x86_64_object(&module)
         .expect_err("native x86-64 must refuse a program __lisp_equal");
     assert!(format!("{err:?}").contains("reserved for the compiler"), "{err:?}");
+
+    // Only the names the pass recognises are refused. The pass also runs on
+    // Nib's and ALGOL's modules, so a function merely *prefixed* `__lisp_` —
+    // here `g` renamed to `__lisp_helper` — must still compile.
+    let mut module = module;
+    for f in &mut module.functions {
+        if f.name == "__lisp_equal" {
+            f.name = "__lisp_helper".into();
+        }
+        for i in &mut f.instructions {
+            for src in &mut i.srcs {
+                if matches!(src, interpreter_ir::Operand::Var(v) if v == "__lisp_equal") {
+                    *src = interpreter_ir::Operand::Var("__lisp_helper".into());
+                }
+            }
+        }
+    }
+    lang_aot::compile_iir_to_llvm(module.clone(), "m", "x86_64-unknown-linux-gnu")
+        .expect("an unreserved __lisp_ name compiles on LLVM");
+    twig_aot::compile_module_linux_x86_64_object(&module).expect("an unreserved __lisp_ name compiles natively");
 }
 
 // ---------------------------------------------------------------------------

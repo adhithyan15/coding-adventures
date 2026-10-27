@@ -102,11 +102,13 @@
 //! Two layers now close it:
 //!
 //! 1. **This pass refuses** ([`check_reserved_names`], run first by
-//!    `lower_dyn_repr`): a module that defines a `__lisp_*` function, or
-//!    `call`s a `__lisp_*` name, is a [`ReservedNameError`] — unless the
+//!    `lower_dyn_repr`): a module that defines, or `call`s, one of the four
+//!    [`RESERVED_NAMES`] is a [`ReservedNameError`] — unless the
 //!    function is *exactly* the helper [`add_used_helpers`] would emit (the
 //!    pass ran before, or a test built the module with this module's own
-//!    builders). So every marker the pass later sees is its own.
+//!    builders). So every marker the pass later sees is its own. Other
+//!    `__lisp_`-prefixed names pass: this pass also runs on Nib's and
+//!    ALGOL's modules, and nothing here recognises them.
 //! 2. **The frontends reserve the prefix** (Twig rejects any identifier that
 //!    begins with `__lisp_` or `__dyn_`; McCarthy's atoms are upper-case and
 //!    cannot spell one), so a user sees a source-level error with a position
@@ -143,10 +145,19 @@ pub const EQUAL: &str = "__lisp_equal";
 /// module-local function.
 pub const EXIT_CODE: &str = "__lisp_exit_code";
 
-/// The prefix every name above shares, reserved for the compiler: a module
-/// that defines or calls a function with this prefix (other than the exact
-/// helpers this module builds) is refused by [`check_reserved_names`].
+/// The prefix every name above shares. Lisp-family frontends reserve the
+/// whole prefix in source (Twig's `reserved_names`), so a later rule can
+/// take a new `__lisp_` name without a source program already using it.
 pub const RESERVED_PREFIX: &str = "__lisp_";
+
+/// The four names this pass recognises, refused by [`check_reserved_names`]
+/// when a module defines or calls one the compiler did not write.
+///
+/// Only these four — not the whole [`RESERVED_PREFIX`]: `lower_dyn_repr`
+/// runs on every module the tagged-word pipelines compile, Nib's and
+/// ALGOL's included, and a Nib function named `__lisp_helper` collides with
+/// nothing here. Refusing it would reject a correct program for no reason.
+pub const RESERVED_NAMES: [&str; 4] = [TRUTHY, NOT, EQUAL, EXIT_CODE];
 
 /// The rules emitted inline (their names are pass-internal markers).
 pub const INLINE_RULES: [&str; 2] = [TRUTHY, NOT];
@@ -289,7 +300,7 @@ pub fn add_used_helpers(module: &mut IIRModule) -> Result<(), ReservedNameError>
 // Reserved names
 // ---------------------------------------------------------------------------
 
-/// A module used a name the Lisp lowering reserves ([`RESERVED_PREFIX`]).
+/// A module used a name the Lisp lowering reserves ([`RESERVED_NAMES`]).
 ///
 /// | `call`er  | meaning                                                      |
 /// |-----------|--------------------------------------------------------------|
@@ -319,14 +330,15 @@ impl std::fmt::Display for ReservedNameError {
             None => write!(f, "the program defines a function named {:?}", self.name)?,
             Some(caller) => write!(f, "function {caller:?} calls {:?}", self.name)?,
         }
-        write!(f, ": names beginning with {RESERVED_PREFIX:?} are reserved for the compiler's Lisp rules")
+        write!(f, ": {RESERVED_NAMES:?} are reserved for the compiler's Lisp rules")
     }
 }
 
 impl std::error::Error for ReservedNameError {}
 
-/// Refuse a module that defines or calls a [`RESERVED_PREFIX`] name the
-/// compiler did not write.
+/// Refuse a module that defines or calls one of the [`RESERVED_NAMES`] the
+/// compiler did not write. Other `__lisp_`-prefixed names pass: nothing
+/// here recognises them.
 ///
 /// The one exception is a helper function identical to the one
 /// [`add_used_helpers`] emits, and `call`s of it: that is a module this
@@ -342,7 +354,7 @@ impl std::error::Error for ReservedNameError {}
 pub fn check_reserved_names(module: &IIRModule) -> Result<(), ReservedNameError> {
     let mut own: Vec<&str> = Vec::new();
     for f in &module.functions {
-        if !f.name.starts_with(RESERVED_PREFIX) {
+        if !RESERVED_NAMES.contains(&f.name.as_str()) {
             continue;
         }
         if !is_compiler_helper(f) {
@@ -356,7 +368,7 @@ pub fn check_reserved_names(module: &IIRModule) -> Result<(), ReservedNameError>
                 continue;
             }
             if let Some(Operand::Var(callee)) = i.srcs.first() {
-                if callee.starts_with(RESERVED_PREFIX) && !own.contains(&callee.as_str()) {
+                if RESERVED_NAMES.contains(&callee.as_str()) && !own.contains(&callee.as_str()) {
                     return Err(ReservedNameError { name: callee.clone(), caller: Some(f.name.clone()) });
                 }
             }
@@ -792,7 +804,7 @@ mod tests {
 
     /// `add_used_helpers` never keeps a program's function in a helper's
     /// place, and `check_reserved_names` refuses a definition or a call of
-    /// any `__lisp_*` name the compiler did not write.
+    /// any of the [`RESERVED_NAMES`] the compiler did not write.
     #[test]
     fn reserved_names_are_refused_unless_the_compiler_wrote_them() {
         let impostor = IIRFunction::new(
@@ -828,6 +840,27 @@ mod tests {
             assert!(is_compiler_helper(&build_helper(helper)), "{helper}");
         }
         assert!(!is_compiler_helper(&IIRFunction::new("main", vec![], WORD, vec![])));
+    }
+
+    /// This pass runs on every module the tagged-word pipelines compile, Nib's
+    /// and ALGOL's too. A function whose name merely begins with `__lisp_`
+    /// collides with nothing the pass recognises, so it — and calls of it —
+    /// must still compile: only the four [`RESERVED_NAMES`] are refused.
+    #[test]
+    fn other_lisp_prefixed_names_are_not_reserved() {
+        let mut m = IIRModule::new("m", "nib");
+        m.add_or_replace(IIRFunction::new("__lisp_helper", vec![], WORD, vec![konst("k", 4), ret("k", WORD)]));
+        m.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            WORD,
+            vec![call("r", "__lisp_helper", &[], WORD), ret("r", WORD)],
+        ));
+        assert_eq!(check_reserved_names(&m), Ok(()));
+        assert_eq!(RESERVED_NAMES, [TRUTHY, NOT, EQUAL, EXIT_CODE]);
+        for name in RESERVED_NAMES {
+            assert!(name.starts_with(RESERVED_PREFIX), "{name}");
+        }
     }
 
     #[test]

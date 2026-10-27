@@ -1736,8 +1736,11 @@ the frontends.
   `(define (__lisp_not x) 0) (__lisp_not 5)` was expanded as Lisp's `not`.
   Two layers now refuse it. `lisp_semantics::check_reserved_names` (run
   first by `lower_dyn_repr`, which now returns `Result`) refuses a module
-  that defines or calls a `__lisp_*` name, unless the function is exactly
-  the helper the pass emits (so a lowered module lowers again). The Twig
+  that defines or calls one of the four names it recognises (`__lisp_truthy`,
+  `__lisp_not`, `__lisp_equal`, `__lisp_exit_code`), unless the function is
+  exactly the helper the pass emits (so a lowered module lowers again).
+  Only those four: the pass runs on Nib's and ALGOL's modules too, where a
+  function merely prefixed `__lisp_` collides with nothing. The Twig
   frontend reserves the `__lisp_` and `__dyn_` prefixes for every name it
   reads, with a source position; McCarthy's atoms are upper-case and cannot
   spell either. `__dyn_` has the same exposure — `length` binds to an

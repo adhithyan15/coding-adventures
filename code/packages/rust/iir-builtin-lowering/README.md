@@ -186,8 +186,10 @@ straight-line `i64` code.
 
 The `__lisp_` prefix is reserved for those helpers and the inline-rule
 markers. `lower_dyn_repr` returns `Result<(), ReservedNameError>` and refuses,
-before rewriting anything, a module that defines or calls a `__lisp_*` name
-it did not write itself (`lisp_semantics::check_reserved_names`):
+before rewriting anything, a module that defines or calls one of the four
+names it recognises (`lisp_semantics::RESERVED_NAMES`) without having written
+it itself (`lisp_semantics::check_reserved_names`). Other `__lisp_`-prefixed
+names are left alone: the pass runs on Nib's and ALGOL's modules too.
 
 ```rust
 let mut module = /* IIR from a frontend */;

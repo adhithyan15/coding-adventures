@@ -1429,14 +1429,21 @@ mod tests {
         let after = format!("{:?}", m.functions.iter().map(|f| &f.instructions).collect::<Vec<_>>());
         assert_eq!(before, after, "a refused module is not rewritten");
 
-        // The same for a definition of an inline rule's marker name, and
-        // for any other name with the prefix.
-        for name in [NOT, TRUTHY, "__lisp_anything"] {
+        // The same for a definition of an inline rule's marker name.
+        for name in [NOT, TRUTHY] {
             let f = IIRFunction::new(name, vec![("x".into(), "any".into())], "any", vec![ret("x")]);
             let mut m = multi_fn_module(vec![konst("z", 0, "i64"), ret("z")], vec![f], "twig");
             let err = lower_dyn_repr(&mut m).expect_err(name);
             assert_eq!((err.name.as_str(), err.caller), (name, None));
         }
+
+        // Any other name with the prefix collides with nothing the pass
+        // recognises, and this pass also runs on Nib's and ALGOL's modules:
+        // it lowers. (Twig source still cannot spell it — its frontend
+        // reserves the whole prefix.)
+        let f = IIRFunction::new("__lisp_anything", vec![("x".into(), "any".into())], "any", vec![ret("x")]);
+        let mut m = multi_fn_module(vec![konst("z", 0, "i64"), ret("z")], vec![f], "nib");
+        lower_dyn_repr(&mut m).expect("an unreserved __lisp_ name lowers");
     }
 
     /// A program `call` of a reserved name the compiler did not write —
