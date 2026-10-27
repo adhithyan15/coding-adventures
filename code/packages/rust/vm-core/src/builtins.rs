@@ -32,12 +32,18 @@
 //! | `"+"` `"-"` `"*"` | two `Int`s (wrapping) or two `Float`s | same kind |
 //! | `"<"` `"<="` `">"` `">="` | two `Int`s or two `Float`s | `Bool` |
 //! | `"="` `"equal?"` | any two values | `Bool` (`Value` equality) |
-//! | `"pair?"` | any one value | `Bool`: is it a live heap cell? |
+//! | `"pair?"` | any one value | `Bool`: is it a non-null heap reference? |
 //!
 //! An operand outside the "Accepts" column is a [`VMError::TypeError`], never
-//! a panic and never a silent coercion: `(< "a" 1)` is an error, exactly as it
-//! is on `twig-vm`, whose `dynval-runtime` rejects a non-integer operand of `<`
+//! a panic and never a silent coercion: `(< "a" 1)` is an error, as it is on
+//! `twig-vm`, whose `dynval-runtime` rejects a non-integer operand of `<`
 //! ("`<` expects integers").
+//!
+//! **Known gap (#18470):** on this VM nil and interned symbols are themselves
+//! `Value::Int`s (nil is `Int(0)`, a symbol is `Int(SYMBOL_ID_BASE + id)`), so
+//! they reach the integer arm: `(< '() 1)` is `#t` here where `twig-vm` raises.
+//! Closing that needs a representation for nil and symbols that is not an
+//! integer, the same decision `number?` / `symbol?` are waiting on.
 //!
 //! There is no float writer. LANG83 PR6a's `write_f64_py` / `write_f64_js`
 //! (a float in Python's / JavaScript's layout) were removed in PR7e, because
@@ -177,7 +183,10 @@ fn dyn_compare(sym: &str, args: &[Value]) -> Result<Value, VMError> {
     }
 }
 
-/// `pair?` on the generic VM: is this value a live heap cell?
+/// `pair?` on the generic VM: is this value a non-null heap reference?
+///
+/// It looks only at the value's kind; it does not ask the heap whether the
+/// block is live (a dangling host-held `HeapRef` would also answer `#t`).
 ///
 /// On this VM a cons cell is what `iir-builtin-lowering::lower_heap_builtins`
 /// turns `cons` into: an `alloc` + two `field_store`s, so a cell is a
@@ -197,7 +206,10 @@ fn dyn_compare(sym: &str, args: &[Value]) -> Result<Value, VMError> {
 /// includes a closure once `lower_closures_to_heap` has turned it into a cell
 /// chain, where `twig-vm` (which tags closures separately) says `#f`. A
 /// `HeapRef` carries no "this is a cons" tag, so the VM cannot draw that line;
-/// no Twig program in the matrix asks `pair?` of a closure.
+/// no Twig program in the matrix asks `pair?` of a closure. For the same
+/// reason a record predicate such as `point?` is `#t` for any cell — a cons,
+/// a closure, or another record type — and the accessor after it reads that
+/// cell's fields (bounds-checked, so a wrong answer, not an unsafe read).
 fn dyn_is_pair(args: &[Value]) -> Result<Value, VMError> {
     match args {
         [v] => Ok(Value::Bool(matches!(v, Value::HeapRef(r) if !r.is_null()))),
