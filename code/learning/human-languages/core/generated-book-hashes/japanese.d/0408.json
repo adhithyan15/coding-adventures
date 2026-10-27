@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:52e33cd1cb19b6a3",
+  "lessonIds": [
+    "JA-C408-senkou",
+    "JA-C408-rousoku",
+    "JA-C408-butsudan",
+    "JA-C408-shuukyou",
+    "JA-C408-matsuru"
+  ],
+  "tex": "japanese/book/chapters/ch408-incense-and-candles.tex"
+}

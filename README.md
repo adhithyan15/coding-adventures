@@ -118,7 +118,7 @@ transistors --> gates --> arithmetic --> CPU/microarchitecture --> ISA
 
 The repo includes transistor and gate models, ALUs, caches, branch prediction,
 pipelines, processor cores, and simulators for architectures including ARM,
-ARM1, RISC-V, IBM System/370, WASM, Intel 4004/8008, JVM, and CLR. Thirty-four
+ARM1, classic AVR, RISC-V, IBM System/370, WASM, Intel 4004/8008, JVM, and CLR. Thirty-four
 Rust packages model processors at gate level, from the Manchester Baby, EDSAC,
 the IAS machine, and the PDP-8 through the Z80, 6502, 6800/6809, 8085,
 VAX-11/780, IBM System/360, and OpenRISC 1000 to ARMv7, AArch64, and x86-64;

@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Calling for Help",
+  "label": "ch:ja-calling-for-help",
+  "canDo": "I can say who called for help and what they did.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C263-sugu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say who called for help and what they did.",
+    "assesses": [
+      "JA-LEX-C263-KYUUKYUU263-03",
+      "JA-LEX-C263-KYUUKYUU263-04",
+      "JA-LEX-C263-KYUUKYUU263-05"
+    ]
+  }
+}

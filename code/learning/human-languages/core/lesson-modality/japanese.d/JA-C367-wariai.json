@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C367-wariai",
+    "language": "japanese",
+    "chapter": 367,
+    "sequence": 21630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be71f77261cee75d"
+  },
+  "findings": []
+}

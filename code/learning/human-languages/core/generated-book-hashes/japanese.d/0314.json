@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:e56a4282862265e0",
+  "lessonIds": [
+    "JA-C314-sukkari",
+    "JA-C314-itsunomanika",
+    "JA-C314-yagate",
+    "JA-C314-heru",
+    "JA-C314-omoitsuku"
+  ],
+  "tex": "japanese/book/chapters/ch314-everything-has-changed.tex"
+}

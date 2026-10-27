@@ -1,0 +1,11 @@
+{
+  "id": "JA-C431-tomadou",
+  "pathSegment": "JA-PATH-431-SHOCK431",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-431-SHOCK431",
+      "order": 0
+    }
+  ]
+}

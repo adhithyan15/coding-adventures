@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:b46ca77f2ce523ab",
+  "lessonIds": [
+    "JA-C460-mokuhyou",
+    "JA-C460-seikou-suru",
+    "JA-C460-jitsuryoku",
+    "JA-C460-chousen-suru",
+    "JA-C460-tenshoku-suru"
+  ],
+  "tex": "japanese/book/chapters/ch460-goals-and-success.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C501-chirasu",
+  "pathSegment": "JA-PATH-501-MOON501",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-501-MOON501",
+      "order": 4
+    }
+  ]
+}

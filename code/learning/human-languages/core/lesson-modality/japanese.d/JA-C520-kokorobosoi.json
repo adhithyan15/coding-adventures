@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C520-kokorobosoi",
+    "language": "japanese",
+    "chapter": 520,
+    "sequence": 30070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24e03b5f6be57d72"
+  },
+  "findings": []
+}

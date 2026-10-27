@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Streams and Springs",
+  "label": "ch:ja-streams-and-springs",
+  "canDo": "I can describe water in the countryside.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C411-sukuu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can describe water in the countryside.",
+    "assesses": [
+      "JA-LEX-C411-OGAWA411-03",
+      "JA-LEX-C411-OGAWA411-04",
+      "JA-LEX-C411-OGAWA411-05"
+    ]
+  }
+}

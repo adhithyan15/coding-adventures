@@ -1,0 +1,11 @@
+{
+  "id": "JA-C378-tsumekomu",
+  "pathSegment": "JA-PATH-378-MANIN378",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-378-MANIN378",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C357-hoshou",
+  "pathSegment": "JA-PATH-357-KEIYAKU357",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-357-KEIYAKU357",
+      "order": 1
+    }
+  ]
+}

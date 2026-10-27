@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Slips and Second Chances",
+  "label": "ch:ja-slips-and-second-chances",
+  "canDo": "I can say what would happen if things went wrong.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C518-ochido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can say what would happen if things went wrong.",
+    "assesses": [
+      "JA-LEX-C518-REGRET518-03",
+      "JA-LEX-C518-REGRET518-04",
+      "JA-LEX-C518-REGRET518-05"
+    ]
+  }
+}

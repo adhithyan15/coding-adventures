@@ -1,0 +1,11 @@
+{
+  "id": "JA-C329-suigara",
+  "pathSegment": "JA-PATH-329-JOUSHIKI329",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-329-JOUSHIKI329",
+      "order": 4
+    }
+  ]
+}

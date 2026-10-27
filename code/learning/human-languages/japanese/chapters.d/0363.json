@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Paying the Bill",
+  "label": "ch:ja-paying-the-bill",
+  "canDo": "I can ask for the bill and talk about what things cost.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C363-zeitaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can ask for the bill and talk about what things cost.",
+    "assesses": [
+      "JA-LEX-C363-KAIKEI363-03",
+      "JA-LEX-C363-KAIKEI363-04",
+      "JA-LEX-C363-KAIKEI363-05"
+    ]
+  }
+}

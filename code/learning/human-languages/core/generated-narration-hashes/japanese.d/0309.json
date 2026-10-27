@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:d61819d19a8f1f15",
+  "lessonIds": [
+    "JA-C309-kureru",
+    "JA-C309-ageru",
+    "JA-C309-okaeshi",
+    "JA-C309-hito",
+    "JA-C309-uchiakeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch309.txt",
+  "json": "japanese/narration/ch309.json",
+  "textHash": "fnv1a64:6ef0b9ecbbc2a249",
+  "jsonHash": "fnv1a64:852805edf141d482",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "The Ogre at the Door",
+  "label": "ch:ja-the-ogre-at-the-door",
+  "canDo": "I can say how the ogre is driven out at the festival.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C297-mezurashii",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say how the ogre is driven out at the festival.",
+    "assesses": [
+      "JA-LEX-C297-ONI297-03",
+      "JA-LEX-C297-ONI297-04",
+      "JA-LEX-C297-ONI297-05"
+    ]
+  }
+}

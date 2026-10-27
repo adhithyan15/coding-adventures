@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C502-gekijou",
+    "language": "japanese",
+    "chapter": 502,
+    "sequence": 29130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:684e32a67e7824b7"
+  },
+  "findings": []
+}

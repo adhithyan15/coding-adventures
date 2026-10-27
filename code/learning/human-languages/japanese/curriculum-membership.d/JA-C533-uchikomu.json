@@ -1,0 +1,11 @@
+{
+  "id": "JA-C533-uchikomu",
+  "pathSegment": "JA-PATH-533-WORTH533",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-533-WORTH533",
+      "order": 3
+    }
+  ]
+}

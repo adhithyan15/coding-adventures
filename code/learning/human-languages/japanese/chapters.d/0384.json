@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "To the Airfield",
+  "label": "ch:ja-to-the-airfield",
+  "canDo": "I can talk about flights taking off and landing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C384-tabidatsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about flights taking off and landing.",
+    "assesses": [
+      "JA-LEX-C384-HIKOUJOU384-03",
+      "JA-LEX-C384-HIKOUJOU384-04",
+      "JA-LEX-C384-HIKOUJOU384-05"
+    ]
+  }
+}

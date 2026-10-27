@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:b7788b2b29124f08",
+  "lessonIds": [
+    "JA-C509-takarakuji",
+    "JA-C509-kujibiki",
+    "JA-C509-chuusen-suru",
+    "JA-C509-kakuritsu",
+    "JA-C509-ateru",
+    "JA-R509-review-504-509"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch509.txt",
+  "json": "japanese/narration/ch509.json",
+  "textHash": "fnv1a64:75bb6a68201da3d9",
+  "jsonHash": "fnv1a64:06b558d7ec5bea3c",
+  "findings": []
+}

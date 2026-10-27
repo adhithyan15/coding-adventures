@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Being Clear",
+  "label": "ch:ja-being-clear",
+  "canDo": "I can say a thing clearly and sum up what it means.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C367-wariai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say a thing clearly and sum up what it means.",
+    "assesses": [
+      "JA-LEX-C367-HAKKIRI367-03",
+      "JA-LEX-C367-HAKKIRI367-04",
+      "JA-LEX-C367-HAKKIRI367-05"
+    ]
+  }
+}

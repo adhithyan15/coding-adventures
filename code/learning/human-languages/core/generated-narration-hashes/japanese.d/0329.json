@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:984c52d9bda8704d",
+  "lessonIds": [
+    "JA-C329-joushiki",
+    "JA-C329-atarimae",
+    "JA-C329-touzen",
+    "JA-C329-junban",
+    "JA-C329-suigara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch329.txt",
+  "json": "japanese/narration/ch329.json",
+  "textHash": "fnv1a64:59a228614e0cee9d",
+  "jsonHash": "fnv1a64:4698011db2f1a32a",
+  "findings": []
+}

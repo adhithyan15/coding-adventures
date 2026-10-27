@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:e33178c3daa3e72d",
+  "lessonIds": [
+    "JA-C328-koukyou",
+    "JA-C328-jama",
+    "JA-C328-urusai",
+    "JA-C328-hikaeru",
+    "JA-C328-warikomu",
+    "JA-R328-review-323-328"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch328.txt",
+  "json": "japanese/narration/ch328.json",
+  "textHash": "fnv1a64:b713e41ed21eb91d",
+  "jsonHash": "fnv1a64:cb8a3fb7b414c47c",
+  "findings": []
+}

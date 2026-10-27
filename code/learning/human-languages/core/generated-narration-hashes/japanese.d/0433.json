@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:e4fd1c86cd3a33f0",
+  "lessonIds": [
+    "JA-C433-akogareru",
+    "JA-C433-koishii",
+    "JA-C433-urayamashii",
+    "JA-C433-kyoumi",
+    "JA-C433-kanshin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch433.txt",
+  "json": "japanese/narration/ch433.json",
+  "textHash": "fnv1a64:e906aad020cd86c5",
+  "jsonHash": "fnv1a64:059d850c04d077ab",
+  "findings": []
+}

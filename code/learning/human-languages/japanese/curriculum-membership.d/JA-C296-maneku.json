@@ -1,0 +1,11 @@
+{
+  "id": "JA-C296-maneku",
+  "pathSegment": "JA-PATH-296-SAKAN296",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-296-SAKAN296",
+      "order": 2
+    }
+  ]
+}

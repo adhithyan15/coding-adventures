@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:12129cdcf513b9ba",
+  "lessonIds": [
+    "JA-C448-koru",
+    "JA-C448-momu",
+    "JA-C448-hineru",
+    "JA-C448-shibireru",
+    "JA-C448-mageru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch448.txt",
+  "json": "japanese/narration/ch448.json",
+  "textHash": "fnv1a64:e3fa9e5f87e400fc",
+  "jsonHash": "fnv1a64:c1c5ead54ad0ca53",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C452-shain",
+    "language": "japanese",
+    "chapter": 452,
+    "sequence": 26370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a81443e1ea2bd55"
+  },
+  "findings": []
+}

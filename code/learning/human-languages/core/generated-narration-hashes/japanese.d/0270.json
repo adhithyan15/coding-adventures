@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:fa5db39f7743d2da",
+  "lessonIds": [
+    "JA-C270-hannin",
+    "JA-C270-jiken",
+    "JA-C270-tsuuhou",
+    "JA-C270-sono",
+    "JA-C270-sawaru"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "japanese/narration/ch270.txt",
+  "json": "japanese/narration/ch270.json",
+  "textHash": "fnv1a64:b5000b87e9cc1c78",
+  "jsonHash": "fnv1a64:6557a456c38af0bd",
+  "findings": []
+}

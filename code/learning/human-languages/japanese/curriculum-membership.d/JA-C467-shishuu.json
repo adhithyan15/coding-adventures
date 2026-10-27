@@ -1,0 +1,11 @@
+{
+  "id": "JA-C467-shishuu",
+  "pathSegment": "JA-PATH-467-CRAFT467",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-467-CRAFT467",
+      "order": 3
+    }
+  ]
+}

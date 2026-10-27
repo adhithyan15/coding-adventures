@@ -1,0 +1,11 @@
+{
+  "id": "JA-C278-tatsumaki",
+  "pathSegment": "JA-PATH-278-INAZUMA278",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-278-INAZUMA278",
+      "order": 3
+    }
+  ]
+}

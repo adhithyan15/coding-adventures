@@ -1,0 +1,11 @@
+{
+  "id": "JA-C397-higaeri",
+  "pathSegment": "JA-PATH-397-MINSHUKU397",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-397-MINSHUKU397",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C340-keikoku",
+  "pathSegment": "JA-PATH-340-JOGEN340",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-340-JOGEN340",
+      "order": 4
+    }
+  ]
+}

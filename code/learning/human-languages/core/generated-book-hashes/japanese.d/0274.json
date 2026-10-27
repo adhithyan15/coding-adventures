@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:aa484fe0b380ff4b",
+  "lessonIds": [
+    "JA-C274-jishin",
+    "JA-C274-kuzureru",
+    "JA-C274-korogaru",
+    "JA-C274-osoroshii",
+    "JA-C274-hinan"
+  ],
+  "tex": "japanese/book/chapters/ch274-when-the-earth-shook.tex"
+}

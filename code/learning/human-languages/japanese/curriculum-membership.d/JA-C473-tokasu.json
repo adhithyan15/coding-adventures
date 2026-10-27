@@ -1,0 +1,11 @@
+{
+  "id": "JA-C473-tokasu",
+  "pathSegment": "JA-PATH-473-SIMMER473",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-473-SIMMER473",
+      "order": 1
+    }
+  ]
+}

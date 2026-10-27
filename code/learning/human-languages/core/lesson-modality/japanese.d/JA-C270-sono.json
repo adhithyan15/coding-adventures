@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C270-sono",
+    "language": "japanese",
+    "chapter": 270,
+    "sequence": 16440,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c8f3adc32ea7ad72"
+  },
+  "findings": []
+}

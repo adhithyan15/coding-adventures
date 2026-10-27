@@ -1,0 +1,11 @@
+{
+  "id": "JA-C351-kakunin-suru",
+  "pathSegment": "JA-PATH-351-MANICHI351",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-351-MANICHI351",
+      "order": 2
+    }
+  ]
+}

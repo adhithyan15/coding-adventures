@@ -1,0 +1,11 @@
+{
+  "id": "JA-C521-zuibun",
+  "pathSegment": "JA-PATH-521-GRADUAL521",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-521-GRADUAL521",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C530-oyoso",
+  "pathSegment": "JA-PATH-530-ATLEAST530",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-530-ATLEAST530",
+      "order": 3
+    }
+  ]
+}

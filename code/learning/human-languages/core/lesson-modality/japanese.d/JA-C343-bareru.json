@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C343-bareru",
+    "language": "japanese",
+    "chapter": 343,
+    "sequence": 20370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51cfa58cd613192c"
+  },
+  "findings": []
+}

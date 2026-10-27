@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-307-DENWA307",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-307-DENWA307"
+  ],
+  "after": []
+}
