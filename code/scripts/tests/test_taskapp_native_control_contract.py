@@ -88,7 +88,9 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 29,
         "swiftui": 57,
         "compose": 40,
-        "qt": 78,
+        # UI21 §2.2: -1 flex-grow (task-name), +1 gap and +1 width
+        # (calendar-cell-drop, reached once its flex-grow was consumed).
+        "qt": 79,
         "flutter": 69,
     }
 
@@ -233,7 +235,9 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     [
         ("qt", "align", 1, "unbaselined style drop 'align'"),
         ("qt", "height", 1, "unbaselined style drop 'height'"),
-        ("qt", "width", 1, "unbaselined style drop 'width'"),
+        # Qt allows the one calendar-cell-drop width (UI21 §2.2); a second
+        # width drop is still a regression.
+        ("qt", "width", 2, "style drop 'width' increased from at most 1 to 2"),
         ("flutter", "align", 1, "unbaselined style drop 'align'"),
         (
             "flutter",
