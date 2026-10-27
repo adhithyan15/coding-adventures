@@ -1,5 +1,29 @@
 # Changelog — twig-vm
 
+## Unreleased — #18453: `str_cmp`; `and` / `or` inside a lambda
+
+### Fixed
+
+- **twig-vm runs `str_cmp`.** The Twig compiler lowers a `string<?` /
+  `string>?` whose operands are statically strings to `str_cmp` followed by
+  `cmp_lt` / `cmp_gt` against 0. `vm-core` and the native backends run
+  that shape, but twig-vm's dispatcher had no `str_cmp` arm. So even
+  `(string<? "a" "b")` stopped with `UnsupportedOpcode("str_cmp")`. The
+  new `exec_str_cmp` compares the bytes and writes -1, 0 or 1, as
+  `vm-core`'s `handle_str_cmp` does.
+
+### Tests
+
+- `and_or_inside_a_lambda_run` checks the values of 12 programs with
+  `and` / `or` inside anonymous lambdas. They include nested joins, a
+  lambda inside a lambda, a lambda returned from a function, and a local
+  or global named `or` / `and` used in value position next to the special
+  form. Before the `twig-ir-compiler` fix, they failed to compile with
+  `unbound name "or" captured by lambda`.
+- `string_order_results_are_right_in_joins` runs `string<?` / `string>?`
+  in `if`, `and`, `or` and `let` joins, including equal strings. Before
+  this change, it stopped with `UnsupportedOpcode("str_cmp")`.
+
 ## Unreleased — #18438: end-to-end tests for builtin shadowing
 
 ### Tests

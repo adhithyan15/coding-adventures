@@ -1134,6 +1134,10 @@ fn dispatch(
                 exec_str_eq(instr, &mut frame)?;
                 pc += 1;
             }
+            "str_cmp" => {
+                exec_str_cmp(instr, &mut frame)?;
+                pc += 1;
+            }
             "print_str" => {
                 exec_print_str(instr, &frame)?;
                 pc += 1;
@@ -1533,6 +1537,35 @@ fn exec_str_eq(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     let lhs = e4_string_arg("str_eq", instr, frame, 0)?;
     let rhs = e4_string_arg("str_eq", instr, frame, 1)?;
     frame.set(dest.clone(), LispyValue::bool(lhs == rhs))?;
+    Ok(())
+}
+
+/// `str_cmp dest, a, b [i64]` — three-way byte-wise comparison: `-1`, `0` or
+/// `1` as `a` sorts before, equal to or after `b`.
+///
+/// The Twig compiler lowers a `(string<? a b)` / `(string>? a b)` whose
+/// operands are statically strings to this op followed by `cmp_lt` /
+/// `cmp_gt` against 0 (the same shape `vm-core` and every native backend
+/// run), so the three-way integer never reaches Twig code as a value:
+///
+/// | `a` vs `b` | `str_cmp` | `string<?` (`< r 0`) | `string>?` (`> r 0`) |
+/// |------------|-----------|----------------------|----------------------|
+/// | `"a"` `"b"`| -1        | #t                   | #f                   |
+/// | `"b"` `"b"`| 0         | #f                   | #f                   |
+/// | `"c"` `"b"`| 1         | #f                   | #t                   |
+///
+/// Until #18453 twig-vm had no `str_cmp` arm, so those programs stopped with
+/// `UnsupportedOpcode("str_cmp")`.
+fn exec_str_cmp(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_cmp")?;
+    let lhs = e4_string_arg("str_cmp", instr, frame, 0)?;
+    let rhs = e4_string_arg("str_cmp", instr, frame, 1)?;
+    let ordering = match lhs.cmp(&rhs) {
+        std::cmp::Ordering::Less => -1,
+        std::cmp::Ordering::Equal => 0,
+        std::cmp::Ordering::Greater => 1,
+    };
+    frame.set(dest.clone(), LispyValue::int(ordering))?;
     Ok(())
 }
 
@@ -4269,6 +4302,58 @@ mod tests {
             ("(if (or (< 2 1) #f) 1 0)", 0),
         ] {
             assert_eq!(run_int(src), Some(want), "{src}");
+        }
+    }
+
+    // ── `and` / `or` inside a lambda; `string<?` is a bool (#18453) ──
+    //
+    // A lambda whose body used `and` / `or` failed to compile (`unbound
+    // name "or" captured by lambda`), and `string<?` / `string>?` wrote
+    // their result with an `i64` hint.  The twig-ir-compiler tests check
+    // the same programs' IR.
+
+    #[test]
+    fn and_or_inside_a_lambda_run() {
+        for (src, want) in [
+            ("(let ((f (lambda () (or \"a\" 1)))) (string-length (f)))", 1),
+            ("(let ((f (lambda () (and #t 5)))) (f))", 5),
+            ("((lambda (c) (+ (and c 5) 1)) #t)", 6),
+            ("((lambda (c) (let ((s (or (and c \"ab\") 7))) (string-length s))) #t)", 2),
+            ("((lambda (c) (let ((s (or (and c \"ab\") 7))) s)) #f)", 7),
+            ("(let ((y 5)) ((lambda () (+ (or #f y) 1))))", 6),
+            ("((lambda () ((lambda (x) (if (and (< x 2) (or #f x)) 10 20)) 1)))", 10),
+            ("(define (mk) (lambda (c) (if (or (and c (< 1 2)) #f) 3 4))) ((mk) #f)", 4),
+            ("(define (mk) (lambda (c) (if (or (and c (< 1 2)) #f) 3 4))) ((mk) #t)", 3),
+            // A local named `or` is captured in value position, while the
+            // call `(or …)` beside it is still the special form.
+            ("(let ((or 7)) ((lambda () (or #f or))))", 7),
+            ("(let ((and 3)) ((lambda () (and 1 and))))", 3),
+            ("(define or 9) ((lambda () (or #f or)))", 9),
+        ] {
+            assert_eq!(run_int(src), Some(want), "{src}");
+        }
+        assert!(run_source("((lambda () (or)))").is_ok_and(|v| v == LispyValue::FALSE));
+    }
+
+    #[test]
+    fn string_order_results_are_right_in_joins() {
+        for (src, want) in [
+            ("(if (and (string<? \"ALPHA\" \"BETA\") (string>? \"BETA\" \"ALPHA\")) 42 0)", 42),
+            ("(if (string<? \"b\" \"a\") 1 2)", 2),
+            ("(if (string>? \"b\" \"b\") 1 2)", 2),
+            ("(if (string<? \"b\" \"b\") 1 2)", 2),
+            ("(if (or (string>? \"a\" \"b\") (< 1 2)) 1 2)", 1),
+            ("(+ (or (string<? \"b\" \"a\") 5) 1)", 6),
+            ("(define (f s) (string<? s \"m\")) (if (f \"a\") 1 2)", 1),
+        ] {
+            assert_eq!(run_int(src), Some(want), "{src}");
+        }
+        for (src, want) in [
+            ("(string<? \"a\" \"b\")", true),
+            ("(string>? \"a\" \"b\")", false),
+            ("(let ((y (or (string>? \"a\" \"b\") (< 2 1)))) y)", false),
+        ] {
+            assert_eq!(run_source(src).unwrap(), LispyValue::bool(want), "{src}");
         }
     }
 
