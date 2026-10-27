@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C232-jiuhuche",
+    "language": "chinese",
+    "chapter": 232,
+    "sequence": 17760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f77de4a651be83ed"
+  },
+  "findings": []
+}

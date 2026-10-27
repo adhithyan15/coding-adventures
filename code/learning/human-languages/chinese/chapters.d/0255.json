@@ -1,0 +1,19 @@
+{
+  "chapter": 255,
+  "title": "A Part-Time Job",
+  "label": "ch:zh-a-part-time-job",
+  "canDo": "I can talk about a part-time job, pay, colleagues, working late and the boss.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C255-laoban",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 255: I can talk about a part-time job, pay, colleagues, working late and the boss.",
+    "assesses": [
+      "ZH-LEX-C255-PARTTIME255-03",
+      "ZH-LEX-C255-PARTTIME255-04",
+      "ZH-LEX-C255-PARTTIME255-05"
+    ]
+  }
+}

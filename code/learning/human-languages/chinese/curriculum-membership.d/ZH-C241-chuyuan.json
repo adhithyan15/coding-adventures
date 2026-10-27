@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C241-chuyuan",
+  "pathSegment": "ZH-PATH-241-WARD241",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-241-WARD241",
+      "order": 3
+    }
+  ]
+}

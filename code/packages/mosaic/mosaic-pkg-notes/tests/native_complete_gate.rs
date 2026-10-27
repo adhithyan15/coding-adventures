@@ -1,38 +1,50 @@
-//! native_complete_gate — Notes, as it is today, on the five native backends.
+//! native_complete_gate — Notes on the five native backends.
 //!
 //! Follows `mosaic-pkg-draft-editor`'s gate: zero capability degradations on
 //! all five native backends with no allowlist, and style drops pinned in both
 //! directions (a pin that stops occurring fails too, so it cannot become a
 //! licence). Both themes are measured.
 //!
-//! Why this gate exists now (E2 of `mosaic-editor-convergence-audit-v1.md`):
-//! the audit measured Notes at 0 capability degradations but **12 style drops
-//! per theme that nothing recorded**. E3 re-founds Notes on
-//! `pkg::mosaic-pkg-toolkit::RecordList` and `pkg::mosaic-pkg-draft-editor::
-//! DraftEditor`, and the audit's probe C says that takes the count from 12 to
-//! 10. Pinning today's 12 first means E3's improvement is *measured* — its
-//! diff has to delete exactly the pins it retires — rather than claimed.
+//! Why this gate exists (E2 of `mosaic-editor-convergence-audit-v1.md`): the
+//! audit measured Notes 0.2.0 at 0 capability degradations but **12 style
+//! drops per theme that nothing recorded**. E2 pinned those 12 so that E3 —
+//! Notes 0.3.0, re-founded on `pkg::mosaic-pkg-toolkit::RecordList` and
+//! `pkg::mosaic-pkg-draft-editor::DraftEditor` — would be *measured* rather
+//! than claimed. E3 took the count to 10, as the audit's probe C predicted:
+//!
+//! - **removed (2 pins):** Qt `text-align` on `notes-row-on` and on
+//!   `notes-row-off`. Those row buttons are gone; RecordList's rows ask for
+//!   no `text-align`, so nothing replaces them.
+//! - **moved (2 pins):** the body's `min-height` on Qt
+//!   and Flutter. The body is now DraftEditor's `draft-editor-body`, which
+//!   DraftEditor's own gate pins for the same reason, so the drop moves part
+//!   rather than going away.
+//! - **kept (8 pins):** Notes' own list/editor flex split, which E3 does
+//!   not touch. PR-6 (`HostNavigationSplit`) removes it.
+//!
+//! The composed package adds no new drop: mounted here, neither RecordList
+//! nor DraftEditor loses anything its own gate does not already record (the
+//! audit's R2 found nested drops in `NoteEditor`'s context, not this one).
 //!
 //! One deliberate difference from DraftEditor's gate: a pin here names the
-//! **part** as well as the backend and property. Two of the twelve drops are
-//! the same `(Qt, "text-align")` on two different row buttons, and four are
-//! `flex-grow`/`flex-shrink` on three different parts. A `(backend, property)`
-//! pin would let a fifth part start dropping `flex-grow` with this gate green,
-//! and would hide E3's 12 → 10 inside an unchanged pin list. So the pin set
-//! is the exact drop set: 12 entries, and every one is required in each theme.
+//! **part** as well as the backend and property. Eight of the drops are
+//! `flex-grow`/`flex-shrink` on three different parts, so a
+//! `(backend, property)` pin would let a fourth part start dropping
+//! `flex-grow` with this gate green. So the pin set is the exact drop set:
+//! 10 entries, and every one is required in each theme.
 //!
 //! The measured set, identical in both themes:
 //!
 //! ```text
-//!              flex-grow       flex-shrink   min-height        text-align
-//!              editor  empty   list          body-input        row-on row-off
-//!   SwiftUI      x       x      x                                              3
-//!   Qt           x       x      x            x                   x      x      6
-//!   Xaml                        x                                              1
-//!   Flutter                     x            x                                 2
-//!   Compose                                                                    0
-//!                                                                             --
-//!                                                                             12
+//!              flex-grow       flex-shrink   min-height
+//!              editor  empty   list          draft-editor-body
+//!   SwiftUI      x       x      x                                3
+//!   Qt           x       x      x            x                   4
+//!   Xaml                        x                                1
+//!   Flutter                     x            x                   2
+//!   Compose                                                      0
+//!                                                               --
+//!                                                               10
 //! ```
 
 use mosaic_package_artifact_builder::{
@@ -73,19 +85,16 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str, &str)] = &[
     (Backend::Xaml, "flex-shrink", "notes-list"),
     (Backend::Flutter, "flex-shrink", "notes-list"),
     // ---- The body's usable height: min-height on the text area ----
-    // `min-height: 200` keeps the multi-line body from collapsing to one
-    // line. Qt and Flutter do not lower `min-height` on a text field yet —
-    // the same gap DraftEditor pins for its own body, which is why E3's
-    // probe C keeps two `min-height` drops after the swap.
-    (Backend::Qt, "min-height", "notes-body-input"),
-    (Backend::Flutter, "min-height", "notes-body-input"),
-    // ---- Left-aligned row labels: text-align on the row buttons ----
-    // A note row is a full-width HostButton whose label should sit at the
-    // left (`text-align: "left"`), as a list row does. Qt's emitter reads no
-    // `text-align` on a button, so the label is centred. E3 replaces these
-    // buttons with RecordList rows, and probe C shows both drops go.
-    (Backend::Qt, "text-align", "notes-row-on"),
-    (Backend::Qt, "text-align", "notes-row-off"),
+    // `min-height: 160` (DraftEditor's theme) keeps the multi-line body from
+    // collapsing to one line. Qt and Flutter do not lower `min-height` on a
+    // text field yet. The body is DraftEditor's since 0.3.0, so this is the
+    // drop DraftEditor's own gate pins, on DraftEditor's part; 0.2.0 pinned
+    // the same gap on Notes' own `notes-body-input`.
+    (Backend::Qt, "min-height", "draft-editor-body"),
+    (Backend::Flutter, "min-height", "draft-editor-body"),
+    // The two Qt `text-align` pins on `notes-row-on` / `notes-row-off` were
+    // deleted in 0.3.0: the list is RecordList, whose rows ask for no
+    // `text-align`, so there is nothing left to drop.
 ];
 
 fn package_root() -> PathBuf {
@@ -209,7 +218,7 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
 /// with this gate green. Engram's own copy of this pattern had 11 of 21 pins
 /// in exactly that state before it was checked.
 ///
-/// Checked per theme, not over the union of both: the twelve drops occur in
+/// Checked per theme, not over the union of both: the ten drops occur in
 /// each theme today, so a pin that one theme stopped producing is already a
 /// change worth seeing.
 #[test]
@@ -255,8 +264,8 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
 /// The pin list itself has no duplicates, so its length is the drop count.
 ///
 /// Together with the two tests above this makes `ALLOWED_STYLE_DROPS.len()`
-/// the package's exact per-theme drop count — 12 on the audit base — which is
-/// the number E3 is meant to move.
+/// the package's exact per-theme drop count: 12 on the audit base, 10 since
+/// E3, and the number PR-6 is meant to move next.
 #[test]
 fn the_pin_list_names_each_drop_once() {
     for (i, pin) in ALLOWED_STYLE_DROPS.iter().enumerate() {

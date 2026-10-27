@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Tickets and Flights",
+  "label": "ch:zh-tickets-and-flights",
+  "canDo": "I can buy a train ticket and a plane ticket, and say when a flight takes off and when a train arrives.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C196-daoda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can buy a train ticket and a plane ticket, and say when a flight takes off and when a train arrives.",
+    "assesses": [
+      "ZH-LEX-C196-TICKET196-03",
+      "ZH-LEX-C196-TICKET196-04",
+      "ZH-LEX-C196-TICKET196-05"
+    ]
+  }
+}

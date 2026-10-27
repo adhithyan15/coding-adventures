@@ -100,11 +100,12 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 11 | SPARC V9 | published architecture manual | Complete and independently reviewed locally: bounded problem-state integer core implements 72-register complete state, four windows, icc/xcc/Y, the admitted V9 and compatibility integer/memory/control families, exact delay/annul/chaining traces, and typed transactional lifecycle. 48 tests, strict checks/docs, BUILD integration, and 91.22% line coverage (1,216/1,333) are green. Publication is next. |
 | 12 | ARM7TDMI | published ARMv4T manuals | Functional merged. Educational gate partner repaired after independent review: exact 525,522-DFF stable-Q inventory; independent ARM/Thumb engine; gate-derived one-hot selectors through the complete Thumb ALU/high/BX/transfer/stack/conditional/write-enable/mnemonic surface; syntax-normalized whole-file token locks plus named parsed-body source-to-sink locks; compiler-valid hostile full-crate mutations across ARM and Thumb control; two-way candidate divergence; real public differential execution and complete-state rollback for every reachable typed functional fault; and explicit source/public-invariant narrowing for compatibility-only unreachable variants. All 59 release tests, strict checks, and 91.67% line coverage (2,168/2,365) are green; a different independent exact-head review is next, and SoC composition remains queued. |
 | 13 | AVR classic (PR #18344) | published instruction-set manual | Complete: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, terminal-state restore round trips, whole-span two-byte call preflight, all-family terminal skip-target validation, 34 release tests with exhaustive add/subtract flag oracles and bug-sensitive fractional multiply flag regressions, and 97.43% line coverage (949/974). Squash auto-merge is armed; the gate partner remains queued. |
-| 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
+| 14 | Xtensa LX6 | public Tensilica ISA manual plus ESP32 manuals | Functional cell complete locally as `Esp32Lx6IntegerV1`, pending independent implementation review: little-endian, 64 physical windowed ARs, mixed 16/24-bit core+density, lazy window checks, loops, complete traces/lifecycle, 29 release tests, and 90.09% line coverage (1,382/1,534). Proprietary/configuration-unknown extensions remain excluded. |
 | 15 | RCA CDP1802 (`RCPU-081` / `RCPU-082`; functional merged in PR #18354) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor with gate-authoritative legality/family/control predicates, repository-gate ALU/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused lifecycle/bus differentials, explicit I/O/DMA/interrupt seams, eleven compiler-valid hostile structural fixtures, typed atomic lifecycle including post-first-step allocation rollback, 40 release tests plus one doctest, and 95.62% line coverage (1,442/1,508). Exact-head review remains before publication. |
 | 16 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
 | 17 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | Functional implementation is in progress from an independently reviewed configuration-pinned spec; the dependent gate cell remains blocked on functional merge. |
 | 18 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is complete locally from its independently reviewed spec-only predecessor: fixed-width big-endian execution, two complete register banks, CC/PC/interrupt/image state, exact transactions, typed atomic lifecycle, 31 completion tests, two corpus consumers over 3,970 checked-in upstream rows, one doctest, and 92.70% release line coverage (1,270/1,370). Exact-clean-head review is next; `RCPU-086` remains blocked until the functional oracle merges. |
+| 19 | PIC16 classic mid-range (PIC16F84A profile) | Microchip DS35007C device data sheet and DS33023A family reference manual | Complete locally: source-pinned 14-bit Harvard CPU with all 35 documented instructions, exact banked file-register/PCL/stack behavior, typed peripheral boundaries, 14 release tests, one doctest, strict checks, and 98.67% package-source line coverage (670/679). |
 
 CDP1802 merged in PR #18354 after independent specification and implementation
 review. The functional cell covers the complete register matrix, instruction
@@ -124,7 +125,7 @@ focused alias/control/bus/lifecycle/fault/allocation matrices, exhaustive
 256x256x2 ALU relations, eleven compiler-valid hostile fixtures, strict
 Clippy/rustdoc, affected BUILD, and 95.62% line coverage (1,442/1,508).
 
-MSP430 follows Xtensa rather than displacing an active item. TI's public
+MSP430 follows Xtensa and CDP1802 rather than displacing an active item. TI's public
 SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
 stack contract, while SLAS504G pins a real non-MSP430X implementation with 16
 registers and a 16-bit address space. That unusually complete primary-source
@@ -150,6 +151,16 @@ independently written upstream C++ simulator, and immutable open RTL provide
 the bounded functional evidence and the later educational-gate boundary.
 Both cells are configuration-pinned CPU cores; neither may claim a complete
 SoC, physical FPGA realization, transistor topology, or timing accuracy.
+
+PIC16F84A follows MSP430, LatticeMico32 and ZipCPU in the independent queue. Microchip's public
+DS35007C pins the exact 1K-by-14 program memory, 68-byte GPR file, core SFR
+map, eight-entry 13-bit stack, and 35-instruction profile; DS33023A supplies
+the detailed mid-range PC, stack, and instruction rules. The first cell keeps
+Timer0, ports, watchdog, EEPROM, interrupts, clocks, and electrical behavior
+behind typed boundaries instead of inventing peripheral semantics. A later
+educational gate cell and a source-backed PIC16F84A SoC composition remain
+separate queued follow-up cells after independent implementation review and
+publication of the functional core.
 
 ## Discovered follow-up work
 
@@ -218,5 +229,13 @@ SoC, physical FPGA realization, transistor topology, or timing accuracy.
 - Compose the first source-backed SoCs around completed cores (Cortex-M
   microcontroller class and an OpenSPARC/OpenRISC platform), then add gate-level
   interconnect models.
+- Independently review and publish the completed bounded Xtensa LX6 functional
+  cell before its educational gate or ESP32-class SoC work. Follow-ups are
+  ordered: publicly specified
+  multiply/divide and conditional-store options; exception/interrupt delivery;
+  then dual-core memory aliases, cache/MMU boundary, interrupt routing, DMA,
+  and peripherals. Any later gate package is an explicitly educational,
+  repository-owned synthesized topology, never a claimed proprietary LX6
+  netlist.
 - Descend below Boolean gates only when the SPICE/device-model wave lands.
   Transistor and analog timing claims must reference those lower-level models.

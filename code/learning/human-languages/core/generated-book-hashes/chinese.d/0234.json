@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:67f9b6fbede6df6a",
+  "lessonIds": [
+    "ZH-C234-tuichi",
+    "ZH-C234-quxiao",
+    "ZH-C234-gaitian",
+    "ZH-C234-yuyi",
+    "ZH-C234-duoyu"
+  ],
+  "tex": "chinese/book/chapters/ch234-rain-or-shine.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C181-chuanglian",
+  "pathSegment": "ZH-PATH-181-BED181",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-181-BED181",
+      "order": 5
+    }
+  ]
+}

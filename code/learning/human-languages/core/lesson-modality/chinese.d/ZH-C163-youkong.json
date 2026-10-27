@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C163-youkong",
+    "language": "chinese",
+    "chapter": 163,
+    "sequence": 13250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df030b87a18e13eb"
+  },
+  "findings": []
+}

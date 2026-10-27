@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:4662b2f8b17fc3f2",
+  "lessonIds": [
+    "ZH-C241-zhuyuan",
+    "ZH-C241-bingfang",
+    "ZH-C241-shoushu",
+    "ZH-C241-chuyuan",
+    "ZH-C241-huifu-recover",
+    "ZH-R241-review-236-241"
+  ],
+  "tex": "chinese/book/chapters/ch241-in-hospital.tex"
+}

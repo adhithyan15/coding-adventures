@@ -1,0 +1,20 @@
+{
+  "chapter": 159,
+  "title": "Rooms at Home",
+  "label": "ch:zh-rooms-at-home",
+  "canDo": "I can name the bedroom, the living room, the study, the balcony and the window.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C159-chuanghu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can name the bedroom, the living room, the study, the balcony and the window.",
+    "assesses": [
+      "ZH-LEX-C159-ROOM159-01",
+      "ZH-LEX-C159-ROOM159-03",
+      "ZH-LEX-C159-ROOM159-04",
+      "ZH-LEX-C159-ROOM159-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:c6af7873184d66aa",
+  "lessonIds": [
+    "ZH-C249-yuxi",
+    "ZH-C249-fangxue",
+    "ZH-C249-duyin",
+    "ZH-W249-du-read",
+    "ZH-C249-chengji",
+    "ZH-C249-nuli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch249.txt",
+  "json": "chinese/narration/ch249.json",
+  "textHash": "fnv1a64:e6b6fbdd6c77dff8",
+  "jsonHash": "fnv1a64:88b0a1fad62cd7b5",
+  "findings": []
+}

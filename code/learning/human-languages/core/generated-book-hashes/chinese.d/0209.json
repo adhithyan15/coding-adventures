@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:9bb89c4fff54d451",
+  "lessonIds": [
+    "ZH-C209-guiding",
+    "ZH-C209-anquan",
+    "ZH-C209-baochi",
+    "ZH-C209-darao",
+    "ZH-C209-yunxu"
+  ],
+  "tex": "chinese/book/chapters/ch209-rules-and-notices.tex"
+}

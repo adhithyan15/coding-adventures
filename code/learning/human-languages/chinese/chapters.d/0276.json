@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "A New Job",
+  "label": "ch:zh-a-new-job",
+  "canDo": "I can say I went for an interview or quit a job, talk about a chance and retiring, and say something is a big deal.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C276-dashi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say I went for an interview or quit a job, talk about a chance and retiring, and say something is a big deal.",
+    "assesses": [
+      "ZH-LEX-C276-NEWJOB276-03",
+      "ZH-LEX-C276-NEWJOB276-04",
+      "ZH-LEX-C276-NEWJOB276-05"
+    ]
+  }
+}

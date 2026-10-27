@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C158-qilai",
+    "language": "chinese",
+    "chapter": 158,
+    "sequence": 13030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:808ff1854d14cce1"
+  },
+  "findings": []
+}

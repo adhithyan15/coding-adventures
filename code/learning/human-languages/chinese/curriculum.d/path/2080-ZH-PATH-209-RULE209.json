@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-209-RULE209",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-209-RULE209"
+  ],
+  "after": []
+}

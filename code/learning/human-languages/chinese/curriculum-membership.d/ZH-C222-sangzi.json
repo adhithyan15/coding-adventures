@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C222-sangzi",
+  "pathSegment": "ZH-PATH-222-CHILL222",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-222-CHILL222",
+      "order": 2
+    }
+  ]
+}

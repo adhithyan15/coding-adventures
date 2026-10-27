@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C259-zuojia",
+  "pathSegment": "ZH-PATH-259-JOB259",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-259-JOB259",
+      "order": 1
+    }
+  ]
+}
