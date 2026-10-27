@@ -14140,7 +14140,6 @@ fn compiler_reserved_lisp_names_are_refused_at_the_source_and_in_the_pipeline() 
     // Only the names the pass recognises are refused. The pass also runs on
     // Nib's and ALGOL's modules, so a function merely *prefixed* `__lisp_` —
     // here `g` renamed to `__lisp_helper` — must still compile.
-    let mut module = module;
     for f in &mut module.functions {
         if f.name == "__lisp_equal" {
             f.name = "__lisp_helper".into();
