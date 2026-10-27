@@ -199,6 +199,17 @@ native cons-cell path uses — so a field holds either a nested `HeapRef`'s raw
 address or a plain integer; storing anything else (a `Str`/`Float`/`Bool`)
 traps. See `tests/gc_heap.rs` for the full round-trip and reclamation proofs.
 
+**Field access needs a block's base address.** `gc_field_load` and
+`gc_field_store` first ask `FlatHeap::payload_size_at_base` for the size of
+the object that starts *exactly* at `obj`, and only then check
+`idx*8 + 8 <= size`. Null, a freed or foreign address, an address inside an
+object, and the address one past an object's end all trap with
+`"<op>: 0x… is not the base address of a live heap object"` before any memory
+is touched. No IIR op produces such a `HeapRef`, but a host can pass one
+through `VMCore::execute`'s arguments; checking the size alone against an
+interior address would bound the access from the wrong starting point and let
+it run past the object's end (issue #18471).
+
 ---
 
 ## JIT integration

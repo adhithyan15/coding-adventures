@@ -92,7 +92,7 @@ fn distinct_gc_allocs_do_not_alias() {
 }
 
 /// An out-of-bounds `gc_field_load`/`gc_field_store` index traps — bounds are
-/// checked against the object's *actual* allocated size (`payload_size`),
+/// checked against the object's *actual* allocated size (`payload_size_at_base`),
 /// the same fail-closed discipline `array_get`/`array_set` use.
 #[test]
 fn gc_field_access_out_of_bounds_traps() {
@@ -151,7 +151,7 @@ fn gc_field_store_rejects_unsupported_value_kinds() {
 
 /// `gc_alloc` is capped by `max_memory_entries`, exactly like `alloc_array` —
 /// a security-motivated fix: `gc_field_load`/`gc_field_store`'s bounds check
-/// (`FlatHeap::payload_size`) is O(live object count), so an uncapped live
+/// (`FlatHeap::payload_size_at_base`) is O(live object count), so an uncapped live
 /// count would let a program spend O(N*M) wall-clock time on N allocations +
 /// M field accesses against the oldest one while an instruction budget only
 /// charges O(N+M). Also proves the cap's counter tracks *live* objects, not
@@ -577,4 +577,186 @@ fn gc_alloc_pair_relocates_and_stays_correct_under_a_compacting_minor_collection
         Some(Value::Int(222)),
         "field 1 must still read back correctly at the relocated address"
     );
+}
+
+// ── Field ops need the block's *base* address (issue #18471) ─────────────────
+//
+// `gc_field_load`/`gc_field_store` bounds-check `idx*8 + 8` against the size
+// of the object `obj` names. Before #18471 that size came from
+// `FlatHeap::payload_size`, which resolves an address *inside* a block (or one
+// past its end) to the whole block's size. The check then measured the right
+// length from the wrong starting point:
+//
+// ```text
+//   32-byte object at P:  [ w0 | w1 | w2 | w3 ]
+//                           P    P+8  P+16 P+24  P+32
+//   HeapRef = P+16, size = 32  →  idx 0..=3 "in bounds"
+//                                  but idx 2 reads P+32..P+40 — past the end.
+// ```
+//
+// No IIR op creates such a `HeapRef`, so a program cannot reach this; a host
+// can, by passing a crafted `Value::HeapRef` through `execute`'s arguments,
+// which is what these tests do. Every test uses a real allocation and every
+// probe that is expected to trap is one the handler must refuse *before* it
+// touches memory. The interior probes use only word indexes that land inside
+// the block even when measured from the interior address, so that running
+// these tests against the pre-fix code shows them failing (the op succeeded
+// when it should have trapped) without performing an out-of-bounds access.
+
+use gc_core::HeapRef;
+
+/// Allocate a `bytes`-byte object on `vm`'s heap, write `fill[i]` into word
+/// `i`, and return the object's base address.
+///
+/// The object is unrooted once this `execute` returns. That is fine here:
+/// nothing in these tests runs `gc_collect` or `safepoint`, which are the only
+/// ops that collect, so the block stays live for the rest of the test.
+fn alloc_filled(vm: &mut VMCore, bytes: i64, fill: &[i64]) -> usize {
+    let mut instrs = vec![ins("gc_alloc", Some("c"), vec![Operand::Int(bytes)], "ref<bytes>")];
+    for (i, v) in fill.iter().enumerate() {
+        instrs.push(ins(
+            "gc_field_store",
+            None,
+            vec![Operand::Var("c".into()), Operand::Int(i as i64), Operand::Int(*v)],
+            "void",
+        ));
+    }
+    instrs.push(ins("ret", None, vec![Operand::Var("c".into())], "ref<bytes>"));
+    let mut m = IIRModule::new("gc_heap", "gc_heap");
+    m.add_or_replace(IIRFunction::new("main", vec![], "ref<bytes>", instrs));
+    let v = vm.execute(&mut m, "main", &[]).unwrap().expect("gc_alloc returns the object");
+    v.as_heap_ref().expect("a gc_alloc result is a HeapRef").addr()
+}
+
+/// Run `r = gc_field_load p, idx; ret r` with `p` bound to `HeapRef(addr)`.
+fn probe_load(vm: &mut VMCore, addr: usize, idx: i64) -> Result<Option<Value>, vm_core::errors::VMError> {
+    let instrs = vec![
+        ins("gc_field_load", Some("r"), vec![Operand::Var("p".into()), Operand::Int(idx)], "i64"),
+        ins("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ];
+    let mut m = IIRModule::new("gc_heap", "gc_heap");
+    m.add_or_replace(IIRFunction::new("probe", vec![("p".into(), "ref<any>".into())], "i64", instrs));
+    vm.execute(&mut m, "probe", &[Value::HeapRef(HeapRef::new(addr))])
+}
+
+/// Run `gc_field_store p, idx, v; ret 0` with `p` bound to `HeapRef(addr)`.
+fn probe_store(
+    vm: &mut VMCore,
+    addr: usize,
+    idx: i64,
+    v: Value,
+) -> Result<Option<Value>, vm_core::errors::VMError> {
+    let instrs = vec![
+        ins("gc_field_store", None, vec![Operand::Var("p".into()), Operand::Int(idx), Operand::Var("v".into())], "void"),
+        ins("ret", None, vec![Operand::Int(0)], "i64"),
+    ];
+    let mut m = IIRModule::new("gc_heap", "gc_heap");
+    m.add_or_replace(IIRFunction::new(
+        "probe",
+        vec![("p".into(), "ref<any>".into()), ("v".into(), "any".into())],
+        "i64",
+        instrs,
+    ));
+    vm.execute(&mut m, "probe", &[Value::HeapRef(HeapRef::new(addr)), v])
+}
+
+/// Assert `r` is the not-a-base trap, naming `op`.
+fn assert_not_a_base_trap(r: Result<Option<Value>, vm_core::errors::VMError>, op: &str) {
+    let err = match r {
+        Err(e) => e.to_string(),
+        Ok(v) => panic!("{op} on a non-base HeapRef must trap, but it returned {v:?}"),
+    };
+    assert!(err.contains(op), "the trap names the op: {err}");
+    assert!(err.contains("not the base address"), "the trap says why: {err}");
+}
+
+/// The control: a `HeapRef` that is a real block's base, handed in from the
+/// host exactly like the bad ones below, still loads and stores every field.
+#[test]
+fn gc_field_ops_accept_a_host_supplied_base_heap_ref() {
+    let mut vm = VMCore::new();
+    let base = alloc_filled(&mut vm, 32, &[11, 22, 33, 44]);
+    assert_eq!(probe_load(&mut vm, base, 0).unwrap(), Some(Value::Int(11)));
+    assert_eq!(probe_load(&mut vm, base, 3).unwrap(), Some(Value::Int(44)), "the last word is in bounds");
+    probe_store(&mut vm, base, 1, Value::Int(99)).unwrap();
+    assert_eq!(probe_load(&mut vm, base, 1).unwrap(), Some(Value::Int(99)));
+    // A heap-ref value stored at a base address takes the write-barrier path.
+    let other = alloc_filled(&mut vm, 16, &[5]);
+    probe_store(&mut vm, base, 2, Value::HeapRef(HeapRef::new(other))).unwrap();
+    assert_eq!(probe_load(&mut vm, base, 2).unwrap(), Some(Value::HeapRef(HeapRef::new(other))));
+    // Bounds still apply at a genuine base: word 4 of a 32-byte object is out.
+    let err = probe_load(&mut vm, base, 4).unwrap_err().to_string();
+    assert!(err.contains("out of bounds"), "a real base keeps the size check: {err}");
+}
+
+/// A `HeapRef` into the middle of a block traps on load. Before #18471 both
+/// probes succeeded and read words 2 and 3 of the block (`33`, `44`).
+#[test]
+fn gc_field_load_traps_on_an_interior_heap_ref() {
+    let mut vm = VMCore::new();
+    let base = alloc_filled(&mut vm, 32, &[11, 22, 33, 44]);
+    let interior = base + 16;
+    assert_not_a_base_trap(probe_load(&mut vm, interior, 0), "gc_field_load");
+    assert_not_a_base_trap(probe_load(&mut vm, interior, 1), "gc_field_load");
+    // An address that is not even word-aligned within the block is refused too.
+    assert_not_a_base_trap(probe_load(&mut vm, base + 8, 0), "gc_field_load");
+}
+
+/// A `HeapRef` into the middle of a block traps on store, and the block is
+/// left exactly as it was. Before #18471 both stores succeeded, overwriting
+/// words 2 and 3, and the heap-ref store also ran the write barrier with
+/// `interior - 32` taken as the object's header.
+#[test]
+fn gc_field_store_traps_on_an_interior_heap_ref_and_writes_nothing() {
+    let mut vm = VMCore::new();
+    let base = alloc_filled(&mut vm, 32, &[11, 22, 33, 44]);
+    let other = alloc_filled(&mut vm, 16, &[]);
+    let interior = base + 16;
+    assert_not_a_base_trap(probe_store(&mut vm, interior, 0, Value::Int(-1)), "gc_field_store");
+    assert_not_a_base_trap(
+        probe_store(&mut vm, interior, 1, Value::HeapRef(HeapRef::new(other))),
+        "gc_field_store",
+    );
+    for (i, want) in [11, 22, 33, 44].into_iter().enumerate() {
+        assert_eq!(
+            probe_load(&mut vm, base, i as i64).unwrap(),
+            Some(Value::Int(want)),
+            "word {i} must be untouched by the refused stores"
+        );
+    }
+}
+
+/// The one-past-the-end address traps on both load and store. `FlatHeap`
+/// deliberately resolves it to the block it bounds (so the collector keeps
+/// that block alive), so the size it would have been checked against was the
+/// whole block: the pre-fix handlers would have accessed the 8 bytes *after*
+/// the block. That is why this test is not run against the pre-fix code.
+#[test]
+fn gc_field_ops_trap_on_a_one_past_the_end_heap_ref() {
+    let mut vm = VMCore::new();
+    let base = alloc_filled(&mut vm, 16, &[7, 8]);
+    let one_past_end = base + 16;
+    assert_not_a_base_trap(probe_load(&mut vm, one_past_end, 0), "gc_field_load");
+    assert_not_a_base_trap(probe_store(&mut vm, one_past_end, 0, Value::Int(1)), "gc_field_store");
+    assert_eq!(probe_load(&mut vm, base, 0).unwrap(), Some(Value::Int(7)));
+    assert_eq!(probe_load(&mut vm, base, 1).unwrap(), Some(Value::Int(8)));
+}
+
+/// Null and a garbage address still trap on both ops, as they did before
+/// #18471 (then as "out of bounds for a 0-byte object"; now with the
+/// not-a-base message, which the second loop pins).
+#[test]
+fn gc_field_ops_trap_on_null_and_garbage_heap_refs() {
+    let mut vm = VMCore::new();
+    // A live object exists, so "no heap at all" is not why these trap.
+    let _live = alloc_filled(&mut vm, 16, &[1]);
+    let bad = [0usize, 0xdead_bee0, usize::MAX & !0xf];
+    for addr in bad {
+        assert!(probe_load(&mut vm, addr, 0).is_err(), "gc_field_load on {addr:#x} must trap");
+        assert!(probe_store(&mut vm, addr, 0, Value::Int(1)).is_err(), "gc_field_store on {addr:#x} must trap");
+    }
+    for addr in bad {
+        assert_not_a_base_trap(probe_load(&mut vm, addr, 0), "gc_field_load");
+        assert_not_a_base_trap(probe_store(&mut vm, addr, 0, Value::Int(1)), "gc_field_store");
+    }
 }

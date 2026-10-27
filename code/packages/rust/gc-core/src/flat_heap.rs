@@ -821,6 +821,15 @@ impl FlatHeap {
     /// either just returned by [`Self::alloc`] or is a root slot the
     /// collector kept up to date (see [`crate::HeapRef::as_mut_ptr`]).
     /// Same O(n) cost and safety argument as [`Self::kind_of`].
+    ///
+    /// **Not a bound for an arbitrary address.** Like every lookup that bottoms
+    /// out in [`Self::find_header`], an address *inside* a block — or exactly one
+    /// past its end — resolves to that whole block, so this returns the block's
+    /// *full* size, not the bytes remaining from `addr` to the end. A caller that
+    /// computes `addr + offset` and checks `offset < payload_size(addr)` is only
+    /// safe if it already knows `addr` is the block's base. A caller that cannot
+    /// prove that (anything handed an address from outside) must use
+    /// [`Self::payload_size_at_base`], which refuses a non-base address outright.
     pub fn payload_size(&self, addr: usize) -> usize {
         let h = self.find_header(addr);
         if h.is_null() {
@@ -829,6 +838,57 @@ impl FlatHeap {
             // SAFETY: `find_header` returned a live block we own; its header is valid.
             unsafe { (*h).size }
         }
+    }
+
+    /// Payload size in bytes of the live heap object whose payload **starts
+    /// exactly at** `addr`, or `None` if `addr` is anything else.
+    ///
+    /// This is the lookup a field accessor needs. Picture a 16-byte object `P`:
+    ///
+    /// ```text
+    ///   header (32 B)        payload (16 B)
+    ///   ┌──────────────────┬────────┬────────┐
+    ///   │ size=16, kind, … │ word 0 │ word 1 │
+    ///   └──────────────────┴────────┴────────┘
+    ///                      ^        ^        ^
+    ///                      P        P+8      P+16 (one past the end)
+    /// ```
+    ///
+    /// | `addr`        | [`Self::payload_size`] | `payload_size_at_base` |
+    /// |---------------|------------------------|------------------------|
+    /// | `P`           | `16`                   | `Some(16)`             |
+    /// | `P + 8`       | `16` (whole block!)    | `None`                 |
+    /// | `P + 16`      | `16` (whole block!)    | `None`                 |
+    /// | `0` / garbage | `0`                    | `None`                 |
+    ///
+    /// A bounds check of the form "word `i` is in range iff `i*8 + 8 <= size`"
+    /// reads the bytes `addr + i*8 .. addr + i*8 + 8`. With `addr = P + 8` and
+    /// `size = 16` it would accept `i = 1` and read `P+16 .. P+24` — eight bytes
+    /// past the end of `P`. [`Self::find_header`] matches interior and
+    /// one-past-the-end addresses on purpose (a conservative collector must keep
+    /// an object alive through *any* pointer into it), so the base check has to
+    /// live here, in the one lookup whose answer is used as a bound.
+    ///
+    /// `None` collapses "not a heap address at all" and "inside a heap object but
+    /// not at its start" into one answer, because a caller can do nothing safe
+    /// with either. Blocks never share a base: each payload is preceded by its own
+    /// `HEADER_SIZE`-byte header, so one block's base can never also be another's
+    /// one-past-the-end (see [`Self::find_header`]'s doc), and an exact match here
+    /// is unambiguous.
+    ///
+    /// Same O(n) cost and safety argument as [`Self::kind_of`]: `addr` is
+    /// validated against the live-block list before any header is read, so a
+    /// bogus address yields `None` and never a read.
+    pub fn payload_size_at_base(&self, addr: usize) -> Option<usize> {
+        let h = self.find_header(addr);
+        // The exact-base test is the same one `classify_precise_word` uses to
+        // tell a genuine reference from an interior one: the payload begins
+        // `HEADER_SIZE` bytes after the header `find_header` resolved to.
+        if h.is_null() || h as usize + HEADER_SIZE != addr {
+            return None;
+        }
+        // SAFETY: `find_header` returned a live block we own; its header is valid.
+        Some(unsafe { (*h).size })
     }
 
     /// Whether the live set has reached the threshold — i.e. a collection is due.
@@ -4237,6 +4297,87 @@ mod tests {
         // a bounds check must key off the block's *start*, not whatever address a
         // caller happens to probe with.
         assert_eq!(heap.payload_size(pair + 8), 16, "interior address resolves to the block's size");
+    }
+
+    // ── payload_size_at_base (issue #18471) ────────────────────────────────
+    //
+    // vm-core's `gc_field_load`/`gc_field_store` used `payload_size` as a bound
+    // for `addr + idx*8`. For an interior or one-past-the-end `addr`, that bound
+    // is the whole block's size measured from the wrong starting point, so it
+    // admits reads and writes past the block's end. These tests pin the
+    // replacement lookup. None of them dereferences the rejected address.
+
+    /// A real allocation's base address still reports its exact size: the fix
+    /// must not change anything for the addresses `alloc` actually hands out.
+    #[test]
+    fn payload_size_at_base_reports_the_size_of_a_real_base_address() {
+        let mut heap = FlatHeap::new();
+        let pair = heap.alloc(16, 0) as usize;
+        let wide = heap.alloc(40, 0) as usize;
+        assert_eq!(heap.payload_size_at_base(pair), Some(16));
+        assert_eq!(heap.payload_size_at_base(wide), Some(40));
+        // Agrees with `payload_size` wherever the address is a genuine base.
+        assert_eq!(heap.payload_size_at_base(pair), Some(heap.payload_size(pair)));
+    }
+
+    /// Every address strictly inside a block is refused, even though
+    /// `payload_size` (deliberately, for its own callers) resolves it to the
+    /// whole block's size.
+    #[test]
+    fn payload_size_at_base_refuses_an_interior_address() {
+        let mut heap = FlatHeap::new();
+        let obj = heap.alloc(32, 0) as usize;
+        for off in [1, 7, 8, 16, 24, 31] {
+            assert_eq!(heap.payload_size(obj + off), 32, "sanity: payload_size still matches interior +{off}");
+            assert_eq!(heap.payload_size_at_base(obj + off), None, "interior address +{off} must not be a base");
+        }
+    }
+
+    /// The one-past-the-end address is refused too. `find_header` matches it
+    /// (inclusively, so the collector keeps the object alive through it), which
+    /// is exactly why the base check cannot be left to `find_header` alone.
+    #[test]
+    fn payload_size_at_base_refuses_a_one_past_the_end_address() {
+        let mut heap = FlatHeap::new();
+        let a = heap.alloc(16, 0) as usize;
+        assert!(!heap.find_header(a + 16).is_null(), "sanity: find_header matches one-past-the-end");
+        assert_eq!(heap.payload_size(a + 16), 16, "sanity: payload_size reports the whole block for it");
+        assert_eq!(heap.payload_size_at_base(a + 16), None, "one-past-the-end must not be a base");
+    }
+
+    /// Null, an arbitrary non-heap address, and a freed block's old base all
+    /// yield `None` without reading anything.
+    #[test]
+    fn payload_size_at_base_refuses_null_garbage_and_freed_addresses() {
+        let mut heap = FlatHeap::new();
+        let keep = heap.alloc(16, 0) as usize;
+        let gone = heap.alloc(16, 0) as usize;
+        assert_eq!(heap.payload_size_at_base(0), None, "null");
+        assert_eq!(heap.payload_size_at_base(0xdead_beef), None, "garbage");
+        assert_eq!(heap.payload_size_at_base(usize::MAX), None, "top of the address space");
+
+        // `collect` takes root *values* (not slot addresses), so only `keep` is rooted.
+        heap.collect(&[keep]);
+        assert_eq!(heap.payload_size_at_base(keep), Some(16), "the rooted block survives");
+        // `gone` is unrooted, so the collection freed it. Its old address is
+        // never dereferenced here: the lookup only compares it against the
+        // live-block list.
+        assert_eq!(heap.payload_size_at_base(gone), None, "a freed block's old base");
+    }
+
+    /// A compacting collection moves the object; the new address is the new
+    /// base, and it still reports the right size.
+    #[test]
+    fn payload_size_at_base_follows_the_object_across_compaction() {
+        let mut heap = FlatHeap::new();
+        let cons = heap.register_kind(&[0, 8]);
+        let root = heap.alloc(16, cons) as usize;
+        let slots = [&root as *const usize as usize];
+        unsafe {
+            heap.collect_compacting(&slots, &[]);
+        }
+        assert_eq!(heap.payload_size_at_base(root), Some(16), "the relocated address is a base");
+        assert_eq!(heap.payload_size_at_base(root + 8), None, "and its interior still is not");
     }
 
     /// A compacting collection relocates the object; `payload_size` resolved at

@@ -1372,7 +1372,7 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     // used to enforce against `ctx.arrays.len()`/total element count:
     //
     // 1. Live *object count* — so `gc_field_load`/`gc_field_store`'s bounds
-    //    check (`FlatHeap::payload_size`, O(live object count)) can't be
+    //    check (`FlatHeap::payload_size_at_base`, O(live object count)) can't be
     //    driven arbitrarily high: without this cap, N allocations followed
     //    by M field accesses against the oldest one would cost O(N*M)
     //    wall-clock time while an instruction budget (`max_instructions`)
@@ -1441,21 +1441,88 @@ const FIELD_TAG_BITS: u32 = gc_core::NAN_BOX_TAG_BITS;
 const FIELD_TAG_MASK: i64 = gc_core::NAN_BOX_TAG_MASK as i64;
 const FIELD_TAG_HEAP_REF: i64 = gc_core::NAN_BOX_REF_TAG as i64;
 
+/// Validate a `gc_field_load`/`gc_field_store` access and return the byte
+/// offset of word `idx` within `obj`'s payload.
+///
+/// Both handlers go through here, so the rule lives in one place: the access
+/// `obj + idx*8 .. obj + idx*8 + 8` is allowed only if it lies wholly inside
+/// the live heap block that **starts at** `obj`.
+///
+/// Why "starts at" matters (issue #18471). `FlatHeap` finds a block from an
+/// address by asking which block's payload range contains it, and that range
+/// includes every interior address and the one-past-the-end address too — a
+/// conservative collector must keep an object alive through *any* pointer
+/// into it. So `payload_size(obj)` for an interior `obj` returns the size of
+/// the whole block, not the bytes left from `obj` to the end:
+///
+/// ```text
+///   32-byte block at P:   [ w0 | w1 | w2 | w3 ]
+///                           P    P+8  P+16 P+24  P+32
+///
+///   obj = P      payload_size = 32   idx 0..=3 → P .. P+32        ✓
+///   obj = P+16   payload_size = 32   idx 0..=3 → P+16 .. P+48     ✗ 16 bytes past the end
+///   obj = P+32   payload_size = 32   idx 0..=3 → P+32 .. P+64     ✗ entirely past the end
+/// ```
+///
+/// `FlatHeap::payload_size_at_base` answers only for the exact base, and
+/// `None` for everything else — null, a non-heap address, a freed block, an
+/// interior address, one-past-the-end — so a single check here rejects all of
+/// them before any memory is touched. No IIR op produces a non-base `HeapRef`
+/// today, but a host can pass any `Value::HeapRef` it likes through
+/// `VMCore::execute`'s arguments, and a future op could do pointer
+/// arithmetic; neither may turn into a heap read or write out of bounds.
+///
+/// | `obj`                    | `idx*8 + 8 <= size` | result                     |
+/// |--------------------------|---------------------|----------------------------|
+/// | live block base          | yes                 | `Ok(idx * 8)`              |
+/// | live block base          | no                  | trap: out of bounds        |
+/// | anything else            | (not evaluated)     | trap: not the base address |
+/// | (any `obj`, `idx < 0`)   | (not evaluated)     | trap: negative index       |
+///
+/// Cost: one O(live objects) walk of the block list, the same as the
+/// `payload_size` lookup it replaces (and bounded the same way, by
+/// `max_memory_entries` — see `handle_gc_alloc`).
+fn checked_field_offset(
+    heap: &gc_core::FlatHeap,
+    op: &str,
+    obj: gc_core::HeapRef,
+    idx: i64,
+) -> Result<usize, VMError> {
+    if idx < 0 {
+        return Err(VMError::Custom(format!("{op}: negative index {idx}")));
+    }
+    let addr = obj.addr();
+    let size = heap.payload_size_at_base(addr).ok_or_else(|| {
+        VMError::Custom(format!(
+            "{op}: {addr:#x} is not the base address of a live heap object \
+             (null, freed, foreign, or pointing inside or past the end of an object)"
+        ))
+    })?;
+    let byte_off = (idx as usize).saturating_mul(8);
+    if byte_off.saturating_add(8) > size {
+        return Err(VMError::Custom(format!(
+            "{op}: index {idx} out of bounds for a {size}-byte object"
+        )));
+    }
+    Ok(byte_off)
+}
+
 /// `gc_field_load dest <- obj, idx` — read the `idx`-th 8-byte word from a
 /// `gc_alloc`'d object's payload.
 ///
-/// Bounds-checked against the object's *actual* allocated size
-/// (`FlatHeap::payload_size`), which also rejects a null or otherwise
-/// invalid `HeapRef` — `payload_size` reads `0` for any address that isn't a
-/// live block, and `0 + 8 > 0` fails the check for every index, so a null
-/// dereference traps exactly like an out-of-bounds one, no special-casing
-/// needed. This bound is only correct because `obj` is always a block's
-/// *base* address — `payload_size` resolves an interior address to the
-/// whole containing block's size, not the remaining bytes to its end, and
-/// no op in this file ever produces an interior `HeapRef` (no pointer
-/// arithmetic on `HeapRef` exists here). A future op that did would need to
-/// re-derive the bound from the block's real start, not reuse this check
-/// as-is.
+/// Bounds-checked against the object's *actual* allocated size, resolved by
+/// [`checked_field_offset`] (see there for the full argument). Two checks,
+/// in order:
+///
+/// 1. `obj` must be **exactly the base address** of a live `FlatHeap` block
+///    (`FlatHeap::payload_size_at_base`). Null, a garbage address, a freed
+///    block, an address *inside* a block and the address one past a block's
+///    end all trap here, before any memory is touched.
+/// 2. Word `idx` must fit: `idx*8 + 8 <= size`.
+///
+/// Check 1 is what makes check 2 mean anything (issue #18471): `size` is
+/// measured from the block's base, so it bounds `obj + idx*8` only when `obj`
+/// *is* that base.
 ///
 /// Decoded purely from the word's own tag bits (see [`FIELD_TAG_MASK`]),
 /// never from `instr.type_hint` — a field's *declared* type ("ref<any>")
@@ -1475,20 +1542,10 @@ fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
             .ok_or_else(|| VMError::Custom("gc_field_load: index must be an integer".into()))?;
         (o, i)
     };
-    if idx < 0 {
-        return Err(VMError::Custom(format!("gc_field_load: negative index {idx}")));
-    }
-    let size = ctx.heap.payload_size(obj.addr());
-    let byte_off = (idx as usize).saturating_mul(8);
-    if byte_off.saturating_add(8) > size {
-        return Err(VMError::Custom(format!(
-            "gc_field_load: index {idx} out of bounds for a {size}-byte object"
-        )));
-    }
-    // SAFETY: `byte_off + 8 <= size`, and `size` came from `payload_size`,
-    // which returns a live block's *actual* payload size or 0 (rejected
-    // above) — so this read stays within the allocation `ctx.heap.alloc`
-    // returned for `obj`.
+    let byte_off = checked_field_offset(ctx.heap, "gc_field_load", obj, idx)?;
+    // SAFETY: `checked_field_offset` proved `obj` is the base of a live block
+    // whose payload is at least `byte_off + 8` bytes long, so this read stays
+    // within the allocation `ctx.heap.alloc` returned for `obj`.
     let word = unsafe { std::ptr::read_unaligned((obj.addr() + byte_off) as *const i64) };
     let value = if word & FIELD_TAG_MASK == FIELD_TAG_HEAP_REF {
         Value::HeapRef(gc_core::HeapRef::new((word & !FIELD_TAG_MASK) as usize))
@@ -1528,16 +1585,7 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
         let v = resolve_src(frame, &instr.srcs, 2)?;
         (o, i, v)
     };
-    if idx < 0 {
-        return Err(VMError::Custom(format!("gc_field_store: negative index {idx}")));
-    }
-    let size = ctx.heap.payload_size(obj.addr());
-    let byte_off = (idx as usize).saturating_mul(8);
-    if byte_off.saturating_add(8) > size {
-        return Err(VMError::Custom(format!(
-            "gc_field_store: index {idx} out of bounds for a {size}-byte object"
-        )));
-    }
+    let byte_off = checked_field_offset(ctx.heap, "gc_field_store", obj, idx)?;
     let word: i64 = match &val {
         Value::HeapRef(r) => {
             // `FlatHeap::alloc` guarantees a 16-byte-aligned payload, so a real
@@ -1587,15 +1635,16 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
          value is a HeapRef — a mismatch here means a future GC compaction could \
          misinterpret a scalar as a movable pointer, or fail to relocate a real one"
     );
-    // SAFETY: `byte_off + 8 <= size`, bounds-checked above against the
-    // object's actual allocated payload size.
+    // SAFETY: `checked_field_offset` proved `obj` is the base of a live block
+    // whose payload is at least `byte_off + 8` bytes long.
     unsafe {
         std::ptr::write_unaligned(field_addr as *mut i64, word);
     }
     if let Value::HeapRef(child) = &val {
-        // SAFETY: `obj.addr()` is the payload address of the live object we
-        // just wrote into (bounds-checked above); `write_barrier` only reads
-        // one byte at its header, never dereferences `child`.
+        // SAFETY: `obj.addr()` is the *base* payload address of the live
+        // object we just wrote into (`checked_field_offset` refused anything
+        // else), so the 32 bytes before it really are its header, which is
+        // what `write_barrier` reads. It never dereferences `child`.
         unsafe {
             ctx.heap.write_barrier(obj.addr(), child.addr());
         }
