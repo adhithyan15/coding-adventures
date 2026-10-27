@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:734d51cd120dca36",
+  "lessonIds": [
+    "JA-C303-ryuu",
+    "JA-C303-numa",
+    "JA-C303-ukabu",
+    "JA-C303-hokora",
+    "JA-C303-medetai"
+  ],
+  "tex": "japanese/book/chapters/ch303-the-dragon-in-the-marsh.tex"
+}

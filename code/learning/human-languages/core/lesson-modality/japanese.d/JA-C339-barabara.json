@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C339-barabara",
+    "language": "japanese",
+    "chapter": 339,
+    "sequence": 20170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55cc3e9ab1e310d1"
+  },
+  "findings": []
+}

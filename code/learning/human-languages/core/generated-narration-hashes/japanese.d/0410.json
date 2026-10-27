@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:b0eef23594790232",
+  "lessonIds": [
+    "JA-C410-jimoto",
+    "JA-C410-shusshin",
+    "JA-C410-hatake",
+    "JA-C410-nohara",
+    "JA-C410-shigeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch410.txt",
+  "json": "japanese/narration/ch410.json",
+  "textHash": "fnv1a64:9dba6b9f7c916d20",
+  "jsonHash": "fnv1a64:242ecf9e2b7b9465",
+  "findings": []
+}

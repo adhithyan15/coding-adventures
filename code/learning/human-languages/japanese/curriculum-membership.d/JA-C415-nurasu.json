@@ -1,0 +1,11 @@
+{
+  "id": "JA-C415-nurasu",
+  "pathSegment": "JA-PATH-415-YUUDACHI415",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-415-YUUDACHI415",
+      "order": 3
+    }
+  ]
+}

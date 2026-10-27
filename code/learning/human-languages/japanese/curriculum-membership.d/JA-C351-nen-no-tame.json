@@ -1,0 +1,11 @@
+{
+  "id": "JA-C351-nen-no-tame",
+  "pathSegment": "JA-PATH-351-MANICHI351",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-351-MANICHI351",
+      "order": 4
+    }
+  ]
+}

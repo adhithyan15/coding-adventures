@@ -1,0 +1,11 @@
+{
+  "id": "JA-C446-taichou",
+  "pathSegment": "JA-PATH-446-CHILL446",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-446-CHILL446",
+      "order": 4
+    }
+  ]
+}

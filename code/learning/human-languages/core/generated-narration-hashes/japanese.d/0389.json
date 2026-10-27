@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:e8f69115ea0dac2f",
+  "lessonIds": [
+    "JA-C389-oudouri",
+    "JA-C389-roji",
+    "JA-C389-uramichi",
+    "JA-C389-hodoukyou",
+    "JA-C389-nukeru",
+    "JA-R389-review-384-389"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch389.txt",
+  "json": "japanese/narration/ch389.json",
+  "textHash": "fnv1a64:e48f389fa787297e",
+  "jsonHash": "fnv1a64:adc7607e269e0a5c",
+  "findings": []
+}

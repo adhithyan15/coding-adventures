@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:657fc6a5536a40d0",
+  "lessonIds": [
+    "JA-C488-kenchiku",
+    "JA-C488-zaimoku",
+    "JA-C488-renga",
+    "JA-C488-tetsu",
+    "JA-C488-kouji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch488.txt",
+  "json": "japanese/narration/ch488.json",
+  "textHash": "fnv1a64:e41423e8b20e7f0f",
+  "jsonHash": "fnv1a64:58588ecb570630f2",
+  "findings": []
+}

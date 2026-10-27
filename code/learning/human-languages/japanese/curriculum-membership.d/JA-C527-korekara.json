@@ -1,0 +1,11 @@
+{
+  "id": "JA-C527-korekara",
+  "pathSegment": "JA-PATH-527-TIME527",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-527-TIME527",
+      "order": 3
+    }
+  ]
+}

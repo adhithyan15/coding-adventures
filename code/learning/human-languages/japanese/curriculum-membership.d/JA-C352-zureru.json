@@ -1,0 +1,11 @@
+{
+  "id": "JA-C352-zureru",
+  "pathSegment": "JA-PATH-352-KOBORERU352",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-352-KOBORERU352",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C407-daibutsu",
+  "pathSegment": "JA-PATH-407-SANPAI407",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-407-SANPAI407",
+      "order": 2
+    }
+  ]
+}

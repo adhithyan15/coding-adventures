@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C267-housou",
+    "language": "japanese",
+    "chapter": 267,
+    "sequence": 16270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:998fa2e781d2f679"
+  },
+  "findings": []
+}

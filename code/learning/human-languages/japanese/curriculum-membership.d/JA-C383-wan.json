@@ -1,0 +1,11 @@
+{
+  "id": "JA-C383-wan",
+  "pathSegment": "JA-PATH-383-SHIMAGUNI383",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-383-SHIMAGUNI383",
+      "order": 1
+    }
+  ]
+}

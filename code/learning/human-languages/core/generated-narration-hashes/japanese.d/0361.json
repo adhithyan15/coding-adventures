@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:136a75cfd4b3c742",
+  "lessonIds": [
+    "JA-C361-moukeru",
+    "JA-C361-moukaru",
+    "JA-C361-rieki",
+    "JA-C361-son",
+    "JA-C361-tsubureru",
+    "JA-R361-review-357-361"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch361.txt",
+  "json": "japanese/narration/ch361.json",
+  "textHash": "fnv1a64:a8c13ec9c8bf0033",
+  "jsonHash": "fnv1a64:a00311127dfe6f53",
+  "findings": []
+}

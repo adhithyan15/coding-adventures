@@ -1,0 +1,11 @@
+{
+  "id": "JA-C337-mottainai",
+  "pathSegment": "JA-PATH-337-SETSUYAKU337",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-337-SETSUYAKU337",
+      "order": 4
+    }
+  ]
+}

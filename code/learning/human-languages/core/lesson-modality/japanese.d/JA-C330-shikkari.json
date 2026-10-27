@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C330-shikkari",
+    "language": "japanese",
+    "chapter": 330,
+    "sequence": 19680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc76e5ac682d04fa"
+  },
+  "findings": []
+}

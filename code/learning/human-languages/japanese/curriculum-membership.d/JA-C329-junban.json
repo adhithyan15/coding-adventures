@@ -1,0 +1,11 @@
+{
+  "id": "JA-C329-junban",
+  "pathSegment": "JA-PATH-329-JOUSHIKI329",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-329-JOUSHIKI329",
+      "order": 3
+    }
+  ]
+}

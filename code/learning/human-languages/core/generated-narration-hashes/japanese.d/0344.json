@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:64f1493f4532c8d1",
+  "lessonIds": [
+    "JA-C344-keikaku",
+    "JA-C344-youi-suru",
+    "JA-C344-youji",
+    "JA-C344-nittei",
+    "JA-C344-junchou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch344.txt",
+  "json": "japanese/narration/ch344.json",
+  "textHash": "fnv1a64:06697bfdcf7d3a1c",
+  "jsonHash": "fnv1a64:8436b337c38d89ec",
+  "findings": []
+}

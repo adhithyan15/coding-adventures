@@ -1,0 +1,11 @@
+{
+  "id": "JA-C465-fude",
+  "pathSegment": "JA-PATH-465-PAINT465",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-465-PAINT465",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:040ef928c6fa8053",
+  "lessonIds": [
+    "JA-C384-hikoujou",
+    "JA-C384-bin",
+    "JA-C384-ririku",
+    "JA-C384-chakuriku",
+    "JA-C384-tabidatsu"
+  ],
+  "tex": "japanese/book/chapters/ch384-to-the-airfield.tex"
+}

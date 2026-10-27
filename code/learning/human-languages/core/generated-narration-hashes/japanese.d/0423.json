@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:39fea24e3925a186",
+  "lessonIds": [
+    "JA-C423-gochisou",
+    "JA-C423-kanjou",
+    "JA-C423-warikan",
+    "JA-C423-ogoru",
+    "JA-C423-manpuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch423.txt",
+  "json": "japanese/narration/ch423.json",
+  "textHash": "fnv1a64:2413e8f148edc791",
+  "jsonHash": "fnv1a64:44f6d652504f82dc",
+  "findings": []
+}

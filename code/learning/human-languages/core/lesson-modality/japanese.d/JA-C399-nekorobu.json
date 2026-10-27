@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C399-nekorobu",
+    "language": "japanese",
+    "chapter": 399,
+    "sequence": 23430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27038f9029180838"
+  },
+  "findings": []
+}

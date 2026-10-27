@@ -1,0 +1,11 @@
+{
+  "id": "JA-C408-butsudan",
+  "pathSegment": "JA-PATH-408-SENKOU408",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-408-SENKOU408",
+      "order": 2
+    }
+  ]
+}

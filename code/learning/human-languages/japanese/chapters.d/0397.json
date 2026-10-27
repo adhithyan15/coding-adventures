@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "A Room for the Night",
+  "label": "ch:ja-a-room-for-the-night",
+  "canDo": "I can book a room and a night's stay.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C397-azukaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can book a room and a night's stay.",
+    "assesses": [
+      "JA-LEX-C397-MINSHUKU397-03",
+      "JA-LEX-C397-MINSHUKU397-04",
+      "JA-LEX-C397-MINSHUKU397-05"
+    ]
+  }
+}

@@ -1,0 +1,946 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 366,
+  "title": "If the Worst Happens",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:741504fe539e12c7",
+  "lessons": [
+    {
+      "id": "JA-C366-saiaku",
+      "sequence": 21530,
+      "title": "さいあく (saiaku) — the worst",
+      "headword": "さいあく",
+      "romanization": "saiaku",
+      "gloss": "the worst",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc0520e0ec663635",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a pension, then the Japanese for an average."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さいあく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいあく — saiaku — \"the worst\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さいあく、でんしゃが とまったら、あるいて かえります。 — saiaku, densha ga tomattara, aruite kaerimasu — \"If the worst comes to the worst and the trains stop, I will walk home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいあく (saiaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, \"utmost\" (Middle Chinese tswajH) and aku, \"bad\" ('ak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saiaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saiaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saiaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saiaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saiaku, densha ga tomattara, aruite kaerimasu — If the worst comes to the worst and the trains stop, I will walk home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saiaku, densha ga tomattara, aruite kaerimasu* — If the worst comes to the worst and the trains stop, I will walk home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a pension, then the Japanese for an average, then say saiaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a pension, then the Japanese for an average, then say *saiaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さいあく (saiaku) mean? (\"The worst\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C366-saiaku-type",
+              "prompt": "Say the Japanese for 'the worst'.",
+              "assesses": [
+                "JA-LEX-C366-SAIAKU366-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さいあく",
+                "saiaku"
+              ],
+              "feedback": {
+                "correct": "Right: さいあく (saiaku) is 'the worst'.",
+                "incorrect": "'The worst' is さいあく (saiaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C366-kesshin-suru",
+      "sequence": 21540,
+      "title": "けっしんする (kesshin suru) — to make up one's mind",
+      "headword": "けっしんする",
+      "romanization": "kesshin suru",
+      "gloss": "to make up one's mind",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebbf72fa1dd84d35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an average, then the Japanese for the worst."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けっしんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっしんする — kesshin suru — \"to make up one's mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははが さんせいしたら、けっしんします。 — haha ga sansei shitara, kesshin shimasu — \"If my mother agrees, I will make up my mind.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite けっしんします, kesshinshimasu; a する verb. Past (polite): あには けっしんしました。, ani wa kesshin shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっしんする (kesshin suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, kesshin, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: ketsu, \"decide\" (Middle Chinese kwet) and shin, \"heart\" (sim) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription). The two join as kes-shin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kesshin suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kesshin suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kesshin suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kesshin suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha ga sansei shitara, kesshin shimasu — If my mother agrees, I will make up my mind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha ga sansei shitara, kesshin shimasu* — If my mother agrees, I will make up my mind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an average, then the Japanese for the worst, then say kesshin suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an average, then the Japanese for the worst, then say *kesshin suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けっしんする (kesshin suru) mean? (\"To make up one's mind\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C366-kesshin-suru-type",
+              "prompt": "Say the Japanese for 'to make up one's mind'.",
+              "assesses": [
+                "JA-LEX-C366-SAIAKU366-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けっしんする",
+                "kesshin suru"
+              ],
+              "feedback": {
+                "correct": "Right: けっしんする (kesshin suru) is 'to make up one's mind'.",
+                "incorrect": "'To make up one's mind' is けっしんする (kesshin suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C366-junjo",
+      "sequence": 21550,
+      "title": "じゅんじょ (junjo) — order; sequence",
+      "headword": "じゅんじょ",
+      "romanization": "junjo",
+      "gloss": "order; sequence",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69eb8f063cd7e078",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the worst, then the Japanese for to make up one's mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅんじょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅんじょ — junjo — \"order; sequence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じゅんじょを まちがえたら、うごきません。 — junjo o machigaetara, ugokimasen — \"If you do it in the wrong order, it won't work.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅんじょ (junjo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jun, \"order\" (Middle Chinese zywinH) and jo, \"order\" (zjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junjo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junjo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junjo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junjo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junjo o machigaetara, ugokimasen — If you do it in the wrong order, it won't work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junjo o machigaetara, ugokimasen* — If you do it in the wrong order, it won't work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the worst, then the Japanese for to make up one's mind, then say junjo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the worst, then the Japanese for to make up one's mind, then say *junjo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅんじょ (junjo) mean? (\"Order; sequence\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C366-junjo-type",
+              "prompt": "Say the Japanese for 'the sequence'.",
+              "assesses": [
+                "JA-LEX-C366-SAIAKU366-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅんじょ",
+                "junjo"
+              ],
+              "feedback": {
+                "correct": "Right: じゅんじょ (junjo) is 'order; sequence'.",
+                "incorrect": "'The sequence' is じゅんじょ (junjo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C366-yuusen-suru",
+      "sequence": 21560,
+      "title": "ゆうせんする (yūsen suru) — to put first; to give priority to",
+      "headword": "ゆうせんする",
+      "romanization": "yūsen suru",
+      "gloss": "to put first; to give priority to",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ab4decd62cd483d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to make up one's mind, then the Japanese for the sequence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆうせんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうせんする — yūsen suru — \"to put first; to give priority to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しけんが あったら、べんきょうを ゆうせんします。 — shiken ga attara, benkyō o yūsen shimasu — \"If there is an exam, I put studying first.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ゆうせんします, yūsenshimasu; a する verb. Past (polite): ははは かぞくを ゆうせんしました。, haha wa kazoku o yūsen shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうせんする (yūsen suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, yūsen, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: yū, \"excel\" (Middle Chinese 'juw) and sen, \"ahead\" (sen) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūsen suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūsen suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūsen suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūsen suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiken ga attara, benkyō o yūsen shimasu — If there is an exam, I put studying first.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiken ga attara, benkyō o yūsen shimasu* — If there is an exam, I put studying first.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to make up one's mind, then the Japanese for the sequence, then say yūsen suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to make up one's mind, then the Japanese for the sequence, then say *yūsen suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆうせんする (yūsen suru) mean? (\"To put first; to give priority to\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C366-yuusen-suru-type",
+              "prompt": "Say the Japanese for 'to put first'.",
+              "assesses": [
+                "JA-LEX-C366-SAIAKU366-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆうせんする",
+                "yūsen suru",
+                "yuusen suru",
+                "yusen suru"
+              ],
+              "feedback": {
+                "correct": "Right: ゆうせんする (yūsen suru) is 'to put first; to give priority to'.",
+                "incorrect": "'To put first' is ゆうせんする (yūsen suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C366-aseru",
+      "sequence": 21570,
+      "title": "あせる (aseru) — to be impatient; to be in a rush",
+      "headword": "あせる",
+      "romanization": "aseru",
+      "gloss": "to be impatient; to be in a rush",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7502a3d8e8719d6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the sequence, then the Japanese for to put first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あせる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あせる — aseru — \"to be impatient; to be in a rush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あせったら、まちがえるでしょう。 — asettara, machigaeru deshō — \"If you rush, you will probably make mistakes.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あせります, aserimasu; a godan verb. Past (polite): おとうとが あせりました。, otōto ga aserimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あせる (aseru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aseru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aseru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aseru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aseru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asettara, machigaeru deshō — If you rush, you will probably make mistakes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asettara, machigaeru deshō* — If you rush, you will probably make mistakes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the sequence, then the Japanese for to put first, then say aseru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the sequence, then the Japanese for to put first, then say *aseru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あせる (aseru) mean? (\"To be impatient; to be in a rush\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C366-aseru-type",
+              "prompt": "Say the Japanese for 'to be impatient'.",
+              "assesses": [
+                "JA-LEX-C366-SAIAKU366-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あせる",
+                "aseru"
+              ],
+              "feedback": {
+                "correct": "Right: あせる (aseru) is 'to be impatient; to be in a rush'.",
+                "incorrect": "'To be impatient' is あせる (aseru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R366-review-362-366",
+      "sequence": 21580,
+      "title": "Looking back: from What Will It Cost? to If the Worst Happens",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from What Will It Cost? to If the Worst Happens",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:daaa1b72e90e4ade",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for an expense and to calculate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an expense, to calculate, the total, prices in general, a rental deposit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an expense, to calculate, the total, prices in general, a rental deposit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the bill, the payment, consumption tax, half price, luxury",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the bill, the payment, consumption tax, half price, luxury]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damage to property, to pay for damage, to pay taxes, to be in charge of, responsibility",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: damage to property, to pay for damage, to pay taxes, to be in charge of, responsibility]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the economy, business conditions, an investment, a pension, an average",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the economy, business conditions, an investment, a pension, an average]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the worst, to make up one's mind, the sequence, to put first, to be impatient",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the worst, to make up one's mind, the sequence, to put first, to be impatient]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An expense? (ひよう, hiyō.) To calculate? (けいさんする, keisan suru.) The total? (ごうけい, gōkei.) Prices in general? (ぶっか, bukka.) A rental deposit? (しききん, shikikin.) The bill? (かいけい, kaikei.) The payment? (だいきん, daikin.) Consumption tax? (しょうひぜい, shōhizei.) Half price? (はんがく, hangaku.) Luxury? (ぜいたく, zeitaku.) Damage to property? (そんがい, songai.) To pay for damage? (べんしょうする, benshō suru.) To pay taxes? (おさめる, osameru.) To be in charge of? (うけもつ, ukemotsu.) Responsibility? (せきにん, sekinin.) The economy? (けいざい, keizai.) Business conditions? (けいき, keiki.) An investment? (とうし, tōshi.) A pension? (ねんきん, nenkin.) An average? (へいきん, heikin.) The worst? (さいあく, saiaku.) To make up one's mind? (けっしんする, kesshin suru.) The sequence? (じゅんじょ, junjo.) To put first? (ゆうせんする, yūsen suru.) To be impatient? (あせる, aseru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R366-review-362-366-type",
+              "prompt": "Say the Japanese for 'an expense'.",
+              "assesses": [
+                "JA-LEX-C362-HIYOU362-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひよう",
+                "hiyō",
+                "hiyou",
+                "hiyoo",
+                "hiyo"
+              ],
+              "feedback": {
+                "correct": "Right: ひよう (hiyō) is 'a cost; an expense'.",
+                "incorrect": "'An expense' is ひよう (hiyō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

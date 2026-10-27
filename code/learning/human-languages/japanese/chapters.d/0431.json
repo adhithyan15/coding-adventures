@@ -1,0 +1,21 @@
+{
+  "chapter": 431,
+  "title": "Surprise and Suspense",
+  "label": "ch:ja-surprise-and-suspense",
+  "canDo": "I can say what startled or puzzled me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R431-review-426-431",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can say what startled or puzzled me.",
+    "assesses": [
+      "JA-LEX-C431-SHOCK431-01",
+      "JA-LEX-C431-SHOCK431-02",
+      "JA-LEX-C431-SHOCK431-03",
+      "JA-LEX-C431-SHOCK431-04",
+      "JA-LEX-C431-SHOCK431-05"
+    ]
+  }
+}

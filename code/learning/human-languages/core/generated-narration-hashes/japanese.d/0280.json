@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:306a280b23b18fec",
+  "lessonIds": [
+    "JA-C280-kiji",
+    "JA-C280-noseru",
+    "JA-C280-dekigoto",
+    "JA-C280-kisha",
+    "JA-C280-kubaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch280.txt",
+  "json": "japanese/narration/ch280.json",
+  "textHash": "fnv1a64:271e6d3684851d46",
+  "jsonHash": "fnv1a64:2d7c149f3ccd4878",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Where Are You Headed?",
+  "label": "ch:ja-where-are-you-headed",
+  "canDo": "I can talk about destinations and wandering about.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C396-urouro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about destinations and wandering about.",
+    "assesses": [
+      "JA-LEX-C396-YUKISAKI396-03",
+      "JA-LEX-C396-YUKISAKI396-04",
+      "JA-LEX-C396-YUKISAKI396-05"
+    ]
+  }
+}

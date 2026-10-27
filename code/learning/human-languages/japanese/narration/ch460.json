@@ -1,0 +1,817 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 460,
+  "title": "Goals and Success",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:06010b37627fffa5",
+  "lessons": [
+    {
+      "id": "JA-C460-mokuhyou",
+      "sequence": 26750,
+      "title": "もくひょう (mokuhyō) — a goal; a target",
+      "headword": "もくひょう",
+      "romanization": "mokuhyō",
+      "gloss": "a goal; a target",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe922934c370f04e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for one's field of study, then the Japanese for a career path."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もくひょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もくひょう — mokuhyō — \"a goal; a target\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ことしの もくひょうは しあいで かつ ことです。 — kotoshi no mokuhyō wa shiai de katsu koto desu — \"My goal this year is to win a match.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もくひょう (mokuhyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are moku, \"eye\" (Middle Chinese mjuwk) and hyō, \"mark\" (pjiew) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokuhyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokuhyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokuhyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokuhyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotoshi no mokuhyō wa shiai de katsu koto desu — My goal this year is to win a match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotoshi no mokuhyō wa shiai de katsu koto desu* — My goal this year is to win a match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for one's field of study, then the Japanese for a career path, then say mokuhyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for one's field of study, then the Japanese for a career path, then say *mokuhyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もくひょう (mokuhyō) mean? (\"A goal; a target\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C460-mokuhyou-type",
+              "prompt": "Say the Japanese for 'a goal'.",
+              "assesses": [
+                "JA-LEX-C460-GOAL460-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もくひょう",
+                "mokuhyō",
+                "mokuhyou",
+                "mokuhyoo",
+                "mokuhyo"
+              ],
+              "feedback": {
+                "correct": "Right: もくひょう (mokuhyō) is 'a goal; a target'.",
+                "incorrect": "'A goal' is もくひょう (mokuhyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C460-seikou-suru",
+      "sequence": 26760,
+      "title": "せいこうする (seikō suru) — to succeed",
+      "headword": "せいこうする",
+      "romanization": "seikō suru",
+      "gloss": "to succeed",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3815285f242a167",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a career path, then the Japanese for a goal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せいこうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいこうする — seikō suru — \"to succeed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいにち れんしゅうして、せいこうしました。 — mainichi renshū shite, seikō shimashita — \"I practised every day and succeeded.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite せいこうします, seikōshimasu; a する verb. Past (polite): あにが せいこうしました。, ani ga seikō shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいこうする (seikō suru) is Sino-Japanese (kango) seikō with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sei, \"become\" (Middle Chinese dzyeng) and kō, \"success\" (kuwng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seikō suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seikō suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seikō suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seikō suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainichi renshū shite, seikō shimashita — I practised every day and succeeded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainichi renshū shite, seikō shimashita* — I practised every day and succeeded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a career path, then the Japanese for a goal, then say seikō suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a career path, then the Japanese for a goal, then say *seikō suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せいこうする (seikō suru) mean? (\"To succeed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C460-seikou-suru-type",
+              "prompt": "Say the Japanese for 'to succeed'.",
+              "assesses": [
+                "JA-LEX-C460-GOAL460-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せいこうする",
+                "seikō suru",
+                "seikou suru",
+                "seikoo suru",
+                "seiko suru"
+              ],
+              "feedback": {
+                "correct": "Right: せいこうする (seikō suru) is 'to succeed'.",
+                "incorrect": "'To succeed' is せいこうする (seikō suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C460-jitsuryoku",
+      "sequence": 26770,
+      "title": "じつりょく (jitsuryoku) — real ability",
+      "headword": "じつりょく",
+      "romanization": "jitsuryoku",
+      "gloss": "real ability",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd7a73f240d48a43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a goal, then the Japanese for to succeed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じつりょく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じつりょく — jitsuryoku — \"real ability\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あの せんしゅは じつりょくが あります。 — ano senshu wa jitsuryoku ga arimasu — \"That player has real ability.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じつりょく (jitsuryoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jitsu, \"reality\" (Middle Chinese zyit) and ryoku, \"power\" (lik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jitsuryoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jitsuryoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jitsuryoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jitsuryoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano senshu wa jitsuryoku ga arimasu — That player has real ability.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano senshu wa jitsuryoku ga arimasu* — That player has real ability.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a goal, then the Japanese for to succeed, then say jitsuryoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a goal, then the Japanese for to succeed, then say *jitsuryoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じつりょく (jitsuryoku) mean? (\"Real ability\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C460-jitsuryoku-type",
+              "prompt": "Say the Japanese for 'real ability'.",
+              "assesses": [
+                "JA-LEX-C460-GOAL460-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じつりょく",
+                "jitsuryoku"
+              ],
+              "feedback": {
+                "correct": "Right: じつりょく (jitsuryoku) is 'real ability'.",
+                "incorrect": "'Real ability' is じつりょく (jitsuryoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C460-chousen-suru",
+      "sequence": 26780,
+      "title": "ちょうせんする (chōsen suru) — to take on a challenge",
+      "headword": "ちょうせんする",
+      "romanization": "chōsen suru",
+      "gloss": "to take on a challenge",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f46ccfeaa9153d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to succeed, then the Japanese for real ability."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちょうせんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうせんする — chōsen suru — \"to take on a challenge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "むすこは たかい やまに ちょうせんしたいです。 — musuko wa takai yama ni chōsen shitai desu — \"My son wants to take on a high mountain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ちょうせんします, chōsenshimasu; a する verb. Past (polite): せんしゅが ちょうせんしました。, senshu ga chōsen shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうせんする (chōsen suru) is Sino-Japanese (kango) chōsen with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chō, \"challenge\" (Middle Chinese thew) and sen, \"battle\" (tsyenH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōsen suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōsen suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōsen suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōsen suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musuko wa takai yama ni chōsen shitai desu — My son wants to take on a high mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musuko wa takai yama ni chōsen shitai desu* — My son wants to take on a high mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to succeed, then the Japanese for real ability, then say chōsen suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to succeed, then the Japanese for real ability, then say *chōsen suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちょうせんする (chōsen suru) mean? (\"To take on a challenge\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C460-chousen-suru-type",
+              "prompt": "Say the Japanese for 'to take on a challenge'.",
+              "assesses": [
+                "JA-LEX-C460-GOAL460-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちょうせんする",
+                "chōsen suru",
+                "chousen suru",
+                "choosen suru",
+                "chosen suru"
+              ],
+              "feedback": {
+                "correct": "Right: ちょうせんする (chōsen suru) is 'to take on a challenge'.",
+                "incorrect": "'To take on a challenge' is ちょうせんする (chōsen suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C460-tenshoku-suru",
+      "sequence": 26790,
+      "title": "てんしょくする (tenshoku suru) — to change jobs",
+      "headword": "てんしょくする",
+      "romanization": "tenshoku suru",
+      "gloss": "to change jobs",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50b87bc38d0e89fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for real ability, then the Japanese for to take on a challenge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てんしょくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんしょくする — tenshoku suru — \"to change jobs\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには きょねん てんしょくしました。 — ani wa kyonen tenshoku shimashita — \"My elder brother changed jobs last year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite てんしょくします, tenshokushimasu; a する verb. Past (polite): ちちが てんしょくしました。, chichi ga tenshoku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんしょくする (tenshoku suru) is Sino-Japanese (kango) tenshoku with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ten, \"change\" (Middle Chinese trjwenX) and shoku, \"employment\" (tsyik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenshoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenshoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenshoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenshoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa kyonen tenshoku shimashita — My elder brother changed jobs last year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa kyonen tenshoku shimashita* — My elder brother changed jobs last year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for real ability, then the Japanese for to take on a challenge, then say tenshoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for real ability, then the Japanese for to take on a challenge, then say *tenshoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てんしょくする (tenshoku suru) mean? (\"To change jobs\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C460-tenshoku-suru-type",
+              "prompt": "Say the Japanese for 'to change jobs'.",
+              "assesses": [
+                "JA-LEX-C460-GOAL460-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てんしょくする",
+                "tenshoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: てんしょくする (tenshoku suru) is 'to change jobs'.",
+                "incorrect": "'To change jobs' is てんしょくする (tenshoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

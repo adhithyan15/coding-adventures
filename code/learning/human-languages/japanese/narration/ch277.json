@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 277,
+  "title": "Snowed In",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bb79c8f36379c095",
+  "lessons": [
+    {
+      "id": "JA-C277-ouyuki",
+      "sequence": 16770,
+      "title": "おおゆき (ōyuki) — heavy snow",
+      "headword": "おおゆき",
+      "romanization": "ōyuki",
+      "gloss": "heavy snow",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:157888b420033ed6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cliff, then the Japanese for awful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おおゆき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おおゆき — ōyuki — \"heavy snow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ことしは おおゆきでした。 — kotoshi wa ōyuki deshita — \"We had a lot of snow this year.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おおゆき (ōyuki) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ō, \"big\", and yuki, \"snow\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōyuki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōyuki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōyuki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōyuki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotoshi wa ōyuki deshita — We had a lot of snow this year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotoshi wa ōyuki deshita* — We had a lot of snow this year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cliff, then the Japanese for awful, then say ōyuki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cliff, then the Japanese for awful, then say *ōyuki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おおゆき (ōyuki) mean? (\"Heavy snow\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C277-ouyuki-type",
+              "prompt": "Say the Japanese for 'heavy snow'.",
+              "assesses": [
+                "JA-LEX-C277-OOYUKI277-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おおゆき",
+                "ōyuki",
+                "ouyuki",
+                "ooyuki",
+                "oyuki"
+              ],
+              "feedback": {
+                "correct": "Right: おおゆき (ōyuki) is 'heavy snow'.",
+                "incorrect": "'Heavy snow' is おおゆき (ōyuki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C277-tsumoru",
+      "sequence": 16780,
+      "title": "つもる (tsumoru) — to accumulate; to lie (of snow)",
+      "headword": "つもる",
+      "romanization": "tsumoru",
+      "gloss": "to accumulate; to lie (of snow)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5778f08ce012b43e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for awful, then the Japanese for heavy snow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つもる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つもる — tsumoru — \"to accumulate; to lie (of snow)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やねに ゆきが つもっています。 — yane ni yuki ga tsumotte imasu — \"There is snow lying on the roof.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つもります, tsumorimasu; a godan verb. Past (polite): ゆきが つもりました。, yuki ga tsumorimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つもる (tsumoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yane ni yuki ga tsumotte imasu — There is snow lying on the roof.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yane ni yuki ga tsumotte imasu* — There is snow lying on the roof.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for awful, then the Japanese for heavy snow, then say tsumoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for awful, then the Japanese for heavy snow, then say *tsumoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つもる (tsumoru) mean? (\"To accumulate; to lie (of snow)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C277-tsumoru-type",
+              "prompt": "Say the Japanese for 'to accumulate'.",
+              "assesses": [
+                "JA-LEX-C277-OOYUKI277-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つもる",
+                "tsumoru"
+              ],
+              "feedback": {
+                "correct": "Right: つもる (tsumoru) is 'to accumulate; to lie (of snow)'.",
+                "incorrect": "'To accumulate' is つもる (tsumoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C277-fubuki",
+      "sequence": 16790,
+      "title": "ふぶき (fubuki) — a snowstorm; a blizzard",
+      "headword": "ふぶき",
+      "romanization": "fubuki",
+      "gloss": "a snowstorm; a blizzard",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39f2dacba3824e04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for heavy snow, then the Japanese for to accumulate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふぶき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふぶき — fubuki — \"a snowstorm; a blizzard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆうべは ひどい ふぶきでした。 — yūbe wa hidoi fubuki deshita — \"There was a terrible blizzard last night.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふぶき (fubuki) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fubuki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fubuki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fubuki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fubuki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūbe wa hidoi fubuki deshita — There was a terrible blizzard last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūbe wa hidoi fubuki deshita* — There was a terrible blizzard last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for heavy snow, then the Japanese for to accumulate, then say fubuki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for heavy snow, then the Japanese for to accumulate, then say *fubuki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふぶき (fubuki) mean? (\"A snowstorm; a blizzard\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C277-fubuki-type",
+              "prompt": "Say the Japanese for 'a snowstorm'.",
+              "assesses": [
+                "JA-LEX-C277-OOYUKI277-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふぶき",
+                "fubuki"
+              ],
+              "feedback": {
+                "correct": "Right: ふぶき (fubuki) is 'a snowstorm; a blizzard'.",
+                "incorrect": "'A snowstorm' is ふぶき (fubuki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C277-teiden",
+      "sequence": 16800,
+      "title": "ていでん (teiden) — a power cut",
+      "headword": "ていでん",
+      "romanization": "teiden",
+      "gloss": "a power cut",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39b6b7c3042db308",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to accumulate, then the Japanese for a snowstorm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ていでん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ていでん — teiden — \"a power cut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あらしで ていでんに なりました。 — arashi de teiden ni narimashita — \"The storm cut the power.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ていでん (teiden) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tei, \"halt\" (Middle Chinese deng) and den, \"electricity\" (denH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teiden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teiden*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teiden, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teiden*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arashi de teiden ni narimashita — The storm cut the power.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arashi de teiden ni narimashita* — The storm cut the power.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to accumulate, then the Japanese for a snowstorm, then say teiden again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to accumulate, then the Japanese for a snowstorm, then say *teiden* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ていでん (teiden) mean? (\"A power cut\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C277-teiden-type",
+              "prompt": "Say the Japanese for 'a power cut'.",
+              "assesses": [
+                "JA-LEX-C277-OOYUKI277-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ていでん",
+                "teiden"
+              ],
+              "feedback": {
+                "correct": "Right: ていでん (teiden) is 'a power cut'.",
+                "incorrect": "'A power cut' is ていでん (teiden)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C277-kogoeru",
+      "sequence": 16810,
+      "title": "こごえる (kogoeru) — to go numb with cold; to freeze",
+      "headword": "こごえる",
+      "romanization": "kogoeru",
+      "gloss": "to go numb with cold; to freeze",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3949664e4ce90842",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a snowstorm, then the Japanese for a power cut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こごえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こごえる — kogoeru — \"to go numb with cold; to freeze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆきの なかで あしが こごえました。 — yuki no naka de ashi ga kogoemashita — \"My feet went numb in the snow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こごえます, kogoemasu; an ichidan verb. Past (polite): てが こごえました。, te ga kogoemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こごえる (kogoeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kogoeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kogoeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kogoeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kogoeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuki no naka de ashi ga kogoemashita — My feet went numb in the snow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuki no naka de ashi ga kogoemashita* — My feet went numb in the snow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a snowstorm, then the Japanese for a power cut, then say kogoeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a snowstorm, then the Japanese for a power cut, then say *kogoeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こごえる (kogoeru) mean? (\"To go numb with cold; to freeze\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C277-kogoeru-type",
+              "prompt": "Say the Japanese for 'to go numb with cold'.",
+              "assesses": [
+                "JA-LEX-C277-OOYUKI277-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こごえる",
+                "kogoeru"
+              ],
+              "feedback": {
+                "correct": "Right: こごえる (kogoeru) is 'to go numb with cold; to freeze'.",
+                "incorrect": "'To go numb with cold' is こごえる (kogoeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

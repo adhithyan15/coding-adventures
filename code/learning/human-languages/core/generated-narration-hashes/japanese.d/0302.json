@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:7fe9ad9ac8d95b73",
+  "lessonIds": [
+    "JA-C302-yuurei",
+    "JA-C302-obake",
+    "JA-C302-uramu",
+    "JA-C302-densetsu",
+    "JA-C302-kamisama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch302.txt",
+  "json": "japanese/narration/ch302.json",
+  "textHash": "fnv1a64:d9d0ddcdf2b8020e",
+  "jsonHash": "fnv1a64:1973d32413ef1eee",
+  "findings": []
+}

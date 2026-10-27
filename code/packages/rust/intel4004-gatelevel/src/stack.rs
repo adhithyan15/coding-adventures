@@ -81,6 +81,21 @@ impl HardwareStack {
         self.pointer.reset();
     }
 
+    /// Restore all three return registers and the circular pointer.
+    pub(crate) fn restore(&mut self, levels: &[u16], pointer: usize) {
+        for (state, &value) in self.levels.iter_mut().zip(levels) {
+            let bits = int_to_bits(value, 12);
+            register(&bits, 0, state);
+            register(&bits, 1, state);
+        }
+        self.pointer.write(pointer as u16);
+    }
+
+    /// Return the physical DFF count of the return registers and pointer.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.levels.iter().map(Vec::len).sum::<usize>() + self.pointer.dff_count()
+    }
+
     /// Current pointer position (not true depth, since we wrap).
     pub fn depth(&self) -> usize {
         usize::from(self.pointer.read())

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C516-norikoeru",
+  "pathSegment": "JA-PATH-516-AHEAD516",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-516-AHEAD516",
+      "order": 1
+    }
+  ]
+}

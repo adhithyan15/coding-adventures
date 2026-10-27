@@ -1,0 +1,19 @@
+{
+  "chapter": 323,
+  "title": "Saying No Politely",
+  "label": "ch:ja-saying-no-politely",
+  "canDo": "I can turn something down politely and give a reason.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C323-betsuni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 323: I can turn something down politely and give a reason.",
+    "assesses": [
+      "JA-LEX-C323-ENRYO323-03",
+      "JA-LEX-C323-ENRYO323-04",
+      "JA-LEX-C323-ENRYO323-05"
+    ]
+  }
+}
