@@ -738,3 +738,123 @@ fn a_loop_else_clause_is_refused() {
         assert_eq!(err.line, 2, "{src:?}: {err}");
     }
 }
+
+// ── `pass` (review F1) ───────────────────────────────────────────────
+
+/// `pass` is a statement that does nothing.  It was refused, in every
+/// position; one-line `def f(): pass` had been accepted only because
+/// one-line bodies used to be dropped, so fixing those made it a
+/// refusal.  It now lowers to no statement.
+#[test]
+fn pass_lowers_to_nothing_everywhere() {
+    for src in [
+        "def f(): pass\n",
+        "def f():\n    pass\n",
+        "x = 1\nif x: pass\n",
+        "x = 1\nif x:\n    pass\nelse:\n    pass\n",
+        "x = 1\nif x == 0:\n    x = 2\nelse: pass\n",
+        "for x in [1]: pass\n",
+        "for i in range(3):\n    pass\n",
+        "x = 0\nwhile x > 0: pass\n",
+        "class C:\n    def m(self): pass\n",
+    ] {
+        lower(src);
+    }
+    // A body that is only `pass` has no statements and returns None.
+    let m = lower("def f(): pass\n");
+    let f = func(&m, "f");
+    assert!(f.body.stmts.is_empty(), "{:?}", f.body.stmts);
+    assert!(matches!(f.body.value, Expr::NilLit { .. }));
+    // `pass` between statements adds nothing.
+    let m = lower("x = 1\npass\nx = 2\n");
+    assert_eq!(main_body(&m).stmts.len(), 2);
+}
+
+// ── `for self in …` in a method (review F3) ──────────────────────────
+
+/// A bare `self` inside a method always reads the receiver, so a loop
+/// that binds `self` would be invisible to the body.  Refused, like
+/// `self = …`.
+#[test]
+fn for_self_in_a_method_is_refused() {
+    let err = refuse(
+        "class C:\n    def m(self):\n        for self in [1, 2]:\n            t = self\n        return 0\n",
+    );
+    assert!(err.message.contains("`for self in"), "{err}");
+    assert_eq!(err.line, 3);
+    // Outside a method, `self` is an ordinary name.
+    lower("for self in [1, 2]:\n    t = self\n");
+}
+
+// ── variables spelled with the escape marker (review F4) ─────────────
+
+/// A variable spelled `__py_main` used to keep that name in the IR, the
+/// same name the escaped `def main` gets, so on every backend the local
+/// shadowed the function.  Variables starting with the marker are
+/// escaped too, one to one.
+#[test]
+fn a_variable_spelled_like_an_escaped_function_is_escaped() {
+    let m = lower("def main(): return 1\ndef g():\n    __py_main = 5\n    return main() + __py_main\n");
+    let g = func(&m, "g");
+    match &g.body.stmts[0] {
+        Stmt::LetStarBinding { name, .. } => assert_eq!(name, "__py___py_main"),
+        other => panic!("{other:?}"),
+    }
+    let (_, args) = builtin(&g.body.value);
+    assert!(
+        matches!(&args[0], Expr::DirectCall { fn_name, .. } if fn_name == "__py_main"),
+        "{args:?}"
+    );
+    assert!(is_var(&args[1], "__py___py_main", Scope::Local), "{args:?}");
+}
+
+/// Every place a variable name reaches the IR is escaped the same way:
+/// parameters, keyword arguments, captures, loop variables.
+#[test]
+fn escaped_variable_names_agree_across_params_keywords_and_captures() {
+    let m = lower(
+        "def f(__py_a, *, __py_k=1):\n    def g():\n        return __py_a + __py_k\n    return g()\n\nprint(f(1, __py_k=2))\nfor __py_i in range(2):\n    t = __py_i\n",
+    );
+    let f = func(&m, "f");
+    let params: Vec<&str> = f.params.iter().map(|p| p.name.as_str()).collect();
+    assert_eq!(params, ["__py___py_a", "__py___py_k"]);
+    let caps: Vec<&str> = func(&m, "g").captures.iter().map(|c| c.name.as_str()).collect();
+    assert_eq!(caps, ["__py___py_a", "__py___py_k"]);
+    let main = main_body(&m);
+    let print_arg = match &main.stmts[0] {
+        Stmt::ExprStmt { expr, .. } => builtin(expr).1.last().expect("an argument"),
+        other => panic!("{other:?}"),
+    };
+    match print_arg {
+        Expr::DirectCall { args, .. } => assert!(
+            matches!(&args[1], Expr::KeywordArg { name, .. } if name == "__py___py_k"),
+            "{args:?}"
+        ),
+        other => panic!("{other:?}"),
+    }
+    assert!(matches!(&main.stmts[1], Stmt::ForRange { var, .. } if var == "__py___py_i"));
+}
+
+// ── loop bodies are statements only (review, found with F2) ──────────
+
+/// A loop body's trailing expression statement used to become the body
+/// block's value, which the C and Ruby backends never emit: `for i in
+/// range(3): print(i)` printed nothing there.  A loop body now has no
+/// value; every statement is a statement.
+#[test]
+fn a_loop_body_has_no_value() {
+    let m = lower("for i in range(3):\n    print(i)\nx = 0\nwhile x < 2:\n    x += 1\n    if x == 2:\n        x\nfor y in [1]:\n    y\n");
+    for stmt in &main_body(&m).stmts {
+        let body = match stmt {
+            Stmt::ForRange { body, .. } | Stmt::While { body, .. } | Stmt::ForEach { body, .. } => {
+                body
+            }
+            _ => continue,
+        };
+        assert!(matches!(body.value, Expr::NilLit { .. }), "{body:?}");
+        assert!(
+            matches!(body.stmts.last(), Some(Stmt::ExprStmt { .. })),
+            "the trailing expression is kept as a statement: {body:?}"
+        );
+    }
+}

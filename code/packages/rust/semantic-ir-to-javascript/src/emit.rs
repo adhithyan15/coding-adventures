@@ -679,12 +679,27 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_block_as_stmts(out, body, indent + 2);
             let _ = writeln!(out, "{pad}}}");
         }
-        // `for (var = start; …; var += step) { body }` — half-open
-        // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
-        // block-scoped temporaries (matching Python's `range`), and the
-        // loop condition is direction-aware so a negative `step` counts
-        // down correctly.  JS has one numeric type, so no casts are
-        // needed (unlike the TypeScript backend's `as number`).
+        // A half-open (`stop` exclusive) counting loop.  `start`/`stop`/
+        // `step` are evaluated ONCE into block-scoped temporaries (matching
+        // Python's `range`), and the loop condition is direction-aware so a
+        // negative `step` counts down correctly.  JS has one numeric type,
+        // so no casts are needed (unlike the TypeScript backend's `as
+        // number`).
+        //
+        // The loop counts with a **hidden counter** `__sir_i_<id>`, and each
+        // iteration binds `var` afresh from it:
+        //
+        //   { let __sir_i_7 = start; const __sir_stop_7 = …, __sir_step_7 = …;
+        //     while (…__sir_i_7 < __sir_stop_7…) {
+        //       let var = __sir_i_7;  body;  __sir_i_7 = __sir_i_7 + __sir_step_7;
+        //     } }
+        //
+        // Counting with `var` itself (as this backend used to) let the body
+        // change the number of iterations: `for i in range(3): i += 10`
+        // ran once instead of three times, and an inner loop that stored
+        // into an outer loop's variable cut the outer loop short.  SIR, like
+        // Python's `range` and the C/Go/Rust/Ruby backends, takes the next
+        // value from the range whatever the body did to `var` (#18482).
         Stmt::ForRange {
             var,
             start,
@@ -697,9 +712,10 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let v = sanitize_ident(var);
             let inner = indent + 2;
             let inner_pad = " ".repeat(inner);
+            let body_pad = " ".repeat(inner + 2);
             // Open a block so the temporaries don't leak.
             let _ = writeln!(out, "{pad}{{");
-            let _ = write!(out, "{inner_pad}let {v} = ");
+            let _ = write!(out, "{inner_pad}let __sir_i_{id} = ");
             emit_expr(out, start, inner);
             out.push_str(";\n");
             let _ = write!(out, "{inner_pad}const __sir_stop_{id} = ");
@@ -710,10 +726,11 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str(";\n");
             let _ = writeln!(
                 out,
-                "{inner_pad}while (__sir_step_{id} >= 0 ? {v} < __sir_stop_{id} : {v} > __sir_stop_{id}) {{"
+                "{inner_pad}while (__sir_step_{id} >= 0 ? __sir_i_{id} < __sir_stop_{id} : __sir_i_{id} > __sir_stop_{id}) {{"
             );
+            let _ = writeln!(out, "{body_pad}let {v} = __sir_i_{id};");
             emit_block_as_stmts(out, body, inner + 2);
-            let _ = writeln!(out, "{}{v} = {v} + __sir_step_{id};", " ".repeat(inner + 2));
+            let _ = writeln!(out, "{body_pad}__sir_i_{id} = __sir_i_{id} + __sir_step_{id};");
             let _ = writeln!(out, "{inner_pad}}}");
             let _ = writeln!(out, "{pad}}}");
         }
@@ -3395,15 +3412,49 @@ mod tests {
             span: s(),
         };
         let out = emit_s(&st);
-        assert!(out.contains("let i = 0;"), "got {out}");
+        assert!(out.contains("let __sir_i_0 = 0;"), "got {out}");
         assert!(out.contains("const __sir_stop_0 = 5;"), "got {out}");
         assert!(out.contains("const __sir_step_0 = 1;"), "got {out}");
         assert!(
-            out.contains("while (__sir_step_0 >= 0 ? i < __sir_stop_0 : i > __sir_stop_0) {"),
+            out.contains(
+                "while (__sir_step_0 >= 0 ? __sir_i_0 < __sir_stop_0 : __sir_i_0 > __sir_stop_0) {"
+            ),
             "got {out}"
         );
+        assert!(out.contains("let i = __sir_i_0;"), "got {out}");
         assert!(out.contains(r#"__Sir.write("stdout", "once", false, i);"#), "got {out}");
-        assert!(out.contains("i = i + __sir_step_0;"), "got {out}");
+        assert!(out.contains("__sir_i_0 = __sir_i_0 + __sir_step_0;"), "got {out}");
+    }
+
+    /// The loop counts with a hidden counter, so a body that assigns the
+    /// loop variable cannot change how many times it runs (#18482): the
+    /// increment reads `__sir_i_N`, never the variable.
+    #[test]
+    fn emit_for_range_counts_with_a_hidden_counter() {
+        LOOP_COUNTER.with(|c| c.set(0));
+        let st = Stmt::ForRange {
+            var: "i".into(),
+            start: int(0),
+            stop: int(3),
+            step: int(1),
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "i".into(),
+                    scope: Scope::Local,
+                    value: int(10),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        };
+        let out = emit_s(&st);
+        assert!(!out.contains("i = i +"), "the variable must not be the counter: {out}");
+        let bind = out.find("let i = __sir_i_0;").expect("binds i from the counter");
+        let store = out.find("i = 10;").expect("the body's store");
+        let step = out.find("__sir_i_0 = __sir_i_0 + __sir_step_0;").expect("steps the counter");
+        assert!(bind < store && store < step, "got {out}");
     }
 
     #[test]

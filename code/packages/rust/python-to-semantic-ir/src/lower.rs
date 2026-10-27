@@ -432,6 +432,53 @@ fn sir_function_name(name: &str) -> String {
     }
 }
 
+/// The SIR name of the *variable* (local, parameter, capture, loop
+/// variable, keyword-argument name) spelled `name` in the source.
+///
+/// ## Why variables are escaped too
+///
+/// Every backend puts a module's functions and a function's variables in
+/// one namespace.  [`sir_function_name`] maps the user's `def main` to
+/// `__py_main`; a variable *spelled* `__py_main` would then shadow it:
+///
+/// ```python
+/// def main(): return 1
+/// def g():
+///     __py_main = 5
+///     return main()     # the backend called the local 5
+/// ```
+///
+/// So a variable that starts with the marker gets the same extra prefix a
+/// function would (`__py_main` → `__py___py_main`).  Unlike a function,
+/// a variable named `main` is left alone: no variable is ever called
+/// `main` in the IR's function sense, and leaving it keeps the two maps
+/// apart.
+///
+/// | source name | as a function   | as a variable     |
+/// |-------------|-----------------|-------------------|
+/// | `main`      | `__py_main`     | `main`            |
+/// | `__py_main` | `__py___py_main`| `__py___py_main`  |
+/// | `f`         | `f`             | `f`               |
+///
+/// For any two source names `a` and `b`, the function name of `a` equals
+/// the variable name of `b` only when `a == b`: the same Python name, which
+/// Python itself keeps in one namespace, so the lowerer's own resolution
+/// (a local shadows a function) already decides between them.  The proof
+/// is the table: an output starts with the marker exactly when it was
+/// escaped, and stripping the marker gives back the input, except for
+/// `main`, whose function name `__py_main` no variable name can equal
+/// (an escaped variable name starts with the marker *twice*).
+///
+/// Temporaries the lowerer invents (`__chain_N`, `__for_N`,
+/// `__param_<name>_N`) do not start with the marker, so they pass through.
+fn sir_var_name(name: &str) -> String {
+    if name.starts_with(FN_ESCAPE_PREFIX) {
+        format!("{FN_ESCAPE_PREFIX}{name}")
+    } else {
+        name.to_string()
+    }
+}
+
 /// Lower a parsed Python CST into a SIR module (M4: literals, variable
 /// references, assignment, operators, control flow, functions, calls,
 /// and closures).
@@ -652,7 +699,7 @@ impl FunctionCtx {
         self.aliases
             .get(name)
             .cloned()
-            .unwrap_or_else(|| name.to_string())
+            .unwrap_or_else(|| sir_var_name(name))
     }
 
     fn is_enclosing_value(&self, name: &str) -> bool {
@@ -1229,6 +1276,13 @@ impl Lowerer {
         };
         match inner.rule_name.as_str() {
             "assign_stmt" => self.lower_assign_stmt(inner, ctx),
+            // `pass` does nothing, so it lowers to no statement at all.  A
+            // body that is only `pass` then has no statements and the value
+            // `None`, which is what Python returns from `def f(): pass`.
+            // (It used to be refused here.  A one-line `def f(): pass` was
+            // accepted only by accident, because one-line suites were
+            // dropped whole; fixing that turned it into a refusal.)
+            "pass_stmt" => Ok(Lowered::Stmts(vec![])),
             "return_stmt" => {
                 // A `return` reaching the *general* statement lowerer is
                 // an early (non-tail) return — rejected per spec.  Tail
@@ -1401,8 +1455,25 @@ impl Lowerer {
     ///   self.n -= 1 ⇒   Assign @n (Instance) = BuiltinCall("-", [@n, 1])
     /// ```
     ///
-    /// The target is read *before* `e` is evaluated, as in Python (the
-    /// builtin evaluates its arguments left to right).
+    /// ## Evaluation order
+    ///
+    /// Python reads the target *before* it evaluates `e`, and that is
+    /// observable when `e` changes the target:
+    ///
+    /// ```python
+    /// self.n = 1
+    /// self.n += self.bump()     # bump sets self.n = 100, returns 5
+    /// # CPython: 1 + 5 = 6, not 100 + 5
+    /// ```
+    ///
+    /// The IR puts the read first (`args: [x, e]`).  Whether it *runs*
+    /// first is up to each backend's argument-evaluation order: the
+    /// Python, JavaScript, Go, Rust and Ruby backends evaluate a call's
+    /// arguments left to right; the C backend hoists them into temporaries
+    /// in order whenever more than one could run code or read mutable
+    /// state (C itself leaves argument order unspecified).  The
+    /// `sir-conformance` program `py_aug_reads_target_first` pins this on
+    /// all six.
     ///
     /// Refused, each with a positioned error:
     ///
@@ -1522,10 +1593,20 @@ impl Lowerer {
     ///   x: int        ⇒   nothing    (a declaration with no value)
     /// ```
     ///
-    /// The annotation is never evaluated or checked.  Inside a function
-    /// CPython never evaluates it either; at module level it would be
-    /// evaluated and stored in `__annotations__`, which this frontend does
-    /// not model.
+    /// The annotation is never evaluated or checked.
+    ///
+    /// - **Inside a function** this matches CPython, which never evaluates
+    ///   a local variable's annotation.
+    /// - **At module level** (and in a class body, which this frontend
+    ///   refuses anyway) CPython 3.10 *does* evaluate it, once, when the
+    ///   statement runs, and stores the result in `__annotations__` (unless
+    ///   the module has `from __future__ import annotations`, which imports
+    ///   do not reach here).  So a module-level annotation with a side
+    ///   effect, `x: print("hi") = 1`, prints in CPython and not here, and
+    ///   one that names an unbound variable, `x: Undefined = 1`, raises
+    ///   `NameError` in CPython and not here.  This is a known divergence:
+    ///   annotations are almost always plain type names, and
+    ///   `__annotations__` is not modelled.
     ///
     /// A declaration with no value binds nothing, so a later read of the
     /// name is still an unresolved-name error, matching Python's
@@ -1682,7 +1763,7 @@ impl Lowerer {
                 } else {
                     ctx.locals.push(name.clone());
                     Ok(Stmt::LetStarBinding {
-                        name,
+                        name: ctx.ir_local(&name),
                         sir_type: None,
                         value,
                         span,
@@ -1793,7 +1874,7 @@ impl Lowerer {
                 name: alias.clone(),
                 sir_type: None,
                 value: Expr::VarRef {
-                    name: name.clone(),
+                    name: sir_var_name(&name),
                     scope: Scope::Param,
                     span: span.clone(),
                 },
@@ -2174,7 +2255,7 @@ impl Lowerer {
         self.refuse_loop_else(while_stmt, "while")?;
 
         let cond = self.lower_expr(cond_node, ctx)?;
-        let body = self.lower_suite(suite, ctx, depth + 1)?;
+        let body = loop_body(self.lower_suite(suite, ctx, depth + 1)?);
         self.observed.add(Feature::Loops);
         Ok(Stmt::While {
             cond,
@@ -2252,6 +2333,16 @@ impl Lowerer {
                 ))
             }
         };
+        // Inside a method a bare `self` always reads the implicit receiver
+        // (`resolve_var`), so `for self in xs:` would bind a variable no
+        // read can see: the body would print the receiver every time.
+        // Refused, like `self = …` (see `classify_target`).
+        if ctx.in_method && var == "self" {
+            return Err(self.err_at(
+                targets[0],
+                "unsupported: `for self in …` inside a method (deferred)".to_string(),
+            ));
+        }
 
         let iter_expr_node = self.single_expr(iter_list)?;
         let span = self.span_of(for_stmt);
@@ -2269,7 +2360,7 @@ impl Lowerer {
 
         match (range, iter) {
             (Some((start, stop, step)), _) => Ok(Stmt::ForRange {
-                var: loop_var,
+                var: sir_var_name(&loop_var),
                 start,
                 stop,
                 step,
@@ -2277,7 +2368,7 @@ impl Lowerer {
                 span,
             }),
             (None, Some(iter)) => Ok(Stmt::ForEach {
-                var: loop_var,
+                var: sir_var_name(&loop_var),
                 iter,
                 body,
                 span,
@@ -2324,7 +2415,7 @@ impl Lowerer {
         let already_bound = ctx.locals.iter().any(|n| n == var);
         if !already_bound {
             ctx.locals.push(var.to_string());
-            let body = self.lower_suite_no_mark(suite, ctx, depth + 1)?;
+            let body = loop_body(self.lower_suite_no_mark(suite, ctx, depth + 1)?);
             return Ok((var.to_string(), body));
         }
         let tmp = self.fresh_temp_name("for");
@@ -2336,7 +2427,7 @@ impl Lowerer {
         };
         let store =
             self.store_target(Target::Name(var.to_string()), read_tmp, ctx, span.clone())?;
-        let mut body = self.lower_suite_no_mark(suite, ctx, depth + 1)?;
+        let mut body = loop_body(self.lower_suite_no_mark(suite, ctx, depth + 1)?);
         body.stmts.insert(0, store);
         Ok((tmp, body))
     }
@@ -2929,7 +3020,7 @@ impl Lowerer {
             params: params
                 .iter()
                 .map(|(pname, kind, default)| Param {
-                    name: pname.clone(),
+                    name: sir_var_name(pname),
                     sir_type: None,
                     // The `kind` is decided by the parameter's position
                     // relative to the keyword-only `*` boundary: `Required`
@@ -2947,7 +3038,7 @@ impl Lowerer {
             captures: captures
                 .iter()
                 .map(|n| Capture {
-                    name: n.clone(),
+                    name: sir_var_name(n),
                     sir_type: None,
                 })
                 .collect(),
@@ -2986,7 +3077,10 @@ impl Lowerer {
             captures: captures
                 .into_iter()
                 .zip(capture_values)
-                .map(|(name, value)| CaptureValue { name, value })
+                .map(|(name, value)| CaptureValue {
+                    name: sir_var_name(&name),
+                    value,
+                })
                 .collect(),
             span,
         }
@@ -4426,7 +4520,8 @@ impl Lowerer {
                     let span = self.span_of(a);
                     self.observed.add(Feature::KeywordParams);
                     args.push(Expr::KeywordArg {
-                        name: kw_name,
+                        // Matches the escaped `Param.name` it binds.
+                        name: sir_var_name(&kw_name),
                         value: Box::new(value),
                         span,
                     });
@@ -5117,14 +5212,14 @@ impl Lowerer {
         }
         if ctx.params.contains(name) {
             return Ok(Expr::VarRef {
-                name: name.to_string(),
+                name: sir_var_name(name),
                 scope: Scope::Param,
                 span,
             });
         }
         if ctx.captures.contains(name) {
             return Ok(Expr::VarRef {
-                name: name.to_string(),
+                name: sir_var_name(name),
                 scope: Scope::Capture,
                 span,
             });
@@ -5417,6 +5512,28 @@ fn has_colon_token(node: &GrammarASTNode) -> bool {
     node.children
         .iter()
         .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Colon))
+}
+
+/// A loop body as **statements only**: its trailing value, if any, becomes
+/// an `ExprStmt`, and the block's value is `NilLit`.
+///
+/// A suite's last expression statement becomes its block's *value*
+/// ([`Lowerer::assemble_block`]).  That is right for an `if` used as an
+/// expression, but a loop body's value is never used, and the C and Ruby
+/// backends emit only a loop body's statements.  So the last statement of a
+/// loop body, when it was an expression statement, was silently dropped
+/// there: `for i in range(3): print(i)` printed nothing on C and Ruby, and
+/// neither did a trailing `if` or call (#18482 review).
+fn loop_body(mut body: Block) -> Block {
+    if !matches!(body.value, Expr::NilLit { .. }) {
+        let span = body.value.span().clone();
+        let value = std::mem::replace(
+            &mut body.value,
+            Expr::NilLit { span: span.clone() },
+        );
+        body.stmts.push(Stmt::ExprStmt { expr: value, span });
+    }
+    body
 }
 
 /// An empty `Block` whose value is `NilLit`.

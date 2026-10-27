@@ -1287,11 +1287,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_block_as_stmts(out, body, indent + 2);
             let _ = writeln!(out, "{}}}", pad);
         }
-        // `for (var = start; …; var += step) { body }` — half-open
-        // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
-        // block-scoped temporaries (matching Python's `range`), and the
-        // loop condition is direction-aware so a negative `step` counts
-        // down correctly.
+        // A half-open (`stop` exclusive) counting loop.  `start`/`stop`/
+        // `step` are evaluated ONCE into block-scoped temporaries (matching
+        // Python's `range`), and the loop condition is direction-aware so a
+        // negative `step` counts down correctly.
+        //
+        // The loop counts with a **hidden counter** `__sir_i_<id>`, and each
+        // iteration binds `var` afresh from it (`let var = __sir_i_<id>;`).
+        // Counting with `var` itself (as this backend used to) let the body
+        // change the number of iterations: `for i in range(3): i += 10` ran
+        // once.  SIR, like Python's `range` and the C/Go/Rust/Ruby backends,
+        // takes the next value from the range whatever the body did to
+        // `var` (#18482).  Mirrors the JavaScript backend.
         Stmt::ForRange {
             var,
             start,
@@ -1304,11 +1311,12 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             let v = sanitize_ident(var);
             let inner = indent + 2;
             let inner_pad = " ".repeat(inner);
+            let body_pad = " ".repeat(inner + 2);
             // Open a block so the temporaries don't leak.
             let _ = writeln!(out, "{}{{", pad);
-            let _ = write!(out, "{}let {}: __Sir.Val = ", inner_pad, v);
+            let _ = write!(out, "{}let __sir_i_{}: number = (", inner_pad, id);
             emit_expr(out, start, inner);
-            out.push_str(";\n");
+            out.push_str(") as number;\n");
             let _ = write!(out, "{}const __sir_stop_{}: number = (", inner_pad, id);
             emit_expr(out, stop, inner);
             out.push_str(") as number;\n");
@@ -1317,17 +1325,16 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str(") as number;\n");
             let _ = writeln!(
                 out,
-                "{}while (__sir_step_{id} >= 0 ? ({v} as number) < __sir_stop_{id} : ({v} as number) > __sir_stop_{id}) {{",
-                inner_pad, id = id, v = v
+                "{}while (__sir_step_{id} >= 0 ? __sir_i_{id} < __sir_stop_{id} : __sir_i_{id} > __sir_stop_{id}) {{",
+                inner_pad, id = id
             );
+            let _ = writeln!(out, "{}let {}: __Sir.Val = __sir_i_{};", body_pad, v, id);
             emit_block_as_stmts(out, body, inner + 2);
             let _ = writeln!(
                 out,
-                "{}{} = ({} as number) + __sir_step_{};",
-                " ".repeat(inner + 2),
-                v,
-                v,
-                id
+                "{}__sir_i_{id} = __sir_i_{id} + __sir_step_{id};",
+                body_pad,
+                id = id
             );
             let _ = writeln!(out, "{}}}", inner_pad);
             let _ = writeln!(out, "{}}}", pad);

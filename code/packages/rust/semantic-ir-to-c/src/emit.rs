@@ -1829,8 +1829,110 @@ fn push_joined(out: &mut String, names: &[String]) {
 // Simple expressions (rendered directly as C expression text)
 // ---------------------------------------------------------------------------
 
+/// Is `e` an **atom**: a value whose evaluation runs no code and reads no
+/// state that running code could change?
+///
+/// Literals, and locals / parameters / captures, are atoms: a SIR call
+/// cannot assign the caller's locals (captures are copied into a closure,
+/// not shared).  A builtin closure handle is a constant.  Anything else
+/// may run code (a call), or reads state a call can change (a global, an
+/// instance or class variable, a constant table entry).
+fn is_atom(e: &Expr) -> bool {
+    match e {
+        Expr::IntLit { .. }
+        | Expr::FloatLit { .. }
+        | Expr::BoolLit { .. }
+        | Expr::NilLit { .. }
+        | Expr::SymLit { .. }
+        | Expr::StrLit { .. } => true,
+        Expr::VarRef { scope, .. } => matches!(
+            scope,
+            Scope::Local | Scope::Param | Scope::Capture | Scope::Builtin
+        ),
+        Expr::Block(b) => b.stmts.is_empty() && is_atom(&b.value),
+        // The current method's receiver is fixed for the whole call.
+        Expr::BuiltinCall { name, args, .. } if name == "__self__" && args.is_empty() => true,
+        // Building a value out of atoms runs no user code and reads no
+        // mutable state: a fresh list, map, string or closure.
+        Expr::SeqLit { items, .. } => items.iter().all(is_atom),
+        Expr::MapLit { entries, .. } => entries.iter().all(|e| is_atom(&e.key) && is_atom(&e.value)),
+        Expr::StrConcat { parts, .. } => parts.iter().all(is_atom),
+        Expr::MakeClosure { captures, .. } => captures.iter().all(|c| is_atom(&c.value)),
+        _ => false,
+    }
+}
+
+/// The OOP dispatch builtins.  Their class and method names must stay raw C
+/// string literals, so they have no hoisted (compound) emit path: a call to
+/// one that is not simple is refused (see `scan_expr_for_builtin`).  So their
+/// operands keep the old rule, "every operand simple", rather than
+/// [`operands_simple`]; applying the ordering rule to them would turn
+/// accepted programs (`[1, 2].map { … }` style dispatch with a computed
+/// receiver and a block) into refusals.  The cost: two operands of one of
+/// these calls that both run code still evaluate in C's unspecified order.
+/// The enclosing expression is hoisted in order as usual, so
+/// `@n + bump` (a `+` whose second operand is a dispatch) is ordered.
+fn is_oop_dispatch(name: &str) -> bool {
+    matches!(
+        name,
+        "__new__"
+            | "__def_method__"
+            | "__method__"
+            | "__super__"
+            | "__def_class_method__"
+            | "__class_method__"
+            | "__include__"
+            | "__extend__"
+    )
+}
+
+/// Can `ops`, the operands of one call or constructor, be rendered inline as
+/// C function arguments *without changing the program's meaning*?
+///
+/// ## Why evaluation order matters here
+///
+/// C leaves the order in which a call's arguments are evaluated
+/// **unspecified**, and gcc on x86-64 evaluates them right to left.  SIR
+/// (like Python, JavaScript, Ruby and Rust) evaluates them left to right.
+/// So rendering
+///
+/// ```text
+///   BuiltinCall("+", [VarRef @n (Instance), __method__(self, "bump")])
+/// ```
+///
+/// inline as `_sir_plus(_sir_ivar_get("@n"), _sir_call_method(...))` ran
+/// `bump()` *first*.  When `bump` sets `@n`, the sum used the new value:
+/// Python's `self.n += self.bump()` gave 105 instead of 6 (#18482 review).
+///
+/// The order is only observable between operands that are not
+/// [atoms](is_atom): one of them must run code and another must run code
+/// or read mutable state.  So the operands render inline when each is
+/// simple and **at most one is not an atom**.  Otherwise the enclosing
+/// expression is not simple, and [`emit_assign`] hoists every operand into
+/// a temporary, in order, before the call: the generic hoist for calls,
+/// and [`hoist_operands`] for sequences, maps and string concatenation.
+/// A single non-atom operand (`f(g(x), 1)`, `_sir_plus(_sir_times(a, b),
+/// c)`) still renders inline, so ordinary arithmetic is unchanged.
+fn operands_simple<'a>(ops: impl IntoIterator<Item = &'a Expr>) -> bool {
+    let mut non_atoms = 0usize;
+    for op in ops {
+        if !is_simple(op) {
+            return false;
+        }
+        if !is_atom(op) {
+            non_atoms += 1;
+            if non_atoms > 1 {
+                return false;
+            }
+        }
+    }
+    true
+}
+
 /// A "simple" expression has no embedded control flow, so it can be rendered
-/// as a single C expression with no statements hoisted out.
+/// as a single C expression with no statements hoisted out.  Its operands
+/// must also be safe to evaluate in C's unspecified argument order (see
+/// [`operands_simple`]).
 fn is_simple(e: &Expr) -> bool {
     match e {
         Expr::IntLit { .. }
@@ -1848,29 +1950,32 @@ fn is_simple(e: &Expr) -> bool {
         {
             false
         }
+        Expr::BuiltinCall { name, args, .. } if is_oop_dispatch(name) => {
+            args.iter().all(is_simple)
+        }
         Expr::DirectCall { args, .. }
         | Expr::IndirectCall { args, .. }
-        | Expr::BuiltinCall { args, .. } => args.iter().all(is_simple),
-        Expr::MakeClosure { captures, .. } => captures.iter().all(|c| is_simple(&c.value)),
+        | Expr::BuiltinCall { args, .. } => operands_simple(args),
+        Expr::MakeClosure { captures, .. } => operands_simple(captures.iter().map(|c| &c.value)),
         // SIR26: a conversion is as simple as its value.
         Expr::Convert { value, .. } => is_simple(value),
         // SIR16 sequences: a `_sir_seq_*` call is simple iff its operands are
         // (they render inline as function arguments); otherwise the operands
         // are hoisted by `emit_assign`.
-        Expr::SeqLit { items, .. } => items.iter().all(is_simple),
-        Expr::SeqIndex { seq, index, .. } => is_simple(seq) && is_simple(index),
+        Expr::SeqLit { items, .. } => operands_simple(items),
+        Expr::SeqIndex { seq, index, .. } => operands_simple([seq.as_ref(), index.as_ref()]),
         Expr::SeqLen { seq, .. } => is_simple(seq),
         // SIR16 maps: a `_sir_map_*` call is simple iff every operand is (they
         // render inline as function arguments); otherwise `emit_assign` hoists
         // them. A `MapLit` operand set is every entry's key AND value.
-        Expr::MapLit { entries, .. } => entries
-            .iter()
-            .all(|e| is_simple(&e.key) && is_simple(&e.value)),
-        Expr::MapGet { map, key, .. } => is_simple(map) && is_simple(key),
+        Expr::MapLit { entries, .. } => {
+            operands_simple(entries.iter().flat_map(|e| [&e.key, &e.value]))
+        }
+        Expr::MapGet { map, key, .. } => operands_simple([map.as_ref(), key.as_ref()]),
         // SIR18 string interpolation: a `_sir_str(_sir_cat(...))` fold is
         // simple iff every part is (they render inline as fold operands);
         // otherwise `emit_assign` hoists them, mirroring `SeqLit`.
-        Expr::StrConcat { parts, .. } => parts.iter().all(is_simple),
+        Expr::StrConcat { parts, .. } => operands_simple(parts),
         // SIR16+ nodes / Intrinsic are not accepted in v0 → unreachable after
         // the capability check.  Treat as non-simple defensively.
         _ => false,

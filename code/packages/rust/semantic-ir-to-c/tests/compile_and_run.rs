@@ -168,6 +168,20 @@ const CORPUS: &[Case] = &[
         source: "puts(-7)\nputs(-7 / 2)\nputs(-(3 * 2))",
         expected: "-7\n-4\n-6\n",
     },
+    // Operands run LEFT TO RIGHT, even when one of them changes what
+    // another reads.  `bump` sets `@n` to 100 and returns 5.  `@n + bump`
+    // must read `@n` (1) first: 6.  `[@n, bump, @n]` must be [1, 5, 100].
+    // C leaves the order of a call's arguments unspecified (gcc goes right
+    // to left), and both used to render inline as C call arguments, printing
+    // 105 and 100001.  Now the operands are hoisted into temporaries, in
+    // order, whenever two of them could run code or read mutable state
+    // (`operands_simple`, #18482 review).
+    Case {
+        name: "operands_left_to_right",
+        lang: "ruby",
+        source: "class K\n  def initialize\n    @n = 1\n  end\n  def bump\n    @n = 100\n    5\n  end\n  def sum\n    @n + self.bump\n  end\n  def list\n    @n = 1\n    [@n, self.bump, @n]\n  end\nend\nk = K.new\nputs(k.sum)\nys = k.list\nputs(ys[0] * 1000 + ys[2])",
+        expected: "6\n1100\n",
+    },
 ];
 
 fn lower(case: &Case) -> semantic_ir::Module {

@@ -68,8 +68,16 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
     ("py_aug_true_div", "x = 7\nx /= 2\nprint(x)\n", "3.5"),
     // `+=` on a string concatenates.
     ("py_aug_str", "s = \"ab\"\ns += \"cd\"\ns += s\nprint(s)\n", "abcdabcd"),
-    // The target is read before the right-hand side runs: x = 3 + (3 * 2).
-    ("py_aug_reads_target_first", "x = 3\nx += x * 2\nprint(x)\n", "9"),
+    // The target is read *before* the right-hand side runs, and here the
+    // right-hand side changes the target: `bump` sets `self.n` to 100 and
+    // returns 5.  CPython reads 1 first: 1 + 5 = 6 (not 105).  The C
+    // backend used to render both operands inline as C call arguments,
+    // whose order C leaves unspecified, and gcc ran `bump()` first.
+    (
+        "py_aug_reads_target_first",
+        "class K:\n    def __init__(self):\n        self.n = 1\n    def bump(self):\n        self.n = 100\n        return 5\n    def go(self):\n        self.n += self.bump()\n        return self.n\n\nprint(K().go())\n",
+        "6",
+    ),
     // Inside a function, on a local and on a parameter, in a loop.  The
     // guard keeps a regression from looping forever.
     // 4 + 3 + 2 + 1 = 10.
@@ -152,6 +160,34 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "i = 10\nfor i in range(0):\n    t = i\nj = i\nfor i in range(3):\n    t = i\nprint(j * 10 + i)\n",
         "102",
     ),
+    // The body assigns the loop variable; the range still decides the
+    // next value.  The JavaScript backend counted with the variable
+    // itself, so the inner loop's last store (2) ended the outer loop
+    // after one pass, and `i += 10` ended the loop after one pass.
+    (
+        "py_for_nested_rebinds_outer_var",
+        "for i in range(2):\n    for i in range(3):\n        pass\n    print(i)\n",
+        "2\n2",
+    ),
+    (
+        "py_for_body_assigns_loop_var",
+        "for i in range(3):\n    i += 10\n    print(i)\n",
+        "10\n11\n12",
+    ),
+    // A loop body's last statement, when it is an expression statement
+    // (a `print`, a trailing `if`), became the body block's *value*, which
+    // the C and Ruby backends never emit: nothing was printed there.
+    (
+        "py_expression_last_in_loop_body",
+        "for i in range(3):\n    print(i)\nx = 0\nwhile x < 2:\n    x += 1\n    if x == 2:\n        print(x * 10)\n",
+        "0\n1\n2\n20",
+    ),
+    // ── `pass` ────────────────────────────────────────────────────────
+    (
+        "py_pass_everywhere",
+        "def f():\n    pass\n\ndef g(): pass\n\nx = 0\nfor i in range(3): pass\nwhile x > 0: pass\nif x == 0:\n    pass\nelse:\n    x = 9\nif f() == None:\n    if g() == None:\n        print(x)\n",
+        "0",
+    ),
     // ── falling off the end of a function returns None ────────────────
     (
         "py_implicit_none",
@@ -196,6 +232,12 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "py_user_main_value",
         "def main():\n    return 40\n\ndef __py_main():\n    return 2\n\nh = main\nprint(h() + __py_main())\n",
         "42",
+    ),
+    // A *variable* spelled like the escaped `main` must not shadow it.
+    (
+        "py_variable_spelled_like_escaped_main",
+        "def main():\n    return 1\n\ndef g():\n    __py_main = 5\n    return main() * 10 + __py_main\n\nprint(g())\n",
+        "15",
     ),
 ];
 
