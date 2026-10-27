@@ -1,0 +1,11 @@
+{
+  "id": "JA-C330-soroeru",
+  "pathSegment": "JA-PATH-330-CHANTO330",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-330-CHANTO330",
+      "order": 3
+    }
+  ]
+}

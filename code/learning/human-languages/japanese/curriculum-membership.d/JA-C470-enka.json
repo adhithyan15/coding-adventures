@@ -1,0 +1,11 @@
+{
+  "id": "JA-C470-enka",
+  "pathSegment": "JA-PATH-470-SONG470",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-470-SONG470",
+      "order": 3
+    }
+  ]
+}

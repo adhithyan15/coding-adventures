@@ -135,7 +135,7 @@ class NeuralFrameworkCIGateTests(unittest.TestCase):
         )
         self.assertIn("actions/setup-go@", self.reusable)
         self.assertIn(
-            "ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a", self.reusable
+            "ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec", self.reusable
         )
         self.assertIn(
             "working-directory: code/packages/ruby/neural-framework", self.reusable

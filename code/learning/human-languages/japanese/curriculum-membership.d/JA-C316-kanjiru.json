@@ -1,0 +1,11 @@
+{
+  "id": "JA-C316-kanjiru",
+  "pathSegment": "JA-PATH-316-MONOGATARI316",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-316-MONOGATARI316",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Looking for a Job",
+  "label": "ch:ja-looking-for-a-job",
+  "canDo": "I can talk about applying for a job.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C457-boshuu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can talk about applying for a job.",
+    "assesses": [
+      "JA-LEX-C457-JOBHUNT457-03",
+      "JA-LEX-C457-JOBHUNT457-04",
+      "JA-LEX-C457-JOBHUNT457-05"
+    ]
+  }
+}

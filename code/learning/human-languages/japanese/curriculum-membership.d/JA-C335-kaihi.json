@@ -1,0 +1,11 @@
+{
+  "id": "JA-C335-kaihi",
+  "pathSegment": "JA-PATH-335-DANTAI335",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-335-DANTAI335",
+      "order": 2
+    }
+  ]
+}

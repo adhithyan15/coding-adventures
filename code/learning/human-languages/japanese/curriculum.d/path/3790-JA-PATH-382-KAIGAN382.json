@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-382-KAIGAN382",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-382-KAIGAN382"
+  ],
+  "after": []
+}

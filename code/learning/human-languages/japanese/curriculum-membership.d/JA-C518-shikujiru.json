@@ -1,0 +1,11 @@
+{
+  "id": "JA-C518-shikujiru",
+  "pathSegment": "JA-PATH-518-REGRET518",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-518-REGRET518",
+      "order": 3
+    }
+  ]
+}

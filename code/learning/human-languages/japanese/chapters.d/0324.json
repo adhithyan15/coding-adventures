@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Complaints",
+  "label": "ch:ja-complaints",
+  "canDo": "I can make a complaint and say what caused it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C324-iiwake",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can make a complaint and say what caused it.",
+    "assesses": [
+      "JA-LEX-C324-MONKU324-03",
+      "JA-LEX-C324-MONKU324-04",
+      "JA-LEX-C324-MONKU324-05"
+    ]
+  }
+}

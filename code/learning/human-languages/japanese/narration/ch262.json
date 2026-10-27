@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 262,
+  "title": "An Accident by the Station",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f44426ae36caabb5",
+  "lessons": [
+    {
+      "id": "JA-C262-jiko",
+      "sequence": 16000,
+      "title": "じこ (jiko) — an accident",
+      "headword": "じこ",
+      "romanization": "jiko",
+      "gloss": "an accident",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55e6a70dad11550f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for serious, then the Japanese for selfish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じこ — jiko — \"an accident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きのう えきの ちかくで じこが ありました。 — kinō eki no chikaku de jiko ga arimashita — \"There was an accident near the station yesterday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じこ (jiko) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"matter\" (Middle Chinese dzriH) and ko, \"circumstances\" (kuH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinō eki no chikaku de jiko ga arimashita — There was an accident near the station yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinō eki no chikaku de jiko ga arimashita* — There was an accident near the station yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for serious, then the Japanese for selfish, then say jiko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for serious, then the Japanese for selfish, then say *jiko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じこ (jiko) mean? (\"An accident\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C262-jiko-type",
+              "prompt": "Say the Japanese for 'an accident'.",
+              "assesses": [
+                "JA-LEX-C262-JIKO262-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じこ",
+                "jiko"
+              ],
+              "feedback": {
+                "correct": "Right: じこ (jiko) is 'an accident'.",
+                "incorrect": "'An accident' is じこ (jiko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C262-tasukaru",
+      "sequence": 16010,
+      "title": "たすかる (tasukaru) — to be saved; to survive",
+      "headword": "たすかる",
+      "romanization": "tasukaru",
+      "gloss": "to be saved; to survive",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f495c7a7c99c40c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for selfish, then the Japanese for an accident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たすかる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たすかる — tasukaru — \"to be saved; to survive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くるまの じこで ちちは たすかりました。 — kuruma no jiko de chichi wa tasukarimashita — \"My father came through the car crash alive.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たすかります, tasukarimasu; a godan verb. Past (polite): こどもは たすかりました。, kodomo wa tasukarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たすかる (tasukaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict). It is the intransitive partner of tasukeru, \"to help\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasukaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasukaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasukaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasukaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruma no jiko de chichi wa tasukarimashita — My father came through the car crash alive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruma no jiko de chichi wa tasukarimashita* — My father came through the car crash alive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for selfish, then the Japanese for an accident, then say tasukaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for selfish, then the Japanese for an accident, then say *tasukaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たすかる (tasukaru) mean? (\"To be saved; to survive\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C262-tasukaru-type",
+              "prompt": "Say the Japanese for 'to be saved'.",
+              "assesses": [
+                "JA-LEX-C262-JIKO262-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たすかる",
+                "tasukaru"
+              ],
+              "feedback": {
+                "correct": "Right: たすかる (tasukaru) is 'to be saved; to survive'.",
+                "incorrect": "'To be saved' is たすかる (tasukaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C262-nigeru",
+      "sequence": 16020,
+      "title": "にげる (nigeru) — to run away; to flee",
+      "headword": "にげる",
+      "romanization": "nigeru",
+      "gloss": "to run away; to flee",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc0b55c9dfec7127",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an accident, then the Japanese for to be saved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にげる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にげる — nigeru — \"to run away; to flee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いぬが きて、ねこが にげました。 — inu ga kite, neko ga nigemashita — \"A dog came along, and the cat fled.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite にげます, nigemasu; an ichidan verb. Past (polite): ねこが にげました。, neko ga nigemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にげる (nigeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inu ga kite, neko ga nigemashita — A dog came along, and the cat fled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inu ga kite, neko ga nigemashita* — A dog came along, and the cat fled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an accident, then the Japanese for to be saved, then say nigeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an accident, then the Japanese for to be saved, then say *nigeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にげる (nigeru) mean? (\"To run away; to flee\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C262-nigeru-type",
+              "prompt": "Say the Japanese for 'to run away'.",
+              "assesses": [
+                "JA-LEX-C262-JIKO262-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にげる",
+                "nigeru"
+              ],
+              "feedback": {
+                "correct": "Right: にげる (nigeru) is 'to run away; to flee'.",
+                "incorrect": "'To run away' is にげる (nigeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C262-totsuzen",
+      "sequence": 16030,
+      "title": "とつぜん (totsuzen) — suddenly; all of a sudden",
+      "headword": "とつぜん",
+      "romanization": "totsuzen",
+      "gloss": "suddenly; all of a sudden",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:099858ce81282d08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be saved, then the Japanese for to run away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とつぜん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とつぜん — totsuzen — \"suddenly; all of a sudden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とつぜん くるまが とまりました。 — totsuzen kuruma ga tomarimashita — \"All of a sudden the car stopped.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とつぜん (totsuzen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are totsu, \"protruding\" (Middle Chinese thwot) and zen, \"so\" (nyen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "totsuzen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *totsuzen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "totsuzen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *totsuzen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "totsuzen kuruma ga tomarimashita — All of a sudden the car stopped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *totsuzen kuruma ga tomarimashita* — All of a sudden the car stopped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be saved, then the Japanese for to run away, then say totsuzen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be saved, then the Japanese for to run away, then say *totsuzen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とつぜん (totsuzen) mean? (\"Suddenly; all of a sudden\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C262-totsuzen-type",
+              "prompt": "Say the Japanese for 'suddenly'.",
+              "assesses": [
+                "JA-LEX-C262-JIKO262-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とつぜん",
+                "totsuzen"
+              ],
+              "feedback": {
+                "correct": "Right: とつぜん (totsuzen) is 'suddenly; all of a sudden'.",
+                "incorrect": "'Suddenly' is とつぜん (totsuzen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C262-higai",
+      "sequence": 16040,
+      "title": "ひがい (higai) — damage; harm suffered",
+      "headword": "ひがい",
+      "romanization": "higai",
+      "gloss": "damage; harm suffered",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1bdb3e3838f56ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to run away, then the Japanese for suddenly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひがい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひがい — higai — \"damage; harm suffered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひがいは ばしょに よります。 — higai wa basho ni yorimasu — \"How much harm is done depends on the place.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひがい (higai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hi, \"incur\" (Middle Chinese bjeX) and gai, \"harm\" (hajH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "higai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *higai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "higai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *higai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "higai wa basho ni yorimasu — How much harm is done depends on the place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *higai wa basho ni yorimasu* — How much harm is done depends on the place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to run away, then the Japanese for suddenly, then say higai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to run away, then the Japanese for suddenly, then say *higai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひがい (higai) mean? (\"Damage; harm suffered\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C262-higai-type",
+              "prompt": "Say the Japanese for 'damage'.",
+              "assesses": [
+                "JA-LEX-C262-JIKO262-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひがい",
+                "higai"
+              ],
+              "feedback": {
+                "correct": "Right: ひがい (higai) is 'damage; harm suffered'.",
+                "incorrect": "'Damage' is ひがい (higai)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

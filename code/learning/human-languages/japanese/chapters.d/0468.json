@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Works of Art",
+  "label": "ch:ja-works-of-art",
+  "canDo": "I can talk about an exhibition.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C468-kumitateru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can talk about an exhibition.",
+    "assesses": [
+      "JA-LEX-C468-WORKS468-03",
+      "JA-LEX-C468-WORKS468-04",
+      "JA-LEX-C468-WORKS468-05"
+    ]
+  }
+}

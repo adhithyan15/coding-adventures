@@ -1,0 +1,11 @@
+{
+  "id": "JA-C415-kosame",
+  "pathSegment": "JA-PATH-415-YUUDACHI415",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-415-YUUDACHI415",
+      "order": 1
+    }
+  ]
+}

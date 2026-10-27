@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:ca5c0aa4beab5268",
+  "lessonIds": [
+    "JA-C383-shimaguni",
+    "JA-C383-wan",
+    "JA-C383-kaikyou",
+    "JA-C383-kaisuiyoku",
+    "JA-C383-sukitouru",
+    "JA-R383-review-378-383"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch383.txt",
+  "json": "japanese/narration/ch383.json",
+  "textHash": "fnv1a64:05d9973eb59f3183",
+  "jsonHash": "fnv1a64:cec383f5e0d76817",
+  "findings": []
+}

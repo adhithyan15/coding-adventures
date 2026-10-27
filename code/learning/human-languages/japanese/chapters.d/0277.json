@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Snowed In",
+  "label": "ch:ja-snowed-in",
+  "canDo": "I can say how deep the snow was and what it did.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C277-kogoeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say how deep the snow was and what it did.",
+    "assesses": [
+      "JA-LEX-C277-OOYUKI277-03",
+      "JA-LEX-C277-OOYUKI277-04",
+      "JA-LEX-C277-OOYUKI277-05"
+    ]
+  }
+}

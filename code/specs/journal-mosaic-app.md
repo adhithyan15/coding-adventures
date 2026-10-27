@@ -118,10 +118,68 @@ exactly the slots and events above. Its layout is a `HostNavigationSplit`:
 - the **detail** holds `DraftEditor`, with the draft slots and `delete-label`
   bound and its change, save, delete and cancel events forwarded.
 
+The pane's content sits inside a `HostScroll`; see *The pane scrolls* below.
+
 The package's tests enforce the contract from both sides:
 
 - the app's start props are exactly the slots;
 - every declared emit is routed, and an undeclared one is rejected.
+
+## The pane scrolls (JO-5)
+
+A native window scrolls nothing unless the layout says so. The web never
+showed the gap, because a browser page scrolls by default. Before this, the
+pane had no scroll container on any native backend. In the declared
+1100×760 window its controls end about 500px down (measured on a Compose
+render), which leaves room for about two timeline rows. Every entry past
+those was unreachable except through search: there was no scrollbar, no
+keyboard scroll and no gesture. TaskApp had the same bug and fixed it the
+same way (#14734).
+
+**Layout.** The pane's `Column [ timeline ]` is wrapped, from outside, in a
+vertical `HostScroll [ timeline-scroll ]`. Its padding therefore stays
+inside the scroll, and the last row keeps its spacing at the end. The pane's
+fixed 300px width, and everything inside the column, are unchanged. The
+detail (the editor) is not wrapped: its content is bounded.
+
+| Backend | The pane's scroll container |
+| --- | --- |
+| React, HTML, WebComponent | `<div style="overflow-y: auto; overflow-x: hidden">` (the page still scrolls as before) |
+| SwiftUI | `ScrollView` inside the `NavigationSplitView` sidebar |
+| Compose | `Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()))` |
+| Flutter | `SingleChildScrollView`, in both the drawer and the side panel |
+| Qt | `ScrollView`, horizontal bar off |
+| XAML | `ScrollViewer`, vertical bar `Auto`, horizontal `Disabled` |
+
+**Tests.**
+
+- `package_compiles` requires that the split's pane is
+  `HostScroll [ timeline-scroll ]`, with no axis (vertical), wrapping exactly
+  `Column [ timeline ]`.
+- `native_complete_gate` builds each native backend and requires the
+  container above in the emitted source. A change that drops the scroll on
+  one backend then fails here, not in a window.
+- **Reachability on Compose desktop** (`conformance/compose/JournalScrollUiTest.kt`,
+  run by CI's Compose lane with its own state file):
+  - it writes enough entries to overflow the 1100×760 window;
+  - it requires that the bottom-most row is **not** displayed, so the test
+    really crosses the fold;
+  - it scrolls the pane with the `ScrollBy` semantics action until that row
+    is displayed;
+  - it opens the row, and requires that the editor holds it.
+
+  `performScrollTo()` is not used, because it hangs against the emitted
+  scroll container (EM-11). The Android test already reaches rows through
+  semantics. The iPadOS test's taps scroll on their own. Neither needs a
+  change.
+- **Reachability on Flutter** (`conformance/flutter/journal_scroll_test.dart`):
+  - it writes the entries through the runtime;
+  - it requires that the bottom row starts below the window;
+  - it drags the pane's `Scrollable` until the row is inside the window;
+  - it taps the row, and requires that the editor holds it.
+
+  Journal has no Flutter desktop lane in CI yet (Mosaic backlog item 13), so
+  the file says how to run it, and that lane should adopt it.
 
 ## Timeline rows on Card (proposed, blocked)
 
@@ -288,8 +346,178 @@ document instead of from `/`.
 
 **Data.** The old app kept its entries under its own storage keys, and this app
 uses `journal-mosaic/state`, so neither can overwrite the other. Importing the
-old app's entries stays deferred. The old app's code and its Electron release
-(`release-journal.yml`) are unchanged; retiring them is a separate decision.
+old app's entries stays deferred. The old app's code is unchanged. Its
+Electron release is retired: `release-journal.yml` now releases this app
+(J5e, below).
+
+## Release (J5e)
+
+`.github/workflows/release-journal.yml` publishes the Mosaic Journal as one
+GitHub Release per version. It follows `release-task-app.yml` and
+`release-engram.yml`. `code/scripts/journal_release.py` holds every check
+and archive step, and `code/scripts/tests/test_journal_release.py` tests it.
+
+### What it replaces
+
+The workflow used to build the **old** TypeScript Electron app
+(`code/programs/typescript/journal-app`) and attach its installers whenever a
+`journal-v*` tag was pushed. It never ran: no `journal-v*` tag exists, and
+there are no Journal releases. Pushing such a tag would have published the
+old app, which the owner has already replaced on the web (J5d). The tag-push
+trigger is therefore removed, together with the Electron build.
+
+The old program stays in the tree, unchanged and still buildable. Nothing
+releases it any more. Deleting it is a separate decision (#14416: the Electron
+shell is retired once its replacement ships).
+
+### Identity
+
+- **Tag:** `journal-v<semver>`, for example `journal-v0.1.0`, in the same shape
+  as `task-app-v*` and `engram-v*`.
+  - The version is strict SemVer (semver.org's reference expression), so
+    `0.1`, `01.0.0` and `1.2.3.4` are refused.
+  - The tag must be exactly `journal-v` followed by the version.
+  - A version with a prerelease part (`0.1.0-rc.1`) publishes as a
+    prerelease.
+- **Commit:** the full 40-hex SHA the dispatch ran on. Every build job checks
+  out that commit, and the release tag is created at it.
+- **Package version:** `[package] version` in `mosaic-package.toml` must
+  equal the release version. A release cannot publish a package that names
+  itself differently.
+
+### Triggers
+
+| Trigger | What runs | Publishes? |
+| --- | --- | --- |
+| `workflow_dispatch` with `version` and `tag` inputs, from `main` | every job | yes, once |
+| `pull_request` to `main` touching the release lane's inputs | every job, as `0.0.0-ci` / `journal-v0.0.0-ci` | no |
+
+There is no tag-push trigger, the same choice the two sibling workflows made.
+A pushed tag publishes whatever commit it points at. A dispatch names the
+version and tag first, so they are checked against each other, the changelog
+and the manifest before anything is built. The workflow then creates the tag
+itself, at the validated commit. It does so atomically, through the refs API,
+which refuses a tag that already exists, and it reads the tag back before
+running `gh release create --verify-tag`. A tag pushed in the gap after the
+last availability check therefore fails the run rather than being adopted.
+(For a tag that already exists, `--target` would be silently ignored.)
+
+A dispatch is refused if:
+
+- it did not run from `refs/heads/main`;
+- the tag already exists;
+- a release with that tag already exists (checked again just before
+  publishing, because the builds take a while);
+- either of those lookups fails. A failed lookup is not read as "absent".
+
+The pull-request run is path-filtered to the lane's own inputs. These are the
+workflow, the helper and its test, the shared archiver and bundle checker it
+reuses, the Journal package, its Rust runtime and core, and the Mosaic
+toolchain the payloads are built from. A change that would break a release is
+therefore caught by the pull request that makes it, not at dispatch time.
+
+### Changelog
+
+The package's changelog is sharded (`CHANGELOG.d/`, bullet entries under the
+single section heading in `_meta.md`). `journal_release.py validate-changelog`
+checks it:
+
+- **Always:**
+  - `_meta.md` has exactly one `## ` section heading, either
+    `## <semver> — unreleased` or `## <semver> — YYYY-MM-DD` (a real date);
+  - that version equals the manifest version;
+  - there is at least one shard;
+  - every shard is named `NNNNN-SLUG-xxxxxxxx.md` and starts with a top-level
+    `- ` bullet.
+- **When publishing:** the heading must be `## <version> — YYYY-MM-DD`, for the
+  version being released. So the release PR dates the section, and a release
+  cannot ship notes that still say "unreleased".
+
+The release notes are the section's entries in document order, newest first,
+followed by a fixed "What is in this release" block (below).
+
+### Payloads
+
+The first release ships only what CI already **runs**, not what it merely
+compiles. A payload that is never launched can pass every check and still
+open to a blank window.
+
+| Payload | Built from | Verified in the release lane |
+| --- | --- | --- |
+| `journal-web-v<V>.zip` | `host/web` with `JOURNAL_WASM_PROFILE=release` | `cargo test -p journal-mosaic-app`; the host's Vitest suite against the real wasm; `npm run build`; the shipped wasm is byte-identical to the one just built; `verify_relocatable_bundle.py` serves it from a subdirectory; the wasm is fetched page-relative |
+| `journal-qt-linux-v<V>.zip` | `mosaic-compile --backend qt --profile native-complete`, then `cmake --install` | the native-complete report is clean; the installed `libmosaic_app.so` is the release runtime; the **extracted archive** launches offscreen twice against one state file (the second launch restores), then quarantines an unreadable state file byte-for-byte as `.corrupt` |
+| `journal-compose-linux-v<V>.zip` | `mosaic-compile --backend compose --profile native-complete`, then `gradle createDistributable` | the same report and runtime checks; the extracted app image launches under Xvfb twice, then the same quarantine check |
+
+The Linux payloads are portable unpack-and-run trees, not distribution
+packages:
+
+- Qt needs Qt 6.8 libraries on the machine.
+- The Compose app image bundles its own JVM.
+- Each one carries an `INSTALL.txt`. It says how to run the app, that it is
+  unsigned, and that `MOSAIC_APP_STATE_PATH` chooses where the state file
+  lives.
+
+Every archive has one top-level directory named after the file. It contains
+a `SOURCE_COMMIT` file and is written by `engram_release.py`'s hardened
+archiver, not by a copy of it. That archiver sorts members, stores symlinks
+as links, keeps file modes, and refuses unsafe names, hard links and
+case-colliding paths. A `SHA256SUMS` file covers the payloads. The publish job
+requires the downloaded set to be **exactly** `artifact-names` plus
+`SHA256SUMS`, so a build job that silently produced nothing cannot shrink a
+release.
+
+The smoke launches always set `MOSAIC_APP_STATE_PATH` to a scratch file, so a
+lane can never read or write a real journal.
+
+**Not in the first release, and why:**
+
+- **SwiftUI (macOS):** CI runs `swift build` (debug) on the emitted package and
+  never launches it. There is also no `.app` bundling for Journal yet: no
+  Info.plist identity and no icon. TaskApp has both (`archive-macos-app`), but
+  they are Trestle-specific.
+- **Flutter desktop:** CI has no Journal desktop lane. Flutter runs Journal only
+  on the Android emulator and the iOS simulator.
+- **XAML (Windows):** CI has no Journal lane.
+- **Qt and Compose on macOS and Windows:** CI runs Journal on these toolkits on
+  Linux only.
+- **Mobile (Android, iOS, iPadOS):** CI builds and UI-tests Journal there, but
+  distributing a mobile app needs signing and a store or sideload decision.
+  This release does not make that decision.
+
+Each of these joins the release when a CI lane launches it, as the Linux lanes
+do now.
+
+### Out of scope
+
+- **Signing and notarization.** Nothing is signed. This is the same open
+  decision as Trestle's (TR-6, #13977).
+- **Mobile distribution**, as above.
+- **An upgrade fixture.** TaskApp's release restores a committed v0.1.0 state
+  from the stable state path. Journal has no previous release to upgrade from,
+  so its first release only checks that a launch restores the state the
+  previous launch left. The shared release-state gate in #18311
+  (`mosaic_release_state_gate.py`) is not on `main` yet, so this lane does not
+  depend on it. Adding a committed Journal fixture through that gate is the
+  follow-up, and it is needed before the second release.
+- **Attestation.** Neither sibling workflow attests its payloads. This lane
+  matches them: provenance is `SOURCE_COMMIT` plus `SHA256SUMS`.
+- **Installers** (`.deb`, `.dmg`, `.msi`).
+
+### Permissions
+
+- The workflow defaults to `contents: read`.
+- Only the publish job has `contents: write`, and it runs only on
+  `workflow_dispatch`.
+- No job gets `id-token` or `attestations`, and none uses an environment.
+- Every action is pinned to a full commit SHA, with its version in a trailing
+  comment.
+- Every checkout sets `persist-credentials: false`. The publish job passes its
+  token to `gh` through `GH_TOKEN` only, never through `.git/config`.
+- No `run:` block contains a `${{ }}` expression. Values reach the shell
+  through `env:`.
+
+`test_journal_release.py` checks each of these properties on the workflow
+file, and the validate job runs that test.
 
 ## Search (J4a)
 
@@ -672,5 +900,5 @@ Markdown export (readable, one-way) and Import are later steps.
 
 ## Deferred
 
-Launching on the remaining native lanes, packaging and release (J5); the markdown preview;
+Release payloads beyond web, Qt Linux and Compose Linux: SwiftUI, Flutter desktop, XAML, the other desktop platforms, and mobile (J5e above says what each one waits on); a Journal upgrade fixture through the shared release-state gate (#18311); the markdown preview;
 (search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f an entry's journal J4g, an empty journal J4h and renaming and deleting a journal J4i are above; export J6a is above); import; Markdown export; importing the TypeScript app's entries; export on SwiftUI, Qt, XAML and Flutter, which arrives with their platform libraries (UI87 §7.3).

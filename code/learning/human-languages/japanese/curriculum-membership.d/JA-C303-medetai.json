@@ -1,0 +1,11 @@
+{
+  "id": "JA-C303-medetai",
+  "pathSegment": "JA-PATH-303-RYUU303",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-303-RYUU303",
+      "order": 4
+    }
+  ]
+}

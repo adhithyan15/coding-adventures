@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **Reachability tests for the scrolling pane (JO-5).** The tests prove that
+  `journal-app`'s pane now scrolls, so an entry below the fold can be reached.
+  - New `conformance/compose/JournalScrollUiTest.kt`, which CI's Compose lane
+    runs with its own state file. It writes eight entries in the 1100×760
+    window, and requires that the last row is not displayed. It scrolls the
+    pane with the `ScrollBy` semantics action until the row is displayed (not
+    `performScrollTo()`, which hangs, EM-11), opens it, and checks the
+    editor's title. Against the old, unscrolled layout it fails, because no
+    node has a vertical scroll range.
+  - New `conformance/flutter/journal_scroll_test.dart`, the same check with a
+    drag of the pane's `Scrollable`. Journal has no Flutter desktop lane yet,
+    so it is run locally, and the file says how.
+
 - **iPadOS UI test.** New `conformance/swiftui-ios/JournalUiTests.swift`, an
   XCUITest that CI compiles into the iOS project (`--ios-ui-test`) and runs on
   the iPad simulator (UI89 §4.3). It runs the same steps as the Android test

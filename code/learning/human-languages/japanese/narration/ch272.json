@@ -1,0 +1,815 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 272,
+  "title": "A Trick over the Phone",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0d3806e840325da1",
+  "lessons": [
+    {
+      "id": "JA-C272-sagi",
+      "sequence": 16510,
+      "title": "さぎ (sagi) — a fraud; a swindle",
+      "headword": "さぎ",
+      "romanization": "sagi",
+      "gloss": "a fraud; a swindle",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8aa7ee5e2d112b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to hide (oneself), then the Japanese for to catch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さぎ — sagi — \"a fraud; a swindle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "年じゅう さぎの でんわが あります。 — nenjū sagi no denwa ga arimasu — \"Swindlers phone all year round.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さぎ (sagi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"deceive\" (Middle Chinese tsraeH) and gi, \"cheat\" (khi) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nenjū sagi no denwa ga arimasu — Swindlers phone all year round.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nenjū sagi no denwa ga arimasu* — Swindlers phone all year round.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to hide (oneself), then the Japanese for to catch, then say sagi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to hide (oneself), then the Japanese for to catch, then say *sagi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さぎ (sagi) mean? (\"A fraud; a swindle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C272-sagi-type",
+              "prompt": "Say the Japanese for 'a fraud'.",
+              "assesses": [
+                "JA-LEX-C272-SAGI272-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さぎ",
+                "sagi"
+              ],
+              "feedback": {
+                "correct": "Right: さぎ (sagi) is 'a fraud; a swindle'.",
+                "incorrect": "'A fraud' is さぎ (sagi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C272-damasu",
+      "sequence": 16520,
+      "title": "だます (damasu) — to trick; to deceive",
+      "headword": "だます",
+      "romanization": "damasu",
+      "gloss": "to trick; to deceive",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7b3dc7870a5da46",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to catch, then the Japanese for a fraud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だます",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だます — damasu — \"to trick; to deceive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その おとこは ははを だましました。 — sono otoko wa haha o damashimashita — \"That man tricked my mother.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite だまします, damashimasu; a godan verb. Past (polite): おとこが ちちを だましました。, otoko ga chichi o damashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だます (damasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *damasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "damasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *damasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono otoko wa haha o damashimashita — That man tricked my mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono otoko wa haha o damashimashita* — That man tricked my mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to catch, then the Japanese for a fraud, then say damasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to catch, then the Japanese for a fraud, then say *damasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だます (damasu) mean? (\"To trick; to deceive\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C272-damasu-type",
+              "prompt": "Say the Japanese for 'to trick'.",
+              "assesses": [
+                "JA-LEX-C272-SAGI272-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だます",
+                "damasu"
+              ],
+              "feedback": {
+                "correct": "Right: だます (damasu) is 'to trick; to deceive'.",
+                "incorrect": "'To trick' is だます (damasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C272-odosu",
+      "sequence": 16530,
+      "title": "おどす (odosu) — to threaten",
+      "headword": "おどす",
+      "romanization": "odosu",
+      "gloss": "to threaten",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95a5bafedc9df716",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a fraud, then the Japanese for to trick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おどす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おどす — odosu — \"to threaten\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はんにんは でんわで ははを おどしました。 — hannin wa denwa de haha o odoshimashita — \"The culprit threatened my mother on the phone.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おどします, odoshimasu; a godan verb. Past (polite): どろぼうが おとこを おどしました。, dorobō ga otoko o odoshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おどす (odosu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *odosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "odosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *odosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hannin wa denwa de haha o odoshimashita — The culprit threatened my mother on the phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hannin wa denwa de haha o odoshimashita* — The culprit threatened my mother on the phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a fraud, then the Japanese for to trick, then say odosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a fraud, then the Japanese for to trick, then say *odosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おどす (odosu) mean? (\"To threaten\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C272-odosu-type",
+              "prompt": "Say the Japanese for 'to threaten'.",
+              "assesses": [
+                "JA-LEX-C272-SAGI272-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おどす",
+                "odosu"
+              ],
+              "feedback": {
+                "correct": "Right: おどす (odosu) is 'to threaten'.",
+                "incorrect": "'To threaten' is おどす (odosu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C272-kakusu",
+      "sequence": 16540,
+      "title": "かくす (kakusu) — to hide (something)",
+      "headword": "かくす",
+      "romanization": "kakusu",
+      "gloss": "to hide (something)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:359f73c520bab777",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to trick, then the Japanese for to threaten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かくす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かくす — kakusu — \"to hide (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はんにんは おかねを やまに かくしました。 — hannin wa okane o yama ni kakushimashita — \"The culprit hid the money in the hills.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かくします, kakushimasu; a godan verb. Past (polite): どろぼうが おかねを かくしました。, dorobō ga okane o kakushimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かくす (kakusu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict). It is the transitive partner of kakureru, \"to hide oneself\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakusu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakusu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakusu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakusu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hannin wa okane o yama ni kakushimashita — The culprit hid the money in the hills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hannin wa okane o yama ni kakushimashita* — The culprit hid the money in the hills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to trick, then the Japanese for to threaten, then say kakusu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to trick, then the Japanese for to threaten, then say *kakusu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かくす (kakusu) mean? (\"To hide (something)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C272-kakusu-type",
+              "prompt": "Say the Japanese for 'to hide (something)'.",
+              "assesses": [
+                "JA-LEX-C272-SAGI272-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かくす",
+                "kakusu"
+              ],
+              "feedback": {
+                "correct": "Right: かくす (kakusu) is 'to hide (something)'.",
+                "incorrect": "'To hide (something)' is かくす (kakusu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C272-hontou",
+      "sequence": 16550,
+      "title": "ほんとう (hontō) — true; the truth",
+      "headword": "ほんとう",
+      "romanization": "hontō",
+      "gloss": "true; the truth",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58da3b1b9e043cd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to threaten, then the Japanese for to hide (something)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほんとう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほんとう — hontō — \"true; the truth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "それは ほんとうですか。 — sore wa hontō desu ka — \"Is that really so?\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほんとう (hontō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hon, \"true\" (Middle Chinese pwonX) and tō, \"right\" (tang) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hontō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hontō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hontō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hontō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sore wa hontō desu ka — Is that really so?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sore wa hontō desu ka* — Is that really so?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to threaten, then the Japanese for to hide (something), then say hontō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to threaten, then the Japanese for to hide (something), then say *hontō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほんとう (hontō) mean? (\"True; the truth\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C272-hontou-type",
+              "prompt": "Say the Japanese for 'true'.",
+              "assesses": [
+                "JA-LEX-C272-SAGI272-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほんとう",
+                "hontō",
+                "hontou",
+                "hontoo",
+                "honto"
+              ],
+              "feedback": {
+                "correct": "Right: ほんとう (hontō) is 'true; the truth'.",
+                "incorrect": "'True' is ほんとう (hontō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

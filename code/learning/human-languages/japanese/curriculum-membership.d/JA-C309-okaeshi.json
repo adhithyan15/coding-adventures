@@ -1,0 +1,11 @@
+{
+  "id": "JA-C309-okaeshi",
+  "pathSegment": "JA-PATH-309-OKURU309",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-309-OKURU309",
+      "order": 2
+    }
+  ]
+}

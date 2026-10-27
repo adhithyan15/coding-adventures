@@ -106,6 +106,97 @@ class VMFrame:
 The call stack is a bounded deque.  The maximum frame depth is configurable
 (default: `max_frames=64`, matching JVM defaults; Tetrad uses `max_frames=4`).
 
+### Frame register limit
+
+A frame holds at most **65,536 (2¹⁶) distinct named registers**
+(`VMFrame::MAX_FRAME_REGISTERS` in the Rust implementation). This is a
+resource bound — it caps one frame's register file — and the same 2¹⁶ bounds
+the `load_reg`/`store_reg` index range (`0..=65_535`). What the whole call
+stack may hold is bounded separately, by the register-slot budget below.
+
+A function's registers are its **parameters, by position** — parameter `i`
+owns slot `i` even when two parameters share a name — plus the distinct
+`dest` names of its instructions that are not parameter names (a `dest`
+naming a parameter reuses its slot). The count is static, and new registers
+are numbered from `params.len()`. Exceeding the limit is a typed error,
+never a silent drop or a panic:
+
+1. **Load time.** Before running anything, `execute` counts the distinct
+   register names of every function in the module. A function over the limit
+   refuses the whole module with `RegisterLimitExceeded { function, registers,
+   limit }` — no instruction runs and no output is written.
+2. **Run time (backstop).** Allocating a new register in a full frame raises
+   the same error, for a register a language opcode handler creates
+   dynamically.
+
+`register_count` is a pre-allocation hint only. The VM pre-allocates it
+bounded by what the function can ever name (`params + instructions`) and by
+the limit, and never below `params.len()`.
+
+**Register-slot budget (memory bound).** The per-frame limit caps one
+frame, not one program: `max_frames` (default 512 in the Rust vm-core) ×
+65,536 slots × ~24 bytes is ~768 MiB, and a three-instruction recursive
+function reaches it — `store_reg 65535, 1; call r = f; ret r` grows every
+frame to the limit with one by-index write (measured peak RSS ≈ 792 MB before
+`FrameOverflow`). So all live frames of one call stack also share a
+**VM-wide budget of register slots**, `max_register_slots` (default
+2²² = 4,194,304):
+
+- **What is counted:** each frame's register-file *capacity* (allocated
+  slots, not just used ones), summed over every live frame.
+- **When it is checked:** whenever a register file grows — a new named
+  register (including `call`'s return slot), a `store_reg` past the end of
+  the file, or a `call` pre-allocating a callee frame (at least
+  `params.len()` slots). Growth over the budget is the typed error
+  `RegisterBudgetExceeded { function, slots, budget }` (its message names
+  the knob: "raise VMCore::max_register_slots"); the frame is left
+  unchanged. A failed `execute` clears its call stack before returning, so
+  the frames' register files are released at once rather than at the next
+  `execute`.
+- **How it is counted (O(1), no pop bookkeeping):** each frame records,
+  when it is pushed, the slots held by the frames beneath it
+  (`slots_below`). Only the top frame ever grows — a caller cannot run while
+  its callee does, and `call` allocates the caller's return slot *before*
+  pushing the callee — so that number stays exact, and a frame may grow
+  while `slots_below + capacity ≤ budget`. Popping a frame takes its share
+  with it. Growth doubles capacity (amortised O(1)) but is clamped to what
+  the budget leaves, so capacity never overshoots.
+- **The bound:** the register files of one `execute` occupy at most
+  `max_register_slots × size_of::<Value>()` bytes — **96 MiB** at the
+  default, 8× below the ~768 MiB it prevents.
+- **What the default guarantees.** Capacity runs ahead of use: growth
+  doubles from the pre-allocation (the `register_count` hint, 8 for almost
+  every frontend), so a frame using `u` slots holds at most
+  `max(pre-allocation, 2u − 1)` — the doubling slack is under 2×. The
+  default gives the full 512-frame stack 8,192 slots a frame, so a function
+  whose frames use ≤ 4,096 registers (and pre-allocate ≤ 8,192) still
+  reaches `max_frames` = 512 and ends in `FrameOverflow` exactly as before
+  the budget, and frames of up to the 65,536-register limit reach depth 64.
+  (A 2²⁰ default was tried first: with the slack, a 2,049-register
+  recursive function stopped at depth 255 instead of 512.)
+- **What it does not change:** the `load_reg`/`store_reg` index range stays
+  `0..=65_535` (a negative or larger index is still an
+  `invalid register index` error). No frontend in the repository emits
+  numeric-index `load_reg`/`store_reg` for vm-core — `twig-to-beam` emits
+  `load_reg` as a BEAM register copy, and the BEAM/CIL/JVM backends lower
+  both to moves — so tying the index range to the function's static
+  register count was rejected as a semantic change with no caller to
+  justify it; the budget bounds memory without it.
+
+Not counted: the name map's key strings (one copy per frame of each `dest`
+name the frame assigns — at most one entry per slot, so their *number* is
+bounded by the budget, but a pathologically long `dest` name is copied into
+every frame that uses it) and the contents of `Value::Str` registers.
+Host opcode extensions that grow `registers` directly (it is a `pub` field)
+are trusted and outside the accounting; they should grow it through
+`VMFrame::store_index` / `assign`.
+
+> History: the Rust vm-core originally dropped the 65,537th register
+> silently, so the program failed later with a misleading
+> `undefined variable`. The JIT tier (`jit-core`'s generic bytecode JIT) has
+> a smaller, separate limit — 256 registers, one-byte register numbers — and
+> declines to compile such a function, leaving it to the interpreter.
+
 When a `call` instruction is executed:
 
 1. A new `VMFrame` is allocated for the callee
@@ -290,6 +381,8 @@ vm.resume_frame(frame: VMFrame, at_ip: int) # restart interpreter from deopt poi
 class VMConfig:
     register_count: int = 8          # registers per frame
     max_frames: int = 64             # maximum call depth
+    max_register_slots: int = 2**20  # register slots all live frames share
+                                     # (Rust vm-core; see "Frame register limit")
     opcodes: dict = field(default_factory=dict)   # language-specific handlers
     builtins: dict = field(default_factory=dict)  # host-provided callables
     profiler_enabled: bool = True    # always-on observation

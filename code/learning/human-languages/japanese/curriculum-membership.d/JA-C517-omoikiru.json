@@ -1,0 +1,11 @@
+{
+  "id": "JA-C517-omoikiru",
+  "pathSegment": "JA-PATH-517-DECIDE517",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-517-DECIDE517",
+      "order": 2
+    }
+  ]
+}

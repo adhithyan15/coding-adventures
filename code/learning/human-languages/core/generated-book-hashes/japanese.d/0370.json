@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:378d7c61f6355369",
+  "lessonIds": [
+    "JA-C370-matomaru",
+    "JA-C370-tagaini",
+    "JA-C370-onaji",
+    "JA-C370-daitai",
+    "JA-C370-pittari"
+  ],
+  "tex": "japanese/book/chapters/ch370-reaching-agreement.tex"
+}

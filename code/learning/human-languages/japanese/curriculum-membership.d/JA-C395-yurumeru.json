@@ -1,0 +1,11 @@
+{
+  "id": "JA-C395-yurumeru",
+  "pathSegment": "JA-PATH-395-KOSHOU395",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-395-KOSHOU395",
+      "order": 3
+    }
+  ]
+}

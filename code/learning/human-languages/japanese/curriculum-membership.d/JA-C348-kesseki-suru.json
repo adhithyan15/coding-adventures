@@ -1,0 +1,11 @@
+{
+  "id": "JA-C348-kesseki-suru",
+  "pathSegment": "JA-PATH-348-KESSEKI348",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-348-KESSEKI348",
+      "order": 0
+    }
+  ]
+}

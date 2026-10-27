@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Word Gets Around",
+  "label": "ch:ja-word-gets-around",
+  "canDo": "I can say how news and rumours spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C281-ousawagi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can say how news and rumours spread.",
+    "assesses": [
+      "JA-LEX-C281-UWASA281-03",
+      "JA-LEX-C281-UWASA281-04",
+      "JA-LEX-C281-UWASA281-05"
+    ]
+  }
+}

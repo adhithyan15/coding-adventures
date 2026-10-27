@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C288-shusseki-suru",
+    "language": "japanese",
+    "chapter": 288,
+    "sequence": 17360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9daa50d83a72eaf"
+  },
+  "findings": []
+}

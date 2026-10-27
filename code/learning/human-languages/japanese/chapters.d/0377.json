@@ -1,0 +1,21 @@
+{
+  "chapter": 377,
+  "title": "Delays and Cancellations",
+  "label": "ch:ja-delays-and-cancellations",
+  "canDo": "I can understand why a train is late or not running.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R377-review-372-377",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can understand why a train is late or not running.",
+    "assesses": [
+      "JA-LEX-C377-CHIEN377-01",
+      "JA-LEX-C377-CHIEN377-02",
+      "JA-LEX-C377-CHIEN377-03",
+      "JA-LEX-C377-CHIEN377-04",
+      "JA-LEX-C377-CHIEN377-05"
+    ]
+  }
+}

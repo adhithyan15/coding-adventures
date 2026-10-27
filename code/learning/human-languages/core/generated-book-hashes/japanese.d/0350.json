@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:a94f549282234835",
+  "lessonIds": [
+    "JA-C350-youjin-suru",
+    "JA-C350-yudan",
+    "JA-C350-sonaeru",
+    "JA-C350-taisaku",
+    "JA-C350-bousai"
+  ],
+  "tex": "japanese/book/chapters/ch350-taking-care.tex"
+}

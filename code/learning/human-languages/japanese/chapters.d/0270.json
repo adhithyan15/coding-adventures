@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Who Did It?",
+  "label": "ch:ja-who-did-it",
+  "canDo": "I can say what the police were told and what not to touch.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C270-sawaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say what the police were told and what not to touch.",
+    "assesses": [
+      "JA-LEX-C270-HANNIN270-03",
+      "JA-LEX-C270-HANNIN270-04",
+      "JA-LEX-C270-HANNIN270-05"
+    ]
+  }
+}

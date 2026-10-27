@@ -19,6 +19,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 84,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_RAW_TRIPLE_SQ"#.to_string(),
@@ -26,6 +27,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 85,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_TRIPLE_DQ"#.to_string(),
@@ -33,6 +35,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 86,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_TRIPLE_SQ"#.to_string(),
@@ -40,6 +43,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 87,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_RAW_DQ"#.to_string(),
@@ -47,6 +51,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 90,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_RAW_SQ"#.to_string(),
@@ -54,6 +59,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 91,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_DQ"#.to_string(),
@@ -61,6 +67,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 92,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_SQ"#.to_string(),
@@ -68,6 +75,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 93,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"FLOAT_EXP"#.to_string(),
@@ -75,6 +83,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 110,
                 alias: Some(r#"FLOAT"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"FLOAT_DOT"#.to_string(),
@@ -82,6 +91,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 111,
                 alias: Some(r#"FLOAT"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"FLOAT"#.to_string(),
@@ -89,6 +99,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 112,
                 alias: Some(r#"FLOAT"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"INT_HEX"#.to_string(),
@@ -96,6 +107,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 115,
                 alias: Some(r#"INT"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"INT_OCT"#.to_string(),
@@ -103,6 +115,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 116,
                 alias: Some(r#"INT"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"INT"#.to_string(),
@@ -110,6 +123,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 117,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"NAME"#.to_string(),
@@ -117,6 +131,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 127,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"DOUBLE_STAR_EQUALS"#.to_string(),
@@ -124,6 +139,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 136,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LEFT_SHIFT_EQUALS"#.to_string(),
@@ -131,6 +147,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 137,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"RIGHT_SHIFT_EQUALS"#.to_string(),
@@ -138,6 +155,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 138,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"FLOOR_DIV_EQUALS"#.to_string(),
@@ -145,6 +163,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 139,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"DOUBLE_STAR"#.to_string(),
@@ -152,6 +171,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 148,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"FLOOR_DIV"#.to_string(),
@@ -159,6 +179,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 149,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LEFT_SHIFT"#.to_string(),
@@ -166,6 +187,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 150,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"RIGHT_SHIFT"#.to_string(),
@@ -173,6 +195,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 151,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"EQUALS_EQUALS"#.to_string(),
@@ -180,6 +203,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 152,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"NOT_EQUALS"#.to_string(),
@@ -187,6 +211,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 153,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LESS_EQUALS"#.to_string(),
@@ -194,6 +219,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 154,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"GREATER_EQUALS"#.to_string(),
@@ -201,6 +227,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 155,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"PLUS_EQUALS"#.to_string(),
@@ -208,6 +235,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 156,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"MINUS_EQUALS"#.to_string(),
@@ -215,6 +243,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 157,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STAR_EQUALS"#.to_string(),
@@ -222,6 +251,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 158,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"SLASH_EQUALS"#.to_string(),
@@ -229,6 +259,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 159,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"PERCENT_EQUALS"#.to_string(),
@@ -236,6 +267,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 160,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"AMP_EQUALS"#.to_string(),
@@ -243,6 +275,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 161,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"PIPE_EQUALS"#.to_string(),
@@ -250,6 +283,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 162,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"CARET_EQUALS"#.to_string(),
@@ -257,6 +291,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 163,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"PLUS"#.to_string(),
@@ -264,6 +299,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 169,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"MINUS"#.to_string(),
@@ -271,6 +307,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 170,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STAR"#.to_string(),
@@ -278,6 +315,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 171,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"SLASH"#.to_string(),
@@ -285,6 +323,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 172,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"PERCENT"#.to_string(),
@@ -292,6 +331,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 173,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"EQUALS"#.to_string(),
@@ -299,6 +339,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 174,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LESS_THAN"#.to_string(),
@@ -306,6 +347,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 175,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"GREATER_THAN"#.to_string(),
@@ -313,6 +355,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 176,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"AMP"#.to_string(),
@@ -320,6 +363,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 177,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"PIPE"#.to_string(),
@@ -327,6 +371,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 178,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"CARET"#.to_string(),
@@ -334,6 +379,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 179,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"TILDE"#.to_string(),
@@ -341,6 +387,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 180,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LPAREN"#.to_string(),
@@ -348,6 +395,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 186,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"RPAREN"#.to_string(),
@@ -355,6 +403,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 187,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LBRACKET"#.to_string(),
@@ -362,6 +411,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 188,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"RBRACKET"#.to_string(),
@@ -369,6 +419,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 189,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LBRACE"#.to_string(),
@@ -376,6 +427,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 190,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"RBRACE"#.to_string(),
@@ -383,6 +435,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 191,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"COMMA"#.to_string(),
@@ -390,6 +443,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 192,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"COLON"#.to_string(),
@@ -397,6 +451,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 193,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"SEMICOLON"#.to_string(),
@@ -404,6 +459,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 194,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"DOT"#.to_string(),
@@ -411,6 +467,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 195,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         keywords: vec![r#"and"#.to_string(), r#"break"#.to_string(), r#"continue"#.to_string(), r#"def"#.to_string(), r#"elif"#.to_string(), r#"else"#.to_string(), r#"for"#.to_string(), r#"if"#.to_string(), r#"in"#.to_string(), r#"lambda"#.to_string(), r#"load"#.to_string(), r#"not"#.to_string(), r#"or"#.to_string(), r#"pass"#.to_string(), r#"return"#.to_string(), r#"True"#.to_string(), r#"False"#.to_string(), r#"None"#.to_string()],
@@ -422,6 +479,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 65,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"WHITESPACE"#.to_string(),
@@ -429,6 +487,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 66,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         reserved_keywords: vec![r#"as"#.to_string(), r#"assert"#.to_string(), r#"async"#.to_string(), r#"await"#.to_string(), r#"class"#.to_string(), r#"del"#.to_string(), r#"except"#.to_string(), r#"finally"#.to_string(), r#"from"#.to_string(), r#"global"#.to_string(), r#"import"#.to_string(), r#"is"#.to_string(), r#"nonlocal"#.to_string(), r#"raise"#.to_string(), r#"try"#.to_string(), r#"while"#.to_string(), r#"with"#.to_string(), r#"yield"#.to_string()],

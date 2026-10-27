@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C483-setomono",
+    "language": "japanese",
+    "chapter": 483,
+    "sequence": 28160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e7db568408b7654"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C498-inemuri",
+    "language": "japanese",
+    "chapter": 498,
+    "sequence": 28960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b97ce0d982dc9e7"
+  },
+  "findings": []
+}

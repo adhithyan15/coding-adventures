@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 400,
+  "title": "A Japanese-Style Room",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8a87465b42336446",
+  "lessons": [
+    {
+      "id": "JA-C400-tokonoma",
+      "sequence": 23440,
+      "title": "とこのま (tokonoma) — an alcove (for flowers or a hanging scroll)",
+      "headword": "とこのま",
+      "romanization": "tokonoma",
+      "gloss": "an alcove (for flowers or a hanging scroll)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29667392c7c52034",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wake from sleep, then the Japanese for to lie down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とこのま",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とこのま — tokonoma — \"an alcove (for flowers or a hanging scroll)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とこのまに はなを かざりました。 — tokonoma ni hana o kazarimashita — \"I put flowers in the alcove.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とこのま (tokonoma) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from toko, \"raised floor\", the particle no and ma, \"space, room\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokonoma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokonoma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokonoma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokonoma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokonoma ni hana o kazarimashita — I put flowers in the alcove.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokonoma ni hana o kazarimashita* — I put flowers in the alcove.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wake from sleep, then the Japanese for to lie down, then say tokonoma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wake from sleep, then the Japanese for to lie down, then say *tokonoma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とこのま (tokonoma) mean? (\"An alcove (for flowers or a hanging scroll)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C400-tokonoma-type",
+              "prompt": "Say the Japanese for 'an alcove'.",
+              "assesses": [
+                "JA-LEX-C400-TOKONOMA400-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とこのま",
+                "tokonoma"
+              ],
+              "feedback": {
+                "correct": "Right: とこのま (tokonoma) is 'an alcove (for flowers or a hanging scroll)'.",
+                "incorrect": "'An alcove' is とこのま (tokonoma)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C400-zashiki",
+      "sequence": 23450,
+      "title": "ざしき (zashiki) — a tatami room",
+      "headword": "ざしき",
+      "romanization": "zashiki",
+      "gloss": "a tatami room",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51c7e511b13b4750",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to lie down, then the Japanese for an alcove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ざしき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざしき — zashiki — \"a tatami room\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ざしきで みんなと ごはんを たべました。 — zashiki de minna to gohan o tabemashita — \"We all had a meal in the tatami room.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざしき (zashiki) is built from both layers of the vocabulary: the Sino-Japanese za, \"seat\" (Middle Chinese dzwaH), an on'yomi borrowed from Chinese, and the native Japanese (wago) shiki, \"spreading\" (from shiku), inherited rather than borrowed (JMdict; KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zashiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zashiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zashiki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zashiki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zashiki de minna to gohan o tabemashita — We all had a meal in the tatami room.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zashiki de minna to gohan o tabemashita* — We all had a meal in the tatami room.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to lie down, then the Japanese for an alcove, then say zashiki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to lie down, then the Japanese for an alcove, then say *zashiki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ざしき (zashiki) mean? (\"A tatami room\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C400-zashiki-type",
+              "prompt": "Say the Japanese for 'a tatami room'.",
+              "assesses": [
+                "JA-LEX-C400-TOKONOMA400-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ざしき",
+                "zashiki"
+              ],
+              "feedback": {
+                "correct": "Right: ざしき (zashiki) is 'a tatami room'.",
+                "incorrect": "'A tatami room' is ざしき (zashiki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C400-engawa",
+      "sequence": 23460,
+      "title": "えんがわ (engawa) — a veranda (along a Japanese house)",
+      "headword": "えんがわ",
+      "romanization": "engawa",
+      "gloss": "a veranda (along a Japanese house)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a48160ab2b7ecd0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an alcove, then the Japanese for a tatami room."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えんがわ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんがわ — engawa — \"a veranda (along a Japanese house)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えんがわで おちゃを のみました。 — engawa de ocha o nomimashita — \"We drank tea on the veranda.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんがわ (engawa) is built from both layers of the vocabulary: the Sino-Japanese en, \"edge\" (Middle Chinese ywenH), an on'yomi borrowed from Chinese, and the native Japanese (wago) gawa, \"side\", inherited rather than borrowed (JMdict; KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engawa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engawa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engawa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engawa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engawa de ocha o nomimashita — We drank tea on the veranda.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engawa de ocha o nomimashita* — We drank tea on the veranda.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an alcove, then the Japanese for a tatami room, then say engawa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an alcove, then the Japanese for a tatami room, then say *engawa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えんがわ (engawa) mean? (\"A veranda (along a Japanese house)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C400-engawa-type",
+              "prompt": "Say the Japanese for 'a veranda'.",
+              "assesses": [
+                "JA-LEX-C400-TOKONOMA400-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えんがわ",
+                "engawa"
+              ],
+              "feedback": {
+                "correct": "Right: えんがわ (engawa) is 'a veranda (along a Japanese house)'.",
+                "incorrect": "'A veranda' is えんがわ (engawa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C400-otearai",
+      "sequence": 23470,
+      "title": "おてあらい (otearai) — a toilet; a restroom",
+      "headword": "おてあらい",
+      "romanization": "otearai",
+      "gloss": "a toilet; a restroom",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a12c4d78c1688eb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a tatami room, then the Japanese for a veranda."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おてあらい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おてあらい — otearai — \"a toilet; a restroom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おてあらいは どこですか。 — otearai wa doko desu ka — \"Where is the toilet?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おてあらい (otearai) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from polite o-, te, \"hand\", and arai, \"washing\" (from arau); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otearai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otearai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otearai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otearai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otearai wa doko desu ka — Where is the toilet?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otearai wa doko desu ka* — Where is the toilet?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a tatami room, then the Japanese for a veranda, then say otearai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a tatami room, then the Japanese for a veranda, then say *otearai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おてあらい (otearai) mean? (\"A toilet; a restroom\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C400-otearai-type",
+              "prompt": "Say the Japanese for 'a toilet'.",
+              "assesses": [
+                "JA-LEX-C400-TOKONOMA400-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おてあらい",
+                "otearai"
+              ],
+              "feedback": {
+                "correct": "Right: おてあらい (otearai) is 'a toilet; a restroom'.",
+                "incorrect": "'A toilet' is おてあらい (otearai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C400-shimeru",
+      "sequence": 23480,
+      "title": "しめる (shimeru) — to shut (a door or window)",
+      "headword": "しめる",
+      "romanization": "shimeru",
+      "gloss": "to shut (a door or window)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50b7bc5445c73d19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a veranda, then the Japanese for a toilet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しめる — shimeru — \"to shut (a door or window)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さむいので、まどを しめて ください。 — samui node, mado o shimete kudasai — \"It is cold, so please shut the window.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しめます, shimemasu; an ichidan verb. Past (polite): ははが まどを しめました。, haha ga mado o shimemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しめる (shimeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict). It is the partner of shimaru, \"to close\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samui node, mado o shimete kudasai — It is cold, so please shut the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samui node, mado o shimete kudasai* — It is cold, so please shut the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a veranda, then the Japanese for a toilet, then say shimeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a veranda, then the Japanese for a toilet, then say *shimeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しめる (shimeru) mean? (\"To shut (a door or window)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C400-shimeru-type",
+              "prompt": "Say the Japanese for 'to shut'.",
+              "assesses": [
+                "JA-LEX-C400-TOKONOMA400-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しめる",
+                "shimeru"
+              ],
+              "feedback": {
+                "correct": "Right: しめる (shimeru) is 'to shut (a door or window)'.",
+                "incorrect": "'To shut' is しめる (shimeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

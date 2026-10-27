@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Moon Viewing and Autumn Leaves",
+  "label": "ch:ja-moon-viewing-and-autumn-leaves",
+  "canDo": "I can talk about seasonal pastimes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C501-chirasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about seasonal pastimes.",
+    "assesses": [
+      "JA-LEX-C501-MOON501-03",
+      "JA-LEX-C501-MOON501-04",
+      "JA-LEX-C501-MOON501-05"
+    ]
+  }
+}

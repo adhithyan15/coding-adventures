@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C362-hiyou",
+    "language": "japanese",
+    "chapter": 362,
+    "sequence": 21330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f28d3125d1aa8a3"
+  },
+  "findings": []
+}

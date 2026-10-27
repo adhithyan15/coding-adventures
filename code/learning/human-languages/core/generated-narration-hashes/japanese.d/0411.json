@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:8a6f77dab1501f7a",
+  "lessonIds": [
+    "JA-C411-ogawa",
+    "JA-C411-izumi",
+    "JA-C411-nigoru",
+    "JA-C411-kakomu",
+    "JA-C411-sukuu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch411.txt",
+  "json": "japanese/narration/ch411.json",
+  "textHash": "fnv1a64:2441bdb869985b36",
+  "jsonHash": "fnv1a64:0d9c475260c394ce",
+  "findings": []
+}

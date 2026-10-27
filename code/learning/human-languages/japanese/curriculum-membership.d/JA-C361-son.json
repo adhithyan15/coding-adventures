@@ -1,0 +1,11 @@
+{
+  "id": "JA-C361-son",
+  "pathSegment": "JA-PATH-361-MOUKERU361",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-361-MOUKERU361",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:849edb9f3f933e3e",
+  "lessonIds": [
+    "JA-C364-songai",
+    "JA-C364-benshou-suru",
+    "JA-C364-osameru",
+    "JA-C364-ukemotsu",
+    "JA-C364-sekinin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch364.txt",
+  "json": "japanese/narration/ch364.json",
+  "textHash": "fnv1a64:d3712027bcbabd9c",
+  "jsonHash": "fnv1a64:d6b919ff73fb32d4",
+  "findings": []
+}

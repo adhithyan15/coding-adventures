@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C291-soushiki",
+    "language": "japanese",
+    "chapter": 291,
+    "sequence": 17500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b91129f4a80edc9"
+  },
+  "findings": []
+}

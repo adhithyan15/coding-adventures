@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C491-suidousui",
+    "language": "japanese",
+    "chapter": 491,
+    "sequence": 28590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:302e005cdd577141"
+  },
+  "findings": []
+}

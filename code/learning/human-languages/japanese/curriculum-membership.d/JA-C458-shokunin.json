@@ -1,0 +1,11 @@
+{
+  "id": "JA-C458-shokunin",
+  "pathSegment": "JA-PATH-458-CAREER458",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-458-CAREER458",
+      "order": 4
+    }
+  ]
+}

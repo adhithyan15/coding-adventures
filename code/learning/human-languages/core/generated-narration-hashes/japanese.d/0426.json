@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:63543e93584201bd",
+  "lessonIds": [
+    "JA-C426-kibun",
+    "JA-C426-fuan",
+    "JA-C426-heiki",
+    "JA-C426-sukkiri",
+    "JA-C426-taeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch426.txt",
+  "json": "japanese/narration/ch426.json",
+  "textHash": "fnv1a64:e733bd1c7bf07b8f",
+  "jsonHash": "fnv1a64:6350ec9eb83d246b",
+  "findings": []
+}

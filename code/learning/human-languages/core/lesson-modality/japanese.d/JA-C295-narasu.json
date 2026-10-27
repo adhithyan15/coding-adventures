@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C295-narasu",
+    "language": "japanese",
+    "chapter": 295,
+    "sequence": 17730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80a2fb755b0637a0"
+  },
+  "findings": []
+}

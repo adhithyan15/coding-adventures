@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Freezer and Cupboard",
+  "label": "ch:ja-freezer-and-cupboard",
+  "canDo": "I can say where food and dishes are kept.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C493-reitou-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can say where food and dishes are kept.",
+    "assesses": [
+      "JA-LEX-C493-FREEZE493-03",
+      "JA-LEX-C493-FREEZE493-04",
+      "JA-LEX-C493-FREEZE493-05"
+    ]
+  }
+}

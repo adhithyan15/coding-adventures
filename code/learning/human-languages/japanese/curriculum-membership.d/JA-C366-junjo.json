@@ -1,0 +1,11 @@
+{
+  "id": "JA-C366-junjo",
+  "pathSegment": "JA-PATH-366-SAIAKU366",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-366-SAIAKU366",
+      "order": 2
+    }
+  ]
+}

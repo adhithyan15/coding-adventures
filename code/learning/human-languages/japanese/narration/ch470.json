@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 470,
+  "title": "Songs and Tunes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:de73d8eea4074221",
+  "lessons": [
+    {
+      "id": "JA-C470-kyoku",
+      "sequence": 27270,
+      "title": "きょく (kyoku) — a piece of music; a tune",
+      "headword": "きょく",
+      "romanization": "kyoku",
+      "gloss": "a piece of music; a tune",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d67a8a55225d295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to play music, then the Japanese for the tone of an instrument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きょく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きょく — kyoku — \"a piece of music; a tune\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははは この きょくが すきです。 — haha wa kono kyoku ga suki desu — \"My mother likes this tune.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きょく (kyoku) is Sino-Japanese (kango): one Chinese character read with its on'yomi, a reading borrowed from Chinese. It is kyoku, \"melody\" (Middle Chinese khjowk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha wa kono kyoku ga suki desu — My mother likes this tune.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha wa kono kyoku ga suki desu* — My mother likes this tune.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to play music, then the Japanese for the tone of an instrument, then say kyoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to play music, then the Japanese for the tone of an instrument, then say *kyoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きょく (kyoku) mean? (\"A piece of music; a tune\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C470-kyoku-type",
+              "prompt": "Say the Japanese for 'a piece of music'.",
+              "assesses": [
+                "JA-LEX-C470-SONG470-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きょく",
+                "kyoku"
+              ],
+              "feedback": {
+                "correct": "Right: きょく (kyoku) is 'a piece of music; a tune'.",
+                "incorrect": "'A piece of music' is きょく (kyoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C470-gakufu",
+      "sequence": 27280,
+      "title": "がくふ (gakufu) — sheet music; a score",
+      "headword": "がくふ",
+      "romanization": "gakufu",
+      "gloss": "sheet music; a score",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acdd8ab18eb0a1ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the tone of an instrument, then the Japanese for a piece of music."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がくふ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がくふ — gakufu — \"sheet music; a score\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がくふを よんで、うたいました。 — gakufu o yonde, utaimashita — \"I read the sheet music and sang.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がくふ (gakufu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gaku, \"music\" (Middle Chinese ngaewk) and fu, \"musical score\" (puX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakufu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakufu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakufu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakufu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakufu o yonde, utaimashita — I read the sheet music and sang.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakufu o yonde, utaimashita* — I read the sheet music and sang.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the tone of an instrument, then the Japanese for a piece of music, then say gakufu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the tone of an instrument, then the Japanese for a piece of music, then say *gakufu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がくふ (gakufu) mean? (\"Sheet music; a score\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C470-gakufu-type",
+              "prompt": "Say the Japanese for 'sheet music'.",
+              "assesses": [
+                "JA-LEX-C470-SONG470-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がくふ",
+                "gakufu"
+              ],
+              "feedback": {
+                "correct": "Right: がくふ (gakufu) is 'sheet music; a score'.",
+                "incorrect": "'Sheet music' is がくふ (gakufu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C470-min-you",
+      "sequence": 27290,
+      "title": "みんよう (min'yō) — a folk song",
+      "headword": "みんよう",
+      "romanization": "min'yō",
+      "gloss": "a folk song",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edce62860671ef5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a piece of music, then the Japanese for sheet music."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みんよう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みんよう — min'yō — \"a folk song\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そぼは みんようを うたいます。 — sobo wa min'yō o utaimasu — \"My grandmother sings folk songs.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みんよう (min'yō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are min, \"people\" (Middle Chinese mjin) and yō, \"song\" (yew) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "min'yō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *min'yō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "min'yō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *min'yō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobo wa min'yō o utaimasu — My grandmother sings folk songs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobo wa min'yō o utaimasu* — My grandmother sings folk songs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a piece of music, then the Japanese for sheet music, then say min'yō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a piece of music, then the Japanese for sheet music, then say *min'yō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みんよう (min'yō) mean? (\"A folk song\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C470-min-you-type",
+              "prompt": "Say the Japanese for 'a folk song'.",
+              "assesses": [
+                "JA-LEX-C470-SONG470-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みんよう",
+                "min'yō",
+                "min'you",
+                "min'yoo",
+                "min'yo"
+              ],
+              "feedback": {
+                "correct": "Right: みんよう (min'yō) is 'a folk song'.",
+                "incorrect": "'A folk song' is みんよう (min'yō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C470-enka",
+      "sequence": 27300,
+      "title": "えんか (enka) — an enka ballad",
+      "headword": "えんか",
+      "romanization": "enka",
+      "gloss": "an enka ballad",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b976d2237bcf2453",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sheet music, then the Japanese for a folk song."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えんか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんか — enka — \"an enka ballad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは えんかが すきです。 — chichi wa enka ga suki desu — \"My father likes enka ballads.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんか (enka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are en, \"performance\" (Middle Chinese yenX) and ka, \"song\" (ka) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa enka ga suki desu — My father likes enka ballads.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa enka ga suki desu* — My father likes enka ballads.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sheet music, then the Japanese for a folk song, then say enka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sheet music, then the Japanese for a folk song, then say *enka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えんか mean? (\"An enka ballad\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C470-enka-type",
+              "prompt": "Say the Japanese for 'an enka ballad'.",
+              "assesses": [
+                "JA-LEX-C470-SONG470-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えんか",
+                "enka"
+              ],
+              "feedback": {
+                "correct": "Right: えんか (enka) is 'an enka ballad'.",
+                "incorrect": "'An enka ballad' is えんか (enka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C470-kuchibue",
+      "sequence": 27310,
+      "title": "くちぶえ (kuchibue) — whistling; a whistle",
+      "headword": "くちぶえ",
+      "romanization": "kuchibue",
+      "gloss": "whistling; a whistle",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce136821dbb87f78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a folk song, then the Japanese for an enka ballad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くちぶえ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くちぶえ — kuchibue — \"whistling; a whistle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは くちぶえを ふきました。 — kare wa kuchibue o fukimashita — \"He whistled.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くちぶえ (kuchibue) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: kuchi, \"mouth\" and bue, \"flute (fue)\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuchibue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuchibue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuchibue, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuchibue*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa kuchibue o fukimashita — He whistled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa kuchibue o fukimashita* — He whistled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a folk song, then the Japanese for an enka ballad, then say kuchibue again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a folk song, then the Japanese for an enka ballad, then say *kuchibue* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くちぶえ (kuchibue) mean? (\"Whistling; a whistle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C470-kuchibue-type",
+              "prompt": "Say the Japanese for 'whistling'.",
+              "assesses": [
+                "JA-LEX-C470-SONG470-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くちぶえ",
+                "kuchibue"
+              ],
+              "feedback": {
+                "correct": "Right: くちぶえ (kuchibue) is 'whistling; a whistle'.",
+                "incorrect": "'Whistling' is くちぶえ (kuchibue)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

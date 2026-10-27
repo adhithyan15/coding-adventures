@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-333-WAKAMONO333",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-333-WAKAMONO333"
+  ],
+  "after": []
+}

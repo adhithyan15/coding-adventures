@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C387-mikakeru",
+    "language": "japanese",
+    "chapter": 387,
+    "sequence": 22780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bba29bd025eb2f7"
+  },
+  "findings": []
+}

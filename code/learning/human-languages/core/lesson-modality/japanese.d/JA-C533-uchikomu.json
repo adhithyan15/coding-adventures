@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C533-uchikomu",
+    "language": "japanese",
+    "chapter": 533,
+    "sequence": 30760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdffb18ed3c414a8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:24e92b176fd1d06c",
+  "lessonIds": [
+    "JA-C343-shin-you-suru",
+    "JA-C343-shinrai",
+    "JA-C343-kabau",
+    "JA-C343-bareru",
+    "JA-C343-kimetsukeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch343.txt",
+  "json": "japanese/narration/ch343.json",
+  "textHash": "fnv1a64:f58ba746363fc2e2",
+  "jsonHash": "fnv1a64:4bbcd0a9fdc5fd32",
+  "findings": []
+}

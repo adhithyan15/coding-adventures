@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:1581b7df22dec74f",
+  "lessonIds": [
+    "JA-C431-tomadou",
+    "JA-C431-bikkuri-suru",
+    "JA-C431-akireru",
+    "JA-C431-odorokasu",
+    "JA-C431-harahara-suru",
+    "JA-R431-review-426-431"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch431.txt",
+  "json": "japanese/narration/ch431.json",
+  "textHash": "fnv1a64:51b2c33ae8fd5c5c",
+  "jsonHash": "fnv1a64:163f97a752d7071d",
+  "findings": []
+}

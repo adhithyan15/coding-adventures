@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:da79726d4c0d668d",
+  "lessonIds": [
+    "JA-C323-enryo-suru",
+    "JA-C323-kobamu",
+    "JA-C323-muri",
+    "JA-C323-kekkou",
+    "JA-C323-betsuni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch323.txt",
+  "json": "japanese/narration/ch323.json",
+  "textHash": "fnv1a64:00dd1adfa877dee9",
+  "jsonHash": "fnv1a64:9b8c064ea7002700",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Pay and Time Off",
+  "label": "ch:ja-pay-and-time-off",
+  "canDo": "I can talk about pay, hiring and time off.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C456-shokuba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can talk about pay, hiring and time off.",
+    "assesses": [
+      "JA-LEX-C456-PAY456-03",
+      "JA-LEX-C456-PAY456-04",
+      "JA-LEX-C456-PAY456-05"
+    ]
+  }
+}

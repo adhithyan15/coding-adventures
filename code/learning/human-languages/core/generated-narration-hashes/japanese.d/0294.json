@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:c83cc5b0d9b2e57c",
+  "lessonIds": [
+    "JA-C294-mikoshi",
+    "JA-C294-katsugu",
+    "JA-C294-gyouretsu",
+    "JA-C294-moriagaru",
+    "JA-C294-bon-odori"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch294.txt",
+  "json": "japanese/narration/ch294.json",
+  "textHash": "fnv1a64:684cbf50311d8485",
+  "jsonHash": "fnv1a64:0f19ea799bae3c7c",
+  "findings": []
+}

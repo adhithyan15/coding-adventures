@@ -1,0 +1,21 @@
+{
+  "chapter": 479,
+  "title": "Close Ties",
+  "label": "ch:ja-close-ties",
+  "canDo": "I can talk about close friends and family ties.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R479-review-final-479",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about close friends and family ties.",
+    "assesses": [
+      "JA-LEX-C479-BOND479-01",
+      "JA-LEX-C479-BOND479-02",
+      "JA-LEX-C479-BOND479-03",
+      "JA-LEX-C479-BOND479-04",
+      "JA-LEX-C479-BOND479-05"
+    ]
+  }
+}

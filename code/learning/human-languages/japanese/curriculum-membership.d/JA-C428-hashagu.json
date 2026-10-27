@@ -1,0 +1,11 @@
+{
+  "id": "JA-C428-hashagu",
+  "pathSegment": "JA-PATH-428-JOY428",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-428-JOY428",
+      "order": 3
+    }
+  ]
+}
