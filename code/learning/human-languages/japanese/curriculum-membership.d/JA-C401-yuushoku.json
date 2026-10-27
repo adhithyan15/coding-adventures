@@ -1,0 +1,11 @@
+{
+  "id": "JA-C401-yuushoku",
+  "pathSegment": "JA-PATH-401-CHOUSHOKU401",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-401-CHOUSHOKU401",
+      "order": 1
+    }
+  ]
+}

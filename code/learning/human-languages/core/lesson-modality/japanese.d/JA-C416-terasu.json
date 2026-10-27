@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C416-terasu",
+    "language": "japanese",
+    "chapter": 416,
+    "sequence": 24310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6eebe9f73aa81db6"
+  },
+  "findings": []
+}

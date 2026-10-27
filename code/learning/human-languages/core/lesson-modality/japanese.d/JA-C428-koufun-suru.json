@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C428-koufun-suru",
+    "language": "japanese",
+    "chapter": 428,
+    "sequence": 25110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:831d3ec9b00fc9f8"
+  },
+  "findings": []
+}

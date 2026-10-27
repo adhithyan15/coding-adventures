@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:b953596bbb7982bf",
+  "lessonIds": [
+    "JA-C421-negiru",
+    "JA-C421-teika",
+    "JA-C421-neage",
+    "JA-C421-nesage",
+    "JA-C421-shouhin"
+  ],
+  "tex": "japanese/book/chapters/ch421-haggling-at-the-market.tex"
+}

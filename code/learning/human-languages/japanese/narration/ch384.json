@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 384,
+  "title": "To the Airfield",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aa2a79a6db04ae61",
+  "lessons": [
+    {
+      "id": "JA-C384-hikoujou",
+      "sequence": 22620,
+      "title": "ひこうじょう (hikōjō) — an airfield",
+      "headword": "ひこうじょう",
+      "romanization": "hikōjō",
+      "gloss": "an airfield",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72a940440c13f899",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for swimming in the sea, then the Japanese for to be see-through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひこうじょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひこうじょう — hikōjō — \"an airfield\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この しまには ちいさい ひこうじょうが あります。 — kono shima ni wa chiisai hikōjō ga arimasu — \"There is a small airfield on this island.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひこうじょう (hikōjō) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hi, \"fly\" (Middle Chinese pj+j), kō, \"going\" (haeng) and jō, \"place\" (drjang) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōjō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōjō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōjō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōjō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono shima ni wa chiisai hikōjō ga arimasu — There is a small airfield on this island.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono shima ni wa chiisai hikōjō ga arimasu* — There is a small airfield on this island.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for swimming in the sea, then the Japanese for to be see-through, then say hikōjō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for swimming in the sea, then the Japanese for to be see-through, then say *hikōjō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひこうじょう (hikōjō) mean? (\"An airfield\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C384-hikoujou-type",
+              "prompt": "Say the Japanese for 'an airfield'.",
+              "assesses": [
+                "JA-LEX-C384-HIKOUJOU384-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひこうじょう",
+                "hikōjō",
+                "hikoujou",
+                "hikoojoo",
+                "hikojo"
+              ],
+              "feedback": {
+                "correct": "Right: ひこうじょう (hikōjō) is 'an airfield'.",
+                "incorrect": "'An airfield' is ひこうじょう (hikōjō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C384-bin",
+      "sequence": 22630,
+      "title": "びん (bin) — a flight; a scheduled service",
+      "headword": "びん",
+      "romanization": "bin",
+      "gloss": "a flight; a scheduled service",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:508579f16af4fabf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be see-through, then the Japanese for an airfield."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: びん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びん — bin — \"a flight; a scheduled service\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つぎの びんは なんじに でますか。 — tsugi no bin wa nanji ni demasu ka — \"What time does the next flight leave?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びん (bin) is Sino-Japanese (kango): one Chinese character read with its on'yomi, a reading borrowed from Chinese: bin, \"convenience\" (Middle Chinese bjienH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsugi no bin wa nanji ni demasu ka — What time does the next flight leave?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsugi no bin wa nanji ni demasu ka* — What time does the next flight leave?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be see-through, then the Japanese for an airfield, then say bin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be see-through, then the Japanese for an airfield, then say *bin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does びん (bin) mean? (\"A flight; a scheduled service\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C384-bin-type",
+              "prompt": "Say the Japanese for 'a flight'.",
+              "assesses": [
+                "JA-LEX-C384-HIKOUJOU384-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "びん",
+                "bin"
+              ],
+              "feedback": {
+                "correct": "Right: びん (bin) is 'a flight; a scheduled service'.",
+                "incorrect": "'A flight' is びん (bin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C384-ririku",
+      "sequence": 22640,
+      "title": "りりく (ririku) — takeoff",
+      "headword": "りりく",
+      "romanization": "ririku",
+      "gloss": "takeoff",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce1a585c69842502",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an airfield, then the Japanese for a flight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りりく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りりく — ririku — \"takeoff\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひこうきは くじに りりくしました。 — hikōki wa kuji ni ririku shimashita — \"The plane took off at nine.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りりく (ririku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ri, \"detach\" (Middle Chinese lje) and riku, \"land\" (ljuwk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ririku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ririku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ririku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ririku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōki wa kuji ni ririku shimashita — The plane took off at nine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōki wa kuji ni ririku shimashita* — The plane took off at nine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an airfield, then the Japanese for a flight, then say ririku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an airfield, then the Japanese for a flight, then say *ririku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りりく (ririku) mean? (\"Takeoff\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C384-ririku-type",
+              "prompt": "Say the Japanese for 'takeoff'.",
+              "assesses": [
+                "JA-LEX-C384-HIKOUJOU384-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りりく",
+                "ririku"
+              ],
+              "feedback": {
+                "correct": "Right: りりく (ririku) is 'takeoff'.",
+                "incorrect": "'Takeoff' is りりく (ririku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C384-chakuriku",
+      "sequence": 22650,
+      "title": "ちゃくりく (chakuriku) — landing (of a plane)",
+      "headword": "ちゃくりく",
+      "romanization": "chakuriku",
+      "gloss": "landing (of a plane)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a466b0a4de9bfea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a flight, then the Japanese for takeoff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちゃくりく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゃくりく — chakuriku — \"landing (of a plane)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひこうきが くうこうに ちゃくりくしました。 — hikōki ga kūkō ni chakuriku shimashita — \"The plane landed at the airport.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゃくりく (chakuriku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chaku, \"arrive\" (Middle Chinese drjak) and riku, \"land\" (ljuwk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chakuriku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chakuriku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chakuriku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chakuriku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōki ga kūkō ni chakuriku shimashita — The plane landed at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōki ga kūkō ni chakuriku shimashita* — The plane landed at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a flight, then the Japanese for takeoff, then say chakuriku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a flight, then the Japanese for takeoff, then say *chakuriku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちゃくりく (chakuriku) mean? (\"Landing (of a plane)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C384-chakuriku-type",
+              "prompt": "Say the Japanese for 'landing (of a plane)'.",
+              "assesses": [
+                "JA-LEX-C384-HIKOUJOU384-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちゃくりく",
+                "chakuriku"
+              ],
+              "feedback": {
+                "correct": "Right: ちゃくりく (chakuriku) is 'landing (of a plane)'.",
+                "incorrect": "'Landing (of a plane)' is ちゃくりく (chakuriku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C384-tabidatsu",
+      "sequence": 22660,
+      "title": "たびだつ (tabidatsu) — to set off on a journey",
+      "headword": "たびだつ",
+      "romanization": "tabidatsu",
+      "gloss": "to set off on a journey",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f09375192c46569c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for takeoff, then the Japanese for landing (of a plane)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たびだつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たびだつ — tabidatsu — \"to set off on a journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには あした くうこうから たびだちます。 — ani wa ashita kūkō kara tabidachimasu — \"My brother sets off from the airport tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たびだちます, tabidachimasu; a godan verb. Past (polite): あにが くうこうから たびだちました。, ani ga kūkō kara tabidachimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たびだつ (tabidatsu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tabi, \"journey\" and datsu, \"setting out\" (from tatsu); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabidatsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabidatsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabidatsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabidatsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa ashita kūkō kara tabidachimasu — My brother sets off from the airport tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa ashita kūkō kara tabidachimasu* — My brother sets off from the airport tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for takeoff, then the Japanese for landing (of a plane), then say tabidatsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for takeoff, then the Japanese for landing (of a plane), then say *tabidatsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たびだつ (tabidatsu) mean? (\"To set off on a journey\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C384-tabidatsu-type",
+              "prompt": "Say the Japanese for 'to set off on a journey'.",
+              "assesses": [
+                "JA-LEX-C384-HIKOUJOU384-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たびだつ",
+                "tabidatsu"
+              ],
+              "feedback": {
+                "correct": "Right: たびだつ (tabidatsu) is 'to set off on a journey'.",
+                "incorrect": "'To set off on a journey' is たびだつ (tabidatsu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

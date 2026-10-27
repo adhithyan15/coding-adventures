@@ -1,0 +1,11 @@
+{
+  "id": "JA-C313-sakaeru",
+  "pathSegment": "JA-PATH-313-KIROKU313",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-313-KIROKU313",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Carrying the Shrine",
+  "label": "ch:ja-carrying-the-shrine",
+  "canDo": "I can say what the festival crowd carried and danced.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C294-bon-odori",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say what the festival crowd carried and danced.",
+    "assesses": [
+      "JA-LEX-C294-MIKOSHI294-03",
+      "JA-LEX-C294-MIKOSHI294-04",
+      "JA-LEX-C294-MIKOSHI294-05"
+    ]
+  }
+}

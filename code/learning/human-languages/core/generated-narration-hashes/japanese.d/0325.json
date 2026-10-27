@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:3f878666f5b4a1e3",
+  "lessonIds": [
+    "JA-C325-shitagau",
+    "JA-C325-sakarau",
+    "JA-C325-uketomeru",
+    "JA-C325-kekkyoku",
+    "JA-C325-jiyuu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch325.txt",
+  "json": "japanese/narration/ch325.json",
+  "textHash": "fnv1a64:b350a87655ba6db5",
+  "jsonHash": "fnv1a64:96e563400c68e406",
+  "findings": []
+}

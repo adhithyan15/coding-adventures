@@ -1,0 +1,21 @@
+{
+  "chapter": 413,
+  "title": "Plains, Peninsulas and Deserts",
+  "label": "ch:ja-plains-peninsulas-and-deserts",
+  "canDo": "I can describe the lie of the land.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-R413-review-408-413",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can describe the lie of the land.",
+    "assesses": [
+      "JA-LEX-C413-HEIYA413-01",
+      "JA-LEX-C413-HEIYA413-02",
+      "JA-LEX-C413-HEIYA413-03",
+      "JA-LEX-C413-HEIYA413-04",
+      "JA-LEX-C413-HEIYA413-05"
+    ]
+  }
+}

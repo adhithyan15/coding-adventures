@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "History",
+  "label": "ch:ja-history",
+  "canDo": "I can say what a place was like in the past.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C312-touji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can say what a place was like in the past.",
+    "assesses": [
+      "JA-LEX-C312-REKISHI312-03",
+      "JA-LEX-C312-REKISHI312-04",
+      "JA-LEX-C312-REKISHI312-05"
+    ]
+  }
+}

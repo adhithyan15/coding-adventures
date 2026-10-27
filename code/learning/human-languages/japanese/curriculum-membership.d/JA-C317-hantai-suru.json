@@ -1,0 +1,11 @@
+{
+  "id": "JA-C317-hantai-suru",
+  "pathSegment": "JA-PATH-317-SANSEI317",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-317-SANSEI317",
+      "order": 1
+    }
+  ]
+}

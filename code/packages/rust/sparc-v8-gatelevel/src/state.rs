@@ -33,6 +33,33 @@ pub(crate) fn clock_bit(q: &mut u8, value: bool) {
     *q = register(&input, 1, &mut state)[0];
 }
 
+/// One persistent D flip-flop observed at stable instruction boundaries.
+///
+/// Keeping Q inside this type prevents an adjacent host-language compatibility
+/// field from silently becoming the architectural authority.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub(crate) struct DffBit {
+    q: u8,
+}
+
+impl DffBit {
+    pub(crate) const fn new() -> Self {
+        Self { q: 0 }
+    }
+
+    pub(crate) const fn q(&self) -> bool {
+        self.q != 0
+    }
+
+    pub(crate) fn clock(&mut self, value: bool) {
+        clock_bit(&mut self.q, value);
+    }
+
+    pub(crate) const fn dff_count(&self) -> usize {
+        1
+    }
+}
+
 /// Clock a two-bit architectural field into packed stable-Q storage.
 pub(crate) fn clock_two_bits(q: &mut [u8; 2], value: u32) {
     let input = [(value & 1) as u8, ((value >> 1) & 1) as u8];
@@ -83,6 +110,10 @@ impl DffMemory {
 
     pub(crate) fn restore_snapshot(&mut self, bytes: &[u8]) {
         self.q.copy_from_slice(bytes);
+    }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.q.len() * 8
     }
 }
 

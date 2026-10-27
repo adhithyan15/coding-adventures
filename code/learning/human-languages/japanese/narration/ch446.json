@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 446,
+  "title": "A Cold Coming On",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2816e4abe5a6201c",
+  "lessons": [
+    {
+      "id": "JA-C446-kushami",
+      "sequence": 26030,
+      "title": "くしゃみ (kushami) — a sneeze",
+      "headword": "くしゃみ",
+      "romanization": "kushami",
+      "gloss": "a sneeze",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:904623cfb8dfa087",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for nausea, then the Japanese for a bruise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くしゃみ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くしゃみ — kushami — \"a sneeze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かぜで くしゃみを しました。 — kaze de kushami o shimashita — \"I sneezed because of my cold.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くしゃみ (kushami) is a native Japanese word (wago), inherited rather than borrowed from Chinese; JMdict writes it in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kushami",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kushami*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kushami, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kushami*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaze de kushami o shimashita — I sneezed because of my cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaze de kushami o shimashita* — I sneezed because of my cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for nausea, then the Japanese for a bruise, then say kushami again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for nausea, then the Japanese for a bruise, then say *kushami* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くしゃみ (kushami) mean? (\"A sneeze\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C446-kushami-type",
+              "prompt": "Say the Japanese for 'a sneeze'.",
+              "assesses": [
+                "JA-LEX-C446-CHILL446-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くしゃみ",
+                "kushami"
+              ],
+              "feedback": {
+                "correct": "Right: くしゃみ (kushami) is 'a sneeze'.",
+                "incorrect": "'A sneeze' is くしゃみ (kushami)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C446-hanamizu",
+      "sequence": 26040,
+      "title": "はなみず (hanamizu) — a runny nose",
+      "headword": "はなみず",
+      "romanization": "hanamizu",
+      "gloss": "a runny nose",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e90e9793b85a42d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a bruise, then the Japanese for a sneeze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はなみず",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はなみず — hanamizu — \"a runny nose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はなみずが とまりません。 — hanamizu ga tomarimasen — \"My nose will not stop running.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はなみず (hanamizu) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: hana, \"nose\" and mizu, \"water\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanamizu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanamizu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanamizu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanamizu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanamizu ga tomarimasen — My nose will not stop running.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanamizu ga tomarimasen* — My nose will not stop running.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a bruise, then the Japanese for a sneeze, then say hanamizu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a bruise, then the Japanese for a sneeze, then say *hanamizu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はなみず (hanamizu) mean? (\"A runny nose\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C446-hanamizu-type",
+              "prompt": "Say the Japanese for 'a runny nose'.",
+              "assesses": [
+                "JA-LEX-C446-CHILL446-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はなみず",
+                "hanamizu"
+              ],
+              "feedback": {
+                "correct": "Right: はなみず (hanamizu) is 'a runny nose'.",
+                "incorrect": "'A runny nose' is はなみず (hanamizu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C446-samuke",
+      "sequence": 26050,
+      "title": "さむけ (samuke) — a chill; the shivers",
+      "headword": "さむけ",
+      "romanization": "samuke",
+      "gloss": "a chill; the shivers",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1378d08d91529ade",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sneeze, then the Japanese for a runny nose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さむけ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さむけ — samuke — \"a chill; the shivers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねつが あって、さむけが します。 — netsu ga atte, samuke ga shimasu — \"I have a fever and the shivers.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さむけ (samuke) is a mixed word: native samu, \"cold\", the stem of samui, joined to Sino-Japanese ke, \"spirit, feeling\" (Middle Chinese khj+jH), a reading borrowed from Chinese (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samuke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samuke*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samuke, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samuke*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netsu ga atte, samuke ga shimasu — I have a fever and the shivers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netsu ga atte, samuke ga shimasu* — I have a fever and the shivers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sneeze, then the Japanese for a runny nose, then say samuke again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sneeze, then the Japanese for a runny nose, then say *samuke* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さむけ (samuke) mean? (\"A chill; the shivers\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C446-samuke-type",
+              "prompt": "Say the Japanese for 'a chill'.",
+              "assesses": [
+                "JA-LEX-C446-CHILL446-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さむけ",
+                "samuke"
+              ],
+              "feedback": {
+                "correct": "Right: さむけ (samuke) is 'a chill; the shivers'.",
+                "incorrect": "'A chill' is さむけ (samuke)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C446-ugai",
+      "sequence": 26060,
+      "title": "うがい (ugai) — gargling",
+      "headword": "うがい",
+      "romanization": "ugai",
+      "gloss": "gargling",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f80010f2071ec32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a runny nose, then the Japanese for a chill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うがい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うがい — ugai — \"gargling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うちに かえったら、うがいを して ください。 — uchi ni kaettara, ugai o shite kudasai — \"When you get home, please gargle.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うがい (ugai) is a native Japanese word (wago), inherited rather than borrowed from Chinese; JMdict writes it in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ugai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ugai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchi ni kaettara, ugai o shite kudasai — When you get home, please gargle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchi ni kaettara, ugai o shite kudasai* — When you get home, please gargle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a runny nose, then the Japanese for a chill, then say ugai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a runny nose, then the Japanese for a chill, then say *ugai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うがい (ugai) mean? (\"Gargling\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C446-ugai-type",
+              "prompt": "Say the Japanese for 'gargling'.",
+              "assesses": [
+                "JA-LEX-C446-CHILL446-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うがい",
+                "ugai"
+              ],
+              "feedback": {
+                "correct": "Right: うがい (ugai) is 'gargling'.",
+                "incorrect": "'Gargling' is うがい (ugai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C446-taichou",
+      "sequence": 26070,
+      "title": "たいちょう (taichō) — physical condition; shape",
+      "headword": "たいちょう",
+      "romanization": "taichō",
+      "gloss": "physical condition; shape",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8097fe46d4904cba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a chill, then the Japanese for gargling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいちょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいちょう — taichō — \"physical condition; shape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんしゅうから たいちょうが よく ありません。 — senshū kara taichō ga yoku arimasen — \"I have not been in good shape since last week.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいちょう (taichō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"body\" (Middle Chinese thejX) and chō, \"harmonize\" (dew) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taichō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taichō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taichō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taichō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senshū kara taichō ga yoku arimasen — I have not been in good shape since last week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senshū kara taichō ga yoku arimasen* — I have not been in good shape since last week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a chill, then the Japanese for gargling, then say taichō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a chill, then the Japanese for gargling, then say *taichō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいちょう (taichō) mean? (\"Physical condition; shape\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C446-taichou-type",
+              "prompt": "Say the Japanese for 'physical condition'.",
+              "assesses": [
+                "JA-LEX-C446-CHILL446-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいちょう",
+                "taichō",
+                "taichou",
+                "taichoo",
+                "taicho"
+              ],
+              "feedback": {
+                "correct": "Right: たいちょう (taichō) is 'physical condition; shape'.",
+                "incorrect": "'Physical condition' is たいちょう (taichō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

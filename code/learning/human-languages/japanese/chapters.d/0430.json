@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Anger and Dislike",
+  "label": "ch:ja-anger-and-dislike",
+  "canDo": "I can talk about anger and things I dislike.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C430-abareru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about anger and things I dislike.",
+    "assesses": [
+      "JA-LEX-C430-ANGER430-03",
+      "JA-LEX-C430-ANGER430-04",
+      "JA-LEX-C430-ANGER430-05"
+    ]
+  }
+}

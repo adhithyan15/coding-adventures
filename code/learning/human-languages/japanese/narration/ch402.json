@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 402,
+  "title": "A Day of Sightseeing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4d80503ad9e41b39",
+  "lessons": [
+    {
+      "id": "JA-C402-kankou",
+      "sequence": 23550,
+      "title": "かんこう (kankō) — tourism; sightseeing",
+      "headword": "かんこう",
+      "romanization": "kankō",
+      "gloss": "tourism; sightseeing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d571bca99a6f008",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to change one's clothes, then the Japanese for to entertain guests."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かんこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんこう — kankō — \"tourism; sightseeing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この しまに かんこうに いきました。 — kono shima ni kankō ni ikimashita — \"We went sightseeing on this island.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんこう (kankō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"view\" (Middle Chinese kwan) and kō, \"light\" (kwang) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kankō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kankō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kankō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kankō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono shima ni kankō ni ikimashita — We went sightseeing on this island.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono shima ni kankō ni ikimashita* — We went sightseeing on this island.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to change one's clothes, then the Japanese for to entertain guests, then say kankō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to change one's clothes, then the Japanese for to entertain guests, then say *kankō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かんこう (kankō) mean? (\"Tourism; sightseeing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C402-kankou-type",
+              "prompt": "Say the Japanese for 'tourism'.",
+              "assesses": [
+                "JA-LEX-C402-KANKOU402-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かんこう",
+                "kankō",
+                "kankou",
+                "kankoo",
+                "kanko"
+              ],
+              "feedback": {
+                "correct": "Right: かんこう (kankō) is 'tourism; sightseeing'.",
+                "incorrect": "'Tourism' is かんこう (kankō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C402-kankoukyaku",
+      "sequence": 23560,
+      "title": "かんこうきゃく (kankōkyaku) — a tourist",
+      "headword": "かんこうきゃく",
+      "romanization": "kankōkyaku",
+      "gloss": "a tourist",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8184dab12e81d99a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to entertain guests, then the Japanese for tourism."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かんこうきゃく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんこうきゃく — kankōkyaku — \"a tourist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつは かんこうきゃくが おおいです。 — natsu wa kankōkyaku ga ōi desu — \"There are a lot of tourists in summer.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんこうきゃく (kankōkyaku) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kan, \"view\" (Middle Chinese kwan), kō, \"light\" (kwang) and kyaku, \"guest\" (khaek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kankōkyaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kankōkyaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kankōkyaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kankōkyaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsu wa kankōkyaku ga ōi desu — There are a lot of tourists in summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsu wa kankōkyaku ga ōi desu* — There are a lot of tourists in summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to entertain guests, then the Japanese for tourism, then say kankōkyaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to entertain guests, then the Japanese for tourism, then say *kankōkyaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かんこうきゃく (kankōkyaku) mean? (\"A tourist\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C402-kankoukyaku-type",
+              "prompt": "Say the Japanese for 'a tourist'.",
+              "assesses": [
+                "JA-LEX-C402-KANKOU402-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かんこうきゃく",
+                "kankōkyaku",
+                "kankoukyaku",
+                "kankookyaku",
+                "kankokyaku"
+              ],
+              "feedback": {
+                "correct": "Right: かんこうきゃく (kankōkyaku) is 'a tourist'.",
+                "incorrect": "'A tourist' is かんこうきゃく (kankōkyaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C402-meisho",
+      "sequence": 23570,
+      "title": "めいしょ (meisho) — a famous sight; a place of interest",
+      "headword": "めいしょ",
+      "romanization": "meisho",
+      "gloss": "a famous sight; a place of interest",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:375bbe5fcb05cfda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for tourism, then the Japanese for a tourist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めいしょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいしょ — meisho — \"a famous sight; a place of interest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この まちの めいしょを まわりました。 — kono machi no meisho o mawarimashita — \"We went round the sights of this town.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいしょ (meisho) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mei, \"noted\" (Middle Chinese mjieng) and sho, \"place\" (srjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meisho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meisho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meisho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meisho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono machi no meisho o mawarimashita — We went round the sights of this town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono machi no meisho o mawarimashita* — We went round the sights of this town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for tourism, then the Japanese for a tourist, then say meisho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for tourism, then the Japanese for a tourist, then say *meisho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めいしょ (meisho) mean? (\"A famous sight; a place of interest\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C402-meisho-type",
+              "prompt": "Say the Japanese for 'a famous sight'.",
+              "assesses": [
+                "JA-LEX-C402-KANKOU402-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めいしょ",
+                "meisho"
+              ],
+              "feedback": {
+                "correct": "Right: めいしょ (meisho) is 'a famous sight; a place of interest'.",
+                "incorrect": "'A famous sight' is めいしょ (meisho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C402-meibutsu",
+      "sequence": 23580,
+      "title": "めいぶつ (meibutsu) — a local speciality",
+      "headword": "めいぶつ",
+      "romanization": "meibutsu",
+      "gloss": "a local speciality",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5d9b94ecfa4352e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a tourist, then the Japanese for a famous sight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めいぶつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいぶつ — meibutsu — \"a local speciality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この まちの めいぶつは さかなです。 — kono machi no meibutsu wa sakana desu — \"Fish is this town's speciality.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいぶつ (meibutsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mei, \"noted\" (Middle Chinese mjieng) and butsu, \"thing\" (mjut) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meibutsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meibutsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meibutsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meibutsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono machi no meibutsu wa sakana desu — Fish is this town's speciality.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono machi no meibutsu wa sakana desu* — Fish is this town's speciality.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a tourist, then the Japanese for a famous sight, then say meibutsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a tourist, then the Japanese for a famous sight, then say *meibutsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めいぶつ (meibutsu) mean? (\"A local speciality\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C402-meibutsu-type",
+              "prompt": "Say the Japanese for 'a local speciality'.",
+              "assesses": [
+                "JA-LEX-C402-KANKOU402-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めいぶつ",
+                "meibutsu"
+              ],
+              "feedback": {
+                "correct": "Right: めいぶつ (meibutsu) is 'a local speciality'.",
+                "incorrect": "'A local speciality' is めいぶつ (meibutsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C402-meguru",
+      "sequence": 23590,
+      "title": "めぐる (meguru) — to tour; to go around",
+      "headword": "めぐる",
+      "romanization": "meguru",
+      "gloss": "to tour; to go around",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:316d979493f84c53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a famous sight, then the Japanese for a local speciality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めぐる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めぐる — meguru — \"to tour; to go around\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じてんしゃで しまの めいしょを めぐりました。 — jitensha de shima no meisho o megurimashita — \"We toured the island's sights by bicycle.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite めぐります, megurimasu; a godan verb. Past (polite): かんこうきゃくが まちを めぐりました。, kankōkyaku ga machi o megurimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めぐる (meguru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meguru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meguru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meguru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meguru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jitensha de shima no meisho o megurimashita — We toured the island's sights by bicycle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jitensha de shima no meisho o megurimashita* — We toured the island's sights by bicycle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a famous sight, then the Japanese for a local speciality, then say meguru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a famous sight, then the Japanese for a local speciality, then say *meguru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めぐる (meguru) mean? (\"To tour; to go around\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C402-meguru-type",
+              "prompt": "Say the Japanese for 'to tour'.",
+              "assesses": [
+                "JA-LEX-C402-KANKOU402-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めぐる",
+                "meguru"
+              ],
+              "feedback": {
+                "correct": "Right: めぐる (meguru) is 'to tour; to go around'.",
+                "incorrect": "'To tour' is めぐる (meguru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

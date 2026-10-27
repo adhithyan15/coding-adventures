@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C460-mokuhyou",
+    "language": "japanese",
+    "chapter": 460,
+    "sequence": 26750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe922934c370f04e"
+  },
+  "findings": []
+}

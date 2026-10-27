@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "What the News Said",
+  "label": "ch:ja-what-the-news-said",
+  "canDo": "I can say what the paper reported and who reported it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C280-kubaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say what the paper reported and who reported it.",
+    "assesses": [
+      "JA-LEX-C280-KIJI280-03",
+      "JA-LEX-C280-KIJI280-04",
+      "JA-LEX-C280-KIJI280-05"
+    ]
+  }
+}

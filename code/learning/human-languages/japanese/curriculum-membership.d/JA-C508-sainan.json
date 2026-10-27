@@ -1,0 +1,11 @@
+{
+  "id": "JA-C508-sainan",
+  "pathSegment": "JA-PATH-508-LUCK508",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-508-LUCK508",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C455-tantou",
+    "language": "japanese",
+    "chapter": 455,
+    "sequence": 26520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9abcf60bbe94faca"
+  },
+  "findings": []
+}

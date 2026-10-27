@@ -1,0 +1,11 @@
+{
+  "id": "JA-C374-hassha",
+  "pathSegment": "JA-PATH-374-SENRO374",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-374-SENRO374",
+      "order": 3
+    }
+  ]
+}

@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Exact 1,428-DFF persistent-state topology and owned full-machine snapshots.
+- A public container-derived storage inventory whose independently counted
+  banks sum to the exact topology constant.
+- Checked complete-state restore, transactional late-run rollback, and five
+  compiler-checked hostile full-crate fixtures for the HALT authority boundary.
 - Functional-oracle lockstep for every specified encoding and representative
   memory, port, branch, indirect, and stack workloads.
 - Typed atomic failures for oversized ROM images, illegal opcodes, truncated
@@ -16,9 +20,22 @@ All notable changes to this project will be documented in this file.
 
 - RAM output ports, selectors, ROM port, halt state, and stack pointer now use
   D flip-flops instead of host fields.
+- HALT Q is now the sole authority across observation, snapshot, reset, program
+  load, restore, step/run guards, `HLT`, and rollback; the private Boolean is a
+  repairable diagnostic observer only.
 - `load_program`, `step`, and `run` now return checked `Result` values.
 - SRC masks its register selector to the architectural two bits.
-- Strict rustdoc now passes and core coverage is 95.15% (686/721).
+- The differential covers all 256 first-byte classifications (240 valid and 16
+  identical typed atomic faults). Strict checks pass and package-source line
+  coverage is 96.69% (1,607/1,662).
+
+### Lessons
+
+- Structural mutation fixtures must anchor replacements to the complete owning
+  method when an identical statement sequence can appear in multiple methods.
+- Post-commit integrity checks must count every transition-helper call, not
+  only calls carrying the expected value, so a later overwrite cannot hide
+  behind a valid first clock.
 
 ## [0.1.0] - 2026-03-21
 

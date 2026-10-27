@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Signs and Landmarks",
+  "label": "ch:ja-signs-and-landmarks",
+  "canDo": "I can follow signs and landmarks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C393-furimuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can follow signs and landmarks.",
+    "assesses": [
+      "JA-LEX-C393-MEJIRUSHI393-03",
+      "JA-LEX-C393-MEJIRUSHI393-04",
+      "JA-LEX-C393-MEJIRUSHI393-05"
+    ]
+  }
+}

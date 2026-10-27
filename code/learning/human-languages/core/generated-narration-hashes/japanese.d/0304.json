@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:8070504acc2f1d58",
+  "lessonIds": [
+    "JA-C304-orei",
+    "JA-C304-ongaeshi",
+    "JA-C304-wana",
+    "JA-C304-nozoku",
+    "JA-C304-mazushii"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch304.txt",
+  "json": "japanese/narration/ch304.json",
+  "textHash": "fnv1a64:60e9980f5ed5c5a2",
+  "jsonHash": "fnv1a64:fdf8c143de2fbe86",
+  "findings": []
+}

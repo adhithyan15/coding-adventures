@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:1ba0638385b25fea",
+  "lessonIds": [
+    "JA-C332-kenri",
+    "JA-C332-gimu",
+    "JA-C332-byoudou",
+    "JA-C332-sabetsu",
+    "JA-C332-zen-in"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch332.txt",
+  "json": "japanese/narration/ch332.json",
+  "textHash": "fnv1a64:6fd969c70583c373",
+  "jsonHash": "fnv1a64:bdd0460fddbe95ee",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:250eb6f057899917",
+  "lessonIds": [
+    "JA-C507-kibou",
+    "JA-C507-nozomu",
+    "JA-C507-shibou-suru",
+    "JA-C507-risou",
+    "JA-C507-hoshigaru"
+  ],
+  "tex": "japanese/book/chapters/ch507-hopes-and-wishes.tex"
+}

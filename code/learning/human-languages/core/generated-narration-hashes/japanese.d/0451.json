@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:d05f192adaac7f7c",
+  "lessonIds": [
+    "JA-C451-shukkin-suru",
+    "JA-C451-tsuukin-suru",
+    "JA-C451-chikoku-suru",
+    "JA-C451-kyuukei-suru",
+    "JA-C451-zangyou-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch451.txt",
+  "json": "japanese/narration/ch451.json",
+  "textHash": "fnv1a64:1f75b3ece91822c2",
+  "jsonHash": "fnv1a64:c0aaeb6aeafbe29c",
+  "findings": []
+}

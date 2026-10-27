@@ -1,0 +1,11 @@
+{
+  "id": "JA-C312-touji",
+  "pathSegment": "JA-PATH-312-REKISHI312",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-312-REKISHI312",
+      "order": 4
+    }
+  ]
+}

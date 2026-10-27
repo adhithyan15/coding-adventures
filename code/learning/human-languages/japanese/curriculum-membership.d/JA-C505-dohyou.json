@@ -1,0 +1,11 @@
+{
+  "id": "JA-C505-dohyou",
+  "pathSegment": "JA-PATH-505-SUMO505",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-505-SUMO505",
+      "order": 1
+    }
+  ]
+}

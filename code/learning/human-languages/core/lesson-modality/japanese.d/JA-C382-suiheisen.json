@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C382-suiheisen",
+    "language": "japanese",
+    "chapter": 382,
+    "sequence": 22540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11e76cf8dc4aa5ab"
+  },
+  "findings": []
+}

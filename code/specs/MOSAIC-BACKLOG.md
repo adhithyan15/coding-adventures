@@ -251,6 +251,8 @@ deploy are in. All five checkboxes in #14416 are still unchecked.
 | JO-1 | No first release, and `release-journal.yml` still packages the old Electron app in `code/programs/typescript/journal-app` | **real**. No `journal-v*` tag exists. Release from the Mosaic app, then retire the Electron app | feature | M |
 | JO-2 | Export works on the web only | **real**. #16034 | feature | M |
 | JO-3 | Photos (needs UI88), encryption, calendar navigation, import | **real** | feature | L |
+| JO-4 | `mosaic-pkg-card` does not fit Journal's timeline rows (backlog item 4, Card's first real consumer) | **blocked** (2026-10-26). Designed, and prototyped on every backend (local branch `wip/journal-timeline-on-card-impl`), but not adopted. Seven misfits are recorded in `journal-component-demand-audit-v1.md` ("Card as the timeline row"): M1 the card cannot be the button (EM-8); M2 Card's styles drop on four native backends, and on Flutter the title loses its size and weight; M3 no optional regions; M4 no badge slot; M5 no selected state; M6 its palette is not Journal's (X-5, UI90); **M7 a Card row is about 1.8× as tall as a RecordList row, and the pane cannot scroll**, so Compose's `JournalUiTest` cannot see the second entry. Unblock with JO-5, then land the prototype | feature | M |
+| JO-5 | Journal's pane never scrolls on a native backend: past about two entries, the timeline cannot be reached in the declared 1100×760 window except through search | **real** (measured 2026-10-26 on Compose renders; no native output emits a scroll container for the pane). Same bug as TaskApp's #14734, fixed there with `HostScroll [ content-scroll ]`. Wrap the pane's content in a `HostScroll`. Compose's `JournalUiTest` must then reach rows below the fold through semantics (`assertExists` plus the `OnClick` action, as the Android test does), because `performScrollTo()` hangs (EM-11). Blocks JO-4 | bug | S–M |
 
 ## Engram (`code/programs/mosaic/engram-app`)
 
@@ -283,6 +285,7 @@ exist.
 | EM-12 | The qualified `pkg::P::C` tag contract is undocumented | docs only: all 8 backends already reject it. #14886 | docs | S |
 | EM-13 | `placeholder : slot: x` on `HostInput` / `Input` silently dropped on React, Web Components, SwiftUI and Flutter | **fixed** (2026-10-19). Each read `placeholder` with a string-literal-only lookup, so every toolkit `Input`, `InputGroup` and `Field`, the note-type editor's six fields, the note editor, card browser, draft editor, review card and SPICE workbench lost their placeholder on these four backends, with no degradation reported. EM-3 named three; a probe of real output found Flutter too (`hintText` missing), although it had been listed as binding. All four now lower a literal, slot, `For` binding and expression (UI29 §2 `placeholder` table) and reject a non-identifier name as `UnsafeSlotName`; SwiftUI output type-checks with `swiftc` and Flutter output passes `flutter analyze`. | bug | S |
 | EM-14 | `HostNumberInput ( placeholder : slot: x )` silently dropped on React, SwiftUI, Flutter and Qt | **fixed** (2026-10-19). Same literal-only lookup as EM-13, on the number field: `mosaic-pkg-toolkit`'s `NumberInput` (and `mosaic-std-controls`' wrapper) binds `placeholder : slot: placeholder`, which Web Components, HTML and XAML bound and these four dropped, unreported. Each now uses its backend's `HostInput` placeholder helper, so a literal, slot, `For` binding and expression all reach the field (UI29 §2, `HostNumberInput` placeholder table); toolkit SwiftUI output type-checks with `swiftc` and Flutter output passes `flutter analyze`. Also fixed in Qt's shared helper, for every text field: a bare `For` binding was quoted as text, and an unsafe name became `placeholderText: ""`; the first is now the binding, the second an `UnsafeSlotName` error. Compose lowers no number placeholder by recorded decision (UI29 §2): its number field's text is the bound number's `toString()`, never empty, so there is no state in which a placeholder could show. | bug | S |
+| EM-15 | An unbound package slot has no defined meaning, so adding a slot to a shared component breaks every consumer (editor convergence audit R1, E6) | **specified, awaiting decision** in [`mosaic-unbound-slot-semantics-v1.md`](mosaic-unbound-slot-semantics-v1.md) (proposed 2026-10-26). UI13 §1 already makes a defaulted slot optional and an undefaulted one required, and the resolver applies text/number/bool defaults. But nothing checks the required half: an unbound slot leaks into the consumer and fails as the consumer's `UnknownSlot` (9/9), is silently captured by a same-named consumer slot, or leaks into generated Swift/TS as an undeclared identifier. A misspelled call-site binding is ignored. An empty default on an `a11y-label` passes the native-complete gate. Proposed: enforce UI13 with UI34's `SlotBindingMissing`, add `UnknownSlotBinding`, allow `list = []` and `one-of` defaults, and refuse empty accessible-name defaults. Follow-ups F1–F8 in its §6 | decision + bug | S–M each |
 
 ## Component program and kernel
 
@@ -291,10 +294,11 @@ exist.
 | PR-1 | Missing components: Chip, StatusPill, Icon, Legend, ValidatedField, InlineEditForm, Composer, StatusPanel, Toolbar, and the L3 task components | **real**. #14415, #14011 | feature | L |
 | PR-2 | Toolkit `Button` has no a11y-label slot (and SegmentedControl also needs `selected`) | **real**. #15421 | a11y | S/M |
 | PR-3 | `HostLink` has no current-page state (`Nav.mll:6` marks it visually only); no arrow-key roving focus | **real**. #15458 (S–M), #15457 (M) | feature | S–M, M |
-| PR-4 | Publishing the `mosaic-pkg-*` crates (all 24 say `publish = false`) | decision. #14014 | decision | M |
+| PR-4 | Publishing the `mosaic-pkg-*` packages (all 24 harness crates say `publish = false`) | **specified, awaiting decision** in [`mosaic-package-publishing-v1.md`](mosaic-package-publishing-v1.md) (proposed 2026-10-26). The `Cargo.toml` files are smoke-test harnesses (`mosaic-pkg-toolkit-smoke` 0.1.0), not the packages, so `publish = false` stays; the proposal is `.mospkg` source archives on immutable GitHub Releases tagged `<package>-v<semver>`, with real `[dependencies]` version semantics, a lockfile and a verified cache. Its §11 lists the maintainer's open questions. #14014 | decision | M |
 | PR-5 | UI48 environment observer for the React, HTML and Web Component backends | **real**: ENV1–ENV4 are done on all 5 native backends. #14003 | feature | M |
 | PR-6 | Adopt `HostNavigationSplit` in notes, note-type-editor and spice-workbench; UI29-6 still says "draft" | **real**. #15481 follow-up | feature | S |
 | PR-7 | Qt releases cover macOS only (`engram_release.py:527`) | **real**. #14223 | feature | M–L |
+| PR-8 | Three editors, one consumer each: `Notes` (Trestle), `DraftEditor` (Journal), `NoteEditor` (Engram) | **real**. Fit-audit [`mosaic-editor-convergence-audit-v1.md`](mosaic-editor-convergence-audit-v1.md) (PROPOSED): converge on `DraftEditor`. Work items E1–E7 in its §6 | decision + feature | S–M each |
 
 ## Design to native (DN)
 
@@ -313,8 +317,9 @@ UI90 §5.5 is the token contract the import lands on.
 
 - **UI88 §6, rich card content.** Blocks EN-2, EN-3 and Journal photos
   (JO-3).
-- **Publishing (PR-4).** Should the `mosaic-pkg-*` crates be published, and
-  under what policy? Blocks MB-10's downloadable demos.
+- **Publishing (PR-4).** Should the `mosaic-pkg-*` packages be published, and
+  under what policy? Blocks MB-10's downloadable demos. Options, a proposed
+  answer and the open questions are in `mosaic-package-publishing-v1.md`.
 - **Signing (TR-6).** Per platform: sign, notarize, or record "unsigned, no
   credentials".
 - **Flutter topbar (TR-5).** Should the topbar wrap or flex below 1600 px?

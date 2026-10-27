@@ -1,0 +1,21 @@
+{
+  "chapter": 461,
+  "title": "Japanese Sports",
+  "label": "ch:ja-japanese-sports",
+  "canDo": "I can name some Japanese sports.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R461-review-456-461",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can name some Japanese sports.",
+    "assesses": [
+      "JA-LEX-C461-SUMO461-01",
+      "JA-LEX-C461-SUMO461-02",
+      "JA-LEX-C461-SUMO461-03",
+      "JA-LEX-C461-SUMO461-04",
+      "JA-LEX-C461-SUMO461-05"
+    ]
+  }
+}

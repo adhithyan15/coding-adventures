@@ -1,0 +1,11 @@
+{
+  "id": "JA-C506-haiboku",
+  "pathSegment": "JA-PATH-506-RACE506",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-506-RACE506",
+      "order": 3
+    }
+  ]
+}

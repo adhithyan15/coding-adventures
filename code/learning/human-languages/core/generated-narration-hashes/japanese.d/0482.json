@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:6359c2a653fbf76e",
+  "lessonIds": [
+    "JA-C482-kugi",
+    "JA-C482-nokogiri",
+    "JA-C482-harigane",
+    "JA-C482-mokuzou",
+    "JA-C482-sasaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch482.txt",
+  "json": "japanese/narration/ch482.json",
+  "textHash": "fnv1a64:a4f4a622a643bd2c",
+  "jsonHash": "fnv1a64:c59b43ce2b0e4b4b",
+  "findings": []
+}

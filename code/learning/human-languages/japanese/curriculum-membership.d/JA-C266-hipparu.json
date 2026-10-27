@@ -1,0 +1,11 @@
+{
+  "id": "JA-C266-hipparu",
+  "pathSegment": "JA-PATH-266-OBORE266",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-266-OBORE266",
+      "order": 2
+    }
+  ]
+}

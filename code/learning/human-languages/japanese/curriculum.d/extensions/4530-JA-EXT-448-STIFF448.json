@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-448-STIFF448",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a part of my body is stiff, twisted or numb.",
+  "prerequisites": []
+}

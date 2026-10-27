@@ -1,0 +1,13 @@
+[package]
+name = "cortex-m33-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked bounded Armv8-M Mainline Cortex-M33 functional simulator"
+license = "MIT"
+
+[dependencies]
+cortex-m3-simulator = { path = "../cortex-m3-simulator" }
+
+[lib]
+name = "cortex_m33_simulator"
+path = "src/lib.rs"

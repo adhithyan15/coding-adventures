@@ -1,0 +1,940 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 413,
+  "title": "Plains, Peninsulas and Deserts",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b0901464637e6a20",
+  "lessons": [
+    {
+      "id": "JA-C413-heiya",
+      "sequence": 24110,
+      "title": "へいや (heiya) — a plain (flat land)",
+      "headword": "へいや",
+      "romanization": "heiya",
+      "gloss": "a plain (flat land)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be200161fe881f05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a plateau, then the Japanese for mountain climbing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: へいや",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へいや — heiya — \"a plain (flat land)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひろい へいやに たんぼが あります。 — hiroi heiya ni tanbo ga arimasu — \"There are rice fields on the wide plain.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へいや (heiya) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hei, \"flat\" (Middle Chinese bjaeng) and ya, \"plains\" (yaeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiroi heiya ni tanbo ga arimasu — There are rice fields on the wide plain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiroi heiya ni tanbo ga arimasu* — There are rice fields on the wide plain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a plateau, then the Japanese for mountain climbing, then say heiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a plateau, then the Japanese for mountain climbing, then say *heiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does へいや (heiya) mean? (\"A plain (flat land)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C413-heiya-type",
+              "prompt": "Say the Japanese for 'a plain'.",
+              "assesses": [
+                "JA-LEX-C413-HEIYA413-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "へいや",
+                "heiya"
+              ],
+              "feedback": {
+                "correct": "Right: へいや (heiya) is 'a plain (flat land)'.",
+                "incorrect": "'A plain' is へいや (heiya)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C413-bonchi",
+      "sequence": 24120,
+      "title": "ぼんち (bonchi) — a basin among mountains",
+      "headword": "ぼんち",
+      "romanization": "bonchi",
+      "gloss": "a basin among mountains",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:906481834e983e0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for mountain climbing, then the Japanese for a plain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぼんち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼんち — bonchi — \"a basin among mountains\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぼんちの なつは むしあついです。 — bonchi no natsu wa mushiatsui desu — \"Summers in the basin are hot and humid.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼんち (bonchi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bon, \"basin\" (Middle Chinese bwon) and chi, \"ground\" (dijH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bonchi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bonchi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bonchi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bonchi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bonchi no natsu wa mushiatsui desu — Summers in the basin are hot and humid.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bonchi no natsu wa mushiatsui desu* — Summers in the basin are hot and humid.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for mountain climbing, then the Japanese for a plain, then say bonchi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for mountain climbing, then the Japanese for a plain, then say *bonchi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぼんち (bonchi) mean? (\"A basin among mountains\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C413-bonchi-type",
+              "prompt": "Say the Japanese for 'a basin among mountains'.",
+              "assesses": [
+                "JA-LEX-C413-HEIYA413-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぼんち",
+                "bonchi"
+              ],
+              "feedback": {
+                "correct": "Right: ぼんち (bonchi) is 'a basin among mountains'.",
+                "incorrect": "'A basin among mountains' is ぼんち (bonchi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C413-hantou",
+      "sequence": 24130,
+      "title": "はんとう (hantō) — a peninsula",
+      "headword": "はんとう",
+      "romanization": "hantō",
+      "gloss": "a peninsula",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ac756fdaec11403",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a plain, then the Japanese for a basin among mountains."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はんとう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はんとう — hantō — \"a peninsula\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この はんとうには みさきが みっつ あります。 — kono hantō ni wa misaki ga mittsu arimasu — \"This peninsula has three capes.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はんとう (hantō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are han, \"half\" (Middle Chinese panH) and tō, \"island\" (tawX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hantō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hantō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hantō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hantō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono hantō ni wa misaki ga mittsu arimasu — This peninsula has three capes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono hantō ni wa misaki ga mittsu arimasu* — This peninsula has three capes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a plain, then the Japanese for a basin among mountains, then say hantō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a plain, then the Japanese for a basin among mountains, then say *hantō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はんとう (hantō) mean? (\"A peninsula\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C413-hantou-type",
+              "prompt": "Say the Japanese for 'a peninsula'.",
+              "assesses": [
+                "JA-LEX-C413-HEIYA413-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はんとう",
+                "hantō",
+                "hantou",
+                "hantoo",
+                "hanto"
+              ],
+              "feedback": {
+                "correct": "Right: はんとう (hantō) is 'a peninsula'.",
+                "incorrect": "'A peninsula' is はんとう (hantō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C413-tairiku",
+      "sequence": 24140,
+      "title": "たいりく (tairiku) — a continent",
+      "headword": "たいりく",
+      "romanization": "tairiku",
+      "gloss": "a continent",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3daa4fe1766c33a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a basin among mountains, then the Japanese for a peninsula."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいりく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいりく — tairiku — \"a continent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふねで たいりくに わたりました。 — fune de tairiku ni watarimashita — \"We crossed over to the continent by ship.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいりく (tairiku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"large\" (Middle Chinese dajH) and riku, \"land\" (ljuwk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tairiku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tairiku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tairiku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tairiku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fune de tairiku ni watarimashita — We crossed over to the continent by ship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fune de tairiku ni watarimashita* — We crossed over to the continent by ship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a basin among mountains, then the Japanese for a peninsula, then say tairiku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a basin among mountains, then the Japanese for a peninsula, then say *tairiku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいりく (tairiku) mean? (\"A continent\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C413-tairiku-type",
+              "prompt": "Say the Japanese for 'a continent'.",
+              "assesses": [
+                "JA-LEX-C413-HEIYA413-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいりく",
+                "tairiku"
+              ],
+              "feedback": {
+                "correct": "Right: たいりく (tairiku) is 'a continent'.",
+                "incorrect": "'A continent' is たいりく (tairiku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C413-sabaku",
+      "sequence": 24150,
+      "title": "さばく (sabaku) — a desert",
+      "headword": "さばく",
+      "romanization": "sabaku",
+      "gloss": "a desert",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f17c59ee341d8008",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a peninsula, then the Japanese for a continent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さばく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さばく — sabaku — \"a desert\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さばくは ひるは あついです。 — sabaku wa hiru wa atsui desu — \"The desert is hot during the day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さばく (sabaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"sand\" (Middle Chinese srae) and baku, \"desert\" (mak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabaku wa hiru wa atsui desu — The desert is hot during the day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabaku wa hiru wa atsui desu* — The desert is hot during the day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a peninsula, then the Japanese for a continent, then say sabaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a peninsula, then the Japanese for a continent, then say *sabaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さばく (sabaku) mean? (\"A desert\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C413-sabaku-type",
+              "prompt": "Say the Japanese for 'a desert'.",
+              "assesses": [
+                "JA-LEX-C413-HEIYA413-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さばく",
+                "sabaku"
+              ],
+              "feedback": {
+                "correct": "Right: さばく (sabaku) is 'a desert'.",
+                "incorrect": "'A desert' is さばく (sabaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R413-review-408-413",
+      "sequence": 24160,
+      "title": "Looking back: from Incense and Candles to Plains, Peninsulas and Deserts",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Incense and Candles to Plains, Peninsulas and Deserts",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6adabb891c6afdb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for an incense stick and a candle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an incense stick, a candle, a household altar, religion, to enshrine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an incense stick, a candle, a household altar, religion, to enshrine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an area, a capital city, a national border, a boundary, a dialect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an area, a capital city, a national border, a boundary, a dialect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one's home area, one's place of origin, a field (for crops), a meadow, to grow thick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one's home area, one's place of origin, a field (for crops), a meadow, to grow thick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stream, a spring (of water), to become muddy, to surround, to scoop up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stream, a spring (of water), to become muddy, to surround, to scoop up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mountain pass, a summit, a mountain range, a plateau, mountain climbing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mountain pass, a summit, a mountain range, a plateau, mountain climbing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plain, a basin among mountains, a peninsula, a continent, a desert",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plain, a basin among mountains, a peninsula, a continent, a desert]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An incense stick? (せんこう, senkō.) A candle? (ろうそく, rōsoku.) A household altar? (ぶつだん, butsudan.) Religion? (しゅうきょう, shūkyō.) To enshrine? (まつる, matsuru.) An area? (ちいき, chiiki.) A capital city? (しゅと, shuto.) A national border? (こっきょう, kokkyō.) A boundary? (さかい, sakai.) A dialect? (ほうげん, hōgen.) One's home area? (じもと, jimoto.) One's place of origin? (しゅっしん, shusshin.) A field (for crops)? (はたけ, hatake.) A meadow? (のはら, nohara.) To grow thick? (しげる, shigeru.) A stream? (おがわ, ogawa.) A spring (of water)? (いずみ, izumi.) To become muddy? (にごる, nigoru.) To surround? (かこむ, kakomu.) To scoop up? (すくう, sukuu.) A mountain pass? (とうげ, tōge.) A summit? (ちょうじょう, chōjō.) A mountain range? (さんみゃく, sanmyaku.) A plateau? (こうげん, kōgen.) Mountain climbing? (とざん, tozan.) A plain? (へいや, heiya.) A basin among mountains? (ぼんち, bonchi.) A peninsula? (はんとう, hantō.) A continent? (たいりく, tairiku.) A desert? (さばく, sabaku.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R413-review-408-413-type",
+              "prompt": "Say the Japanese for 'an incense stick'.",
+              "assesses": [
+                "JA-LEX-C408-SENKOU408-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せんこう",
+                "senkō",
+                "senkou",
+                "senkoo",
+                "senko"
+              ],
+              "feedback": {
+                "correct": "Right: せんこう (senkō) is 'an incense stick'.",
+                "incorrect": "'An incense stick' is せんこう (senkō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

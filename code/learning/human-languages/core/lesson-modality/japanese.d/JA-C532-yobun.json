@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C532-yobun",
+    "language": "japanese",
+    "chapter": 532,
+    "sequence": 30700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dba67628272f0749"
+  },
+  "findings": []
+}

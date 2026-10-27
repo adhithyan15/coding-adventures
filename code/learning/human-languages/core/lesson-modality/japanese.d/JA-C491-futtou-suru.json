@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C491-futtou-suru",
+    "language": "japanese",
+    "chapter": 491,
+    "sequence": 28600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa9acf96ee77d1c9"
+  },
+  "findings": []
+}
