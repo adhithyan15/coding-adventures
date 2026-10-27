@@ -99,8 +99,16 @@ pub unsafe extern "C" fn dyn_pair_new(car: u64, cdr: u64) -> u64 {
 /// ("an int", "#f") without saying where anything lives.
 #[cold]
 fn not_a_pair(op: &str, word: u64) -> ! {
+    panic!("{}", not_a_pair_message(op, word))
+}
+
+/// The refusal's text, for an implementation of the pair readers that
+/// reports the error instead of panicking (`lang-aot`'s JIT callbacks):
+/// `"dyn_pair_first: argument with tag 0 (int) is not a pair"`. The tag and
+/// its kind, never the word — see [`not_a_pair`].
+pub fn not_a_pair_message(op: &str, word: u64) -> String {
     let tag = word & TAG_BITS;
-    panic!("{op}: argument with tag {tag} ({}) is not a pair", tag_kind_name(tag))
+    format!("{op}: argument with tag {tag} ({}) is not a pair", tag_kind_name(tag))
 }
 
 /// The kind a 3-bit tag names (LANG77's table), for error messages.

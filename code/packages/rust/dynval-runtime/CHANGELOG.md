@@ -1,5 +1,9 @@
 # Changelog — dynval-runtime
 
+## Unreleased — #18417 — the pair refusal's text is public
+
+- New `abi::not_a_pair_message(op, word)` returns the refusal text, for an implementation that reports the error instead of panicking (`lang-aot`'s JIT callbacks), for example `dyn_pair_first: argument with tag 0 (int) is not a pair`. The private `not_a_pair` panic uses it.
+
 ## Unreleased — LANG83 PR7f follow-up — the pair refusal names the tag, not the word
 
 - `abi::dyn_pair_first` / `dyn_pair_rest` panicked with `argument {:#x} is not a cons cell`, printing the raw word. A heap-tagged word that is not a cons cell (a closure) is a heap address, so the message could print a pointer on stderr. Both now go through a shared `not_a_pair` helper that prints `dyn_pair_first: argument with tag 7 (heap object) is not a pair`: the tag and its kind (`tag_kind_name`), the same words the C runtime (`twig-aot/runtime/dynval_runtime.c`) prints. New test `not_a_pair_names_the_tag_and_never_the_word` (it calls the Rust helper under `catch_unwind`, not the `extern "C"` functions).

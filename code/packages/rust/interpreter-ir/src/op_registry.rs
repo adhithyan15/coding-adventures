@@ -502,8 +502,8 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     // `(car 1000000)` read address 8000000). The traps list stays empty: a
     // type error is not one of the closed `Trap.*` kinds, so a program cannot
     // catch it — a frontend that wants a recoverable answer tests with
-    // `dyn_is_pair` first. (One known exception: `lang_aot::jit_lisp`'s
-    // McCarthy callbacks answer nil instead of failing.)
+    // `dyn_is_pair` first. `lang_aot::jit_lisp`'s McCarthy callbacks fail
+    // the same way (they answered nil until #18417).
     spec("dyn_box_int", Builtin, Dynamic, 1, true, UN_I64, NO_TRAP, LANG83_PR7F),
     spec("dyn_unbox_int", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
     spec("dyn_tag", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
