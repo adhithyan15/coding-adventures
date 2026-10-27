@@ -256,12 +256,15 @@ on the Mosaic compilers and artifact builder, so without this a change to a
 `mosaic-emit-*` backend re-ran none of those suites.
 
 The Go tool therefore keeps a second relation, *test triggers*: for each
-package `D`, the packages whose `Cargo.toml` top-level `[dev-dependencies]`
-table names `D`. It is read for languages `rust`, `wasm` and `mosaic` (the
-harness beside `mosaic-package.toml`), and entries resolve exactly as
-`[dependencies]` entries do: only entries with a quoted `path`, by key or
-`package =` rename, through the same name table (Rust's, for a Mosaic
-harness). Self-references are dropped. Change detection applies it **one hop**:
+package `D`, the packages whose `Cargo.toml` names `D` in a trigger table.
+For languages `rust` and `wasm` the trigger tables are `[dev-dependencies]`
+and every `[target.<cfg>.dev-dependencies]` (the union over all targets, since
+CI runs on several hosts). For a `mosaic` package's harness (the `Cargo.toml`
+beside `mosaic-package.toml`) they also include `[dependencies]` and
+`[build-dependencies]` and their target forms, because a Mosaic package has no
+Cargo graph edges at all. The legacy `dev_dependencies`/`build_dependencies`
+spellings are the same tables. Self-references are dropped. Change detection
+applies the relation **one hop**:
 
 ```
 closure  = AffectedNodes(changed)
@@ -276,22 +279,52 @@ what keeps the graph acyclic: Cargo allows A to dev-depend on B while B
 depends on A (the repository has such pairs), and as a graph edge that cycle
 would fail every package's build.
 
+Entries resolve **by path, not by name**: only entries with a `path` field
+count, and `filepath.Join(manifest directory, path)`, cleaned, must be a
+discovered package's directory or lie inside one (the containing package is
+the trigger, as prefix matching attributes changes there to it). Resolving by
+Cargo name would let any crate declaring the same `name` capture the trigger.
+A path to an existing crate directory that no discovered package covers
+yields no trigger and no error: such a crate is invisible to the tool anyway
+(a change in it selects nothing), and it is governed by the orphan-crate gate
+and `code/BUILD-EXEMPTIONS` (four such entries exist today). The same applies
+to a package left out by `-language`. Any other unresolvable path (nothing
+there, absolute, empty) is an error.
+
 The cost is deliberate. Measured on the repository when this was added, a
 one-line change to `mosaic-emit-qt`, `mosaic-emit-flutter` or
-`mosaic-package-artifact-builder` went from 73 selected packages to 151
-(`moslayout-compiler`: 74 to 153): 27–28 Mosaic package and app suites,
-`rust/venture-browser-qt` (which dev-depends on the artifact builder), and
-about 51 of that crate's build prerequisites brought in by the normal
-prerequisite expansion. Dev-dependents keep that expansion like every other
-selected package; the larger fan-out was reviewed and accepted. Target-specific
-`[target.*.dev-dependencies]` tables are not read, matching `[dependencies]`.
+`mosaic-package-artifact-builder` went from 73 selected packages to 158
+(`moslayout-compiler`: 74 to 160): 27–28 Mosaic package and app suites,
+`rust/venture-browser-qt`, `rust/venture-browser-macos` and
+`rust/venture-browser-windows` (which dev-depend on the artifact builder, the
+last two through target tables), and their build prerequisites from the normal
+prerequisite expansion (about 51 for `venture-browser-qt` alone). Dev-dependents
+keep that expansion like every other selected package. The fan-out was
+reviewed and accepted at 151, before target tables were read; reading them
+added the remaining 7.
 
-The reader fails closed: inside `[dev-dependencies]` every entry must be one
-line, a bare key with either a version string or a one-line inline table.
-A sub-table header (`[dev-dependencies.x]`), the `[dev_dependencies]`
-spelling, a dotted or quoted key, a multi-line value, `workspace = true`, any
-other value shape, or a root-level or dotted key spelling the table is an
-error that stops the plan.
+The reader fails closed, because a dropped trigger silently skips a
+dependent's tests. It reads a plain TOML subset and stops the plan on anything
+outside it:
+
+- a multi-line string (`"""` or `'''`) anywhere in the manifest, a one-line
+  string left open, mismatched brackets, or a value still open at the end of
+  the file;
+- a header or key it cannot decode (any backslash, an empty segment, a stray
+  bracket). Quoted segments are decoded, so `["dev-dependencies"]` *is* the
+  table;
+- a trigger table in any shape but `[name]` or `[target.<cfg>.name]`: a
+  sub-table (`[dev-dependencies.x]`), an array of tables, or a key elsewhere
+  that writes one (`dev-dependencies.x = ...`, `target = { ... }`);
+- inside a trigger table, an entry that is not `bare-key = "version"` or a
+  one-line inline table (only an array value may continue onto the next
+  line). Every inline-table field key must be bare, exactly lowercase and
+  unique (Cargo ignores `Package`, so it must not be read as a rename), with a
+  one-line string, boolean or array-of-strings value; nested inline tables,
+  trailing commas, escapes and `workspace = true` are refused;
+- a manifest that is not a regular file or exceeds 1 MiB.
+
+A leading UTF-8 byte-order mark is stripped, as TOML allows.
 
 ### Hash-Based Fallback
 
