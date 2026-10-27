@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W154-hai-still",
+    "language": "chinese",
+    "chapter": 154,
+    "sequence": 12510,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4933be39fd67f338",
+    "detachableSegments": [
+      "Script — 不, then the walking piece last"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
