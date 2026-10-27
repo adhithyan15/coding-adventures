@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C148-yao-future",
+    "language": "chinese",
+    "chapter": 148,
+    "sequence": 12090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3de4188fa7869d1e"
+  },
+  "findings": []
+}

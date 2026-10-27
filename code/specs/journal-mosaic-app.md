@@ -13,7 +13,8 @@ events into engine commands. Every generated native host loads it as
 `libmosaic_app` through `mosaic_app_capi::export_mosaic_app!`.
 
 J3c is split so each half is reviewable: this crate (J3c-1) has no dependency on
-the UI packages; the `journal-app` package (J3c-2) composes `RecordList` and
+the UI packages; the `journal-app` package (J3c-2) composes `mosaic-pkg-card`'s
+`Card` (the timeline), the toolkit's `RecordList` (On this day) and
 `DraftEditor` over these props.
 
 ## The editor model
@@ -38,7 +39,7 @@ for a **target**:
 
 | slot | type | value |
 | --- | --- | --- |
-| `timeline-rows` | `list<list<text>>` | `RecordList` rows `[key, heading, title, subtitle, meta, badge]`, newest day first |
+| `timeline-rows` | `list<list<text>>` | rows `[key, heading, title, subtitle, meta, badge, open-label]`, newest day first, drawn as Cards (see *Timeline rows on Card*) |
 | `selected-key` | `text` | the target entry's id, `""` for `New` |
 | `timeline-empty` | `bool` | no entries yet (drives the empty state) |
 | `draft-title` | `text` | |
@@ -48,15 +49,21 @@ for a **target**:
 Row fields:
 
 - `heading` — the day, e.g. `Thursday, 24 September 2026`, set **only on the
-  first row of each day** (`RecordList`'s flattened grouping).
+  first row of each day** (a flattened grouping, the shape `RecordList` also
+  reads).
 - `title` — the entry's title; for an untitled entry, the opening words of its
-  body; failing that, `Untitled entry`. Never empty: `RecordList` draws the title
-  as the row's button, and an empty one would be an unnamed button.
+  body; failing that, `Untitled entry`. Never empty: it is the Card's title and
+  the entry's part of the Open button's name, and an empty one would leave an
+  unnamed row.
 - `subtitle` — the first line of the body (markdown `#` markers stripped), at
   most 100 characters, cut on character boundaries; `""` when the title already
   came from the body.
 - `meta` — `""` for now: no time of day yet (see *Time zones*).
 - `badge` — `★` for a starred entry.
+- `open-label` — `Open {title}`, the timeline Open button's accessible name.
+  The layout cannot join strings, so the crate sends the whole name. Every row
+  list carries it, `on-this-day-rows` and search hits included; `RecordList`
+  reads only `row[0]`–`row[5]` and ignores it.
 
 ## Events
 
@@ -113,8 +120,10 @@ repaired to `New`.
 exactly the slots and events above. Its layout is a `HostNavigationSplit`:
 
 - the **pane** holds a *New entry* button (`onNewEntry`), then `EmptyState`
-  when `timeline-empty` is true, else `RecordList` (`timeline-rows`,
-  `selected-key`, and `onSelect` forwarded as `onSelectEntry`);
+  when `timeline-empty` is true, else a `For` over `timeline-rows` that draws
+  each entry as a `Card` with an *Open* button (`selected` against
+  `selected-key`, `onClick` forwarded as `onSelectEntry`); see *Timeline rows
+  on Card* below;
 - the **detail** holds `DraftEditor`, with the draft slots and `delete-label`
   bound and its change, save, delete and cancel events forwarded.
 
@@ -172,6 +181,12 @@ detail (the editor) is not wrapped: its content is bounded.
   scroll container (EM-11). The Android test already reaches rows through
   semantics. The iPadOS test's taps scroll on their own. Neither needs a
   change.
+- **Rows below the fold in `JournalUiTest`.** Since the timeline became Card
+  rows (about 220px each), the two-entry flow no longer fits the window: the
+  second entry starts below the fold. Before it asserts a row or the empty
+  state, the test scrolls the pane back to its top and then down with
+  `ScrollBy`, a bounded number of steps, until that node is displayed. It
+  still asserts *displayed*, never only *exists*.
 - **Reachability on Flutter** (`conformance/flutter/journal_scroll_test.dart`):
   - it writes the entries through the runtime;
   - it requires that the bottom row starts below the window;
@@ -181,22 +196,17 @@ detail (the editor) is not wrapped: its content is bounded.
   Journal has no Flutter desktop lane in CI yet (Mosaic backlog item 13), so
   the file says how to run it, and that lane should adopt it.
 
-## Timeline rows on Card (proposed, blocked)
+## Timeline rows on Card (Mosaic backlog item 4)
 
-Mosaic backlog item 4 asks for `mosaic-pkg-card` to get a real consumer
-(product program §5) by drawing the timeline's rows as Cards. It was
-designed and prototyped on 2026-10-26, and it is **not adopted**: the timeline
-is still a `RecordList`, and nothing in this crate or the package changed.
-The probes, the design and seven misfits are recorded in
+The timeline's rows are drawn by `mosaic-pkg-card`'s `Card`, which gives
+`Card` its first real consumer (product program §5). The probes, the design
+and seven misfits are recorded in
 [`journal-component-demand-audit-v1.md`](journal-component-demand-audit-v1.md),
-"Card as the timeline row". The prototype is kept on the local branch
-`wip/journal-timeline-on-card-impl`, which is not pushed.
+"Card as the timeline row".
 
-The design, for when it is unblocked:
-
-- **The package** depends on `mosaic-pkg-card = "0.2.0"` and replaces the
-  timeline's `RecordList` mount with a `For` over `timeline-rows`. Each row
-  is:
+- **The package** depends on `mosaic-pkg-card = "0.2.0"`, and the timeline is
+  a `For` over `timeline-rows` (search hits included, since they share the
+  slot). Each row is:
   - the day heading (`row[1]`, a `Text` with the heading role);
   - a `Card` (`title` ← `row[2]`, `body-text` ← `row[3]`, `footer` ←
     `row[4]`);
@@ -204,16 +214,35 @@ The design, for when it is unblocked:
     `row[0] == selected-key`, `onClick` → `onSelectEntry`), with `row[5]`
     (the `★`) beside it.
 
-  The open entry's row gets `-selected` parts.
-- **This crate** would append a seventh row field, `open-label` =
-  `Open {title}`, to every row list, because a layout expression cannot join
-  strings. `RecordList` ignores it.
-- **It is blocked** by misfit M7. In the declared 1100×760 window, a Card row
-  plus its Open button is about 1.8× as tall as a `RecordList` row (measured
-  on Compose: about 220px against 124px). The pane does not scroll on any
-  native backend (JO-5), so Compose's `JournalUiTest` cannot see the second
-  entry. Fix JO-5 first. Then either EM-8, which retires the Open button's
-  extra line, or a denser Card variant.
+  The open entry's row gets `-selected` parts. The button sits beside the
+  card, not around it, because a `HostButton`'s children are dropped on six
+  of eight backends (misfit M1, EM-8). "On this day" stays a `RecordList`.
+- **This crate** appends a seventh row field, `open-label` = `Open {title}`,
+  to every row list, because a layout expression cannot join strings.
+  `RecordList` ignores it.
+- **Card's style drops** (misfit M2) are pinned in `native_complete_gate`'s
+  `CARD_STYLE_DROPS`, matched only on Card's own parts. The package stays
+  native-complete with zero capability degradations.
+- **Row height (misfit M7).** In the declared 1100×760 window a Card row plus
+  its Open button is about 1.8× as tall as a `RecordList` row (measured on
+  Compose: about 220px against 124px), so the second entry starts below the
+  fold. This blocked adoption until the pane could scroll. It was resolved
+  by:
+  1. *The pane scrolls* (JO-5, above): every native backend now scrolls the
+     pane, so every entry is reachable;
+  2. the native UI tests scrolling to a row before requiring it to be
+     displayed. Compose's `JournalUiTest` scrolls with `ScrollBy`, as
+     `JournalScrollUiTest` does (`performScrollTo()` hangs, EM-11). The
+     Android test reaches rows through semantics, and the iPadOS test's
+     taps scroll on their own.
+
+  The density is not won back. EM-8, which would let the card itself be the
+  button and retire the Open line, or a compact Card variant would.
+- **Tests find a row** by its button's part tag prefix, `timeline-entry-open`
+  (`-selected` for the open entry), and its accessible name `Open {title}`:
+  the Compose `contentDescription`, the Flutter `Semantics` label, the
+  XCUITest `label`, the web `aria-label`. The visible text is "Open" on every
+  row.
 
 ## Native hosts (J5a)
 
@@ -576,7 +605,7 @@ entry edited so that it no longer matches drops out.
 - then `EmptyState` "No entries yet" when `timeline-empty`;
 - else `EmptyState` "No entries match" when `no-matches` (a second
   `EmptyState` mount, #15959);
-- else `RecordList`.
+- else the timeline's Card rows, one per hit.
 
 ## Stars (J4b)
 
@@ -651,13 +680,16 @@ section is hidden and the results take the pane.
 | `onSelectOnThisDay` | `{ index }`, a row of the `on-this-day-rows` last rendered |
 
 It opens the entry in the editor exactly as `onSelectEntry` does. It has its
-own event because each `RecordList` indexes its own rows. The open entry is
-highlighted in both lists, since both bind `selected-key`.
+own event because each list (the timeline and On this day) indexes its own
+rows. The open entry is highlighted in both lists, since both bind
+`selected-key`.
 
 **Layout.** In the pane, above the timeline's empty states and list: when
-`has-on-this-day` is set, an "On this day" heading and a second `RecordList`
-mount. The layout already mounts `RecordList` once; the resolver renames the
-second mount's parts (#15959).
+`has-on-this-day` is set, an "On this day" heading and a `RecordList` mount.
+Since the timeline became Card rows this is the layout's only `RecordList`
+mount, so its parts keep their plain names. (While the timeline was a
+`RecordList` too, this was the second mount and the resolver suffixed its
+parts `-m2`, #15959.)
 
 ## Tags (J4d)
 

@@ -161,8 +161,39 @@ src/
   numeric.rs  — 18-entry lowering table and per-instruction rewrite logic
   error.rs    — BuiltinLoweringError enum
   lower.rs    — legacy simple lowering pass (kept for historical reference)
+  heap.rs, dyn_repr.rs, dyn_repr_structural.rs, … — the heap / value-model passes
+  lisp_semantics.rs — Lisp's value rules as compiler-emitted IIR (LANG83 PR7f-2)
 tests/
   test_lowering.rs  — 50 integration tests
+```
+
+## The tagged-word path and the dynamic-value primitives (LANG83 PR7f)
+
+On the native and LLVM pipelines, `lower_heap_builtins_runtime` and
+`lower_dyn_repr` turn a Lisp-family frontend's `cons` / `car` / `cdr` /
+`pair?` / `null?` into the registered dynamic-value primitives
+(`dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`,
+`dyn_is_nil`, plus `dyn_box_int` / `dyn_unbox_int` / `dyn_tag` / `dyn_nil`),
+which those backends call in the tagged-word runtime.
+
+Lisp's *rules* are not runtime calls (`src/lisp_semantics.rs`): truthiness
+(only the words nil and `#f` are false — the whole word is compared, so a
+malformed raw `9` with nil's tag is still true) and `not` are written inline, and `equal?` and
+the run-time exit-code switch are module-local functions `__lisp_equal` /
+`__lisp_exit_code`, all over the primitives above. A JIT-compiled function
+that tests a value stays JIT-compiled, because the inline rules are
+straight-line `i64` code.
+
+The `__lisp_` prefix is reserved for those helpers and the inline-rule
+markers. `lower_dyn_repr` returns `Result<(), ReservedNameError>` and refuses,
+before rewriting anything, a module that defines or calls one of the four
+names it recognises (`lisp_semantics::RESERVED_NAMES`) without having written
+it itself (`lisp_semantics::check_reserved_names`). Other `__lisp_`-prefixed
+names are left alone: the pass runs on Nib's and ALGOL's modules too.
+
+```rust
+let mut module = /* IIR from a frontend */;
+iir_builtin_lowering::lower_dyn_repr(&mut module)?; // Err if the program spells `__lisp_equal`
 ```
 
 ## Relationship to the LANG31 spec
