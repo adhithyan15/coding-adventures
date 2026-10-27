@@ -47,6 +47,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* `__fastfail` (see lispy_not_a_pair) lives in <intrin.h> on MSVC. */
+#if defined(_MSC_VER)
+#include <intrin.h>
+#ifndef FAST_FAIL_FATAL_APP_EXIT
+#define FAST_FAIL_FATAL_APP_EXIT 7 /* winnt.h's value; avoids <windows.h>. */
+#endif
+#endif
+
 /* TWIG-GC (twig_gc.c) — used by __dyn_pair_new to allocate cons cells on
  * the managed heap instead of leaking via calloc. */
 extern int64_t __twig_gc_alloc(int64_t n);
@@ -189,7 +197,8 @@ uint64_t __dyn_pair_new(uint64_t car, uint64_t cdr) {
  *   - the VM (`twig-vm`'s `field_load`, `dynval-runtime`'s `car` builtin)
  *     returns a `TypeError` ("… is not a cons cell") and the run fails;
  *   - `dynval-runtime`'s own `extern "C" dyn_pair_first` panics with
- *     "dyn_pair_first: argument 0x… is not a cons cell".
+ *     "dyn_pair_first: argument with tag 0 (int) is not a pair" — the same
+ *     words this file prints.
  *
  * So the C runtime stops the program too, never returning a made-up value
  * (returning nil would let `(car 5)` quietly exit 0 here while the VM
@@ -209,17 +218,81 @@ uint64_t __dyn_pair_new(uint64_t car, uint64_t cdr) {
  * full answer would ask the collector for the block's kind
  * (`__gc_kind_of`), which walks the heap and is too slow for every `car`.
  */
+/* ── What the refusal prints: the tag, never the word ───────────────────
+ *
+ * The message names the operation, the word's tag and that tag's kind —
+ * "dyn_pair_first: argument with tag 0 (int) is not a pair" — and never the
+ * word itself.  The words that reach here today are immediates (an integer, a
+ * symbol id), but stderr is the one channel a program's user always sees, and
+ * printing raw words there is a habit that leaks a heap address (an ASLR
+ * defeat) the day a heap-tagged non-pair is refused too.  The tag is all a
+ * reader needs to tell "you passed an integer" from "you passed #f".
+ *
+ *   | tag   | kind name   |      | tag   | kind name                  |
+ *   |-------|-------------|      |-------|----------------------------|
+ *   | 0b000 | int         |      | 0b100 | unused tag                 |
+ *   | 0b001 | nil         |      | 0b101 | #t                         |
+ *   | 0b010 | symbol      |      | 0b110 | unused tag                 |
+ *   | 0b011 | #f          |      | 0b111 | heap object (never refused |
+ *   |       |             |      |       | here: the check passes it) |
+ */
+static const char *lispy_tag_kind(uint64_t tag) {
+    switch (tag) {
+    case LISPY_TAG_INT:    return "int";
+    case LISPY_TAG_NIL:    return "nil";
+    case LISPY_TAG_SYMBOL: return "symbol";
+    case LISPY_TAG_FALSE:  return "#f";
+    case LISPY_TAG_TRUE:   return "#t";
+    case LISPY_TAG_HEAP:   return "heap object";
+    default:               return "unused tag";
+    }
+}
+
+/* ── Stopping even when `abort` has been replaced ───────────────────────
+ *
+ * `abort()` is a symbol the linker resolves, and on a backend that exports a
+ * program's own functions (LLVM before #18416) a program that defines
+ * `(define (abort) 0)` *replaces* libc's: the runtime's `abort()` then calls
+ * the program's function, which returns.  So `abort()` must not be the last
+ * line of defence:
+ *
+ *   1. The call goes through a `volatile` function pointer.  The C library
+ *      declares `abort` `noreturn`, so a direct `abort(); __builtin_trap();`
+ *      lets the compiler treat everything after the call as unreachable and
+ *      delete the trap — exactly the code that matters when `abort` returns.
+ *      Loading the callee from a volatile object hides that promise.
+ *   2. If the call comes back anyway, a trap instruction the program cannot
+ *      redefine ends the process: `__builtin_trap()` (`ud2` on x86-64, `brk`
+ *      on AArch64 — SIGILL / SIGTRAP), or on MSVC `__fastfail`, which raises
+ *      a non-continuable exception straight to the kernel and skips every
+ *      in-process handler.
+ *
+ * The usual path is unchanged: libc's `abort()` raises SIGABRT and never
+ * returns, so step 2's trap only ever runs when something replaced it.
+ */
 #if defined(__GNUC__) || defined(__clang__)
 __attribute__((noreturn))
 #elif defined(_MSC_VER)
 __declspec(noreturn)
 #endif
 static void lispy_not_a_pair(const char *op, uint64_t word) {
+    uint64_t tag = word & LISPY_TAG_BITS;
+    void (*volatile stop)(void) = abort;
     fflush(stdout);
-    fprintf(stderr, "%s: argument 0x%llx is not a pair\n", op,
-            (unsigned long long)word);
+    fprintf(stderr, "%s: argument with tag %u (%s) is not a pair\n", op,
+            (unsigned)tag, lispy_tag_kind(tag));
     fflush(stderr);
-    abort();
+    stop();
+#if defined(_MSC_VER)
+    __fastfail(FAST_FAIL_FATAL_APP_EXIT);
+#elif defined(__GNUC__) || defined(__clang__)
+    __builtin_trap();
+#else
+    for (;;) {
+        /* No trap intrinsic: spin rather than return into the caller, which
+         * would read through the non-pair word. */
+    }
+#endif
 }
 
 uint64_t __dyn_pair_first(uint64_t pair) {

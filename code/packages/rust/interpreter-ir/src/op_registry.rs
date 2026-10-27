@@ -496,7 +496,8 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     // implementation reads memory through the word. The VM returns a
     // `TypeError`, `dynval-runtime`'s `extern "C"` functions panic, and the
     // C runtime the tagged-word backends link checks the tag and aborts with
-    // "dyn_pair_first: argument 0x… is not a pair" on stderr (LANG83 PR7f
+    // "dyn_pair_first: argument with tag 0 (int) is not a pair" on stderr —
+    // the tag, never the word, which could be a heap address (LANG83 PR7f
     // follow-up; it was a read through the word before, so Twig's
     // `(car 1000000)` read address 8000000). The traps list stays empty: a
     // type error is not one of the closed `Trap.*` kinds, so a program cannot

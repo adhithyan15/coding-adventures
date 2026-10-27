@@ -2,7 +2,7 @@
 
 ## Unreleased — LANG83 PR7f follow-up — a non-pair stops the program
 
-- `op_registry`: the `Dynamic` family's comment no longer calls `dyn_pair_first` / `dyn_pair_rest` of a non-pair undefined. Every implementation now stops the program (the VM's `TypeError`, `dynval-runtime`'s `extern "C"` panic, and `dynval_runtime.c`'s new tag check and abort). The traps list stays empty: a type error is not one of the closed `Trap.*` kinds. The comment names the one known exception, `lang_aot::jit_lisp`'s McCarthy callbacks, which answer nil. Comment only; no registry data changes.
+- `op_registry`: the `Dynamic` family's comment no longer calls `dyn_pair_first` / `dyn_pair_rest` of a non-pair undefined. Every implementation now stops the program (the VM's `TypeError`, `dynval-runtime`'s `extern "C"` panic, and `dynval_runtime.c`'s new tag check and abort). The traps list stays empty: a type error is not one of the closed `Trap.*` kinds. The comment names the one known exception, `lang_aot::jit_lisp`'s McCarthy callbacks, which answer nil. Comment only; no registry data changes. The quoted refusal is the tag-only message (`dyn_pair_first: argument with tag 0 (int) is not a pair`) adopted after the security review.
 
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 

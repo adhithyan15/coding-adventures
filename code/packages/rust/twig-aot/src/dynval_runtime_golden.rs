@@ -184,14 +184,30 @@ fn c_pair_p_returns_tagged_booleans() {
 // child died (a non-zero status — SIGABRT on Unix) and said why on stderr.
 //
 //   parent:  for each (op, word):  spawn self  ──env──▶  child
-//   child:   __dyn_pair_first(word)  →  abort()   (never reaches `exit(0)`)
-//   parent:  assert !status.success() && stderr names op and "not a pair"
+//   child:   RLIMIT_CORE = 0, then __dyn_pair_first(word)  →  abort()
+//            (never reaches `exit(0)`)
+//   parent:  assert !status.success() && stderr names op, tag and kind
+//
+// Two things keep a dozen deliberate aborts from littering the host:
+//
+//   - the child drops its core-file limit to 0 before the call, so a host
+//     with core dumps enabled (`ulimit -c unlimited`, a CI runner's default
+//     on some images) does not write a core file per case — a core of a test
+//     binary is a copy of its memory, and nothing here wants one;
+//   - the test is Unix-only. On Windows `abort()` can raise a Windows Error
+//     Reporting dialog or minidump per child; the C runtime's behaviour there
+//     is the same code path, so the Unix run is the evidence.
+//
+// The refusal names the word's *tag* and kind ("with tag 0 (int)"), never the
+// word: stderr is no place for a value that could be a heap address. The
+// parent checks that too — no `0x` may appear on the child's stderr.
 
 /// The environment variable that turns a run of
 /// [`c_pair_reads_of_a_non_pair_fail_closed`] into the child that makes the
 /// bad call: `"first:<hex word>"` or `"rest:<hex word>"`.
 const NOT_A_PAIR_CHILD: &str = "DYNVAL_GOLDEN_NOT_A_PAIR_CHILD";
 
+#[cfg(unix)]
 #[test]
 fn c_pair_reads_of_a_non_pair_fail_closed() {
     use std::process::Command;
@@ -200,6 +216,12 @@ fn c_pair_reads_of_a_non_pair_fail_closed() {
         // ── The child: make the call the parent asked for. ──
         let (op, word) = call.split_once(':').expect("child spec is op:hex");
         let word = u64::from_str_radix(word, 16).expect("child word is hex");
+        // No core file for the abort that follows (soft and hard limit 0).
+        let no_core = libc::rlimit { rlim_cur: 0, rlim_max: 0 };
+        // SAFETY: setrlimit reads one initialised `rlimit` and changes only
+        // this (child) process's limits.
+        let rc = unsafe { libc::setrlimit(libc::RLIMIT_CORE, &no_core) };
+        assert_eq!(rc, 0, "child: setrlimit(RLIMIT_CORE, 0)");
         let got = unsafe {
             match op {
                 "first" => __dyn_pair_first(word),
@@ -219,17 +241,18 @@ fn c_pair_reads_of_a_non_pair_fail_closed() {
     let test_name = format!("{module}::c_pair_reads_of_a_non_pair_fail_closed");
     let exe = std::env::current_exe().expect("current test binary");
 
+    // (what, word, the tag and kind the refusal must name)
     let words = unsafe {
         [
-            ("an integer, (car 1000000)", __dyn_box_int(1_000_000)),
-            ("the integer 5", __dyn_box_int(5)),
-            ("nil", __dyn_nil()),
-            ("#f", LispyValue::FALSE.bits()),
-            ("#t", LispyValue::TRUE.bits()),
-            ("a symbol", __dyn_symbol(b"NOT-A-PAIR".as_ptr(), 10)),
+            ("an integer, (car 1000000)", __dyn_box_int(1_000_000), "tag 0 (int)"),
+            ("the integer 5", __dyn_box_int(5), "tag 0 (int)"),
+            ("nil", __dyn_nil(), "tag 1 (nil)"),
+            ("#f", LispyValue::FALSE.bits(), "tag 3 (#f)"),
+            ("#t", LispyValue::TRUE.bits(), "tag 5 (#t)"),
+            ("a symbol", __dyn_symbol(b"NOT-A-PAIR".as_ptr(), 10), "tag 2 (symbol)"),
         ]
     };
-    for (what, word) in words {
+    for (what, word, tag_and_kind) in words {
         // The Rust reference refuses this word too: `heap::car`/`cdr` (what the
         // VM's `field_load` and `dynval-runtime`'s `dyn_pair_first` call) return `None`.
         // SAFETY: every word above is a well-formed immediate LispyValue.
@@ -251,8 +274,12 @@ fn c_pair_reads_of_a_non_pair_fail_closed() {
                  status {:?}, stdout {stdout}",
                 out.status
             );
-            let want = format!("{c_name}: argument {word:#x} is not a pair");
+            let want = format!("{c_name}: argument with {tag_and_kind} is not a pair");
             assert!(stderr.contains(&want), "{c_name}({what}): stderr {stderr:?} lacks {want:?}");
+            assert!(
+                !stderr.contains("0x"),
+                "{c_name}({what}): the refusal printed a raw word on stderr: {stderr:?}"
+            );
         }
     }
 

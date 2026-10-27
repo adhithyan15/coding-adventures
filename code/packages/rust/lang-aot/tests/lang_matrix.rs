@@ -14131,8 +14131,10 @@ fn twig_truthiness_of_a_raw_word_matches_the_runtime_rule_it_replaced() {
 /// compare, only that no column completes. That alone cannot tell the fix
 /// from the bug — a read of address 40 also kills the process (SIGSEGV) — so
 /// the tagged-word columns are run once more and their stderr must carry the
-/// runtime's refusal (`dyn_pair_first: argument 0x28 is not a pair`), which
-/// only the tag check prints.
+/// runtime's refusal (`dyn_pair_first: argument with tag 0 (int) is not a
+/// pair`), which only the tag check prints. The refusal names the tag, never
+/// the word, so no stderr here may carry a `0x…` value (a heap address there
+/// would be an ASLR leak).
 ///
 /// Columns: the ones that compile a `car` with no `cons` in the program and
 /// can be checked here. WASM refuses that program at compile time (its
@@ -14167,9 +14169,14 @@ fn twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column() {
         }
         for (column, stderr) in tagged_word_stderr(&p) {
             assert!(
-                stderr.contains("is not a pair"),
+                stderr.contains("argument with tag ") && stderr.contains("is not a pair"),
                 "{column} {src}: the C runtime must refuse the non-pair, not read \
                  through it; stderr: {stderr:?}"
+            );
+            assert!(
+                !stderr.contains("0x"),
+                "{column} {src}: the refusal must name the tag, not print the word; \
+                 stderr: {stderr:?}"
             );
         }
     }

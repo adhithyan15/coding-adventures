@@ -1633,7 +1633,13 @@ the frontends.
   read the cell at `word & ~7` unconditionally until this change, so Twig's
   `(car 1000000)` read the 8 bytes at address 8000000 on LLVM and native —
   checks for the pair tag `0b111`, flushes stdout, prints
-  `dyn_pair_first: argument 0x… is not a pair` on stderr and aborts. The
+  `dyn_pair_first: argument with tag 0 (int) is not a pair` on stderr and
+  aborts. The message names the word's tag and kind, never the word, so no
+  heap address reaches stderr; `dynval-runtime`'s panic uses the same words.
+  If `abort` returns — a program-defined `abort` replaced libc's, possible on
+  LLVM before #18416 — a trap instruction (`__builtin_trap`, or `__fastfail`
+  on MSVC) still ends the process; `abort` is called through a `volatile`
+  pointer so the compiler cannot delete that trap as unreachable. The
   op's traps list stays empty: a type error is not one of the closed
   `Trap.*` kinds, so it is not catchable, and `lang_matrix`'s
   `twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column` pins the

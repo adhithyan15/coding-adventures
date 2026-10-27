@@ -56,7 +56,9 @@ use lang_runtime_core::SymbolId;
 
 use crate::heap::{self, Closure};
 use crate::intern;
-use crate::value::LispyValue;
+use crate::value::{
+    LispyValue, TAG_BITS, TAG_FALSE, TAG_HEAP, TAG_INT, TAG_NIL, TAG_SYMBOL, TAG_TRUE,
+};
 
 // ---------------------------------------------------------------------------
 // Cons cell operations
@@ -82,6 +84,45 @@ pub unsafe extern "C" fn dyn_pair_new(car: u64, cdr: u64) -> u64 {
     heap::alloc_cons(car_v, cdr_v).bits()
 }
 
+/// The refusal both pair readers share: name the operation and the word's
+/// *tag*, never the word.
+///
+/// The message is the one the C runtime (`twig-aot/runtime/dynval_runtime.c`,
+/// `lispy_not_a_pair`) prints, so every implementation of this ABI says the
+/// same thing: `dyn_pair_first: argument with tag 0 (int) is not a pair`.
+///
+/// Why not print the word with `{:#x}`, as this used to: a panic message goes
+/// to stderr, the one channel every user of a program sees, and the words
+/// refused here include heap-tagged ones — a closure is tag `0b111` but not a
+/// cons cell — whose bits *are* a heap address.  Printing them hands out a
+/// pointer (an ASLR defeat) for free.  The tag says what the caller passed
+/// ("an int", "#f") without saying where anything lives.
+#[cold]
+fn not_a_pair(op: &str, word: u64) -> ! {
+    let tag = word & TAG_BITS;
+    panic!("{op}: argument with tag {tag} ({}) is not a pair", tag_kind_name(tag))
+}
+
+/// The kind a 3-bit tag names (LANG77's table), for error messages.
+///
+/// | tag   | kind        |   | tag   | kind        |
+/// |-------|-------------|---|-------|-------------|
+/// | 0b000 | int         |   | 0b100 | unused tag  |
+/// | 0b001 | nil         |   | 0b101 | #t          |
+/// | 0b010 | symbol      |   | 0b110 | unused tag  |
+/// | 0b011 | #f          |   | 0b111 | heap object |
+fn tag_kind_name(tag: u64) -> &'static str {
+    match tag {
+        TAG_INT => "int",
+        TAG_NIL => "nil",
+        TAG_SYMBOL => "symbol",
+        TAG_FALSE => "#f",
+        TAG_TRUE => "#t",
+        TAG_HEAP => "heap object",
+        _ => "unused tag",
+    }
+}
+
 /// `dyn_pair_first(pair) -> u64` — extract the first element of a
 /// cons cell.
 ///
@@ -101,7 +142,7 @@ pub unsafe extern "C" fn dyn_pair_first(pair: u64) -> u64 {
     let v = unsafe { LispyValue::from_raw_bits(pair) };
     // SAFETY: caller upholds that `pair` is a valid LispyValue.
     unsafe { heap::car(v) }
-        .unwrap_or_else(|| panic!("dyn_pair_first: argument {:#x} is not a cons cell", pair))
+        .unwrap_or_else(|| not_a_pair("dyn_pair_first", pair))
         .bits()
 }
 
@@ -120,7 +161,7 @@ pub unsafe extern "C" fn dyn_pair_rest(pair: u64) -> u64 {
     let v = unsafe { LispyValue::from_raw_bits(pair) };
     // SAFETY: caller upholds that `pair` is a valid LispyValue.
     unsafe { heap::cdr(v) }
-        .unwrap_or_else(|| panic!("dyn_pair_rest: argument {:#x} is not a cons cell", pair))
+        .unwrap_or_else(|| not_a_pair("dyn_pair_rest", pair))
         .bits()
 }
 
@@ -275,6 +316,32 @@ mod tests {
             assert_eq!(dyn_pair_first(v), LispyValue::int(1).bits());
             assert_eq!(dyn_pair_rest(v), LispyValue::int(2).bits());
         }
+    }
+
+    // The refusal's *message* is tested on the Rust helper directly (a
+    // plain Rust panic, caught here) rather than through the `extern "C"`
+    // functions, for the reason in the note below.  It must name the tag and
+    // its kind and must not print the word: a heap-tagged non-pair (a
+    // closure) is a heap address, and stderr is no place for one.
+    #[test]
+    fn not_a_pair_names_the_tag_and_never_the_word() {
+        let closure_like_word = 0x7f12_3456_7890_u64 | TAG_HEAP;
+        for (word, want) in [
+            (LispyValue::int(5).bits(), "dyn_pair_first: argument with tag 0 (int) is not a pair"),
+            (LispyValue::NIL.bits(), "dyn_pair_first: argument with tag 1 (nil) is not a pair"),
+            (LispyValue::FALSE.bits(), "dyn_pair_first: argument with tag 3 (#f) is not a pair"),
+            (LispyValue::TRUE.bits(), "dyn_pair_first: argument with tag 5 (#t) is not a pair"),
+            (closure_like_word, "dyn_pair_first: argument with tag 7 (heap object) is not a pair"),
+        ] {
+            let payload = std::panic::catch_unwind(|| not_a_pair("dyn_pair_first", word))
+                .expect_err("not_a_pair always panics");
+            let msg = payload.downcast_ref::<String>().expect("formatted panic message");
+            assert_eq!(msg, want);
+            assert!(!msg.contains("0x"), "the word must not be printed: {msg}");
+        }
+        assert_eq!(tag_kind_name(TAG_SYMBOL), "symbol");
+        assert_eq!(tag_kind_name(0b100), "unused tag");
+        assert_eq!(tag_kind_name(0b110), "unused tag");
     }
 
     // Note: panicking-across-FFI tests are intentionally omitted.
