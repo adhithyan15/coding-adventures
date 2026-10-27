@@ -1,5 +1,52 @@
 # Changelog — twig-type-checker
 
+## Unreleased — #18438: a user definition shadows a builtin
+
+### Fixed
+
+- **`if`-guard narrowing trusted a comparison by its name.**
+  `extract_narrowing_facts` read `(< x 128)` as "x < 128" whatever `<` was.
+  After `(define (< a b) #t)`, or inside `(lambda (<) …)`, the guard calls
+  some other function, and narrowing on it "proved" refinements the program
+  breaks. `infer_if` now narrows through a comparison or `not` only when
+  the name is not lexically bound and `TypeEnv::resolves_to_builtin` says
+  it is still the builtin. The IR compiler uses the same rule.
+- **`and` / `or` are syntax.** `infer_apply` no longer looks up a user
+  `and` / `or` for a call: the IR compiler always lowers `(and …)` inline,
+  so a user `(define (and a b) …)` no longer makes `(and a b c)` an arity
+  error.
+- **Imported definitions shadow builtins.** `check_program_with_globals`
+  used to skip an imported name that was also a builtin, so an imported `<`
+  kept the builtin's kind. It now binds every imported global. The IR
+  compiler `call`s that import, so its kind is the one that applies.
+  `extract_module_exports` leaves out a builtin that a module re-exports
+  without defining it.
+
+### Added
+
+- `TypeEnv::resolves_to_builtin(name)`. It needs a private `user_defined`
+  set that `bind_global` and record / union registration fill: a builtin
+  and a user value both have kind `Any`, so `globals` cannot tell them
+  apart. The builtin names are now the module constant `BUILTIN_NAMES`.
+- `narrowing::extract_narrowing_facts_where(guard, is_builtin)`.
+  `extract_narrowing_facts` keeps its signature and trusts every name.
+
+### Tests
+
+- New: `narrowing_ignores_a_user_defined_comparison`,
+  `narrowing_ignores_a_user_defined_not`,
+  `narrowing_ignores_a_lexically_bound_comparison`,
+  `imported_definition_named_like_a_builtin_shadows_it`,
+  `exports_leave_out_builtins_the_module_did_not_define` and
+  `and_or_stay_special_forms_when_defined` all failed before the fix.
+  `user_function_named_like_a_builtin_has_its_own_arity` passed before
+  too. `shadowed_comparison_or_not_produces_no_facts` is a unit test of
+  `extract_narrowing_facts_where`.
+- The TW05-C prelude `ascii_info_prelude` no longer defines stub
+  `<`, `<=`, `>`, `>=` and `and` functions. They dated from before builtins
+  were registered, and under this rule they would shadow the builtins the
+  narrowing tests rely on.
+
 ## Unreleased — #18435: shadowed callees are not refinement-checked
 
 ### Fixed

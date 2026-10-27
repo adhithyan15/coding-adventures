@@ -4272,6 +4272,116 @@ mod tests {
         }
     }
 
+    // ── A top-level definition shadows a builtin (#18438) ───────────
+    //
+    // A user's top-level `define` beats a builtin of the same name in
+    // call position as well as value position, and the typed fast paths
+    // no longer assume the builtin ran.  The twig-ir-compiler tests check
+    // the same programs' IR.
+
+    #[test]
+    fn user_definition_named_like_a_builtin_is_what_runs() {
+        for (src, want) in [
+            // The issue body: both positions agree.
+            ("(define car 5) car", 5),
+            ("(define (car p) 42) (car (cons 1 2))", 42),
+            ("(define car (let ((k 7)) (lambda (p) k))) (car (cons 1 2))", 7),
+            (
+                "(define (g p) (car p)) (define car (let ((k 7)) (lambda (p) k))) \
+                 (g (cons 1 2))",
+                7,
+            ),
+            // A user function named like each name-recognised builtin.
+            ("(define (string-length s) 7) (string-length \"abc\")", 7),
+            ("(define (string-append a b) 6) (string-append \"a\" \"b\")", 6),
+            ("(define (substring s a b) 5) (substring \"abc\" 0 1)", 5),
+            ("(define (string-ref s i) 6) (string-ref \"abc\" 0)", 6),
+            ("(define (+ a b) 0) (+ 5 1)", 0),
+            ("(define (- a b) 0) (- 5 1)", 0),
+            ("(define (* a b) 0) (* 5 2)", 0),
+            ("(define (< a b) 1) (< 5 2)", 1),
+            ("(define (= a b) 2) (= 1 1)", 2),
+            ("(define (cons a b) 9) (+ (cons 1 2) 1)", 10),
+            ("(define (car p) \"s\") (string-length (car (cons 1 2)))", 1),
+            // The user's result feeds a builtin that has a typed fast path.
+            ("(define (string-append a b) \"xyz\") (string-length (string-append \"a\" \"b\"))", 3),
+            (
+                "(define (string-length s) 1) \
+                 (string-length (substring \"abc\" 0 (string-length \"abc\")))",
+                1,
+            ),
+            // A user VALUE named like a builtin, called.
+            ("(define + (let ((k 100)) (lambda (a b) k))) (+ 1 2)", 100),
+            (
+                "(define string-append (let ((k \"xyz\")) (lambda (a b) k))) \
+                 (string-length (string-append \"a\" \"b\"))",
+                3,
+            ),
+            // `match` takes values apart with the builtin `=` / `car`, which
+            // a user definition does not change.
+            ("(define (= a b) #f) (union T (A) (B)) (match (B) ((A) 1) ((B) 2))", 2),
+            ("(define (car p) 0) (union T (A (v : int))) (match (A 5) ((A v) v))", 5),
+            // `and` stays the special form in call position.
+            ("(define (and a b) 99) (if (and #f 5) 1 0)", 0),
+            ("(define (and a b) 99) ((lambda (f) (f 1 2)) and)", 99),
+        ] {
+            assert_eq!(run_int(src), Some(want), "{src}");
+        }
+    }
+
+    #[test]
+    fn shadowing_definition_result_reaches_the_dynamic_builtin() {
+        // Each user definition returns the wrong kind for the builtin that
+        // consumes it, so the program must fail — but in the dynamic
+        // builtin, which checks, not in a typed op a native backend would
+        // run unchecked.
+        for (src, builtin, typed_op) in [
+            // The issue comment.
+            (
+                "(define (string-append a b) 5) (string-length (string-append \"a\" \"b\"))",
+                "string-length",
+                "str_len",
+            ),
+            ("(define (+ a b) \"zz\") (string-ref \"abc\" (+ 0 1))", "string-ref", "str_index"),
+            (
+                "(define (f x) (string-length x)) (define (string-append a b) 5) \
+                 (f (string-append \"a\" \"b\"))",
+                "string-length",
+                "str_len",
+            ),
+            // More fast-path builtins, and a user VALUE.
+            (
+                "(define (string-length s) \"x\") (substring \"abc\" 0 (string-length \"abc\"))",
+                "substring",
+                "str_slice",
+            ),
+            (
+                "(define (substring s a b) 5) (string-length (substring \"abc\" 0 1))",
+                "string-length",
+                "str_len",
+            ),
+            ("(define (* a b) \"zz\") (string-ref \"abc\" (* 1 1))", "string-ref", "str_index"),
+            (
+                "(define string-append (let ((k 5)) (lambda (a b) k))) \
+                 (string-length (string-append \"a\" \"b\"))",
+                "string-length",
+                "str_len",
+            ),
+            (
+                "(define (f x) (string-length x)) (define (substring s a b) 5) \
+                 (f (substring \"abc\" 0 1))",
+                "string-length",
+                "str_len",
+            ),
+        ] {
+            let e = run_err(src);
+            assert!(e.contains(builtin), "{src}: {e}");
+            assert!(!e.contains(typed_op), "{src}: {e}");
+        }
+        // `(define car 5)`: calling `car` calls 5, which is an error.
+        run_err("(define car 5) (car (cons 1 2))");
+    }
+
     // ── Error paths ─────────────────────────────────────────────────
 
     #[test]

@@ -1,5 +1,16 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18438: an imported function shadows a builtin
+
+### Tests
+
+- `imported_function_named_like_a_builtin_shadows_it`: `lib.tw` exports a
+  `string-append` that returns 5, and `main.tw` calls
+  `(string-length (string-append "a" "b"))`. The linked `main` must not
+  contain `str_len` or `str_concat`, and running it must fail in the
+  dynamic `string-length`. Before the `twig-ir-compiler` fix, `main` ran
+  `str_len` on 5.
+
 ## Unreleased — #18435: a local shadows an imported function
 
 ### Tests

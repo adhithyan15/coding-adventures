@@ -51,6 +51,7 @@
 //! | Lexically bound name (param, `let`,    | `call_closure h, ...args`         |
 //! | `let*`, lambda param, `match` binding) |                                   |
 //! | Top-level user fn name / extern        | `call <name>, ...args`            |
+//! | Top-level value `define`               | `call_closure` on its value       |
 //! | Builtin name (`+`, `cons`)             | `call_builtin <name>, ...args`    |
 //! | Anything else (any other expression)   | `call_closure h, ...args` (LANG34)|
 //!
@@ -85,6 +86,8 @@
 //! |                                       | is captured, not skipped as global    |
 //! | E4 string fast paths                  | a shadowed `string-append` etc. is    |
 //! |                                       | not lowered to `str_concat` etc.      |
+//! |                                       | (nor one a top-level define shadows,  |
+//! |                                       | #18438)                               |
 //! | `main` direct-call string evidence    | a shadowed call is not evidence about |
 //! |                                       | the global it happens to share a name |
 //! |                                       | with                                  |
@@ -93,6 +96,30 @@
 //! `call`, its statically-known return type and parameter types — because
 //! the callee is simply a different value.  `and` / `or` are special
 //! forms, not bindings, and are not shadowable.
+//!
+//! ### A top-level definition shadows a builtin (#18438)
+//!
+//! The same rule one level out: a top-level `define` (function or value),
+//! a record / union constructor, predicate or accessor, or an extern from
+//! another module beats a builtin of the same name — in call position, in
+//! value position, and in every typed fast path.  Before #18438 the call
+//! arm checked user *functions* before builtins but not user *values*, and
+//! the fast paths checked neither:
+//!
+//! ```text
+//! (define car 5)  car            ; 5           — the define (always was)
+//!                 (car p)        ; was the builtin; now calls 5 → error
+//! (define (string-append a b) 5)
+//! (string-length (string-append "a" "b"))
+//!   was: r = call string-append …; str_len r   ; str_len on an integer
+//!   now: r = call string-append …; call_builtin string-length, r
+//! ```
+//!
+//! [`Compiler::resolves_to_builtin`] is the one predicate every builtin
+//! site asks.  Redefining a builtin is not an error, as in Scheme.  The
+//! compiler's own lowering of `match`, records and unions emits its
+//! `car` / `cons` / `=` operations directly, so a user `car` cannot
+//! change how a `match` takes a value apart.
 //!
 //! ## LANG34 closure opcodes
 //!
@@ -1180,7 +1207,7 @@ impl Compiler {
                     let name = def.name();
                     if !self.escaping_value_globals.contains(name)
                         && !forward_referenced_values.contains(name)
-                        && Self::is_syntax_static_e4_string_expr(
+                        && self.is_syntax_static_e4_string_expr(
                             value,
                             &known_static_string_values,
                             &HashSet::new(),
@@ -1359,7 +1386,7 @@ impl Compiler {
                     body_shadowed.insert(name.to_string());
                 }
                 for (name, rhs) in l.bindings() {
-                    if Self::is_syntax_static_e4_string_expr(rhs, known_static_string_values, shadowed) {
+                    if self.is_syntax_static_e4_string_expr(rhs, known_static_string_values, shadowed) {
                         body_static_string_values.insert(name.to_string());
                     }
                 }
@@ -1373,7 +1400,7 @@ impl Compiler {
                 let mut scoped_shadowed = shadowed.clone();
                 for (name, rhs) in l.bindings() {
                     self.collect_direct_string_call_evidence(rhs, evidence, &scoped_static_string_values, &scoped_shadowed, mode);
-                    if Self::is_syntax_static_e4_string_expr(rhs, &scoped_static_string_values, &scoped_shadowed) {
+                    if self.is_syntax_static_e4_string_expr(rhs, &scoped_static_string_values, &scoped_shadowed) {
                         scoped_static_string_values.insert(name.to_string());
                     } else {
                         scoped_static_string_values.remove(name);
@@ -1391,7 +1418,7 @@ impl Compiler {
                     if let Some(slots) = evidence.get_mut(f) {
                         if apply.args().len() == slots.len() {
                             for (slot, arg) in slots.iter_mut().zip(apply.args().iter()) {
-                                let is_str = Self::is_syntax_static_e4_string_expr(
+                                let is_str = self.is_syntax_static_e4_string_expr(
                                     arg,
                                     known_static_string_values,
                                     shadowed,
@@ -1482,24 +1509,61 @@ impl Compiler {
         }
     }
 
-    /// [`Self::named_apply`], but only when `f` is **not** lexically bound
-    /// — i.e. when `f` really names a builtin or top-level function.
+    /// Is `name` defined at the top level of this program — a function or
+    /// value `define`, a record / union constructor, predicate or accessor,
+    /// or an extern from another module?
+    ///
+    /// Such a definition shadows a builtin of the same name everywhere
+    /// (#18438): see [`Self::resolves_to_builtin`].
+    fn is_user_global(&self, name: &str) -> bool {
+        self.fn_globals.contains(name) || self.value_globals.contains(name)
+    }
+
+    /// Does `name`, used at this point, mean the **builtin** `name`?
+    ///
+    /// Twig resolves a name to its innermost binding (TW00 "Name
+    /// resolution"); a builtin is only the last resort:
+    ///
+    /// | `name` is …                                    | it means        |
+    /// |------------------------------------------------|-----------------|
+    /// | bound by a parameter / `let` / lambda / `match` | that local      |
+    /// | a top-level `define`, record/union name, extern | the user's one  |
+    /// | in [`BUILTINS`]                                 | the builtin     |
+    ///
+    /// `is_bound` answers the first row: [`FnCtx::is_bound`] during
+    /// lowering, the pre-pass's `shadowed` set before it.
+    ///
+    /// Every place that treats a name as a builtin asks this — the
+    /// `call_builtin` arm of `compile_apply` and every typed fast path that
+    /// recognises `string-append`, `substring`, `string-length` or
+    /// `+ - * /` by name.  Asking only "is it a local?" (as before #18438)
+    /// let a user `(define (string-append a b) 5)` be *called*, while the
+    /// code around the call was typed as if the builtin had run: a `str_len`
+    /// on the integer 5.
+    fn resolves_to_builtin(&self, name: &str, is_bound: &dyn Fn(&str) -> bool) -> bool {
+        is_builtin(name) && !is_bound(name) && !self.is_user_global(name)
+    }
+
+    /// [`Self::named_apply`], but only when `f` resolves to the builtin `f`
+    /// ([`Self::resolves_to_builtin`]).
     ///
     /// The E4 string fast paths recognise calls by name (`string-append`,
     /// `substring`, `string-length`, `+`).  If a parameter or `let` binding
     /// is called `string-append`, `(string-append a b)` calls *that* closure
-    /// (#18435), and treating it as the builtin would compile a
-    /// `str_concat` the program never asked for.  `is_bound` answers "is
-    /// this name bound at this point?": [`FnCtx::is_bound`] during lowering,
-    /// the pre-pass's `shadowed` set before it.
-    fn unshadowed_apply<'a>(
+    /// (#18435); if a top-level `define` is, it calls the user's function
+    /// (#18438).  Either way, treating it as the builtin would compile a
+    /// `str_concat` the program never asked for, or type the result as a
+    /// string when it is not one.
+    fn builtin_apply<'a>(
+        &self,
         expr: ExprNode<'a>,
         is_bound: &dyn Fn(&str) -> bool,
     ) -> Option<(&'a str, Exprs<'a>)> {
-        Self::named_apply(expr).filter(|(f, _)| !is_bound(f))
+        Self::named_apply(expr).filter(|(f, _)| self.resolves_to_builtin(f, is_bound))
     }
 
     fn is_syntax_static_e4_string_expr(
+        &self,
         expr: ExprNode<'_>,
         known_static_string_values: &HashSet<String>,
         shadowed: &HashSet<String>,
@@ -1508,21 +1572,21 @@ impl Compiler {
             ExprKind::StrLit(_) => true,
             ExprKind::VarRef(name) => known_static_string_values.contains(name),
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::unshadowed_apply(expr, &|n| shadowed.contains(n)) else {
+                let Some((f, args)) = self.builtin_apply(expr, &|n| shadowed.contains(n)) else {
                     return false;
                 };
                 let arg = |i: usize| args.get(i).expect("length checked first");
                 match f {
                     "string-append" => {
                         args.len() == 2
-                            && Self::is_syntax_static_e4_string_expr(arg(0), known_static_string_values, shadowed)
-                            && Self::is_syntax_static_e4_string_expr(arg(1), known_static_string_values, shadowed)
+                            && self.is_syntax_static_e4_string_expr(arg(0), known_static_string_values, shadowed)
+                            && self.is_syntax_static_e4_string_expr(arg(1), known_static_string_values, shadowed)
                     }
                     "substring" => {
                         args.len() == 3
-                            && Self::is_syntax_static_e4_string_expr(arg(0), known_static_string_values, shadowed)
-                            && Self::is_syntax_static_e4_index_expr(arg(1), known_static_string_values, shadowed)
-                            && Self::is_syntax_static_e4_index_expr(arg(2), known_static_string_values, shadowed)
+                            && self.is_syntax_static_e4_string_expr(arg(0), known_static_string_values, shadowed)
+                            && self.is_syntax_static_e4_index_expr(arg(1), known_static_string_values, shadowed)
+                            && self.is_syntax_static_e4_index_expr(arg(2), known_static_string_values, shadowed)
                     }
                     _ => false,
                 }
@@ -1532,6 +1596,7 @@ impl Compiler {
     }
 
     fn is_syntax_static_e4_index_expr(
+        &self,
         expr: ExprNode<'_>,
         known_static_string_values: &HashSet<String>,
         shadowed: &HashSet<String>,
@@ -1539,13 +1604,13 @@ impl Compiler {
         match expr.kind() {
             ExprKind::IntLit(_) => true,
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::unshadowed_apply(expr, &|n| shadowed.contains(n)) else {
+                let Some((f, args)) = self.builtin_apply(expr, &|n| shadowed.contains(n)) else {
                     return false;
                 };
                 match f {
                     "string-length" => {
                         args.len() == 1
-                            && Self::is_syntax_static_e4_string_expr(
+                            && self.is_syntax_static_e4_string_expr(
                                 args.get(0).expect("length checked first"),
                                 known_static_string_values,
                                 shadowed,
@@ -1555,7 +1620,7 @@ impl Compiler {
                         args.len() >= 2
                             && args
                                 .iter()
-                                .all(|arg| Self::is_syntax_static_e4_index_expr(arg, known_static_string_values, shadowed))
+                                .all(|arg| self.is_syntax_static_e4_index_expr(arg, known_static_string_values, shadowed))
                     }
                     _ => false,
                 }
@@ -2389,7 +2454,7 @@ impl Compiler {
             ExprKind::StrLit(_) => true,
             ExprKind::VarRef(name) => self.is_known_value_type(name, ctx, "str"),
             ExprKind::Apply(_) => {
-                if let Some((f, args)) = Self::unshadowed_apply(expr, &|n| ctx.is_bound(n)) {
+                if let Some((f, args)) = self.builtin_apply(expr, &|n| ctx.is_bound(n)) {
                     let arg = |i: usize| args.get(i).expect("length checked first");
                     match f {
                         "string-append" => {
@@ -2421,7 +2486,7 @@ impl Compiler {
                     || self.is_known_value_type(name, ctx, "i32")
             }
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::unshadowed_apply(expr, &|n| ctx.is_bound(n)) else {
+                let Some((f, args)) = self.builtin_apply(expr, &|n| ctx.is_bound(n)) else {
                     return false;
                 };
                 match f {
@@ -2635,6 +2700,11 @@ impl Compiler {
         // `compile_and`), so a wide `(and …)`/`(or …)` uses constant native
         // stack: argument count is bounded by neither the parser's nesting
         // limit nor MAX_COMPILE_DEPTH.
+        //
+        // They are syntax, not bindings, so this check comes before every
+        // name lookup: neither a local nor a top-level `define` named `and`
+        // changes what `(and …)` means (TW00 "Name resolution").  A define
+        // of that name is still what `and` means as a *value*.
         if let Some(fn_name) = expr.fn_name() {
             if fn_name == "and" {
                 return self.compile_and(args, ctx, loc);
@@ -2696,7 +2766,13 @@ impl Compiler {
                 return Ok(dest);
             }
 
-            if is_builtin(fn_name) {
+            // Only a name that still means the builtin reaches here: not a
+            // local (filtered above), not a top-level function or extern
+            // (the `call` arm above), and — #18438 — not a top-level VALUE
+            // define either.  `(define car 5) (car p)` calls that 5 through
+            // the indirect path below, exactly as `car` in value position
+            // reads it; it used to quietly call the builtin `car` instead.
+            if self.resolves_to_builtin(fn_name, &|n| ctx.is_bound(n)) {
                 if let Some(result) =
                     self.try_compile_e4_string_builtin(fn_name, args, ctx, loc)?
                 {
@@ -2725,7 +2801,7 @@ impl Compiler {
                         return Ok(dest);
                     }
                     if let Some((append_fn, append_args)) =
-                        Self::unshadowed_apply(arg(0), &|n| ctx.is_bound(n))
+                        self.builtin_apply(arg(0), &|n| ctx.is_bound(n))
                     {
                         if append_fn == "string-append" && append_args.len() == 2 {
                             let append_arg = |i: usize| {

@@ -115,6 +115,7 @@ the first one that matches wins:
 |-----------------------------|---------------------------------------------|
 | A name bound in the current lexical scope (parameter, `let`/`let*` binding, lambda parameter, `match` binding) | `call_closure <local>, ...args`, even if a top-level function, extern or builtin has the same name |
 | Top-level user fn or extern | `call <name>, ...args`, using the known return type when the function was already lowered in source order |
+| Top-level value `define` (`(define car 5)`) | `call_closure` on its value — even when a builtin has the same name |
 | Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
 | Direct literal, immutable top-level, lexical-local, annotated top-level-parameter, or direct-call-inferred top-level-parameter string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
 | Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
@@ -147,7 +148,8 @@ program returned 100. Every lookup now checks the lexical scope first:
   name as a global.
 - **E4 string fast paths.** If a local is named `string-append`, `substring`
   or `string-length`, calls to it are not lowered to `str_concat`, `str_slice`
-  or `str_len`.
+  or `str_len`. (Nor are calls to a top-level definition of that name —
+  see below.)
 - **Call-site string inference in `main`.** A call to a shadowing `let`
   binding tells the compiler nothing about the parameters of the top-level
   function with the same name.
@@ -202,6 +204,45 @@ free one.
 
 `and` and `or` are special forms, not bindings, so a local cannot shadow
 them.
+
+### A top-level definition shadows a builtin
+
+The same rule, one level out (#18438): a top-level `define` — a function
+or a value — beats a builtin of the same name, as in Scheme. So do record
+and union constructors, predicates and accessors, and externs imported from
+another module. It holds everywhere a name can be read:
+
+```scheme
+(define car 5)
+car                 ; => 5
+(car (cons 1 2))    ; calls 5: a run-time "not a closure" error
+
+(define (string-append a b) 5)
+(string-length (string-append "a" "b"))   ; string-length of 5: a run-time error
+```
+
+Before the fix the two positions disagreed. `(car p)` still called the
+builtin `car`. Worse, the typed fast paths recognise `string-append`,
+`substring`, `string-length` and `+ - * /` by name, and only asked "is this
+a local?". So the user's `string-append` was *called*, but the code around
+the call was typed as if the builtin had run: `str_len` on the integer 5,
+which a native backend runs unchecked. Call-site string evidence made the
+same mistake, typing a parameter `str` because an argument looked like a
+`string-append` call.
+
+Now one predicate, `Compiler::resolves_to_builtin`, answers "does this name
+mean the builtin here?" for the `call_builtin` arm and every fast path. It
+says no for a local, a top-level definition, or an extern. Redefining a
+builtin is not an error. The compiler's own lowering of `match`, records
+and unions emits its `car` / `cons` / `=` operations directly, so a user
+`car` does not change how `match` takes a value apart.
+
+The special forms stay syntax. `if`, `let`, `let*`, `lambda`, `define`,
+`quote`, `begin`, `match` (and `module`, `record`, …) are keywords, so
+`(define (if a) a)` is a parse error with a source position. `and` and `or`
+are ordinary names to the parser: `(define (and a b) …)` is accepted and is
+what `and` means as a *value*, but `(and …)` in call position is still the
+short-circuit form.
 
 ### Join temporaries take a consensus type
 

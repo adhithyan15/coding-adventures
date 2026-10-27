@@ -1,5 +1,26 @@
 # Changelog — twig-vm
 
+## Unreleased — #18438: end-to-end tests for builtin shadowing
+
+### Tests
+
+- `user_definition_named_like_a_builtin_is_what_runs` checks the values of
+  23 programs. A top-level function or value named like a builtin is what
+  runs, in both positions. A user `=` or `car` does not change how a
+  `match` takes a value apart. `and` stays the special form in call
+  position. Five failed before the `twig-ir-compiler` fix. In four of
+  them a value define named like a builtin is called, and the builtin ran
+  instead: `(+ 1 2)` gave 3, not the user's 100. The fifth nests a user
+  `string-length` inside a `substring` bound. Before the fix, the
+  string-parameter evidence treated that inner call as the builtin and
+  typed the user function's parameter `str`.
+- `shadowing_definition_result_reaches_the_dynamic_builtin` runs 8
+  programs where a user definition returns the wrong kind for the builtin
+  that consumes its result. Each must fail in the dynamic builtin
+  (`string-length`, `string-ref`, `substring`), not in the typed op
+  (`str_len`, `str_index`, `str_slice`) that a native backend would run
+  unchecked. It also checks that `(define car 5) (car p)` is an error.
+
 ## Unreleased — #18448: end-to-end tests for join result types
 
 ### Tests

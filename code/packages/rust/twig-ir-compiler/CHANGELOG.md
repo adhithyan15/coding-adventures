@@ -1,5 +1,80 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18438: a top-level definition shadows a builtin
+
+### Fixed
+
+- **A user's top-level definition now beats a builtin of the same name
+  everywhere.** Before, the call and value positions disagreed, and the
+  typed fast paths trusted the builtin's name:
+
+  ```scheme
+  (define car 5) car (car p)              ; 5, but (car p) ran the builtin car
+  (define (string-append a b) 5)
+  (string-length (string-append "a" "b")) ; call string-append; str_len on 5
+  (define (+ a b) "zz")
+  (string-ref "abc" (+ 0 1))              ; str_index with a str index
+  (define (f x) (string-length x)) (define (string-append a b) 5)
+  (f (string-append "a" "b"))             ; evidence typed x : str
+  ```
+
+  `compile_apply` already called a user *function* before a builtin, but
+  `unshadowed_apply`, the `can_compile_e4_*` and `is_syntax_static_e4_*`
+  checks, and string-parameter evidence only excluded *locals*. So the
+  user's function was called, while the code around it was typed as if the
+  builtin had run. The VM's typed string ops check their operands and
+  raised a `TypeError`. The native backends trust the hint, so there this
+  was type confusion. A user *value* define named like a builtin lost in
+  call position altogether.
+
+  A new predicate, `Compiler::resolves_to_builtin(name, is_bound)`, is true
+  only for a builtin that is neither a local nor a top-level definition
+  (function or value define, record or union function, or extern). The
+  `call_builtin` arm of `compile_apply` and every name-recognising fast path
+  ask it. `unshadowed_apply` became the method `builtin_apply`, and
+  `is_syntax_static_e4_string_expr` / `_index_expr` became methods so they
+  can see the globals. A call to a value define named like a builtin now
+  takes the indirect path (`call_closure` on its value), like any other
+  value define. Redefining a builtin is not an error, as in Scheme.
+- **Special forms are unchanged and now documented.** Keywords (`if`,
+  `let`, `let*`, `lambda`, `define`, `quote`, `begin`, `match`, …) cannot
+  be defined: that is a positioned parse error. `and` / `or` can be: the
+  definition is what the name means as a value, but `(and …)` / `(or …)`
+  stay the short-circuit forms.
+
+### Changed
+
+- **IR changes only for programs that define a builtin-named global.** Over
+  an 826-program corpus (the 780 Twig program literals from the twig, twigc
+  and lang-aot test sources, plus this change's 46 new programs), 28
+  programs' IR changed relative to the base branch. Every one of them
+  defines a global named like a builtin. The other 798 are byte-identical,
+  including all 49 Twig programs in `lang-aot`'s `lang_matrix`. Of the 49
+  corpus programs that define such a global, the 21 unchanged ones only
+  call a user function by its name, which was already a `call`.
+
+### Tests
+
+- `BUILTIN_SHADOWING_PROGRAMS`: 31 programs, all run through
+  `assert_registers_sound`. They are the issue's and comment's programs, a
+  user function named like each name-recognised builtin (`string-append`,
+  `string-length`, `substring`, `string-ref`, `+`, `-`, `*`, `/`, `<`, `=`,
+  `car`, `cons`), user values named like builtins, string-parameter
+  evidence through a shadowing definition, and uses before the definition,
+  in a function body and in a lambda.
+- `user_function_named_like_a_builtin_wins_in_both_positions`,
+  `user_value_named_like_a_builtin_wins_in_both_positions`,
+  `typed_fast_paths_do_not_trust_a_shadowing_definition`,
+  `string_param_evidence_ignores_a_shadowing_definition` and
+  `extern_named_like_a_builtin_is_not_typed_as_the_builtin` pin the IR
+  shape. `unshadowed_builtins_keep_their_fast_paths` is the control: only
+  the shadowed name loses its fast path.
+- `and_or_stay_special_forms_when_defined` and
+  `keyword_special_forms_cannot_be_defined` pin the special-form behaviour.
+- Five of these tests failed before the fix. The other four (both-positions
+  for functions, the control and the two special-form tests) pin behaviour
+  that was already right.
+
 ## Unreleased — #18448: join temporaries take the consensus of every writer
 
 ### Fixed
