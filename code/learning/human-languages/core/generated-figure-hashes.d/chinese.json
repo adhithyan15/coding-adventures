@@ -402,6 +402,27 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ZH-W147-hou-after",
+      "sourceHash": "fnv1a64:ba8ba9337e4c91f9",
+      "svgHash": "fnv1a64:35917159cd3240f7",
+      "svg": "chinese/book/figures/ZH-W147-hou-after-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W148-yue-month",
+      "sourceHash": "fnv1a64:4855b0f7bc032af9",
+      "svgHash": "fnv1a64:8be62441473f37c3",
+      "svg": "chinese/book/figures/ZH-W148-yue-month-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W149-zheng",
+      "sourceHash": "fnv1a64:4bb536985a4a23a1",
+      "svgHash": "fnv1a64:e069ae0e124474e0",
+      "svg": "chinese/book/figures/ZH-W149-zheng-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ZH-W15-tong",
       "sourceHash": "fnv1a64:44621164bcab57b4",
       "svgHash": "fnv1a64:be3708a419493fb8",
@@ -413,6 +434,55 @@
       "sourceHash": "fnv1a64:363da0c0dd9c332f",
       "svgHash": "fnv1a64:07b0dcf71daf4a7b",
       "svg": "chinese/book/figures/ZH-W15-zhong-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W150-guo-pass",
+      "sourceHash": "fnv1a64:e39ddaa2ff0f6281",
+      "svgHash": "fnv1a64:984bb5914a3a3056",
+      "svg": "chinese/book/figures/ZH-W150-guo-pass-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W151-dao-arrive",
+      "sourceHash": "fnv1a64:22c062fb1ce3f2bf",
+      "svgHash": "fnv1a64:5cb1f78ebb4fb98c",
+      "svg": "chinese/book/figures/ZH-W151-dao-arrive-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W152-de-complement",
+      "sourceHash": "fnv1a64:bbab8c9cd6dac689",
+      "svgHash": "fnv1a64:b397c0016bf3c7d5",
+      "svg": "chinese/book/figures/ZH-W152-de-complement-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W153-bi-compare",
+      "sourceHash": "fnv1a64:a394d486b1b588c0",
+      "svgHash": "fnv1a64:b06fe8c5ccedfc71",
+      "svg": "chinese/book/figures/ZH-W153-bi-compare-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W154-hai-still",
+      "sourceHash": "fnv1a64:eea7163f78791949",
+      "svgHash": "fnv1a64:b02488d0d9a5ade1",
+      "svg": "chinese/book/figures/ZH-W154-hai-still-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W155-cong-from",
+      "sourceHash": "fnv1a64:3a99a1e14b1e6808",
+      "svgHash": "fnv1a64:d08f6b6531ff7f0a",
+      "svg": "chinese/book/figures/ZH-W155-cong-from-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ZH-W156-yuan-money",
+      "sourceHash": "fnv1a64:0041ccb026bf1165",
+      "svgHash": "fnv1a64:1ff08cd41c39d86c",
+      "svg": "chinese/book/figures/ZH-W156-yuan-money-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

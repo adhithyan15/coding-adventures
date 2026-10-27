@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C156-practice",
+    "language": "chinese",
+    "chapter": 156,
+    "sequence": 12700,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:015507891a3a1c64"
+  },
+  "findings": []
+}

@@ -217,6 +217,11 @@ component TaskApp {
   slot note-title-value    : text ;
   slot note-body-value     : text ;
   slot note-task-value     : text ;
+  // Why the last note Save was refused, or empty (E5): today only "no task
+  // has that name". It is TaskApp's, not a Notes slot, and is drawn above
+  // the Notes mount the way Journal draws `draft-error` above DraftEditor,
+  // so Notes' own contract is unchanged (task-app-notes-ui-v1.md, v1.2).
+  slot note-error          : text ;
 
   // Checklists (C3a). `checklists-mode` is non-empty when the view is showing.
   // The library is RecordList rows over the project's templates then runs; the
