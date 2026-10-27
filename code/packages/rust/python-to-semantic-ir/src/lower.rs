@@ -149,6 +149,54 @@
 //! `lst.sort(key=lambda x: -x)`) is just another argument and lowers
 //! through the ordinary call-arg path (a lambda → `MakeClosure`).
 //!
+//! ## Assignment statements (#18482)
+//!
+//! Python's grammar folds five statement forms into one rule,
+//! `assign_stmt = expression_list [ assign_suffix | augmented_assign |
+//! annotation ]`.  The frontend once looked only for `assign_suffix` and
+//! lowered *anything else* as the bare expression on the left, so
+//! `x += 2` and `x: int = 5` compiled to the statement `x` and changed
+//! nothing.  Every form is now lowered or refused:
+//!
+//! ```text
+//!   x = e              store e into x
+//!   a = b = e          tmp = e; a = tmp; b = tmp      (e evaluated once,
+//!                                                     targets left to right)
+//!   x += e             x = x + e      (same builtin as the binary `+`)
+//!   x: T = e           x = e          (the annotation T is ignored)
+//!   x: T               nothing        (a declaration with no value)
+//!   e                  an expression statement
+//! ```
+//!
+//! An augmented assignment uses *exactly* the builtin its binary operator
+//! lowers to (see [`arith_builtin`]), so `x /= 2` true-divides like
+//! `x / 2`.  An operator whose binary form is not lowered (`//=`, `**=`,
+//! the bitwise ones, `@=`) is refused, and so is a subscript target
+//! (`xs[i] += 1`), which would have to evaluate `xs` and `i` once.
+//!
+//! **One known divergence:** for a *list*, Python's `xs += ys` extends the
+//! list in place (`list.__iadd__`), so every other reference to that list
+//! sees the new items.  `xs = xs + ys` builds a new list instead.  The
+//! frontend cannot tell a list from a number without types, and no SIR
+//! runtime has an in-place `+=` helper yet, so this case is documented, not
+//! refused.  `x += 1` on numbers and strings is exact.
+//!
+//! Two scoping rules make assignment inside a loop work:
+//!
+//! - a **parameter** the body assigns is copied into a fresh local when
+//!   the function starts, and every later read and store of the name
+//!   goes to that local.
+//!   Assigning a parameter used to declare a new local that shadowed it
+//!   only until the end of the enclosing block, so
+//!   `while n > 0: n -= 1` never changed the `n` the condition read and
+//!   looped forever;
+//! - a `for` whose variable is **already bound** (`i = 10; for i in …`)
+//!   stores each item into that variable, as Python does, instead of
+//!   declaring a fresh loop-scoped one.
+//!
+//! A user `def main` is renamed, because the synthesised module body is
+//! the SIR function `main`.  See [`sir_function_name`].
+//!
 //! ## Still deferred (later milestones / runtime-library work)
 //!
 //! - list/dict **comprehensions** (`[x for x in xs]`)            → deferred
@@ -328,6 +376,62 @@ const MODULE_OWNER: &str = "<module>";
 /// its parent.
 const DETACHED_OWNER: &str = "<detached>";
 
+/// The prefix that marks an **escaped** user function name.
+///
+/// ## Why user function names need escaping
+///
+/// The module body runs as the synthesised SIR function `main`, and every
+/// `def` is lifted into the same module-level function table.  So the
+/// everyday idiom
+///
+/// ```python
+/// def main():
+///     print(42)
+///
+/// main()
+/// ```
+///
+/// produced two functions named `main`, and the validator refused the
+/// module.  Renaming the user's `main` to some fixed name like `user_main`
+/// would only move the clash, since a program can define `user_main`
+/// too.  The rename has to be **one-to-one**: no two source names may map
+/// to the same SIR name, and no source name may map to `main`.
+///
+/// ## The escape
+///
+/// [`sir_function_name`] prefixes this marker to the two kinds of name
+/// that could collide, and leaves every other name alone:
+///
+/// | source name        | SIR name             | why                        |
+/// |--------------------|----------------------|----------------------------|
+/// | `main`             | `__py_main`          | `main` is taken            |
+/// | `__py_x`           | `__py___py_x`        | it starts with the marker  |
+/// | anything else, `f` | `f`                  | unchanged                  |
+///
+/// It is one-to-one because the output starts with the marker exactly
+/// when the input was escaped, and stripping the marker recovers the
+/// input.  `main` itself is never an output: an unescaped output is not
+/// `main` by the first row, and an escaped one starts with the marker.
+///
+/// The escape is applied only where a function name is *written into the
+/// IR*: [`Function::name`], `DirectCall`, and `MakeClosure`.  Inside the
+/// lowerer, every table (`function_names`, `fn_captures`, `def_facts`) stays
+/// keyed by the source spelling, so `main()` in the source still resolves.
+const FN_ESCAPE_PREFIX: &str = "__py_";
+
+/// The SIR name of the user function spelled `name` in the source (see
+/// [`FN_ESCAPE_PREFIX`] for the one-to-one escape).  Synthesised names
+/// (`__lambda_<N>`, `Class__method`) pass through unchanged unless they
+/// happen to start with the marker, in which case they are escaped like
+/// any other name, consistently at every site.
+fn sir_function_name(name: &str) -> String {
+    if name == "main" || name.starts_with(FN_ESCAPE_PREFIX) {
+        format!("{FN_ESCAPE_PREFIX}{name}")
+    } else {
+        name.to_string()
+    }
+}
+
 /// Lower a parsed Python CST into a SIR module (M4: literals, variable
 /// references, assignment, operators, control flow, functions, calls,
 /// and closures).
@@ -379,6 +483,29 @@ enum SuffixKind {
     /// suffix, or a deferred bare attribute read.  Carries the lexeme so
     /// the fold can pack it as the dispatch method-name `StrLit`.
     Attr(String),
+}
+
+/// What the left-hand side of an assignment denotes, worked out
+/// *before* anything is stored (see [`Lowerer::classify_target`]).
+///
+/// Classifying first lets every assignment form share one store routine
+/// ([`Lowerer::store_target`]): a plain `x = e`, each target of a chain
+/// `a = b = e`, an annotated `x: T = e`, and the write half of an
+/// augmented `x += e`.
+enum Target<'a> {
+    /// A bare name: `x = …`.
+    Name(String),
+    /// An instance variable inside a method: `self.attr = …`.  Carries
+    /// the attribute name.
+    Instance(String),
+    /// A subscript: `base[index] = …`.  `atom` and the `leading`
+    /// suffixes build the base value (`xs`, or `m[a]` for `m[a][b]`);
+    /// `last` is the final subscript suffix being stored into.
+    Subscript {
+        atom: &'a GrammarASTNode,
+        leading: Vec<&'a GrammarASTNode>,
+        last: &'a GrammarASTNode,
+    },
 }
 
 /// Facts about one `def`, gathered by the first pass
@@ -464,6 +591,13 @@ struct FunctionCtx {
     /// method body is distinguished from an (otherwise unresolved) bare
     /// name of the same spelling anywhere else.
     in_method: bool,
+    /// Locals whose IR name differs from their source name.  A parameter
+    /// the body assigns is copied into a fresh local when the function
+    /// starts (see [`Lowerer::param_copy_prologue`]); from then on the
+    /// source name `n` means that local, `__param_n_<N>`.  Every read
+    /// ([`Lowerer::resolve_var_in`]) and store ([`Lowerer::store_target`])
+    /// of a local goes through [`Self::ir_local`].
+    aliases: std::collections::HashMap<String, String>,
 }
 
 impl FunctionCtx {
@@ -476,6 +610,7 @@ impl FunctionCtx {
             locals: Vec::new(),
             owner: owner.to_string(),
             in_method: false,
+            aliases: std::collections::HashMap::new(),
         }
     }
 
@@ -492,6 +627,7 @@ impl FunctionCtx {
             // ever planned from inside a method body (see `DefFacts`).
             owner: DETACHED_OWNER.to_string(),
             in_method: true,
+            aliases: std::collections::HashMap::new(),
         }
     }
 
@@ -510,6 +646,15 @@ impl FunctionCtx {
     /// Is `name` an enclosing-scope value (local / param / capture) of
     /// *this* function?  Such a name, when read inside a nested
     /// `lambda`/`def`, must be **captured**.
+    /// The IR name of the local spelled `name` in the source: its alias
+    /// if it has one, else `name` itself.
+    fn ir_local(&self, name: &str) -> String {
+        self.aliases
+            .get(name)
+            .cloned()
+            .unwrap_or_else(|| name.to_string())
+    }
+
     fn is_enclosing_value(&self, name: &str) -> bool {
         self.locals.iter().any(|n| n == name)
             || self.params.contains(name)
@@ -567,6 +712,13 @@ struct Lowerer {
     /// name.  Used after lowering to detect [`Feature::MutualRecursion`]
     /// (a cycle of length ≥ 2 — two functions that call each other).
     call_graph: Vec<(String, HashSet<String>)>,
+    /// Every `NAME` token spelled anywhere in the source file, collected
+    /// once by [`Self::lower_file`].  A temporary the lowerer invents (see
+    /// [`Self::fresh_temp_name`]) must not be one of these, or it would
+    /// shadow a user variable of the same spelling.
+    source_names: HashSet<String>,
+    /// Counter for temporaries' names (`__chain_<N>`, `__for_<N>`).
+    temp_counter: usize,
 }
 
 impl Lowerer {
@@ -582,6 +734,8 @@ impl Lowerer {
             def_facts: std::collections::HashMap::new(),
             claimed_names: HashSet::new(),
             call_graph: Vec::new(),
+            source_names: HashSet::new(),
+            temp_counter: 0,
         }
     }
 
@@ -627,6 +781,7 @@ impl Lowerer {
         }
 
         // ── Pass 1: collect all function names (top-level + nested). ──
+        self.source_names = collect_source_names(file);
         for child in &file.children {
             if let ASTNodeOrToken::Node(stmt) = child {
                 self.collect_function_names(stmt, MODULE_OWNER, 0)?;
@@ -701,19 +856,8 @@ impl Lowerer {
             },
             _ => Expr::NilLit { span: span.clone() },
         };
-        let stmts: Vec<Stmt> = items
-            .into_iter()
-            .flat_map(|item| match item {
-                Lowered::Stmt(s) => vec![*s],
-                Lowered::Stmts(v) => v,
-                Lowered::Expr(expr) => {
-                    let s = expr.span().clone();
-                    vec![Stmt::ExprStmt { expr, span: s }]
-                }
-            })
-            .collect();
         Block {
-            stmts,
+            stmts: Self::statements_only(items),
             value,
             span: span.clone(),
         }
@@ -928,7 +1072,10 @@ impl Lowerer {
                 }
             }
         }
-        Err(self.err_at(class_stmt, "malformed class: missing class name".to_string()))
+        Err(self.err_at(
+            class_stmt,
+            "malformed class: missing class name".to_string(),
+        ))
     }
 
     /// Extract a `class_stmt`'s optional single base class
@@ -1028,6 +1175,11 @@ impl Lowerer {
                 format!("control-flow nesting too deep (exceeds {MAX_BLOCK_DEPTH} levels)"),
             ));
         }
+        // A one-line suite (`if c: x = 1`) holds a bare `simple_stmt`,
+        // with no `statement` wrapper (see `suite_statements`).
+        if stmt.rule_name == "simple_stmt" {
+            return self.lower_simple_stmt(stmt, ctx);
+        }
         if stmt.rule_name != "statement" {
             return Err(self.err_at(
                 stmt,
@@ -1094,34 +1246,91 @@ impl Lowerer {
         }
     }
 
-    /// Lower an `assign_stmt` — `expression_list (assign_suffix)?`.  With
-    /// an `assign_suffix` (`= rhs`) present it is a real assignment;
-    /// otherwise it is a bare expression statement.
+    /// Lower an `assign_stmt`:
+    ///
+    /// ```text
+    ///   assign_stmt = expression_list
+    ///                 [ assign_suffix | augmented_assign | annotation ] ;
+    /// ```
+    ///
+    /// The optional tail picks the statement form, so it is matched
+    /// explicitly.  Any other shape is refused: an earlier version looked
+    /// only for `assign_suffix` and lowered `x += 2` and `x: int = 5` as
+    /// the bare expression `x`, silently dropping the store (#18482).
+    ///
+    /// | tail               | form                     | lowered by                  |
+    /// |--------------------|--------------------------|-----------------------------|
+    /// | none               | expression statement `e` | [`Self::lower_expr`]        |
+    /// | `assign_suffix`    | `x = e`, `a = b = e`     | [`Self::lower_assignment`]  |
+    /// | `augmented_assign` | `x += e`, …              | [`Self::lower_augmented`]   |
+    /// | `annotation`       | `x: T = e`, `x: T`       | [`Self::lower_annotated`]   |
     fn lower_assign_stmt(
         &mut self,
         assign: &GrammarASTNode,
         ctx: &mut FunctionCtx,
     ) -> Result<Lowered, PythonLowerError> {
-        let node_children: Vec<&GrammarASTNode> = child_nodes(assign);
-        let suffix = node_children
-            .iter()
-            .find(|n| n.rule_name == "assign_suffix")
-            .copied();
+        let kids: Vec<&GrammarASTNode> = child_nodes(assign);
+        let (lhs_list, tail) = match kids.as_slice() {
+            [lhs] => (*lhs, None),
+            [lhs, tail] => (*lhs, Some(*tail)),
+            _ => {
+                return Err(self.err_at(
+                    assign,
+                    "unsupported: assignment statement shape (deferred)".to_string(),
+                ))
+            }
+        };
+        if lhs_list.rule_name != "expression_list" {
+            return Err(self.err_at(
+                lhs_list,
+                format!(
+                    "expected an `expression_list`, got `{}`",
+                    lhs_list.rule_name
+                ),
+            ));
+        }
 
-        let lhs_list = self.expect_single_kind(assign, "expression_list")?;
-
-        match suffix {
+        match tail.map(|t| (t, t.rule_name.as_str())) {
             None => {
                 let expr = self.lower_expr(self.single_expr(lhs_list)?, ctx)?;
                 Ok(Lowered::Expr(expr))
             }
-            Some(suffix) => self.lower_assignment(assign, lhs_list, suffix, ctx),
+            Some((suffix, "assign_suffix")) => self.lower_assignment(assign, lhs_list, suffix, ctx),
+            Some((aug, "augmented_assign")) => self.lower_augmented(assign, lhs_list, aug, ctx),
+            Some((ann, "annotation")) => self.lower_annotated(assign, lhs_list, ann, ctx),
+            Some((other, name)) => Err(self.err_at(
+                other,
+                format!("unsupported: assignment form `{name}` (deferred)"),
+            )),
         }
     }
 
-    /// Lower `target = rhs`.  First-occurrence detection: the first
-    /// assignment to a name emits a `LetStarBinding`; a later assignment
-    /// to an already-declared name emits an `Assign`.
+    /// Lower `target = rhs`, or a **chained** assignment
+    /// `t1 = t2 = … = rhs`.
+    ///
+    /// The `assign_suffix` holds every `= expression_list` after the first
+    /// target; the *last* list is the value, the others are more targets:
+    ///
+    /// ```text
+    ///   a = b = 0
+    ///   assign_stmt
+    ///     expression_list  (a)          ← target 1
+    ///     assign_suffix
+    ///       "="  expression_list (b)    ← target 2
+    ///       "="  expression_list (0)    ← the value
+    /// ```
+    ///
+    /// Python evaluates the value **once**, then stores it into each
+    /// target **left to right**.  Evaluating `[]` once per target would
+    /// give each target its own list, where Python gives them one shared
+    /// list.  So a chain stores the value into a fresh temporary first:
+    ///
+    /// ```text
+    ///   a = b = []    ⇒   __chain_0 = []; a = __chain_0; b = __chain_0
+    /// ```
+    ///
+    /// An earlier version took only the first `expression_list` of the
+    /// suffix, so `a = b = 0` compiled to `a = b` (#18482).
     fn lower_assignment(
         &mut self,
         assign: &GrammarASTNode,
@@ -1129,182 +1338,485 @@ impl Lowerer {
         suffix: &GrammarASTNode,
         ctx: &mut FunctionCtx,
     ) -> Result<Lowered, PythonLowerError> {
-        let rhs_list = self.expect_single_kind(suffix, "expression_list")?;
-
-        let target_node = self.single_expr(lhs_list)?;
-        let rhs_node = self.single_expr(rhs_list)?;
-
-        let name = match self.target_name(target_node)? {
-            Some(name) => name,
-            None => {
-                // An instance-variable target (`self.x = v`, OOP surface)?
-                if let Some(stmt) = self.try_attr_assign(assign, target_node, rhs_node, ctx)? {
-                    return Ok(Lowered::Stmt(Box::new(stmt)));
-                }
-                // M5: a *subscript* target (`xs[i] = v` / `d[k] = v`)?
-                // Everything else (tuple-unpack, chained attrs, …) is deferred.
-                if let Some(stmt) = self.try_subscript_assign(assign, target_node, rhs_node, ctx)? {
-                    return Ok(Lowered::Stmt(Box::new(stmt)));
-                }
+        let mut lists: Vec<&GrammarASTNode> = vec![lhs_list];
+        for n in child_nodes(suffix) {
+            if n.rule_name != "expression_list" {
                 return Err(self.err_at(
-                    target_node,
-                    "unsupported: assignment target is not a bare name (deferred)".to_string(),
+                    n,
+                    format!("expected an `expression_list`, got `{}`", n.rule_name),
                 ));
             }
+            lists.push(n);
+        }
+        let Some((value_list, target_lists)) = lists.split_last() else {
+            unreachable!("lists starts with the left-hand side");
         };
-
-        // Lower the RHS *before* declaring the name so a self-referential
-        // first binding (`x = x`) correctly sees `x` as still-unbound.
-        let value = self.lower_expr(rhs_node, ctx)?;
+        if target_lists.is_empty() {
+            return Err(self.err_at(suffix, "malformed assignment".to_string()));
+        }
         let span = self.span_of(assign);
 
-        if ctx.locals.iter().any(|n| n == &name) {
-            self.observed.add(Feature::MutableBindings);
-            Ok(Lowered::Stmt(Box::new(Stmt::Assign {
-                name,
-                scope: Scope::Local,
-                value,
-                span,
-            })))
-        } else {
-            ctx.locals.push(name.clone());
-            Ok(Lowered::Stmt(Box::new(Stmt::LetStarBinding {
-                name,
-                sir_type: None,
-                value,
-                span,
-            })))
-        }
-    }
+        // Lower the value *before* any target is declared, so a first
+        // binding that reads its own name (`x = x`) still sees `x` as
+        // unbound, matching Python's `NameError`.
+        let value = self.lower_expr(self.single_expr(value_list)?, ctx)?;
 
-    /// Lower an **instance-variable assignment** `self.x = rhs` (OOP
-    /// surface, SIR25 §2) into [`Stmt::Assign`] with `Scope::Instance`.
-    /// Returns `Ok(None)` when the LHS is not this shape — a bare-name
-    /// `self.x` attribute target where the receiver peels to *exactly*
-    /// `self` — so the caller falls through to the subscript check and
-    /// then the generic deferral (a chained target like `self.x.y = v`
-    /// or an attribute assignment on any receiver other than `self`
-    /// stays deferred, matching the read side's restriction in
-    /// `try_primary_suffixes`).
-    fn try_attr_assign(
-        &mut self,
-        assign: &GrammarASTNode,
-        target_node: &GrammarASTNode,
-        rhs_node: &GrammarASTNode,
-        ctx: &mut FunctionCtx,
-    ) -> Result<Option<Stmt>, PythonLowerError> {
-        let primary = match self.peel_to_primary(target_node) {
-            Some(p) => p,
-            None => return Ok(None),
-        };
-        let kids = child_nodes(primary);
-        let (atom, suffixes) = match kids.split_first() {
-            Some((atom, rest)) if !rest.is_empty() && rest[0].rule_name == "suffix" => {
-                (*atom, rest)
-            }
-            _ => return Ok(None),
-        };
-        // Only the single-suffix shape `self.x = v` is ours; a chained
-        // target (`self.x.y = v`) is left for the caller's next check
-        // (which will also decline, and the target ultimately defers).
-        if suffixes.len() != 1 {
-            return Ok(None);
+        if let [only] = target_lists {
+            let target = self.classify_target(self.single_expr(only)?, ctx)?;
+            let stmt = self.store_target(target, value, ctx, span)?;
+            return Ok(Lowered::Stmt(Box::new(stmt)));
         }
-        let attr_name = match self.suffix_kind(suffixes[0])? {
-            SuffixKind::Attr(name) => name,
-            _ => return Ok(None),
-        };
-        let receiver = self.lower_expr(atom, ctx)?;
-        if !is_self_ref(&receiver) {
-            return Ok(None);
-        }
-        let value = self.lower_expr(rhs_node, ctx)?;
-        let span = self.span_of(assign);
-        // Stmt::Assign unconditionally observes MutableBindings (any
-        // scope) in the validator, alongside the Instance-scope-specific
-        // InstanceVars — declare both so the manifest matches exactly.
-        self.observed.add(Feature::MutableBindings);
-        self.observed.add(Feature::InstanceVars);
-        Ok(Some(Stmt::Assign {
-            name: format!("@{attr_name}"),
-            scope: Scope::Instance,
+
+        // A chain: evaluate once into a temporary, then store it into
+        // each target left to right.
+        let tmp = self.fresh_temp_name("chain");
+        let mut stmts = vec![Stmt::LetStarBinding {
+            name: tmp.clone(),
+            sir_type: None,
             value,
-            span,
-        }))
+            span: span.clone(),
+        }];
+        ctx.locals.push(tmp.clone());
+        for list in target_lists {
+            let target = self.classify_target(self.single_expr(list)?, ctx)?;
+            let read_tmp = Expr::VarRef {
+                name: tmp.clone(),
+                scope: Scope::Local,
+                span: span.clone(),
+            };
+            stmts.push(self.store_target(target, read_tmp, ctx, span.clone())?);
+        }
+        Ok(Lowered::Stmts(stmts))
     }
 
-    /// M5: lower a **subscript assignment** `base[index] = rhs` into
-    /// [`Stmt::SeqSet`] (list) or [`Stmt::MapSet`] (map), mirroring the
-    /// read-side disambiguation (string-literal index → map).  Returns
-    /// `Ok(None)` when the LHS is *not* a subscript target (so the caller
-    /// reports the generic "not a bare name" deferral).
+    /// Lower an **augmented assignment** `target op= rhs` (#18482).
     ///
-    /// The `base` is everything left of the final subscript: for
-    /// `xs[i] = v` it is `xs`; for a chained `m[a][b] = v` it is `m[a]`
-    /// (itself lowered as a `SeqIndex`/`MapGet` value).  The base is
-    /// lowered as an ordinary expression (it must resolve to a value in
-    /// scope), the final index/key and the RHS likewise.
-    fn try_subscript_assign(
+    /// Python reads the target, applies the operator, and writes the result
+    /// back.  So `x += e` lowers to `x = x + e`, using exactly the builtin
+    /// the binary operator lowers to ([`arith_builtin`]):
+    ///
+    /// ```text
+    ///   x += e      ⇒   Assign x = BuiltinCall("+",        [x, e])
+    ///   x /= e      ⇒   Assign x = BuiltinCall("div_true", [x, e])
+    ///   self.n -= 1 ⇒   Assign @n (Instance) = BuiltinCall("-", [@n, 1])
+    /// ```
+    ///
+    /// The target is read *before* `e` is evaluated, as in Python (the
+    /// builtin evaluates its arguments left to right).
+    ///
+    /// Refused, each with a positioned error:
+    ///
+    /// - `//=`, `**=`, `&=`, `|=`, `^=`, `<<=`, `>>=`, `@=`: their binary
+    ///   operators are not lowered either;
+    /// - a subscript target (`xs[i] += 1`): `xs` and `i` would have to be
+    ///   evaluated once and used twice, which needs temporaries the
+    ///   subscript path does not make yet;
+    /// - a name not bound in this scope.  Python makes an augmented
+    ///   target local to its function, so reading it first raises
+    ///   `UnboundLocalError` (or `NameError` at module level);
+    /// - a tuple value (`x += 1, 2`), like every tuple.
+    ///
+    /// For a *list*, Python's `+=` extends the list in place; this lowering
+    /// builds a new one (see the module docs, "Assignment statements").
+    fn lower_augmented(
         &mut self,
         assign: &GrammarASTNode,
-        target_node: &GrammarASTNode,
-        rhs_node: &GrammarASTNode,
+        lhs_list: &GrammarASTNode,
+        aug: &GrammarASTNode,
         ctx: &mut FunctionCtx,
-    ) -> Result<Option<Stmt>, PythonLowerError> {
-        // Peel the target expression to its `primary` (the rule that
-        // carries `atom suffix*`); a non-subscript target peels to a bare
-        // atom (no suffix) and is not ours.
-        let primary = match self.peel_to_primary(target_node) {
-            Some(p) => p,
-            None => return Ok(None),
+    ) -> Result<Lowered, PythonLowerError> {
+        let op_node = self
+            .first_child_named(aug, "augmented_assign_op")
+            .ok_or_else(|| self.err_at(aug, "malformed augmented assignment".to_string()))?;
+        let op_text = op_node
+            .children
+            .iter()
+            .find_map(|c| match c {
+                ASTNodeOrToken::Token(t) => Some(t.value.clone()),
+                ASTNodeOrToken::Node(_) => None,
+            })
+            .ok_or_else(|| self.err_at(op_node, "malformed augmented operator".to_string()))?;
+        // `+=` → `+`: the augmented spelling is the binary one plus `=`.
+        let binary = op_text.strip_suffix('=').unwrap_or(&op_text);
+        let Some(builtin) = arith_builtin(binary) else {
+            return Err(self.err_at(
+                op_node,
+                format!(
+                    "unsupported: augmented assignment `{op_text}` (the `{binary}` operator \
+                     is not lowered yet) (deferred)"
+                ),
+            ));
         };
+        let value_list = self
+            .first_child_named(aug, "expression_list")
+            .ok_or_else(|| self.err_at(aug, "malformed augmented assignment".to_string()))?;
+        let target_node = self.single_expr(lhs_list)?;
+        let span = self.span_of(assign);
+
+        let target = self.classify_target(target_node, ctx)?;
+        let current = match &target {
+            Target::Name(name) => {
+                let unbound = || {
+                    self.err_at(
+                        target_node,
+                        format!(
+                            "unsupported: augmented assignment to `{name}`, which is not \
+                             bound in this scope (Python raises UnboundLocalError)"
+                        ),
+                    )
+                };
+                if !ctx.is_enclosing_value(name) {
+                    return Err(unbound());
+                }
+                let read = self.resolve_var_in(ctx, name, span.clone())?;
+                if matches!(
+                    read,
+                    Expr::VarRef {
+                        scope: Scope::Capture,
+                        ..
+                    }
+                ) {
+                    // Unreachable through the bound-name analysis (an
+                    // augmented target is bound in its function, so it is
+                    // never captured), but a store into a capture would
+                    // only change this closure's copy.  Refuse it.
+                    return Err(unbound());
+                }
+                read
+            }
+            Target::Instance(attr) => {
+                self.observed.add(Feature::InstanceVars);
+                Expr::VarRef {
+                    name: format!("@{attr}"),
+                    scope: Scope::Instance,
+                    span: span.clone(),
+                }
+            }
+            Target::Subscript { .. } => {
+                return Err(self.err_at(
+                    target_node,
+                    format!(
+                        "unsupported: augmented assignment `{op_text}` to a subscript \
+                         (deferred)"
+                    ),
+                ))
+            }
+        };
+        let rhs = self.lower_expr(self.single_expr(value_list)?, ctx)?;
+        let value = Expr::BuiltinCall {
+            name: builtin.to_string(),
+            args: vec![current, rhs],
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        };
+        let stmt = self.store_target(target, value, ctx, span)?;
+        Ok(Lowered::Stmt(Box::new(stmt)))
+    }
+
+    /// Lower an **annotated assignment** (PEP 526, #18482):
+    ///
+    /// ```text
+    ///   annotation = ":" expression [ "=" expression_list ] ;
+    ///
+    ///   x: int = 5    ⇒   x = 5      (the annotation is ignored)
+    ///   x: int        ⇒   nothing    (a declaration with no value)
+    /// ```
+    ///
+    /// The annotation is never evaluated or checked.  Inside a function
+    /// CPython never evaluates it either; at module level it would be
+    /// evaluated and stored in `__annotations__`, which this frontend does
+    /// not model.
+    ///
+    /// A declaration with no value binds nothing, so a later read of the
+    /// name is still an unresolved-name error, matching Python's
+    /// `NameError`.  It is accepted only for a bare name: for any other
+    /// target Python would evaluate part of it (`obj` in `obj.x: int`),
+    /// and those are refused.
+    fn lower_annotated(
+        &mut self,
+        assign: &GrammarASTNode,
+        lhs_list: &GrammarASTNode,
+        ann: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+    ) -> Result<Lowered, PythonLowerError> {
+        let target_node = self.single_expr(lhs_list)?;
+        let span = self.span_of(assign);
+        match self.first_child_named(ann, "expression_list") {
+            Some(value_list) => {
+                let value = self.lower_expr(self.single_expr(value_list)?, ctx)?;
+                let target = self.classify_target(target_node, ctx)?;
+                let stmt = self.store_target(target, value, ctx, span)?;
+                Ok(Lowered::Stmt(Box::new(stmt)))
+            }
+            None => match self.target_name(target_node)? {
+                Some(_) => Ok(Lowered::Stmts(vec![])),
+                None => Err(self.err_at(
+                    target_node,
+                    "unsupported: annotation without a value on a target that is not a \
+                     bare name (deferred)"
+                        .to_string(),
+                )),
+            },
+        }
+    }
+
+    /// Work out what an assignment target denotes (see [`Target`]),
+    /// without lowering or storing anything yet.
+    ///
+    /// | target           | result               |
+    /// |------------------|----------------------|
+    /// | `x`              | `Name("x")`          |
+    /// | `self.x` (method)| `Instance("x")`      |
+    /// | `xs[i]`, `m[a][b]` | `Subscript { … }`  |
+    /// | anything else    | positioned error     |
+    ///
+    /// "Anything else" covers a tuple target (`a, b = …`, refused by
+    /// [`Self::single_expr`] before this is reached), an attribute of
+    /// anything but `self` (`obj.x = …`, `self.x.y = …`), and a call
+    /// (`f() = …`).
+    fn classify_target<'a>(
+        &self,
+        target_node: &'a GrammarASTNode,
+        ctx: &FunctionCtx,
+    ) -> Result<Target<'a>, PythonLowerError> {
+        if let Some(name) = self.target_name(target_node)? {
+            // Inside a method a bare `self` always reads the implicit
+            // receiver (`resolve_var`), so a store into it would be
+            // invisible to every later read.  Refuse it.
+            if ctx.in_method && name == "self" {
+                return Err(self.err_at(
+                    target_node,
+                    "unsupported: assignment to `self` inside a method (deferred)".to_string(),
+                ));
+            }
+            return Ok(Target::Name(name));
+        }
+        let not_supported = || {
+            self.err_at(
+                target_node,
+                "unsupported: assignment target is not a bare name, `self.x` or a \
+                 subscript (deferred)"
+                    .to_string(),
+            )
+        };
+        let primary = self
+            .peel_to_primary(target_node)
+            .ok_or_else(not_supported)?;
         let kids = child_nodes(primary);
         let (atom, suffixes) = match kids.split_first() {
-            Some((atom, rest)) if !rest.is_empty() && rest[0].rule_name == "suffix" => {
+            Some((atom, rest))
+                if !rest.is_empty() && rest.iter().all(|n| n.rule_name == "suffix") =>
+            {
                 (*atom, rest)
             }
-            _ => return Ok(None),
+            _ => return Err(not_supported()),
         };
-        // The *final* suffix must be the subscript being assigned.  Earlier
-        // suffixes (if any) form the base value `m[a]` / `g()`.
-        let (last, leading) = suffixes.split_last().expect("split_first left ≥ 1 suffix");
-        if !matches!(self.suffix_kind(last)?, SuffixKind::Subscript) {
-            // `f(x) = v` is not a valid assignment target.
-            return Err(self.err_at(
+        let (last, leading) = suffixes.split_last().expect("checked non-empty");
+        match self.suffix_kind(last)? {
+            SuffixKind::Subscript => Ok(Target::Subscript {
+                atom,
+                leading: leading.to_vec(),
+                last,
+            }),
+            // `self.x = v` inside a method: the receiver is the bare name
+            // `self`, which `resolve_var` turns into the implicit receiver
+            // only inside a method body.  Checked on the source, so nothing
+            // is lowered just to classify.
+            SuffixKind::Attr(attr)
+                if leading.is_empty()
+                    && ctx.in_method
+                    && self.target_name(atom)?.as_deref() == Some("self") =>
+            {
+                Ok(Target::Instance(attr))
+            }
+            SuffixKind::Attr(_) => Err(self.err_at(
+                target_node,
+                "unsupported: assignment to an attribute of anything but `self` \
+                 (deferred)"
+                    .to_string(),
+            )),
+            SuffixKind::Call => Err(self.err_at(
                 primary,
                 "unsupported: assignment to a call result (deferred)".to_string(),
-            ));
+            )),
         }
+    }
 
-        // Build the base value: the atom, with every leading suffix
-        // applied (calls / subscripts).  No leading suffix → the base is
-        // just the atom (`xs`).
-        let span = self.span_of(assign);
-        let mut base = self.lower_expr(atom, ctx)?;
-        for suffix in leading {
-            base = self.apply_value_suffix(base, suffix, ctx, 0, &span)?;
+    /// Store an already-lowered `value` into `target`, returning the one
+    /// IR statement that does it.
+    ///
+    /// ## A bare name: declare, or store
+    ///
+    /// | `x` is currently …          | statement                           |
+    /// |-----------------------------|-------------------------------------|
+    /// | a local in scope            | `Assign { scope: Local }`           |
+    /// | not bound                   | `LetStarBinding` (declares `x`)     |
+    ///
+    /// A parameter the body assigns is already a local here, under an
+    /// alias: the function prologue copies it into one (see
+    /// [`Self::param_copy_prologue`]).
+    ///
+    /// ## `self.x` and subscripts
+    ///
+    /// `self.x` becomes `Assign { name: "@x", scope: Instance }` (OOP
+    /// surface, SIR25 §2).  `base[index]` becomes [`Stmt::SeqSet`], or
+    /// [`Stmt::MapSet`] for a string-literal index (the M5 subscript
+    /// heuristic, mirrored from the read side).
+    fn store_target(
+        &mut self,
+        target: Target<'_>,
+        value: Expr,
+        ctx: &mut FunctionCtx,
+        span: Span,
+    ) -> Result<Stmt, PythonLowerError> {
+        match target {
+            Target::Name(name) => {
+                if ctx.locals.iter().any(|n| n == &name) {
+                    self.observed.add(Feature::MutableBindings);
+                    Ok(Stmt::Assign {
+                        name: ctx.ir_local(&name),
+                        scope: Scope::Local,
+                        value,
+                        span,
+                    })
+                } else {
+                    ctx.locals.push(name.clone());
+                    Ok(Stmt::LetStarBinding {
+                        name,
+                        sir_type: None,
+                        value,
+                        span,
+                    })
+                }
+            }
+            Target::Instance(attr) => {
+                // `Stmt::Assign` observes `MutableBindings` for any scope
+                // in the validator, alongside the Instance-scope
+                // `InstanceVars`, so declare both and the manifest matches.
+                self.observed.add(Feature::MutableBindings);
+                self.observed.add(Feature::InstanceVars);
+                Ok(Stmt::Assign {
+                    name: format!("@{attr}"),
+                    scope: Scope::Instance,
+                    value,
+                    span,
+                })
+            }
+            Target::Subscript {
+                atom,
+                leading,
+                last,
+            } => {
+                // Build the base value: the atom, with every leading
+                // suffix applied (`m[a]` for `m[a][b] = v`).
+                let mut base = self.lower_expr(atom, ctx)?;
+                for suffix in leading {
+                    base = self.apply_value_suffix(base, suffix, ctx, 0, &span)?;
+                }
+                let index_node = self.subscript_index(last)?;
+                let index = self.lower_expr(index_node, ctx)?;
+                if is_str_lit(&index) {
+                    self.observed.add(Feature::Maps);
+                    Ok(Stmt::MapSet {
+                        map: base,
+                        key: index,
+                        value,
+                        span,
+                    })
+                } else {
+                    self.observed.add(Feature::Sequences);
+                    Ok(Stmt::SeqSet {
+                        seq: base,
+                        index,
+                        value,
+                        span,
+                    })
+                }
+            }
         }
+    }
 
-        let index_node = self.subscript_index(last)?;
-        let index = self.lower_expr(index_node, ctx)?;
-        let value = self.lower_expr(rhs_node, ctx)?;
+    /// The statements that start a function body by copying each
+    /// parameter the body **assigns** into a fresh local, and the matching
+    /// alias in `ctx` (see [`FunctionCtx::aliases`]).
+    ///
+    /// ```text
+    ///   def countdown(n):        countdown(n):
+    ///       while n > 0:    ⇒        let* __param_n_0 = n (Param)    ← prologue
+    ///           n -= 1               while __param_n_0 > 0:
+    ///       return n                     __param_n_0 = __param_n_0 - 1
+    ///                                __param_n_0
+    /// ```
+    ///
+    /// ## Why
+    ///
+    /// Python has one `n`: the parameter.  Before this prologue,
+    /// `n -= 1` declared a *new* local `n`.  Inside a loop body that local
+    /// ended with the body, so the condition kept reading the unchanged
+    /// parameter and the loop never ended.  The two direct fixes both fail
+    /// on some backend:
+    ///
+    /// - store into the parameter (`Assign { scope: Param }`): valid SIR,
+    ///   but the Rust backend emits parameters as immutable bindings, so
+    ///   the program does not compile;
+    /// - copy into a local *of the same name*: JavaScript, Go and C refuse
+    ///   to redeclare a parameter in the function's own scope
+    ///   (`let n = n;` is a `SyntaxError`).
+    ///
+    /// A copy under a fresh name works everywhere: every later read and
+    /// store of `n` is an ordinary local read or store of the copy.  The
+    /// parameter keeps its name, so keyword calls (`countdown(n=3)`) still
+    /// match it, and the copy reads it after the backend has filled in any
+    /// default value.  Parameters the body never assigns are left alone.
+    ///
+    /// "Assigns" is the bound-name scan used for captures
+    /// ([`Self::collect_suite_bound_names`]): plain, chained, augmented and
+    /// annotated targets, and `for` variables, anywhere in the body.
+    fn param_copy_prologue(
+        &mut self,
+        suite: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        span: &Span,
+    ) -> Result<Vec<Stmt>, PythonLowerError> {
+        let mut assigned = HashSet::new();
+        self.collect_suite_bound_names(suite, &mut assigned)?;
+        let mut copied: Vec<String> = assigned
+            .into_iter()
+            .filter(|n| ctx.params.contains(n))
+            .collect();
+        // Deterministic output: a `HashSet` has no stable order.
+        copied.sort();
+        let mut stmts = Vec::with_capacity(copied.len());
+        for name in copied {
+            let alias = self.fresh_temp_name(&format!("param_{name}"));
+            stmts.push(Stmt::LetStarBinding {
+                name: alias.clone(),
+                sir_type: None,
+                value: Expr::VarRef {
+                    name: name.clone(),
+                    scope: Scope::Param,
+                    span: span.clone(),
+                },
+                span: span.clone(),
+            });
+            ctx.locals.push(name.clone());
+            ctx.aliases.insert(name, alias);
+        }
+        Ok(stmts)
+    }
 
-        if is_str_lit(&index) {
-            self.observed.add(Feature::Maps);
-            Ok(Some(Stmt::MapSet {
-                map: base,
-                key: index,
-                value,
-                span,
-            }))
-        } else {
-            self.observed.add(Feature::Sequences);
-            Ok(Some(Stmt::SeqSet {
-                seq: base,
-                index,
-                value,
-                span,
-            }))
+    /// A fresh name for a temporary local, `__<stem>_<N>`.
+    ///
+    /// It is never spelled anywhere in the source (`source_names`), so it
+    /// cannot shadow or be shadowed by a user variable, and the counter
+    /// keeps two temporaries apart.
+    fn fresh_temp_name(&mut self, stem: &str) -> String {
+        loop {
+            let name = format!("__{stem}_{}", self.temp_counter);
+            self.temp_counter += 1;
+            if !self.source_names.contains(&name) {
+                return name;
+            }
         }
     }
 
@@ -1529,8 +2041,10 @@ impl Lowerer {
             .ok_or_else(|| self.err_at(def, "malformed def: missing body".to_string()))?;
         let hoisted_name = format!("{class_name}__{py_name}");
         let mut inner = FunctionCtx::for_method(params.iter().map(|(n, ..)| n.clone()).collect());
-        let body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
         let span = self.span_of(def);
+        let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
+        let mut body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
+        body.stmts.splice(0..0, prologue);
         self.push_function(&hoisted_name, &params, &[], body, span.clone());
 
         // `__def_method__("Class", "method", MakeClosure(hoisted_name))` —
@@ -1542,7 +2056,7 @@ impl Lowerer {
         self.observed.add(Feature::Closures);
         self.observed.add(Feature::Strings);
         let closure = Expr::MakeClosure {
-            fn_name: hoisted_name,
+            fn_name: sir_function_name(&hoisted_name),
             captures: vec![],
             span: span.clone(),
         };
@@ -1657,6 +2171,7 @@ impl Lowerer {
         let suite = self
             .first_child_named(while_stmt, "suite")
             .ok_or_else(|| self.err_at(while_stmt, "malformed while: no body".to_string()))?;
+        self.refuse_loop_else(while_stmt, "while")?;
 
         let cond = self.lower_expr(cond_node, ctx)?;
         let body = self.lower_suite(suite, ctx, depth + 1)?;
@@ -1666,6 +2181,30 @@ impl Lowerer {
             body,
             span: self.span_of(while_stmt),
         })
+    }
+
+    /// Refuse a loop's `else:` clause.
+    ///
+    /// `while c: … else: …` and `for x in xs: … else: …` run the `else`
+    /// suite when the loop ends without `break`.  The loop lowerers took
+    /// only the *first* suite, so the `else` suite was silently dropped
+    /// (#18482).  It is refused until it is lowered.
+    fn refuse_loop_else(
+        &self,
+        loop_stmt: &GrammarASTNode,
+        keyword: &str,
+    ) -> Result<(), PythonLowerError> {
+        let suites = child_nodes(loop_stmt)
+            .into_iter()
+            .filter(|n| n.rule_name == "suite")
+            .count();
+        if suites > 1 {
+            return Err(self.err_at(
+                loop_stmt,
+                format!("unsupported: `{keyword} … else:` (deferred)"),
+            ));
+        }
+        Ok(())
     }
 
     /// Lower a `for_stmt` into [`Stmt::ForRange`] (literal `range(...)`
@@ -1685,9 +2224,18 @@ impl Lowerer {
         let suite = self
             .first_child_named(for_stmt, "suite")
             .ok_or_else(|| self.err_at(for_stmt, "malformed for: no body".to_string()))?;
+        self.refuse_loop_else(for_stmt, "for")?;
 
         let targets = child_nodes(target_list);
         let var = match targets.as_slice() {
+            // `for x, in rows:` unpacks each row into `x`; it is a tuple
+            // target, not the plain `for x in rows:`.
+            [_] if has_comma_token(target_list) => {
+                return Err(self.err_at(
+                    target_list,
+                    "unsupported: tuple for-loop target (deferred)".to_string(),
+                ))
+            }
             [one] => match self.target_name(one)? {
                 Some(name) => name,
                 None => {
@@ -1709,37 +2257,88 @@ impl Lowerer {
         let span = self.span_of(for_stmt);
 
         let range = self.try_range_call(iter_expr_node, ctx)?;
+        let iter = match range {
+            Some(_) => None,
+            None => Some(self.lower_expr(iter_expr_node, ctx)?),
+        };
         self.observed.add(Feature::Loops);
 
-        match range {
-            Some((start, stop, step)) => {
-                let mark = Self::scope_mark(ctx);
-                ctx.locals.push(var.clone());
-                let body = self.lower_suite_no_mark(suite, ctx, depth + 1)?;
-                Self::scope_rewind(ctx, mark);
-                Ok(Stmt::ForRange {
-                    var,
-                    start,
-                    stop,
-                    step,
-                    body,
-                    span,
-                })
-            }
-            None => {
-                let iter = self.lower_expr(iter_expr_node, ctx)?;
-                let mark = Self::scope_mark(ctx);
-                ctx.locals.push(var.clone());
-                let body = self.lower_suite_no_mark(suite, ctx, depth + 1)?;
-                Self::scope_rewind(ctx, mark);
-                Ok(Stmt::ForEach {
-                    var,
-                    iter,
-                    body,
-                    span,
-                })
-            }
+        let mark = Self::scope_mark(ctx);
+        let (loop_var, body) = self.lower_for_body(&var, suite, ctx, depth, &span)?;
+        Self::scope_rewind(ctx, mark);
+
+        match (range, iter) {
+            (Some((start, stop, step)), _) => Ok(Stmt::ForRange {
+                var: loop_var,
+                start,
+                stop,
+                step,
+                body,
+                span,
+            }),
+            (None, Some(iter)) => Ok(Stmt::ForEach {
+                var: loop_var,
+                iter,
+                body,
+                span,
+            }),
+            (None, None) => unreachable!("a non-range loop always lowers its iterable"),
         }
+    }
+
+    /// Lower a `for` body, binding the loop variable `var`.  Returns the
+    /// name the IR loop should bind, and the body.
+    ///
+    /// SIR's `ForRange` / `ForEach` declare their variable fresh, scoped to
+    /// the body.  That matches Python only when `var` is not bound yet.
+    /// When it **is** (a local or parameter in scope), Python's loop
+    /// stores each item into *that* variable, and the variable keeps the
+    /// last item after the loop:
+    ///
+    /// ```python
+    /// i = 10
+    /// for i in range(3):
+    ///     pass
+    /// print(i)          # 2
+    /// ```
+    ///
+    /// Declaring a fresh, body-scoped `i` printed 10 on five of the six
+    /// backends.  So in that case the IR loop binds a temporary, and the
+    /// body starts by storing it into the real variable:
+    ///
+    /// ```text
+    ///   ForRange { var: __for_0, …, body: [ Assign i = __for_0, …body ] }
+    /// ```
+    ///
+    /// A loop that runs zero times leaves `i` untouched, as in Python.
+    fn lower_for_body(
+        &mut self,
+        var: &str,
+        suite: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        depth: usize,
+        span: &Span,
+    ) -> Result<(String, Block), PythonLowerError> {
+        // A parameter used as a loop variable is a local by now (the
+        // function prologue copies it, see `param_copy_prologue`).
+        let already_bound = ctx.locals.iter().any(|n| n == var);
+        if !already_bound {
+            ctx.locals.push(var.to_string());
+            let body = self.lower_suite_no_mark(suite, ctx, depth + 1)?;
+            return Ok((var.to_string(), body));
+        }
+        let tmp = self.fresh_temp_name("for");
+        ctx.locals.push(tmp.clone());
+        let read_tmp = Expr::VarRef {
+            name: tmp.clone(),
+            scope: Scope::Local,
+            span: span.clone(),
+        };
+        let store =
+            self.store_target(Target::Name(var.to_string()), read_tmp, ctx, span.clone())?;
+        let mut body = self.lower_suite_no_mark(suite, ctx, depth + 1)?;
+        body.stmts.insert(0, store);
+        Ok((tmp, body))
     }
 
     /// Recognise a literal `range(...)` call inside a `for` header and
@@ -2288,7 +2887,9 @@ impl Lowerer {
             captures.iter().cloned().collect(),
             name,
         );
-        let body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
+        let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
+        let mut body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
+        body.stmts.splice(0..0, prologue);
 
         self.push_function(name, params, &captures, body, span.clone());
 
@@ -2322,7 +2923,9 @@ impl Lowerer {
             self.observed.add(Feature::Closures);
         }
         let f = Function {
-            name: name.to_string(),
+            // The SIR spelling: a user `main` must not collide with the
+            // synthesised module body (see `FN_ESCAPE_PREFIX`).
+            name: sir_function_name(name),
             params: params
                 .iter()
                 .map(|(pname, kind, default)| Param {
@@ -2357,7 +2960,8 @@ impl Lowerer {
         // graph) for mutual-recursion detection.
         let mut callees = HashSet::new();
         collect_direct_callees(&f.body, &mut callees);
-        self.call_graph.push((name.to_string(), callees));
+        // Keyed by the SIR spelling, like the `DirectCall` callees above.
+        self.call_graph.push((sir_function_name(name), callees));
         self.functions.push(f);
     }
 
@@ -2378,7 +2982,7 @@ impl Lowerer {
         span: Span,
     ) -> Expr {
         Expr::MakeClosure {
-            fn_name,
+            fn_name: sir_function_name(&fn_name),
             captures: captures
                 .into_iter()
                 .zip(capture_values)
@@ -2742,18 +3346,26 @@ impl Lowerer {
         }
         match node.rule_name.as_str() {
             "assign_stmt" => {
-                // First expression_list is the LHS; if there's an
-                // assign_suffix it's a real assignment target.
-                let has_suffix = child_nodes(node)
-                    .iter()
-                    .any(|n| n.rule_name == "assign_suffix");
-                if has_suffix {
-                    if let Some(list) = self.first_child_named(node, "expression_list") {
-                        if let Ok(Some(name)) =
-                            self.single_expr(list).and_then(|e| self.target_name(e))
-                        {
-                            out.push(name);
+                // The first expression_list is a target whenever a tail
+                // follows it: `x = …`, `x += …` and `x: T [= …]` all make
+                // `x` local to the function in Python, even a bare
+                // annotation.  A chain `a = b = …` has more targets: every
+                // expression_list of the `assign_suffix` but the last.
+                let kids = child_nodes(node);
+                let mut target_lists: Vec<&GrammarASTNode> = Vec::new();
+                if let [lhs, tail] = kids.as_slice() {
+                    target_lists.push(lhs);
+                    if tail.rule_name == "assign_suffix" {
+                        let more = child_nodes(tail);
+                        if let Some((_value, rest)) = more.split_last() {
+                            target_lists.extend(rest.iter().copied());
                         }
+                    }
+                }
+                for list in target_lists {
+                    if let Ok(Some(name)) = self.single_expr(list).and_then(|e| self.target_name(e))
+                    {
+                        out.push(name);
                     }
                 }
             }
@@ -2848,6 +3460,16 @@ impl Lowerer {
             return Ok(());
         }
 
+        // An annotation (`x: T = e`) is never evaluated (see
+        // `lower_annotated`), so the names in `T` are not references: only
+        // the value `e` can read a variable.
+        if node.rule_name == "annotation" {
+            if let Some(value) = self.first_child_named(node, "expression_list") {
+                self.collect_free_names(value, bound, free, seen, depth + 1)?;
+            }
+            return Ok(());
+        }
+
         // A bare `Name` token (no type_name) is a reference.
         if let Some(tok) = node.token() {
             if matches!(tok.type_, lexer::token::TokenType::Name) && tok.type_name.is_none() {
@@ -2890,14 +3512,7 @@ impl Lowerer {
                 format!("expected `suite`, got `{}`", suite.rule_name),
             ));
         }
-        let stmt_nodes: Vec<&GrammarASTNode> = suite
-            .children
-            .iter()
-            .filter_map(|c| match c {
-                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
-                _ => None,
-            })
-            .collect();
+        let stmt_nodes = suite_statements(suite);
 
         let span = self.span_of(suite);
         if stmt_nodes.is_empty() {
@@ -2918,43 +3533,67 @@ impl Lowerer {
             items.push(self.lower_statement(stmt, ctx, depth)?);
         }
 
+        // Every statement before the last is run for its effect, so each
+        // becomes a statement, *including an expression statement*.
+        // (`assemble_block` would make a trailing expression the block's
+        // value, and the tail `return` below then replaced that value: the
+        // statement just before a tail `return` was silently dropped.  In
+        //
+        //     def clamp(n):
+        //         if n > 10:
+        //             n = 10
+        //         return n
+        //
+        // the whole `if` vanished, and so did a `print(…)` or
+        // `xs.append(…)` written just before a `return`.)
+        let mut stmts = Self::statements_only(items);
+
         // The last statement may be a tail `return`.
         let last = stmt_nodes[stmt_nodes.len() - 1];
-        if let Some(ret) = self.as_return_stmt(last) {
-            let value = self.lower_return_value(ret, ctx)?;
-            let block = Self::assemble_block(items, &span);
-            Self::scope_rewind(ctx, mark);
-            return Ok(Block {
-                stmts: block.stmts,
-                value,
-                span,
-            });
-        }
-
-        // The last statement may be a tail `if` whose branches end in
-        // `return`s — the canonical `if cond: return a else: return b`
-        // shape.  Each branch is itself in *function-tail* position, so we
-        // lower it as a function suite (its tail `return` becomes the
-        // branch's block value) and fold into an `if`-expression.  This is
-        // how an early-looking `return` inside a *tail* `if` is accepted
-        // (it is not actually early — control reaches the function end).
-        if let Some(if_stmt) = self.as_if_stmt(last) {
-            let value = self.lower_if_tail(if_stmt, ctx, depth)?;
-            let block = Self::assemble_block(items, &span);
-            Self::scope_rewind(ctx, mark);
-            return Ok(Block {
-                stmts: block.stmts,
-                value,
-                span,
-            });
-        }
-
-        // No tail return: the last statement lowers normally (its
-        // trailing-expr value, if any, becomes the body value; else nil).
-        items.push(self.lower_statement(last, ctx, depth)?);
-        let block = Self::assemble_block(items, &span);
+        let value = if let Some(ret) = self.as_return_stmt(last) {
+            self.lower_return_value(ret, ctx)?
+        } else if let Some(if_stmt) = self.as_if_stmt(last) {
+            // The last statement may be a tail `if` whose branches end in
+            // `return`s — the canonical `if cond: return a else: return b`
+            // shape.  Each branch is itself in *function-tail* position, so
+            // we lower it as a function suite (its tail `return` becomes
+            // the branch's block value) and fold into an `if`-expression.
+            // This is how an early-looking `return` inside a *tail* `if` is
+            // accepted (it is not actually early — control reaches the
+            // function end).
+            self.lower_if_tail(if_stmt, ctx, depth)?
+        } else {
+            // No tail return: the function falls off its end and returns
+            // `None`.  The last statement is lowered as a *statement*, even
+            // an expression statement.  Making a trailing expression the
+            // block's value (as `assemble_block` does) meant `def f(x):
+            // x + 1` returned `x + 1`, a docstring-only body returned the
+            // docstring, and a body ending in a nested `def` returned the
+            // closure.  Python returns `None` from all three.
+            let tail = self.lower_statement(last, ctx, depth)?;
+            stmts.extend(Self::statements_only(vec![tail]));
+            Expr::NilLit { span: span.clone() }
+        };
         Self::scope_rewind(ctx, mark);
-        Ok(block)
+        Ok(Block { stmts, value, span })
+    }
+
+    /// Turn lowered items into statements, every one of them: a bare
+    /// expression becomes an `ExprStmt`, never a block value.  (Compare
+    /// [`Self::assemble_block`], which makes a trailing expression the
+    /// value.)
+    fn statements_only(items: Vec<Lowered>) -> Vec<Stmt> {
+        items
+            .into_iter()
+            .flat_map(|item| match item {
+                Lowered::Stmt(s) => vec![*s],
+                Lowered::Stmts(v) => v,
+                Lowered::Expr(expr) => {
+                    let span = expr.span().clone();
+                    vec![Stmt::ExprStmt { expr, span }]
+                }
+            })
+            .collect()
     }
 
     /// If `stmt` is a `statement → compound_stmt → if_stmt`, return the
@@ -3051,12 +3690,7 @@ impl Lowerer {
     /// If `stmt` is a `statement → simple_stmt → small_stmt → return_stmt`,
     /// return the `return_stmt` node.
     fn as_return_stmt<'a>(&self, stmt: &'a GrammarASTNode) -> Option<&'a GrammarASTNode> {
-        if stmt.rule_name != "statement" {
-            return None;
-        }
-        let simple = child_nodes(stmt)
-            .into_iter()
-            .find(|n| n.rule_name == "simple_stmt")?;
+        let simple = simple_stmt_of(stmt)?;
         let small = child_nodes(simple)
             .into_iter()
             .find(|n| n.rule_name == "small_stmt")?;
@@ -3115,12 +3749,8 @@ impl Lowerer {
         }
 
         let mut items: Vec<Lowered> = Vec::new();
-        for child in &suite.children {
-            if let ASTNodeOrToken::Node(stmt) = child {
-                if stmt.rule_name == "statement" {
-                    items.push(self.lower_statement(stmt, ctx, depth)?);
-                }
-            }
+        for stmt in suite_statements(suite) {
+            items.push(self.lower_statement(stmt, ctx, depth)?);
         }
         let span = self.span_of(suite);
         Ok(Self::assemble_block(items, &span))
@@ -3668,7 +4298,7 @@ impl Lowerer {
                 return self.lower_closure_call(&name, args, ctx, span);
             }
             return Ok(Expr::DirectCall {
-                fn_name: name,
+                fn_name: sir_function_name(&name),
                 args,
                 effects: EffectSet::PURE,
                 span: span.clone(),
@@ -3901,6 +4531,13 @@ impl Lowerer {
             .filter(|n| n.rule_name == "subscript_item")
             .collect();
         let item = match items.as_slice() {
+            // `xs[i,]` indexes with the tuple `(i,)`, not with `i`.
+            [_] if has_comma_token(subscript) => {
+                return Err(self.err_at(
+                    subscript,
+                    "unsupported: tuple subscript (deferred)".to_string(),
+                ))
+            }
             [only] => *only,
             _ => {
                 return Err(self.err_at(
@@ -4220,10 +4857,13 @@ impl Lowerer {
                             // (no `Integer#/`-style floor — that's `//`,
                             // not lowered here), so it maps to `div_true`,
                             // not the operator-spelling passthrough `+`/
-                            // `-`/`*`/`%` use.
-                            let name = if op == "/" { "div_true".to_string() } else { op };
+                            // `-`/`*`/`%` use.  `arith_builtin` is the one
+                            // table shared with augmented assignment.
+                            let name = arith_builtin(&op).ok_or_else(|| {
+                                self.err_at(node, format!("unsupported operator `{op}`"))
+                            })?;
                             Expr::BuiltinCall {
-                                name,
+                                name: name.to_string(),
                                 args: vec![lhs, operand],
                                 effects: EffectSet::PURE,
                                 span,
@@ -4470,7 +5110,7 @@ impl Lowerer {
     ) -> Result<Expr, PythonLowerError> {
         if ctx.locals.iter().rev().any(|n| n == name) {
             return Ok(Expr::VarRef {
-                name: name.to_string(),
+                name: ctx.ir_local(name),
                 scope: Scope::Local,
                 span,
             });
@@ -4558,21 +5198,23 @@ impl Lowerer {
         }
     }
 
-    fn expect_single_kind<'a>(
-        &self,
-        node: &'a GrammarASTNode,
-        kind: &str,
-    ) -> Result<&'a GrammarASTNode, PythonLowerError> {
-        child_nodes(node)
-            .into_iter()
-            .find(|n| n.rule_name == kind)
-            .ok_or_else(|| self.err_at(node, format!("expected a `{kind}` child")))
-    }
-
+    /// The one expression of an `expression_list`.  Refuses a tuple,
+    /// whether it has several elements or one with a trailing comma.
     fn single_expr<'a>(
         &self,
         list: &'a GrammarASTNode,
     ) -> Result<&'a GrammarASTNode, PythonLowerError> {
+        // A trailing comma makes a one-element tuple: `x = 1,` binds
+        // `(1,)` and `return y,` returns one.  Taking the lone element
+        // would silently drop the tuple, so it is refused like any tuple.
+        if has_comma_token(list) {
+            return Err(self.err_at(
+                list,
+                "unsupported: tuple (a comma-separated or trailing-comma expression \
+                 list) (deferred)"
+                    .to_string(),
+            ));
+        }
         let exprs = child_nodes(list);
         match exprs.as_slice() {
             [only] => Ok(only),
@@ -4604,6 +5246,68 @@ impl Lowerer {
 // Free helpers
 // ---------------------------------------------------------------------------
 
+/// Every `NAME` token's spelling anywhere under `root`.
+///
+/// The walk keeps its own stack instead of recursing, so a deeply nested
+/// tree (which the parser accepts up to its own depth cap) cannot
+/// overflow the native stack here.  It runs once per file.
+fn collect_source_names(root: &GrammarASTNode) -> HashSet<String> {
+    let mut names = HashSet::new();
+    let mut stack: Vec<&GrammarASTNode> = vec![root];
+    while let Some(node) = stack.pop() {
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(n) => stack.push(n),
+                ASTNodeOrToken::Token(t) => {
+                    if matches!(t.type_, lexer::token::TokenType::Name) {
+                        names.insert(t.value.clone());
+                    }
+                }
+            }
+        }
+    }
+    names
+}
+
+/// The SIR builtin a Python binary arithmetic operator lowers to, or
+/// `None` for an operator the frontend does not lower.
+///
+/// This is the **single** table for both the binary form (`a + b`, in
+/// [`Lowerer::try_binary_arith`]) and the augmented form (`a += b`, in
+/// [`Lowerer::lower_augmented`]), so the two cannot drift apart:
+///
+/// | Python | SIR builtin | note                                         |
+/// |--------|-------------|----------------------------------------------|
+/// | `+`    | `+`         | numbers add, strings and lists concatenate   |
+/// | `-`    | `-`         |                                              |
+/// | `*`    | `*`         |                                              |
+/// | `/`    | `div_true`  | Python's `/` always true-divides (SIR21 T3b-2) |
+/// | `%`    | `%`         |                                              |
+///
+/// `//`, `**`, `@` and the bitwise operators are not lowered yet.
+fn arith_builtin(op: &str) -> Option<&'static str> {
+    match op {
+        "+" => Some("+"),
+        "-" => Some("-"),
+        "*" => Some("*"),
+        "/" => Some("div_true"),
+        "%" => Some("%"),
+        _ => None,
+    }
+}
+
+/// Does `node` have a `,` token among its *direct* children?  In an
+/// `expression_list`, `target_list` or `subscript`, a comma makes a
+/// **tuple**: `x = 1,` binds the tuple `(1,)`, and `for x, in rows:`
+/// unpacks each row.  Tuples are not lowered yet, so a caller that wants
+/// one value refuses such a node rather than silently taking its only
+/// element.
+fn has_comma_token(node: &GrammarASTNode) -> bool {
+    node.children
+        .iter()
+        .any(|c| matches!(c, ASTNodeOrToken::Token(t) if t.type_ == lexer::token::TokenType::Comma))
+}
+
 /// Collect the *node* children of `node` (dropping tokens).
 fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     node.children
@@ -4615,30 +5319,59 @@ fn child_nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
         .collect()
 }
 
-/// The direct `statement` children of a `class_stmt`'s `suite` — same
-/// extraction as `lower_function_suite`'s `stmt_nodes`, factored out as a
-/// free function since `lower_class` needs it before any lowering (it
-/// walks the body once to build `__def_method__` registrations, with no
-/// tail-position special-casing — a class body has no "return value").
-fn class_body_statements(suite: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+/// The statements of a `suite`, in order.
+///
+/// ```text
+///   suite = simple_stmt | NEWLINE INDENT { statement } DEDENT ;
+/// ```
+///
+/// An indented body is a run of `statement` nodes.  A body written on the
+/// header's own line (`def f(x): return x`, `if c: y = 1`) is a single
+/// bare `simple_stmt` with no `statement` wrapper.  The suite lowerers
+/// once kept only `statement` children, so a one-line body was dropped
+/// whole: `def f(x): return x + 1` returned `None` (#18482).  Every caller
+/// that walks a suite's statements goes through here, and
+/// [`Lowerer::lower_statement`] accepts either kind of node.
+fn suite_statements(suite: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     suite
         .children
         .iter()
         .filter_map(|c| match c {
-            ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+            ASTNodeOrToken::Node(n)
+                if n.rule_name == "statement" || n.rule_name == "simple_stmt" =>
+            {
+                Some(n)
+            }
             _ => None,
         })
         .collect()
 }
 
-/// Is `stmt` (a `statement` node) Python's `pass` — the no-op placeholder
+/// The `simple_stmt` of a suite statement: the node itself for a
+/// one-line suite's bare `simple_stmt`, or the child of a `statement`.
+fn simple_stmt_of(stmt: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    match stmt.rule_name.as_str() {
+        "simple_stmt" => Some(stmt),
+        "statement" => child_nodes(stmt)
+            .into_iter()
+            .find(|n| n.rule_name == "simple_stmt"),
+        _ => None,
+    }
+}
+
+/// The statements of a `class_stmt`'s `suite` (see [`suite_statements`];
+/// a one-line `class C: pass` is a bare `simple_stmt`).  `lower_class`
+/// walks them once to build `__def_method__` registrations, with no
+/// tail-position special-casing — a class body has no "return value".
+fn class_body_statements(suite: &GrammarASTNode) -> Vec<&GrammarASTNode> {
+    suite_statements(suite)
+}
+
+/// Is `stmt` (a suite statement) Python's `pass` — the no-op placeholder
 /// used for an otherwise-empty suite (`class Foo:\n    pass\n`)? Structure:
-/// `statement -> simple_stmt -> small_stmt -> pass_stmt`.
+/// `[statement ->] simple_stmt -> small_stmt -> pass_stmt`.
 fn is_pass_stmt(stmt: &GrammarASTNode) -> bool {
-    let Some(simple) = child_nodes(stmt)
-        .into_iter()
-        .find(|n| n.rule_name == "simple_stmt")
-    else {
+    let Some(simple) = simple_stmt_of(stmt) else {
         return false;
     };
     let Some(small) = child_nodes(simple)
@@ -4647,7 +5380,9 @@ fn is_pass_stmt(stmt: &GrammarASTNode) -> bool {
     else {
         return false;
     };
-    child_nodes(small).iter().any(|n| n.rule_name == "pass_stmt")
+    child_nodes(small)
+        .iter()
+        .any(|n| n.rule_name == "pass_stmt")
 }
 
 /// Is `expr` the SIR receiver value for the current method's implicit
@@ -4663,7 +5398,7 @@ fn is_self_ref(expr: &Expr) -> bool {
 /// Is `value` one of the binary arithmetic operator spellings the lowerer
 /// recognises under `arith` (`+`/`-`) and `term` (`*`/`/`/`%`)?
 fn is_arith_op(value: &str) -> bool {
-    matches!(value, "+" | "-" | "*" | "/" | "%")
+    arith_builtin(value).is_some()
 }
 
 /// Is a lowered index expression a string literal?  This is the M5

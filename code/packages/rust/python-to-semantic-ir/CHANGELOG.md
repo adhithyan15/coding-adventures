@@ -7,6 +7,79 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.13.0 — Every assignment form is lowered or refused; statements are no longer dropped (#18482)
+
+Valid Python used to compile to SIR that silently computed something else.
+All of these are fixed in `src/lower.rs`.
+
+**Assignment forms.** `assign_stmt = expression_list [ assign_suffix |
+augmented_assign | annotation ]`, and `lower_assign_stmt` looked only for
+`assign_suffix`:
+
+- **Augmented assignment** (`x += 2`) was lowered as the bare expression
+  `x`, so `x = 1; x += 2; print(x)` printed 1.  It now lowers to
+  `Assign x = BuiltinCall(op, [x, e])`, where `op` comes from the new
+  `arith_builtin` table that the binary operators also use, so `x /= 2`
+  true-divides exactly like `x / 2`.  `+= -= *= /= %=` are lowered; `//=
+  **= &= |= ^= <<= >>= @=` are refused at the operator, as their binary
+  forms are.  Targets: a bound name, or `self.attr` in a method.  A
+  subscript target, any other attribute, and a name not bound in the
+  current scope (Python's `UnboundLocalError`) are refused.
+- **Annotated assignment** (`x: int = 5`) was dropped the same way.  It
+  lowers as `x = 5`; the annotation is ignored, and its names no longer
+  count as free names for capture analysis.  `x: int` alone binds nothing.
+- **Chained assignment** (`a = b = 0`) lowered as `a = b`:
+  `expect_single_kind` (now removed) took only the first
+  `expression_list` of the suffix.  The value is now evaluated once into a
+  fresh temporary and stored into every target, left to right.
+- One routine, `classify_target` + `store_target`, now stores into a
+  name, `self.attr` or a subscript for all three forms.  The bound-name
+  scan (`walk_for_targets`) collects chained, augmented and annotated
+  targets too.
+- **Known divergence, documented:** for a list, Python's `+=` extends in
+  place; the lowering builds a new list.  Numbers and strings are exact.
+
+**Parameters assigned in the body.** The first store to a parameter
+declared a new local that shadowed it until the end of its block, so
+`while n > 0: n -= 1` (or `n = n - 1`) never changed the `n` the condition
+reads, and looped forever on every backend.  A parameter the body assigns
+is now copied into a fresh local (`__param_<name>_N`) by a prologue
+(`param_copy_prologue`), and `FunctionCtx::aliases` sends every read and
+store to it.  Storing into the parameter directly is refused by the Rust
+backend, and a same-named copy by JavaScript, Go and C.
+
+**A user `def main`** clashed with the synthesised module body and the
+validator refused the module.  User function names are now escaped one to
+one where they are written into the IR (`sir_function_name`): `main` →
+`__py_main`, `__py_x` → `__py___py_x`, everything else unchanged.
+
+**Other statements that were silently dropped or mis-lowered:**
+
+- A **one-line suite** (`def f(x): return x + 1`, `if c: y = 1`) is a bare
+  `simple_stmt` in the grammar, and the suite lowerers kept only
+  `statement` children: the whole body was dropped.  New
+  `suite_statements` returns both kinds.
+- An **expression statement just before a tail `return`** (a call, a
+  `print`, an `if`) became the block's value, which the `return` then
+  replaced: it was dropped.  New `statements_only` keeps it.
+- A function that **falls off its end** returned its last expression
+  statement (`def f(x): x + 1` returned `x + 1`; a docstring-only body
+  returned the docstring; a trailing nested `def` returned the closure).
+  It now returns `None`, as the SIR17 spec already said.
+- A **trailing-comma tuple** (`x = 1,`, `return y,`, `for x, in rows:`,
+  `xs[i,]`) lowered as its single element.  Refused, like every tuple.
+- A **`for` over an already-bound variable** declared a fresh loop-scoped
+  one, so `i = 10; for i in range(3): …; print(i)` printed 10 on five of
+  six backends.  The loop now binds a temporary and stores it into `i`.
+- A loop's **`else:` clause** was dropped (only the first suite was
+  lowered).  Refused.
+- **`self = …` in a method** stored into a local that no read could see
+  (`self` always reads the receiver).  Refused.
+
+**Tests.** New `tests/statement_forms.rs` (35 tests, each of which fails
+against 0.12.0).  `sir-conformance`'s `python_statement_forms.rs` runs
+the programs on all six backends against CPython's output.
+
 ## 0.12.0 — A closure that names itself or a sibling keeps its captures (#18468)
 
 **The bug.** A nested `def` that captures a variable got a zero-capture

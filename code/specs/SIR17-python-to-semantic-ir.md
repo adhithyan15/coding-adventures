@@ -66,6 +66,9 @@ versions of this frontend may accept a version parameter.
 | `"hello"`, `'world'`                   | `StrLit { value }`                                          |
 | `name` (reference)                     | `VarRef { name, scope }` with resolved scope                |
 | `x = 1`                                | `LetStarBinding` (first time) or `Assign` (subsequent)      |
+| `x += e` (`-=`, `*=`, `/=`, `%=`)       | `Assign x = BuiltinCall(op, [x, e])` (op as for `x op e`)   |
+| `a = b = e`                            | `let* tmp = e`, then each target `= tmp`, left to right     |
+| `x: T = e` / `x: T`                    | as `x = e` / nothing (annotation ignored)                   |
 | `x + y`, `x - y`, `x * y`, `x / y`     | `BuiltinCall("+" / "-" / "*" / "/", [...])`                 |
 | `x % y`                                | `BuiltinCall("%", [x, y])`                                  |
 | `-x`                                   | `BuiltinCall("neg", [x])`                                   |
@@ -170,6 +173,43 @@ the default is re-evaluated per call.  This is a deliberate, documented v0
 choice.  Keyword-only parameters, `*args` / `**kwargs`, and keyword
 arguments at call sites remain deferred.
 
+## Assignment statements (#18482)
+
+The grammar spells every assignment form with one rule:
+
+```text
+assign_stmt = expression_list [ assign_suffix | augmented_assign | annotation ] ;
+```
+
+The frontend matches the optional tail explicitly.  (It once checked only
+for `assign_suffix` and lowered any other tail as the bare left-hand
+expression, silently dropping `x += 2` and `x: int = 5`.)
+
+- **Targets.**  A bare name, `self.attr` inside a method, or a subscript
+  (`xs[i]`, `m[a][b]`).  Any other target is a positioned error, and so
+  is a tuple target or value.  A trailing comma makes a tuple too
+  (`x = 1,`, `return y,`, `for x, in rows:`, `xs[i,]`), so it is refused
+  rather than lowered as the lone element.
+- **Augmented** `t op= e` reads `t`, applies the builtin the binary
+  operator `op` lowers to (one shared table, so `/=` is `div_true`), and
+  stores the result.  `+= -= *= /= %=` are lowered.  `//= **= &= |= ^=
+  <<= >>= @=` are refused, as their binary forms are.  A subscript target
+  is refused (its base and index would need evaluating once).  A name not
+  bound in the current scope is refused: Python makes an augmented target
+  local, so reading it first raises `UnboundLocalError`.  *Divergence:*
+  Python's `+=` on a list extends it in place; the lowering rebinds to a
+  new list.  This is documented, not refused, because the frontend has no
+  types and no runtime has an in-place helper yet.
+- **Chained** `t1 = … = tn = e` evaluates `e` once into a fresh local,
+  then stores it into `t1` … `tn` in order, so `a = b = []` shares one
+  list.
+- **Annotated** `t: T = e` lowers as `t = e`.  `T` is never evaluated, and
+  its names are not free names for capture analysis.  `t: T` with no value
+  binds nothing; only a bare-name target is accepted there.
+
+**Temporaries** the frontend invents (`__chain_N`, `__for_N`,
+`__param_<name>_N`) never take a name spelled anywhere in the source.
+
 ## Return statement
 
 Python's `return` is a statement in the AST.  The SIR doesn't have a
@@ -179,6 +219,17 @@ expression IS the return value.  Lowering:
 - A function with a single `return expr` at the end: `body.value = expr`.
 - A function ending with statements that don't return: synthesize
   `body.value = NilLit` (matches Python's implicit `None` return).
+  This holds whatever the last statement is: an expression statement, a
+  docstring or a nested `def` is lowered as a statement, never as the
+  return value.  (Before #18482 the implementation made a trailing
+  expression statement the return value, diverging from this rule.)
+- Every statement before the tail `return` is kept as a statement.
+  (Before #18482 an expression statement just before a tail `return`
+  became the block's value and was then replaced by the `return`'s
+  value, so a call or `print` there was dropped.)
+- A suite written on its header's line (`def f(x): return x`) is a bare
+  `simple_stmt` in the grammar, with no `statement` wrapper, and is
+  lowered exactly like an indented suite.  (Before #18482 it was dropped.)
 - A function with early returns: this requires lifting to a control-
   flow shape the IR can express.  For the v0 MVP, **early returns
   are not supported** — frontends reject programs with non-tail
@@ -225,6 +276,23 @@ sequential semantics Python's top-to-bottom execution requires.  The
 RHS is lowered before the name is added to the declared set, so a
 self-referential first binding (`x = x`) correctly reports `x` as
 unresolved.
+
+**Implementation note (#18482 — assigned parameters):** a parameter the
+body assigns (by any assignment form or as a `for` variable) is copied
+into a fresh local `__param_<name>_N` at the top of the function, and
+every later read and store of the name uses that local.  Declaring a new
+local at the first store (the earlier behaviour) shadowed the parameter
+only until the end of its block, so `while n > 0: n -= 1` never ended.
+The copy has a fresh name because JavaScript, Go and C refuse to
+redeclare a parameter in the function's own scope, and the Rust backend
+refuses `Assign { scope: Param }`.
+
+**Implementation note (#18482 — `for` over a bound variable):** when the
+loop variable is already a local in scope, the IR loop binds a fresh
+temporary and the body starts with `Assign var = temp`, so the variable
+keeps the last item after the loop (Python's rule) and a zero-trip loop
+leaves it unchanged.  A fresh loop variable is still scoped to the body.
+A loop's `else:` clause is refused.
 
 `global x` and `nonlocal x` declarations are **out of scope** in v0
 — the frontend rejects them.
@@ -309,6 +377,13 @@ becomes a `LetStarBinding` local of `main`).  A module-level `def`
 becomes a top-level `Function` entry (lifted out of `main`'s body);
 `main` holds the remaining top-level statements.
 
+A user function named `main` would collide with it, so user function
+names are escaped one to one where they are written into the IR
+(`Function.name`, `DirectCall.fn_name`, `MakeClosure.fn_name`): `main`
+becomes `__py_main`, a name starting with `__py_` gains another `__py_`
+prefix, and every other name is unchanged.  No source name maps to
+`main`, and no two map to the same name.  (#18482)
+
 ```text
 SIR Module {
     functions: [
@@ -339,7 +414,11 @@ Errors:
 - Early `return` (not at function tail)
 - `global` / `nonlocal` declaration encountered
 - Unsupported syntax (classes, exceptions, generators, comprehensions,
-  decorators, multi-assign, slicing, `with`, async)
+  decorators, tuple / unpacking assignment, slicing, `with`, async)
+- Augmented assignment with an operator whose binary form is not lowered,
+  to a subscript, or to a name not bound in the current scope
+- An annotation with no value on a target other than a bare name
+- A loop `else:` clause; assignment to `self` inside a method
 - Mismatched arity on builtins (`range` with > 3 args, `len` with > 1 arg)
 
 ## Manifest computation
@@ -383,7 +462,8 @@ Coverage target ≥ 90%.
 - `async def` / `await`
 - Comprehensions
 - Decorators
-- Multi-target assignment / unpacking
+- Tuple / unpacking assignment (`a, b = …`; chained `a = b = …` is
+  supported, see "Assignment statements")
 - Slicing
 - Keyword arguments, keyword-only parameters, `*args` / `**kwargs`
   (positional default parameters `def f(a=1)` ARE supported — P8)

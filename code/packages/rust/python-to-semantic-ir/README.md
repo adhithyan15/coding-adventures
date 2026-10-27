@@ -86,6 +86,11 @@ becomes a negative literal.
 | `x` (not bound)              | error: `unresolved name `x``              | —                  |
 | `x = 1` (first occurrence)   | `LetStarBinding { name, value }`          | —                  |
 | `x = 2` (already declared)   | `Assign { name, scope: Local, value }`    | `MutableBindings`  |
+| `x += e` (also `-= *= /= %=`)| `Assign x = BuiltinCall("+", [x, e])`     | `MutableBindings`  |
+| `self.n += e` (in a method)  | `Assign @n (Instance) = @n + e`           | `InstanceVars`     |
+| `a = b = e`                  | `__chain_N = e; a = __chain_N; b = …`     | —                  |
+| `x: int = 5`                 | as `x = 5` (annotation ignored)           | —                  |
+| `x: int`                     | nothing (binds no value)                  | —                  |
 
 Assignment uses **first-occurrence detection** (per scope): the first
 `x = …` declares the name, later ones re-bind it.  The frontend emits
@@ -93,6 +98,45 @@ Assignment uses **first-occurrence detection** (per scope): the first
 RHS can see an earlier binding — `x = 1` then `y = x + 1` resolves `x`
 correctly.  The RHS is lowered before the name is declared, so `x = x`
 reports `x` as unresolved (matching Python's `NameError`).
+
+**Every `assign_stmt` form is lowered or refused (#18482).**  The grammar
+spells five statement forms with one rule, `expression_list [
+assign_suffix | augmented_assign | annotation ]`.  The lowerer used to
+check only for `assign_suffix`, so `x += 2` and `x: int = 5` compiled to
+the bare expression `x` and stored nothing, and `a = b = 0` compiled to
+`a = b`.  Now:
+
+- **augmented** `x op= e` reads `x`, applies *the same builtin as the
+  binary operator* (`/=` is `div_true`, like `/`), and stores the result.
+  `//=`, `**=`, `&=`, `|=`, `^=`, `<<=`, `>>=` and `@=` are refused, as
+  their binary operators are.  The target may be a bound name or
+  `self.attr`; a subscript target (`xs[i] += 1`), any other attribute,
+  and a name not bound in the current scope (Python's
+  `UnboundLocalError`) are refused.
+- **chained** `a = b = e` evaluates `e` once into a fresh temporary, then
+  stores it into each target left to right, so `a = b = []` gives both
+  names one shared list, as in Python.
+- **annotated** `x: T = e` is `x = e`; the annotation is never evaluated.
+  `x: T` alone binds nothing.
+
+*Known divergence:* for a list, Python's `xs += ys` extends the list in
+place, so other references to it see the change; the lowering builds a
+new list (`xs = xs + ys`).  Numbers and strings are exact.
+
+**Assigning a parameter.**  A parameter the body assigns is copied into
+a fresh local (`__param_n_N`) at the top of the function, and every read
+and store of the name uses the copy.  Before, the first store declared a
+new local that shadowed the parameter only until the end of its block,
+so `while n > 0: n -= 1` looped forever.  The copy has a fresh name
+because JavaScript, Go and C refuse to redeclare a parameter in the
+function's own scope, and the Rust backend refuses to assign one.
+
+**Temporaries** (`__chain_N`, `__for_N`, `__param_<name>_N`) never take a
+name spelled anywhere in the source file.
+
+**Tuples.**  A trailing comma makes a tuple (`x = 1,`, `return y,`,
+`for x, in rows:`, `xs[i,]`).  These used to lower as the bare element;
+like every tuple, they are refused.
 
 ### Operators (M2)
 
@@ -143,6 +187,14 @@ its arity mapped to `(start, stop, step)`; `range` with zero or more
 than three arguments is rejected ("range with wrong arity").  Any other
 iterable becomes a `ForEach`.
 
+**A loop over an already-bound variable** (`i = 10; for i in range(3):
+…`) stores each item into that variable, which keeps the last item after
+the loop, as in Python: the IR loop binds a temporary `__for_N`, and the
+body starts with `Assign i = __for_N`.  A **loop `else:`** clause is
+refused (it used to be dropped).  A **one-line body** (`if c: x = 1`,
+`while c: n -= 1`) is lowered like an indented one; it is a bare
+`simple_stmt` in the grammar, and used to be dropped whole.
+
 **Scoping.**  The loop variable (`i` / `x`) is a `Scope::Local` bound
 **inside the body only**, and a name first bound inside a loop or
 `if`-branch body does **not** leak past the block — the lowerer's
@@ -176,6 +228,13 @@ nesting into a clean error rather than a native stack overflow.
 † a `def`/`lambda` with parameters declares `DynamicTyping` (the subset
 has no parameter annotations).
 
+**A user `def main`** is renamed, since the module body is the SIR
+function `main`.  The escape is one-to-one: `main` becomes `__py_main`, a
+name that already starts with `__py_` gains another `__py_`, and every
+other name is unchanged.  It applies where a name is written into the IR
+(`Function.name`, `DirectCall`, `MakeClosure`), so `main()` and `h = main`
+in the source still resolve.
+
 **Two-pass design.**  A first pass collects **every** function name
 (top-level and nested) into a flat table, so a call to a function defined
 *later* in the file — and **mutual recursion** — resolve to `DirectCall`.
@@ -184,7 +243,11 @@ names and its parameter shape.  The second pass lowers each body.
 
 **`return` is tail-only.**  A SIR function body is a `Block` whose `value`
 IS the return value, so a tail `return expr` sets that value (and a bare
-tail `return` / falling off the end yields `NilLit`).  A tail `if` whose
+tail `return` / falling off the end yields `NilLit`).  Falling off the end
+returns `None` whatever the last statement is: an expression statement, a
+docstring or a nested `def` used to become the return value.  Every
+statement before the tail `return` is kept as a statement; an expression
+statement there (a call, a `print`, an `if`) used to be dropped (#18482).  A tail `if` whose
 branches each `return` (`if c: return a else: return b`) lowers with each
 branch in function-tail position, becoming an `Expr::If`.  A **non-tail**
 `return` (followed by more statements, or nested in a loop / non-tail
@@ -409,9 +472,11 @@ Everything past M5 / C2 / the OOP surface above returns a clear positioned
   parameters** (`def f(a=1)`, P8) and **keyword parameters / arguments**
   (`def f(*, x)`, `f(x=1)`, KW8) are now supported; only the variadic
   rest forms remain deferred
-- tuple / multi-target `for` (`for k, v in …`), multi-target / chained
-  assignment, non-`self` attribute targets, bitwise operators, the power
-  operator (`**`)
+- tuple / multi-target `for` (`for k, v in …`), tuple / unpacking
+  assignment (`a, b = …`, `x = 1,`), non-`self` attribute targets, augmented
+  assignment to a subscript, bitwise operators, the power operator (`**`),
+  floor division (`//`) and their augmented forms, loop `else:` clauses,
+  `pass`
 - `@classmethod`/class methods, class variables, `super()` calls, mixins
   (`include`/`extend`), exceptions, generators, non-class decorators,
   `with` / `try`, `async`, imports, `global` / `nonlocal`, f-strings.
@@ -422,7 +487,16 @@ Everything past M5 / C2 / the OOP surface above returns a clear positioned
 cargo test -p python-to-semantic-ir
 ```
 
-The suite (82 tests) covers M1–M3 (literals; operators with
+`tests/statement_forms.rs` covers the #18482 statement fixes: augmented
+assignment (each operator against its binary form, the refused operators
+and targets), annotated and chained assignment, parameters assigned in a
+body, the `main` escape, trailing-comma tuples, `for` over a bound
+variable, falling off a function's end, the statement before a tail
+`return`, one-line suites and loop `else:`.  `sir-conformance`'s
+`python_statement_forms.rs` runs the same forms on all six backends
+against CPython's output.
+
+The unit suite covers M1–M3 (literals; operators with
 left-associativity / precedence; variable resolution and first-occurrence
 assignment; short-circuit nodes; `if` / `elif` / `else`, `while`,
 `for`-range / `for`-each with block scoping) plus the M4 surface:

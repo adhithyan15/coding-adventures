@@ -2,6 +2,33 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.29.0] - Python statement forms (#18482)
+
+Adds `tests/python_statement_forms.rs`: 23 Python programs covering the
+statement forms `python-to-semantic-ir` 0.13.0 fixed, each run on Python,
+JavaScript, Go, Rust, C and Ruby and compared with CPython's output:
+
+- augmented assignment (`+= -= *= /=`, on ints, floats and strings, on a
+  parameter in a loop, on `self.n` in a method);
+- annotated assignment, with and without a value;
+- chained assignment, including a shared list and a subscript target;
+- a parameter assigned in a loop or an `if`, and then captured;
+- a `for` over an already-bound variable, including a zero-trip loop;
+- falling off the end of a function, a call or `print` just before a tail
+  `return`, and one-line bodies;
+- a user `def main`, called and used as a value.
+
+`programs_lower_and_validate` checks every program passes the validator.
+`programs_print_cpythons_output_on_every_backend` first checks each
+expectation against a real `python3` (when present), then runs every
+`(program, backend)` cell and reports all the cells that disagree at once.
+
+Against `python-to-semantic-ir` 0.12.0, every program fails on at least
+four of the six backends, by printing the wrong value or not lowering.
+(Rebinding a parameter or loop variable happened to work on the Python
+and Ruby backends, whose emitted code has no block scope.)  `while` loops carry a guard counter so
+the old endless-loop lowering fails instead of hanging.
+
 ## [0.28.0] - Python closures that name themselves or each other (#18468)
 
 Adds `tests/python_nested_closures.rs`: six Python programs whose nested
