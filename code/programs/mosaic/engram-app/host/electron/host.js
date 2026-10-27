@@ -171,7 +171,8 @@ function quarantineSnapshot() {
     const corruptPath =
       index === 0 ? `${snapshotPath}.corrupt` : `${snapshotPath}.corrupt.${index}`;
     try {
-      // COPYFILE_EXCL fails with EEXIST instead of replacing what is there.
+      // COPYFILE_EXCL fails instead of replacing what is there (EEXIST on
+      // POSIX; EPERM or EISDIR for a directory on Windows).
       copyFileSync(snapshotPath, corruptPath, constants.COPYFILE_EXCL);
       console.warn(`Engram copied the unreadable snapshot to ${corruptPath}`);
       return;
