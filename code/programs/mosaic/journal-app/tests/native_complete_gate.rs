@@ -44,6 +44,18 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // the current emitters still lose, so it cannot license that regression.
 ];
 
+/// The scroll container each native backend must emit around the pane (JO-5,
+/// journal-mosaic-app.md "The pane scrolls"), as a marker in its generated
+/// source. Before JO-5 none of these appeared anywhere in Journal's output, so
+/// a pane with no way to reach older entries passed every other check here.
+const PANE_SCROLL_MARKERS: &[(Backend, &str, &str)] = &[
+    (Backend::SwiftUI, "swiftui/JournalApp.swift", "ScrollView {"),
+    (Backend::Qt, "qt/JournalApp.qml", "ScrollView {"),
+    (Backend::Xaml, "xaml/JournalApp.xaml", "<ScrollViewer"),
+    (Backend::Flutter, "flutter/JournalApp.dart", "SingleChildScrollView("),
+    (Backend::Compose, "compose/JournalApp.kt", ".verticalScroll(rememberScrollState())"),
+];
+
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
 }
@@ -190,4 +202,43 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
         stale.len(),
         stale.join("\n")
     );
+}
+
+/// Every native backend wraps the pane in its scroll container (JO-5).
+///
+/// The marker must open before the pane's first control, the *New entry*
+/// button, so it is the pane that scrolls and not something further in. The
+/// table must also cover every native backend, so a backend added to Mosaic
+/// cannot skip this check.
+#[test]
+fn every_native_backend_scrolls_the_pane() {
+    for &backend in NATIVE_BACKENDS {
+        assert!(
+            PANE_SCROLL_MARKERS.iter().any(|(b, _, _)| *b == backend),
+            "{backend:?} has no pane-scroll marker in PANE_SCROLL_MARKERS"
+        );
+    }
+    for &(backend, file, marker) in PANE_SCROLL_MARKERS {
+        let out = TempDir::new().expect("temp dir");
+        mosaic_package_artifact_builder::build_package(&BuildOptions {
+            package_root: package_root(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_or_else(|e| panic!("{backend:?} build failed: {e}"));
+        let source = std::fs::read_to_string(out.path().join(file))
+            .unwrap_or_else(|e| panic!("{backend:?}: cannot read {file}: {e}"));
+        let scroll = source
+            .find(marker)
+            .unwrap_or_else(|| panic!("{backend:?}: {file} has no `{marker}`: the pane does not scroll"));
+        let first_control = source
+            .find("New entry")
+            .unwrap_or_else(|| panic!("{backend:?}: {file} has no New entry button"));
+        assert!(
+            scroll < first_control,
+            "{backend:?}: `{marker}` opens after the pane's first control, so it does not wrap the pane"
+        );
+    }
 }
