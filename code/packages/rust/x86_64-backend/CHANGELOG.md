@@ -1,5 +1,30 @@
 # Changelog — `x86_64-backend`
 
+## Unreleased — a `bool`-typed comparison is signed (#18453)
+
+### Fixed
+
+- **`cmp_lt_bool` / `cmp_le_bool` / `cmp_gt_bool` / `cmp_ge_bool` compare
+  signed.** A comparison's suffix is its *result* type when the frontend gave
+  one. Twig types every `(< a b)` and `(string<? a b)` result `bool` while its
+  operands are `i64`s. The backend treated `bool` as unsigned, so
+  `cmp_lt_bool -1, 0` read -1 as `0xFFFF_FFFF_FFFF_FFFF` and returned 0.
+  Natively, `(if (< -5 0) 42 7)` exited 7, and so did
+  `(define (f x) (if (< x 0) 42 7)) (f -5)`. `(string<? "a" "b")` (`str_cmp`
+  gives -1, then `cmp_lt _, 0`) was `#f`.
+- A new helper, `is_signed_ty`, treats `i*` and `bool` as signed and `u*` as
+  unsigned. It replaces the inline `ty.starts_with('i')` in the comparison,
+  divide / modulo and right-shift lowering (`setl` / `setle` / `setg` / `setge` and `idiv` / `sar`). For genuine 0 / 1
+  booleans the signed and unsigned answers agree.
+
+### Tests
+
+- `bool_typed_compare_is_signed`: for each of `lt` / `le` / `gt` / `ge`, a
+  `bool` compare emits the same bytes as the `i64` one, and different bytes
+  from the `u64` one. `cmp_lt_bool` contains the signed condition and not the
+  unsigned one. It failed before the fix.
+- `parse_cmp_suffix_works` now expects `ne_bool` / `lt_bool` to be signed.
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 ### Fixed

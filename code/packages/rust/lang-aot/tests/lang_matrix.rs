@@ -930,6 +930,49 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // Twig — a `bool`-typed comparison is SIGNED (#18453). `string<?` is
+    // `str_cmp` (-1/0/1) then `cmp_lt _, 0 [bool]`, and `(< a b)` is
+    // `cmp_lt a, b [bool]`; the native backends took the `bool` suffix as
+    // unsigned, so -1 < 0 was false. These rows put a negative operand in
+    // front of every such compare: a string parameter ordered before its
+    // bound, `string>?` on an ordered pair, and `<` on negative literals and
+    // a negative argument.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f s) (if (string<? s \"m\") 1 2)) (f \"a\")",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (string>? \"a\" \"b\") 42 7)",
+        expect: Expect::Exit(7),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (< -5 0) 42 7)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (< x 0) 42 7)) (f -5)",
+        expect: Expect::Exit(42),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+        release: None,
+        case: None,
+    },
     // Twig — E4 string ops inside a direct top-level function. The function body
     // lowers `(string-length "HELLO")` to typed `str_const` + `str_len`, and the
     // direct `(strlen)` call now carries the function's `i64` return type instead

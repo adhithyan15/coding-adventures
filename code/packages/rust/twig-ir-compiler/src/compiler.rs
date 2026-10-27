@@ -1418,7 +1418,7 @@ impl Compiler {
                 // lookup), never a call to a user `(define (and a b) …)`.
                 if let Some(f) = apply
                     .fn_name()
-                    .filter(|f| !shadowed.contains(*f) && !matches!(*f, "and" | "or"))
+                    .filter(|f| !shadowed.contains(*f) && !apply.is_short_circuit_form())
                 {
                     if let Some(slots) = evidence.get_mut(f) {
                         if apply.args().len() == slots.len() {

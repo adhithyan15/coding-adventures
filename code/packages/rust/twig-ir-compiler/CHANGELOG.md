@@ -20,8 +20,8 @@
   captures the local `or`, and `((lambda () or))` with nothing bound is
   still an "unbound name" error. A new predicate,
   `cst::is_short_circuit_form` (and `ApplyView::is_short_circuit_form`),
-  names the two heads. `compile_apply` and `free_vars` both ask it, so
-  they cannot disagree. Every other special form is a lexer keyword with
+  names the two heads. `compile_apply`, `free_vars` and the call-site
+  string-evidence walk all ask it, so they cannot disagree. Every other special form is a lexer keyword with
   its own grammar rule, so it never parses as an application, and
   `free_vars` already handled it as syntax. As a side effect,
   `lambda_captured_globals` no longer counts a `(or …)` inside a lambda as
@@ -33,8 +33,12 @@
   `bool`, so a typed `mov` / `ret [bool]` read a register whose only
   writer claimed `i64`. It is now emitted `[bool]`, the same hint that
   `(< a b)` gets. `str_cmp` is a real three-way integer and stays `i64`.
-  The IR of the 826-program corpus changes in only the two programs that
-  use `string<?` / `string>?`, by that hint. One of them is a
+  On x86-64 and AArch64 this hint selects the comparison's signedness
+  (`cmp_lt_bool`). Those backends used to treat `bool` as unsigned, so they
+  needed the matching fix in this change: there, `-1 < 0` would otherwise
+  have been false (see their changelogs). The IR of the 826-program corpus
+  changes in only the two programs that use `string<?` / `string>?`, by that
+  hint. One of them is a
   `lang_matrix` program. The strengthened soundness check now finds 0
   problems across the corpus (it found 1 before).
 

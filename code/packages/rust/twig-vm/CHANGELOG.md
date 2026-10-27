@@ -1,8 +1,17 @@
 # Changelog — twig-vm
 
-## Unreleased — #18453: `str_cmp`; `and` / `or` inside a lambda
+## Unreleased — #18453: `str_cmp`, `str_slice`; `and` / `or` inside a lambda
 
 ### Fixed
+
+- **twig-vm runs `str_slice`.** The compiler lowers a `(substring s a b)`
+  over a static string and integer bounds to `str_slice`. twig-vm had no
+  arm for it, so `(substring "abcde" 1 3)` stopped with
+  `UnsupportedOpcode("str_slice")`. So did
+  `(define (f s) (substring s 0 1)) (f "abc")`. The new `exec_str_slice`
+  mirrors `vm-core`'s `handle_str_slice`: it counts bytes, like the other E4
+  ops. It requires `0 <= start <= end <= len`, and for UTF-8 input both
+  ends must fall on character boundaries. Anything else is a `TypeError`.
 
 - **twig-vm runs `str_cmp`.** The Twig compiler lowers a `string<?` /
   `string>?` whose operands are statically strings to `str_cmp` followed by
@@ -20,6 +29,11 @@
   or global named `or` / `and` used in value position next to the special
   form. Before the `twig-ir-compiler` fix, they failed to compile with
   `unbound name "or" captured by lambda`.
+- `literal_substring_runs_as_str_slice` runs the four programs from the
+  review, which compile to `str_slice`, plus an empty slice.
+  `str_slice_rejects_a_bad_range` checks five out-of-range bounds and a
+  UTF-8 split. Both failed with `UnsupportedOpcode("str_slice")` before
+  this change.
 - `string_order_results_are_right_in_joins` runs `string<?` / `string>?`
   in `if`, `and`, `or` and `let` joins, including equal strings. Before
   this change, it stopped with `UnsupportedOpcode("str_cmp")`.

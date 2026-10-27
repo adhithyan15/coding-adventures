@@ -1138,6 +1138,10 @@ fn dispatch(
                 exec_str_cmp(instr, &mut frame)?;
                 pc += 1;
             }
+            "str_slice" => {
+                exec_str_slice(instr, &mut frame)?;
+                pc += 1;
+            }
             "print_str" => {
                 exec_print_str(instr, &frame)?;
                 pc += 1;
@@ -1566,6 +1570,52 @@ fn exec_str_cmp(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
         std::cmp::Ordering::Greater => 1,
     };
     frame.set(dest.clone(), LispyValue::int(ordering))?;
+    Ok(())
+}
+
+/// `str_slice dest, s, start, end [str]` — a new string holding the bytes
+/// `s[start..end]`.
+///
+/// The Twig compiler lowers a `(substring s a b)` whose operands are
+/// statically a string and two integers to this op.  Like the other E4
+/// string ops (`str_len`, `str_index`) it counts **bytes**, as `vm-core`'s
+/// `handle_str_slice` and the native backends do.  The range must satisfy
+///
+/// ```text
+/// 0 <= start <= end <= len(s)
+/// ```
+///
+/// and, when `s` is UTF-8, both ends must fall on character boundaries so
+/// the result is UTF-8 too; anything else is a `TypeError`, never a panic
+/// or an out-of-bounds read.  Until #18453 twig-vm had no `str_slice` arm,
+/// so even `(substring "abcde" 1 3)` stopped with
+/// `UnsupportedOpcode("str_slice")`.
+fn exec_str_slice(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_slice")?;
+    let bytes = e4_string_arg("str_slice", instr, frame, 0)?;
+    let start = e4_int_arg("str_slice", instr, frame, 1)?;
+    let end = e4_int_arg("str_slice", instr, frame, 2)?;
+    let out_of_range = || {
+        RunError::Runtime(RuntimeError::TypeError(format!(
+            "str_slice: range {start}..{end} out of bounds for string of length {}",
+            bytes.len()
+        )))
+    };
+    // `usize::try_from` rejects a negative `start`; the comparisons then
+    // order the range and bound it by the length.
+    let lo = usize::try_from(start).map_err(|_| out_of_range())?;
+    let hi = usize::try_from(end).map_err(|_| out_of_range())?;
+    if lo > hi || hi > bytes.len() {
+        return Err(out_of_range());
+    }
+    if let Ok(text) = std::str::from_utf8(&bytes) {
+        if !text.is_char_boundary(lo) || !text.is_char_boundary(hi) {
+            return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+                "str_slice: range {start}..{end} splits a UTF-8 character"
+            ))));
+        }
+    }
+    frame.set(dest.clone(), dynval_runtime::heap::alloc_string(&bytes[lo..hi]))?;
     Ok(())
 }
 
@@ -4333,6 +4383,65 @@ mod tests {
             assert_eq!(run_int(src), Some(want), "{src}");
         }
         assert!(run_source("((lambda () (or)))").is_ok_and(|v| v == LispyValue::FALSE));
+    }
+
+    #[test]
+    fn literal_substring_runs_as_str_slice() {
+        // #18453 review: twig-vm had no `str_slice` arm, so a `substring`
+        // the compiler could type stopped with `UnsupportedOpcode`.
+        for src in [
+            "(substring \"abcde\" 1 3)",
+            "(define (f s) (substring s 0 1)) (f \"abc\")",
+        ] {
+            assert!(
+                compile_source(src, "test").unwrap().functions.iter()
+                    .any(|f| f.instructions.iter().any(|i| i.op == "str_slice")),
+                "{src}: expected the typed str_slice"
+            );
+        }
+        let s = run_source("(substring \"abcde\" 1 3)").unwrap();
+        // SAFETY: `s` came from the VM's tagged value space.
+        assert_eq!(unsafe { dynval_runtime::heap::string_bytes(s) }, Some(&b"bc"[..]));
+        let s = run_source("(define (f s) (substring s 0 1)) (f \"abc\")").unwrap();
+        // SAFETY: as above.
+        assert_eq!(unsafe { dynval_runtime::heap::string_bytes(s) }, Some(&b"a"[..]));
+        assert_eq!(run_int("(string-length (substring \"abc\" 0 (string-length \"abc\")))"), Some(3));
+        assert_eq!(run_int("(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))"), Some(67));
+        assert_eq!(run_int("(string-length (substring \"abc\" 1 1))"), Some(0));
+    }
+
+    #[test]
+    fn str_slice_rejects_a_bad_range() {
+        // Hand-built, so the range reaches `str_slice` unchecked.
+        for (start, end) in [(-1, 2), (2, 1), (0, 4), (4, 4), (1, 1 << 40)] {
+            let instrs = vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("abc".into())], "str"),
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(start)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(end)], "i64"),
+                IIRInstr::new(
+                    "str_slice",
+                    Some("r".into()),
+                    vec![Operand::Var("s".into()), Operand::Var("a".into()), Operand::Var("b".into())],
+                    "str",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "str"),
+            ];
+            let e = run(&module_with_main(instrs, 4)).expect_err(&format!("{start}..{end}"));
+            assert!(format!("{e:?}").contains("str_slice"), "{start}..{end}: {e:?}");
+        }
+        // A range that splits a UTF-8 character is rejected too.
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("é".into())], "str"),
+            IIRInstr::new(
+                "str_slice",
+                Some("r".into()),
+                vec![Operand::Var("s".into()), Operand::Int(0), Operand::Int(1)],
+                "str",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "str"),
+        ];
+        let e = run(&module_with_main(instrs, 2)).unwrap_err();
+        assert!(format!("{e:?}").contains("UTF-8"), "{e:?}");
     }
 
     #[test]
