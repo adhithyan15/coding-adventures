@@ -46,6 +46,7 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
 | P0 | Arm Cortex-M0 | merged | merged | Complete; gate PR #18296 landed. |
 | P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
+| P0 | Arm Cortex-M7 | merged | local repair complete | Gate cell implements Spec 07an2 with 524,956 authoritative DFFs, exhaustive DSP truth tables, hostile compiled-backend proofs, and typed allocation rollback. The shared M3 integration commit is now fallible and revalidates its publicly mutable candidate before any DFF clock; the external-consumer regression proves a hostile post-settle mutation preserves the complete authoritative Q snapshot. |
 | P0 | Arm Cortex-M23, Security Extension disabled | merged | local complete | Spec 07ao2 is implemented with exactly 524,898 authoritative stable-Q DFFs and independent gate-derived decode/data/flags/control. All 35 release tests pass, including exhaustive decode, every condition and shift-boundary outcome, arithmetic/multiply edges, memory-addressing overlaps, full-state differential, typed allocation/lifecycle rollback, exact locks over every stable-Q mutation route, compile-valid direct-Q hostile fixtures, and out-of-range decoder boundaries; measured line coverage is 93.64% (1,827/1,951). TrustZone/SAU, NVIC, MPU/IDAU, buses, timing, and proprietary silicon topology remain separate cells. |
 
 ## P0 gate-integrity repair queue
