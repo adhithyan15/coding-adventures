@@ -36,6 +36,10 @@ editing, and save/delete/cancel controls.
   `pkg::mosaic-pkg-session-progress::SessionProgress`, and
   `pkg::mosaic-pkg-review-card::ReviewCard`, plus
   `pkg::mosaic-pkg-review-actions::ReviewActions`.
+- The Add/Edit screen's `NoteEditor` (0.2.0) edits the focused field in a
+  body-only `DraftEditor`, the editor Journal also uses. The field is
+  multi-line, and Ctrl+Enter (Cmd+Enter on macOS) saves the note, as Anki's
+  Add dialog does (`mosaic-editor-convergence-audit-v1.md` §8).
 - `EngramApp.touch.mll` is the touch/mobile layout variant of the same
   product shell, keeping the `EngramApp.mil` interface and component mounts
   unchanged while stacking the header and navigation for narrow viewports.

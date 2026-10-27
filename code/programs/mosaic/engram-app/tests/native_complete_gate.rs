@@ -209,6 +209,47 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Flutter, "font-weight"),
 ];
 
+/// Style drops allowed on ONE part only: `(backend, property, part)`.
+///
+/// `ALLOWED_STYLE_DROPS` above pins by property across the whole app, which
+/// is the right grain for a gap an emitter has everywhere. It is the wrong
+/// grain for a drop that one mount causes: pinning `(SwiftUI, "gap")` there
+/// would re-license the very property that list removed on purpose (see its
+/// `gap` note), for every part of Engram, to cover one part of one package.
+///
+/// So these are pinned where they occur, and checked in both directions like
+/// the list above.
+///
+/// ## NoteEditor 0.2.0 mounts DraftEditor (E4)
+///
+/// Engram's focused note field is now a body-only
+/// `pkg::mosaic-pkg-draft-editor::DraftEditor`, nested in NoteEditor
+/// (`mosaic-editor-convergence-audit-v1.md` §8). Nested there it drops four
+/// things, each once per layout that mounts NoteEditor (`EngramApp.mll` and
+/// `EngramApp.touch.mll`). Flutter `min-height` is already pinned by property
+/// above; the other three are kinds that list does not pin:
+///
+/// - SwiftUI `gap` on `draft-editor-title-group`: a reporting artifact. The
+///   title group is folded away at compile time (`title-label : ""`), and
+///   the reporter counts the style of a part with no occurrence as unlowered.
+/// - Qt `min-height` on `draft-editor-body`: DraftEditor's own pinned gap.
+/// - Flutter `width` on `draft-editor-body`: `width: 100%` under
+///   NoteEditor's `Row [ editor-body ]`, which bounds no width, so Flutter
+///   declines it. The 0.1.0 field asked for no width at all.
+///
+/// NoteEditor's own gate pins the same set, measured on the package alone.
+const ALLOWED_PART_STYLE_DROPS: &[(Backend, &str, &str)] = &[
+    (Backend::SwiftUI, "gap", "draft-editor-title-group"),
+    (Backend::Qt, "min-height", "draft-editor-body"),
+    (Backend::Flutter, "width", "draft-editor-body"),
+];
+
+/// The part a style drop was reported on (`$style.<part>`), or `None`, which
+/// matches no part pin.
+fn part_of(layout_path: &str) -> Option<&str> {
+    layout_path.strip_prefix("$style.")
+}
+
 #[test]
 fn engram_emits_with_no_degradations_on_every_native_backend() {
     let mut failures = Vec::new();
@@ -277,6 +318,10 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
             seen_any = true;
             let allowed = ALLOWED_STYLE_DROPS.iter().any(|(b, property)| {
                 *b == backend && Some(*property) == entry.primitive.as_deref()
+            }) || ALLOWED_PART_STYLE_DROPS.iter().any(|(b, property, part)| {
+                *b == backend
+                    && Some(*property) == entry.primitive.as_deref()
+                    && Some(*part) == part_of(&entry.layout_path)
             });
             if !allowed {
                 unexpected.push(format!(
@@ -293,7 +338,8 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
         unexpected.is_empty(),
         "{} style property/properties are dropped that were not pinned:\n{}\n\n\
          Either map the property in that backend's emitter, or add it to \
-         ALLOWED_STYLE_DROPS with a reason and an issue.",
+         ALLOWED_STYLE_DROPS (or, for one part, ALLOWED_PART_STYLE_DROPS) with \
+         a reason and an issue.",
         unexpected.len(),
         unexpected.join("\n")
     );
@@ -328,6 +374,7 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
     // suit a test would be the tail wagging the dog. Both collections are
     // dozens of entries, so the linear scan below costs nothing.
     let mut observed: Vec<(Backend, String)> = Vec::new();
+    let mut observed_on_part: Vec<(Backend, String, String)> = Vec::new();
 
     for &backend in NATIVE_BACKENDS {
         let output = TempDir::new().expect("temporary output");
@@ -346,11 +393,14 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
         for entry in &report.style_degradations {
             if let Some(primitive) = entry.primitive.as_deref() {
                 observed.push((backend, primitive.to_string()));
+                if let Some(part) = part_of(&entry.layout_path) {
+                    observed_on_part.push((backend, primitive.to_string(), part.to_string()));
+                }
             }
         }
     }
 
-    let stale: Vec<String> = ALLOWED_STYLE_DROPS
+    let mut stale: Vec<String> = ALLOWED_STYLE_DROPS
         .iter()
         .filter(|(backend, property)| {
             !observed
@@ -359,12 +409,23 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
         })
         .map(|(backend, property)| format!("  {backend:?}: {property}"))
         .collect();
+    stale.extend(
+        ALLOWED_PART_STYLE_DROPS
+            .iter()
+            .filter(|(backend, property, part)| {
+                !observed_on_part
+                    .iter()
+                    .any(|(b, p, q)| b == backend && p == property && q == part)
+            })
+            .map(|(backend, property, part)| format!("  {backend:?}: {property} on {part}")),
+    );
 
     assert!(
         stale.is_empty(),
         "{} pinned style drop(s) no longer occur:\n{}\n\n\
          The emitter learned the mapping, so delete these from \
-         ALLOWED_STYLE_DROPS -- and close the issue each is pinned to. Left in \
+         ALLOWED_STYLE_DROPS or ALLOWED_PART_STYLE_DROPS -- and close the issue \
+         each is pinned to. Left in \
          place they stop being a record of a known gap and become a licence for \
          that property to be dropped again with nothing noticing.",
         stale.len(),
