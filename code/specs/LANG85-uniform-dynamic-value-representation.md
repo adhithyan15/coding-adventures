@@ -640,7 +640,7 @@ values, as TW00 says. The ninth review's comment on #18480 records both
 natives disagreeing with the VM on `(= 0 #f)` through a parameter.
 `vm-core`'s `Value::as_i64` turns `#f` into 0, so the VM may answer true.
 Before PR5's gate counts such a program, the oracle's answer has to be
-settled (§11, question 6).
+settled (§11.1, decision 4: false).
 
 ### 5.2 Signed order is preserved
 
@@ -677,7 +677,7 @@ The masking matters for safety. An unmasked tagged add of a pair
 forged pointer. With the mask it yields `(p & −8) + 8`, tag `000`, which
 is wrong but harmless. The reference form (untag, op, retag) is safe for
 the same reason: the retag always produces tag `000`. Detecting the type
-error and failing closed is a separate decision (§11, question 3).
+error and failing closed is a separate decision (§11.2, question 1).
 
 ### 5.4 Overflow at ±2^60: the decision
 
@@ -717,11 +717,13 @@ Why this choice:
 4. **The cost is one overflow branch per op.** On x86-64 the tag-aware add
    is `and`, `and`, `add`, `jo`.
 
-The divergence this leaves is that a program whose exact intermediate
-leaves the fixnum range traps on native and LLVM and returns an `i64` on
-the VM. The fuzz gate classifies that as expected when `ref.py` in fixnum
-mode also says overflow (§7.3). Whether the other columns should adopt the
-same range is a language decision for the owner (§11, question 1).
+The owner decided that every column adopts the same range (§11.1,
+decision 1). A program whose exact intermediate leaves the fixnum range
+raises `Trap.Overflow` on every column, the VM included. On the
+non-tagged columns the range check is frontend-emitted IIR. Until PR7
+lands on every column, the fuzz gate treats a native or LLVM overflow trap
+as expected when `ref.py` in fixnum mode also says overflow (§7.3). After
+PR7, any column that disagrees fails the gate.
 
 Frontend-typed code (`add [i64]` from Twig's typed fast path) keeps its
 declared `i64` semantics. The pass never moves an operation between the
@@ -995,10 +997,10 @@ record the same history from the implementer's side. They live on the
 
 | Item | Why it is not here | Tracking |
 |---|---|---|
-| A dynamic form for strings (`string-length` on an untyped value) | needs a heap kind and a tag decision (§11, question 4) | #18428 |
+| A dynamic form for strings (`string-length` on an untyped value) | needs a heap kind and a tag decision (§11.2, question 2) | #18428 |
 | The managed columns (WASM / JVM / CLR) reading declared types instead of `lisp_functions` | different value model; mismatches fail loudly there; needs its own spec | #18451 item 3, #18425 (`producer_types`) |
 | O6, the unboxed worker/wrapper calling convention | an optimisation; needs PR9's clean base | new issue |
-| Failing closed on `(+ pair 1)` and other dynamic type errors | needs a trap kind (§11, question 3) | new issue |
+| Failing closed on `(+ pair 1)` and other dynamic type errors | needs a trap kind (§11.2, question 1) | new issue |
 | Printing a non-integer dynamic value with `print` | a print rule, like `__lisp_exit_code` | new issue |
 | `vm-core` truthiness of `Int(0)`, and its `i64` range | VM-side divergences | new issues |
 | Retro-CPU columns | they do not run `prepare_module_for_aot` | #18487 item 2 |
