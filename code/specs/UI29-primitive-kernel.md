@@ -402,7 +402,56 @@ type system.
   slot, never to a `For`-bound name.
 - A `For`-bound name and a slot of the same name is a **shadow
   warning** in the compiler. (Slots win? `For` wins? — picked by the
-  spec PR that lands the resolver.)
+  spec PR that lands the resolver.) **Resolved: `For` wins.** Inside
+  the loop body the bare name is the loop variable, on every backend
+  (UI34 §5 "Bindings"; each emitter's lexical scoping gives the same
+  answer). No warning is emitted yet.
+- **A bare name must be bound** (backlog 6f1p). A bare NAME prop value
+  (`Text ( content: hello )`, a `LayoutPropValue::Keyword`) in a
+  name-reference position is a `name_ref`, and every backend lowers it
+  to a variable read (React `{hello}`, SwiftUI `_mosaicText(hello)`,
+  Web Components `this.hello`, …). So the layout validator requires it
+  to name one of:
+  1. an `as:` or `index:` binding of an enclosing `For` in the same
+     layout (nested `For`s included; matched exactly as written), or
+  2. a slot of the component's own `.mil`, in its declared kebab-case
+     spelling or its camelCase form (`display-name` / `displayName`).
+
+  Anything else is the compile error `UnboundName`, naming the
+  component, the bare name, the prop and the node path
+  (`Column[root] > For#2 > Text[cell]`), and suggesting the three fixes:
+  declare `slot hello : …` in `<Component>.mil`, bind it with
+  `For ( …, as: hello )`, or quote it as the string literal `"hello"`.
+  Before this rule the validator accepted such a name and each backend
+  failed late and differently: `tsc`/`swiftc`/`kotlinc`/`dart analyze`
+  errors, or a runtime `ReferenceError` that blanked the whole Web
+  Component.
+
+  Positions that are **not** name references are exempt, exactly the
+  ones the package resolver's `check_callee_scope` exempts (UI34 §5
+  "Callee scope"), so the two never disagree:
+  - `true` / `false`, anywhere;
+  - a `moslayout_compiler::KEYWORD_LITERAL_PROPS` position (enum props
+    such as `HostScroll ( axis: both )`, `Text ( a11y-role: heading )`);
+  - the props of `For` (`as:`/`index:` are binders; a bare `each:` is
+    already checked against the loop scope by the `For` rule), `If`
+    (`when:` rejects a bare name outright) and `Else`;
+  - the props of a component call site (any tag that is not a kernel
+    primitive, `pkg::P::C` or a local component). A bare value there
+    may be one of a callee `one-of` slot's declared values, which only
+    the callee's interface can tell; the layout validator never sees
+    that interface. A package call site is still covered: the
+    artifact builder re-runs this validator on the inlined tree against
+    the consumer's interface, where a value that was not a declared
+    `one-of` value sits in the callee's primitives as a bare name of
+    the consumer's scope; inside a package layout the resolver checks
+    call-site values against the mounted component's slots.
+
+  When the layout is compiled without an interface (`validate(def,
+  None)`), slots are unknown and the rule is skipped, as `UnknownSlot`
+  is. Free names inside an *expression* (`If ( when: ( hint > 0 ) )`)
+  are not covered by this rule; the validator still treats an
+  expression as opaque text.
 
 ### 3.5 Grammar fits the existing parser
 
