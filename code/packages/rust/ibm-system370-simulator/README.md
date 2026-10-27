@@ -25,7 +25,10 @@ assert_eq!(result.final_state.condition_code, 1);
 
 The simulator uses 24-bit architectural addresses over one installed MiB of
 storage. Every checked failure is atomic, and `run` is transactional across the
-whole bounded execution.
+whole bounded execution. Destructive-overlap `MVCL` follows architectural
+completion exactly: it suppresses storage movement and register-pair progress,
+sets condition code 3, and clears the ignored high byte of both address
+registers.
 
 ## Verification
 
@@ -40,4 +43,4 @@ cargo llvm-cov -p ibm-system370-simulator --all-targets --summary-only
 
 The package has fourteen focused tests. They include an exhaustive first-byte
 classification witness for every inherited opcode and produce 100% function
-coverage and 98.78% line coverage (568/575 lines).
+coverage and 98.79% line coverage (570/577 lines).

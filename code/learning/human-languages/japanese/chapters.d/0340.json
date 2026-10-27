@@ -1,0 +1,21 @@
+{
+  "chapter": 340,
+  "title": "Giving Advice",
+  "label": "ch:ja-giving-advice",
+  "canDo": "I can give advice and say why it is good advice.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-R340-review-335-340",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can give advice and say why it is good advice.",
+    "assesses": [
+      "JA-LEX-C340-JOGEN340-01",
+      "JA-LEX-C340-JOGEN340-02",
+      "JA-LEX-C340-JOGEN340-03",
+      "JA-LEX-C340-JOGEN340-04",
+      "JA-LEX-C340-JOGEN340-05"
+    ]
+  }
+}

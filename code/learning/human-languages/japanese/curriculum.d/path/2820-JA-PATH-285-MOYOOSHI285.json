@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-285-MOYOOSHI285",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-285-MOYOOSHI285"
+  ],
+  "after": []
+}

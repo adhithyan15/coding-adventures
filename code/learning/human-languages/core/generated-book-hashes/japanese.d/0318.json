@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:c02b008d9d204e26",
+  "lessonIds": [
+    "JA-C318-setsumei-suru",
+    "JA-C318-nattoku-suru",
+    "JA-C318-konkyo",
+    "JA-C318-imi",
+    "JA-C318-naze"
+  ],
+  "tex": "japanese/book/chapters/ch318-explaining-why.tex"
+}

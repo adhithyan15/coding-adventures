@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:e62dcc35ac264e5d",
+  "lessonIds": [
+    "JA-C301-takara",
+    "JA-C301-horu",
+    "JA-C301-umeru",
+    "JA-C301-binbou",
+    "JA-C301-yokubari",
+    "JA-R301-review-297-301"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch301.txt",
+  "json": "japanese/narration/ch301.json",
+  "textHash": "fnv1a64:04d0568de96a34c3",
+  "jsonHash": "fnv1a64:19767d8fe4f2d92a",
+  "findings": []
+}

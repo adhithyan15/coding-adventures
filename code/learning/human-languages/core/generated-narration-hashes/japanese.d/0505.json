@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:b5fe98bfb05f2a70",
+  "lessonIds": [
+    "JA-C505-rikishi",
+    "JA-C505-dohyou",
+    "JA-C505-gyouji",
+    "JA-C505-yumi",
+    "JA-C505-yokeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch505.txt",
+  "json": "japanese/narration/ch505.json",
+  "textHash": "fnv1a64:df874952fadc3c16",
+  "jsonHash": "fnv1a64:a4376396b738a9a8",
+  "findings": []
+}

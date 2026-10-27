@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 280,
+  "title": "What the News Said",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:306a280b23b18fec",
+  "lessons": [
+    {
+      "id": "JA-C280-kiji",
+      "sequence": 16930,
+      "title": "きじ (kiji) — a newspaper article; a report",
+      "headword": "きじ",
+      "romanization": "kiji",
+      "gloss": "a newspaper article; a report",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d54ef1d31e50729",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to prevent, then the Japanese for big."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きじ — kiji — \"a newspaper article; a report\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今 しんぶんの きじを よんでいます。 — ima shinbun no kiji o yonde imasu — \"I am reading a newspaper article now.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きじ (kiji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ki, \"account\" (Middle Chinese kiH) and ji, \"matter\" (dzriH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ima shinbun no kiji o yonde imasu — I am reading a newspaper article now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ima shinbun no kiji o yonde imasu* — I am reading a newspaper article now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to prevent, then the Japanese for big, then say kiji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to prevent, then the Japanese for big, then say *kiji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きじ (kiji) mean? (\"A newspaper article; a report\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C280-kiji-type",
+              "prompt": "Say the Japanese for 'a newspaper article'.",
+              "assesses": [
+                "JA-LEX-C280-KIJI280-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きじ",
+                "kiji"
+              ],
+              "feedback": {
+                "correct": "Right: きじ (kiji) is 'a newspaper article; a report'.",
+                "incorrect": "'A newspaper article' is きじ (kiji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C280-noseru",
+      "sequence": 16940,
+      "title": "のせる (noseru) — to print (in a paper); to put on",
+      "headword": "のせる",
+      "romanization": "noseru",
+      "gloss": "to print (in a paper); to put on",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35adde9c350bad39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for big, then the Japanese for a newspaper article."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のせる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のせる — noseru — \"to print (in a paper); to put on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しんぶんが じけんの しゃしんを のせました。 — shinbun ga jiken no shashin o nosemashita — \"The paper ran a photo of the incident.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite のせます, nosemasu; an ichidan verb. Past (polite): しんぶんが しゃしんを のせました。, shinbun ga shashin o nosemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のせる (noseru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noseru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noseru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noseru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noseru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinbun ga jiken no shashin o nosemashita — The paper ran a photo of the incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinbun ga jiken no shashin o nosemashita* — The paper ran a photo of the incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for big, then the Japanese for a newspaper article, then say noseru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for big, then the Japanese for a newspaper article, then say *noseru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のせる (noseru) mean? (\"To print (in a paper); to put on\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C280-noseru-type",
+              "prompt": "Say the Japanese for 'to print (in a paper)'.",
+              "assesses": [
+                "JA-LEX-C280-KIJI280-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のせる",
+                "noseru"
+              ],
+              "feedback": {
+                "correct": "Right: のせる (noseru) is 'to print (in a paper); to put on'.",
+                "incorrect": "'To print (in a paper)' is のせる (noseru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C280-dekigoto",
+      "sequence": 16950,
+      "title": "できごと (dekigoto) — an event; a happening",
+      "headword": "できごと",
+      "romanization": "dekigoto",
+      "gloss": "an event; a happening",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acf330bcc0072a29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a newspaper article, then the Japanese for to print (in a paper)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: できごと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "できごと — dekigoto — \"an event; a happening\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きのうの できごとを はなして ください。 — kinō no dekigoto o hanashite kudasai — \"Please tell me what happened yesterday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "できごと (dekigoto) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from deki, \"coming about\" (from dekiru), and goto, \"matter\" (from koto) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dekigoto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dekigoto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dekigoto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dekigoto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinō no dekigoto o hanashite kudasai — Please tell me what happened yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinō no dekigoto o hanashite kudasai* — Please tell me what happened yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a newspaper article, then the Japanese for to print (in a paper), then say dekigoto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a newspaper article, then the Japanese for to print (in a paper), then say *dekigoto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does できごと (dekigoto) mean? (\"An event; a happening\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C280-dekigoto-type",
+              "prompt": "Say the Japanese for 'an event'.",
+              "assesses": [
+                "JA-LEX-C280-KIJI280-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "できごと",
+                "dekigoto"
+              ],
+              "feedback": {
+                "correct": "Right: できごと (dekigoto) is 'an event; a happening'.",
+                "incorrect": "'An event' is できごと (dekigoto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C280-kisha",
+      "sequence": 16960,
+      "title": "きしゃ (kisha) — a reporter; a journalist",
+      "headword": "きしゃ",
+      "romanization": "kisha",
+      "gloss": "a reporter; a journalist",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:716dbf4f1706f7de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to print (in a paper), then the Japanese for an event."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きしゃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きしゃ — kisha — \"a reporter; a journalist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きしゃが けいさつに しつもんしました。 — kisha ga keisatsu ni shitsumon shimashita — \"A reporter put questions to the police.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きしゃ (kisha) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ki, \"account\" (Middle Chinese kiH) and sha, \"person\" (tsyaeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisha ga keisatsu ni shitsumon shimashita — A reporter put questions to the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisha ga keisatsu ni shitsumon shimashita* — A reporter put questions to the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to print (in a paper), then the Japanese for an event, then say kisha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to print (in a paper), then the Japanese for an event, then say *kisha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きしゃ (kisha) mean? (\"A reporter; a journalist\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C280-kisha-type",
+              "prompt": "Say the Japanese for 'a reporter'.",
+              "assesses": [
+                "JA-LEX-C280-KIJI280-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きしゃ",
+                "kisha"
+              ],
+              "feedback": {
+                "correct": "Right: きしゃ (kisha) is 'a reporter; a journalist'.",
+                "incorrect": "'A reporter' is きしゃ (kisha)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C280-kubaru",
+      "sequence": 16970,
+      "title": "くばる (kubaru) — to hand out; to distribute",
+      "headword": "くばる",
+      "romanization": "kubaru",
+      "gloss": "to hand out; to distribute",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1da39951aea19e1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an event, then the Japanese for a reporter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くばる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くばる — kubaru — \"to hand out; to distribute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきで しんぶんを くばっていました。 — eki de shinbun o kubatte imashita — \"They were handing out newspapers at the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite くばります, kubarimasu; a godan verb. Past (polite): こどもが しんぶんを くばりました。, kodomo ga shinbun o kubarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くばる (kubaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kubaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kubaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kubaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kubaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eki de shinbun o kubatte imashita — They were handing out newspapers at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eki de shinbun o kubatte imashita* — They were handing out newspapers at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an event, then the Japanese for a reporter, then say kubaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an event, then the Japanese for a reporter, then say *kubaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くばる (kubaru) mean? (\"To hand out; to distribute\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C280-kubaru-type",
+              "prompt": "Say the Japanese for 'to hand out'.",
+              "assesses": [
+                "JA-LEX-C280-KIJI280-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くばる",
+                "kubaru"
+              ],
+              "feedback": {
+                "correct": "Right: くばる (kubaru) is 'to hand out; to distribute'.",
+                "incorrect": "'To hand out' is くばる (kubaru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

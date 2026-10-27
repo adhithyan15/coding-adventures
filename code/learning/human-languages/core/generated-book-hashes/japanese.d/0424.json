@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:dbd67942275bcbc4",
+  "lessonIds": [
+    "JA-C424-otoshimono",
+    "JA-C424-hagureru",
+    "JA-C424-miushinau",
+    "JA-C424-sagashimawaru",
+    "JA-C424-saiwai"
+  ],
+  "tex": "japanese/book/chapters/ch424-lost-and-found.tex"
+}

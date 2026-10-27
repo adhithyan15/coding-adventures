@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C391-saegiru",
+    "language": "japanese",
+    "chapter": 391,
+    "sequence": 23020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1894effe579ccf2f"
+  },
+  "findings": []
+}

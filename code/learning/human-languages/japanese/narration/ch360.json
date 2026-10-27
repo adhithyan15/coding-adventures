@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 360,
+  "title": "Income and Spending",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d4daed30e5feb9eb",
+  "lessons": [
+    {
+      "id": "JA-C360-shuunyuu",
+      "sequence": 21220,
+      "title": "しゅうにゅう (shūnyū) — income",
+      "headword": "しゅうにゅう",
+      "romanization": "shūnyū",
+      "gloss": "income",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c76b01b2531f4af7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a refund, then the Japanese for a sum of money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅうにゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅうにゅう — shūnyū — \"income\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅうにゅうが ふえたら、ひっこしたいです。 — shūnyū ga fuetara, hikkoshitai desu — \"If my income goes up, I want to move house.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅうにゅう (shūnyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shū, \"income\" (Middle Chinese syuw) and nyū, \"enter\" (nyip) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūnyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūnyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūnyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūnyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūnyū ga fuetara, hikkoshitai desu — If my income goes up, I want to move house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūnyū ga fuetara, hikkoshitai desu* — If my income goes up, I want to move house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a refund, then the Japanese for a sum of money, then say shūnyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a refund, then the Japanese for a sum of money, then say *shūnyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅうにゅう (shūnyū) mean? (\"Income\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C360-shuunyuu-type",
+              "prompt": "Say the Japanese for 'income'.",
+              "assesses": [
+                "JA-LEX-C360-SHUUNYUU360-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅうにゅう",
+                "shūnyū",
+                "shuunyuu",
+                "shunyu"
+              ],
+              "feedback": {
+                "correct": "Right: しゅうにゅう (shūnyū) is 'income'.",
+                "incorrect": "'Income' is しゅうにゅう (shūnyū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C360-shishutsu",
+      "sequence": 21230,
+      "title": "ししゅつ (shishutsu) — spending; expenditure",
+      "headword": "ししゅつ",
+      "romanization": "shishutsu",
+      "gloss": "spending; expenditure",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:616e1ed49a1ec0e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sum of money, then the Japanese for income."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ししゅつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ししゅつ — shishutsu — \"spending; expenditure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ししゅつが ふえたら、せつやくした ほうが いいです。 — shishutsu ga fuetara, setsuyaku shita hō ga ii desu — \"If spending goes up, we had better economize.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ししゅつ (shishutsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"support\" (Middle Chinese tsye) and shutsu, \"exit\" (tsyhwit) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shishutsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shishutsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shishutsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shishutsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shishutsu ga fuetara, setsuyaku shita hō ga ii desu — If spending goes up, we had better economize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shishutsu ga fuetara, setsuyaku shita hō ga ii desu* — If spending goes up, we had better economize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sum of money, then the Japanese for income, then say shishutsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sum of money, then the Japanese for income, then say *shishutsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ししゅつ (shishutsu) mean? (\"Spending; expenditure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C360-shishutsu-type",
+              "prompt": "Say the Japanese for 'expenditure'.",
+              "assesses": [
+                "JA-LEX-C360-SHUUNYUU360-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ししゅつ",
+                "shishutsu"
+              ],
+              "feedback": {
+                "correct": "Right: ししゅつ (shishutsu) is 'spending; expenditure'.",
+                "incorrect": "'Expenditure' is ししゅつ (shishutsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C360-seikatsuhi",
+      "sequence": 21240,
+      "title": "せいかつひ (seikatsuhi) — living costs",
+      "headword": "せいかつひ",
+      "romanization": "seikatsuhi",
+      "gloss": "living costs",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8c270b792c6c098",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for income, then the Japanese for expenditure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せいかつひ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいかつひ — seikatsuhi — \"living costs\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とかいに すんだら、せいかつひが たかいでしょう。 — tokai ni sundara, seikatsuhi ga takai deshō — \"If you live in the city, your living costs will probably be high.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいかつひ (seikatsuhi) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sei, \"life\" (Middle Chinese srjaeng), katsu, \"lively\" (hwat) and hi, \"expense\" (phj+jH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seikatsuhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seikatsuhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seikatsuhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seikatsuhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokai ni sundara, seikatsuhi ga takai deshō — If you live in the city, your living costs will probably be high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokai ni sundara, seikatsuhi ga takai deshō* — If you live in the city, your living costs will probably be high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for income, then the Japanese for expenditure, then say seikatsuhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for income, then the Japanese for expenditure, then say *seikatsuhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せいかつひ (seikatsuhi) mean? (\"Living costs\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C360-seikatsuhi-type",
+              "prompt": "Say the Japanese for 'living costs'.",
+              "assesses": [
+                "JA-LEX-C360-SHUUNYUU360-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せいかつひ",
+                "seikatsuhi"
+              ],
+              "feedback": {
+                "correct": "Right: せいかつひ (seikatsuhi) is 'living costs'.",
+                "incorrect": "'Living costs' is せいかつひ (seikatsuhi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C360-tamaru",
+      "sequence": 21250,
+      "title": "たまる (tamaru) — to be saved up; to build up",
+      "headword": "たまる",
+      "romanization": "tamaru",
+      "gloss": "to be saved up; to build up",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a3efabd86b5e76e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for expenditure, then the Japanese for living costs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たまる — tamaru — \"to be saved up; to build up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おかねが たまったら、りょこうに いきたいです。 — okane ga tamattara, ryokō ni ikitai desu — \"When I have saved enough money, I want to go travelling.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たまります, tamarimasu; a godan verb. Past (polite): ごみが たまりました。, gomi ga tamarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たまる (tamaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. JMdict notes that it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okane ga tamattara, ryokō ni ikitai desu — When I have saved enough money, I want to go travelling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okane ga tamattara, ryokō ni ikitai desu* — When I have saved enough money, I want to go travelling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for expenditure, then the Japanese for living costs, then say tamaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for expenditure, then the Japanese for living costs, then say *tamaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たまる (tamaru) mean? (\"To be saved up; to build up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C360-tamaru-type",
+              "prompt": "Say the Japanese for 'to be saved up'.",
+              "assesses": [
+                "JA-LEX-C360-SHUUNYUU360-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たまる",
+                "tamaru"
+              ],
+              "feedback": {
+                "correct": "Right: たまる (tamaru) is 'to be saved up; to build up'.",
+                "incorrect": "'To be saved up' is たまる (tamaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C360-osaeru",
+      "sequence": 21260,
+      "title": "おさえる (osaeru) — to keep down (costs); to hold down",
+      "headword": "おさえる",
+      "romanization": "osaeru",
+      "gloss": "to keep down (costs); to hold down",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40cd103f6f248d06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for living costs, then the Japanese for to be saved up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おさえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おさえる — osaeru — \"to keep down (costs); to hold down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねだんが あがったら、ししゅつを おさえた ほうが いいです。 — nedan ga agattara, shishutsu o osaeta hō ga ii desu — \"If prices go up, we had better keep our spending down.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おさえます, osaemasu; an ichidan verb. Past (polite): ははが ししゅつを おさえました。, haha ga shishutsu o osaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おさえる (osaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedan ga agattara, shishutsu o osaeta hō ga ii desu — If prices go up, we had better keep our spending down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedan ga agattara, shishutsu o osaeta hō ga ii desu* — If prices go up, we had better keep our spending down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for living costs, then the Japanese for to be saved up, then say osaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for living costs, then the Japanese for to be saved up, then say *osaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おさえる (osaeru) mean? (\"To keep down (costs); to hold down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C360-osaeru-type",
+              "prompt": "Say the Japanese for 'to keep down'.",
+              "assesses": [
+                "JA-LEX-C360-SHUUNYUU360-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おさえる",
+                "osaeru"
+              ],
+              "feedback": {
+                "correct": "Right: おさえる (osaeru) is 'to keep down (costs); to hold down'.",
+                "incorrect": "'To keep down' is おさえる (osaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C517-sentakushi",
+  "pathSegment": "JA-PATH-517-DECIDE517",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-517-DECIDE517",
+      "order": 4
+    }
+  ]
+}

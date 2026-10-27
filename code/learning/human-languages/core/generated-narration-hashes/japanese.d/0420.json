@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:ce09ebbeeb444831",
+  "lessonIds": [
+    "JA-C420-tesuuryou",
+    "JA-C420-ryoushuusho",
+    "JA-C420-souryou",
+    "JA-C420-shiharau",
+    "JA-C420-haraimodosu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch420.txt",
+  "json": "japanese/narration/ch420.json",
+  "textHash": "fnv1a64:4e37b79be6dff365",
+  "jsonHash": "fnv1a64:47418b9925a8ecba",
+  "findings": []
+}

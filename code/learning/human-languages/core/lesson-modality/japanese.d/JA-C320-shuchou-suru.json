@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C320-shuchou-suru",
+    "language": "japanese",
+    "chapter": 320,
+    "sequence": 19170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d55b3e82f1700283"
+  },
+  "findings": []
+}

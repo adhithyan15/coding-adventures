@@ -1,0 +1,11 @@
+{
+  "id": "JA-C306-nengajou",
+  "pathSegment": "JA-PATH-306-AISATSU306",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-306-AISATSU306",
+      "order": 2
+    }
+  ]
+}

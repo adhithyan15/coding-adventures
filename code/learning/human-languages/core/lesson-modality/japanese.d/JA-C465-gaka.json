@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C465-gaka",
+    "language": "japanese",
+    "chapter": 465,
+    "sequence": 27040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5a62842177ff470"
+  },
+  "findings": []
+}

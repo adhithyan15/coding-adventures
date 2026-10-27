@@ -94,6 +94,11 @@ impl ProgramCounter {
         self.load(0);
     }
 
+    /// Return the program counter's physical DFF count.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
+    }
+
     /// 12-bit register (72 gates) + 12 half-adders (24 gates) = 96.
     pub fn gate_count(&self) -> usize {
         96

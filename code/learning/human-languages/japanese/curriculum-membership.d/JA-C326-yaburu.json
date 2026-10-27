@@ -1,0 +1,11 @@
+{
+  "id": "JA-C326-yaburu",
+  "pathSegment": "JA-PATH-326-KISOKU326",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-326-KISOKU326",
+      "order": 1
+    }
+  ]
+}

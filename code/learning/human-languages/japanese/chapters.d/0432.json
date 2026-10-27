@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Worry and Regret",
+  "label": "ch:ja-worry-and-regret",
+  "canDo": "I can say what worries me, what I regret and what I gave up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C432-akirameru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can say what worries me, what I regret and what I gave up.",
+    "assesses": [
+      "JA-LEX-C432-WORRY432-03",
+      "JA-LEX-C432-WORRY432-04",
+      "JA-LEX-C432-WORRY432-05"
+    ]
+  }
+}

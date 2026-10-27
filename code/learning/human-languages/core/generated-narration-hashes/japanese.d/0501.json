@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:35b422f5f05cf2f2",
+  "lessonIds": [
+    "JA-C501-tsukimi",
+    "JA-C501-hanami",
+    "JA-C501-momiji",
+    "JA-C501-fuurin",
+    "JA-C501-chirasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch501.txt",
+  "json": "japanese/narration/ch501.json",
+  "textHash": "fnv1a64:86dd90c070211070",
+  "jsonHash": "fnv1a64:7212caa5f1c8b2ba",
+  "findings": []
+}

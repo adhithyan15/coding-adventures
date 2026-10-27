@@ -1,0 +1,11 @@
+{
+  "id": "JA-C467-amimono",
+  "pathSegment": "JA-PATH-467-CRAFT467",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-467-CRAFT467",
+      "order": 1
+    }
+  ]
+}

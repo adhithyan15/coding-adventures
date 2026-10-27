@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:74e79fae466e1456",
+  "lessonIds": [
+    "JA-C350-youjin-suru",
+    "JA-C350-yudan",
+    "JA-C350-sonaeru",
+    "JA-C350-taisaku",
+    "JA-C350-bousai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch350.txt",
+  "json": "japanese/narration/ch350.json",
+  "textHash": "fnv1a64:e9f339c537caea42",
+  "jsonHash": "fnv1a64:04ee27d3c3376b02",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C384-tabidatsu",
+  "pathSegment": "JA-PATH-384-HIKOUJOU384",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-384-HIKOUJOU384",
+      "order": 4
+    }
+  ]
+}

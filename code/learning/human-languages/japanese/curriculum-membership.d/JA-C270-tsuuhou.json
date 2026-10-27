@@ -1,0 +1,11 @@
+{
+  "id": "JA-C270-tsuuhou",
+  "pathSegment": "JA-PATH-270-HANNIN270",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-270-HANNIN270",
+      "order": 2
+    }
+  ]
+}

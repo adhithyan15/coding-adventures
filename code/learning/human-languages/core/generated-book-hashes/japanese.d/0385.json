@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:574c6a3976b2faac",
+  "lessonIds": [
+    "JA-C385-kaigai",
+    "JA-C385-gaikoku",
+    "JA-C385-kokusai",
+    "JA-C385-jisa",
+    "JA-C385-mezasu"
+  ],
+  "tex": "japanese/book/chapters/ch385-going-abroad.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C329-touzen",
+    "language": "japanese",
+    "chapter": 329,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c782f89e75fd8232"
+  },
+  "findings": []
+}

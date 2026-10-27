@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C354-higasa",
+    "language": "japanese",
+    "chapter": 354,
+    "sequence": 20940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76607b62965824c0"
+  },
+  "findings": []
+}

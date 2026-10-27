@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Going Abroad",
+  "label": "ch:ja-going-abroad",
+  "canDo": "I can talk about travelling to other countries.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C385-mezasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can talk about travelling to other countries.",
+    "assesses": [
+      "JA-LEX-C385-KAIGAI385-03",
+      "JA-LEX-C385-KAIGAI385-04",
+      "JA-LEX-C385-KAIGAI385-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C386-shukkoku",
+    "language": "japanese",
+    "chapter": 386,
+    "sequence": 22750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d60d86656e333f39"
+  },
+  "findings": []
+}

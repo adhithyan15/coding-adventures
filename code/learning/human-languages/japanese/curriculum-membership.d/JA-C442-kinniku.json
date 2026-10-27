@@ -1,0 +1,11 @@
+{
+  "id": "JA-C442-kinniku",
+  "pathSegment": "JA-PATH-442-INSIDE442",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-442-INSIDE442",
+      "order": 1
+    }
+  ]
+}

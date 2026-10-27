@@ -1,0 +1,21 @@
+{
+  "chapter": 267,
+  "title": "A Lost Child",
+  "label": "ch:ja-a-lost-child",
+  "canDo": "I can say who went missing and how they were found.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R267-review-262-267",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say who went missing and how they were found.",
+    "assesses": [
+      "JA-LEX-C267-MAIGO267-01",
+      "JA-LEX-C267-MAIGO267-02",
+      "JA-LEX-C267-MAIGO267-03",
+      "JA-LEX-C267-MAIGO267-04",
+      "JA-LEX-C267-MAIGO267-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:740765f404af9b63",
+  "lessonIds": [
+    "JA-C524-katei",
+    "JA-C524-omoiegaku",
+    "JA-C524-souzou-suru",
+    "JA-C524-suiri",
+    "JA-C524-jitsugen-suru"
+  ],
+  "tex": "japanese/book/chapters/ch524-imagining.tex"
+}

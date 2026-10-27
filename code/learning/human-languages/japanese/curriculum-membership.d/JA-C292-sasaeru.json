@@ -1,0 +1,11 @@
+{
+  "id": "JA-C292-sasaeru",
+  "pathSegment": "JA-PATH-292-JINSEI292",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-292-JINSEI292",
+      "order": 4
+    }
+  ]
+}

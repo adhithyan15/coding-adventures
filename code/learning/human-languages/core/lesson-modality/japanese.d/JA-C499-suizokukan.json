@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C499-suizokukan",
+    "language": "japanese",
+    "chapter": 499,
+    "sequence": 29000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7ae9ef7c85b41cc"
+  },
+  "findings": []
+}

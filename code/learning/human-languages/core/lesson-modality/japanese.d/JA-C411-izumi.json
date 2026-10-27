@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C411-izumi",
+    "language": "japanese",
+    "chapter": 411,
+    "sequence": 24020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c08e15813c5dc7b"
+  },
+  "findings": []
+}
