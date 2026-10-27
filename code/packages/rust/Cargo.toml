@@ -9,6 +9,7 @@ resolver = "2"
 exclude = ["os-kernel"]
 members = [
     "avr-classic-simulator",
+    "cortex-m4-gatelevel",
     "v8-test262",
     "browser-bookmarks",
     "bounded-json",
@@ -1052,6 +1053,7 @@ members = [
     "mips-r2000-simulator",
     "mips-r2000-encoder",
     "mips-r2000-backend",
+    "msp430-simulator",
     "intel8051-simulator",
     "intel8051-encoder",
     "intel8051-backend",

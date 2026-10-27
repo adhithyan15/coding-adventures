@@ -3489,7 +3489,8 @@ fn test_90_math_transcendentals_emit_call_ext_not_gc_bif() {
 /// loader-recognized guard BIF, confirmed by real `erlc -S` disassembly
 /// showing the generic `{gc_bif,floor,...}` shape (the same shape
 /// `float`/`trunc` already use for `int_to_real`/`real_to_int_trunc`), never
-/// `call_ext`.
+/// a `call_ext` to a floor function. The only `call_ext`s are the two
+/// `erlang:error('Trap.ConvRange')` raises of the range check after it.
 #[test]
 fn test_91_real_to_int_floor_emits_gc_bif1_not_call_ext() {
     let m = make_module_fn("main", vec![("x", "f64")], "i64", vec![
@@ -3498,7 +3499,10 @@ fn test_91_real_to_int_floor_emits_gc_bif1_not_call_ext() {
     ]);
     let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
     assert_eq!(count_opcode(&beam, OP_GC_BIF1), 1, "real_to_int_floor must emit exactly one gc_bif1");
-    assert_eq!(count_opcode(&beam, OP_CALL_EXT), 0, "real_to_int_floor must NOT emit call_ext");
+    assert_eq!(
+        count_opcode(&beam, OP_CALL_EXT), 2,
+        "real_to_int_floor's only call_ext are the two Trap.ConvRange raises"
+    );
 
     let has_erlang_floor = beam.imports.iter().any(|imp| {
         let module = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
@@ -6018,4 +6022,48 @@ fn pr6c_ieee_arithmetic_is_refused_on_beam() {
         assert!(!iir_to_beam::op_support(op).is_lowered(), "{op}: OP_SUPPORT must say Refused");
     }
     assert!(iir_to_beam::op_support("f64_signbit").is_lowered());
+}
+
+/// End-to-end: `real_to_int_trunc(1.0e30)` and `real_to_int_floor(-1.0e30)`
+/// do not return the bignum `trunc/1`/`floor/1` compute; they raise LANG83's
+/// typed `Trap.ConvRange` (`erlang:error('Trap.ConvRange')`), and the edge
+/// `-2^63` still converts. Silently skipped when `erl` is not on PATH; the
+/// instruction shape is pinned without `erl` in `tests/lang83_pr1b.rs`.
+#[test]
+fn test_conv_range_real_erl_narrowing_out_of_range_raises_typed_trap() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_conv_range_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    for (name, op, x, want) in [
+        ("iir_conv_range_trunc", "real_to_int_trunc", 1.0e30, "{'EXIT','Trap.ConvRange'}"),
+        ("iir_conv_range_floor", "real_to_int_floor", -1.0e30, "{'EXIT','Trap.ConvRange'}"),
+        ("iir_conv_range_edge", "real_to_int_trunc", -9_223_372_036_854_775_808.0, "-9223372036854775808"),
+    ] {
+        let m = make_module_fn("main", vec![], "i64", vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Float(x)], "f64"),
+            IIRInstr::new(op, Some("n".into()), vec![Operand::Var("x".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]);
+        let errs = validate_for_beam(&m);
+        assert!(errs.is_empty(), "{name}: {errs:?}");
+        let bytes = encode_beam(&lower_iir_to_beam(&m, &IIRBeamConfig::new(name)).unwrap());
+        std::fs::write(tmp.join(format!("{name}.beam")), &bytes).expect("write .beam");
+        let output = std::process::Command::new("erl")
+            .arg("-noshell")
+            .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+            .arg("-eval")
+            .arg(format!(
+                "R = try {name}:main() catch error:E -> {{'EXIT', E}} end, io:format(\"~p~n\",[R]),halt(0)."
+            ))
+            .output()
+            .expect("spawn erl");
+        assert!(output.status.success(), "{name}: {}", String::from_utf8_lossy(&output.stderr));
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        assert_eq!(stdout.trim(), want, "{name}");
+    }
 }
