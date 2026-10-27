@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R223-review-218-223
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 17300
+chapter: 223
+type: review
+headword: (dialogue)
+gloss: a review of the words from Wind and Warm Days to Animals
+concept_tag: REVIEW
+prerequisites: [ZH-C218-fengyi, ZH-C218-nuanhuo, ZH-C218-menre, ZH-C218-ganzao, ZH-C218-chaoshi, ZH-C219-yun, ZH-C219-duoyun, ZH-C219-jiangwen, ZH-C219-qiwen, ZH-C219-fangqing, ZH-C220-jianshen, ZH-C220-jianfei, ZH-C220-chuhan, ZH-C220-tiaosheng, ZH-C220-zuocao, ZH-C221-xueren, ZH-C221-huaxue, ZH-C221-bing, ZH-C221-lingxia, ZH-C221-shoutao, ZH-C222-zhaoliang, ZH-C222-kesou, ZH-C222-sangzi, ZH-C222-dapenti, ZH-C222-nanshou, ZH-C223-dongwu, ZH-C223-xiongmao, ZH-C223-laohu, ZH-C223-houzi, ZH-C223-tuzi, ZH-W218-feng-wind, ZH-W219-yun-cloud, ZH-W221-xue-snow]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C218-WIND218-01, ZH-LEX-C218-WIND218-02, ZH-LEX-C218-WIND218-03, ZH-LEX-C218-WIND218-04, ZH-LEX-C218-WIND218-05, ZH-LEX-C219-CLOUD219-01, ZH-LEX-C219-CLOUD219-02, ZH-LEX-C219-CLOUD219-03, ZH-LEX-C219-CLOUD219-04, ZH-LEX-C219-CLOUD219-05, ZH-LEX-C220-FIT220-01, ZH-LEX-C220-FIT220-02, ZH-LEX-C220-FIT220-03, ZH-LEX-C220-FIT220-04, ZH-LEX-C220-FIT220-05, ZH-LEX-C221-SNOW221-01, ZH-LEX-C221-SNOW221-02, ZH-LEX-C221-SNOW221-03, ZH-LEX-C221-SNOW221-04, ZH-LEX-C221-SNOW221-05, ZH-LEX-C222-CHILL222-01, ZH-LEX-C222-CHILL222-02, ZH-LEX-C222-CHILL222-03, ZH-LEX-C222-CHILL222-04, ZH-LEX-C222-CHILL222-05, ZH-LEX-C223-ZOO223-01, ZH-LEX-C223-ZOO223-02, ZH-LEX-C223-ZOO223-03, ZH-LEX-C223-ZOO223-04, ZH-LEX-C223-ZOO223-05, ZH-SCRIPT-FENG-WIND-01, ZH-SCRIPT-YUN-CLOUD-01, ZH-SCRIPT-XUE-SNOW-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C218-WIND218-01, ZH-LEX-C218-WIND218-02, ZH-LEX-C218-WIND218-03, ZH-LEX-C218-WIND218-04, ZH-LEX-C218-WIND218-05, ZH-LEX-C219-CLOUD219-01, ZH-LEX-C219-CLOUD219-02, ZH-LEX-C219-CLOUD219-03, ZH-LEX-C219-CLOUD219-04, ZH-LEX-C219-CLOUD219-05, ZH-LEX-C220-FIT220-01, ZH-LEX-C220-FIT220-02, ZH-LEX-C220-FIT220-03, ZH-LEX-C220-FIT220-04, ZH-LEX-C220-FIT220-05, ZH-LEX-C221-SNOW221-01, ZH-LEX-C221-SNOW221-02, ZH-LEX-C221-SNOW221-03, ZH-LEX-C221-SNOW221-04, ZH-LEX-C221-SNOW221-05, ZH-LEX-C222-CHILL222-01, ZH-LEX-C222-CHILL222-02, ZH-LEX-C222-CHILL222-03, ZH-LEX-C222-CHILL222-04, ZH-LEX-C222-CHILL222-05, ZH-LEX-C223-ZOO223-01, ZH-LEX-C223-ZOO223-02, ZH-LEX-C223-ZOO223-03, ZH-LEX-C223-ZOO223-04, ZH-LEX-C223-ZOO223-05, ZH-SCRIPT-FENG-WIND-01, ZH-SCRIPT-YUN-CLOUD-01, ZH-SCRIPT-XUE-SNOW-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C218-fengyi, ZH-C218-nuanhuo, ZH-C218-menre, ZH-C218-ganzao, ZH-C218-chaoshi, ZH-C219-yun, ZH-C219-duoyun, ZH-C219-jiangwen, ZH-C219-qiwen, ZH-C219-fangqing, ZH-C220-jianshen, ZH-C220-jianfei, ZH-C220-chuhan, ZH-C220-tiaosheng, ZH-C220-zuocao, ZH-C221-xueren, ZH-C221-huaxue, ZH-C221-bing, ZH-C221-lingxia, ZH-C221-shoutao, ZH-C222-zhaoliang, ZH-C222-kesou, ZH-C222-sangzi, ZH-C222-dapenti, ZH-C222-nanshou, ZH-C223-dongwu, ZH-C223-xiongmao, ZH-C223-laohu, ZH-C223-houzi, ZH-C223-tuzi, ZH-W218-feng-wind, ZH-W219-yun-cloud, ZH-W221-xue-snow]
+---
+
+# Looking back: from Wind and Warm Days to Animals
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C218-WIND218-01, ZH-LEX-C218-WIND218-02] -->
+
+[PAUSE 3s] Say the Mandarin for a windbreaker and pleasantly warm.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C218-WIND218-01, ZH-LEX-C218-WIND218-02, ZH-LEX-C218-WIND218-03, ZH-LEX-C218-WIND218-04, ZH-LEX-C218-WIND218-05, ZH-LEX-C219-CLOUD219-01, ZH-LEX-C219-CLOUD219-02, ZH-LEX-C219-CLOUD219-03, ZH-LEX-C219-CLOUD219-04, ZH-LEX-C219-CLOUD219-05, ZH-LEX-C220-FIT220-01, ZH-LEX-C220-FIT220-02, ZH-LEX-C220-FIT220-03, ZH-LEX-C220-FIT220-04, ZH-LEX-C220-FIT220-05, ZH-LEX-C221-SNOW221-01, ZH-LEX-C221-SNOW221-02, ZH-LEX-C221-SNOW221-03, ZH-LEX-C221-SNOW221-04, ZH-LEX-C221-SNOW221-05, ZH-LEX-C222-CHILL222-01, ZH-LEX-C222-CHILL222-02, ZH-LEX-C222-CHILL222-03, ZH-LEX-C222-CHILL222-04, ZH-LEX-C222-CHILL222-05, ZH-LEX-C223-ZOO223-01, ZH-LEX-C223-ZOO223-02, ZH-LEX-C223-ZOO223-03, ZH-LEX-C223-ZOO223-04, ZH-LEX-C223-ZOO223-05, ZH-SCRIPT-FENG-WIND-01, ZH-SCRIPT-YUN-CLOUD-01, ZH-SCRIPT-XUE-SNOW-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a windbreaker, pleasantly warm, hot and stuffy, dry air, damp]
+- [YOU SAY: a cloud, cloudy, to turn colder, air temperature, to clear up]
+- [YOU SAY: to work out, to lose weight, to sweat, to skip with a rope, to do a fitness routine]
+- [YOU SAY: a snowman, to ski, ice, below zero, gloves]
+- [YOU SAY: to catch a chill, to cough, throat, to sneeze, miserable]
+- [YOU SAY: an animal, a panda, a tiger, a monkey, a rabbit]
+- [YOU READ: 风 云 雪 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C218-WIND218-01, ZH-LEX-C218-WIND218-02, ZH-LEX-C218-WIND218-03, ZH-LEX-C218-WIND218-04, ZH-LEX-C218-WIND218-05, ZH-LEX-C219-CLOUD219-01, ZH-LEX-C219-CLOUD219-02, ZH-LEX-C219-CLOUD219-03, ZH-LEX-C219-CLOUD219-04, ZH-LEX-C219-CLOUD219-05, ZH-LEX-C220-FIT220-01, ZH-LEX-C220-FIT220-02, ZH-LEX-C220-FIT220-03, ZH-LEX-C220-FIT220-04, ZH-LEX-C220-FIT220-05, ZH-LEX-C221-SNOW221-01, ZH-LEX-C221-SNOW221-02, ZH-LEX-C221-SNOW221-03, ZH-LEX-C221-SNOW221-04, ZH-LEX-C221-SNOW221-05, ZH-LEX-C222-CHILL222-01, ZH-LEX-C222-CHILL222-02, ZH-LEX-C222-CHILL222-03, ZH-LEX-C222-CHILL222-04, ZH-LEX-C222-CHILL222-05, ZH-LEX-C223-ZOO223-01, ZH-LEX-C223-ZOO223-02, ZH-LEX-C223-ZOO223-03, ZH-LEX-C223-ZOO223-04, ZH-LEX-C223-ZOO223-05, ZH-SCRIPT-FENG-WIND-01, ZH-SCRIPT-YUN-CLOUD-01, ZH-SCRIPT-XUE-SNOW-01] -->
+
+[PAUSE 3s] A windbreaker? (**风衣**, *fēngyī*.) Pleasantly warm? (*nuǎnhuo*.) Hot and stuffy? (*mēnrè*.) Dry air? (*gānzào*.) Damp? (*cháoshī*.) A cloud? (**云**, *yún*.) Cloudy? (**多云**, *duōyún*.) To turn colder? (*jiàngwēn*.) Air temperature? (*qìwēn*.) To clear up? (*fàngqíng*.) To work out? (*jiànshēn*.) To lose weight? (*jiǎnféi*.) To sweat? (*chūhàn*.) To skip with a rope? (*tiàoshéng*.) To do a fitness routine? (*zuòcāo*.) A snowman? (**雪人**, *xuěrén*.) To ski? (*huáxuě*.) Ice? (*bīng*.) Below zero? (*língxià*.) Gloves? (*shǒutào*.) To catch a chill? (*zháoliáng*.) To cough? (*késou*.) Throat? (*sǎngzi*.) To sneeze? (*dǎ pēntì*.) Miserable? (*nánshòu*.) An animal? (*dòngwù*.) A panda? (*xióngmāo*.) A tiger? (*lǎohǔ*.) A monkey? (*hóuzi*.) A rabbit? (*tùzi*.)
+`;export{t};

@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W181-jian-room-filmstrip-DJgySxn1.svg`,import.meta.url).href;export{e as default};

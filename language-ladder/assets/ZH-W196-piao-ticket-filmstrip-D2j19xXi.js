@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W196-piao-ticket-filmstrip-C6hdxd2s.svg`,import.meta.url).href;export{e as default};

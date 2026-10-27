@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W188-qian-money-filmstrip-CQO3iJPG.svg`,import.meta.url).href;export{e as default};

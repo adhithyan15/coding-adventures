@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W224-hua-flower-filmstrip-B4vLxDMM.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W230-shen-body-filmstrip-Da6ByKdP.svg`,import.meta.url).href;export{e as default};

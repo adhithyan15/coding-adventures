@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W228-tou-head-filmstrip-DK73HgSy.svg`,import.meta.url).href;export{e as default};

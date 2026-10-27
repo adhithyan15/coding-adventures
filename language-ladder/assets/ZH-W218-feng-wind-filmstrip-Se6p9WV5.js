@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W218-feng-wind-filmstrip-BM79Iy_n.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W228-teng-ache-filmstrip-DdUuaEpj.svg`,import.meta.url).href;export{e as default};

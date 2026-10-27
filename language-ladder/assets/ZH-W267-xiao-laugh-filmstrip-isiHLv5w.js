@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W267-xiao-laugh-filmstrip-Crgtpy0A.svg`,import.meta.url).href;export{e as default};

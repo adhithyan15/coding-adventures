@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W161-mi-rice-filmstrip-D6m_uppE.svg`,import.meta.url).href;export{e as default};

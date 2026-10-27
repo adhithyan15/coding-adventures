@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R259-review-254-259
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 19610
+chapter: 259
+type: review
+headword: (dialogue)
+gloss: a review of the words from Born and Married to What Do You Do?
+concept_tag: REVIEW
+prerequisites: [ZH-C254-chusheng, ZH-C254-jiehun, ZH-C254-biye, ZH-C254-hunli, ZH-C254-shenghuo, ZH-C255-dagong, ZH-C255-gongzi, ZH-C255-tongshi, ZH-C255-jiaban, ZH-C255-laoban, ZH-C256-renwei, ZH-C256-kanfa, ZH-C256-kanlai, ZH-C256-yexu, ZH-C256-butong, ZH-C257-yueqi, ZH-C257-dagu, ZH-C257-yanchu, ZH-C257-geshou, ZH-C257-guzhang, ZH-C258-youhao, ZH-C258-rexin, ZH-C258-naixin, ZH-C258-youmo, ZH-C258-xingge, ZH-C259-zhiye, ZH-C259-zuojia, ZH-C259-lushi, ZH-C259-jizhe, ZH-C259-diangong, ZH-W255-gong-work, ZH-W258-re-hot]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C254-BORN254-01, ZH-LEX-C254-BORN254-02, ZH-LEX-C254-BORN254-03, ZH-LEX-C254-BORN254-04, ZH-LEX-C254-BORN254-05, ZH-LEX-C255-PARTTIME255-01, ZH-LEX-C255-PARTTIME255-02, ZH-LEX-C255-PARTTIME255-03, ZH-LEX-C255-PARTTIME255-04, ZH-LEX-C255-PARTTIME255-05, ZH-LEX-C256-THINK256-01, ZH-LEX-C256-THINK256-02, ZH-LEX-C256-THINK256-03, ZH-LEX-C256-THINK256-04, ZH-LEX-C256-THINK256-05, ZH-LEX-C257-SHOW257-01, ZH-LEX-C257-SHOW257-02, ZH-LEX-C257-SHOW257-03, ZH-LEX-C257-SHOW257-04, ZH-LEX-C257-SHOW257-05, ZH-LEX-C258-KIND258-01, ZH-LEX-C258-KIND258-02, ZH-LEX-C258-KIND258-03, ZH-LEX-C258-KIND258-04, ZH-LEX-C258-KIND258-05, ZH-LEX-C259-JOB259-01, ZH-LEX-C259-JOB259-02, ZH-LEX-C259-JOB259-03, ZH-LEX-C259-JOB259-04, ZH-LEX-C259-JOB259-05, ZH-SCRIPT-GONG-WORK-01, ZH-SCRIPT-RE-HOT-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C254-BORN254-01, ZH-LEX-C254-BORN254-02, ZH-LEX-C254-BORN254-03, ZH-LEX-C254-BORN254-04, ZH-LEX-C254-BORN254-05, ZH-LEX-C255-PARTTIME255-01, ZH-LEX-C255-PARTTIME255-02, ZH-LEX-C255-PARTTIME255-03, ZH-LEX-C255-PARTTIME255-04, ZH-LEX-C255-PARTTIME255-05, ZH-LEX-C256-THINK256-01, ZH-LEX-C256-THINK256-02, ZH-LEX-C256-THINK256-03, ZH-LEX-C256-THINK256-04, ZH-LEX-C256-THINK256-05, ZH-LEX-C257-SHOW257-01, ZH-LEX-C257-SHOW257-02, ZH-LEX-C257-SHOW257-03, ZH-LEX-C257-SHOW257-04, ZH-LEX-C257-SHOW257-05, ZH-LEX-C258-KIND258-01, ZH-LEX-C258-KIND258-02, ZH-LEX-C258-KIND258-03, ZH-LEX-C258-KIND258-04, ZH-LEX-C258-KIND258-05, ZH-LEX-C259-JOB259-01, ZH-LEX-C259-JOB259-02, ZH-LEX-C259-JOB259-03, ZH-LEX-C259-JOB259-04, ZH-LEX-C259-JOB259-05, ZH-SCRIPT-GONG-WORK-01, ZH-SCRIPT-RE-HOT-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C254-chusheng, ZH-C254-jiehun, ZH-C254-biye, ZH-C254-hunli, ZH-C254-shenghuo, ZH-C255-dagong, ZH-C255-gongzi, ZH-C255-tongshi, ZH-C255-jiaban, ZH-C255-laoban, ZH-C256-renwei, ZH-C256-kanfa, ZH-C256-kanlai, ZH-C256-yexu, ZH-C256-butong, ZH-C257-yueqi, ZH-C257-dagu, ZH-C257-yanchu, ZH-C257-geshou, ZH-C257-guzhang, ZH-C258-youhao, ZH-C258-rexin, ZH-C258-naixin, ZH-C258-youmo, ZH-C258-xingge, ZH-C259-zhiye, ZH-C259-zuojia, ZH-C259-lushi, ZH-C259-jizhe, ZH-C259-diangong, ZH-W255-gong-work, ZH-W258-re-hot]
+---
+
+# Looking back: from Born and Married to What Do You Do?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C254-BORN254-01, ZH-LEX-C254-BORN254-02] -->
+
+[PAUSE 3s] Say the Mandarin for to be born and to get married.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C254-BORN254-01, ZH-LEX-C254-BORN254-02, ZH-LEX-C254-BORN254-03, ZH-LEX-C254-BORN254-04, ZH-LEX-C254-BORN254-05, ZH-LEX-C255-PARTTIME255-01, ZH-LEX-C255-PARTTIME255-02, ZH-LEX-C255-PARTTIME255-03, ZH-LEX-C255-PARTTIME255-04, ZH-LEX-C255-PARTTIME255-05, ZH-LEX-C256-THINK256-01, ZH-LEX-C256-THINK256-02, ZH-LEX-C256-THINK256-03, ZH-LEX-C256-THINK256-04, ZH-LEX-C256-THINK256-05, ZH-LEX-C257-SHOW257-01, ZH-LEX-C257-SHOW257-02, ZH-LEX-C257-SHOW257-03, ZH-LEX-C257-SHOW257-04, ZH-LEX-C257-SHOW257-05, ZH-LEX-C258-KIND258-01, ZH-LEX-C258-KIND258-02, ZH-LEX-C258-KIND258-03, ZH-LEX-C258-KIND258-04, ZH-LEX-C258-KIND258-05, ZH-LEX-C259-JOB259-01, ZH-LEX-C259-JOB259-02, ZH-LEX-C259-JOB259-03, ZH-LEX-C259-JOB259-04, ZH-LEX-C259-JOB259-05, ZH-SCRIPT-GONG-WORK-01, ZH-SCRIPT-RE-HOT-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to be born, to get married, to graduate, a wedding, daily life]
+- [YOU SAY: to work part-time, wages, a colleague, to work overtime, the boss]
+- [YOU SAY: to hold a view, a point of view, it looks as if, it may be that, different]
+- [YOU SAY: a musical instrument, to play the drums, to perform on stage, a singer, to applaud]
+- [YOU SAY: friendly, eager to help, patient with people, witty, personality]
+- [YOU SAY: an occupation, an author, a lawyer, a journalist, an electrician]
+- [YOU READ: 工 热 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C254-BORN254-01, ZH-LEX-C254-BORN254-02, ZH-LEX-C254-BORN254-03, ZH-LEX-C254-BORN254-04, ZH-LEX-C254-BORN254-05, ZH-LEX-C255-PARTTIME255-01, ZH-LEX-C255-PARTTIME255-02, ZH-LEX-C255-PARTTIME255-03, ZH-LEX-C255-PARTTIME255-04, ZH-LEX-C255-PARTTIME255-05, ZH-LEX-C256-THINK256-01, ZH-LEX-C256-THINK256-02, ZH-LEX-C256-THINK256-03, ZH-LEX-C256-THINK256-04, ZH-LEX-C256-THINK256-05, ZH-LEX-C257-SHOW257-01, ZH-LEX-C257-SHOW257-02, ZH-LEX-C257-SHOW257-03, ZH-LEX-C257-SHOW257-04, ZH-LEX-C257-SHOW257-05, ZH-LEX-C258-KIND258-01, ZH-LEX-C258-KIND258-02, ZH-LEX-C258-KIND258-03, ZH-LEX-C258-KIND258-04, ZH-LEX-C258-KIND258-05, ZH-LEX-C259-JOB259-01, ZH-LEX-C259-JOB259-02, ZH-LEX-C259-JOB259-03, ZH-LEX-C259-JOB259-04, ZH-LEX-C259-JOB259-05, ZH-SCRIPT-GONG-WORK-01, ZH-SCRIPT-RE-HOT-01] -->
+
+[PAUSE 3s] To be born? (**出生**, *chūshēng*.) To get married? (*jiéhūn*.) To graduate? (*bìyè*.) A wedding? (*hūnlǐ*.) Daily life? (*shēnghuó*.) To work part-time? (**打工**, *dǎgōng*.) Wages? (*gōngzī*.) A colleague? (**同事**, *tóngshì*.) To work overtime? (*jiābān*.) The boss? (*lǎobǎn*.) To hold a view? (*rènwéi*.) A point of view? (*kànfǎ*.) It looks as if? (**看来**, *kànlai*.) It may be that? (*yěxǔ*.) Different? (**不同**, *bùtóng*.) A musical instrument? (*yuèqì*.) To play the drums? (*dǎgǔ*.) To perform on stage? (*yǎnchū*.) A singer? (*gēshǒu*.) To applaud? (*gǔzhǎng*.) Friendly? (*yǒuhǎo*.) Eager to help? (**热心**, *rèxīn*.) Patient with people? (*nàixīn*.) Witty? (*yōumò*.) Personality? (*xìnggé*.) An occupation? (*zhíyè*.) An author? (**作家**, *zuòjiā*.) A lawyer? (*lǜshī*.) A journalist? (*jìzhě*.) An electrician? (**电工**, *diàngōng*.)
+`;export{t};

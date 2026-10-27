@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W248-xiao-school-filmstrip-BF3fVSZG.svg`,import.meta.url).href;export{e as default};

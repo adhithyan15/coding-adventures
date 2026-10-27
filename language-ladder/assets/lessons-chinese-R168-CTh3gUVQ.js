@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R169-review-164-169
+spine_node: SPINE-TIME-OF-DAY
+sequence: 13610
+chapter: 169
+type: review
+headword: (dialogue)
+gloss: a review of the words from Getting Ready to Early and Late
+concept_tag: REVIEW
+prerequisites: [ZH-C164-daban, ZH-C164-xitou, ZH-C164-chuifengji, ZH-C164-huazhuang, ZH-C164-gualian, ZH-C165-dayi, ZH-C165-maoyi, ZH-C165-tiao, ZH-C165-qunzi, ZH-C165-weijin, ZH-C166-kaishui, ZH-C166-xiawucha, ZH-C166-hongcha, ZH-C166-chaye, ZH-C166-paocha, ZH-C167-qiantian, ZH-C167-fasheng, ZH-C167-meishi, ZH-C167-tingdian, ZH-C167-shengyin, ZH-C168-zheng, ZH-C168-zha, ZH-C168-dun, ZH-C168-shaoshui, ZH-C168-tang, ZH-C169-yidazao, ZH-C169-wujiao, ZH-C169-bangwan, ZH-C169-aoye, ZH-C169-shenye, ZH-W165-yi-clothes, ZH-W166-cha-tea, ZH-W167-shi-matter, ZH-W169-jiao-sleep]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C164-READY164-01, ZH-LEX-C164-READY164-02, ZH-LEX-C164-READY164-03, ZH-LEX-C164-READY164-04, ZH-LEX-C164-READY164-05, ZH-LEX-C165-COAT165-01, ZH-LEX-C165-COAT165-02, ZH-LEX-C165-COAT165-03, ZH-LEX-C165-COAT165-04, ZH-LEX-C165-COAT165-05, ZH-LEX-C166-TEA166-01, ZH-LEX-C166-TEA166-02, ZH-LEX-C166-TEA166-03, ZH-LEX-C166-TEA166-04, ZH-LEX-C166-TEA166-05, ZH-LEX-C167-PAST167-01, ZH-LEX-C167-PAST167-02, ZH-LEX-C167-PAST167-03, ZH-LEX-C167-PAST167-04, ZH-LEX-C167-PAST167-05, ZH-LEX-C168-COOK168-01, ZH-LEX-C168-COOK168-02, ZH-LEX-C168-COOK168-03, ZH-LEX-C168-COOK168-04, ZH-LEX-C168-COOK168-05, ZH-LEX-C169-EARLY169-01, ZH-LEX-C169-EARLY169-02, ZH-LEX-C169-EARLY169-03, ZH-LEX-C169-EARLY169-04, ZH-LEX-C169-EARLY169-05, ZH-SCRIPT-YI-CLOTHES-01, ZH-SCRIPT-CHA-TEA-01, ZH-SCRIPT-SHI-MATTER-01, ZH-SCRIPT-JIAO-SLEEP-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C164-READY164-01, ZH-LEX-C164-READY164-02, ZH-LEX-C164-READY164-03, ZH-LEX-C164-READY164-04, ZH-LEX-C164-READY164-05, ZH-LEX-C165-COAT165-01, ZH-LEX-C165-COAT165-02, ZH-LEX-C165-COAT165-03, ZH-LEX-C165-COAT165-04, ZH-LEX-C165-COAT165-05, ZH-LEX-C166-TEA166-01, ZH-LEX-C166-TEA166-02, ZH-LEX-C166-TEA166-03, ZH-LEX-C166-TEA166-04, ZH-LEX-C166-TEA166-05, ZH-LEX-C167-PAST167-01, ZH-LEX-C167-PAST167-02, ZH-LEX-C167-PAST167-03, ZH-LEX-C167-PAST167-04, ZH-LEX-C167-PAST167-05, ZH-LEX-C168-COOK168-01, ZH-LEX-C168-COOK168-02, ZH-LEX-C168-COOK168-03, ZH-LEX-C168-COOK168-04, ZH-LEX-C168-COOK168-05, ZH-LEX-C169-EARLY169-01, ZH-LEX-C169-EARLY169-02, ZH-LEX-C169-EARLY169-03, ZH-LEX-C169-EARLY169-04, ZH-LEX-C169-EARLY169-05, ZH-SCRIPT-YI-CLOTHES-01, ZH-SCRIPT-CHA-TEA-01, ZH-SCRIPT-SHI-MATTER-01, ZH-SCRIPT-JIAO-SLEEP-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C164-daban, ZH-C164-xitou, ZH-C164-chuifengji, ZH-C164-huazhuang, ZH-C164-gualian, ZH-C165-dayi, ZH-C165-maoyi, ZH-C165-tiao, ZH-C165-qunzi, ZH-C165-weijin, ZH-C166-kaishui, ZH-C166-xiawucha, ZH-C166-hongcha, ZH-C166-chaye, ZH-C166-paocha, ZH-C167-qiantian, ZH-C167-fasheng, ZH-C167-meishi, ZH-C167-tingdian, ZH-C167-shengyin, ZH-C168-zheng, ZH-C168-zha, ZH-C168-dun, ZH-C168-shaoshui, ZH-C168-tang, ZH-C169-yidazao, ZH-C169-wujiao, ZH-C169-bangwan, ZH-C169-aoye, ZH-C169-shenye, ZH-W165-yi-clothes, ZH-W166-cha-tea, ZH-W167-shi-matter, ZH-W169-jiao-sleep]
+---
+
+# Looking back: from Getting Ready to Early and Late
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C164-READY164-01, ZH-LEX-C164-READY164-02] -->
+
+[PAUSE 3s] Say the Mandarin for to dress up and to wash one's hair.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C164-READY164-01, ZH-LEX-C164-READY164-02, ZH-LEX-C164-READY164-03, ZH-LEX-C164-READY164-04, ZH-LEX-C164-READY164-05, ZH-LEX-C165-COAT165-01, ZH-LEX-C165-COAT165-02, ZH-LEX-C165-COAT165-03, ZH-LEX-C165-COAT165-04, ZH-LEX-C165-COAT165-05, ZH-LEX-C166-TEA166-01, ZH-LEX-C166-TEA166-02, ZH-LEX-C166-TEA166-03, ZH-LEX-C166-TEA166-04, ZH-LEX-C166-TEA166-05, ZH-LEX-C167-PAST167-01, ZH-LEX-C167-PAST167-02, ZH-LEX-C167-PAST167-03, ZH-LEX-C167-PAST167-04, ZH-LEX-C167-PAST167-05, ZH-LEX-C168-COOK168-01, ZH-LEX-C168-COOK168-02, ZH-LEX-C168-COOK168-03, ZH-LEX-C168-COOK168-04, ZH-LEX-C168-COOK168-05, ZH-LEX-C169-EARLY169-01, ZH-LEX-C169-EARLY169-02, ZH-LEX-C169-EARLY169-03, ZH-LEX-C169-EARLY169-04, ZH-LEX-C169-EARLY169-05, ZH-SCRIPT-YI-CLOTHES-01, ZH-SCRIPT-CHA-TEA-01, ZH-SCRIPT-SHI-MATTER-01, ZH-SCRIPT-JIAO-SLEEP-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to dress up, to wash one's hair, a hair dryer, to put on make-up, to have a shave]
+- [YOU SAY: an overcoat, a sweater, measure word for long things, a skirt, a scarf]
+- [YOU SAY: boiled water, afternoon tea, black tea, tea leaves, to make tea]
+- [YOU SAY: the day before yesterday, to happen, it's nothing, to have a power cut, a sound]
+- [YOU SAY: to steam, to deep-fry, to stew, to boil water, sugar]
+- [YOU SAY: first thing in the morning, an afternoon nap, towards evening, to stay up late, late at night]
+- [YOU READ: 衣 茶 事 觉 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C164-READY164-01, ZH-LEX-C164-READY164-02, ZH-LEX-C164-READY164-03, ZH-LEX-C164-READY164-04, ZH-LEX-C164-READY164-05, ZH-LEX-C165-COAT165-01, ZH-LEX-C165-COAT165-02, ZH-LEX-C165-COAT165-03, ZH-LEX-C165-COAT165-04, ZH-LEX-C165-COAT165-05, ZH-LEX-C166-TEA166-01, ZH-LEX-C166-TEA166-02, ZH-LEX-C166-TEA166-03, ZH-LEX-C166-TEA166-04, ZH-LEX-C166-TEA166-05, ZH-LEX-C167-PAST167-01, ZH-LEX-C167-PAST167-02, ZH-LEX-C167-PAST167-03, ZH-LEX-C167-PAST167-04, ZH-LEX-C167-PAST167-05, ZH-LEX-C168-COOK168-01, ZH-LEX-C168-COOK168-02, ZH-LEX-C168-COOK168-03, ZH-LEX-C168-COOK168-04, ZH-LEX-C168-COOK168-05, ZH-LEX-C169-EARLY169-01, ZH-LEX-C169-EARLY169-02, ZH-LEX-C169-EARLY169-03, ZH-LEX-C169-EARLY169-04, ZH-LEX-C169-EARLY169-05, ZH-SCRIPT-YI-CLOTHES-01, ZH-SCRIPT-CHA-TEA-01, ZH-SCRIPT-SHI-MATTER-01, ZH-SCRIPT-JIAO-SLEEP-01] -->
+
+[PAUSE 3s] To dress up? (*dǎban*.) To wash one's hair? (*xǐtóu*.) A hair dryer? (*chuīfēngjī*.) To put on make-up? (*huàzhuāng*.) To have a shave? (*guāliǎn*.) An overcoat? (**大衣**, *dàyī*.) A sweater? (*máoyī*.) Measure word for long things? (*tiáo*.) A skirt? (*qúnzi*.) A scarf? (*wéijīn*.) Boiled water? (**开水**, *kāishuǐ*.) Afternoon tea? (**下午茶**, *xiàwǔchá*.) Black tea? (*hóngchá*.) Tea leaves? (*cháyè*.) To make tea? (*pàochá*.) The day before yesterday? (**前天**, *qiántiān*.) To happen? (*fāshēng*.) It's nothing? (**没事**, *méishì*.) To have a power cut? (*tíngdiàn*.) A sound? (*shēngyīn*.) To steam? (*zhēng*.) To deep-fry? (*zhá*.) To stew? (*dùn*.) To boil water? (*shāoshuǐ*.) Sugar? (*táng*.) First thing in the morning? (**一大早**, *yídàzǎo*.) An afternoon nap? (**午觉**, *wǔjiào*.) Towards evening? (*bàngwǎn*.) To stay up late? (*áoyè*.) Late at night? (*shēnyè*.)
+`;export{t};

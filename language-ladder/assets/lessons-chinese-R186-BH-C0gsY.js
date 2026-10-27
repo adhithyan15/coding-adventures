@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R187-review-182-187
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 14540
+chapter: 187
+type: review
+headword: (dialogue)
+gloss: a review of the words from Eating Out to What a Day
+concept_tag: REVIEW
+prerequisites: [ZH-C182-fanguan, ZH-C182-lengcai, ZH-C182-xiaochi, ZH-C182-jiachangcai, ZH-C182-hefan, ZH-C183-chuqu, ZH-C183-jinlai, ZH-C183-xiaban, ZH-C183-suomen, ZH-C183-tang, ZH-C184-dujia, ZH-C184-jueding, ZH-C184-canguan, ZH-C184-laojia, ZH-C184-fangsong, ZH-C185-haojiu, ZH-C185-zhiqian, ZH-C185-zhihou, ZH-C185-zaowan, ZH-C185-wangwang, ZH-C186-jiandao, ZH-C186-lajitong, ZH-C186-suliaodai, ZH-C186-pingzi, ZH-C186-chouti, ZH-C187-dapo, ZH-C187-shuai, ZH-C187-houhui, ZH-C187-dangshi, ZH-C187-jieguo, ZH-W182-leng-cold]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C182-EATOUT182-01, ZH-LEX-C182-EATOUT182-02, ZH-LEX-C182-EATOUT182-03, ZH-LEX-C182-EATOUT182-04, ZH-LEX-C182-EATOUT182-05, ZH-LEX-C183-INOUT183-01, ZH-LEX-C183-INOUT183-02, ZH-LEX-C183-INOUT183-03, ZH-LEX-C183-INOUT183-04, ZH-LEX-C183-INOUT183-05, ZH-LEX-C184-HOLIDAY184-01, ZH-LEX-C184-HOLIDAY184-02, ZH-LEX-C184-HOLIDAY184-03, ZH-LEX-C184-HOLIDAY184-04, ZH-LEX-C184-HOLIDAY184-05, ZH-LEX-C185-WHEN185-01, ZH-LEX-C185-WHEN185-02, ZH-LEX-C185-WHEN185-03, ZH-LEX-C185-WHEN185-04, ZH-LEX-C185-WHEN185-05, ZH-LEX-C186-THINGS186-01, ZH-LEX-C186-THINGS186-02, ZH-LEX-C186-THINGS186-03, ZH-LEX-C186-THINGS186-04, ZH-LEX-C186-THINGS186-05, ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02, ZH-LEX-C187-BADDAY187-03, ZH-LEX-C187-BADDAY187-04, ZH-LEX-C187-BADDAY187-05, ZH-SCRIPT-LENG-COLD-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C182-EATOUT182-01, ZH-LEX-C182-EATOUT182-02, ZH-LEX-C182-EATOUT182-03, ZH-LEX-C182-EATOUT182-04, ZH-LEX-C182-EATOUT182-05, ZH-LEX-C183-INOUT183-01, ZH-LEX-C183-INOUT183-02, ZH-LEX-C183-INOUT183-03, ZH-LEX-C183-INOUT183-04, ZH-LEX-C183-INOUT183-05, ZH-LEX-C184-HOLIDAY184-01, ZH-LEX-C184-HOLIDAY184-02, ZH-LEX-C184-HOLIDAY184-03, ZH-LEX-C184-HOLIDAY184-04, ZH-LEX-C184-HOLIDAY184-05, ZH-LEX-C185-WHEN185-01, ZH-LEX-C185-WHEN185-02, ZH-LEX-C185-WHEN185-03, ZH-LEX-C185-WHEN185-04, ZH-LEX-C185-WHEN185-05, ZH-LEX-C186-THINGS186-01, ZH-LEX-C186-THINGS186-02, ZH-LEX-C186-THINGS186-03, ZH-LEX-C186-THINGS186-04, ZH-LEX-C186-THINGS186-05, ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02, ZH-LEX-C187-BADDAY187-03, ZH-LEX-C187-BADDAY187-04, ZH-LEX-C187-BADDAY187-05, ZH-SCRIPT-LENG-COLD-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C182-fanguan, ZH-C182-lengcai, ZH-C182-xiaochi, ZH-C182-jiachangcai, ZH-C182-hefan, ZH-C183-chuqu, ZH-C183-jinlai, ZH-C183-xiaban, ZH-C183-suomen, ZH-C183-tang, ZH-C184-dujia, ZH-C184-jueding, ZH-C184-canguan, ZH-C184-laojia, ZH-C184-fangsong, ZH-C185-haojiu, ZH-C185-zhiqian, ZH-C185-zhihou, ZH-C185-zaowan, ZH-C185-wangwang, ZH-C186-jiandao, ZH-C186-lajitong, ZH-C186-suliaodai, ZH-C186-pingzi, ZH-C186-chouti, ZH-C187-dapo, ZH-C187-shuai, ZH-C187-houhui, ZH-C187-dangshi, ZH-C187-jieguo, ZH-W182-leng-cold]
+---
+
+# Looking back: from Eating Out to What a Day
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C182-EATOUT182-01, ZH-LEX-C182-EATOUT182-02] -->
+
+[PAUSE 3s] Say the Mandarin for a restaurant and a cold starter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C182-EATOUT182-01, ZH-LEX-C182-EATOUT182-02, ZH-LEX-C182-EATOUT182-03, ZH-LEX-C182-EATOUT182-04, ZH-LEX-C182-EATOUT182-05, ZH-LEX-C183-INOUT183-01, ZH-LEX-C183-INOUT183-02, ZH-LEX-C183-INOUT183-03, ZH-LEX-C183-INOUT183-04, ZH-LEX-C183-INOUT183-05, ZH-LEX-C184-HOLIDAY184-01, ZH-LEX-C184-HOLIDAY184-02, ZH-LEX-C184-HOLIDAY184-03, ZH-LEX-C184-HOLIDAY184-04, ZH-LEX-C184-HOLIDAY184-05, ZH-LEX-C185-WHEN185-01, ZH-LEX-C185-WHEN185-02, ZH-LEX-C185-WHEN185-03, ZH-LEX-C185-WHEN185-04, ZH-LEX-C185-WHEN185-05, ZH-LEX-C186-THINGS186-01, ZH-LEX-C186-THINGS186-02, ZH-LEX-C186-THINGS186-03, ZH-LEX-C186-THINGS186-04, ZH-LEX-C186-THINGS186-05, ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02, ZH-LEX-C187-BADDAY187-03, ZH-LEX-C187-BADDAY187-04, ZH-LEX-C187-BADDAY187-05, ZH-SCRIPT-LENG-COLD-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a restaurant, a cold starter, a snack, home cooking, a boxed meal]
+- [YOU SAY: to go out of here, to come inside, to finish work, to lock up, to lie down]
+- [YOU SAY: to go on holiday, to decide, to look round a place, one's home town, to relax]
+- [YOU SAY: for ages, before (a time), after (a time), morning and evening, more often than not]
+- [YOU SAY: scissors, a rubbish bin, a plastic bag, a bottle, a drawer]
+- [YOU SAY: to smash, to have a fall, to regret, at that time, in the end]
+- [YOU READ: 冷 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C182-EATOUT182-01, ZH-LEX-C182-EATOUT182-02, ZH-LEX-C182-EATOUT182-03, ZH-LEX-C182-EATOUT182-04, ZH-LEX-C182-EATOUT182-05, ZH-LEX-C183-INOUT183-01, ZH-LEX-C183-INOUT183-02, ZH-LEX-C183-INOUT183-03, ZH-LEX-C183-INOUT183-04, ZH-LEX-C183-INOUT183-05, ZH-LEX-C184-HOLIDAY184-01, ZH-LEX-C184-HOLIDAY184-02, ZH-LEX-C184-HOLIDAY184-03, ZH-LEX-C184-HOLIDAY184-04, ZH-LEX-C184-HOLIDAY184-05, ZH-LEX-C185-WHEN185-01, ZH-LEX-C185-WHEN185-02, ZH-LEX-C185-WHEN185-03, ZH-LEX-C185-WHEN185-04, ZH-LEX-C185-WHEN185-05, ZH-LEX-C186-THINGS186-01, ZH-LEX-C186-THINGS186-02, ZH-LEX-C186-THINGS186-03, ZH-LEX-C186-THINGS186-04, ZH-LEX-C186-THINGS186-05, ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02, ZH-LEX-C187-BADDAY187-03, ZH-LEX-C187-BADDAY187-04, ZH-LEX-C187-BADDAY187-05, ZH-SCRIPT-LENG-COLD-01] -->
+
+[PAUSE 3s] A restaurant? (*fànguǎn*.) A cold starter? (**冷菜**, *lěngcài*.) A snack? (**小吃**, *xiǎochī*.) Home cooking? (**家常菜**, *jiāchángcài*.) A boxed meal? (*héfàn*.) To go out of here? (**出去**, *chūqù*.) To come inside? (**进来**, *jìnlái*.) To finish work? (*xiàbān*.) To lock up? (*suǒmén*.) To lie down? (*tǎng*.) To go on holiday? (*dùjià*.) To decide? (*juédìng*.) To look round a place? (*cānguān*.) One's home town? (*lǎojiā*.) To relax? (*fàngsōng*.) For ages? (*hǎojiǔ*.) Before (a time)? (*zhīqián*.) After (a time)? (*zhīhòu*.) Morning and evening? (**早晚**, *zǎowǎn*.) More often than not? (*wǎngwǎng*.) Scissors? (*jiǎndāo*.) A rubbish bin? (*lājītǒng*.) A plastic bag? (*sùliàodài*.) A bottle? (*píngzi*.) A drawer? (*chōuti*.) To smash? (*dǎpò*.) To have a fall? (*shuāi*.) To regret? (*hòuhuǐ*.) At that time? (*dāngshí*.) In the end? (*jiéguǒ*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R187-review-final-187
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 14550
+chapter: 187
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [ZH-C187-dapo, ZH-C187-shuai, ZH-C187-houhui, ZH-C187-dangshi, ZH-C187-jieguo]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02, ZH-LEX-C187-BADDAY187-03, ZH-LEX-C187-BADDAY187-04, ZH-LEX-C187-BADDAY187-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02, ZH-LEX-C187-BADDAY187-03, ZH-LEX-C187-BADDAY187-04, ZH-LEX-C187-BADDAY187-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C187-dapo, ZH-C187-shuai, ZH-C187-houhui, ZH-C187-dangshi, ZH-C187-jieguo]
+---
+
+# What a Day — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02] -->
+
+[PAUSE 3s] Say the Mandarin for to smash and to have a fall.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02, ZH-LEX-C187-BADDAY187-03, ZH-LEX-C187-BADDAY187-04, ZH-LEX-C187-BADDAY187-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to smash, to have a fall, to regret, at that time, in the end]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C187-BADDAY187-01, ZH-LEX-C187-BADDAY187-02, ZH-LEX-C187-BADDAY187-03, ZH-LEX-C187-BADDAY187-04, ZH-LEX-C187-BADDAY187-05] -->
+
+[PAUSE 3s] To smash? (*dǎpò*.) To have a fall? (*shuāi*.) To regret? (*hòuhuǐ*.) At that time? (*dāngshí*.) In the end? (*jiéguǒ*.)
+`;export{t as n,r as t};

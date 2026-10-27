@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W159-fang-room-filmstrip-MqLuvPoR.svg`,import.meta.url).href;export{e as default};

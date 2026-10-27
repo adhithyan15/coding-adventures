@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W253-hai-child-filmstrip-MTWi2JbL.svg`,import.meta.url).href;export{e as default};

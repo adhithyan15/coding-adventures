@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W170-bei-cup-filmstrip-BUijcjql.svg`,import.meta.url).href;export{e as default};

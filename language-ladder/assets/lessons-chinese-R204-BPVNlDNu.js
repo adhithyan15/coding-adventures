@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R205-review-200-205
+spine_node: SPINE-ASK-LOCATION
+sequence: 15920
+chapter: 205
+type: review
+headword: (dialogue)
+gloss: a review of the words from Booking a Room to How Far Is It?
+concept_tag: REVIEW
+prerequisites: [ZH-C200-binguan, ZH-C200-yuding, ZH-C200-danrenjian, ZH-C200-ruzhu, ZH-C200-tuifang, ZH-C201-youpiao, ZH-C201-kuaidi, ZH-C201-youjian, ZH-C201-fasong, ZH-C201-shoudao, ZH-C202-saoma, ZH-C202-shouju, ZH-C202-tuihuo, ZH-C202-guke, ZH-C202-shouyintai, ZH-C203-zu, ZH-C203-fangdong, ZH-C203-fangzu, ZH-C203-yajin, ZH-C203-hetong, ZH-C204-wangzhan, ZH-C204-denglu, ZH-C204-dianji, ZH-C204-shipin, ZH-C204-dazi, ZH-C205-li, ZH-C205-gongli, ZH-C205-zuoyou, ZH-C205-chabuduo, ZH-C205-juli, ZH-W203-dong-east, ZH-W205-li-apart, ZH-W205-gong-public]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C200-HOTEL200-01, ZH-LEX-C200-HOTEL200-02, ZH-LEX-C200-HOTEL200-03, ZH-LEX-C200-HOTEL200-04, ZH-LEX-C200-HOTEL200-05, ZH-LEX-C201-POST201-01, ZH-LEX-C201-POST201-02, ZH-LEX-C201-POST201-03, ZH-LEX-C201-POST201-04, ZH-LEX-C201-POST201-05, ZH-LEX-C202-TILL202-01, ZH-LEX-C202-TILL202-02, ZH-LEX-C202-TILL202-03, ZH-LEX-C202-TILL202-04, ZH-LEX-C202-TILL202-05, ZH-LEX-C203-RENT203-01, ZH-LEX-C203-RENT203-02, ZH-LEX-C203-RENT203-03, ZH-LEX-C203-RENT203-04, ZH-LEX-C203-RENT203-05, ZH-LEX-C204-ONLINE204-01, ZH-LEX-C204-ONLINE204-02, ZH-LEX-C204-ONLINE204-03, ZH-LEX-C204-ONLINE204-04, ZH-LEX-C204-ONLINE204-05, ZH-LEX-C205-FAR205-01, ZH-LEX-C205-FAR205-02, ZH-LEX-C205-FAR205-03, ZH-LEX-C205-FAR205-04, ZH-LEX-C205-FAR205-05, ZH-SCRIPT-DONG-EAST-01, ZH-SCRIPT-LI-APART-01, ZH-SCRIPT-GONG-PUBLIC-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C200-HOTEL200-01, ZH-LEX-C200-HOTEL200-02, ZH-LEX-C200-HOTEL200-03, ZH-LEX-C200-HOTEL200-04, ZH-LEX-C200-HOTEL200-05, ZH-LEX-C201-POST201-01, ZH-LEX-C201-POST201-02, ZH-LEX-C201-POST201-03, ZH-LEX-C201-POST201-04, ZH-LEX-C201-POST201-05, ZH-LEX-C202-TILL202-01, ZH-LEX-C202-TILL202-02, ZH-LEX-C202-TILL202-03, ZH-LEX-C202-TILL202-04, ZH-LEX-C202-TILL202-05, ZH-LEX-C203-RENT203-01, ZH-LEX-C203-RENT203-02, ZH-LEX-C203-RENT203-03, ZH-LEX-C203-RENT203-04, ZH-LEX-C203-RENT203-05, ZH-LEX-C204-ONLINE204-01, ZH-LEX-C204-ONLINE204-02, ZH-LEX-C204-ONLINE204-03, ZH-LEX-C204-ONLINE204-04, ZH-LEX-C204-ONLINE204-05, ZH-LEX-C205-FAR205-01, ZH-LEX-C205-FAR205-02, ZH-LEX-C205-FAR205-03, ZH-LEX-C205-FAR205-04, ZH-LEX-C205-FAR205-05, ZH-SCRIPT-DONG-EAST-01, ZH-SCRIPT-LI-APART-01, ZH-SCRIPT-GONG-PUBLIC-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C200-binguan, ZH-C200-yuding, ZH-C200-danrenjian, ZH-C200-ruzhu, ZH-C200-tuifang, ZH-C201-youpiao, ZH-C201-kuaidi, ZH-C201-youjian, ZH-C201-fasong, ZH-C201-shoudao, ZH-C202-saoma, ZH-C202-shouju, ZH-C202-tuihuo, ZH-C202-guke, ZH-C202-shouyintai, ZH-C203-zu, ZH-C203-fangdong, ZH-C203-fangzu, ZH-C203-yajin, ZH-C203-hetong, ZH-C204-wangzhan, ZH-C204-denglu, ZH-C204-dianji, ZH-C204-shipin, ZH-C204-dazi, ZH-C205-li, ZH-C205-gongli, ZH-C205-zuoyou, ZH-C205-chabuduo, ZH-C205-juli, ZH-W203-dong-east, ZH-W205-li-apart, ZH-W205-gong-public]
+---
+
+# Looking back: from Booking a Room to How Far Is It?
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C200-HOTEL200-01, ZH-LEX-C200-HOTEL200-02] -->
+
+[PAUSE 3s] Say the Mandarin for hotel and to book ahead.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C200-HOTEL200-01, ZH-LEX-C200-HOTEL200-02, ZH-LEX-C200-HOTEL200-03, ZH-LEX-C200-HOTEL200-04, ZH-LEX-C200-HOTEL200-05, ZH-LEX-C201-POST201-01, ZH-LEX-C201-POST201-02, ZH-LEX-C201-POST201-03, ZH-LEX-C201-POST201-04, ZH-LEX-C201-POST201-05, ZH-LEX-C202-TILL202-01, ZH-LEX-C202-TILL202-02, ZH-LEX-C202-TILL202-03, ZH-LEX-C202-TILL202-04, ZH-LEX-C202-TILL202-05, ZH-LEX-C203-RENT203-01, ZH-LEX-C203-RENT203-02, ZH-LEX-C203-RENT203-03, ZH-LEX-C203-RENT203-04, ZH-LEX-C203-RENT203-05, ZH-LEX-C204-ONLINE204-01, ZH-LEX-C204-ONLINE204-02, ZH-LEX-C204-ONLINE204-03, ZH-LEX-C204-ONLINE204-04, ZH-LEX-C204-ONLINE204-05, ZH-LEX-C205-FAR205-01, ZH-LEX-C205-FAR205-02, ZH-LEX-C205-FAR205-03, ZH-LEX-C205-FAR205-04, ZH-LEX-C205-FAR205-05, ZH-SCRIPT-DONG-EAST-01, ZH-SCRIPT-LI-APART-01, ZH-SCRIPT-GONG-PUBLIC-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: hotel, to book ahead, single room, to check in, to check out]
+- [YOU SAY: postage stamp, courier service, email, to send electronically, to get something sent]
+- [YOU SAY: to scan a code, receipt, to take goods back, customer, checkout]
+- [YOU SAY: to rent, landlord, rent for a home, a deposit paid in advance, contract]
+- [YOU SAY: website, to log in, to click, video, to type on a keyboard]
+- [YOU SAY: away from, kilometre, or so, almost, distance]
+- [YOU READ: 东 离 公 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C200-HOTEL200-01, ZH-LEX-C200-HOTEL200-02, ZH-LEX-C200-HOTEL200-03, ZH-LEX-C200-HOTEL200-04, ZH-LEX-C200-HOTEL200-05, ZH-LEX-C201-POST201-01, ZH-LEX-C201-POST201-02, ZH-LEX-C201-POST201-03, ZH-LEX-C201-POST201-04, ZH-LEX-C201-POST201-05, ZH-LEX-C202-TILL202-01, ZH-LEX-C202-TILL202-02, ZH-LEX-C202-TILL202-03, ZH-LEX-C202-TILL202-04, ZH-LEX-C202-TILL202-05, ZH-LEX-C203-RENT203-01, ZH-LEX-C203-RENT203-02, ZH-LEX-C203-RENT203-03, ZH-LEX-C203-RENT203-04, ZH-LEX-C203-RENT203-05, ZH-LEX-C204-ONLINE204-01, ZH-LEX-C204-ONLINE204-02, ZH-LEX-C204-ONLINE204-03, ZH-LEX-C204-ONLINE204-04, ZH-LEX-C204-ONLINE204-05, ZH-LEX-C205-FAR205-01, ZH-LEX-C205-FAR205-02, ZH-LEX-C205-FAR205-03, ZH-LEX-C205-FAR205-04, ZH-LEX-C205-FAR205-05, ZH-SCRIPT-DONG-EAST-01, ZH-SCRIPT-LI-APART-01, ZH-SCRIPT-GONG-PUBLIC-01] -->
+
+[PAUSE 3s] Hotel? (*bīnguǎn*.) To book ahead? (*yùdìng*.) Single room? (*dānrénjiān*.) To check in? (*rùzhù*.) To check out? (*tuìfáng*.) Postage stamp? (*yóupiào*.) Courier service? (*kuàidì*.) Email? (*yóujiàn*.) To send electronically? (*fāsòng*.) To get something sent? (*shōudào*.) To scan a code? (*sǎomǎ*.) Receipt? (*shōujù*.) To take goods back? (*tuìhuò*.) Customer? (*gùkè*.) Checkout? (*shōuyíntái*.) To rent? (*zū*.) Landlord? (**房东**, *fángdōng*.) Rent for a home? (*fángzū*.) A deposit paid in advance? (*yājīn*.) Contract? (*hétong*.) Website? (**网站**, *wǎngzhàn*.) To log in? (*dēnglù*.) To click? (*diǎnjī*.) Video? (*shìpín*.) To type on a keyboard? (**打字**, *dǎzì*.) Away from? (**离**, *lí*.) Kilometre? (**公里**, *gōnglǐ*.) Or so? (*zuǒyòu*.) Almost? (*chàbuduō*.) Distance? (*jùlí*.)
+`;export{t};
