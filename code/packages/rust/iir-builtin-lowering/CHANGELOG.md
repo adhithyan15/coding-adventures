@@ -1,5 +1,11 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — the list and closure passes refuse an impostor helper
+
+- New module `helper_names`, which exports `HelperNameError`. `lower_list_ops` and `lower_closures_to_heap` used to add their helper only "if no function of that name exists". A module that already held some *other* function named `__dyn_list_length` (… `_ref`, `_append`, `_reverse`, `_assoc`) or `__dyn_call_closure` kept it, and every `length` / closure call was rewritten to call it. Both passes now claim their helper's name before rewriting anything. A different function under the name is a `HelperNameError` and the module is left unchanged. The pass's own helper, identical instruction for instruction, is still accepted, so a lowered module lowers again. This follows `lisp_semantics`' `ReservedNameError` rule.
+- **Signature change:** `lower_list_ops`, `lower_closures_to_heap`, `lower_heap_builtins` and `lower_heap_builtins_runtime` return `Result<(), HelperNameError>`. `lower_builtins` reports the error as the new `BuiltinLoweringError::HelperName` variant and skips its later phases.
+- Tests: `helper_names` unit tests; `list_ops` `an_impostor_helper_is_refused_not_called` (all five helpers) and `the_real_helper_and_an_unused_name_are_accepted`; `closure_heap` `an_impostor_dispatcher_is_refused`. Existing tests unwrap the new `Result`.
+
 ## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
 
 - New module `lisp_semantics`: Lisp's truthiness, `not`, `equal?` and exit-code coercion written as IIR over the LANG83 PR7f dynamic-value primitives. Truthiness (`(x ≠ 3) × (x ≠ 1)` over the whole word) and `not` (`5 − 2 × truthy`) expand inline (`expand_inline_rules`), every instruction typed `i64`, so a function using them stays JIT-compilable; `equal?` (`__lisp_equal`, recursive) and the run-time exit-code switch (`__lisp_exit_code`) are module-local functions appended once, only when called (`add_used_helpers`). Names are the lowering's own `__lisp_*` namespace, never a runtime's.

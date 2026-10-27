@@ -139,7 +139,7 @@ fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
 /// `LAMBDA` / `LABEL` / recursion) — the JIT is the eighth and final backend.
 pub fn run_mccarthy_on_jit(source: &str) -> Result<Option<i64>, LangAotError> {
     let mut module = compile_source_to_iir(Language::McCarthyLisp, source, "jit")?;
-    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
+    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module).map_err(|e| LangAotError::JitBackendError(e.to_string()))?;
     iir_builtin_lowering::intern_symbols(&mut module);
     iir_builtin_lowering::lower_dyn_repr(&mut module).map_err(|e| LangAotError::JitBackendError(e.to_string()))?;
 

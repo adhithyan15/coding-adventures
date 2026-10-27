@@ -1226,6 +1226,13 @@ impl Compiler {
         }
 
         // 2. Build the inner function: captures ++ params for its parameter list.
+        //
+        // The name cannot collide with a program function: `__lambda_` is a
+        // reserved prefix (`reserved_names`), refused in every source name
+        // before compilation starts. Before it was, a program's own
+        // `(define (__lambda_0 …) …)` made the module hold two functions of
+        // that name, and backends that look a function up by name (the native
+        // linker's offset table, `closure_heap`'s dispatch) took the program's.
         let fn_name = format!("__lambda_{}", self.lambda_counter);
         self.lambda_counter += 1;
 

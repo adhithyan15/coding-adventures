@@ -1,4 +1,12 @@
 # Changelog — `twig-aot`
+## Unreleased — a program function cannot stand in for a runtime symbol
+
+- The link step patches a call in place whenever its symbol names a function of the module, and the backends name a runtime call by its runtime symbol. So a program function called `__twig_print_i64` received `print`'s call: `(define (__twig_print_i64 n) 0) (begin (print 5) 0)` printed nothing on native x86-64. New `check_program_function_names`, run first by both link steps (`compile_module_x86_64_to_text`, `compile_module_to_text_raw`, so every native target), refuses two kinds of module with `AotError::Linker`:
+  - one that defines a function named like a runtime symbol: the `__twig_*` and `__gc_*` namespaces, or one of the `__dyn_*` functions `dynval_runtime.c` defines (`DYNVAL_RUNTIME_SYMBOLS`; the pass-generated `__dyn_list_*` / `__dyn_call_closure` stay allowed);
+  - one that defines two functions with one name (the offset table kept only one).
+- `prepare_module_for_aot` propagates `lower_closures_to_heap` / `lower_heap_builtins_runtime`'s new `HelperNameError` as `AotError::Compile`.
+- Tests: `a_program_function_named_like_a_runtime_symbol_is_refused` (five names × Linux, Windows and macOS objects), `a_module_with_two_functions_of_one_name_is_refused`, `module_helpers_and_lookalikes_are_not_runtime_symbols`, and `dynval_runtime_symbols_match_the_c_source`, which pins the list to the C file and to every registry `dyn_*` builtin.
+
 ## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
 
 - `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).

@@ -1335,6 +1335,101 @@ fn build_gc_init_stackmaps_x86_64_msx64(
     Ok((a.finish().map_err(gc_asm_err_x86)?, relocs, faddr))
 }
 
+/// The functions `runtime/dynval_runtime.c` defines. A test
+/// (`dynval_runtime_symbols_match_the_c_source`) reads the C file and pins
+/// this list to it, so a function added there cannot be missed here.
+///
+/// They are listed one by one, not as the `__dyn_` prefix, because the
+/// lowering passes legitimately add *module* functions in that namespace
+/// (`__dyn_list_length`, `__dyn_call_closure`), which calls must reach.
+const DYNVAL_RUNTIME_SYMBOLS: &[&str] = &[
+    "__dyn_box_int",
+    "__dyn_unbox_int",
+    "__dyn_nil",
+    "__dyn_tag",
+    "__dyn_pair_new",
+    "__dyn_pair_first",
+    "__dyn_pair_rest",
+    "__dyn_is_pair",
+    "__dyn_is_nil",
+    "__dyn_symbol",
+    "__dyn_tag_int",
+    "__dyn_tag_nil",
+    "__dyn_tag_symbol",
+    "__dyn_tag_false",
+    "__dyn_tag_true",
+    "__dyn_tag_heap",
+    "__dyn_tag_mask",
+];
+
+/// Whole namespaces that belong to the native runtime and to this crate:
+///
+/// | prefix    | whose                                                                 |
+/// |-----------|-----------------------------------------------------------------------|
+/// | `__twig_` | `runtime/twig_runtime.c` (`__twig_print_i64`, `__twig_trap`, …) and gc-core-capi's `__twig_gc_*` |
+/// | `__gc_`   | gc-core-capi (`__gc_register_stackmap`, …) and the functions this crate generates around the program (`__gc_aot_entry`, `__gc_init_stackmaps`) |
+///
+/// No frontend or lowering pass names a module function in either.
+const RUNTIME_SYMBOL_PREFIXES: &[&str] = &["__twig_", "__gc_"];
+
+/// Is `name` a symbol the linked runtime defines or this crate generates?
+fn is_runtime_symbol(name: &str) -> bool {
+    RUNTIME_SYMBOL_PREFIXES.iter().any(|p| name.starts_with(p)) || DYNVAL_RUNTIME_SYMBOLS.contains(&name)
+}
+
+/// Refuse a module whose own functions could be mistaken for runtime code,
+/// before any native code is generated.
+///
+/// The linker step below (pass 2 of each `compile_module_*_to_text*`) patches
+/// a call in place whenever its symbol names a function *of this module*,
+/// and hands every other call to the system linker. The backends name a
+/// runtime call by its runtime symbol (`print_i64` → `__twig_print_i64`) and
+/// a program call by the function's name, so the two meet in one namespace:
+///
+/// ```text
+/// (define (__twig_print_i64 n) 0) (begin (print 5) 0)
+///
+///   main:  call __twig_print_i64   ; emitted for `print`
+///   offsets["__twig_print_i64"]    ; the program's function exists …
+///   ⇒ patched to the program's function, and nothing is printed
+/// ```
+///
+/// Two cases are refused:
+///
+/// | the module …                                          | why                                                       |
+/// |-------------------------------------------------------|-----------------------------------------------------------|
+/// | defines a function named like a runtime symbol        | a runtime call would be bound to it, as above             |
+/// | defines two functions with one name                   | the offset table keeps one, so calls reach whichever wins |
+///
+/// Twig refuses these names in source already (`__twig_`, `__dyn_`,
+/// `__lambda_` are reserved in `twig-ir-compiler`), but this crate compiles
+/// IIR from every frontend, so the linker step defends itself.
+fn check_program_function_names(module: &IIRModule) -> Result<(), AotError> {
+    let mut seen: std::collections::HashSet<&str> = std::collections::HashSet::new();
+    for f in &module.functions {
+        // `AotError::Linker`, like the GC-wrapper guard in the link step: it is
+        // the link step's own name resolution that this protects.
+        if is_runtime_symbol(&f.name) {
+            return Err(AotError::Linker {
+                status: None,
+                stderr: format!(
+                    "twig-aot: the program defines a function named {:?}, which is \
+                     reserved for the compiler: it names a runtime symbol, and a call to \
+                     the runtime would be linked to the program's function instead",
+                    f.name
+                ),
+            });
+        }
+        if !seen.insert(f.name.as_str()) {
+            return Err(AotError::Linker {
+                status: None,
+                stderr: format!("twig-aot: the module defines more than one function named {:?}", f.name),
+            });
+        }
+    }
+    Ok(())
+}
+
 /// Refuse any direct `call` whose argument count differs from the callee's
 /// declared parameter count, before any native code is generated.
 ///
@@ -1378,6 +1473,7 @@ fn compile_module_x86_64_to_text(
     module: &IIRModule,
     abi: X86_64Abi,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<X86RelocRecord>), AotError> {
+    check_program_function_names(module)?;
     check_direct_call_arities(module)?;
     let global_slots = collect_global_slots(module);
 
@@ -3268,9 +3364,12 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
     // heap path below already lowers. Must run BEFORE `lower_heap_builtins_runtime`
     // so the `cons`/`car`/`cdr` it emits become `dyn_*` runtime calls. A no-op for
     // a closure-free module.
-    lower_closures_to_heap(module);
+    // Both refuse a module that already holds a different function under one
+    // of their helpers' names (`__dyn_call_closure`, `__dyn_list_*`): they
+    // would route every closure call / list operation to it.
+    lower_closures_to_heap(module).map_err(|e| AotError::Compile(e.to_string()))?;
 
-    lower_heap_builtins_runtime(module);
+    lower_heap_builtins_runtime(module).map_err(|e| AotError::Compile(e.to_string()))?;
 
     // Phase 0a‴: dynamic integer arithmetic over `any` (LANG-FULL E6d-2).
     // A dynamic frontend emits `call_builtin "+"/"-"/…` whose operands are boxed
@@ -3418,6 +3517,7 @@ fn collect_global_slots(module: &IIRModule) -> HashMap<String, usize> {
 fn compile_module_to_text_raw(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
+    check_program_function_names(module)?;
     check_direct_call_arities(module)?;
     // ── Collect global names (LANG39) ─────────────────────────────────────────
     let global_slots = collect_global_slots(module);
@@ -5520,5 +5620,98 @@ mod tests {
         strip_dead_string_consts(&mut func);
         strip_dead_aot_string_allocs(&mut func);
         assert!(func.source_map.is_empty(), "no map in, no map out");
+    }
+
+    // ── Program names that shadow runtime symbols (security review) ──────────
+
+    /// Compile `src` to IIR and rename its function `from` to `to`, at the
+    /// definition and at every direct call: the module a frontend without
+    /// Twig's reserved prefixes would hand this crate.
+    fn twig_module_renaming(src: &str, from: &str, to: &str) -> IIRModule {
+        let mut m = twig_ir_compiler::compile_source(src, "shadow").expect("compiles");
+        for f in &mut m.functions {
+            if f.name == from {
+                f.name = to.to_string();
+            }
+            for i in &mut f.instructions {
+                for op in &mut i.srcs {
+                    if matches!(op, Operand::Var(v) if v == from) {
+                        *op = Operand::Var(to.to_string());
+                    }
+                }
+            }
+        }
+        m
+    }
+
+    /// The security-review repro, at the IIR level: a program function named
+    /// `__twig_print_i64` used to receive `print`'s runtime call, so the
+    /// program printed nothing. Every native target refuses the module now.
+    #[test]
+    fn a_program_function_named_like_a_runtime_symbol_is_refused() {
+        for name in ["__twig_print_i64", "__twig_trap", "__gc_aot_entry", "__gc_init_stackmaps", "__dyn_pair_first"] {
+            let m = twig_module_renaming("(define (f n) 0) (begin (print 5) (f 1))", "f", name);
+            for (target, result) in [
+                ("linux x86-64", compile_module_linux_x86_64_object(&m).map(|_| ())),
+                ("windows x86-64", compile_module_windows_x86_64_object(&m).map(|_| ())),
+                ("macOS arm64", compile_module_macos_arm64_object(&m).map(|_| ())),
+            ] {
+                let err = result.expect_err(&format!("{target} must refuse a program {name}"));
+                assert!(
+                    matches!(&err, AotError::Linker { stderr, .. } if stderr.contains(name) && stderr.contains("reserved for the compiler")),
+                    "{target} {name}: {err:?}"
+                );
+            }
+        }
+    }
+
+    /// Two functions with one name: the link step's offset table keeps one,
+    /// so calls would reach whichever was inserted last.
+    #[test]
+    fn a_module_with_two_functions_of_one_name_is_refused() {
+        let mut m = twig_ir_compiler::compile_source("(define (f n) n) (define (g n) 7) (+ (f 1) (g 2))", "dup")
+            .expect("compiles");
+        for f in &mut m.functions {
+            if f.name == "g" {
+                f.name = "f".into();
+            }
+        }
+        let err = compile_module_linux_x86_64_object(&m).expect_err("duplicate names must be refused");
+        assert!(matches!(&err, AotError::Linker { stderr, .. } if stderr.contains("more than one function named \"f\"")), "{err:?}");
+    }
+
+    /// The module functions the lowering passes add in the `__dyn_` namespace
+    /// are not runtime symbols, and the names merely *near* one are free.
+    #[test]
+    fn module_helpers_and_lookalikes_are_not_runtime_symbols() {
+        for name in ["__dyn_list_length", "__dyn_call_closure", "__lisp_equal", "__dyn_pair_firsts", "twig_print", "_gc_x"] {
+            assert!(!is_runtime_symbol(name), "{name}");
+        }
+        compile_module_linux_x86_64_object(&twig_module_renaming("(define (f n) n) (f 42)", "f", "__dyn_pair_firsts"))
+            .expect("a near-miss name compiles");
+    }
+
+    /// `DYNVAL_RUNTIME_SYMBOLS` is exactly the set of functions
+    /// `runtime/dynval_runtime.c` defines, and covers every registry `dyn_*`
+    /// builtin the backends call as `__dyn_*`. A function added to the C file
+    /// without updating the list fails here.
+    #[test]
+    fn dynval_runtime_symbols_match_the_c_source() {
+        let c = include_str!("../runtime/dynval_runtime.c");
+        let mut defined: Vec<&str> = c
+            .lines()
+            .filter(|l| l.starts_with("uint64_t __dyn_") || l.starts_with("int64_t __dyn_"))
+            .filter_map(|l| l.split_whitespace().nth(1))
+            .filter_map(|decl| decl.split('(').next())
+            .collect();
+        defined.sort_unstable();
+        let mut listed: Vec<&str> = DYNVAL_RUNTIME_SYMBOLS.to_vec();
+        listed.sort_unstable();
+        assert_eq!(defined, listed, "DYNVAL_RUNTIME_SYMBOLS drifted from dynval_runtime.c");
+
+        for spec in interpreter_ir::op_registry::STANDARD_OPS.iter().filter(|s| s.name.starts_with("dyn_")) {
+            let symbol = format!("__{}", spec.name);
+            assert!(is_runtime_symbol(&symbol), "{symbol} (registry {}) is not listed", spec.name);
+        }
     }
 }

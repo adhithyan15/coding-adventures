@@ -128,15 +128,25 @@ Builtin references in non-call positions wrap into a `make_builtin_closure` so t
 
 ## Reserved names
 
-Names beginning with `__lisp_` or `__dyn_` (ignoring ASCII case, in any
-`/`-separated segment) belong to the functions later lowering passes add to
-the module and to the native runtime's symbols, which those passes recognise
-by name. A program may not define, bind or reference one:
+Names beginning with `__lisp_`, `__dyn_`, `__lambda_` or `__twig_`
+(ignoring ASCII case, in any `/`-separated segment) are reserved. They belong
+to the functions later lowering passes add to the module, to the native
+runtime's symbols, and to the functions this compiler lifts each `(lambda …)`
+into (`__lambda_0`, `__lambda_1`, …). A program may not define, bind or
+reference one:
 
 ```text
-(define (__lisp_equal a b) 42)   → TwigCompileError at 1:10: the name "__lisp_equal" is reserved
-'__lisp_equal                    → fine: a quoted symbol is data, not a name
+(define (__lisp_equal a b) 42)      → TwigCompileError at 1:10: the name "__lisp_equal" is reserved
+(define (__twig_print_i64 n) 0)     → refused: native `print` would have called it
+(define (__lambda_0 y) …)           → refused: a lifted lambda would have shared its name
+'__lisp_equal                       → fine: a quoted symbol is data, not a name
 ```
+
+The generated lambda names stay `__lambda_N` rather than using a character
+Twig cannot spell. A generated name reaches every backend's symbol table,
+and no character is legal unquoted in all of them: the JVM forbids `.` in a
+method name, and LLVM quotes anything outside `[-a-zA-Z$._0-9]`. Reserving
+the prefix changes no symbol.
 
 `RESERVED_PREFIXES` and `reserved_prefix` are exported for tools that want
 the same rule.

@@ -8,10 +8,12 @@
 //! compiler add functions of their own to the same module, and recognise
 //! them **by name**:
 //!
-//! | prefix    | owner                                   | examples                                          |
-//! |-----------|-----------------------------------------|---------------------------------------------------|
-//! | `__lisp_` | `iir-builtin-lowering::lisp_semantics`  | `__lisp_equal`, `__lisp_exit_code`, and the inline-rule markers `__lisp_truthy` / `__lisp_not` |
-//! | `__dyn_`  | the dynamic-value lowering and runtime  | `__dyn_list_length` …, `__dyn_call_closure`, and the C runtime's `__dyn_pair_new` … |
+//! | prefix      | owner                                   | examples                                          |
+//! |-------------|-----------------------------------------|---------------------------------------------------|
+//! | `__lisp_`   | `iir-builtin-lowering::lisp_semantics`  | `__lisp_equal`, `__lisp_exit_code`, and the inline-rule markers `__lisp_truthy` / `__lisp_not` |
+//! | `__dyn_`    | the dynamic-value lowering and runtime  | `__dyn_list_length` …, `__dyn_call_closure`, and the C runtime's `__dyn_pair_new` … |
+//! | `__lambda_` | this compiler                           | `__lambda_0`, `__lambda_1`, … — the functions a `(lambda …)` is lifted into |
+//! | `__twig_`   | the native runtime (`twig_runtime.c`, gc-core-capi) | `__twig_print_i64`, `__twig_trap`, `__twig_gc_alloc` … |
 //!
 //! Twig's `NAME` token (`[A-Za-z+\-*/=<>!?_$][…]*`) can spell every one of
 //! them, so before this check a program could stand in for the compiler:
@@ -27,6 +29,34 @@
 //! returns a `ReservedNameError`), but a user deserves a source-level error
 //! with a line and column, raised before any IIR exists — so the frontend
 //! reserves both prefixes.
+//!
+//! The same review found two more names a program could take over:
+//!
+//! ```text
+//! (define (__twig_print_i64 n) 0) (begin (print 5) 0)
+//!     ; native x86-64 linked `print`'s runtime call to the program's
+//!     ; function, so nothing was printed
+//! (define (__lambda_0 y) (+ y 50)) (define (g f) (+ 0 (f 5)))
+//! (+ (__lambda_0 1) (g (lambda (y) (+ y 1))))
+//!     ; the lambda is lifted into a second function named `__lambda_0`;
+//!     ; the closure called the program's one and the result was 120, not 57
+//! ```
+//!
+//! so `__lambda_` and `__twig_` are reserved as well.
+//!
+//! ## Why reserve a prefix rather than pick an unspellable name
+//!
+//! The other fix for `__lambda_N` would be a generated name that contains a
+//! character Twig's `NAME` token cannot (`NAME` is
+//! `[A-Za-z+\-*/=<>!?_$][A-Za-z+\-*/=<>!?_$0-9]*`, so `.`, `:`, `#`, `@`,
+//! `%` … are out). But that name reaches every backend's symbol table, and
+//! no such character is legal unquoted on all of them: the JVM forbids `.`,
+//! `;`, `[` and `/` in a method name; LLVM quotes anything outside
+//! `[-a-zA-Z$._0-9]`, so `.` is the only candidate it takes bare; ilasm's
+//! plain identifiers take `@` and `` ` `` but not `.` or `:` in a method name
+//! without quoting. A reserved prefix changes no generated name, so no
+//! backend can mangle it differently — it only removes the program's way of
+//! spelling it.
 //!
 //! ## The rule
 //!
@@ -48,7 +78,7 @@ use crate::errors::TwigCompileError;
 
 /// The identifier prefixes reserved for compiler-generated functions and
 /// runtime symbols (see the module docs for who owns each).
-pub const RESERVED_PREFIXES: [&str; 2] = ["__lisp_", "__dyn_"];
+pub const RESERVED_PREFIXES: [&str; 4] = ["__lisp_", "__dyn_", "__lambda_", "__twig_"];
 
 /// The reserved prefix `name` uses, if any.
 ///

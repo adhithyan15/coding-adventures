@@ -1,5 +1,11 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — reserved `__lambda_` and `__twig_` prefixes
+
+- `RESERVED_PREFIXES` adds `__lambda_` and `__twig_` (now `["__lisp_", "__dyn_", "__lambda_", "__twig_"]`). Two programs found by security review compiled and then misbehaved on native x86-64. In `(define (__twig_print_i64 n) 0) (begin (print 5) 0)`, `print`'s runtime call was linked to the program's function, so nothing was printed. In `(define (__lambda_0 y) (+ y 50)) … (g (lambda (y) (+ y 1)))`, the lifted lambda became a second `__lambda_0` and the closure called the program's function: exit 120 instead of 57. Both are now a `TwigCompileError` at the name.
+- Lifted lambdas keep the `__lambda_N` names. Reserving the prefix was chosen over a generated name with a character `NAME` cannot contain, because no such character is legal unquoted in every backend's symbols (JVM method names, LLVM identifiers, ilasm). The reasoning is in `reserved_names.rs`.
+- `tests/reserved_names.rs`: `runtime_and_lambda_names_are_reserved` (both repros, plus a bare reference to `__lambda_0`) and `a_lifted_lambda_is_the_only_function_with_its_name`; the prefix-table test is updated.
+
 ## Unreleased — LANG83 PR7f-2 security review — reserved name prefixes
 
 - A program may no longer define, bind or reference a name beginning with `__lisp_` or `__dyn_` (ASCII case ignored, each `/`-separated segment checked): `Compiler::compile` refuses it with a `TwigCompileError` at the name's position, right after `check_cst`. Those prefixes name the functions the lowering passes add to the module (`__lisp_equal`, `__lisp_exit_code`, the inline-rule markers `__lisp_truthy` / `__lisp_not`, `__dyn_list_*`, `__dyn_call_closure`) and the C runtime's `__dyn_*` symbols, which the passes recognise by name: `(define (__lisp_equal a b) 42)` used to stand in for `equal?`, and `(define (__lisp_not x) 0) (__lisp_not 5)` was silently compiled as Lisp's `not`. Quoted symbols (`'__lisp_x`) are data and stay allowed.

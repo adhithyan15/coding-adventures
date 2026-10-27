@@ -3,8 +3,10 @@
 //! The lowering passes after this compiler add functions of their own —
 //! `__lisp_equal`, `__dyn_list_length`, … — and recognise them by name, so a
 //! Twig program may not define, bind or reference a name that begins with
-//! `__lisp_` or `__dyn_`. Each test below is a program that, before the
-//! reservation, compiled and then silently changed what a builtin meant.
+//! `__lisp_` or `__dyn_`. A second review added `__lambda_` (this compiler's
+//! lifted lambdas) and `__twig_` (the native runtime). Each test below is a
+//! program that, before the reservation, compiled and then silently changed
+//! what a builtin meant.
 
 use twig_ir_compiler::{compile_source, reserved_prefix, RESERVED_PREFIXES};
 
@@ -82,11 +84,45 @@ fn symbols_and_lookalikes_are_not_reserved() {
 
 #[test]
 fn reserved_prefix_reads_each_segment_and_ignores_case() {
-    assert_eq!(RESERVED_PREFIXES, ["__lisp_", "__dyn_"]);
+    assert_eq!(RESERVED_PREFIXES, ["__lisp_", "__dyn_", "__lambda_", "__twig_"]);
     assert_eq!(reserved_prefix("__lisp_equal"), Some("__lisp_"));
     assert_eq!(reserved_prefix("__DYN_x"), Some("__dyn_"));
     assert_eq!(reserved_prefix("host/__dyn_x"), Some("__dyn_"));
     assert_eq!(reserved_prefix("__lispy"), None);
     assert_eq!(reserved_prefix("my__lisp_x"), None);
-    assert_eq!(reserved_prefix("__twig_x"), None);
+    assert_eq!(reserved_prefix("__twig_x"), Some("__twig_"));
+    assert_eq!(reserved_prefix("__Lambda_3"), Some("__lambda_"));
+    assert_eq!(reserved_prefix("__lambda"), None);
+    assert_eq!(reserved_prefix("__twigx"), None);
+}
+
+/// The second security review's repros. `print` lowers to a call of the
+/// runtime's `__twig_print_i64`, and a `(lambda …)` is lifted into a function
+/// this compiler names `__lambda_N`; a program that could spell either name
+/// could stand in for the runtime or for one of its own lambdas.
+#[test]
+fn runtime_and_lambda_names_are_reserved() {
+    let e = refused("(define (__twig_print_i64 n) 0) (begin (print 5) 0)");
+    assert!(e.message.contains("\"__twig_\""), "{}", e.message);
+    assert_eq!((e.line, e.column), (1, 10));
+
+    let e = refused(
+        "(define (__lambda_0 y) (+ y 50)) (define (g f) (+ 0 (f 5))) \
+         (+ (__lambda_0 1) (g (lambda (y) (+ y 1))))",
+    );
+    assert!(e.message.contains("\"__lambda_\""), "{}", e.message);
+
+    // A reference alone is refused too: `(__lambda_0 1)` would call the
+    // compiler's own lifted lambda.
+    refused("(define (g f) (f 5)) (+ (g (lambda (y) y)) (__lambda_0 1))");
+}
+
+/// The lambda the compiler lifts keeps its `__lambda_N` name, and since no
+/// source name can begin with `__lambda_`, it is the only function so named.
+#[test]
+fn a_lifted_lambda_is_the_only_function_with_its_name() {
+    let m = compile_source("(define (g f) (+ 0 (f 5))) (+ (g (lambda (y) (+ y 1))) 1)", "m").expect("compiles");
+    let lambdas: Vec<&str> =
+        m.functions.iter().map(|f| f.name.as_str()).filter(|n| n.starts_with("__lambda_")).collect();
+    assert_eq!(lambdas, ["__lambda_0"]);
 }

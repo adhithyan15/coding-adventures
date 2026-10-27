@@ -65,6 +65,8 @@ use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::IIRModule;
 use std::collections::BTreeMap;
 
+use crate::helper_names::{claim_helper_name, HelperNameError};
+
 /// The synthesized dispatcher's function name.
 const DISPATCHER: &str = "__dyn_call_closure";
 /// The nil-sentinel `const` type hint — the empty-list terminator, exactly the
@@ -122,10 +124,18 @@ fn collect_dispatch(module: &IIRModule) -> Vec<Dispatch> {
 /// Module-level entry: lower `alloc_closure`/`call_closure` to the cons-heap
 /// form plus a synthesized dispatcher (native + WASM). A no-op if the module has
 /// no closures.
-pub fn lower_closures_to_heap(module: &mut IIRModule) {
+///
+/// # Errors
+///
+/// [`HelperNameError`], before anything is rewritten, when the module already
+/// holds a function named [`DISPATCHER`] that is not the dispatcher this pass
+/// would build for it. Every closure call is rewritten to call the dispatcher
+/// by that name, so keeping the module's function would route every closure
+/// call through it (see [`crate::helper_names`]).
+pub fn lower_closures_to_heap(module: &mut IIRModule) -> Result<(), HelperNameError> {
     let dispatch = collect_dispatch(module);
     if dispatch.is_empty() {
-        return; // no closures — nothing to do (every closure-free program).
+        return Ok(()); // no closures — nothing to do (every closure-free program).
     }
     let index_of: BTreeMap<String, i64> =
         dispatch.iter().map(|d| (d.fn_name.clone(), d.idx)).collect();
@@ -168,12 +178,18 @@ pub fn lower_closures_to_heap(module: &mut IIRModule) {
             .is_some_and(|f| f.params.iter().any(|(_, t)| t == REF_ANY))
     });
 
+    // Claim the dispatcher's name before rewriting a single call, so a refused
+    // module is refused unchanged.
+    let dispatcher = build_dispatcher(&dispatch, params_are_boxed);
+    let already_ours = claim_helper_name(module, &dispatcher, "lower_closures_to_heap")?;
+
     for f in &mut module.functions {
         rewrite_closure_ops(f, &index_of, params_are_boxed);
     }
-    if !module.functions.iter().any(|f| f.name == DISPATCHER) {
-        module.functions.push(build_dispatcher(&dispatch, params_are_boxed));
+    if !already_ours {
+        module.functions.push(dispatcher);
     }
+    Ok(())
 }
 
 /// Rewrite `alloc_closure`/`call_closure` in one function to cons-chain builds +
@@ -519,6 +535,28 @@ mod tests {
         m
     }
 
+    /// Security review: a module that already defines `__dyn_call_closure`
+    /// used to keep it, and every closure call was rewritten to call it. The
+    /// module is refused, before any closure op is rewritten.
+    #[test]
+    fn an_impostor_dispatcher_is_refused() {
+        let body = IIRFunction::new("__lambda_0", vec![("x".into(), "any".into())], "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")]);
+        let impostor = IIRFunction::new(DISPATCHER, vec![("c".into(), "any".into()), ("a".into(), "any".into())], "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "any")]);
+        let main = IIRFunction::new("main", vec![], "any", vec![
+            IIRInstr::new("alloc_closure", Some("clo".into()), vec![Operand::Str("__lambda_0".into())], "closure"),
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(41)], "i64"),
+            IIRInstr::new("call_closure", Some("r".into()), vec![Operand::Var("clo".into()), Operand::Var("a".into())], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ]);
+        let mut m = module_with(vec![body, impostor, main]);
+        let err = lower_closures_to_heap(&mut m).unwrap_err();
+        assert_eq!(err, HelperNameError { name: DISPATCHER.into(), pass: "lower_closures_to_heap" });
+        assert!(m.functions[2].instructions.iter().any(|i| i.op == "call_closure"), "main is untouched");
+        assert_eq!(m.functions.len(), 3, "no dispatcher added");
+    }
+
     /// A capture-free `((lambda (x) x) …)`: one body `__lambda_0(x)`.
     #[test]
     fn alloc_and_call_lower_to_cons_and_dispatch() {
@@ -531,7 +569,7 @@ mod tests {
             IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
         ]);
         let mut m = module_with(vec![body, main]);
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
 
         // No closure opcodes remain.
         assert!(!m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == "alloc_closure" || i.op == "call_closure")));
@@ -581,7 +619,7 @@ mod tests {
             vec![IIRInstr::new("ret", None, vec![Operand::Var("y".into())], "any")],
         );
         let mut m = module_with(vec![l0, l1]);
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
 
         // Producer side: the captured parameter is boxed before it is consed.
         let l0 = m.functions.iter().find(|f| f.name == "__lambda_0").unwrap();
@@ -651,7 +689,7 @@ mod tests {
             ],
         );
         let mut m = module_with(vec![inner, outer, main]);
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
     }
 
     /// The mirror image: a genuinely tagged (lisp) module passes values through
@@ -689,7 +727,7 @@ mod tests {
         );
         let mut m = IIRModule::new("m", "mccarthy-lisp");
         m.functions = vec![l0, main];
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
 
         let disp = m.functions.iter().find(|f| f.name == DISPATCHER).unwrap();
         assert_eq!(
@@ -720,7 +758,7 @@ mod tests {
             IIRInstr::new("ret", None, vec![Operand::Var("clo".into())], "any"),
         ]);
         let mut m = module_with(vec![l1, l0, main]); // deliberately out of order
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
         let disp = m.functions.iter().find(|f| f.name == DISPATCHER).unwrap();
         // Two cmp_eq cases, calling __lambda_0 (idx 0, 0 caps + 1 arg) and
         // __lambda_1 (idx 1, 1 cap + 1 arg).

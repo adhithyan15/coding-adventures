@@ -1746,8 +1746,15 @@ the frontends.
   spell either. `__dyn_` has the same exposure — `length` binds to an
   existing `__dyn_list_length`, closures to an existing
   `__dyn_call_closure`, and `__dyn_pair_new` … are runtime symbols — and is
-  closed at the Twig frontend; a pass-level refusal for the list and
-  closure helpers is left for a follow-up.
+  closed at the Twig frontend. *Follow-up (landed):* the list and closure
+  passes now refuse a module that holds a different function under one of
+  their helpers' names (`helper_names::HelperNameError`, plumbed like
+  `ReservedNameError`). A second review found two more shadowing routes, also
+  closed. First, `twig-aot`'s link step patched a runtime call to a program
+  function of the same name: `(define (__twig_print_i64 n) 0)` swallowed
+  `print`. It now refuses a function named like a runtime symbol, or two
+  functions of one name. Second, a program could define `__lambda_0`, the
+  name of a lifted lambda. Twig now also reserves `__lambda_` and `__twig_`.
 - *Not moved yet.* The managed backends (WASM, JVM, CLR, BEAM) still lower
   the source-level `pair?`, `not` and `equal?` builtins in their own code
   (their value model is structural, and `lower_dyn_repr_structural` leaves
