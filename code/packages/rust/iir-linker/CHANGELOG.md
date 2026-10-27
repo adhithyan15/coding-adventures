@@ -1,5 +1,53 @@
 # Changelog — iir-linker
 
+## Unreleased — #18429 — one owner per name
+
+### Fixed
+
+- **Two modules exporting the same name linked silently.**  The export map
+  is keyed by `(module_name, public_name)`, so `left::foo` and `right::foo`
+  never collided there — but exported functions keep their *bare* name in
+  the merged module, so the result held two functions called `foo` and
+  every reference (including `right`'s calls to its own `foo`, and Twig's
+  bare-name cross-module calls) ran `left`'s.  `build_export_map` now
+  records the first module to claim each public name and reports the new
+  `LinkError::ConflictingExport { function_name, first_module,
+  second_module }` when a different module claims it again.  Aliases count
+  by their public name.  One module holding two same-named functions
+  (Twig's user `main` beside its synthesized `main`) is unaffected.
+- **Two input modules with the same name shared their imports.**  Import
+  rewrites are keyed by module name, so each same-named module picked up
+  the other's imports, and an import could override the other's own
+  function.  `link` now rejects this with the new
+  `LinkError::DuplicateModuleName` (one error per repeated name), checked
+  first by the new `resolve::check_module_names`.
+- **An unresolved entry point bound to another module's private function.**
+  If the entry module's `entry_point` named a function it neither defined
+  nor imported, the name stayed bare and bound to whatever owned it after
+  merging.  The new `resolve::check_entry_point` requires the effective
+  entry point (first module with one) to be a function that module defines
+  or the local name of one of its imports; otherwise
+  `LinkError::UnresolvedEntryPoint`.
+- `merge_modules` documents its preconditions as a table and re-asserts the
+  one-owner rule with a `debug_assert!` (it silently runs the wrong
+  function rather than crashing when violated).
+- **Docs:** `function_name_slot` now states the LANG28 contract that the
+  `fn` operand of `task_spawn` (`srcs[0]`) and `group_spawn` (`srcs[1]`) is
+  a function *name*, never a closure register — the rewrite matches by
+  operand text, so a register there would be renamed too.
+
+### Tests
+
+- Nine new integration tests in `tests/test_linker.rs`: cross-module
+  duplicate export (plain and via an alias), distinct aliases of same-named
+  functions, duplicate names inside one module, duplicate module names
+  (and reported once per name), unresolved entry point, entry point via an
+  import's local name, and only the effective entry point is checked.  The
+  five rejection tests fail on the previous linker.
+- Unit tests for the three new `Display` arms, `ConflictingExport` vs
+  `DuplicateExport` in `build_export_map`, `check_module_names`,
+  `check_entry_point`, and the debug-build `merge_modules` guard.
+
 ## Unreleased — #18421 — renames reach every function reference
 
 ### Fixed

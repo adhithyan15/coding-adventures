@@ -764,7 +764,7 @@ pub fn is_allocating(op: &str) -> bool {
 ///
 /// | Mnemonic | Description |
 /// |----------|-------------|
-/// | `task_spawn` | Spawn a new task; src = callee + args; dest = `task<T>` |
+/// | `task_spawn` | Spawn a new task; src = fn name + args; dest = `task<T>` |
 /// | `task_current` | Get the current task's handle; dest = `task<void>` |
 /// | `task_yield` | Cooperatively yield to the scheduler (**may park**) |
 /// | `task_sleep` | Park until a deadline passes; src = deadline (**may park**) |
@@ -772,6 +772,15 @@ pub fn is_allocating(op: &str) -> bool {
 /// | `task_cancel` | Request cancellation; src = `task<T>` + cancel\_token |
 /// | `task_check_cancel` | Poll the current task's cancel flag; dest = bool |
 /// | `task_detach` | Detach task from its parent group; src = `task<T>` |
+///
+/// **The spawned `fn` is a function name.**  `task_spawn`'s `srcs[0]` (and
+/// `group_spawn`'s `srcs[1]`, see [`is_task_group`]) names a function in the
+/// module, exactly like `call`'s callee — it is never a register holding a
+/// closure.  `iir-linker` renames these operands by their text when it
+/// resolves a function-name collision, so a register here would be renamed
+/// too.  To spawn a closure, spawn a named trampoline that does
+/// `call_closure` on an argument.  (LANG28 "The `fn` operand is a function
+/// name", pinned in issue #18429.)
 pub fn is_task(op: &str) -> bool {
     matches!(
         op,
@@ -794,7 +803,7 @@ pub fn is_task(op: &str) -> bool {
 /// | Mnemonic | Description |
 /// |----------|-------------|
 /// | `group_new` | Create an empty task group; dest = `task_group` |
-/// | `group_spawn` | Spawn a task inside a group; src = group + fn + args; dest = `task<T>` |
+/// | `group_spawn` | Spawn a task inside a group; src = group + fn name + args; dest = `task<T>` |
 /// | `group_join` | Wait for all tasks in the group to finish (**may park**) |
 /// | `group_cancel` | Cancel all running tasks in the group |
 /// | `group_close` | Close group to new spawns (all future spawn calls trap) |
