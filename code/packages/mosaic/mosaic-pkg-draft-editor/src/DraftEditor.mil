@@ -30,14 +30,22 @@
 // no title); an empty action label removes that button. The component can
 // therefore never draw an unnamed field or an unnamed button.
 //
-// Why no body placeholder and no preview
-// --------------------------------------
-// The multi-line primitive's placeholder is literal-only on React,
-// WebComponent and SwiftUI (UI25), so a slot-bound one would vanish there; the
-// visible body label does that job. A markdown preview is a `node` slot with
-// real costs (no .msl styling, one surface per native host, unescaped on the
-// HTML backend); it belongs to the one product that wants it (Journal),
-// composed beside this component, not inside it.
+// Why the body placeholder is a slot (0.2.0)
+// ------------------------------------------
+// The visible body label names the field; the placeholder is only a hint
+// shown while the body is empty ("Write something…", or Engram's field
+// name). 0.1.0 had none, because the multi-line field's placeholder was then
+// literal-only on React, WebComponent and SwiftUI and a slot-bound one would
+// have vanished there. EM-13 (2026-10-19) made `placeholder : slot:` lower on
+// every backend, so the hint is now a slot like every other label. Pass ""
+// for no hint, as Journal does.
+//
+// Why no preview
+// --------------
+// A markdown preview is a `node` slot with real costs (no .msl styling, one
+// surface per native host, unescaped on the HTML backend); it belongs to the
+// one product that wants it (Journal), composed beside this component, not
+// inside it.
 
 component DraftEditor {
   // Label of the one-line title field; "" = no title field. Also its
@@ -55,6 +63,10 @@ component DraftEditor {
 
   // The body text (host-owned draft). Markdown, if the host wants it.
   slot body-value : text ;
+
+  // Hint shown in an empty body; "" = no hint. Never the field's name:
+  // that is `body-label`, which stays visible once the user types.
+  slot body-placeholder : text ;
 
   // Action labels; "" = that action is not offered.
   slot save-label : text ;

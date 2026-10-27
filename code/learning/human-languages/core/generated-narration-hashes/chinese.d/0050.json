@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:34de17ce5ffa8990",
+  "lessonIds": [
+    "ZH-C50-shuijiao",
+    "ZH-C50-qichuang",
+    "ZH-C50-xiuxi",
+    "ZH-C50-shenti",
+    "ZH-C50-bing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch50.txt",
+  "json": "chinese/narration/ch50.json",
+  "textHash": "fnv1a64:614d935f5a326297",
+  "jsonHash": "fnv1a64:9d2f9b383e6bbfb8",
+  "findings": []
+}

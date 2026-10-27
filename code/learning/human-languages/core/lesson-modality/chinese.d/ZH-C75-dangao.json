@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C75-dangao",
+    "language": "chinese",
+    "chapter": 75,
+    "sequence": 5900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:855c69d6968df143"
+  },
+  "findings": []
+}

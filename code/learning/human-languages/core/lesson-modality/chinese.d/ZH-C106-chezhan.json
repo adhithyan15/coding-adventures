@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C106-chezhan",
+    "language": "chinese",
+    "chapter": 106,
+    "sequence": 8360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3540867cd1ad0ba2"
+  },
+  "findings": []
+}

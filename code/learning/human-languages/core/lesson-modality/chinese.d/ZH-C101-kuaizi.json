@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C101-kuaizi",
+    "language": "chinese",
+    "chapter": 101,
+    "sequence": 8120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e06c2266e5a68e2"
+  },
+  "findings": []
+}

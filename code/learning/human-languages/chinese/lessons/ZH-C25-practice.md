@@ -41,7 +41,7 @@ reviews_of: [ZH-C25-ti, ZH-C24-practice, ZH-C21-practice, ZH-C19-haobuhao, ZH-R1
 
 - [YOU RECALL: say *le* — **R1**, one lesson back, before it decays]
 - [YOU RECALL: say *wǒ yǒu yí ge míngzi* — **R2**, the first real retrieval, five to fifteen lessons back]
-- [YOU RECALL: say *shíyī èrshí jiúshíjiǔ yìbǎi* — **R3**, durable, twenty to sixty lessons back]
+- [YOU RECALL: say *shíyī èrshí jiǔshíjiǔ yìbǎi* — **R3**, durable, twenty to sixty lessons back]
 - [YOU RECALL: say *hǎo bu hǎo* — **R3**, durable again, a second word from that distance]
 - [YOU RECALL: say *zì — hànzì — hànyǔ — zhōngwén — zhōngguó* — **R4**, recognition at distance, eighty lessons back or more]
 - [YOU RECALL: say *dàjiā* — **R4**, recognition at distance, a second word from that far back]

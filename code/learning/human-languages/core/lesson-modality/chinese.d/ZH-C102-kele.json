@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C102-kele",
+    "language": "chinese",
+    "chapter": 102,
+    "sequence": 8170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78bacbc247ef1ab3"
+  },
+  "findings": []
+}

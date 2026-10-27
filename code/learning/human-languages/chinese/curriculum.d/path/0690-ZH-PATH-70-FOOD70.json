@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-70-FOOD70",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ZH-EXT-70-FOOD70"
+  ],
+  "after": []
+}

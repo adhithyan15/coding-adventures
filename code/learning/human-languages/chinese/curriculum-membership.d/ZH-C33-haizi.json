@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C33-haizi",
+  "pathSegment": "ZH-PATH-33-FAMILY33",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-33-FAMILY33",
+      "order": 5
+    }
+  ]
+}

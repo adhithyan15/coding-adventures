@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C58-bao",
+  "pathSegment": "ZH-PATH-58-THINGS58",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-58-THINGS58",
+      "order": 2
+    }
+  ]
+}

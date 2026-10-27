@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:706d4fc611d981e3",
+  "lessonIds": [
+    "ZH-C113-qie",
+    "ZH-C113-zhu-boil",
+    "ZH-C113-chao",
+    "ZH-C113-kao",
+    "ZH-C113-jian"
+  ],
+  "tex": "chinese/book/chapters/ch113-cooking.tex"
+}

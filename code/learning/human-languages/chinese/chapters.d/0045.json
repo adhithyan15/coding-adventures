@@ -1,0 +1,20 @@
+{
+  "chapter": 45,
+  "title": "Today and Tomorrow",
+  "label": "ch:zh-today-and-tomorrow",
+  "canDo": "I can say today, yesterday, tomorrow and now.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C45-mingtian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: I can say today, yesterday, tomorrow and now.",
+    "assesses": [
+      "ZH-LEX-C45-TODAY45-02",
+      "ZH-LEX-C45-TODAY45-03",
+      "ZH-LEX-C45-TODAY45-04",
+      "ZH-LEX-C45-TODAY45-05"
+    ]
+  }
+}

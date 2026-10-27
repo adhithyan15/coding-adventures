@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:084c61e2ffda1045",
+  "lessonIds": [
+    "ZH-C137-jieri",
+    "ZH-W137-jie-joint",
+    "ZH-C137-chunjie",
+    "ZH-C137-guonian",
+    "ZH-C137-fangjia",
+    "ZH-C137-jiaqi"
+  ],
+  "tex": "chinese/book/chapters/ch137-holidays.tex"
+}

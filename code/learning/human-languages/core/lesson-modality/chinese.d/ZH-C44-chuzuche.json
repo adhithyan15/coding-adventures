@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C44-chuzuche",
+    "language": "chinese",
+    "chapter": 44,
+    "sequence": 3710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d04d02dde6aaf39c"
+  },
+  "findings": []
+}

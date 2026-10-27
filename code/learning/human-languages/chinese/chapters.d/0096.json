@@ -1,0 +1,21 @@
+{
+  "chapter": 96,
+  "title": "Because",
+  "label": "ch:zh-because",
+  "canDo": "I can give one reason with 因为.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C96-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Giving one reason with 因为, and what follows from it with suǒyǐ, built on one new written character: 因.",
+    "assesses": [
+      "ZH-LEX-C96-YINWEI-01",
+      "ZH-SCRIPT-YIN-01",
+      "ZH-LEX-C96-SUOYI-01",
+      "ZH-LEX-C96-SHUFU-01",
+      "ZH-PERFORMANCE-BECAUSE-01"
+    ]
+  }
+}

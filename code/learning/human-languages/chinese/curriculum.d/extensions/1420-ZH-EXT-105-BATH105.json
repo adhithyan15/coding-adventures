@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-105-BATH105",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a towel, a toothbrush, toothpaste, soap and a mirror.",
+  "prerequisites": []
+}

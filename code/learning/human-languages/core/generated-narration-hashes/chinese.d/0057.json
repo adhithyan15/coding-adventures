@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:02fd0c872cb8b831",
+  "lessonIds": [
+    "ZH-C57-fangzi",
+    "ZH-C57-fangjian",
+    "ZH-C57-zhuozi",
+    "ZH-C57-yizi",
+    "ZH-C57-zher",
+    "ZH-R57-review-53-57",
+    "ZH-R57-review-final-57"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch57.txt",
+  "json": "chinese/narration/ch57.json",
+  "textHash": "fnv1a64:ea45697768c0a945",
+  "jsonHash": "fnv1a64:1e153dd338377cde",
+  "findings": []
+}

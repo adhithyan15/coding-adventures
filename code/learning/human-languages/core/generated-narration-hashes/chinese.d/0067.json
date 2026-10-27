@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:4172caf40ee7b49f",
+  "lessonIds": [
+    "ZH-C67-ma",
+    "ZH-W67-ma-horse",
+    "ZH-C67-gou",
+    "ZH-C67-mao",
+    "ZH-C67-niao",
+    "ZH-C67-yu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch67.txt",
+  "json": "chinese/narration/ch67.json",
+  "textHash": "fnv1a64:5cbed0d8fab0e3d2",
+  "jsonHash": "fnv1a64:371e6000fd9adf94",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C146-yeli",
+    "language": "chinese",
+    "chapter": 146,
+    "sequence": 11190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fc89e82bc10779d"
+  },
+  "findings": []
+}

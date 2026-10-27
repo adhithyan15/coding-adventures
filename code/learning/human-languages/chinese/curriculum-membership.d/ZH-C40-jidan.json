@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C40-jidan",
+  "pathSegment": "ZH-PATH-40-FRUIT40",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-40-FRUIT40",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:6487cc949f004631",
+  "lessonIds": [
+    "ZH-C33-nan",
+    "ZH-W33-nan",
+    "ZH-C33-nanren",
+    "ZH-C33-nuren",
+    "ZH-C33-meimei",
+    "ZH-C33-haizi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch33.txt",
+  "json": "chinese/narration/ch33.json",
+  "textHash": "fnv1a64:5da6613564daebc7",
+  "jsonHash": "fnv1a64:cbd941188f0600cc",
+  "findings": []
+}

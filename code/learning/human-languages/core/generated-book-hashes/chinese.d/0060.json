@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:23c29fecbf034171",
+  "lessonIds": [
+    "ZH-C60-bai",
+    "ZH-W60-bai-white",
+    "ZH-C60-yanse",
+    "ZH-C60-hong",
+    "ZH-C60-hei",
+    "ZH-C60-lan"
+  ],
+  "tex": "chinese/book/chapters/ch60-colours.tex"
+}

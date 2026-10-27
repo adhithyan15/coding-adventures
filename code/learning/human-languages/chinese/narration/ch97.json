@@ -1,0 +1,1061 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 97,
+  "title": "My Day in Characters",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f87863acd65b35e5",
+  "lessons": [
+    {
+      "id": "ZH-C97-xiaoshi",
+      "sequence": 7770,
+      "title": "小时 (xiǎoshí) — hour",
+      "headword": "小时",
+      "romanization": "xiǎoshí",
+      "gloss": "hour",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50b44641856d5c66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens with a word for measuring a day."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 为什么, then answer it with 因为 — wèishénme, yīnwèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 为什么, then answer it with 因为 — *wèishénme*, *yīnwèi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒ bù shūfu, I'm not feeling well — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒ bù shūfu*, I'm not feeling well — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shíhou, a time; a moment — R4, recognition at distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shíhou*, a time; a moment — **R4**, recognition at distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiǎoshíhou, in childhood — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiǎoshíhou*, in childhood — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 小时",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "小时 — xiǎoshí — \"hour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "一个小时 yí ge xiǎoshí — an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the second character in your hand. It is the shí of shíhou and xiǎoshíhou."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "小时 (xiǎoshí) is built from 小 'small' and 时 (shí) 'time'. Both are inherited from Middle Chinese, sjewX and dzyi (Guangyun, in Baxter's transcription), dzyi glossed 'a season; a time'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "一 before 个 rises: yí ge xiǎoshí, an hour. Before the other tones it falls: yì tiān, a day; yì nián, a year. Time words count with 一 as often as anything does."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎoshí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎoshí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎoshí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎoshí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "一个小时 — yí ge xiǎoshí — an hour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 一个小时 — *yí ge xiǎoshí* — an hour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "一天 — yì tiān — a day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 一天 — *yì tiān* — a day]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "一年 — yì nián — a year",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 一年 — *yì nián* — a year]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shíhou, then xiǎoshí, and hear the same shí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shíhou*, then *xiǎoshí*, and hear the same shí]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 小时 mean? (\"Hour\".) Say an hour, and listen to 一. (yí ge xiǎoshí: 一 rises before 个.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W97-shi-time",
+      "sequence": 7780,
+      "title": "时 (shí) — 日, then the right half of 对",
+      "headword": "时",
+      "romanization": "shí",
+      "gloss": "时 — 日, then the right half of 对",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:293c6ee82158acbc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 日, then the right half of 对",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 日, then the right half of 对 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiǎoshí — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiǎoshí* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "日 对."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — rì, duì",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *rì*, *duì*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 日, then the right half of 对",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "时 (shí)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces you own, side by side."
+            },
+            {
+              "kind": "speech",
+              "text": "日, four strokes, narrow, on the left: the left side, the top that turns down the right side, the middle bar, the bottom bar."
+            },
+            {
+              "kind": "speech",
+              "text": "The right half of 对, three strokes: the bar, the vertical that hooks to the left at its foot, then the dot."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 3 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "时 (shí), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 时, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 时 (shí)? (Seven.) Which character is on the left? (日.) Where have you written the right half? (At the end of 对.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 时 (shí), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C97-meitian",
+      "sequence": 7790,
+      "title": "měitiān — every day",
+      "headword": "měitiān",
+      "romanization": "měitiān",
+      "gloss": "every day",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33da17353d1ae4b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read the last lesson's character, then a day with 一 in front of it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "两个小时, aloud — liǎng ge xiǎoshí, two hours",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 两个小时, aloud — *liǎng ge xiǎoshí*, two hours]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 一天 — yì tiān, a day, with 一 falling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 一天 — *yì tiān*, a day, with 一 falling]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: měitiān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "měitiān — \"every day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ měitiān hē chá — I drink tea every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "měitiān is built from měi 'each' and tiān 'day', the 天 you write. Both are inherited from Middle Chinese, mwojX and then (Guangyun, in Baxter's transcription); the Guangyun glosses mwojX 'frequently', and 'each' is assumed from that, not quoted."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A time word goes early, after the person and before the verb: 我, měitiān, hē chá. yì tiān is one day; měitiān is every day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "měitiān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *měitiān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "měitiān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *měitiān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ měitiān hē chá — I drink tea every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ měitiān hē chá* — I drink tea every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yì tiān, then měitiān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yì tiān*, then *měitiān*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does měitiān mean? (\"Every day\".) Where does it go? (After the person, before the verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C97-yihou",
+      "sequence": 7800,
+      "title": "yǐhòu — after; afterwards",
+      "headword": "yǐhòu",
+      "romanization": "yǐhòu",
+      "gloss": "after; afterwards",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d125f59230c87a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then two words for school and after."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say měitiān, every day — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *měitiān*, every day — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 下课 — xiàkè, to finish class",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 下课 — *xiàkè*, to finish class]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hòu, after; behind — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hòu*, after; behind — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yǐhòu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǐhòu — \"after; afterwards\"."
+            },
+            {
+              "kind": "speech",
+              "text": "xiàkè yǐhòu, wǒ qù chī fàn — After class I go and eat."
+            },
+            {
+              "kind": "speech",
+              "text": "yí ge xiǎoshí yǐhòu — an hour later."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǐhòu is built from yǐ, the yǐ of kěyǐ, and hòu 'after', the hòu you know. Both are inherited from Middle Chinese, yiX and huwX (Guangyun, in Baxter's transcription), huwX glossed 'after, in order'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǐhòu comes after the thing it follows: xiàkè yǐhòu, after class; yí ge xiǎoshí yǐhòu, an hour later."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǐhòu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǐhòu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǐhòu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǐhòu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàkè yǐhòu, wǒ qù chī fàn — After class I go and eat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàkè yǐhòu, wǒ qù chī fàn* — After class I go and eat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yí ge xiǎoshí yǐhòu — an hour later",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yí ge xiǎoshí yǐhòu* — an hour later]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hòu, then yǐhòu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hòu*, then *yǐhòu*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yǐhòu mean? (\"After; afterwards\".) Where does it go? (After the thing it follows: xiàkè yǐhòu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C97-reading",
+      "sequence": 7810,
+      "title": "(reading) (jīntiān shì xīngqītiān) — a Sunday at home",
+      "headword": "(reading)",
+      "romanization": "jīntiān shì xīngqītiān",
+      "gloss": "a Sunday at home in fifty-seven characters, every one of them written by the reader",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:f9747e433708c522",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Fifty-seven characters in a row, and every one is a character you write."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiàkè yǐhòu, after class — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiàkè yǐhòu*, after class — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiàoshì, a classroom — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiàoshì*, a classroom — **R3**, durable]"
+            },
+            {
+              "kind": "speech",
+              "text": "上课 下课."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both aloud, with nothing said first — shàngkè, xiàkè",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both aloud, with nothing said first — *shàngkè*, *xiàkè*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "今天是星期天 我和妈妈都在家 妈妈做饭 我看书 我想喝水 也想吃饭 妈妈说 饭太多了 我说 太好了 下午两点 我们去买书 因为我很喜欢看书."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage through once without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage through once without stopping; do not translate as you go]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and this time notice where the day turns: the line with the time in it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and this time notice where the day turns: the line with the time in it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the pinyin, after you have tried",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīntiān shì xīngqītiān wǒ hé māma dōu zài jiā māma zuò fàn wǒ kàn shū wǒ xiǎng hē shuǐ yě xiǎng chī fàn māma shuō fàn tài duō le wǒ shuō tài hǎo le xiàwǔ liǎng diǎn wǒmen qù mǎi shū yīnwèi wǒ hěn xǐhuan kàn shū."
+            },
+            {
+              "kind": "speech",
+              "text": "One line per clause, and no punctuation, as this book prints Chinese: the line breaks carry the pauses. 饭太多了 is 太 … 了 as a complaint, too much rice; 太好了 a line later is the same frame as delight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the passage aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the passage aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C97-reading-time",
+              "prompt": "At what time do they go to buy books?",
+              "assesses": [
+                "ZH-SKILL-READ-A1-PASSAGE-01",
+                "ZH-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "2",
+                "two",
+                "two o'clock",
+                "两点",
+                "liǎng diǎn",
+                "2pm"
+              ],
+              "feedback": {
+                "correct": "两点: two in the afternoon.",
+                "incorrect": "下午两点: two o'clock in the afternoon."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who is at home? (我和妈妈: the writer and Mum.) Why do they go to buy books? (因为我很喜欢看书.) Which line is a complaint, and which a delight? (饭太多了, then 太好了.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W97-my-own-line",
+      "sequence": 7820,
+      "title": "My own line — the first Chinese with no model",
+      "headword": "(my own line)",
+      "romanization": "",
+      "gloss": "your own line of Chinese, chosen from a closed supply of known words, with nothing to copy",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8552e5ea2ca0a350",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you have written so far had something to reach for: a model to trace, a word somebody said, a sentence printed above the space."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This does not. You choose the words, from a supply that is closed: what this book has given you."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 两个小时 — liǎng ge xiǎoshí, two hours",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 两个小时 — *liǎng ge xiǎoshí*, two hours]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — controlled composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write one line of your own about your day. Three parts, in your own words: where you are, with 在; what you want, with 想要 or 要; and for how long, with 一个小时 or 两个小时. If you want a second thing, 也 brings it in, in front of its verb."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Some words you will want have characters you have not written yet: měitiān, every day; yǐhòu, after. Write those in pinyin, inside the line, with their tone marks. This task allows that, and it allows nothing else: a character you can read but have not learned to write is not one you produce, so it goes in pinyin too."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three checks belong to the hand. Write each character in the stroke order you learned: 时 (shí) is 日 first, narrow, then the hooked vertical and the dot. Give every character the same size of square, two-stroke 了 as much as ten-stroke 都. And leave a space between clauses: no Chinese comma or full stop, as this book prints them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the line. Then read it back, and check that every pinyin word has its tone marks before you check anything else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which words did you write in pinyin? (Any whose characters you have not written: měitiān, yǐhòu.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which piece of 时 (shí) comes first? (日, narrow, on the left.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what did you choose here that the earlier lessons chose for you? (The words.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-W97-my-own-line-hour",
+              "prompt": "Write the word for an hour, in characters.",
+              "assesses": [
+                "ZH-SCRIPT-SHI-TIME-01",
+                "ZH-LEX-C97-XIAOSHI-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "小时",
+                "xiǎoshí",
+                "xiaoshi"
+              ],
+              "feedback": {
+                "correct": "小时: 小, then 日 and the right half of 对.",
+                "incorrect": "小时. 时 is 日 on the left, then the hooked vertical and the dot."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

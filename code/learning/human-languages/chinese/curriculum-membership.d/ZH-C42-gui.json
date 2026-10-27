@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C42-gui",
+  "pathSegment": "ZH-PATH-42-SHOP42",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-42-SHOP42",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 65,
+  "title": "Excuse Me",
+  "label": "ch:zh-excuse-me",
+  "canDo": "I can say excuse me, ask politely, and ask somebody to open or shut something.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ZH-C65-guan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: I can say excuse me, ask politely, and ask somebody to open or shut something.",
+    "assesses": [
+      "ZH-LEX-C65-SORRY65-01",
+      "ZH-LEX-C65-SORRY65-03",
+      "ZH-LEX-C65-SORRY65-04",
+      "ZH-LEX-C65-SORRY65-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W74-ke-guest",
+  "pathSegment": "ZH-PATH-74-VISIT74",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-74-VISIT74",
+      "order": 3
+    }
+  ]
+}
