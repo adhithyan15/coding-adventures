@@ -72,9 +72,10 @@ The frontend covers everything in
 | `(let* ((x e)...) body...)`       | `Block` with `LetStarBinding`s        |
 | `(begin e1 e2 ...)`               | `Block` with `ExprStmt`s              |
 | `(lambda (a b) body...)`          | `MakeClosure` + synthesised `Function`|
-| `(f a b)` — `f` top-level         | `DirectCall`                          |
 | `(f a b)` — `f` local             | `IndirectCall`                        |
-| `(+ a b)`, `(cons a b)`, etc.     | `BuiltinCall`                         |
+| `(f a b)` — `f` top-level fn      | `DirectCall`                          |
+| `(f a b)` — `f` top-level value   | `IndirectCall` on the `Global`        |
+| `(+ a b)`, `(cons a b)`, etc.     | `BuiltinCall` (if nothing above binds the name) |
 
 LANG48 typed forms (records, unions, match, type annotations) are
 **deferred** in this v0 frontend — they exist in the Twig AST but
@@ -82,19 +83,48 @@ the lowerer treats them as errors.  A later spec will cover them.
 
 ## Apply-site dispatch
 
-The frontend commits to call shape at lowering time, matching the
-existing `twig-ir-compiler` table from TW00:
+The frontend commits to call shape at lowering time.  A call's function
+position resolves in **the same order as a name in value position**
+(TW00 "Name resolution: lexical scope wins"); the first row that binds
+the name picks the node:
 
-| Function position           | SIR node                                  |
-|-----------------------------|-------------------------------------------|
-| Top-level name              | `DirectCall { fn_name, ... }`             |
-| Local / param / capture     | `IndirectCall { target = VarRef, ... }`   |
-| Builtin (`+`, `cons`, ...)  | `BuiltinCall { name, ... }`               |
+| Row | Function position bound by                                  | SIR node                                  |
+|-----|-------------------------------------------------------------|-------------------------------------------|
+| 1   | Local / param / lambda param / capture (innermost first)    | `IndirectCall { target = VarRef, ... }`   |
+| 2   | Top-level function `define`                                 | `DirectCall { fn_name, ... }`             |
+| 3   | Top-level value `define`                                    | `IndirectCall { target = VarRef Global }` |
+| 4   | Builtin (`+`, `cons`, ...)                                  | `BuiltinCall { name, ... }`               |
+| —   | Nothing                                                     | `TwigLowerError` ("unresolved name")      |
 
-The lowerer maintains a `KnownNames` table (top-level function names
-+ builtin names) constructed in a first pass.  When emitting an
-`Apply` whose function position is a `VarRef`, the lowerer consults
-`KnownNames` to pick `DirectCall` vs `BuiltinCall` vs `IndirectCall`.
+A program may therefore redefine a builtin, and the definition wins
+in call position exactly as in value position:
+
+```scheme
+(define (car p) 42)
+(car (cons 1 2))               ; row 2: DirectCall car   → 42
+(define (f car) (car 1))       ; row 1: IndirectCall on the parameter
+(define + (let ((k 100)) (lambda (a b) k)))
+(+ 1 2)                        ; row 3: IndirectCall on Global + → 100
+```
+
+`print`'s SIR28 lowering to `__sys_write__` is part of row 4, so a
+user's `print` (function, value or local) is called like any other
+binding.  A `define` whose expression is a bare `lambda` is a function
+define (row 2).  Special forms (`if`, `let`, `let*`, `lambda`, `begin`,
+`quote`) are parsed to their own AST nodes before resolution, so they
+stay syntax.
+
+The lowerer builds the top-level function and value name sets in a
+first pass, so a call that appears before the definition it refers to
+still resolves to that definition.
+
+> **Revision (issue #18456).** This section used to list the rows as
+> "top-level name, then local, then builtin", and the implementation
+> checked the builtin table *first* in call position.  So
+> `(define (car p) 42) (car x)` lowered to `BuiltinCall car`, and a
+> parameter named like a top-level function lowered to a `DirectCall`
+> to that function.  `twig-to-semantic-ir` 0.2.1 follows the table
+> above.
 
 ## Closures
 
@@ -171,8 +201,10 @@ a `Scopes` stack:
   a `let` or `let*` form.
 - Lookup walks the stack top-down: first `LocalFrame`s and
   `LetFrame`s (the local scope), then the function's `params`, then
-  the function's `captures`, then the module's `globals` table, then
-  the builtin table.  The first hit wins and supplies the scope tag.
+  the function's `captures`, then the module's `globals` table (value
+  and function defines), then the builtin table.  The first hit wins
+  and supplies the scope tag.  Call position uses the same order; see
+  "Apply-site dispatch".
 
 A name with no hit anywhere is a `TwigLowerError`.
 
@@ -259,6 +291,11 @@ All errors carry the source position from the offending AST node.
   to SIR, assert equality.
 - **Validator integration**: every lowered SIR module must pass
   `semantic_ir::validate` cleanly.
+- **Name resolution** (`tests/name_resolution.rs`): for each row of
+  the apply-site table, programs that shadow a builtin or a top-level
+  definition, with the expected call node pinned.  The same programs run
+  end to end under `node` in `semantic-ir-to-javascript`'s
+  `tests/twig_name_resolution.rs`.
 
 Coverage target: **≥ 95%**.
 

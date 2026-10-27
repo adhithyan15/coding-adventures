@@ -4,6 +4,16 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed — Notes 0.3.0 rows, and Delete only for a saved note (E3)
+
+`noteRows()` builds the toolkit RecordList's six-field rows, `[id, "",
+title or "Untitled", "", "", ""]`, because `mosaic-pkg-notes` 0.3.0 lists
+notes with `RecordList`. The controller also sends `noteDeleteLabel`
+(TaskApp's new `note-delete-label` slot): "Delete" when the open note is one
+the engine has saved, "" for a new note whose id was only minted, so no
+Delete button is drawn for it. The same rule as task-mosaic-app.
+`__tests__/notes.test.ts` covers both.
+
 ### Fixed — a refused note Save is visible, and note drafts are capped (E5)
 
 `saveNote` with an *Attach to task* name that matched no task only called

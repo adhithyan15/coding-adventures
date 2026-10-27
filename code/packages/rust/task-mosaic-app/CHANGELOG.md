@@ -1,5 +1,23 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — Notes 0.3.0 rows, and Delete only for a saved note (E3)
+
+- **`note-rows` rows are the toolkit RecordList's** `[key, heading, title,
+  subtitle, meta, badge]`, because `mosaic-pkg-notes` 0.3.0 lists notes
+  with `RecordList`. The key is the note id and the title is the note's
+  title or "Untitled", as before; the other four fields are `""`, so each
+  row is still one line. Order is unchanged (by lower-cased title), and so
+  is index-to-note resolution in `select_note`.
+- **New prop `note-delete-label`** (TaskApp's new slot): `"Delete"` when the
+  open note exists in the active project, `""` otherwise. A new note's id is
+  minted by `new_note` before the engine hears of it, so an open id alone
+  does not mean there is something to delete; with `""`, DraftEditor draws
+  no Delete button. `delete_note` is unchanged and still harmless for an
+  unsaved id.
+- Tests: `note_rows_have_record_list_s_six_fields` and
+  `delete_is_offered_only_for_a_saved_note`; the props-coverage list gains
+  `note-delete-label`.
+
 ## [Unreleased] — a refused note Save says why; note drafts are capped (E5)
 
 - **Fixed: Save silently did nothing for an unknown task.** When the note's

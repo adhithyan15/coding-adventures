@@ -146,7 +146,10 @@ fn task_app_package_graph_lowers_notes_to_native_multiline_xaml() {
     let body_input = result
         .xaml
         .lines()
-        .find(|line| line.contains("AutomationProperties.AutomationId=\"notes-body-input\""))
+        // Notes 0.3.0's body is DraftEditor's part, matched by PREFIX: a
+        // later DraftEditor mount would rename it `draft-editor-body-m2`
+        // (lesson adding-an-earlier-mount-of-a-component-renames-the-later-mount-s).
+        .find(|line| line.contains("AutomationProperties.AutomationId=\"draft-editor-body"))
         .expect("Trestle Notes body TextBox");
     assert!(
         body_input.contains("AcceptsReturn=\"True\"")

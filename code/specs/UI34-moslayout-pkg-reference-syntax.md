@@ -478,6 +478,13 @@ How it behaves:
     A bare NAME that names one of the component's own slots is rewritten to
     `slot: <name>`, so it takes the call site's binding or the default.
     Before, it showed the consumer's slot of the same name.
+    The layout validator applies the same rule to every layout compiled
+    with its interface, packages and applications alike (UI29 §3.4, "A
+    bare name must be bound"), so outside call sites an unbound bare
+    NAME in a package now fails as the layout compile error
+    `UnboundName` (wrapped in `NestedCompileError`) before this check
+    runs; the check remains for call-site values, which need the
+    mounted component's interface.
   - The mount slot may be read only by the mount. A read anywhere else,
     whether as a prop, as a bare NAME, or inside an expression, is
     `ChildMountSlotReferenced { package, component, slot }`.

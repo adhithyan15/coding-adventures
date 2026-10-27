@@ -296,6 +296,62 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // Twig — untyped integer comparisons are SIGNED (#18483). twig-aot's
+    // untyped native path kept the frontend's `bool` result hint on
+    // `(< a b)`, so the op was `cmp_lt_bool`, and x86-64 / AArch64 compared
+    // that suffix unsigned: -8 became 0xFFFF_FFFF_FFFF_FFF8, and
+    // `(< -8 100)` was false. twig-aot now retypes an integer-word compare
+    // `i64`. Each row below takes the other branch under an unsigned compare.
+    // `(<= -5 -5)` alone is true either way (equal words), so its row also
+    // asks `(<= -5 0)`, which only a signed compare answers true. Not
+    // declared on Clr / Beam: not run where these rows were added (no
+    // `dotnet` / `erl`).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (< -8 100) 1 2)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (> -1 0) 1 2)",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (<= -5 -5) (if (<= -5 0) 1 3) 2)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (< (- 0 8) 0) 1 2)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A function's negative result, compared in the caller.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (neg7) (- 0 7)) (if (< (neg7) 0) 1 2)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // Twig — **E6d-1: TW3-core dynamic `cons`/`car`/`cdr` on the code-gen backends.**
     // `(car (cons 42 0))` allocates a heap cons pair `(42 . 0)` and reads its head.
     // The Twig frontend emits `call_builtin "cons"/"car" [any]`; the shared
@@ -15645,10 +15701,12 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        // Twig: the 49 rows through VM-041, plus 0.43.0's 82 call-boundary rows
-        // (389 cells: 32 rows x 6 columns, 7 x 5, 38 x 4, 5 x 2 — NativeAot and
-        // LLVM on every row, WASM/JVM/VM/JIT where they run it).
-        (Language::Twig, 131, 781),
+        // Twig: the 49 rows through VM-041, #18483's five negative-operand
+        // comparison rows on six columns (all but Clr / Beam), plus 0.43.0's 82
+        // call-boundary rows (389 cells: 32 rows x 6 columns, 7 x 5, 38 x 4,
+        // 5 x 2 — NativeAot and LLVM on every row, WASM/JVM/VM/JIT where they
+        // run it).
+        (Language::Twig, 136, 811),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),

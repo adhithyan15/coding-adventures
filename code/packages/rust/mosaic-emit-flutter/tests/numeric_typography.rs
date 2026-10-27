@@ -179,9 +179,25 @@ fn numeric_literals_and_invalid_authored_values() {
     assert!(fixture("22.5", "number")
         .unwrap()
         .contains("copyWith(fontSize: 22.5)"));
-    for value in ["0", "\"18px\"", "(textSize)", "auto"] {
+    for value in ["0", "\"18px\"", "(textSize)"] {
         assert!(fixture(value, "number").is_err(), "{value}");
     }
+    // A bare `auto` is a name reference that no `For` and no slot binds, so
+    // the layout compiler rejects it (`UnboundName`, UI29 §3.4) before the
+    // emitter's own font-size check is reached.
+    let model =
+        mosmodel_compiler::compile("component Typography { slot text-size : number ; }").unwrap();
+    let errors = moslayout_compiler::compile(
+        r#"layout Typography { Text ( content: "Title" , font-size: auto ) }"#,
+        Some(&model.descriptor_json),
+    )
+    .expect_err("auto");
+    assert!(
+        errors
+            .iter()
+            .any(|e| e.kind == moslayout_compiler::ErrorKind::UnboundName),
+        "{errors:?}"
+    );
     assert!(fixture("slot: text-size", "text").is_err());
 }
 
