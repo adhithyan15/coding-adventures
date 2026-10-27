@@ -1267,9 +1267,21 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 						return 1
 					}
 					changedPackageRoots = changedPkgs
-					if len(changedPkgs) > 0 {
+					// Repository-wide guards whose inputs changed are added
+					// without their dependents (see repository_inputs.go).
+					inputConsumers, consumerErr := repositoryInputConsumersForChange(changedFiles, packages, *language)
+					if consumerErr != nil {
+						fmt.Fprintf(os.Stderr, "Error selecting repository input consumers: %v\n", consumerErr)
+						return 1
+					}
+					if len(changedPkgs) > 0 || len(inputConsumers) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
 						affectedSet = expandAffectedSetWithPrereqs(graph, affectedSet)
+						affectedSet = withRepositoryInputConsumers(graph, affectedSet, inputConsumers)
+						if len(inputConsumers) > 0 {
+							fmt.Printf("Git diff: repository-wide inputs changed — also selecting %s\n",
+								strings.Join(sortedConsumerNames(inputConsumers), ", "))
+						}
 						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents and prerequisites)\n",
 							len(changedPkgs), len(affectedSet))
 					} else {
@@ -1624,11 +1636,20 @@ func emitBuildPlan(
 			fmt.Fprintf(os.Stderr, "Error selecting %s native fixture consumers: %v\n", goos, selectionErr)
 			return 1
 		}
-		platformAffected := affectedForGraph(
+		platformConsumers, consumerErr := repositoryInputConsumersForChange(changedFiles, platformPackages, language)
+		if consumerErr != nil {
+			fmt.Fprintf(os.Stderr, "Error selecting %s repository input consumers: %v\n", goos, consumerErr)
+			return 1
+		}
+		platformAffected := withRepositoryInputConsumers(
 			platformGraph,
-			platformChanged,
-			affectedSet,
-			force,
+			affectedForGraph(
+				platformGraph,
+				platformChanged,
+				affectedSet,
+				force,
+			),
+			platformConsumers,
 		)
 		platformOverrides[goos] = plan.PlatformState{
 			DependencyEdges:  graphEdges(platformGraph),
