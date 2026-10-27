@@ -860,8 +860,28 @@ func graphEdges(graph *directedgraph.Graph) [][2]string {
 	return edges
 }
 
+// affectedForGraph is affectedForGraphWithTriggers without any Cargo
+// dev-dependency triggers: the pure graph closure plus prerequisites.
 func affectedForGraph(
 	graph *directedgraph.Graph,
+	changedPackageRoots map[string]bool,
+	fallback map[string]bool,
+	force bool,
+) map[string]bool {
+	return affectedForGraphWithTriggers(graph, nil, changedPackageRoots, fallback, force)
+}
+
+// affectedForGraphWithTriggers computes one platform's affected set:
+//
+//	closure  = graph.AffectedNodes(changed)          — changed + dependents
+//	closure ∪= triggers[a] for every a in closure    — dev-dependents, ONE hop
+//	affected = closure + its prerequisites
+//
+// force means "everything" (nil); a nil change list means Git gave no answer,
+// so the caller's fallback stands; an empty one selects nothing.
+func affectedForGraphWithTriggers(
+	graph *directedgraph.Graph,
+	triggers resolver.TestTriggers,
 	changedPackageRoots map[string]bool,
 	fallback map[string]bool,
 	force bool,
@@ -875,8 +895,38 @@ func affectedForGraph(
 	if len(changedPackageRoots) == 0 {
 		return map[string]bool{}
 	}
-	affected := graph.AffectedNodes(changedPackageRoots)
+	affected := withDevDependents(graph.AffectedNodes(changedPackageRoots), triggers)
 	return expandAffectedSetWithPrereqs(graph, affected)
+}
+
+// withDevDependents adds, for every package in a build closure, the packages
+// whose Cargo.toml dev-depends on it (resolver.TestTriggers). Their tests
+// link something that changed, so they must re-run.
+//
+// It is applied exactly once, to the closure and nothing else:
+//
+//   - not transitively — a dev-dependent's library did not change, so its own
+//     dependents (and its own dev-dependents) have nothing new to test, and a
+//     dev-dependency cycle (A dev-depends on B, B depends on A) cannot loop;
+//   - not to prerequisites — expandAffectedSetWithPrereqs runs AFTER this, and
+//     the packages it adds are scheduled only so a fresh runner can build,
+//     not because they changed.
+//
+// The input set is not modified; a nil set ("everything") stays nil.
+func withDevDependents(closure map[string]bool, triggers resolver.TestTriggers) map[string]bool {
+	if closure == nil || len(triggers) == 0 {
+		return closure
+	}
+	union := make(map[string]bool, len(closure))
+	for name := range closure {
+		union[name] = true
+	}
+	for name := range closure {
+		for _, dependent := range triggers.Dependents(name) {
+			union[dependent] = true
+		}
+	}
+	return union
 }
 
 func affectedListFromSet(affectedSet map[string]bool) []string {
@@ -980,6 +1030,9 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// Every package on this platform, before any shard or language filter.
 	var knownPackages []discovery.Package
 	var graph *directedgraph.Graph
+	// Cargo dev-dependency triggers, applied one hop past the graph closure.
+	// Plan-file runs leave it nil: their affected set already includes them.
+	var testTriggers resolver.TestTriggers
 	var affectedSet map[string]bool
 	var changedPackageRoots map[string]bool
 	var changedFilesForPlan []string
@@ -1206,7 +1259,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		fmt.Printf("Discovered %d packages\n", len(packages))
 
 		// Step 4: Resolve dependencies.
-		graph, err = resolver.ResolveDependencies(packages)
+		graph, testTriggers, err = resolver.ResolveWithTestTriggers(packages)
 		if err != nil {
 			message, exitCode := formatResolverError(err)
 			fmt.Fprintln(os.Stderr, message)
@@ -1276,6 +1329,9 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 					}
 					if len(changedPkgs) > 0 || len(inputConsumers) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
+						// Cargo dev-dependents of the closure, one hop, before
+						// prerequisites (see withDevDependents).
+						affectedSet = withDevDependents(affectedSet, testTriggers)
 						affectedSet = expandAffectedSetWithPrereqs(graph, affectedSet)
 						affectedSet = withRepositoryInputConsumers(graph, affectedSet, inputConsumers)
 						if len(inputConsumers) > 0 {
@@ -1630,7 +1686,7 @@ func emitBuildPlan(
 	platformLanguages := make(map[string]bool)
 	for _, goos := range []string{"linux", "darwin", "windows"} {
 		platformPackages := packagesForPlatform(packages, goos)
-		platformGraph, err := resolver.ResolveDependencies(platformPackages)
+		platformGraph, platformTriggers, err := resolver.ResolveWithTestTriggers(platformPackages)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error resolving %s build plan: %v\n", goos, err)
 			return 1
@@ -1647,8 +1703,9 @@ func emitBuildPlan(
 		}
 		platformAffected := withRepositoryInputConsumers(
 			platformGraph,
-			affectedForGraph(
+			affectedForGraphWithTriggers(
 				platformGraph,
+				platformTriggers,
 				platformChanged,
 				affectedSet,
 				force,
