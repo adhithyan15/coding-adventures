@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W111-bian",
+  "pathSegment": "ZH-PATH-111-FRONT111",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-111-FRONT111",
+      "order": 1
+    }
+  ]
+}

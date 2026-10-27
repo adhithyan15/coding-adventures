@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:b0218c17d1b9df35",
+  "lessonIds": [
+    "ZH-C151-kandao",
+    "ZH-W151-dao-arrive",
+    "ZH-C151-result",
+    "ZH-C151-xuehui",
+    "ZH-C151-tingdong",
+    "ZH-C151-kandong",
+    "ZH-C151-zuowan",
+    "ZH-C151-practice"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch151.txt",
+  "json": "chinese/narration/ch151.json",
+  "textHash": "fnv1a64:00341a73802ac159",
+  "jsonHash": "fnv1a64:ad7edd00ec3c3594",
+  "findings": []
+}

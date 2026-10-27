@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:a496c25f2f2f641f",
+  "lessonIds": [
+    "ZH-C47-nian",
+    "ZH-W47-nian",
+    "ZH-C47-yue",
+    "ZH-C47-mingnian",
+    "ZH-W47-ming-bright",
+    "ZH-C47-jinnian",
+    "ZH-C47-riqi",
+    "ZH-R47-review-43-47"
+  ],
+  "tex": "chinese/book/chapters/ch47-months-and-years.tex"
+}

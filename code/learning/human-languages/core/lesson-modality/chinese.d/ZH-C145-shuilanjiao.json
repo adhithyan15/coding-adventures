@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C145-shuilanjiao",
+    "language": "chinese",
+    "chapter": 145,
+    "sequence": 11160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:29b5f9d3a0bc97b7"
+  },
+  "findings": []
+}

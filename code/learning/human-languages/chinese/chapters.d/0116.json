@@ -1,0 +1,21 @@
+{
+  "chapter": 116,
+  "title": "Things I Carry",
+  "label": "ch:zh-things-i-carry",
+  "canDo": "I can say I have my wallet, passport, watch and umbrella, and say I have lost something.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-R116-review-111-116",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: I can say I have my wallet, passport, watch and umbrella, and say I have lost something.",
+    "assesses": [
+      "ZH-LEX-C116-CARRY116-01",
+      "ZH-LEX-C116-CARRY116-02",
+      "ZH-LEX-C116-CARRY116-03",
+      "ZH-LEX-C116-CARRY116-04",
+      "ZH-LEX-C116-CARRY116-05"
+    ]
+  }
+}

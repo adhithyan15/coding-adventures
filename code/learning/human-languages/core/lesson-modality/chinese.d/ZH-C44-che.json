@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C44-che",
+    "language": "chinese",
+    "chapter": 44,
+    "sequence": 3670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c47af9d8c2a8360b"
+  },
+  "findings": []
+}

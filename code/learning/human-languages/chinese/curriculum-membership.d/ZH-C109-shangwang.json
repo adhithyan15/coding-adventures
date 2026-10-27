@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C109-shangwang",
+  "pathSegment": "ZH-PATH-109-SCREEN109",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-109-SCREEN109",
+      "order": 0
+    }
+  ]
+}

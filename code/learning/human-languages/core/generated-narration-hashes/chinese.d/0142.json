@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:7b0d286f5b5e7ad5",
+  "lessonIds": [
+    "ZH-C142-tuodi",
+    "ZH-C142-laji",
+    "ZH-C142-shai",
+    "ZH-C142-zhengli",
+    "ZH-C142-jiaohua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch142.txt",
+  "json": "chinese/narration/ch142.json",
+  "textHash": "fnv1a64:791c42beb249f61c",
+  "jsonHash": "fnv1a64:b12d79b0f472bfc2",
+  "findings": []
+}

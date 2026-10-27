@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-99-WASH99",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say wash, brush my teeth, wash my face, have a shower and comb my hair.",
+  "prerequisites": []
+}

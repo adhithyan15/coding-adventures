@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C37-zhege",
+    "language": "chinese",
+    "chapter": 37,
+    "sequence": 3320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65abf44a45ab37a2"
+  },
+  "findings": []
+}

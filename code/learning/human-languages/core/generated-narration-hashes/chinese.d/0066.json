@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:a760bbf85011558f",
+  "lessonIds": [
+    "ZH-C66-tianqi",
+    "ZH-W66-qi-air",
+    "ZH-C66-yu",
+    "ZH-W66-yu-rain",
+    "ZH-C66-xiayu",
+    "ZH-C66-xue",
+    "ZH-C66-feng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch66.txt",
+  "json": "chinese/narration/ch66.json",
+  "textHash": "fnv1a64:5d8d16fd957b50fe",
+  "jsonHash": "fnv1a64:72eca1657f8ac68a",
+  "findings": []
+}

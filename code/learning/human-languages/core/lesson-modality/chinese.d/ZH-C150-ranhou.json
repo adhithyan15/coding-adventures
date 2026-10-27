@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C150-ranhou",
+    "language": "chinese",
+    "chapter": 150,
+    "sequence": 12250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa1661633eb43ff5"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Thousands",
+  "label": "ch:zh-thousands",
+  "canDo": "I can count in thousands and ten thousands, say zero, and say how many in all.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C132-shu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: I can count in thousands and ten thousands, say zero, and say how many in all.",
+    "assesses": [
+      "ZH-LEX-C132-BIG132-03",
+      "ZH-LEX-C132-BIG132-04",
+      "ZH-LEX-C132-BIG132-05"
+    ]
+  }
+}

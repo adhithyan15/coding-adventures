@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:7f40c896e441cd81",
+  "lessonIds": [
+    "ZH-C102-yinliao",
+    "ZH-C102-guozhi",
+    "ZH-C102-kele",
+    "ZH-C102-pijiu",
+    "ZH-C102-binggan"
+  ],
+  "tex": "chinese/book/chapters/ch102-something-to-drink.tex"
+}

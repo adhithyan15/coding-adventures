@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C96-shufu",
+  "pathSegment": "ZH-PATH-96-BECAUSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-96-BECAUSE",
+      "order": 3
+    }
+  ]
+}

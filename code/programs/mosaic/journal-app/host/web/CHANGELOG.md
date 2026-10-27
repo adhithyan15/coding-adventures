@@ -2,6 +2,13 @@
 
 ## 0.1.0 — unreleased
 
+- **Timeline entries are Cards.** The tests open an entry by its *Open*
+  button's `aria-label` (`Open {title}`), not by a button with the title as
+  its text. A new test covers the row: the card shows the title, excerpt and
+  tags, the button says "Open" and reports `aria-pressed` for the open entry,
+  the `★` sits beside the button, nothing is nested in the button, and
+  activating it opens the entry (19 tests).
+
 - **Export (J6a).** The host creates Mosaic's browser file executor
   (`createBrowserFileEffects`) with the runtime, runs `files.*` effects
   synchronously from the click that raised them (a picker needs the gesture),

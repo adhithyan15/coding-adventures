@@ -122,13 +122,23 @@ fn corpus_holds(subset: &str, expected_releases: &[&str], min_cases: usize) -> (
             match (case.outcome_on(release), compiled) {
                 (Outcome::Runs { stdout, trap }, Ok(module)) => {
                     assert!(module.validate().is_empty(), "{release} {}", case.name);
-                    // C7: registry entries plus the ungated `const`/`ret`.
-                    for instr in &module.functions[0].instructions {
+                    // C7: registry entries plus the ungated `const`/`ret`; since
+                    // LANG83 PR7c-py also the branches of the module's own
+                    // `repr(float)` helpers and the `call`s between them. No op or
+                    // builtin names Python (`write_f64_py` is gone).
+                    let helpers: Vec<&str> = module.functions.iter().skip(1).map(|f| f.name.as_str()).collect();
+                    for instr in module.functions.iter().flat_map(|f| &f.instructions) {
+                        let ungated = match instr.op.as_str() {
+                            "const" | "ret" | "jmp" | "jmp_if_false" | "label" => true,
+                            "call" => instr.srcs.first().and_then(|s| s.as_var()).is_some_and(|f| helpers.contains(&f)),
+                            _ => false,
+                        };
                         assert!(
-                            registry_name(instr).is_some() || ["const", "ret"].contains(&instr.op.as_str()),
+                            registry_name(instr).is_some() || ungated,
                             "{release} {}: {instr:?} is neither a registry op nor ungated IIR",
                             case.name
                         );
+                        assert_ne!(registry_name(instr), Some("write_f64_py"), "{release} {}", case.name);
                     }
                     let ran = run_module(module).unwrap_or_else(|e| panic!("{release} {}: {e}", case.name));
                     assert_eq!(ran.stdout, stdout, "{release} {}: stdout", case.name);

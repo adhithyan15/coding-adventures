@@ -1,0 +1,22 @@
+{
+  "chapter": 140,
+  "title": "First and Half",
+  "label": "ch:zh-first-and-half",
+  "canDo": "I can say first, half, how many times, the most, and work a sum out.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R140-review-135-140",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: I can say first, half, how many times, the most, and work a sum out.",
+    "assesses": [
+      "ZH-LEX-C140-ORDER140-01",
+      "ZH-LEX-C140-ORDER140-02",
+      "ZH-LEX-C140-ORDER140-03",
+      "ZH-LEX-C140-ORDER140-04",
+      "ZH-LEX-C140-ORDER140-05",
+      "ZH-SCRIPT-BAN-HALF-01"
+    ]
+  }
+}

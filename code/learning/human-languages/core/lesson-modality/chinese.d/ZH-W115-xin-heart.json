@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W115-xin-heart",
+    "language": "chinese",
+    "chapter": 115,
+    "sequence": 8825,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d66d315b9c1cf142",
+    "detachableSegments": [
+      "Script — a dot, a lying hook, two dots"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

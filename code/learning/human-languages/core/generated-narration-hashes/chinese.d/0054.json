@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:80b888addd91ee8b",
+  "lessonIds": [
+    "ZH-C54-xuexi",
+    "ZH-C54-xie",
+    "ZH-C54-du",
+    "ZH-C54-wen",
+    "ZH-C54-ke"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch54.txt",
+  "json": "chinese/narration/ch54.json",
+  "textHash": "fnv1a64:9c9b82338dae85f8",
+  "jsonHash": "fnv1a64:be86a90e95e4739e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Free Time",
+  "label": "ch:zh-free-time",
+  "canDo": "I can say what I do for fun: play, sport, running and laughing.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C56-xiao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: I can say what I do for fun: play, sport, running and laughing.",
+    "assesses": [
+      "ZH-LEX-C56-PLAY56-03",
+      "ZH-LEX-C56-PLAY56-04",
+      "ZH-LEX-C56-PLAY56-05"
+    ]
+  }
+}

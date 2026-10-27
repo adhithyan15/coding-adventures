@@ -38,6 +38,21 @@ condition comes from PEG ordering, so `a ⏎ (b)` stays a call.
   newline-significant grammar, lookahead, repetition, the budget,
   hand-built streams, an empty stream, and a compiled-grammar fixture round trip.
 
+### Fixed — a parse tree whose owned copy would explode is refused
+
+The packrat memo shares nodes, so a grammar of stacked zero-width rules
+(`z1 = [ X ] ; z2 = z1 z1 ; … z40 = z39 z39 ;`) matched the empty input with 40
+shared nodes whose owned copy has 2⁴⁰ nodes: `to_grammar_node` never finished.
+Before copying, `parse` now counts the expanded size with
+`expanded_tree_size`, which is linear in the distinct nodes, non-recursive,
+memoized, saturating and stops at the limit. It fails with "parse tree too
+large: N nodes for M input tokens" when the size passes
+`MAX_TREE_NODES_PER_TOKEN` (64) × (tokens + 1), floored at
+`MAX_TREE_NODES_FLOOR` (65,536). Across 3,142 parses in the test suites of 22
+grammar crates, the largest real tree had 10.3 nodes per token (a 6× margin; 64 rather than 256 after the security review, to bound what a crafted grammar can allocate). Tests:
+`an_exponentially_shared_empty_tree_is_refused_before_copying` (rejected in
+well under a second) and `a_small_shared_empty_tree_still_parses`.
+
 ### Fixed — repetitions with a body that matches nothing no longer hang
 
 `{ }`, `{ }+` and `{ x // sep }` now stop after an iteration that succeeded

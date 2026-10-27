@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W155-cong-from",
+    "language": "chinese",
+    "chapter": 155,
+    "sequence": 12570,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:13fa526f4a1c0d0f",
+    "detachableSegments": [
+      "Script — 人 twice, the left one narrower"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

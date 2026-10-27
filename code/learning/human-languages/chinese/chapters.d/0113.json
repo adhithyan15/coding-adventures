@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Cooking",
+  "label": "ch:zh-cooking",
+  "canDo": "I can say cut, boil, stir-fry, roast and fry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C113-jian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: I can say cut, boil, stir-fry, roast and fry.",
+    "assesses": [
+      "ZH-LEX-C113-COOK113-03",
+      "ZH-LEX-C113-COOK113-04",
+      "ZH-LEX-C113-COOK113-05"
+    ]
+  }
+}

@@ -1,0 +1,992 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 110,
+  "title": "Things I Can Do",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:d8b6f680454b5308",
+  "lessons": [
+    {
+      "id": "ZH-C110-waiyu",
+      "sequence": 8560,
+      "title": "外语 (wàiyǔ) — foreign language",
+      "headword": "外语",
+      "romanization": "wàiyǔ",
+      "gloss": "foreign language",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf1c1957006dfdd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to charge a battery, then the Mandarin for to download."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 外语",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "外语 — wàiyǔ — \"foreign language\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我上网学外语 wǒ shàngwǎng xué wàiyǔ — I learn foreign languages online."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 外 (wài) — on the left the three-stroke top half of 多; on the right a vertical with a dot beside it. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "外语 (wàiyǔ) is built from 外 (wài) 'outside' and 语 'speech', both inherited from Middle Chinese, ngwajH and ngjoX (Guangyun, in Baxter's transcription): the speech from outside."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I have and can do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wàiyǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wàiyǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wàiyǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wàiyǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ shàngwǎng xué wàiyǔ — I learn foreign languages online.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ shàngwǎng xué wàiyǔ* — I learn foreign languages online.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to charge a battery, then the Mandarin for to download, then say wàiyǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to charge a battery, then the Mandarin for to download, then say *wàiyǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 外语 (wàiyǔ) mean? (\"Foreign language\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W110-wai",
+      "sequence": 8565,
+      "title": "外 (wài) — the top of 多, then a vertical and a dot",
+      "headword": "外",
+      "romanization": "wài",
+      "gloss": "外 — the top of 多, then a vertical and a dot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:012885204d2c45b4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the top of 多, then a vertical and a dot",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the top of 多, then a vertical and a dot and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wàiyǔ — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wàiyǔ* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "多 语."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — duō, yǔ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *duō*, *yǔ*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the top of 多, then a vertical and a dot",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "外 (wài)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, three strokes, the top half of 多: a short left-falling stroke, a stroke across that turns and sweeps down to the left, and a dot inside."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, two strokes: a long vertical, and a dot to its right."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 2 = five."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "外 (wài), all five, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 外, all five, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 外 (wài)? (Five.) Where have you written its left piece? (At the top of 多.) What is on the right? (A vertical and a dot.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 外 (wài), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C110-gangqin",
+      "sequence": 8570,
+      "title": "gāngqín — piano",
+      "headword": "gāngqín",
+      "romanization": "gāngqín",
+      "gloss": "piano",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f04a8ffd35840e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to download, then the Mandarin for foreign language."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gāngqín",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gāngqín — \"piano\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā jiā yǒu gāngqín — Her family has a piano."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gāngqín is built from gāng 'steel' and qín, a stringed instrument, both inherited from Middle Chinese, kang and gim (Guangyun, in Baxter's transcription); the dictionary describes the second as an instrument of five strings, later seven. The piano is a modern sense of the pair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I have and can do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāngqín",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāngqín*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāngqín, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāngqín*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā jiā yǒu gāngqín — Her family has a piano.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā jiā yǒu gāngqín* — Her family has a piano.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to download, then the Mandarin for foreign language, then say gāngqín again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to download, then the Mandarin for foreign language, then say *gāngqín* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gāngqín mean? (\"Piano\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C110-tan",
+      "sequence": 8580,
+      "title": "tán — to play an instrument; to pluck",
+      "headword": "tán",
+      "romanization": "tán",
+      "gloss": "to play an instrument; to pluck",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9589907a0c6f265c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for foreign language, then the Mandarin for piano."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tán",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tán — \"to play an instrument; to pluck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ huì tán gāngqín — I can play the piano."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tán is inherited from Middle Chinese dan (Guangyun, in Baxter's transcription), glossed 'to shoot' and named in a game of flicking pieces. Playing an instrument is not given there, so how the word came to that sense is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I have and can do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ huì tán gāngqín — I can play the piano.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ huì tán gāngqín* — I can play the piano.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for foreign language, then the Mandarin for piano, then say tán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for foreign language, then the Mandarin for piano, then say *tán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tán mean? (\"To play an instrument; to pluck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C110-huahua",
+      "sequence": 8590,
+      "title": "huàhuà — to paint pictures; to draw",
+      "headword": "huàhuà",
+      "romanization": "huàhuà",
+      "gloss": "to paint pictures; to draw",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bf78652d31dcaed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for piano, then the Mandarin for to play an instrument."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: huàhuà",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huàhuà — \"to paint pictures; to draw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "háizi xǐhuan huàhuà — Children love painting."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huàhuà is built from huà 'to paint' and its object huà 'a picture', one word used twice, inherited from Middle Chinese hweaH (Guangyun, in Baxter's transcription); the dictionary explains painting as laying the five colours on the likeness of things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I have and can do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huàhuà",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huàhuà*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huàhuà, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huàhuà*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háizi xǐhuan huàhuà — Children love painting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háizi xǐhuan huàhuà* — Children love painting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for piano, then the Mandarin for to play an instrument, then say huàhuà again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for piano, then the Mandarin for to play an instrument, then say *huàhuà* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does huàhuà mean? (\"To paint pictures; to draw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C110-tiaowu",
+      "sequence": 8600,
+      "title": "tiàowǔ — to dance",
+      "headword": "tiàowǔ",
+      "romanization": "tiàowǔ",
+      "gloss": "to dance",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e6512a7996593fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to play an instrument, then the Mandarin for to paint pictures."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tiàowǔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tiàowǔ — \"to dance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ xǐhuan tiàowǔ ma — Do you like dancing?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tiàowǔ is built from tiào 'to leap' and wǔ 'dance', both inherited from Middle Chinese, dew and mjuX (Guangyun, in Baxter's transcription); the dictionary glosses the second as song and dance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I have and can do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiàowǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiàowǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiàowǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiàowǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ xǐhuan tiàowǔ ma — Do you like dancing?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ xǐhuan tiàowǔ ma* — Do you like dancing?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to play an instrument, then the Mandarin for to paint pictures, then say tiàowǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to play an instrument, then the Mandarin for to paint pictures, then say *tiàowǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tiàowǔ mean? (\"To dance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R110-review-105-110",
+      "sequence": 8610,
+      "title": "Looking back: from In the Bathroom to Things I Can Do",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from In the Bathroom to Things I Can Do",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f90986843c84d1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for towel and toothbrush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "towel, toothbrush, toothpaste, soap, mirror",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: towel, toothbrush, toothpaste, soap, mirror]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "station, metro, bus, bicycle, to ride",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: station, metro, bus, bicycle, to ride]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to jump, to climb, to move house, to stop, to leave a place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to jump, to climb, to move house, to stop, to leave a place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to try on, to exchange, a pair of, size, a good fit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to try on, to exchange, a pair of, size, a good fit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go online, television, photo, to charge a battery, to download",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go online, television, photo, to charge a battery, to download]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "foreign language, piano, to play an instrument, to paint pictures, to dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: foreign language, piano, to play an instrument, to paint pictures, to dance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "站 试 网 外 (wài) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 站 试 网 外 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Towel? (máojīn.) Toothbrush? (yáshuā.) Toothpaste? (yágāo.) Soap? (féizào.) Mirror? (jìngzi.) Station? (车站, chēzhàn.) Metro? (dìtiě.) Bus? (gōngjiāochē.) Bicycle? (zìxíngchē.) To ride? (qí.) To jump? (tiào.) To climb? (pá.) To move house? (bān.) To stop? (tíng.) To leave a place? (líkāi.) To try on? (试, shì.) To exchange? (huàn.) A pair of? (shuāng.) Size? (大小, dàxiǎo.) A good fit? (héshì.) To go online? (上网, shàngwǎng.) Television? (diànshì.) Photo? (zhàopiàn.) To charge a battery? (chōngdiàn.) To download? (xiàzài.) Foreign language? (外语, wàiyǔ.) Piano? (gāngqín.) To play an instrument? (tán.) To paint pictures? (huàhuà.) To dance? (tiàowǔ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -403,6 +403,41 @@ pub struct GrammarParser {
 /// input.
 pub const DEFAULT_MAX_RULE_DEPTH: usize = 128;
 
+/// The largest owned tree a parse may build, per input token (EOF included).
+///
+/// The packrat memo makes the finished tree a DAG: a node built once can be
+/// the child of several parents. [`to_grammar_node`] copies that DAG into
+/// owned nodes, one copy per *appearance*, so a node shared `k` times costs
+/// `k` copies. For real grammars that is harmless — a node is shared only
+/// when an alternative re-uses a memoized sub-parse at the same position, and
+/// every node still sits above at least one token or is a short empty
+/// wrapper. A grammar that stacks zero-width rules can do far worse:
+///
+/// ```text
+/// z1 = [ X ] ;  z2 = z1 z1 ;  z3 = z2 z2 ;  …  z40 = z39 z39 ;
+/// ```
+///
+/// matches the empty input with 40 distinct shared nodes whose expansion is
+/// 2⁴⁰ nodes: the copy would never finish. So [`GrammarParser::parse`] first
+/// counts the expanded size ([`expanded_tree_size`], linear in the number
+/// of *distinct* nodes) and refuses a tree larger than this many nodes per
+/// input token, or [`MAX_TREE_NODES_FLOOR`], whichever is larger.
+///
+/// Why 64: measured over the test suites of 22 grammar crates (JavaScript,
+/// TypeScript, Python, Ruby, Perl, C, Java, C#, Haskell, SQL, Verilog,
+/// ALGOL, COBOL, Twig and others; 3,142 parses, inputs up to 100,003
+/// tokens), the largest owned tree had 10.3 nodes per input token, and no
+/// input over 100 tokens passed 9.5. 64 is a 6× margin over that. It also
+/// bounds what a crafted (non-exponential) grammar can make the copy
+/// allocate to about 64 owned nodes, a few KiB, per token, while an
+/// exponential expansion still fails at once instead of exhausting memory.
+pub const MAX_TREE_NODES_PER_TOKEN: usize = 64;
+
+/// The smallest tree budget, whatever the input length: a short input may
+/// legitimately produce a tree of a few hundred wrappers (an empty program
+/// still has its start rule and its statement-list scaffolding).
+pub const MAX_TREE_NODES_FLOOR: usize = 1 << 16;
+
 impl GrammarParser {
     /// Create a new grammar-driven parser (trace disabled).
     pub fn new(tokens: Vec<Token>, grammar: ParserGrammar) -> Self {
@@ -653,6 +688,35 @@ impl GrammarParser {
                 }
 
                 self.check_insertion_budget(&node)?;
+                // Refuse a tree whose owned copy would be out of proportion
+                // to the input before copying it (see
+                // `MAX_TREE_NODES_PER_TOKEN`).
+                let budget = self
+                    .tokens
+                    .len()
+                    .saturating_add(1)
+                    .saturating_mul(MAX_TREE_NODES_PER_TOKEN)
+                    .max(MAX_TREE_NODES_FLOOR);
+                let size = expanded_tree_size(&node, budget);
+                if size > budget {
+                    return Err(GrammarParseError {
+                        message: format!(
+                            "parse tree too large: {size} nodes for {} input tokens (limit {budget})",
+                            self.tokens.len()
+                        ),
+                        // Not `self.current()`: an empty stream has no token
+                        // to index.
+                        token: self.tokens.last().cloned().unwrap_or_else(|| Token {
+                            cv: None,
+                            type_: TokenType::Eof,
+                            value: String::new(),
+                            line: 1,
+                            column: 1,
+                            type_name: None,
+                            flags: None,
+                        }),
+                    });
+                }
 
                 // Post-parse hooks: transform the AST after parsing completes.
                 let mut result = to_grammar_node(&node);
@@ -1570,6 +1634,58 @@ fn split_angle_bracket_run(token: &Token, expected_type: &str) -> Option<(Token,
 // ===========================================================================
 // AST position computation
 // ===========================================================================
+
+/// The number of nodes and tokens [`to_grammar_node`] would create for
+/// `root`: every appearance of a shared node counts again, as it would be
+/// copied again.
+///
+/// It is computed without copying and without recursion. Each *distinct*
+/// node's expanded size is worked out once (post-order over an explicit
+/// stack, memoized by address), so the walk is linear in the DAG even when
+/// the expansion is exponential. Sizes saturate, and the walk stops as soon
+/// as any node's size passes `limit`: the caller only needs to know the tree
+/// is too big, not by how much.
+///
+/// | child kind        | contributes                              |
+/// |-------------------|------------------------------------------|
+/// | `Built::Token`    | 1                                        |
+/// | `Built::Node(n)`  | the expanded size of `n`, every time     |
+/// | the node itself   | 1                                        |
+fn expanded_tree_size(root: &Rc<BuiltNode>, limit: usize) -> usize {
+    let mut sizes: HashMap<*const BuiltNode, usize> = HashMap::new();
+    // (node, children already pushed?)
+    let mut stack: Vec<(&BuiltNode, bool)> = vec![(root.as_ref(), false)];
+    while let Some((node, expanded)) = stack.pop() {
+        let key = node as *const BuiltNode;
+        if sizes.contains_key(&key) {
+            continue;
+        }
+        if !expanded {
+            stack.push((node, true));
+            for child in &node.children {
+                if let Built::Node(inner) = child {
+                    if !sizes.contains_key(&(inner.as_ref() as *const BuiltNode)) {
+                        stack.push((inner.as_ref(), false));
+                    }
+                }
+            }
+            continue;
+        }
+        let mut size: usize = 1;
+        for child in &node.children {
+            let add = match child {
+                Built::Token(_) => 1,
+                Built::Node(inner) => sizes[&(inner.as_ref() as *const BuiltNode)],
+            };
+            size = size.saturating_add(add);
+        }
+        if size > limit {
+            return size;
+        }
+        sizes.insert(key, size);
+    }
+    sizes[&(root.as_ref() as *const BuiltNode)]
+}
 
 /// Convert a finished [`BuiltNode`] tree into the public, owned
 /// [`GrammarASTNode`] form. Runs once per parse, after the memo has done its
@@ -2991,5 +3107,51 @@ term       = NUMBER | NAME ;
         assert_eq!((gap.start_line, gap.end_line), (None, None));
         assert_eq!((tree.start_line, tree.start_column), (Some(1), Some(5)));
         assert_eq!((tree.end_line, tree.end_column), (Some(3), Some(9)));
+    }
+
+    /// A chain of zero-width rules that doubles at each level shares one
+    /// memoized node per level, so the parse itself is cheap, but its owned
+    /// copy would hold 2⁴⁰ nodes. The tree budget refuses it before any
+    /// copying, promptly.
+    #[test]
+    fn an_exponentially_shared_empty_tree_is_refused_before_copying() {
+        use grammar_tools::parser_grammar::parse_parser_grammar;
+        let mut source = String::from("start = z40 ;\nz1 = [ X ] ;\n");
+        for level in 2..=40 {
+            source.push_str(&format!("z{level} = z{prev} z{prev} ;\n", prev = level - 1));
+        }
+        let grammar = parse_parser_grammar(&source).unwrap();
+        let started = std::time::Instant::now();
+        let err = GrammarParser::new(vec![tok(TokenType::Eof, "")], grammar)
+            .parse()
+            .unwrap_err();
+        assert!(started.elapsed() < std::time::Duration::from_secs(1), "took {:?}", started.elapsed());
+        assert!(err.message.starts_with("parse tree too large:"), "{}", err.message);
+        assert!(err.message.contains("for 1 input tokens"), "{}", err.message);
+    }
+
+    /// The same shape, kept small, is an ordinary parse: sharing alone is
+    /// not refused, only an expansion past the budget.
+    #[test]
+    fn a_small_shared_empty_tree_still_parses() {
+        use grammar_tools::parser_grammar::parse_parser_grammar;
+        let mut source = String::from("start = z8 ;\nz1 = [ X ] ;\n");
+        for level in 2..=8 {
+            source.push_str(&format!("z{level} = z{prev} z{prev} ;\n", prev = level - 1));
+        }
+        let grammar = parse_parser_grammar(&source).unwrap();
+        let ast = GrammarParser::new(vec![tok(TokenType::Eof, "")], grammar).parse().unwrap();
+        // start + z8 + 2·z7 + … + 128·z1 = 1 + (2⁸ − 1) nodes.
+        fn count(node: &GrammarASTNode) -> usize {
+            1 + node
+                .children
+                .iter()
+                .map(|c| match c {
+                    ASTNodeOrToken::Node(n) => count(n),
+                    ASTNodeOrToken::Token(_) => 1,
+                })
+                .sum::<usize>()
+        }
+        assert_eq!(count(&ast), 256);
     }
 }

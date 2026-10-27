@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Long and Short",
+  "label": "ch:zh-long-and-short",
+  "canDo": "I can say long, short, tall, short of height, and new.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C61-xin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: I can say long, short, tall, short of height, and new.",
+    "assesses": [
+      "ZH-LEX-C61-LONG61-03",
+      "ZH-LEX-C61-LONG61-04",
+      "ZH-LEX-C61-LONG61-05"
+    ]
+  }
+}

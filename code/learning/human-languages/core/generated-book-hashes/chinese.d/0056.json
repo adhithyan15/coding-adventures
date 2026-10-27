@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:d907cac91db0430e",
+  "lessonIds": [
+    "ZH-C56-wan",
+    "ZH-C56-daqiu",
+    "ZH-C56-yundong",
+    "ZH-C56-paobu",
+    "ZH-C56-xiao"
+  ],
+  "tex": "chinese/book/chapters/ch56-free-time.tex"
+}

@@ -17,11 +17,17 @@
 //! boxes integer atoms as `TAG_INT` and routes all lisp ops through `call_builtin`).
 //! `to_lv` / `from_lv` convert at the builtin boundary.
 //!
-//! ## Coercions (`unbox_int` / `truthy`)
+//! ## Only the representation is registered
 //!
-//! These program-boundary coercions live in `dynval_runtime.c` (C) but not as named
-//! functions in the Rust crate — they're trivial and derived here from the crate's
-//! existing public primitives (`LispyValue::as_int` / `is_truthy`), NOT duplicated.
+//! The callbacks are the LANG83 PR7f dynamic-value primitives (`dyn_pair_new`,
+//! `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_tag`,
+//! `dyn_unbox_int`), each derived from the crate's public primitives
+//! (`LispyValue::as_int`, `bits`, `builtins::cons` …), not duplicated. Lisp's
+//! truthiness, `not`, `equal?` and exit coercion are not callbacks: since LANG83
+//! PR7f-2 `lower_dyn_repr` writes them as IIR in the module (truthiness and `not`
+//! inline, so a function that uses them still JIT-compiles; `__lisp_equal` and
+//! `__lisp_exit_code` as module functions, which run on the interpreter tier
+//! because they branch and call).
 //!
 //! ## Safety
 //!
@@ -84,47 +90,21 @@ fn b_cdr(a: &[Value]) -> Value {
 fn b_pair_p(a: &[Value]) -> Value {
     a.first().map(|x| builtins::pair_p(&[to_lv(x)]).map(from_lv).unwrap_or_else(|_| nil())).unwrap_or_else(nil)
 }
-fn b_not(a: &[Value]) -> Value {
-    a.first().map(|x| builtins::not(&[to_lv(x)]).map(from_lv).unwrap_or_else(|_| nil())).unwrap_or_else(nil)
-}
-fn b_equal(a: &[Value]) -> Value {
-    match (a.first(), a.get(1)) {
-        (Some(x), Some(y)) => builtins::equal_p(&[to_lv(x), to_lv(y)]).map(from_lv).unwrap_or_else(|_| nil()),
-        _ => nil(),
-    }
-}
-/// `dyn_truthy` — a tagged value → a raw machine `0`/`1` (false iff `#f`/nil),
-/// for the backend's `jmp_if_false` in a `COND`. Derived from `LispyValue::is_truthy`.
-fn b_truthy(a: &[Value]) -> Value {
-    Value::Int(a.first().map(|x| to_lv(x).is_truthy() as i64).unwrap_or(0))
-}
 /// `dyn_unbox_int` — a tagged integer → its raw machine value, the program-exit
 /// coercion for an integer result. Derived from `LispyValue::as_int` (`>> 3`).
 fn b_unbox_int(a: &[Value]) -> Value {
     Value::Int(a.first().and_then(|x| to_lv(x).as_int()).unwrap_or(0))
 }
-/// `dyn_to_exit_code` — the program-exit coercion for a **polymorphic** result
-/// (a `LAMBDA` whose return type is `any`): dispatch on the runtime tag, exactly as
-/// `__dyn_to_exit_code` does in `dynval_runtime.c`. Integer → its raw value;
-/// `#t`/`#f`/nil → `1`/`0`/`0`; a symbol or pair → its tagged word verbatim. Built
-/// from `LispyValue`'s existing predicates — not duplicated.
-fn b_to_exit_code(a: &[Value]) -> Value {
-    Value::Int(
-        a.first()
-            .map(|x| {
-                let lv = to_lv(x);
-                if let Some(n) = lv.as_int() {
-                    n
-                } else if lv.is_true() {
-                    1
-                } else if lv.is_false() || lv.is_nil() {
-                    0
-                } else {
-                    lv.bits() as i64 // symbol / pair: the tagged word, verbatim
-                }
-            })
-            .unwrap_or(0),
-    )
+/// `dyn_tag` — the tag number (`bits & 7`), the one query the Lisp lowering's
+/// compiler-written truthiness, `not`, `equal?` and exit coercion need (LANG83
+/// PR7f-2; they were the `dyn_truthy` / `dyn_not` / `dyn_equal` /
+/// `dyn_to_exit_code` callbacks here before).
+fn b_tag(a: &[Value]) -> Value {
+    Value::Int(a.first().map(|x| (to_lv(x).bits() & dynval_runtime::TAG_BITS) as i64).unwrap_or(0))
+}
+/// `dyn_is_nil` — the nil test as a tagged boolean.
+fn b_is_nil(a: &[Value]) -> Value {
+    a.first().map(|x| builtins::null_p(&[to_lv(x)]).map(from_lv).unwrap_or_else(|_| nil())).unwrap_or_else(nil)
 }
 
 /// Register every McCarthy `dyn_*` builtin on a VM + JIT pair, backed by the
@@ -133,15 +113,13 @@ fn b_to_exit_code(a: &[Value]) -> Value {
 /// compiled path) so the two agree.
 fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
     for (name, f) in [
-        ("dyn_cons", b_cons as fn(&[Value]) -> Value),
-        ("dyn_car", b_car),
-        ("dyn_cdr", b_cdr),
-        ("dyn_pair_p", b_pair_p),
-        ("dyn_not", b_not),
-        ("dyn_equal", b_equal),
-        ("dyn_truthy", b_truthy),
+        ("dyn_pair_new", b_cons as fn(&[Value]) -> Value),
+        ("dyn_pair_first", b_car),
+        ("dyn_pair_rest", b_cdr),
+        ("dyn_is_pair", b_pair_p),
+        ("dyn_is_nil", b_is_nil),
+        ("dyn_tag", b_tag),
         ("dyn_unbox_int", b_unbox_int),
-        ("dyn_to_exit_code", b_to_exit_code),
     ] {
         vm.builtins_mut().register(name, move |args: &[Value]| Ok(f(args)));
         backend.register_builtin(name, move |args: &[Value]| f(args));
@@ -163,7 +141,7 @@ pub fn run_mccarthy_on_jit(source: &str) -> Result<Option<i64>, LangAotError> {
     let mut module = compile_source_to_iir(Language::McCarthyLisp, source, "jit")?;
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
-    iir_builtin_lowering::lower_dyn_repr(&mut module);
+    iir_builtin_lowering::lower_dyn_repr(&mut module).map_err(|e| LangAotError::JitBackendError(e.to_string()))?;
 
     let mut vm = VMCore::new();
     let backend = GenericCirJit::new(); // default step-cap (fuel) bounds execution

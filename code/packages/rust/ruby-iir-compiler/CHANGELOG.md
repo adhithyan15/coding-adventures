@@ -7,6 +7,22 @@
   new `GrammarElement::AutoInsert`, whose inserted token and closers are
   token names.
 
+## Unreleased — LANG84 R1b
+
+### Added
+- The `rb-int-puts` corpus gains one positive case and two `.reject` cases,
+  each with a host ruby 3.3.6 `.cite`:
+  - `embedded_document_and_end` (positive): an `=begin`/`=end` document and
+    a `__END__` line leave `1` and `3`.
+  - `reject_heredoc` (`Lex`): its heredoc bodies hold `=begin`/`=end`, and
+    the opener is refused.
+  - `reject_unspaced_slash` (`Lex`): `puts 6 /2`, an over-refusal Ruby
+    accepts.
+- The release sweep now has 15 positive cases. `release_classes.csv` is
+  regenerated: the class digest changes because a case was added, and the
+  partition is still the single class {3.3.5, 3.3.6, 3.3.7}. The compiler
+  itself is unchanged, since comments and data emit no IIR.
+
 ## Unreleased — grammar-tools adjacency predicates (E6)
 
 ### Changed

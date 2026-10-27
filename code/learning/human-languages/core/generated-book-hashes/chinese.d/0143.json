@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:3b89ee6dc34a289c",
+  "lessonIds": [
+    "ZH-C143-miao",
+    "ZH-C143-fenzhong",
+    "ZH-C143-cha",
+    "ZH-C143-zhunshi",
+    "ZH-C143-bantian"
+  ],
+  "tex": "chinese/book/chapters/ch143-clock-words.tex"
+}

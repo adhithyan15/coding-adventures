@@ -7,6 +7,80 @@
   new `GrammarElement::AutoInsert`, whose inserted token and closers are
   token names.
 
+## Unreleased - the crate owns its `repr` oracle (LANG83 PR7e)
+
+- `write_float_matches_the_pr6a_repr_byte_for_byte` (was
+  `…_pr6a_python_repr_…`) compares the 1,248 values with a test-local
+  `repr_oracle` over `vm_core::float_format::shortest_digits`, because LANG83
+  PR7e removed vm-core's `python_repr` with the `write_f64_py` builtin; it
+  still also runs host `python3` when installed.
+  `the_repr_oracle_matches_host_python3` pins the oracle to strings host
+  `python3` printed. No code change: the release path has emitted no
+  `write_f64_py` since 0.4.0.
+
+## 0.4.0 - Unreleased - the compiler writes `repr(float)` (LANG83 PR7c-py)
+
+LANG83 PR7 says the IIR names no source language. This release takes
+Python's float layout out of every backend and puts it in the module, as
+0.7.0 of `javascript-iir-compiler` did for `String(x)`.
+
+### Changed
+
+- **`write_f64_py` is no longer emitted.** A release-path module that prints
+  a float carries four functions this compiler writes (new `float_repr`
+  module): `__py_write_float(x: f64) -> i64`, which is CPython 3's
+  `float_repr` (`nan`, `inf`/`-inf`, `0.0`/`-0.0`, fixed notation when
+  `-4 <= e < 16` with `.0` on an integral value, else `d.ddde±XX` with at
+  least two exponent digits), and the integer helpers `__py_digit_count`,
+  `__py_write_digits` and `__py_write_uint`. They are built from the
+  neutral `f64_class`, `f64_signbit`, `f64_digits` and `f64_exp10` plus
+  `add`/`sub`/`mul`/`div`, `cmp_*`, branches, `call` and `putchar`, so no
+  backend needs Python code. Every float `print` is one
+  `call __py_write_float` (its unused `0` always lands in the register
+  `py_repr`, so a print costs `main` no extra register) followed by
+  `putchar 10`. A module that prints no float (every `py-int-print` and
+  `py2-int-print` module) is exactly `main`, byte-identical to 0.3.0.
+  Python 2 and 3.0a1 (`py2`, `py30`) never print a float (their profile is
+  `Floats::None`), so nothing changes for them.
+- **The release runner's step budget is derived from the module it runs**
+  (`len(main) + 1 + (calls of __py_write_float in main) × 1,024`, capped
+  at `MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`, 257M; it was a flat
+  `MAX_IIR_INSTRUCTIONS`, 1M). A float print now runs the helper, up to
+  700 VM steps (`-1.7976931348623157e+308`) instead of one builtin call,
+  so the old budget refused valid programs: the 2,048-line, 64 KiB
+  `print(-1.2345678901234567e-308)` program the default frontend budgets
+  accept needs 1,423,362 steps. `MAX_STEPS_PER_FLOAT_PRINT` (1,024) bounds
+  one print, and the compiler's `main` is straight-line, so the per-module
+  bound is sound for its output. A hand-built looping module gets only
+  its own size's worth (`label L; jmp L` stops after 3 steps); a flat
+  257M ceiling would have let it spin for about 26 s in a release build
+  (security review).
+- `run_module` registers only `print_i64` and `putchar`.
+- `code/grammars/python/release_classes.csv` is regenerated: the 77
+  `py-float-print` rows have new digests. The classes partition the
+  releases as before ({3.6.0, 3.12.3, 3.13.16, 3.11.17, 3.16.0a1} and
+  {3.5.10}); no `py-int-print` or `py2-int-print` row changed.
+
+### Added
+
+- `write_float_matches_the_pr6a_python_repr_byte_for_byte`: 1,248 values
+  (every layout boundary, the specials and a xorshift sweep of bit
+  patterns, each with both signs) printed by the module's helper on
+  vm-core, byte for byte against vm-core's PR6a `python_repr`, and (when a
+  host `python3` is installed) against CPython running the same programs.
+- `one_float_print_stays_within_its_step_bound` measures the dearest print
+  over that sweep (700 steps) and pins it between half the bound and the
+  bound.
+- `the_step_budget_covers_the_largest_float_printing_program` runs the
+  largest program the default budgets accept for the dearest print line,
+  and checks it needs more than the old budget; it also runs a
+  trusted-budget module at vm-core's 65,536-register frame limit.
+- `the_float_helpers_are_emitted_only_into_modules_that_print_a_float`,
+  and the `float_repr` unit tests (neutral ops only, one `ret` per helper,
+  fully typed, no `mod`, only the entry helper reads the float).
+- `release_subsets`'s C7 check walks every function and accepts the
+  helpers' branches and `call`s between them; it rejects `write_f64_py`.
+
 ## Unreleased — LANG84 phase 7c, slice 3: `py-float-print`
 
 ### Added

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:58c142aba465399c",
+  "lessonIds": [
+    "ZH-C123-congming",
+    "ZH-C123-renzhen",
+    "ZH-C123-keai",
+    "ZH-C123-reqing",
+    "ZH-C123-guanxin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch123.txt",
+  "json": "chinese/narration/ch123.json",
+  "textHash": "fnv1a64:e9c73d8ea4609bf0",
+  "jsonHash": "fnv1a64:712b8571d432c336",
+  "findings": []
+}

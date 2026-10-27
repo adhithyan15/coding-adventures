@@ -1,4 +1,48 @@
 # Changelog — `twig-aot`
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).
+- `macos_arm64_smoke`'s closure-capture test coerces its integer result with `dyn_unbox_int` (it called `dyn_to_exit_code`).
+- Security review: `prepare_module_for_aot` returns `Result`; a module that defines or calls a compiler-reserved `__lisp_*` name is refused by `lower_dyn_repr` and surfaces as `AotError::Compile` from every native compile entry point, instead of letting a program function stand in for a Lisp rule.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `runtime/dynval_runtime.c`: `__dyn_cons` / `__dyn_car` / `__dyn_cdr` / `__dyn_pair_p` / `__dyn_null_p` / `__dyn_make_symbol` are renamed `__dyn_pair_new` / `__dyn_pair_first` / `__dyn_pair_rest` / `__dyn_is_pair` / `__dyn_is_nil` / `__dyn_symbol` (LANG83 PR7f's registry names, which the native backends map to `__` + name). New `int64_t __dyn_tag(uint64_t)`: the value's three-bit tag.
+- `dynval_runtime_golden`: new `c_tag_of_every_kind_matches_rust` pins `__dyn_tag` against `dynval-runtime`'s tag constants for an integer, nil, a symbol, `#f`, `#t` and a pair; the symbol tests are `c_symbol_*`.
+
+## Unreleased — LANG83 PR7e — no float writers in the runtime
+
+- `twig_runtime.c` drops `__twig_write_f64_py` / `__twig_write_f64_js` and
+  their layout code (`twig_write_f64`): the runtime holds no language's
+  float layout. The Burger–Dybvig core (`twig_f64_digits`) and
+  `__twig_f64_digits` / `__twig_f64_exp10` are unchanged.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- `__twig_trap`'s kind table (`TWIG_TRAP_KINDS`) renames id 7 from
+  `"Trap.ReferenceError"` to `"Trap.Unbound"`: the kind names the condition
+  (a name is unbound), not JavaScript's exception class. The id is unchanged,
+  so compiled code is unaffected; a native program that stops on it now
+  prints `trap: Trap.Unbound`. The comment no longer reserves ids from 1000
+  for language kinds, which LANG83 PR7d retired.
+- `runtime_trap_kind_table_matches_exception_kind` drops its
+  `LANGUAGE_TRAP_KINDS` check (the table is gone) and pins id 7's new name.
+
+## Unreleased — LANG83 PR7b — native runtime digit helpers
+
+- **`__twig_f64_digits(int64_t bits)` / `__twig_f64_exp10(int64_t bits)`** in
+  `runtime/twig_runtime.c`: the shortest round-trip significand `D` (no
+  trailing zeros) and the exponent of its leading digit, 0 for ±0, ±Infinity
+  and NaN. Both run `twig_f64_digits`, the core `__twig_write_f64_*` print
+  from, so the native backends' `f64_digits` / `f64_exp10` share it. Checked
+  against host `python3` on 122 108 values (every power of two, the
+  subnormal and finite edges, random bit patterns and short decimals) under
+  ASan/UBSan.
+- The runtime helpers are named `__twig_f64_digits` / `__twig_f64_exp10`, in
+  the runtime's own namespace. An `__iir_` name would have interposed on
+  iir-to-llvm's module-local 3-argument `@__iir_f64_digits` in any LLVM
+  program that links this runtime (found in security review).
+
 ## Unreleased — precise GC on every ABI; nested gc-core-capi build fixes
 
 - **The Windows precise-GC differentials run again.**

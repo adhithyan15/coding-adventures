@@ -58,7 +58,7 @@ fn symbols_f6() {
 #[test]
 fn lambda_and_label_f7() {
     // Direct application: the argument is boxed across the call and the
-    // polymorphic result coerced at the program exit by `dyn_to_exit_code`.
+    // polymorphic result coerced at the program exit by `__lisp_exit_code`.
     assert_eq!(run("((LAMBDA (X) X) 5)"), 5);
     assert_eq!(run("((LAMBDA (X) (CAR X)) (CONS 7 9))"), 7);
     assert_eq!(run("((LAMBDA (X) (CDR X)) (CONS 7 9))"), 9);

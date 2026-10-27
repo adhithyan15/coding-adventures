@@ -1,0 +1,23 @@
+{
+  "chapter": 74,
+  "title": "Visiting",
+  "label": "ch:zh-visiting",
+  "canDo": "I can ask a guest in, welcome them and introduce people.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ZH-R74-review-70-74",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: I can ask a guest in, welcome them and introduce people.",
+    "assesses": [
+      "ZH-LEX-C74-VISIT74-01",
+      "ZH-LEX-C74-VISIT74-02",
+      "ZH-LEX-C74-VISIT74-03",
+      "ZH-LEX-C74-VISIT74-04",
+      "ZH-LEX-C74-VISIT74-05",
+      "ZH-SCRIPT-JIN-ENTER-01",
+      "ZH-SCRIPT-KE-GUEST-01"
+    ]
+  }
+}

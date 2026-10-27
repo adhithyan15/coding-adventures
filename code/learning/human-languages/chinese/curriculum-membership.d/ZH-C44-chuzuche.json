@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C44-chuzuche",
+  "pathSegment": "ZH-PATH-44-PLACES44",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-44-PLACES44",
+      "order": 5
+    }
+  ]
+}

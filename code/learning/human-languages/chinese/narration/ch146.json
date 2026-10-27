@@ -1,0 +1,910 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 146,
+  "title": "Day and Night",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:3055790b1385903a",
+  "lessons": [
+    {
+      "id": "ZH-C146-baitian",
+      "sequence": 11180,
+      "title": "白天 (báitiān) — daytime",
+      "headword": "白天",
+      "romanization": "báitiān",
+      "gloss": "daytime",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8db3e62cea6841a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to lie in, then the Mandarin for hurry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 白天",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "白天 — báitiān — \"daytime\"."
+            },
+            {
+              "kind": "speech",
+              "text": "白天这儿很吵 báitiān zhèr hěn chǎo — It's noisy here in the daytime."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "白天 (báitiān) is built from 白 'white' and 天 'day, sky', both inherited from Middle Chinese, baek and then (Guangyun, in Baxter's transcription): the white, light part of the day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "báitiān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *báitiān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "báitiān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *báitiān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "báitiān zhèr hěn chǎo — It's noisy here in the daytime.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *báitiān zhèr hěn chǎo* — It's noisy here in the daytime.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to lie in, then the Mandarin for hurry, then say báitiān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to lie in, then the Mandarin for hurry, then say *báitiān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 白天 (báitiān) mean? (\"Daytime\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C146-yeli",
+      "sequence": 11190,
+      "title": "yèli — at night",
+      "headword": "yèli",
+      "romanization": "yèli",
+      "gloss": "at night",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fc89e82bc10779d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for hurry, then the Mandarin for daytime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yèli",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yèli — \"at night\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yèli hěn lěng — It's cold at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yèli is built from yè 'night' and 里 'inside', both inherited from Middle Chinese, yaeH and liX (Guangyun, in Baxter's transcription); the dictionary glosses the first 'dusk' and 'a time to rest'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yèli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yèli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yèli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yèli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yèli hěn lěng — It's cold at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yèli hěn lěng* — It's cold at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for hurry, then the Mandarin for daytime, then say yèli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for hurry, then the Mandarin for daytime, then say *yèli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yèli mean? (\"At night\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C146-banye",
+      "sequence": 11200,
+      "title": "bànyè — the middle of the night",
+      "headword": "bànyè",
+      "romanization": "bànyè",
+      "gloss": "the middle of the night",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7244843d42d93a9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for daytime, then the Mandarin for at night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bànyè",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bànyè — \"the middle of the night\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ bànyè è le — I got hungry in the middle of the night."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bànyè is built from 半 'half' and yè 'night', both inherited from Middle Chinese, panH and yaeH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bànyè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bànyè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bànyè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bànyè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ bànyè è le — I got hungry in the middle of the night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ bànyè è le* — I got hungry in the middle of the night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for daytime, then the Mandarin for at night, then say bànyè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for daytime, then the Mandarin for at night, then say *bànyè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bànyè mean? (\"The middle of the night\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C146-xing-wake",
+      "sequence": 11210,
+      "title": "xǐng — to wake up",
+      "headword": "xǐng",
+      "romanization": "xǐng",
+      "gloss": "to wake up",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2de9f9b1cfdec539",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for at night, then the Mandarin for the middle of the night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xǐng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xǐng — \"to wake up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ bànyè xǐng le yīnwèi wàibian hěn chǎo — I woke up in the middle of the night because it was noisy outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xǐng is inherited from Middle Chinese sengX (Guangyun, in Baxter's transcription), glossed 'drunkenness passing off', that is, sobering up. Waking from sleep is not given there, so how the word came to it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xǐng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xǐng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xǐng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xǐng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ bànyè xǐng le yīnwèi wàibian hěn chǎo — I woke up in the middle of the night because it was noisy outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ bànyè xǐng le yīnwèi wàibian hěn chǎo* — I woke up in the middle of the night because it was noisy outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for at night, then the Mandarin for the middle of the night, then say xǐng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for at night, then the Mandarin for the middle of the night, then say *xǐng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xǐng mean? (\"To wake up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C146-pingshi",
+      "sequence": 11220,
+      "title": "píngshí — usually; ordinarily",
+      "headword": "píngshí",
+      "romanization": "píngshí",
+      "gloss": "usually; ordinarily",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2de1561fa79260c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the middle of the night, then the Mandarin for to wake up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: píngshí",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "píngshí — \"usually; ordinarily\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ píngshí qī diǎn qǐchuáng — I usually get up at seven."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "píngshí is built from píng 'level, even' and 时 'time', both inherited from Middle Chinese, bjaeng and dzyi (Guangyun, in Baxter's transcription): the level, ordinary times."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for times of day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "píngshí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *píngshí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "píngshí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *píngshí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ píngshí qī diǎn qǐchuáng — I usually get up at seven.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ píngshí qī diǎn qǐchuáng* — I usually get up at seven.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the middle of the night, then the Mandarin for to wake up, then say píngshí again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the middle of the night, then the Mandarin for to wake up, then say *píngshí* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does píngshí mean? (\"Usually; ordinarily\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R146-review-141-146",
+      "sequence": 11230,
+      "title": "Looking back: from Travel and Fun to Day and Night",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Travel and Fun to Day and Night",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae9f18ed8757368f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to travel and a game."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to travel, a game, to stroll the shops, to take a walk, to go fishing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to travel, a game, to stroll the shops, to take a walk, to go fishing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to mop the floor, rubbish, to dry in the sun, to sort out, to water the plants",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to mop the floor, rubbish, to dry in the sun, to sort out, to water the plants]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "second (of time), minute (a length of time), to be short of, punctual, a long while",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: second (of time), minute (a length of time), to be short of, punctual, a long while]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "important, easy, simple, special, to find (that)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: important, easy, simple, special, to find (that)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reason, to run behind schedule, alarm clock, to lie in, hurry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reason, to run behind schedule, alarm clock, to lie in, hurry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daytime, at night, the middle of the night, to wake up, ordinarily",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: daytime, at night, the middle of the night, to wake up, ordinarily]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To travel? (lǚyóu.) A game? (yóuxì.) To stroll the shops? (guàngjiē.) To take a walk? (sànbù.) To go fishing? (diàoyú.) To mop the floor? (tuōdì.) Rubbish? (lājī.) To dry in the sun? (shài.) To sort out? (zhěnglǐ.) To water the plants? (jiāohuā.) Second (of time)? (miǎo.) Minute (a length of time)? (fēnzhōng.) To be short of? (chà.) Punctual? (zhǔnshí.) A long while? (半天, bàntiān.) Important? (重要, zhòngyào.) Easy? (róngyì.) Simple? (jiǎndān.) Special? (tèbié.) To find (that)? (juéde.) A reason? (yuányīn.) To run behind schedule? (晚点, wǎndiǎn.) Alarm clock? (nàozhōng.) To lie in? (shuì lǎnjiào.) Hurry? (gǎnkuài.) Daytime? (白天, báitiān.) At night? (yèli.) The middle of the night? (bànyè.) To wake up? (xǐng.) Ordinarily? (píngshí.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R146-review-final-146",
+      "sequence": 11240,
+      "title": "Day and Night — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85b5f3573ffe20bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for daytime and at night."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daytime, at night, the middle of the night, to wake up, ordinarily",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: daytime, at night, the middle of the night, to wake up, ordinarily]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Daytime? (白天, báitiān.) At night? (yèli.) The middle of the night? (bànyè.) To wake up? (xǐng.) Ordinarily? (píngshí.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

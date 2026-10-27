@@ -1,0 +1,1074 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 85,
+  "title": "Where Things Are",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:46137cb11ffbbb6c",
+  "lessons": [
+    {
+      "id": "ZH-C85-zai",
+      "sequence": 7000,
+      "title": "在 (zài) — at, in; to be somewhere",
+      "headword": "在",
+      "romanization": "zài",
+      "gloss": "to be at; in, at",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb4f0cac49729453",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens with the word that puts people and things in places."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhǔnbèi, to get ready — R1, the last word you met",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhǔnbèi*, to get ready — **R1**, the last word you met]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 这儿 — zhèr, here — R3, durable, from the chapter on home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 这儿 — *zhèr*, here — **R3**, durable, from the chapter on home]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pángbiān, beside — R2, a few chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pángbiān*, beside — **R2**, a few chapters back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 在",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "在 — zài — \"to be at; in, at\"."
+            },
+            {
+              "kind": "speech",
+              "text": "妈妈在家吗 māma zài jiā ma — Is Mum at home?"
+            },
+            {
+              "kind": "speech",
+              "text": "我在这儿 wǒ zài zhèr — I'm here."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the character in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "在 (zài) is inherited from Middle Chinese dzojX (Guangyun, in Baxter's transcription), glossed 'to dwell' and 'to exist'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The place comes straight after 在 (zài): 妈妈, 在 (zài), 家. English needs is and at; Mandarin needs 在 (zài) alone."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole sentence pattern of the chapter: a person or a thing, then 在 (zài), then the place."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "妈妈在家吗 — māma zài jiā ma — Is Mum at home?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 妈妈在家吗 — *māma zài jiā ma* — Is Mum at home?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我在这儿 — wǒ zài zhèr — I'm here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我在这儿 — *wǒ zài zhèr* — I'm here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhǔnbèi and pángbiān, then zài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhǔnbèi* and *pángbiān*, then *zài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 在 (zài) mean? (\"To be at; in, at\".) Where does the place go? (Straight after 在 (zài).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W85-zai-at",
+      "sequence": 7010,
+      "title": "在 (zài) — the top of 有, a vertical, then 土",
+      "headword": "在",
+      "romanization": "zài",
+      "gloss": "在 — the top of 有, a vertical, then 土",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3321d000db8df91f",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the top of 有, a vertical, then 土",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the top of 有, a vertical, then 土 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zài — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zài* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "有 里 十."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — yǒu, lǐ, shí",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *yǒu*, *lǐ*, *shí*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the top of 有, a vertical, then 土",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "在 (zài)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, and two of them you already write."
+            },
+            {
+              "kind": "speech",
+              "text": "The top of 有, two strokes: a long horizontal, then a long left-falling stroke from above it, down to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "A short vertical under them, on the left, down from the falling stroke."
+            },
+            {
+              "kind": "speech",
+              "text": "土, three strokes: a short horizontal, a vertical down through it, and a long bar along the foot. It is 十 standing on a bar."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 1 + 3 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "在 (zài), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 在, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 在 (zài)? (Six.) Which character you know opens the same way? (有.) Which bar is longest? (The last, along the foot.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 在 (zài), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C85-nar",
+      "sequence": 7020,
+      "title": "那儿 (nàr) — there",
+      "headword": "那儿",
+      "romanization": "nàr",
+      "gloss": "there",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5546a28255a49b8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: the character from the last lesson, then a word it pairs with."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "在家, aloud — zài jiā, at home",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 在家, aloud — *zài jiā*, at home]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 这儿 — zhèr, here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 这儿 — *zhèr*, here]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 那儿",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "那儿 — nàr — \"there\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他在那儿 tā zài nàr — He's over there."
+            },
+            {
+              "kind": "speech",
+              "text": "我在这儿 wǒ zài zhèr — I'm here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "那儿 (nàr) is built from 那 'that' and 儿, the ending that runs into the syllable before it as an r: the same two pieces as 这儿. The Guangyun records 那 as na (Guangyun, in Baxter's transcription), glossed 'how, what'; how it came to mean 'that' is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "这儿 and 那儿 (nàr), here and there, answer most of the place questions this chapter asks. Both take the r ending, and both follow 在 (zài)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nàr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nàr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nàr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nàr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "他在那儿 — tā zài nàr — He's over there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 他在那儿 — *tā zài nàr* — He's over there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我在这儿 你在那儿 — wǒ zài zhèr, nǐ zài nàr — I'm here, you're there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我在这儿 你在那儿 — *wǒ zài zhèr, nǐ zài nàr* — I'm here, you're there.]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 那儿 (nàr) mean? (\"There\".) And here? (这儿.) Say both once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C85-libian",
+      "sequence": 7030,
+      "title": "lǐbian — inside",
+      "headword": "lǐbian",
+      "romanization": "lǐbian",
+      "gloss": "inside; in",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31f8815c81052c44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, and a character you write."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 那儿 — nàr, there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 那儿 — *nàr*, there]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "里, aloud — lǐ, inside",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 里, aloud — *lǐ*, inside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chéngshì, a city",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chéngshì*, a city]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lǐbian",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǐbian — \"inside; in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "shū zài bāo lǐbian — The book is in the bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Its second character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǐbian is built from lǐ 'inside', the 里 you write, and bian 'side', the syllable that ends zuǒbian and pángbiān. Both are inherited from Middle Chinese, liX and pen (Guangyun, in Baxter's transcription), glossed 'the inside of a garment' and 'an edge; a side'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǐbian comes after the thing whose inside it names: bāo lǐbian, inside the bag. Put 在 in front and it is a place: zài bāo lǐbian."
+            },
+            {
+              "kind": "speech",
+              "text": "里 on its own does the same job in a quicker sentence, as in shān lǐ. lǐbian can also stand alone: zài lǐbian, inside."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǐbian",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǐbian*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǐbian, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǐbian*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shū zài bāo lǐbian — The book is in the bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shū zài bāo lǐbian* — The book is in the bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā zài lǐbian — He's inside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā zài lǐbian* — He's inside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nàr and chéngshì, then lǐbian again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nàr* and *chéngshì*, then *lǐbian* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lǐbian mean? (\"Inside; in\".) Which written character does it open with? (里.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C85-waibian",
+      "sequence": 7040,
+      "title": "wàibian — outside",
+      "headword": "wàibian",
+      "romanization": "wàibian",
+      "gloss": "outside",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:183577c312b8d788",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the word for inside, then two words you have had for a while."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lǐbian, inside — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lǐbian*, inside — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wàiguó, abroad — R2, a few chapters back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wàiguó*, abroad — **R2**, a few chapters back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuǒbian and yòubian, left and right — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuǒbian* and *yòubian*, left and right — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wàibian",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wàibian — \"outside\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā zài wàibian — She's outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wàibian is built from wài 'outside', the wài of wàiguó, and bian 'side'. Both are inherited from Middle Chinese, ngwajH and pen (Guangyun, in Baxter's transcription), ngwajH glossed 'the outside' and 'far'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǐbian and wàibian, inside and outside, beside the pair you already own, zuǒbian and yòubian: one ending, bian, makes all four, and all four follow 在 (zài)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wàibian",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wàibian*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wàibian, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wàibian*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā zài wàibian — She's outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā zài wàibian* — She's outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māo zài wàibian — The cat's outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māo zài wàibian* — The cat's outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lǐbian and wàiguó, then wàibian again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lǐbian* and *wàiguó*, then *wàibian* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wàibian mean? (\"Outside\".) And inside? (lǐbian.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C85-practice",
+      "sequence": 7050,
+      "title": "我在这儿 — 你在那儿 (wǒ zài zhèr — nǐ zài nàr)",
+      "headword": "我在这儿 — 你在那儿",
+      "romanization": "wǒ zài zhèr — nǐ zài nàr",
+      "gloss": "two speakers place themselves, a book, a bag and a cat",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27f0b70126e3b600",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with two people placing themselves and their things."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wàibian, outside — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wàibian*, outside — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yìqǐ, together — R2, the first real retrieval",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yìqǐ*, together — **R2**, the first real retrieval]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiànmiàn, to meet up — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiànmiàn*, to meet up — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 我在家 你呢 wǒ zài jiā, nǐ ne — I'm at home. And you? B: wǒ zài xuéxiào — I'm at school. A: 你的书呢 nǐ de shū ne — Where's your book? B: zài bāo lǐbian — In my bag. A: māo ne — And the cat? B: māo zài wàibian — The cat's outside. A: 他呢 tā ne — And him? B: 他在那儿 tā zài nàr — He's over there."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ de shū ne asks where the book is: 呢 after a thing, with nothing else, means and where is it? The answer drops the book and starts at 在 (zài)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C85-practice-cat",
+              "prompt": "Where is the cat?",
+              "assesses": [
+                "ZH-PERFORMANCE-LOCATION-01",
+                "ZH-LEX-C85-WAIBIAN-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "outside",
+                "wàibian",
+                "waibian",
+                "outside the house"
+              ],
+              "feedback": {
+                "correct": "Outside: māo zài wàibian.",
+                "incorrect": "B says māo zài wàibian: the cat is outside."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — one pattern, four places",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One pattern, a person or a thing, then 在 (zài), then the place:"
+            },
+            {
+              "kind": "speech",
+              "text": "我在这儿 wǒ zài zhèr — I'm here."
+            },
+            {
+              "kind": "speech",
+              "text": "他在那儿 tā zài nàr — he's there."
+            },
+            {
+              "kind": "speech",
+              "text": "shū zài bāo lǐbian — the book is in the bag."
+            },
+            {
+              "kind": "speech",
+              "text": "māo zài wàibian — the cat is outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Nǐ de shǒujī ne?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Place yourself, then somebody you know, then your phone."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "在 (zài) — the top of 有, a short vertical, then 十 on a long bar",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 在 — the top of 有, a short vertical, then 十 on a long bar]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我在家 你呢 — wǒ zài jiā, nǐ ne — I'm at home. And you?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我在家 你呢 — *wǒ zài jiā, nǐ ne* — I'm at home. And you?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你的书呢 — nǐ de shū ne — Where's your book?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你的书呢 — *nǐ de shū ne* — Where's your book?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "我在这儿",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 我在这儿]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say you are at home. (我在家.) Say the book is in the bag. (shū zài bāo lǐbian.) Ask where somebody's book is, with three characters. (你的书呢.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

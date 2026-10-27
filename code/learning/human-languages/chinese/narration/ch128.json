@@ -1,0 +1,988 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 128,
+  "title": "Music",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:da9f03827a686392",
+  "lessons": [
+    {
+      "id": "ZH-C128-yinyue",
+      "sequence": 10250,
+      "title": "音乐 (yīnyuè) — music",
+      "headword": "音乐",
+      "romanization": "yīnyuè",
+      "gloss": "music",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0f47a541d2a6cc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a few, then the Mandarin for like this."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 音乐",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "音乐 — yīnyuè — \"music\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我喜欢音乐 wǒ xǐhuan yīnyuè — I love music."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 音 (yīn) — on top a five-stroke piece — a dot, a short bar, two short strokes leaning toward each other, and a long bar — and under it 日. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "音乐 (yīnyuè) is built from 音 (yīn) 'sound' and 乐, here said yuè, both inherited from Middle Chinese, 'im and ngaewk (Guangyun, in Baxter's transcription); the dictionary glosses the second with the whole word, 'music'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīnyuè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīnyuè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīnyuè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīnyuè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xǐhuan yīnyuè — I love music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xǐhuan yīnyuè* — I love music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a few, then the Mandarin for like this, then say yīnyuè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a few, then the Mandarin for like this, then say *yīnyuè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 音乐 (yīnyuè) mean? (\"Music\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W128-yin-sound",
+      "sequence": 10255,
+      "title": "音 (yīn) — five strokes over 日",
+      "headword": "音",
+      "romanization": "yīn",
+      "gloss": "音 — a five-stroke top over 日",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3fdd8ba688d80a37",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — five strokes over 日",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — five strokes over 日 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yīnyuè — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yīnyuè* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "日 乐."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — rì, lè",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *rì*, *lè*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — five strokes over 日",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "音 (yīn)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, top to bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The top piece, five strokes. A dot at the top, a short horizontal under it, a short stroke on the left falling to the lower right, a short stroke on the right falling to the lower left, then a long horizontal across the whole width."
+            },
+            {
+              "kind": "speech",
+              "text": "日, four strokes, the four your hand makes in 日: the left side, the top that turns down the right side, the middle bar, and the bar that closes the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "5 + 4 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "音 (yīn), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 音, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces in 音 (yīn)? (Two.) Which stroke ends the top piece? (The long horizontal.) What sits underneath? (日.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 音 (yīn), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C128-ge",
+      "sequence": 10260,
+      "title": "gē — song",
+      "headword": "gē",
+      "romanization": "gē",
+      "gloss": "song",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a713c5d31449aef4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for like this, then the Mandarin for music."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gē",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gē — \"song\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ xǐhuan Zhōngguó gē — I love Chinese songs."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gē is inherited from Middle Chinese ka (Guangyun, in Baxter's transcription); the dictionary quotes an older book: the voice of a person is called song."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xǐhuan Zhōngguó gē — I love Chinese songs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xǐhuan Zhōngguó gē* — I love Chinese songs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for like this, then the Mandarin for music, then say gē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for like this, then the Mandarin for music, then say *gē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gē mean? (\"Song\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C128-haoting",
+      "sequence": 10270,
+      "title": "hǎotīng — pleasant to hear",
+      "headword": "hǎotīng",
+      "romanization": "hǎotīng",
+      "gloss": "pleasant to hear",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:206c647cd2229d1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for music, then the Mandarin for song."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hǎotīng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hǎotīng — \"pleasant to hear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Zhōngguó yīnyuè hěn hǎotīng — Chinese music is lovely to listen to."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hǎotīng is built from 好 'good' and tīng 'to listen', both inherited from Middle Chinese, xawX and theng (Guangyun, in Baxter's transcription), the same shape as 好看 and 好吃."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎotīng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎotīng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎotīng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎotīng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Zhōngguó yīnyuè hěn hǎotīng — Chinese music is lovely to listen to.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Zhōngguó yīnyuè hěn hǎotīng* — Chinese music is lovely to listen to.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for music, then the Mandarin for song, then say hǎotīng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for music, then the Mandarin for song, then say *hǎotīng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hǎotīng mean? (\"Pleasant to hear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C128-yinyuehui",
+      "sequence": 10280,
+      "title": "音乐会 (yīnyuèhuì) — concert",
+      "headword": "音乐会",
+      "romanization": "yīnyuèhuì",
+      "gloss": "concert",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d4710b7f0369c36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for song, then the Mandarin for pleasant to hear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 音乐会",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "音乐会 — yīnyuèhuì — \"concert\"."
+            },
+            {
+              "kind": "speech",
+              "text": "明天晚上我们去音乐会 míngtiān wǎnshang wǒmen qù yīnyuèhuì — Tomorrow evening we're going to a concert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "音乐会 (yīnyuèhuì) is built from 音乐 (yīnyuè) 'music' and 会 'a gathering', all three parts inherited from Middle Chinese, 'im, ngaewk and hwajH (Guangyun, in Baxter's transcription); the dictionary glosses the last 'to come together'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīnyuèhuì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīnyuèhuì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīnyuèhuì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīnyuèhuì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "míngtiān wǎnshang wǒmen qù yīnyuèhuì — Tomorrow evening we're going to a concert.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *míngtiān wǎnshang wǒmen qù yīnyuèhuì* — Tomorrow evening we're going to a concert.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for song, then the Mandarin for pleasant to hear, then say yīnyuèhuì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for song, then the Mandarin for pleasant to hear, then say *yīnyuèhuì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 音乐会 (yīnyuèhuì) mean? (\"Concert\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C128-jita",
+      "sequence": 10290,
+      "title": "jítā — guitar",
+      "headword": "jítā",
+      "romanization": "jítā",
+      "gloss": "guitar",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebe624855b81989b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for pleasant to hear, then the Mandarin for concert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jítā",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jítā — \"guitar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ xiǎng xué jítā — I'd like to learn the guitar."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jítā is usually traced to English guitar; its two characters were chosen for their sound, the first a word for lucky and the second the 他 of 'he'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for what I like."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jítā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jítā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jítā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jítā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎng xué jítā — I'd like to learn the guitar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎng xué jítā* — I'd like to learn the guitar.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for pleasant to hear, then the Mandarin for concert, then say jítā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for pleasant to hear, then the Mandarin for concert, then say *jítā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jítā mean? (\"Guitar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R128-review-123-128",
+      "sequence": 10300,
+      "title": "Looking back: from What People Are Like to Music",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from What People Are Like to Music",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b0dcc99d3fd84a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for clever and conscientious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clever, conscientious, lovable, warm-hearted, to care about",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: clever, conscientious, lovable, warm-hearted, to care about]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a person's height, hair, handsome, ugly, to resemble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a person's height, hair, handsome, ugly, to resemble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get angry, to worry, to be at ease, anxious, upset",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get angry, to worry, to be at ease, anxious, upset]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "often, sometimes, in the past, a moment ago, already",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: often, sometimes, in the past, a moment ago, already]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "these, those, which ones, a few, like this",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: these, those, which ones, a few, like this]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "music, song, pleasant to hear, concert, guitar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: music, song, pleasant to hear, concert, guitar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "以 些 音 (yīn) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 以 些 音 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Clever? (cōngming.) Conscientious? (rènzhēn.) Lovable? (kě'ài.) Warm-hearted? (rèqíng.) To care about? (guānxīn.) A person's height? (个子, gèzi.) Hair? (tóufa.) Handsome? (shuài.) Ugly? (nánkàn.) To resemble? (xiàng.) To get angry? (生气, shēngqì.) To worry? (dānxīn.) To be at ease? (fàngxīn.) Anxious? (zháojí.) Upset? (nánguò.) Often? (chángcháng.) Sometimes? (yǒushíhou.) In the past? (以前, yǐqián.) A moment ago? (gāngcái.) Already? (yǐjīng.) These? (这些, zhèxiē.) Those? (那些, nàxiē.) Which ones? (哪些, nǎxiē.) A few? (一些, yìxiē.) Like this? (zhèyàng.) Music? (音乐, yīnyuè.) Song? (gē.) Pleasant to hear? (hǎotīng.) Concert? (音乐会, yīnyuèhuì.) Guitar? (jítā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

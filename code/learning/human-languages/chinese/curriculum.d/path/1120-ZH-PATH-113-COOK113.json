@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-113-COOK113",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-113-COOK113"
+  ],
+  "after": []
+}

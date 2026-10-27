@@ -1,6 +1,4 @@
 {
-  "omits": [
-    "COURTESY-SORRY"
-  ],
+  "omits": [],
   "relocates": {}
 }

@@ -1,0 +1,32 @@
+{
+  "chapter": 98,
+  "title": "With a Clock",
+  "label": "ch:zh-with-a-clock",
+  "canDo": "I can fill a short form and write a short message against a clock.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-R98-review-final-98",
+    "kind": "production",
+    "summary": "Complete ZH-R98-review-final-98: one dialogue across the A1 core, where, what there is, how many, giving, can, want, too, all, why and because, after a five-field form and a short message under this book's own three-minute clock.",
+    "assesses": [
+      "ZH-PERFORMANCE-LOCATION-01",
+      "ZH-PERFORMANCE-WHERE-01",
+      "ZH-PERFORMANCE-HAVE-NOT-01",
+      "ZH-PERFORMANCE-MEASURE-01",
+      "ZH-PERFORMANCE-ACTIONS-01",
+      "ZH-PERFORMANCE-CAN-01",
+      "ZH-PERFORMANCE-WANT-01",
+      "ZH-PERFORMANCE-ORDER-01",
+      "ZH-PERFORMANCE-TOO-01",
+      "ZH-PERFORMANCE-DESCRIBE-01",
+      "ZH-PERFORMANCE-WHY-01",
+      "ZH-PERFORMANCE-BECAUSE-01",
+      "ZH-LEX-C97-XIAOSHI-01",
+      "ZH-LEX-C97-MEITIAN-01",
+      "ZH-LEX-C97-YIHOU-01"
+    ],
+    "note": "The A1 target is HSK 3.0 Level 1-aligned and project-defined (chinese/assessment-spec.md); the complete target adds independently scored productive writing, a small form and a short message. No official clock is claimed: the three-minute timer is this book's own, which keeps the lesson inside the five-minute cap. Writing is scored as its own paper, 60 of 100, never averaged against the other three (assessment-spec.md, Four-skill pass rule)."
+  }
+}
