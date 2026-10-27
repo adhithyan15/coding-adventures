@@ -11,8 +11,13 @@ fn words_bytes(words: &[u32]) -> Vec<u8> {
 #[test]
 fn exact_topology_and_architectural_constructor_cover_every_persistent_bit() {
     let cpu = ARM1GateLevel::architectural();
+    let inventory = cpu.physical_storage_inventory();
     assert_eq!(cpu.memory().len(), MEMORY_SIZE);
     assert_eq!(cpu.get_state().regs.len(), 27);
+    assert_eq!(inventory.memory_dffs, cpu.memory().len() * 8);
+    assert_eq!(inventory.register_dffs, cpu.get_state().regs.len() * 32);
+    assert_eq!(inventory.halt_dffs, 1);
+    assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
     assert_eq!(FLIP_FLOP_COUNT, MEMORY_SIZE * 8 + 27 * 32 + 1);
 }
 

@@ -1177,6 +1177,91 @@ mod tests {
             strlen.instructions
         );
     }
+
+    // ── Issue #18421: per-module lambda names must survive linking ───────────
+    //
+    // Every module is compiled by a fresh `twig-ir-compiler::Compiler`, so
+    // every module numbers its anonymous functions from zero: the first
+    // `(lambda …)` in *each* file becomes `__lambda_0`.  The linker keeps the
+    // first module's `__lambda_0` and renames the second module's copy to
+    // `<module>::__lambda_0` — but the second module's `alloc_closure`
+    // instruction names its body with an inline `Operand::Str("__lambda_0")`.
+    // Before the fix only `call` callees were rewritten, so the second
+    // module's closure silently ran the *first* module's lambda body.
+    //
+    // The two libraries below are deliberately shaped so the bug is
+    // visible in the result and not just as a crash:
+    //
+    //   adder:   (lambda (x) (+ x n))          1 capture,  1 param
+    //   scaler:  (lambda (x) (* x (* a b)))    2 captures, 1 param
+    //   subber:  (lambda (x) (- x n))          1 capture,  1 param  (same arity
+    //            as adder — a mis-dispatch here type-checks fine and just
+    //            computes the wrong number)
+    //
+    //   expected:  (+ ((make-adder 1) 10)        11
+    //                 ((make-scaler 2 3) 100)    600
+    //                 ((make-subber 5) 1000))    995   → 1606
+
+    /// Write the three-library program used by the lambda-name tests and
+    /// return the root `main.tw` path.
+    fn write_three_lambda_libs(dir: &Path) -> PathBuf {
+        write_temp(dir, "adder.tw", "
+            (module adder (export make-adder))
+            (define (make-adder n) (lambda (x) (+ x n)))
+        ");
+        write_temp(dir, "scaler.tw", "
+            (module scaler (export make-scaler))
+            (define (make-scaler a b) (lambda (x) (* x (* a b))))
+        ");
+        write_temp(dir, "subber.tw", "
+            (module subber (export make-subber))
+            (define (make-subber n) (lambda (x) (- x n)))
+        ");
+        write_temp(dir, "main.tw", "
+            (module main (import adder) (import scaler) (import subber))
+            (let ((add1 (make-adder 1))
+                  (mul6 (make-scaler 2 3))
+                  (sub5 (make-subber 5)))
+              (+ (add1 10) (+ (mul6 100) (sub5 1000))))
+        ")
+    }
+
+    #[test]
+    fn lambdas_from_different_modules_keep_their_own_bodies() {
+        let dir = make_tempdir("lambda_names_18421_vm");
+        let root = write_three_lambda_libs(&dir);
+        let v = run_in_large_stack(root, dir, "lambda_names_18421");
+        assert_eq!(
+            v,
+            twig_vm::LispyValue::int(1606),
+            "each module's closure must run that module's own lambda body",
+        );
+    }
+
+    #[test]
+    fn same_arity_lambdas_from_different_modules_do_not_alias() {
+        // The quiet variant of the bug: both lambdas take 1 capture + 1
+        // param, so a mis-dispatched closure runs without any arity error
+        // and just computes `(+ 1000 5)` = 1005 instead of `(- 1000 5)` = 995,
+        // turning the expected 1006 into 1016.
+        let dir = make_tempdir("lambda_names_18421_same_arity");
+        write_temp(&dir, "adder.tw", "
+            (module adder (export make-adder))
+            (define (make-adder n) (lambda (x) (+ x n)))
+        ");
+        write_temp(&dir, "subber.tw", "
+            (module subber (export make-subber))
+            (define (make-subber n) (lambda (x) (- x n)))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import adder) (import subber))
+            (let ((add1 (make-adder 1))
+                  (sub5 (make-subber 5)))
+              (+ (add1 10) (sub5 1000)))
+        ");
+        let v = run_in_large_stack(root, dir, "lambda_names_18421_same_arity");
+        assert_eq!(v, twig_vm::LispyValue::int(1006));
+    }
 }
 
 // ---------------------------------------------------------------------------

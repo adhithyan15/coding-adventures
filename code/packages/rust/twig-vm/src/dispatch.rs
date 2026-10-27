@@ -4760,7 +4760,7 @@ mod tests {
             IIRInstr::new(
                 "call_builtin",
                 Some("nil_v".into()),
-                vec![Operand::Var("make_nil".into())],
+                vec![Operand::Var("dyn_nil".into())],
                 "any",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("nil_v".into())], "any"),

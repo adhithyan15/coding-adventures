@@ -71,6 +71,10 @@
   `(let ((s (string-append "a" "b"))) (let ((s 5)) s))` returns 5. It used to
   read the outer string's alias register.
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- A test that built nil with `call_builtin "make_nil"` uses `dyn_nil`, the name `dynval-runtime`'s binding now resolves (LANG83 PR7f). Doc comments describe the typed `const 0 : ref<LispyPair>` that twig-ir-compiler emits for `nil`.
+
 ## Unreleased — host stdin seam: stdin tests no longer abort Miri
 
 ### Fixed — `miri-twig-vm.sh` aborted at `host_read_byte_returns_value_in_dest`

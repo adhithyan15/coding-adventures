@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C152-de-grammar",
+  "pathSegment": "ZH-PATH-152-WELL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-152-WELL",
+      "order": 2
+    }
+  ]
+}

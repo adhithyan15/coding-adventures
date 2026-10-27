@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:37b8c6054a7f5b82",
+  "lessonIds": [
+    "ZH-C154-hai",
+    "ZH-W154-hai-still",
+    "ZH-C154-haishi",
+    "ZH-C154-huozhe",
+    "ZH-C154-bie",
+    "ZH-C154-practice"
+  ],
+  "tex": "chinese/book/chapters/ch154-this-one-or-that-one.tex"
+}
