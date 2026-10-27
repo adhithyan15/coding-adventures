@@ -115,39 +115,57 @@
 //! | `-a`                        | `f64_neg r, a`                                       |
 //! | `a + b`, `-`, `*`, `/`      | `f64_add` / `f64_sub` / `f64_mul` / `f64_div`        |
 //! | `console.log(a, b)`         | `a` and `b` evaluated first, then: print `a`, `putchar 32`, print `b`, `putchar 10` |
-//! | print `x`                   | `-0` test (below), then `write_f64_js x`             |
-//! | ReferenceError (TDZ or undeclared) | `trap "Trap.ReferenceError"`                  |
+//! | print `x`                   | `-0` test (below), then `call __js_write_number, x`  |
+//! | ReferenceError (TDZ or undeclared) | `trap "Trap.Unbound"`                         |
+//!
+//! A ReferenceError is JavaScript's name for a neutral condition, a read of
+//! a name that has no value here, so the module traps with LANG83's
+//! `Trap.Unbound` (stable id 7), the kind Python's `NameError` also maps
+//! onto. The JavaScript wording stays in this compiler (see [`run_source`]).
 //!
 //! The `f64_*` ops are IEEE-754 and never trap, so `1 / 0` is `Infinity`
 //! and `0 * -1` is `-0` on every backend. BEAM, whose floats cannot hold
 //! an infinity or a NaN, refuses them at compile time (`UnsupportedOps`),
 //! which LANG84 stage B allows; a module without arithmetic runs there too.
 //!
+//! ## Printing a number (LANG83 PR7c-js)
+//!
+//! No backend knows JavaScript's number layout. `String(x)` is a function
+//! this compiler writes into the module, `__js_write_number`, built from the
+//! neutral `f64_class`, `f64_signbit`, `f64_digits` and `f64_exp10` plus
+//! integer code and `putchar` (see the `number_to_string` module). It and
+//! the three small functions it calls are added only to a module that
+//! prints a number, and every `console.log` argument `call`s it rather than
+//! repeating the layout. Up to 0.6.0 the same text came from the
+//! `write_f64_js` builtin, which every backend had to implement.
+//!
 //! ## Printing `-0`
 //!
 //! `console.log` formats a number with `util.inspect`, which prints the
-//! sign of zero (`-0`). `write_f64_js` is `String(x)`, which does not
-//! (`String(-0)` is `"0"`), so the compiler writes the `-` itself when the
-//! value is negative zero. No registry op compares floats on every backend
-//! (the JIT keeps float registers away from `cmp_*`, and BEAM's `cmp_eq`
-//! is exact), so the test reads only sign bits, as integers:
+//! sign of zero (`-0`). `String(x)` does not (`String(-0)` is `"0"`), so the
+//! call site writes the `-` itself when the value is negative zero: its
+//! class is `0` (±0) and its sign bit is set. Both facts are integers, and
+//! one compare tests them together:
 //!
 //! ```text
-//!   s    = f64_signbit x            x         s   x + 0    t   s > t
-//!   t    = f64_signbit (x + 0)      -0        1   +0       0   yes  ← only here
-//!   if s > t: putchar '-'           -2.5      1   -2.5     1   no
-//!   write_f64_js x                  +0, 7     0   +0, 7    0   no
+//!   c = f64_class x      x          c   s   s > c
+//!   s = f64_signbit x    -0         0   1   yes  ← only here
+//!   if s > c: '-'        +0         0   0   no
+//!   call write(x)        -2.5, -∞   1,2 1   no
+//!                        NaN        3   ?   no
 //! ```
 //!
-//! IEEE addition rounds `-0 + +0` to `+0` and leaves every other non-NaN
-//! value unchanged, so `s > t` holds for `-0` alone. A NaN is printed
-//! `NaN`; its sign is not observable (LANG83 PR6c), and the eight IEEE
-//! backends return the NaN operand of `x + 0` unchanged, so no `-` appears.
+//! `s` is 0 or 1 and `c` is 0 to 3, so `s > c` holds exactly when `s = 1`
+//! and `c = 0`. A NaN's sign is never shown (LANG83 PR6c): its class is 3.
+//!
+//! Until PR7c-js the test was `f64_signbit x > f64_signbit (x + 0)`, which
+//! needed `f64_add`, an op BEAM refuses. The class test needs no
+//! arithmetic, so a `console.log` of a value is never what keeps a module
+//! off BEAM; only the `f64_*` arithmetic that computed the value is.
 //!
 //! A literal is never `-0` (JavaScript has no negative literals: `-0` is
 //! `f64_neg` applied to `0`), so a literal, or a binding initialized
-//! straight from one, is printed with `write_f64_js` alone. That keeps the
-//! IIR of `console.log(42)` free of `f64_add`, so BEAM runs it.
+//! straight from one, is printed with the call alone.
 //!
 //! # Editions (LANG84 phase 6d)
 //!
@@ -166,6 +184,7 @@
 //! "unsupported", never as something it is not.
 
 pub mod frontend_error;
+mod number_to_string;
 pub mod profiles;
 pub mod releases;
 
@@ -182,7 +201,7 @@ use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
-use vm_core::{float_format::FloatLayout, value::Value, VMCore};
+use vm_core::{value::Value, VMCore};
 
 /// Bound source read and parse work for the first native interpreter pilot.
 pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
@@ -192,7 +211,13 @@ const MAX_EXPRESSION_DEPTH: usize = 64;
 /// The LANG83 trap kind a ReferenceError stops the program with: reading a
 /// name that no declaration binds, or a lexical binding inside its temporal
 /// dead zone (after the script starts, before its declaration has executed).
-const REFERENCE_ERROR_TRAP: &str = interpreter_ir::exception_kind::TRAP_REFERENCE_ERROR;
+///
+/// The kind names the condition, `Trap.Unbound`, not JavaScript's exception
+/// class: the IIR is language-neutral (LANG83 PR7d renamed it from
+/// `Trap.ReferenceError`, keeping id 7). Which class a JavaScript reader
+/// would see, and V8's sentence for it, is this compiler's knowledge, kept in
+/// [`Compiled::reference_error`].
+const UNBOUND_TRAP: &str = interpreter_ir::exception_kind::TRAP_UNBOUND;
 
 /// The bytes `console.log` writes with LANG83 `putchar`: a space between
 /// arguments, a newline after the last, and the sign of `-0`.
@@ -202,6 +227,25 @@ const MINUS_BYTE: i64 = b'-' as i64;
 
 /// The most bytes [`run_module`] collects before it stops the program.
 const MAX_OUTPUT_BYTES: usize = 1_000_000;
+
+/// The VM step budget [`run_module`] gives a program.
+///
+/// The subset has no loops and no user calls, so a program's work is
+/// bounded by its size. The dear part is printing: since PR7c-js each
+/// number goes through the module's own `__js_write_number`, which runs
+/// about 110 VM instructions for `1.5` and about 165 for `1e20` (the
+/// longest layouts, `-1.7976931348623157e+308` and the 21-digit integrals,
+/// stay under 256). One printed number needs at least one AST node, so
+/// `MAX_AST_NODES × 256` steps cover the largest program the parser
+/// accepts. Before PR7c-js a print was one `call_builtin` and the budget
+/// was 100,000. That stayed fine for a builtin, but with the helper it
+/// refused `console.log(1e20, 1e20, 1e20)` repeated 200 times, a 5.8 KB
+/// program well inside the source and node limits, with a message that
+/// blamed an infinite loop.
+///
+/// At most one `putchar` per step and at most ~25 bytes per number keep
+/// the output under [`MAX_OUTPUT_BYTES`] anyway.
+const MAX_VM_STEPS: u64 = MAX_AST_NODES as u64 * 256;
 
 /// Names the native runner's global object is defined to hold.
 ///
@@ -326,8 +370,9 @@ pub fn compile_source_at(
 struct Compiled {
     module: IIRModule,
     /// The V8 wording of the ReferenceError the program stops on, if it
-    /// stops on one. The IIR only says `trap "Trap.ReferenceError"`; the
-    /// name is not an operand any backend could print. The code is
+    /// stops on one. The IIR only says `trap "Trap.Unbound"`; neither the
+    /// binding's name nor the word `ReferenceError` is an operand any
+    /// backend could print. The code is
     /// straight-line, so the first trap the compiler emitted is the one that
     /// fires, and [`run_source`] puts this message on the error it returns.
     reference_error: Option<String>,
@@ -446,12 +491,25 @@ fn compile_ast_parts(ast: &GrammarASTNode, module_name: &str) -> Result<Compiled
         .push(IIRInstr::new("ret", None, vec![Operand::Var(exit)], "i64"));
     let mut module = IIRModule::new(module_name, "javascript");
     module.entry_point = Some("main".into());
+    // The `String(x)` helpers go only into a module that prints a number:
+    // `console.log()` alone, or a program that stops on a ReferenceError
+    // before its first print, carries none of them.
+    let prints_a_number = compiler.instructions.iter().any(|instruction| {
+        instruction.op == "call"
+            && instruction.srcs.first().and_then(Operand::as_var)
+                == Some(number_to_string::WRITE_NUMBER)
+    });
     module.add_or_replace(IIRFunction::new(
         "main",
         vec![],
         "i64",
         compiler.instructions,
     ));
+    if prints_a_number {
+        for helper in number_to_string::number_to_string_helpers() {
+            module.add_or_replace(helper);
+        }
+    }
     let errors = module.validate();
     if !errors.is_empty() {
         return Err(format!("invalid JavaScript IIR: {}", errors.join("; ")));
@@ -1655,16 +1713,18 @@ pub fn run_source_at(source: &str, release: Option<&str>) -> Result<String, Java
     run_compiled(compiled)
 }
 
-/// Run a module the compiler just built. A `Trap.ReferenceError` is reported
-/// with the message the compiler recorded for it (V8's wording, naming the
-/// binding), not the bare `trap: Trap.ReferenceError` of [`run_module`].
+/// Run a module the compiler just built. A `Trap.Unbound` is reported with
+/// the message the compiler recorded for it (V8's wording, naming the
+/// binding: `ReferenceError: z is not defined`), not the bare
+/// `trap: Trap.Unbound` of [`run_module`]. This is where the neutral kind
+/// turns back into JavaScript's error class.
 fn run_compiled(compiled: Compiled) -> Result<String, JavaScriptRunError> {
     let Compiled {
         module,
         reference_error,
     } = compiled;
     run_module(module).map_err(|mut error| {
-        if error.message == format!("trap: {REFERENCE_ERROR_TRAP}") {
+        if error.message == format!("trap: {UNBOUND_TRAP}") {
             if let Some(message) = reference_error {
                 error.message = message;
             }
@@ -1675,32 +1735,18 @@ fn run_compiled(compiled: Compiled) -> Result<String, JavaScriptRunError> {
 
 /// Run a compiled module on `vm-core` and collect its console output.
 ///
-/// The module speaks LANG83 only, so the runner registers just the two
-/// output builtins it calls, both writing into one bounded buffer in call
-/// order:
+/// The module speaks LANG83 only, and since PR7c-js its one output builtin
+/// is `putchar`: a space, a newline, the `-` of `-0`, and every character
+/// of a number, which the module's own `__js_write_number` writes. The
+/// runner registers just that, into one bounded buffer in call order.
 ///
-/// | builtin        | writes                                           |
-/// | -------------- | ------------------------------------------------ |
-/// | `write_f64_js` | `String(x)` of one float (`vm_core::float_format`) |
-/// | `putchar`      | one byte: a space, a newline, or the `-` of `-0` |
-///
-/// A trap (`Trap.ReferenceError`) or any other VM error keeps the output
+/// A trap (`Trap.Unbound`) or any other VM error keeps the output
 /// written before it, exactly as node keeps the lines `console.log` already
 /// wrote before an uncaught exception.
 pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
     let output = Arc::new(Mutex::new(Vec::<u8>::new()));
     let mut vm = VMCore::new();
-    vm.max_instructions = Some(100_000);
-    let captured = Arc::clone(&output);
-    vm.builtins_mut().register("write_f64_js", move |args| {
-        let [Value::Float(number)] = args else {
-            return Err(vm_core::errors::VMError::Custom(
-                "write_f64_js expects one JavaScript Number".into(),
-            ));
-        };
-        let text = vm_core::float_format::format_f64(*number, FloatLayout::JavaScript);
-        append_output(&captured, text.as_bytes())
-    });
+    vm.max_instructions = Some(MAX_VM_STEPS);
     let captured = Arc::clone(&output);
     vm.builtins_mut().register("putchar", move |args| {
         let [Value::Int(byte)] = args else {
@@ -1728,9 +1774,9 @@ pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
 }
 
 // Append to the runner's output buffer, refusing to grow it past
-// MAX_OUTPUT_BYTES. A source is at most 64 KiB and the VM stops after 100,000
-// instructions, so a program cannot get near the limit today; it stays as a
-// backstop for whoever raises those budgets.
+// MAX_OUTPUT_BYTES. A source is at most MAX_AST_NODES nodes, and each printed
+// number writes at most ~25 bytes, so a program cannot get near the limit
+// today; it stays as a backstop for whoever raises those budgets.
 fn append_output(sink: &Mutex<Vec<u8>>, bytes: &[u8]) -> Result<Value, vm_core::errors::VMError> {
     let mut sink = sink
         .lock()
@@ -1842,42 +1888,32 @@ impl Compiler {
         );
     }
 
-    // Print one number as `console.log` does: `write_f64_js`, preceded by a
-    // `-` when the value is negative zero (module docs, "Printing `-0`"):
+    // Print one number as `console.log` does: a call to the module's own
+    // `String(x)` helper, preceded by a `-` when the value is negative zero
+    // (module docs, "Printing `-0`"):
     //
-    //   const      z <- 0.0
-    //   f64_add    y <- x, z
+    //   f64_class   c <- x
     //   f64_signbit s <- x
-    //   f64_signbit t <- y
-    //   cmp_gt     c <- s, t           c is 1 for -0 only
-    //   jmp_if_false c, skip
-    //   putchar    '-'
-    //   label      skip
-    //   write_f64_js x
+    //   cmp_gt      m <- s, c          m is 1 for -0 only
+    //   jmp_if_false m, skip
+    //   putchar     '-'
+    //   label       skip
+    //   call        _ <- __js_write_number, x
     fn emit_console_number(&mut self, value: &Operand) {
         let needs_sign_test = match value {
             Operand::Var(register) => !self.never_negative_zero.contains(register),
             _ => true,
         };
         if needs_sign_test {
-            let zero = self.register();
-            self.emit("const", Some(zero.clone()), vec![Operand::Float(0.0)], "f64");
-            let sum = self.register();
-            self.emit(
-                "f64_add",
-                Some(sum.clone()),
-                vec![value.clone(), Operand::Var(zero)],
-                "f64",
-            );
+            let class = self.register();
+            self.emit("f64_class", Some(class.clone()), vec![value.clone()], "i64");
             let sign = self.register();
             self.emit("f64_signbit", Some(sign.clone()), vec![value.clone()], "i64");
-            let sum_sign = self.register();
-            self.emit("f64_signbit", Some(sum_sign.clone()), vec![Operand::Var(sum)], "i64");
             let negative_zero = self.register();
             self.emit(
                 "cmp_gt",
                 Some(negative_zero.clone()),
-                vec![Operand::Var(sign), Operand::Var(sum_sign)],
+                vec![Operand::Var(sign), Operand::Var(class)],
                 "i64",
             );
             let skip = self.register();
@@ -1890,11 +1926,15 @@ impl Compiler {
             self.emit_byte(MINUS_BYTE);
             self.emit("label", None, vec![Operand::Var(skip)], "void");
         }
+        let ignored = self.register();
         self.emit(
-            "call_builtin",
-            None,
-            vec![Operand::Var("write_f64_js".into()), value.clone()],
-            "void",
+            "call",
+            Some(ignored),
+            vec![
+                Operand::Var(number_to_string::WRITE_NUMBER.into()),
+                value.clone(),
+            ],
+            "i64",
         );
     }
 
@@ -1940,8 +1980,8 @@ impl Compiler {
     //   ----------------------------   -------------------------------------
     //   declared and initialized       read register `js.NAME`
     //   a runner global (NaN, Math…)   compile error: not implemented yet
-    //   declared later in the script   trap Trap.ReferenceError  (TDZ)
-    //   declared nowhere               trap Trap.ReferenceError
+    //   declared later in the script   trap Trap.Unbound  (JS: TDZ ReferenceError)
+    //   declared nowhere               trap Trap.Unbound  (JS: ReferenceError)
     //
     // The trap never returns, so nothing after it is emitted. The read still
     // yields a fresh (never written) register so the enclosing expression
@@ -1964,7 +2004,7 @@ impl Compiler {
         self.emit(
             "trap",
             None,
-            vec![Operand::Str(REFERENCE_ERROR_TRAP.into())],
+            vec![Operand::Str(UNBOUND_TRAP.into())],
             "void",
         );
         self.reference_error.get_or_insert(message);
@@ -2166,8 +2206,8 @@ mod tests {
             assert!(error.output.is_empty(), "{source}");
         }
         // Before 6e the runner refused to display numbers outside
-        // 1e-6..1e21; `write_f64_js` is `String(x)`, so they print as node
-        // prints them.
+        // 1e-6..1e21; the module's `__js_write_number` is `String(x)`, so
+        // they print as node prints them.
         for (source, expected) in [
             ("console.log(7); console.log(1e21 / 1, 8 / 2, 9 / 3);", "7\n1e+21 4 3\n"),
             ("console.log(7); console.log(8 / 2, 1e21 / 1, 9 / 3);", "7\n4 1e+21 3\n"),
@@ -2233,16 +2273,23 @@ mod tests {
     fn two_numeric_arguments_lower_in_order_and_print_with_one_space() {
         let ast = cst("console.log(1 + 2, 3 / 2);");
         let module = compile_ast(&ast, "two-log").unwrap();
-        let builtins: Vec<_> = module.functions[0]
+        let calls: Vec<_> = module.functions[0]
             .instructions
             .iter()
-            .filter(|instruction| instruction.op == "call_builtin")
+            .filter(|instruction| matches!(instruction.op.as_str(), "call" | "call_builtin"))
             .filter_map(|instruction| instruction.srcs[0].as_var())
             .collect();
         // Each sum may be -0, so each gets a guarded `-` before its digits.
         assert_eq!(
-            builtins,
-            ["putchar", "write_f64_js", "putchar", "putchar", "write_f64_js", "putchar"]
+            calls,
+            [
+                "putchar",
+                "__js_write_number",
+                "putchar",
+                "putchar",
+                "__js_write_number",
+                "putchar"
+            ]
         );
         assert_eq!(
             run_source("console.log(); console.log(1 + 2, 3 / 2); console.log(4);").unwrap(),
@@ -2257,13 +2304,13 @@ mod tests {
         let instructions = &module.functions[0].instructions;
         let writes: Vec<_> = instructions
             .iter()
-            .filter(|i| i.op == "call_builtin" && i.srcs[0] == Operand::Var("write_f64_js".into()))
+            .filter(|i| i.op == "call" && i.srcs[0] == Operand::Var("__js_write_number".into()))
             .collect();
         assert_eq!(writes.len(), 3);
         for (index, number) in [11.0, 22.0, 33.0].into_iter().enumerate() {
             // Each source argument's constant must come first (every argument
             // is evaluated before the line is written) and feed its own
-            // `write_f64_js`, in source order.
+            // `__js_write_number` call, in source order.
             assert_eq!(instructions[index].op, "const");
             assert_eq!(instructions[index].srcs, vec![Operand::Float(number)]);
             assert_eq!(
@@ -2406,6 +2453,50 @@ mod tests {
         assert!(compile_ast(&ast, "too-many-nodes").is_err());
     }
 
+    /// The step budget fits the biggest printing program the limits admit.
+    ///
+    /// Since PR7c-js every printed number runs the module's own
+    /// `__js_write_number` (about 165 steps for `1e20`), so the old flat
+    /// 100,000-step budget refused `console.log(1e20, 1e20, 1e20)` written
+    /// 200 times. [`MAX_VM_STEPS`] is sized from the node limit instead; this
+    /// test grows the most expensive print line until the compiler refuses
+    /// it, and requires the largest accepted program to run to the end.
+    #[test]
+    fn the_step_budget_covers_every_program_the_limits_accept() {
+        let lines = |line: &str, count: usize| line.repeat(count);
+        assert_eq!(
+            run_source(&lines("console.log(1e20, 1e20, 1e20);\n", 300)).unwrap(),
+            "100000000000000000000 100000000000000000000 100000000000000000000\n"
+                .repeat(300)
+        );
+
+        for line in [
+            "console.log(-1.7976931348623157e+308, -5e-324, 123456789012345680000);\n",
+            "console.log(1e20);\n",
+            "console.log(-0.000001234567890123456);\n",
+        ] {
+            // Largest repetition count the compiler still accepts.
+            assert!(compile_source(line, "budget").is_ok(), "{line:?}");
+            let (mut fits, mut over) = (1usize, 2usize);
+            while compile_source(&lines(line, over), "budget").is_ok() {
+                fits = over;
+                over *= 2;
+            }
+            while over - fits > 1 {
+                let middle = fits + (over - fits) / 2;
+                if compile_source(&lines(line, middle), "budget").is_ok() {
+                    fits = middle;
+                } else {
+                    over = middle;
+                }
+            }
+            let source = lines(line, fits);
+            let output = run_source(&source)
+                .unwrap_or_else(|error| panic!("{fits} × {line:?}: {}", error.message));
+            assert_eq!(output.lines().count(), fits, "{line:?}");
+        }
+    }
+
     // ---- top-level numeric let/const (0.2.0) -------------------------------
 
     fn assert_runs(source: &str, expected: &str) {
@@ -2458,14 +2549,11 @@ mod tests {
         assert_eq!(instructions[0].dest.as_deref(), Some("js.js0"));
         assert_eq!(instructions[0].srcs, vec![Operand::Float(5.0)]);
         assert!(instructions.iter().all(|i| i.op != "mov"));
-        let call = instructions
-            .iter()
-            .find(|i| i.op == "call_builtin")
-            .unwrap();
+        let call = instructions.iter().find(|i| i.op == "call").unwrap();
         assert_eq!(
             call.srcs,
             vec![
-                Operand::Var("write_f64_js".into()),
+                Operand::Var("__js_write_number".into()),
                 Operand::Var("js.js0".into())
             ]
         );
@@ -2543,15 +2631,17 @@ mod tests {
         assert_eq!(instructions[0].op, "trap");
         assert_eq!(
             instructions[0].srcs,
-            vec![Operand::Str("Trap.ReferenceError".into())]
+            vec![Operand::Str("Trap.Unbound".into())]
         );
         // `main` still ends with its exit status: `const 0`, `ret`.
         assert_eq!((instructions[1].op.as_str(), instructions[2].op.as_str()), ("const", "ret"));
         // `run_module` sees only the IIR, which does not name the binding.
         let error = run_module(compile_source("console.log(8); a; let a = 1;", "tdz").unwrap()).unwrap_err();
-        assert_eq!((error.output.as_str(), error.message.as_str()), ("8\n", "trap: Trap.ReferenceError"));
-        // The trap kind is in LANG83's closed table, with its stable id.
-        assert_eq!(interpreter_ir::exception_kind::trap_kind_id(REFERENCE_ERROR_TRAP), Some(7));
+        assert_eq!((error.output.as_str(), error.message.as_str()), ("8\n", "trap: Trap.Unbound"));
+        // The trap kind is in LANG83's closed table, with its stable id, and
+        // it is the neutral kind, not JavaScript's class (LANG83 PR7d).
+        assert_eq!(interpreter_ir::exception_kind::trap_kind_id(UNBOUND_TRAP), Some(7));
+        assert_eq!(UNBOUND_TRAP, "Trap.Unbound");
     }
 
     #[test]
@@ -2656,21 +2746,19 @@ mod tests {
                 // -x
                 "f64_neg",
                 // x: a literal's binding is never -0, so no sign test
-                "call_builtin",
+                "call",
                 // ' '
                 "const",
                 "call_builtin",
-                // -x may be -0: the sign test, then its digits
-                "const",
-                "f64_add",
-                "f64_signbit",
+                // -x may be -0: the class test, then its digits
+                "f64_class",
                 "f64_signbit",
                 "cmp_gt",
                 "jmp_if_false",
                 "const",
                 "call_builtin",
                 "label",
-                "call_builtin",
+                "call",
                 // '\n'
                 "const",
                 "call_builtin",
@@ -2773,8 +2861,8 @@ mod tests {
             ));
             run_module(module)
         };
-        let error = call("write_f64_js", Operand::Int(1)).unwrap_err();
-        assert!(error.message.contains("one JavaScript Number"), "{error}");
+        // The runner registers `putchar` alone: since PR7c-js the module
+        // writes every number itself, so it never calls `write_f64_js`.
         let error = call("putchar", Operand::Float(1.0)).unwrap_err();
         assert!(error.message.contains("one byte"), "{error}");
         assert_eq!(call("putchar", Operand::Int(0x141)).unwrap(), "A");
@@ -2789,40 +2877,210 @@ mod tests {
     #[test]
     fn the_module_holds_only_lang83_registry_operations() {
         // Every op a backend lowers or refuses by name, plus the ungated
-        // `const`, the branch and `ret` (LANG84 C2: no JavaScript-named
-        // builtin survives).
+        // `const`, the branches, `call` and `ret` (LANG84 C2: no
+        // JavaScript-named builtin survives), in `main` and in the
+        // `String(x)` helpers alike.
         let source = "let a = 1 / 0; const b = -a * 0; console.log(a, b - 1, 2); \
                       console.log(); z;";
         let module = compile_source(source, "registry").unwrap();
-        for instruction in &module.functions[0].instructions {
+        assert_eq!(module.functions.len(), 5, "main and the four helpers");
+        for instruction in module.functions.iter().flat_map(|f| &f.instructions) {
             match interpreter_ir::op_registry::registry_name(instruction) {
                 Some(name) => assert!(
                     [
                         "f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit",
-                        "cmp_gt", "write_f64_js", "putchar", "trap",
+                        "f64_class", "f64_digits", "f64_exp10", "add", "sub", "mul", "div",
+                        "cmp_eq", "cmp_lt", "cmp_gt", "cmp_ge", "putchar", "trap",
                     ]
                     .contains(&name),
                     "{instruction:?}"
                 ),
                 None => assert!(
-                    ["const", "jmp_if_false", "label", "ret"].contains(&instruction.op.as_str()),
+                    ["const", "jmp", "jmp_if_false", "label", "call", "ret"]
+                        .contains(&instruction.op.as_str()),
                     "{instruction:?}"
                 ),
             }
+            // LANG83 PR7: no op or builtin names a source language.
+            assert!(
+                instruction.srcs.iter().all(|s| s.as_var() != Some("write_f64_js")),
+                "{instruction:?}"
+            );
         }
     }
 
     #[test]
-    fn negative_zero_is_told_apart_from_zero_by_sign_bits_alone() {
+    fn negative_zero_is_told_apart_from_zero_by_its_class_and_sign() {
         assert_runs("console.log(-0, 0 * -1, 5 - 5);", "-0 -0 0\n");
         assert_runs("console.log(-0 + -0, -0 + 0, 0 - 0); console.log(-(-0));", "-0 0 0\n0\n");
         assert_runs("const n = -2.5; console.log(n, -n, n * 0);", "-2.5 2.5 -0\n");
         assert_runs("console.log(1 / -0, -(1 / 0), 0 / 0); console.log(-(0 / 0));", "-Infinity -Infinity NaN\nNaN\n");
         assert_runs("console.log(-5e-324, 5e-324 * -1);", "-5e-324 -5e-324\n");
-        // A literal can never be -0: no sign test, so no `f64_add` (BEAM runs
-        // such a module).
+        // A literal can never be -0: no sign test at its call site.
         let module = compile_source("let x = 5.; console.log(0, x, 0x1F);", "literal").unwrap();
-        assert!(module.functions[0].instructions.iter().all(|i| i.op != "f64_add"));
+        let main = module.get_function("main").unwrap();
+        assert!(main.instructions.iter().all(|i| i.op != "f64_class" && i.op != "f64_signbit"));
+        // The class test is the whole sign test: it needs no arithmetic, so
+        // the module of a computed value's print holds no `f64_add` it did not
+        // ask for (the 6e test was `signbit x > signbit (x + 0)`).
+        let module = compile_source("console.log(-0);", "computed").unwrap();
+        let ops: Vec<_> = module.get_function("main").unwrap().instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(
+            ops,
+            [
+                "const", "f64_neg", "f64_class", "f64_signbit", "cmp_gt", "jmp_if_false", "const",
+                "call_builtin", "label", "call", "const", "call_builtin", "const", "ret",
+            ]
+        );
+        assert!(module.functions.iter().flat_map(|f| &f.instructions).all(|i| i.op != "f64_add"));
     }
 
+    #[test]
+    fn the_number_helpers_are_emitted_only_into_modules_that_print_a_number() {
+        let names = |source: &str| -> Vec<String> {
+            compile_source(source, "helpers").unwrap().functions.iter().map(|f| f.name.clone()).collect()
+        };
+        // Nothing printed, an empty line, or a ReferenceError before the
+        // first number: `main` alone.
+        assert_eq!(names("1 + 2;"), ["main"]);
+        assert_eq!(names("console.log();"), ["main"]);
+        assert_eq!(names("console.log(z); console.log(1);"), ["main"]);
+        // One number is enough for all four; more numbers share them.
+        let helpers = ["main", "__js_write_number", "__js_digit_count", "__js_write_digits", "__js_write_uint"];
+        assert_eq!(names("console.log(1);"), helpers);
+        assert_eq!(names("console.log(1, 2); console.log(3);"), helpers);
+        // Every print site calls the helper; none inlines the layout.
+        let module = compile_source("console.log(1, -2); console.log(3);", "sites").unwrap();
+        let main = module.get_function("main").unwrap();
+        let calls = main.instructions.iter().filter(|i| i.op == "call").count();
+        assert_eq!(calls, 3);
+        assert!(main.instructions.iter().all(|i| i.op != "f64_digits"));
+    }
+
+    /// `Number::toString(x)` (ECMA-262 §6.1.6.1.20) as a Rust oracle: the
+    /// same layout vm-core's PR6a formatter wrote for `write_f64_js` (the text
+    /// LANG83 PR7e removed with the builtin), over vm-core's shortest digits.
+    /// It is the reference the module's own `__js_write_number` must match.
+    fn number_to_string_oracle(x: f64) -> String {
+        if x.is_nan() {
+            return "NaN".into();
+        }
+        if x == 0.0 {
+            return "0".into(); // String(-0) is "0"
+        }
+        let sign = if x < 0.0 { "-" } else { "" };
+        if x.is_infinite() {
+            return format!("{sign}Infinity");
+        }
+        let (d, e) = vm_core::float_format::shortest_digits(x);
+        let digits = d.to_string();
+        let n = digits.len() as i32;
+        let body = if (-6..21).contains(&e) {
+            if e < 0 {
+                format!("0.{}{digits}", "0".repeat((-e - 1) as usize))
+            } else if n <= e + 1 {
+                format!("{digits}{}", "0".repeat((e + 1 - n) as usize))
+            } else {
+                format!("{}.{}", &digits[..(e + 1) as usize], &digits[(e + 1) as usize..])
+            }
+        } else {
+            let point = if n > 1 { format!(".{}", &digits[1..]) } else { String::new() };
+            format!("{}{point}e{}{}", &digits[..1], if e < 0 { '-' } else { '+' }, e.unsigned_abs())
+        };
+        format!("{sign}{body}")
+    }
+
+    /// The oracle is what host `node` prints: rows generated by node v22
+    /// (`String(x)`) for every layout edge, the extremes and a tie.
+    #[test]
+    fn the_oracle_matches_host_node() {
+        for (x, want) in [
+            (1.0, "1"),
+            (100.0, "100"),
+            (0.1, "0.1"),
+            (1e16, "10000000000000000"),
+            (1e20, "100000000000000000000"),
+            (1e21, "1e+21"),
+            (1e-6, "0.000001"),
+            (1e-7, "1e-7"),
+            (1.5e-7, "1.5e-7"),
+            (-2.5, "-2.5"),
+            (5e-324, "5e-324"),
+            (1.7976931348623157e308, "1.7976931348623157e+308"),
+            (2.9802322387695312e-08, "2.9802322387695312e-8"),
+            (123456789012345680.0, "123456789012345680"),
+            (-0.0, "0"),
+            (f64::NEG_INFINITY, "-Infinity"),
+            (f64::NAN, "NaN"),
+        ] {
+            assert_eq!(number_to_string_oracle(x), want, "{x:e}");
+        }
+    }
+
+    /// `__js_write_number` against the `Number::toString` oracle (the text
+    /// PR6a's `write_f64_js` wrote), over the layout's every boundary and a
+    /// deterministic sweep of bit patterns. Each value is spelled as a
+    /// JavaScript literal with Rust's shortest round-trip `{:e}` form, so
+    /// the program prints exactly that double. The programs are batched (one
+    /// `console.log` per line, each line checked). Each batch is also a valid
+    /// Node program, so where a host `node` is installed it runs the same
+    /// source and must print the same bytes: the oracle is checked against
+    /// a real engine on every value, not only on the hand-picked rows of
+    /// [`the_oracle_matches_host_node`]. (Node's `console.log` of a number
+    /// is `String(x)` except for `-0`, which the sweep never holds.)
+    #[test]
+    fn write_number_matches_the_pr6a_layout_byte_for_byte() {
+        let mut values: Vec<f64> = vec![
+            1.0, 2.5, 0.1, 0.5, 0.3, 123.45, 1e20, 1e21, 9.999999999999999e20, 1.5e21,
+            123456789012345680000.0, 1e-6, 1e-7, 1.5e-7, 9.99e-7, 0.000001234, 1.7976931348623157e308,
+            5e-324, 2.2250738585072014e-308, 4503599627370496.0, 9007199254740993.0, 1e16, 1e17,
+            12345678901234567.0, 0.30000000000000004, 100.0, 1e-5, 1e-300, 1e300, 0.1 + 0.2, 1.0 / 3.0,
+        ];
+        // xorshift64 over raw bit patterns; non-finite patterns are skipped.
+        let mut state = 0x9E37_79B9_7F4A_7C15u64;
+        while values.len() < 600 {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            let x = f64::from_bits(state);
+            if x.is_finite() && x != 0.0 {
+                values.push(x.abs());
+            }
+        }
+        let host = std::process::Command::new("node")
+            .args(["-e", ""])
+            .output()
+            .is_ok_and(|out| out.status.success());
+        if !host {
+            eprintln!("SKIP host node half: no `node` on PATH");
+        }
+        let signed: Vec<f64> = values.iter().flat_map(|&x| [x, -x]).collect();
+        assert_eq!(signed.len(), 1_200);
+        let statement = |value: f64| {
+            let literal = format!("{:e}", value.abs());
+            if value < 0.0 {
+                format!("console.log(-{literal});\n")
+            } else {
+                format!("console.log({literal});\n")
+            }
+        };
+        for batch in signed.chunks(100) {
+            let source: String = batch.iter().map(|&x| statement(x)).collect();
+            let want: String = batch.iter().map(|&x| format!("{}\n", number_to_string_oracle(x))).collect();
+            let got = run_source(&source).unwrap();
+            for ((got, want), &x) in got.lines().zip(want.lines()).zip(batch) {
+                assert_eq!(got, want, "{}", statement(x).trim_end());
+            }
+            assert_eq!(got, want);
+            if host {
+                let out = std::process::Command::new("node").args(["-e", &source]).output().unwrap();
+                assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+                let node = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
+                for ((node, want), &x) in node.lines().zip(want.lines()).zip(batch) {
+                    assert_eq!(node, want, "host node: {}", statement(x).trim_end());
+                }
+                assert_eq!(node, want, "host node");
+            }
+        }
+    }
 }

@@ -212,9 +212,18 @@ code/packages/rust/iir-linker/
 ///    - Accumulate `LinkError::Unresolved` if not found.
 /// 3. Merge all functions into a single `IIRModule`:
 ///    - Rename colliding private functions by prefixing with `"<module>::"`.
-///    - Rewrite call instructions that reference imported functions to use the
-///      merged name.
-/// 4. Preserve `entry_point` from the first module that has one.
+///    - Rewrite every operand that *names a function* — `call` callee
+///      (`srcs[0]`), `alloc_closure` body name (`srcs[0]`, an
+///      `Operand::Str`), `task_spawn` callee (`srcs[0]`) and `group_spawn`
+///      fn (`srcs[1]`) — through the module's rename map: its own renamed
+///      functions plus its imports (imports win on a clash).  Data operands
+///      such as `const(Str(..))` are never rewritten.  (#18421: earlier
+///      versions rewrote only `call` callees of imported names, so a renamed
+///      private function — e.g. a second module's `__lambda_0` — was still
+///      referenced by its old bare name and silently bound to another
+///      module's function.)
+/// 4. Preserve `entry_point` from the first module that has one, mapped
+///    through that module's rename map.
 /// 5. Return the merged module (or all errors if any were found).
 pub fn link(modules: &[IIRModule]) -> Result<IIRModule, Vec<LinkError>>;
 
