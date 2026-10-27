@@ -103,7 +103,7 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 14 | Xtensa LX6 | public Tensilica ISA manual plus ESP32 manuals | Functional cell complete locally as `Esp32Lx6IntegerV1`, pending independent implementation review: little-endian, 64 physical windowed ARs, mixed 16/24-bit core+density, lazy window checks, loops, complete traces/lifecycle, 29 release tests, and 90.09% line coverage (1,382/1,534). Proprietary/configuration-unknown extensions remain excluded. |
 | 15 | RCA CDP1802 (`RCPU-081` / `RCPU-082`; functional merged in PR #18354) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor with gate-authoritative legality/family/control predicates, repository-gate ALU/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused lifecycle/bus differentials, explicit I/O/DMA/interrupt seams, eleven compiler-valid hostile structural fixtures, typed atomic lifecycle including post-first-step allocation rollback, 40 release tests plus one doctest, and 95.62% line coverage (1,442/1,508). Exact-head review remains before publication. |
 | 16 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
-| 17 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | Functional implementation is in progress from an independently reviewed configuration-pinned spec; the dependent gate cell remains blocked on functional merge. |
+| 17 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | `RCPU-083` is complete locally: full pinned base configuration, 34 release tests, 712 checked-in evidence rows including 308 independent manual transitions, 183 distinct source-topology transitions, and 56 lifecycle/fault rows, strict checks, and 94.33% line coverage (882/935). Independent exact-head review is next. `RCPU-084` remains merge-dependent and must review the manual/RTL EBA bit-8 discrepancy before claiming state equality. |
 | 18 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is complete locally from its independently reviewed spec-only predecessor: fixed-width big-endian execution, two complete register banks, CC/PC/interrupt/image state, exact transactions, typed atomic lifecycle, 31 completion tests, two corpus consumers over 3,970 checked-in upstream rows, one doctest, and 92.70% release line coverage (1,270/1,370). Exact-clean-head review is next; `RCPU-086` remains blocked until the functional oracle merges. |
 | 19 | PIC16 classic mid-range (PIC16F84A profile) | Microchip DS35007C device data sheet and DS33023A family reference manual | Complete locally: source-pinned 14-bit Harvard CPU with all 35 documented instructions, exact banked file-register/PCL/stack behavior, typed peripheral boundaries, 14 release tests, one doctest, strict checks, and 98.67% package-source line coverage (670/679). |
 
@@ -124,6 +124,28 @@ decode sweep, exact full traces/states for all 255 accepted transitions and
 focused alias/control/bus/lifecycle/fault/allocation matrices, exhaustive
 256x256x2 ALU relations, eleven compiler-valid hostile fixtures, strict
 Clippy/rustdoc, affected BUILD, and 95.62% line coverage (1,442/1,508).
+
+LatticeMico32 was selected after a duplicate and evidence audit found no
+pre-existing package, branch, worktree, open pull request, or merged pull
+request for LM32.
+It ranks ahead of evidence-blocked Itanium and LoongArch because Lattice
+publishes a complete programmer reference while the pinned vendor-origin fork
+retains the original decoder, register file, ALU, shifter, multiplier,
+multi-cycle divider, interrupt logic, top-level CPU, and instruction tests.
+The functional boundary is deliberately configuration-pinned; the dependent
+gate cell is not authorized to claim transistor accuracy or a complete SoC.
+The completed local functional cell owns all 32 mutable GPRs, complete 64 KiB
+memory/image state, every pinned instruction family, exact CFG/CSR behavior,
+DC.RE exception remapping, all 32 latched-pending interrupt inputs, complete
+post-state and bus-transaction traces, and atomic lifecycle/allocation seams.
+Its 32 release integration tests consume 747 checked-in evidence rows,
+including 530 independently generated exact full-state/full-transaction
+transitions, 52 lifecycle/fault rollback rows, five immutable RTL source
+hashes represented by eight source facts, and 32 operand seeds that drive 672
+additional complete-state ALU transitions; strict Clippy/rustdoc and 94.18%
+measured release line coverage (874/928) are green. A different
+reviewer's exact-clean-head implementation PASS is the remaining publication
+gate.
 
 MSP430 follows Xtensa and CDP1802 rather than displacing an active item. TI's public
 SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
