@@ -66,6 +66,6 @@ pub mod cpu;
 pub mod registers;
 mod state;
 
-pub use cpu::{Cpu8051, FLIP_FLOP_COUNT};
+pub use cpu::{Cpu8051, PhysicalStorageInventory, FLIP_FLOP_COUNT};
 pub use intel8051_simulator::{ExecutionResult, Intel8051Error, Intel8051State, StepTrace};
 pub use state::DffMemory;
