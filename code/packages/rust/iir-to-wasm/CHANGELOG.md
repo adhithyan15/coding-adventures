@@ -1,5 +1,44 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: WebAssembly holds dynamic values structurally (WasmGC structs and `i31ref`s, through `lang-aot`'s structural lowering) and links no tagged-word runtime.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's
+  builtin list, and `lang83_f64.rs` loses its writer group
+  (`$__iir_write_f64`, `put_digits`, `put_repeat`): a module that calls
+  either is refused. `build_f64_helpers(base, scratch)` builds the ten
+  computing helpers only, which import nothing.
+- Tests: the writer tests are replaced by `retired_float_writers_are_refused`;
+  the scratch-region test runs the digit search on the widest values between
+  two string prints; the PR6c edge table prints `class digits exp10 sign`
+  (the test host gains `env.__write_i64`); `pr7b_digit_core_is_emitted_once`
+  replaces the writer-sharing test.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- The validator checks a `trap` kind with `exception_kind::is_trap_kind`
+  (LANG83 PR7d removed `is_registered_trap_kind` with the empty
+  `LANGUAGE_TRAP_KINDS` table); the accepted set is unchanged. The emitted
+  module is byte-identical: `env.__trap` still receives id 7, which the host
+  now names `Trap.Unbound` (was `Trap.ReferenceError`).
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The in-module float helpers are two groups: helpers 0–9 compute (big
+  integers, the digit core and two new wrappers `(f64) -> i64` returning `D`
+  and `k - 1`), helpers 10–12 print (`put_digits`, `put_repeat`,
+  `$__iir_write_f64`). A module with `f64_digits` / `f64_exp10` reserves the
+  scratch region and gets the first group, and imports no `env.putchar`; a
+  module that prints a float gets both groups and one core.
+- `f64_class` is inline: reinterpret, mask, three `i64` compares summed as
+  `i32`, `i64.extend_i32_u` (new `codegen::I64_EXTEND_I32_U`).
+- Tests: the three ops on the in-process runtime against host `python3`, no
+  `putchar` import without output, one core with both users. The wrappers
+  were also checked against `python3` on 30 527 corpus values.
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 - `real_to_int_trunc` / `real_to_int_floor` round with `f64.trunc` (new

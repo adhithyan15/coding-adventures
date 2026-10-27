@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:5ef47f2be88c7873",
+  "lessonIds": [
+    "ZH-C38-chi",
+    "ZH-W38-chi",
+    "ZH-C38-fan",
+    "ZH-W38-fan",
+    "ZH-C38-mifan",
+    "ZH-C38-e",
+    "ZH-C38-cai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch38.txt",
+  "json": "chinese/narration/ch38.json",
+  "textHash": "fnv1a64:799755bfcdf6473b",
+  "jsonHash": "fnv1a64:18f33b890d35b3f5",
+  "findings": []
+}

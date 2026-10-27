@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Clock Words",
+  "label": "ch:zh-clock-words",
+  "canDo": "I can say seconds and minutes, the minutes before the hour, and when things begin and end.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C143-bantian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: I can say seconds and minutes, the minutes before the hour, and when things begin and end.",
+    "assesses": [
+      "ZH-LEX-C143-CLOCK143-03",
+      "ZH-LEX-C143-CLOCK143-04",
+      "ZH-LEX-C143-CLOCK143-05"
+    ]
+  }
+}

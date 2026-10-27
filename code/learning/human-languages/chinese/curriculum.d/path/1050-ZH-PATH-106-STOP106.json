@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-106-STOP106",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-106-STOP106"
+  ],
+  "after": []
+}

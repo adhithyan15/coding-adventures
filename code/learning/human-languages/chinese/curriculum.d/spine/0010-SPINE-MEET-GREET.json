@@ -1,8 +1,7 @@
 {
   "omits": [
     "GREETING-FORMAL",
-    "GREETING-PEACE",
-    "GREETING-WELCOME"
+    "GREETING-PEACE"
   ],
   "relocates": {}
 }

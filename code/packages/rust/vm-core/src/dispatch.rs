@@ -423,13 +423,14 @@ fn handle_i64_mod_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
 
 /// `trap "<kind>"` — terminate the program with a LANG83 trap.
 ///
-/// The kind must be in the closed table (`exception_kind::is_registered_trap_kind`);
+/// The kind must be in the closed table (`exception_kind::is_trap_kind`, the
+/// seven built-in `Trap.*` leaves; LANG83 PR7d retired language kinds);
 /// anything else is malformed IR and reported as such rather than as a trap.
 /// Every VM output builtin flushes as it writes, so "flush, then trap" holds
 /// with nothing to do here.
 fn handle_trap(_ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     match instr.srcs.first() {
-        Some(Operand::Str(kind)) if interpreter_ir::exception_kind::is_registered_trap_kind(kind) => {
+        Some(Operand::Str(kind)) if interpreter_ir::exception_kind::is_trap_kind(kind) => {
             Err(trap(kind))
         }
         other => Err(VMError::Custom(format!(
@@ -1314,7 +1315,7 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 // comment above this one explains the tag scheme) — a raw `Value::Int` is a
 // completely legitimate thing to store in, say, a cons cell's car/cdr. This
 // was investigated and found to make a naive `{0,8}`-style *boxed* kind
-// registration (mirroring native-AOT's `__dyn_cons`, via `register_kind`)
+// registration (mirroring native-AOT's `__dyn_pair_new`, via `register_kind`)
 // UNSOUND during AOT00-T9 PR-5 follow-up scouting: marking tolerates a
 // look-alike int fine (`mark_word` tag-strips and validates against
 // `find_header` — safe over-approximation), but *compaction* does not —
@@ -2221,6 +2222,46 @@ fn handle_f64_signbit(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     Ok(Some(result))
 }
 
+// ---------------------------------------------------------------------------
+// LANG83 PR7b — the language-neutral float primitives
+// ---------------------------------------------------------------------------
+//
+// Three integer queries on one `f64` operand, the digits every float writer
+// computes before it chooses a layout (see `crate::float_format`):
+//
+//   f64_class x    0 ±0 | 1 finite non-zero | 2 ±Infinity | 3 NaN
+//   f64_digits x   D, the shortest round-trip significand of |x| (class 1)
+//   f64_exp10 x    e10, the exponent of D's leading digit (class 1)
+//
+// Each is pure and never traps; classes 0, 2 and 3 have no digits and give
+// 0 from the last two. The operand must be a `Value::Float`, the same strict
+// check as every other `f64` op.
+
+/// Shared body of the three PR7b handlers: `dest = Int(query(x))`.
+fn handle_f64_query(ctx: &mut DispatchCtx, instr: &IIRInstr, query: fn(f64) -> i64) -> Result<Option<Value>, VMError> {
+    let x = f64_operand(ctx, instr, 0)?;
+    let result = Value::Int(query(x));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
+    }
+    Ok(Some(result))
+}
+
+/// `f64_class` — Rust's `f64::classify`, numbered 0/1/2/3.
+fn handle_f64_class(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_query(ctx, instr, crate::float_format::f64_class)
+}
+
+/// `f64_digits` — the shortest round-trip significand `D` (0 unless class 1).
+fn handle_f64_digits(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_query(ctx, instr, crate::float_format::f64_digits)
+}
+
+/// `f64_exp10` — the exponent `e10` of `D`'s leading digit (0 unless class 1).
+fn handle_f64_exp10(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_query(ctx, instr, crate::float_format::f64_exp10)
+}
+
 fn handle_f64_sin(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     handle_f64_transcendental(ctx, instr, "f64_sin", f64::sin)
 }
@@ -2347,6 +2388,10 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "f64_div"           => Some(handle_f64_div),
         "f64_neg"           => Some(handle_f64_neg),
         "f64_signbit"       => Some(handle_f64_signbit),
+        // LANG83 PR7b.
+        "f64_class"         => Some(handle_f64_class),
+        "f64_digits"        => Some(handle_f64_digits),
+        "f64_exp10"         => Some(handle_f64_exp10),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }

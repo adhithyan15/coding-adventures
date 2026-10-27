@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W74-ke-guest",
+    "language": "chinese",
+    "chapter": 74,
+    "sequence": 5835,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b1a7f5ab6bae8cab",
+    "detachableSegments": [
+      "Script — under the roof, a foot and 口"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W75-le-joy",
+    "language": "chinese",
+    "chapter": 75,
+    "sequence": 5885,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ea53580c2a5428d7",
+    "detachableSegments": [
+      "Script — a fall, a turn, and 小"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

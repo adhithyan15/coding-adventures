@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:b5e606caabf45036",
+  "lessonIds": [
+    "ZH-C64-duibuqi",
+    "ZH-W64-qi-rise",
+    "ZH-C64-bang",
+    "ZH-C64-bangmang",
+    "ZH-C64-jie",
+    "ZH-C64-huan"
+  ],
+  "tex": "chinese/book/chapters/ch64-asking-for-help.tex"
+}

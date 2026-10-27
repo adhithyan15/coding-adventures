@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C105-yagao",
+    "language": "chinese",
+    "chapter": 105,
+    "sequence": 8330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db316262b914e4db"
+  },
+  "findings": []
+}

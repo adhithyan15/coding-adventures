@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "In the Kitchen",
+  "label": "ch:zh-in-the-kitchen",
+  "canDo": "I can name the kitchen, cabbage, chopsticks, plates and a knife.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C101-dao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: I can name the kitchen, cabbage, chopsticks, plates and a knife.",
+    "assesses": [
+      "ZH-LEX-C101-KITCHEN101-03",
+      "ZH-LEX-C101-KITCHEN101-04",
+      "ZH-LEX-C101-KITCHEN101-05"
+    ]
+  }
+}

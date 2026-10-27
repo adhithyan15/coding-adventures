@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W49-wu-noon",
+    "language": "chinese",
+    "chapter": 49,
+    "sequence": 3935,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:85ad9c33f902d676",
+    "detachableSegments": [
+      "Script — the top of 年"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

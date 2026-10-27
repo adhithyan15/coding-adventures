@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Something to Drink",
+  "label": "ch:zh-something-to-drink",
+  "canDo": "I can ask for a drink: juice, cola or beer, and a biscuit.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C102-binggan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: I can ask for a drink: juice, cola or beer, and a biscuit.",
+    "assesses": [
+      "ZH-LEX-C102-DRINK102-03",
+      "ZH-LEX-C102-DRINK102-04",
+      "ZH-LEX-C102-DRINK102-05"
+    ]
+  }
+}

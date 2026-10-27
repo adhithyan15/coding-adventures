@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C87-yaoshi",
+  "pathSegment": "ZH-PATH-87-NONE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-87-NONE",
+      "order": 5
+    }
+  ]
+}

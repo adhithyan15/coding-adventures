@@ -1,5 +1,18 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18421 regression tests for cross-module lambdas
+
+### Added
+
+- Two end-to-end tests that link several modules which each define a
+  `lambda` (so each emits its own `__lambda_0`) and run them on twig-vm:
+  `lambdas_from_different_modules_keep_their_own_bodies` (three libraries,
+  1- and 2-capture closures; previously failed with "arity mismatch on call
+  to `__lambda_0`: expected 2, got 3") and
+  `same_arity_lambdas_from_different_modules_do_not_alias` (previously
+  returned 1016 instead of 1006 because the second module's closure ran the
+  first module's body).  The fix itself is in `iir-linker`.
+
 ## 0.15.0 - Unreleased - LANG84: hand the IIR compiler the parse tree
 
 ### Changed

@@ -1,0 +1,22 @@
+{
+  "chapter": 104,
+  "title": "On the Desk",
+  "label": "ch:zh-on-the-desk",
+  "canDo": "I can name a notebook, a pen, a pencil, paper and a dictionary.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R104-review-99-104",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: I can name a notebook, a pen, a pencil, paper and a dictionary.",
+    "assesses": [
+      "ZH-LEX-C104-DESK104-01",
+      "ZH-LEX-C104-DESK104-02",
+      "ZH-LEX-C104-DESK104-03",
+      "ZH-LEX-C104-DESK104-04",
+      "ZH-LEX-C104-DESK104-05",
+      "ZH-SCRIPT-BEN-01"
+    ]
+  }
+}

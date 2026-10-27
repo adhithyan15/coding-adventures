@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W127-xie-few",
+    "language": "chinese",
+    "chapter": 127,
+    "sequence": 10205,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b90f47d3049215d5",
+    "detachableSegments": [
+      "Script — two small pieces over 二"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

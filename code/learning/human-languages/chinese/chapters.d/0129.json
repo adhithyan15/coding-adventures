@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Quiet and Noisy",
+  "label": "ch:zh-quiet-and-noisy",
+  "canDo": "I can say a place is quiet, noisy, lively or handy, and that something is interesting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C129-youyisi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: I can say a place is quiet, noisy, lively or handy, and that something is interesting.",
+    "assesses": [
+      "ZH-LEX-C129-PLACE129-03",
+      "ZH-LEX-C129-PLACE129-04",
+      "ZH-LEX-C129-PLACE129-05"
+    ]
+  }
+}

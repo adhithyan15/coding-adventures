@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C40-pingguo",
+    "language": "chinese",
+    "chapter": 40,
+    "sequence": 3470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad18774a731057c5"
+  },
+  "findings": []
+}

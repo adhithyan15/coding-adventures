@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-38-EAT38",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ZH-EXT-38-EAT38"
+  ],
+  "after": []
+}

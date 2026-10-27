@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C146-yeli",
+  "pathSegment": "ZH-PATH-146-NIGHT146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-146-NIGHT146",
+      "order": 1
+    }
+  ]
+}

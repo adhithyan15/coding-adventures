@@ -111,14 +111,42 @@ assert_eq!((ran.stdout.as_str(), ran.trap.as_deref()), ("1.5
 | `+ - *` with a float, `/` always | `f64_add`, `f64_sub`, `f64_mul`, `f64_div` (LANG83 PR6c, IEEE, never trap) |
 | `/` by a known `±0` | `trap "Trap.DivZero"` first (CPython's ZeroDivisionError) |
 | `-a`, `+a` (float) | `f64_neg`, nothing |
-| `print(a)` (float) | `write_f64_py` (Python `repr`), `putchar 10` |
+| `print(a)` (float) | `call __py_write_float, a` (Python `repr`, written by this compiler), `putchar 10` |
 
 Refused (`Unsupported`): `//` and `%` on a float, `int / int` with an operand
 above 2^53 (CPython rounds the exact quotient once), and a literal that
 overflows to `inf` (`1e400`). 3.0a1 has no floats: its `str(float)` is
-`%.12g`, which no LANG83 writer produces. BEAM refuses the `f64_*`
-arithmetic at compile time (its floats have no `inf`/`nan`); a literal-only
-program runs there too.
+`%.12g`, which this compiler does not write (LANG83 plans `f64_digits_prec`
+for it). BEAM refuses the `f64_*` arithmetic at compile time (its floats
+have no `inf`/`nan`); a literal-only program runs there too.
+
+#### Printing a float: the module writes `repr` (LANG83 PR7c-py)
+
+No backend knows Python's float layout. Since 0.4.0 a module that prints a
+float carries four functions this compiler writes (`src/float_repr.rs`),
+and every float `print` is one `call` of the first:
+
+```text
+main ──call──▶ __py_write_float(x)        repr(x)
+                  ├─call─▶ __py_digit_count(D)
+                  ├─call─▶ __py_write_digits(D, n, from, to)
+                  └─call─▶ __py_write_uint(u)
+```
+
+`__py_write_float` reads `x` only through the neutral LANG83 primitives
+`f64_class` (zero, finite, infinite, NaN), `f64_signbit`, `f64_digits` (the
+shortest round-trip digits `D`) and `f64_exp10` (the exponent `e` of `D`'s
+leading digit). The rest is integer code and `putchar`: `nan`, `inf`,
+`-0.0`, fixed notation when `-4 <= e < 16` (`1000000000000000.0`,
+`0.0001`), otherwise `1e+16`, `1.5e-07`, `5e-324`. A module that prints no
+float carries none of them. Up to 0.3.0 the `write_f64_py` builtin did this,
+so each of the nine backends carried a copy of Python's layout.
+
+A print now costs the VM up to 700 steps instead of one, so `run_module`
+derives each module's step budget from the module: `main`'s length plus
+1,024 (the measured per-print bound, with headroom) per
+`call __py_write_float`, capped at `MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`.
+A hand-built module that loops is stopped after its own size's worth.
 
 ## LANG79's float pilot
 

@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "Every and Other",
+  "label": "ch:zh-every-and-other",
+  "canDo": "I can say every, myself, other people, all and the others.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C138-qita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: I can say every, myself, other people, all and the others.",
+    "assesses": [
+      "ZH-LEX-C138-EVERY138-03",
+      "ZH-LEX-C138-EVERY138-04",
+      "ZH-LEX-C138-EVERY138-05"
+    ]
+  }
+}

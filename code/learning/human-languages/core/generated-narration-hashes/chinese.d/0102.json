@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:bbdf20df5b60ca89",
+  "lessonIds": [
+    "ZH-C102-yinliao",
+    "ZH-C102-guozhi",
+    "ZH-C102-kele",
+    "ZH-C102-pijiu",
+    "ZH-C102-binggan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch102.txt",
+  "json": "chinese/narration/ch102.json",
+  "textHash": "fnv1a64:59c3cdfdc9c451ef",
+  "jsonHash": "fnv1a64:c25683e07e2df3b7",
+  "findings": []
+}

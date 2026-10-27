@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C70-miantiao",
+  "pathSegment": "ZH-PATH-70-FOOD70",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-70-FOOD70",
+      "order": 2
+    }
+  ]
+}

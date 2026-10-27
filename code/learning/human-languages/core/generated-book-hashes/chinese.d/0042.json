@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:315132eab7e40c78",
+  "lessonIds": [
+    "ZH-C42-dongxi",
+    "ZH-C42-mai-sell",
+    "ZH-C42-shangdian",
+    "ZH-C42-pianyi",
+    "ZH-C42-gui",
+    "ZH-R42-review-37-42"
+  ],
+  "tex": "chinese/book/chapters/ch42-in-the-shop.tex"
+}

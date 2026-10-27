@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:f0e1aa58c7d7624c",
+  "lessonIds": [
+    "ZH-C77-bukeqi",
+    "ZH-C77-mafan",
+    "ZH-C77-ganxie",
+    "ZH-C77-feichang",
+    "ZH-C77-zhen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch77.txt",
+  "json": "chinese/narration/ch77.json",
+  "textHash": "fnv1a64:63eaeb96d43026b4",
+  "jsonHash": "fnv1a64:816c4e901201bdeb",
+  "findings": []
+}

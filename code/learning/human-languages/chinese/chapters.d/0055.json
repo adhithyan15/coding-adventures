@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "What You Love",
+  "label": "ch:zh-what-you-love",
+  "canDo": "I can say what I would like to do and what I love.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C55-kafei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: I can say what I would like to do and what I love.",
+    "assesses": [
+      "ZH-LEX-C55-LIKE55-03",
+      "ZH-LEX-C55-LIKE55-04",
+      "ZH-LEX-C55-LIKE55-05"
+    ]
+  }
+}

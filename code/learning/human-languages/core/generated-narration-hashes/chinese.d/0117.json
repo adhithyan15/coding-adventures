@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:3d236e89004f8328",
+  "lessonIds": [
+    "ZH-C117-dongbian",
+    "ZH-C117-nanbian",
+    "ZH-C117-xibian",
+    "ZH-C117-beibian",
+    "ZH-C117-fangxiang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch117.txt",
+  "json": "chinese/narration/ch117.json",
+  "textHash": "fnv1a64:7a51130ef32fcd6d",
+  "jsonHash": "fnv1a64:60cd9fb620d0e446",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Way In, Way Out",
+  "label": "ch:zh-way-in-way-out",
+  "canDo": "I can say the words on signs for the way out, the way in, push, pull and the stairs.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C112-louti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: I can say the words on signs for the way out, the way in, push, pull and the stairs.",
+    "assesses": [
+      "ZH-LEX-C112-EXIT112-03",
+      "ZH-LEX-C112-EXIT112-04",
+      "ZH-LEX-C112-EXIT112-05"
+    ]
+  }
+}

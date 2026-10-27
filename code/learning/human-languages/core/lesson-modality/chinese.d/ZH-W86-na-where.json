@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W86-na-where",
+    "language": "chinese",
+    "chapter": 86,
+    "sequence": 7070,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b438b78b9dd16ec1",
+    "detachableSegments": [
+      "Script — 口 beside the whole of 那"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

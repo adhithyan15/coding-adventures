@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:f6c1621b95bfdcea",
+  "lessonIds": [
+    "ZH-C74-jin",
+    "ZH-W74-jin-enter",
+    "ZH-C74-keren",
+    "ZH-W74-ke-guest",
+    "ZH-C74-menkou",
+    "ZH-C74-huanying",
+    "ZH-C74-jieshao",
+    "ZH-R74-review-70-74"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch74.txt",
+  "json": "chinese/narration/ch74.json",
+  "textHash": "fnv1a64:372edaa2b3688197",
+  "jsonHash": "fnv1a64:4235ae0e51735979",
+  "findings": []
+}

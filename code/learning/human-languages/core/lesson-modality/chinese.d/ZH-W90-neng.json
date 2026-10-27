@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W90-neng",
+    "language": "chinese",
+    "chapter": 90,
+    "sequence": 7370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:457dae0a0f1760d8",
+    "detachableSegments": [
+      "Script — 厶 over the moon piece, then two 匕"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

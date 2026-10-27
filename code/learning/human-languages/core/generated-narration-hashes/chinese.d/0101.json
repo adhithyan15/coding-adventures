@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:ee753a754ce86506",
+  "lessonIds": [
+    "ZH-C101-chufang",
+    "ZH-C101-baicai",
+    "ZH-W101-cai",
+    "ZH-C101-kuaizi",
+    "ZH-C101-panzi",
+    "ZH-C101-dao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch101.txt",
+  "json": "chinese/narration/ch101.json",
+  "textHash": "fnv1a64:2724073b4a634cc5",
+  "jsonHash": "fnv1a64:1bd479a22fa23923",
+  "findings": []
+}

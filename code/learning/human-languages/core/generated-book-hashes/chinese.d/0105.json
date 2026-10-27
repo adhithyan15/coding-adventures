@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:f9661ec1d9abd774",
+  "lessonIds": [
+    "ZH-C105-maojin",
+    "ZH-C105-yashua",
+    "ZH-C105-yagao",
+    "ZH-C105-feizao",
+    "ZH-C105-jingzi"
+  ],
+  "tex": "chinese/book/chapters/ch105-in-the-bathroom.tex"
+}

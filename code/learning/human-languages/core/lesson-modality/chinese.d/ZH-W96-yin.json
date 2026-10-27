@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W96-yin",
+    "language": "chinese",
+    "chapter": 96,
+    "sequence": 7730,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:97b1bf181c047c8e",
+    "detachableSegments": [
+      "Script — 大 inside the frame of 国"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

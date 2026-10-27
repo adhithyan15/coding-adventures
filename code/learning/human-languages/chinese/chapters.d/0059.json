@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Clothes",
+  "label": "ch:zh-clothes",
+  "canDo": "I can say what I wear: shoes, a hat and trousers, and that they look nice.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C59-piaoliang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: I can say what I wear: shoes, a hat and trousers, and that they look nice.",
+    "assesses": [
+      "ZH-LEX-C59-WEAR59-03",
+      "ZH-LEX-C59-WEAR59-04",
+      "ZH-LEX-C59-WEAR59-05"
+    ]
+  }
+}

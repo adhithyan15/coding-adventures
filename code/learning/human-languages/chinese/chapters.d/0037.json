@@ -1,0 +1,20 @@
+{
+  "chapter": 37,
+  "title": "This One and That One",
+  "label": "ch:zh-this-one-and-that-one",
+  "canDo": "I can point things out as this one, that one and which one.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C37-nage",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 37: I can point things out as this one, that one and which one.",
+    "assesses": [
+      "ZH-LEX-C37-THIS37-03",
+      "ZH-LEX-C37-THIS37-04",
+      "ZH-LEX-C37-THIS37-05",
+      "ZH-SCRIPT-NA-01"
+    ]
+  }
+}
