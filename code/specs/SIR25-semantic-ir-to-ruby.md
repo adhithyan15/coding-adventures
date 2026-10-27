@@ -266,7 +266,11 @@ uppercase, escapes other characters, and suffixes Ruby keywords (`def`, `end`,
 `class`, `do`, …) and the runtime's own `sir_`/`$sir_` namespace with `_`.  SIR
 `main` renders as `sir_user_main` (Ruby has no reserved `main`, but the rename
 keeps the entry explicit and uniform with the other backends); `_init` renders
-as `sir_user_init`.  String/symbol escaping (`quote_ruby_string`) neutralises
+as `sir_user_init`; every other function renders as `sir_fn_<name>`.  A
+top-level `def` is a private method on `Object`, found ahead of `Kernel`, so
+an unprefixed user `def raise` overrode `Kernel#raise` for the runtime too
+(issue #18466).  The closure wrapper's argument list is `sir_args`, in the
+same reserved namespace (it was `__sir_args`, which a user could spell).  String/symbol escaping (`quote_ruby_string`) neutralises
 `"`, `\`, `#{` (interpolation), and control characters so no source text can
 break out of a literal or inject an interpolation.
 
@@ -282,7 +286,7 @@ def sir_puts(*xs) … end        # display-convention aware
 # … helpers …
 
 # ── user functions (mutual recursion needs no ordering in Ruby) ──
-def <fn>(<params>) … end
+def sir_fn_<fn>(<params>) … end
 
 def sir_user_init … end        # if the module has _init
 def sir_user_main … end        # SIR `main`

@@ -39,6 +39,11 @@ Ruby's semantics already match the SIR's:
   A *strict* closure (SIR10's `lambda` marker — a Ruby lambda, every Twig
   closure) starts with `sir_check_arity`, so a wrong argument count raises
   `ArgumentError: arity mismatch: …` counting the closure's own parameters.
+- **Reserved `sir_` namespace** — every user function is `sir_fn_<name>`
+  (a top-level `def raise` would otherwise override `Kernel#raise` for the
+  runtime too) and the closure wrapper's argument list is `sir_args`;
+  `sanitize_ident` escapes every `sir_…` user name (SIR10 "Generated
+  names", issue #18466).
 
 So the emitter is thin and the inlined runtime is tiny (a `Pair`, a global
 store, a display path, equality, and a builtin-as-value dispatcher).

@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds around user code**:
+  `__sir…` in any case (the `__Sir*` imports, `__sir_result`, loop
+  temporaries), `_a` (a closure wrapper's argument array), `__l`, `__kw`,
+  `__exc`, and the globals the emitted code calls inline (`Map`, `Object`,
+  `Error`).  The closure wrapper evaluates its captured values inside
+  `(..._a) => …`, so a captured `_a` read the argument array.
+  (`__sir_block__` keeps its spelling.)
+- **A strict closure's arity error is `ArgumentError`.**  When the module
+  imports the exception runtime it is raised with
+  `__SirExc.raiseError("ArgumentError", …)`, so `rescue ArgumentError`
+  catches it (a native `TypeError` was a plain `StandardError` to
+  `rescueMatches`); otherwise nothing can catch it, and an `Error` named
+  `ArgumentError` keeps the uncaught report the same without adding a
+  runtime import to every program with a lambda.
+- `tests/twig_generated_names.rs` runs the cross-backend table, with an
+  inline stub of `sir-runtime-exceptions` beside the existing ones.
+
 ## Unreleased — Strict closures (issue #18461)
 
 The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) used to

@@ -670,9 +670,9 @@ pub fn emit_module(m: &Module) -> String {
 ///
 /// Python has no multi-statement lambda, so a block that contains a
 /// loop and appears in *expression* position cannot be inlined.  Such a
-/// block is lifted to a nested `def __block_N(): …` (see
+/// block is lifted to a nested `def _sir_block_N(): …` (see
 /// [`emit_block_as_expr`]) whose source is queued here, and the call
-/// site emits `__block_N()`.  The queued defs must be written out
+/// site emits `_sir_block_N()`.  The queued defs must be written out
 /// *before* the statement whose value-expression referenced them — every
 /// statement-emitting path renders to a scratch buffer, calls this, then
 /// appends the scratch buffer, so the defs land in the right place.
@@ -2325,7 +2325,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
     // A block holding a loop in expression position cannot be expressed
     // as a walrus tuple (Python has no multi-statement expression), so
     // it is lifted to a nested `def` (queued in the hoist buffer) and
-    // the call site emits `__block_N()`.
+    // the call site emits `_sir_block_N()`.
     if block_has_loop(b) {
         emit_block_as_lifted_def(out, b, indent, env);
         return;
@@ -2544,8 +2544,8 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
     out.push_str(")[-1]");
 }
 
-/// Lift a statement-bearing block to a nested `def __block_N(): …` whose
-/// source is queued in the hoist buffer; emit `__block_N()` at the call
+/// Lift a statement-bearing block to a nested `def _sir_block_N(): …` whose
+/// source is queued in the hoist buffer; emit `_sir_block_N()` at the call
 /// site.  Used for expression-position blocks containing a loop, which
 /// cannot be inlined as a Python expression.
 fn emit_block_as_lifted_def(out: &mut String, b: &Block, indent: usize, env: &mut TypeEnv) {
@@ -2734,7 +2734,11 @@ fn fresh_block_name() -> String {
         let mut c = c.borrow_mut();
         let n = *c;
         *c += 1;
-        format!("__block_{}", n)
+        // `_sir_block_N`, inside the reserved `_sir` namespace (#18466).  It
+        // used to be `__block_N` — the very name the Ruby frontend gives its
+        // hoisted block *functions* — so a Ruby method holding both a block
+        // and a looping expression could define `__block_0` twice.
+        format!("_sir_block_{}", n)
     })
 }
 
@@ -2813,18 +2817,34 @@ const TAG_ESCAPED: &str = "e";
 /// empty body (`escape_body("")` is itself `""`, and no *non-empty*
 /// invalid name can ever produce an empty `escape_body` output, so this
 /// stays unambiguous too).
+///
+/// # Generated names are reserved too (#18466)
+///
+/// The emitter writes names of its own into the same Python module as the
+/// user's code — see [`is_generated_name`].  Python resolves a name at call
+/// time, so a user `def` spelled like one of them silently *replaces* it:
+/// `(define (_sir_global_set k v) 0)` took over every global write, and
+/// `(define (_sir_user_main) 42)` was overwritten by the renamed SIR `main`,
+/// which then called itself until `RecursionError`.  A reserved name now
+/// takes the marker branch exactly like a keyword:
+///
+/// ```text
+/// _sir_global_set  ->  sir_esc_v_sir_global_set
+/// _sir_user_main   ->  sir_esc_v_sir_user_main
+/// len              ->  sir_esc_vlen
+/// ```
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
-    if is_valid_py_ident(s) && !is_python_keyword(s) && !s.starts_with(ESCAPE_MARKER) {
+    if is_valid_py_ident(s) && !is_python_keyword(s) && !is_generated_name(s) {
         return s.to_string();
     }
     if is_valid_py_ident(s) {
-        // A real Python keyword, or a valid-but-marker-prefixed name —
-        // either way every character is already legal, so no further
-        // per-character escaping is needed; the marker + tag alone
-        // disambiguates.
+        // A real Python keyword, a name the emitter generates, or a
+        // valid-but-marker-prefixed name — either way every character is
+        // already legal, so no further per-character escaping is needed;
+        // the marker + tag alone disambiguates.
         return format!("{ESCAPE_MARKER}{TAG_VERBATIM}{s}");
     }
     format!("{ESCAPE_MARKER}{TAG_ESCAPED}{}", escape_body(s))
@@ -2886,6 +2906,25 @@ pub fn escape_body(s: &str) -> String {
         }
     }
     out
+}
+
+/// Names the emitted module binds or reads that a user name must never spell
+/// (#18466).  [`sanitize_ident`] escapes every one of them.
+///
+/// | reserved          | where the emitter writes it                                   |
+/// |-------------------|---------------------------------------------------------------|
+/// | `_sir…`, `_SIR…` (any case) | every runtime helper alias (`_sir_plus`, `_sir_global_set`, …), `_SIR_MISSING`, `_sir_user_main` (SIR's `main`), the nested `def _sir_block_N` a looping block in expression position is lifted to ([`fresh_block_name`]) |
+/// | `sir_esc_…`       | [`ESCAPE_MARKER`], this function's own escaped outputs        |
+/// | `__l`             | the `lambda __l: …` that evaluates a short-circuit `and`/`or` operand once |
+/// | `__exc`           | the caught exception in a `try`/`except` lowering             |
+/// | `Exception`, `len`, `list`, `range` | builtins the emitted code names bare (`except Exception`, `len(seq)`, `list(rest)`, `for … in range(…)`); a module-level `def len` would shadow the builtin for the whole module |
+///
+/// The `_sir` prefix is matched case-insensitively so every alias the
+/// runtime imports, present or future, is covered by one rule.
+fn is_generated_name(s: &str) -> bool {
+    s.get(..4).is_some_and(|p| p.eq_ignore_ascii_case("_sir"))
+        || s.starts_with(ESCAPE_MARKER)
+        || matches!(s, "__l" | "__exc" | "Exception" | "len" | "list" | "range")
 }
 
 fn is_valid_py_ident(s: &str) -> bool {
@@ -2999,6 +3038,22 @@ mod tests {
 
     fn s() -> Span {
         Span::synthetic()
+    }
+
+    /// The names the emitted module binds or reads are escaped; ordinary
+    /// names — the Ruby frontend's `__block_N` functions included — are not
+    /// (#18466).
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in [
+            "_sir_user_main", "_sir_global_set", "_SIR_MISSING", "_Sir_x", "_sir_block_0",
+            "__l", "__exc", "Exception", "len", "list", "range",
+        ] {
+            assert_eq!(sanitize_ident(name), format!("sir_esc_v{name}"), "{name}");
+        }
+        for name in ["x", "_si", "sir", "__block_0", "__lambda_0", "length", "lists"] {
+            assert_eq!(sanitize_ident(name), name, "{name}");
+        }
     }
 
     #[test]

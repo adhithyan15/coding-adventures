@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — Generated names reserved (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds**: `__sir…` (the
+  runtime module, `__sir_user_main`, loop temporaries), the capture
+  temporaries `__cap_…`, the closure adapter's `__args`/`__it`, `__l`,
+  `__r`, `__payload`, `__exc`, and the prelude variants `Some`, `None`,
+  `Ok`, `Err` that the emitted `match` arms name.  `(define
+  (__sir_user_main) 42)` was a duplicate definition, and `(define (f A
+  __cap_A) (lambda () (+ A __cap_A)))` printed 2 instead of 11: the second
+  capture read the temporary bound for the first.  (`__sir_block__`, the
+  frontends' shared block-parameter name, keeps its spelling.)
+- **A keyword capture's temporary is one identifier**: `__cap_fn`, not the
+  invalid `__cap_r#fn`.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
 ## Unreleased — Strict closures; readable uncaught raises (issue #18461)
 
 - The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`)

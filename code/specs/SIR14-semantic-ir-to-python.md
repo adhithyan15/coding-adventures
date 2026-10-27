@@ -95,12 +95,26 @@ statements, but SIR `Block`s appear in expression positions.  The
 emitter lifts each non-trivial Block into a fresh nested `def`:
 
 ```python
-def __block_42():
+def _sir_block_42():
     x = 1
     y = 2
     return x + y
-__block_42()
+_sir_block_42()
 ```
+
+The lifted def is named inside the reserved `_sir` namespace.  It was
+`__block_N` until issue #18466 — the very name the Ruby frontend gives its
+hoisted block *functions*, so one module could define `__block_0` twice.
+
+### Reserved names (issue #18466)
+
+The emitted module's own names share Python's single module namespace with
+the user's, and Python resolves names at call time, so a user `def` with a
+generated name *replaces* it.  `sanitize_ident` escapes into
+`sir_esc_v<name>` every `_sir…` name in any case (the runtime aliases,
+`_SIR_MISSING`, `_sir_user_main`, `_sir_block_N`), the temporaries `__l`
+and `__exc`, and the builtins the emitted code names bare: `Exception`,
+`len`, `list`, `range` (SIR10 "Generated names").
 
 For trivial blocks (no statements), the value expression renders
 inline.

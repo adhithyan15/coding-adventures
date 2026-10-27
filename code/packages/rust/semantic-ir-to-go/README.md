@@ -29,6 +29,12 @@ closure) is wrapped in `_sir_strict_arity(<closure>, N)`, which panics with
 a catchable `ArgumentError: arity mismatch: …` on any other argument count
 (a plain closure would hit Go's own index-out-of-range instead).
 
+The runtime, its imports and the user's functions share one package scope,
+so `sanitize_ident` escapes every name the file declares — the runtime's
+`sir…`/`_sir…` functions and types, `Value`, `Map`, …, the imports `fmt`,
+`math`, …, `main`, `init` and `_` — into `sir_esc_v<name>` (SIR10
+"Generated names", issue #18466).
+
 ### SIR16 (v1) — complete
 
 The Go backend accepts **all six** SIR16 features below, reaching **full

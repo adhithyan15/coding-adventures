@@ -294,6 +294,18 @@ A frontend that doesn't know whether a call site is direct or
 indirect **must** commit to `IndirectCall`.  The IR has no "maybe
 direct" node.
 
+A `DirectCall`'s target must not be a closure body — a `Function` with
+`captures`.  A closure body is reached only through a `MakeClosure`, which
+supplies the captured values ahead of the call's arguments; a `DirectCall`
+has no way to supply them, so the validator refuses it.
+
+> **Revision (issue #18466).** The `DirectCall` arity rule below counted
+> `params` only, so a hand-written call passing `params.len()` arguments to
+> a closure body validated.  C, Go and Rust then failed to compile it (their
+> function takes `captures…, params…`) and JavaScript shifted every argument
+> into a capture slot.  No frontend emits such a call (Twig's own path was
+> closed in #18461).
+
 #### Default parameters and call arity (P2a)
 
 A parameter may carry a default-value expression (`Param.default`, the
@@ -416,17 +428,33 @@ marker evaluates to that closure.  When the function has no single arity
 block parameter), the marker changes nothing and the closure stays
 lenient.
 
-Every backend raises the error at the call, before the body runs:
+The `lambda` marker takes exactly one argument.  A backend refuses a
+marker with any other count at compile time (C did not, before issue
+#18466; only a hand-built or non-Twig module can carry one).
+
+Every backend raises the error at the call, before the body runs, and the
+error is always Ruby's **`ArgumentError`**, with the message `arity
+mismatch: closure expects N argument(s), got M`.  `ArgumentError` is the
+class Ruby itself raises for a lambda called with the wrong count, and the
+class four of the seven backends already used, so a `rescue ArgumentError`
+around a closure call catches it — and a `rescue TypeError` does not —
+whichever language the program is compiled to:
 
 | Backend    | How                                                    | Error                                    |
 |------------|--------------------------------------------------------|------------------------------------------|
-| C          | `_sir_strict_arity` stamps the closure; `_sir_apply` checks | `ArgumentError: arity mismatch: …`, exit 1 |
-| Go         | `_sir_strict_arity` wraps the closure                  | catchable `ArgumentError` panic           |
-| Rust       | `__sir::strict_arity` wraps the closure                | catchable `ArgumentError`                 |
-| JavaScript | check inlined in the closure's arrow function          | `TypeError: arity mismatch: …`            |
-| TypeScript | same inline check (no runtime-package change)          | `TypeError: arity mismatch: …`            |
-| Ruby       | `sir_check_arity` first thing in the lambda            | `ArgumentError: arity mismatch: …`        |
-| Python     | `_sir_as_lambda` passes arguments through unadjusted   | Python's own `TypeError`                  |
+| C          | `_sir_strict_arity` stamps the closure; `_sir_apply` checks | `ArgumentError`; uncaught: printed, exit 1 |
+| Go         | `_sir_strict_arity` wraps the closure                  | `ArgumentError` panic                     |
+| Rust       | `__sir::strict_arity` wraps the closure                | `ArgumentError`                           |
+| JavaScript | check inlined in the closure's arrow function          | `__Sir.raiseError("ArgumentError", …)`    |
+| TypeScript | same inline check (no runtime-package change)          | `__SirExc.raiseError("ArgumentError", …)` when the module imports the exception runtime; otherwise an `Error` named `ArgumentError`, which nothing could catch anyway |
+| Ruby       | `sir_check_arity` first thing in the lambda            | `ArgumentError`                           |
+| Python     | the runtime's `apply` checks a lambda's count          | `ArityError`, tagged `sir_class = "ArgumentError"` (a `TypeError` subclass, so native handlers still work) |
+
+> **Revision (issue #18466).** JavaScript, TypeScript and Python raised a
+> native `TypeError`, which their exception runtimes class as a plain
+> `StandardError`: a Ruby-frontend `rescue ArgumentError` around a lambda
+> call caught the error on C, Go, Rust and Ruby and missed it on the other
+> three.
 
 > **Revision (issue #18461).** Only the Python backend gave the marker
 > this meaning before; C and Ruby refused it as an unknown builtin,
@@ -618,6 +646,10 @@ The validator checks:
 - Every `Block` ends with a value expression
 - Every `Intrinsic.targets` is non-empty
 - Function names are unique within a module
+- A `DirectCall` names a known function, with an argument count its
+  parameters accept, and never a closure body (a function with captures)
+- A `MakeClosure` supplies exactly one value per capture its function
+  declares
 - Effects propagation is internally consistent (best-effort)
 - Manifest features declared-but-not-used produce **warnings**
   (frontends may over-declare conservatively)
@@ -650,6 +682,33 @@ pub struct Artifact {
 ```
 
 A `BackendRegistry` allows runtime discovery of registered backends.
+
+### Generated names
+
+A backend emits names of its own next to the user's: a renamed entry
+point, runtime helpers, the argument list of a closure wrapper,
+temporaries.  **A user name must never be able to spell one.**  If it can,
+the two become one variable or one definition, and the program silently
+means something else — or does not compile.  Each backend therefore
+reserves every name it generates in its identifier sanitizer, which maps a
+reserved name into the same escaped form it already uses for a target
+keyword (the C backend's `sir_esc_v<name>`, and its equivalents).  The
+escape is one-to-one, so no two user names collide either.
+
+A backend may instead put user names into a namespace of their own.  C and
+Ruby do this for functions: every user function is `sir_fn_<name>`, because
+a C function shares the C library's symbol namespace and a top-level Ruby
+`def` overrides `Kernel` methods for the whole program.
+
+> **Revision (issue #18466).** Only the C backend reserved its own names.
+> Elsewhere `(define (_sir_user_main) 42)` was overwritten by the renamed
+> SIR `main` (Python) or redeclared it (Go, Rust); `(define
+> (_sir_global_set k v) 0)` replaced the Python runtime's global store; a
+> captured variable named `_a` (JavaScript, TypeScript), `__sir_args`
+> (Ruby) or `__cap_A` (Rust) read the closure wrapper's own binding;
+> `(define (free x) x)` clashed with libc; and `(define (Map x) x)` replaced
+> JavaScript's `Map` for the inlined runtime.  The full list of reserved
+> names is in each backend's `sanitize_ident` documentation.
 
 ## Versioning
 

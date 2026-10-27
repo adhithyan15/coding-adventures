@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — `ArityError`: a strict closure's error is SIR's `ArgumentError` (issue #18466)
+
+`apply` now checks a lambda's (strict closure's) argument count before the
+call and raises the new `ArityError` — "arity mismatch: closure expects N
+argument(s), got M", the message every SIR backend prints.  It used to
+pass the arguments through and let Python raise its own `TypeError`, which
+`sir-runtime-exceptions` classes as a plain `StandardError`, so a Ruby
+`rescue ArgumentError` around a lambda call missed it on the Python
+backend alone.  `ArityError` carries `sir_class = "ArgumentError"` (read by
+`class_of_thrown`; this package cannot import that one to subclass
+`SirError`) and still subclasses `TypeError`, so existing handlers keep
+working.
+
 ## 0.6.0 — SIR21 T3b-2 Slice 2: `trunc_div`/`utrunc_div`/`true_div`
 
 Additive-only: adds the three genuinely-new division functions from the

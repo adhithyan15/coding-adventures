@@ -43,6 +43,30 @@ class LocalJumpError(Exception):
     """
 
 
+class ArityError(TypeError):
+    """A strict closure (a Ruby lambda, every Twig closure) was called with
+    the wrong number of arguments.
+
+    SIR10 fixes the class of this error at Ruby's ``ArgumentError`` on every
+    backend, so a ``rescue ArgumentError`` catches it whichever language the
+    program was compiled to.  Python has no ``ArgumentError``; we would
+    otherwise surface the interpreter's own ``TypeError`` ("f() takes 2
+    positional arguments but 1 was given"), which the exception runtime
+    classes as a plain ``StandardError`` — so ``rescue ArgumentError`` missed
+    it on this backend alone (issue #18466).
+
+    Two facets make it read correctly from both sides:
+
+    - ``sir_class = "ArgumentError"`` is the SIR class tag.  The exception
+      runtime's ``class_of_thrown`` reads it from *any* exception, so this
+      class needs no import of that package (which depends on this one).
+    - It still subclasses :class:`TypeError`, so Python code that already
+      caught the native error keeps working.
+    """
+
+    sir_class = "ArgumentError"
+
+
 class Closure:
     """A callable handle wrapping a Python function.
 
@@ -85,15 +109,28 @@ def apply(c: Any, args: list[Any]) -> Any:
     dropped and missing ones become ``nil`` (``None``) — so e.g. a one-param
     block yielded two values (``each_with_index``-style) binds the first and
     ignores the rest instead of raising.  A *lambda* (``is_lambda``) is left
-    **strict**: arguments pass through unadjusted, so a genuine mismatch
-    surfaces as Python's native ``TypeError`` (the analogue of Ruby's
-    ``ArgumentError``).  A variadic block (``arity is None``) is also passed
-    through unadjusted.
+    **strict**: its arguments are never adjusted.  Their count is checked
+    up front, and a mismatch raises :class:`ArityError` — SIR's
+    ``ArgumentError`` — with the same message every other backend prints:
+
+    ===============================  ======================================
+    call                             result
+    ===============================  ======================================
+    lambda (x, y) called with 2      runs
+    lambda (x, y) called with 1      ArityError: arity mismatch: closure
+                                     expects 2 argument(s), got 1
+    proc (x, y) called with 1        runs with y = None
+    variadic (``arity is None``)     passed through unadjusted
+    ===============================  ======================================
     """
     if c is None:
         raise LocalJumpError("no block given (yield)")
     if not isinstance(c, Closure):
         raise TypeError("apply on non-closure")
+    if c.is_lambda and c.arity is not None and len(args) != c.arity:
+        raise ArityError(
+            f"arity mismatch: closure expects {c.arity} argument(s), got {len(args)}"
+        )
     if c.is_lambda or c.arity is None:
         return c.fn(*args)
     # Block / proc leniency: reshape args to exactly the declared arity.

@@ -39,6 +39,11 @@ while _sir.truthy(i < len(xs)):
     i = i + 1
 ```
 
+A *strict* closure (`as_lambda`, a Ruby lambda) called with the wrong
+number of arguments raises `ArityError: arity mismatch: closure expects N
+argument(s), got M`.  It is SIR's `ArgumentError` — tagged `sir_class =
+"ArgumentError"` for `sir-runtime-exceptions` — and still a `TypeError`.
+
 ## Where it fits
 
 Frontend (Ruby / JS / Python …) → `semantic-ir` → `semantic-ir-to-python` →

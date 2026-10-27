@@ -165,7 +165,14 @@ through the runtime's `_sir_global_set` — the same store
 `_sir_global_get_static` reads.  (Before issue #18461 they wrote a
 `_globals` dict the emitted module never imported, so any value define
 raised `NameError`.)  A strict closure (SIR10's `lambda` marker) is wrapped
-in `_sir_as_lambda`, so a wrong argument count raises Python's `TypeError`.
+in `_sir_as_lambda`, so a wrong argument count raises the runtime's
+`ArityError` — SIR's `ArgumentError`, which `rescue ArgumentError` catches.
+
+`sanitize_ident` escapes every name the emitted module binds or reads —
+`_sir…` in any case (the runtime aliases, `_sir_user_main`, the lifted
+`_sir_block_N` defs), `__l`, `__exc` and the bare builtins `Exception`,
+`len`, `list`, `range` — so a user `def` can no longer replace one (SIR10
+"Generated names", issue #18466).
 
 ## Capability declaration
 

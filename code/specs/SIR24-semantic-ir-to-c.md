@@ -274,14 +274,19 @@ string-concat cases the corpus exercises).
 /* forward decls, then user functions (mutual recursion) */
 
 /* ── user program ────────────────────────────────────── */
-static SirValue user_main(void) { … }   /* SIR `main`, renamed */
+SirValue sir_fn_fact(SirValue n) { … }  /* every user function: sir_fn_<name> */
+SirValue sir_user_main(void) { … }       /* SIR `main`, renamed */
 
-int main(void) { _sir_runtime_init(); user_main(); return 0; }
+int main(void) { sir_user_init(); sir_user_main(); return 0; }
 ```
 
-SIR's `main` is renamed `user_main` so it never collides with C's process
-entry `main`.  All user functions get forward declarations before any
-definition, so mutual recursion needs no ordering.
+SIR's `main` is renamed `sir_user_main` (and `_init` `sir_user_init`) so it
+never collides with C's process entry `main`.  Every other function is
+`sir_fn_<name>`: a C function shares the symbol namespace of the C library
+and the included headers, so a user function named `free` or `exit` used
+to be a "conflicting types" error (issue #18466).  All user functions get
+forward declarations before any definition, so mutual recursion needs no
+ordering.
 
 ## Display convention
 
@@ -296,10 +301,14 @@ anti-injection discipline; the substituted value can never be attacker text).
 ## Identifier sanitisation
 
 C identifiers match `[A-Za-z_][A-Za-z0-9_]*`.  `sanitize_ident` maps SIR names
-into that set (non-matching characters escaped to `_uXXXX_`), and any name
+into that set (non-matching characters escaped to `_uXXXXXX_`), and any name
 colliding with a C keyword (`is_c_keyword`: `int`, `for`, `return`, `struct`,
-…) or a runtime symbol (the `_sir_`/`user_main` namespace) gets a disambiguating
-suffix.  String and comment escaping (`quote_c_string`, `sanitize_comment`)
+…), a runtime symbol (`sir…`/`_sir…` in any case — functions, `Sir*` types,
+`SIR_*` macros, the `sir_fn_`/`sir_user_*` names), `main`, or a name the C
+headers may define as a macro (no lower-case letter: `EOF`, `NAN`, …;
+implementation-reserved `__x`/`_X`; `errno`, `math_errhandling`, `stdin`,
+`stdout`, `stderr`, `L_tmpnam`) is escaped to `sir_esc_v<name>` (SIR10
+"Generated names", issue #18466).  String and comment escaping (`quote_c_string`, `sanitize_comment`)
 strips embedded terminators, mirroring the SIR12/SIR13 defence, so no source
 text can break out of a literal or a comment.
 

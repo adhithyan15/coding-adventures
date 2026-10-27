@@ -2364,7 +2364,17 @@ fn emit_make_closure(
     let pad = indent_str(indent + 1);
     let mut cap_names: Vec<String> = Vec::with_capacity(captures.len());
     for c in captures {
-        let bind = format!("__cap_{}", sanitize_ident(&c.name));
+        // `__cap_<capture>`.  The user can never spell one of these: the
+        // whole `__cap_` family is reserved by `sanitize_ident` (#18466), so
+        // a user variable named `__cap_A` is `__sir_esc_v__cap_A` and cannot
+        // be shadowed by the temporary for `A`.  A keyword capture sanitizes
+        // to raw-identifier syntax (`r#fn`), which cannot be glued onto a
+        // prefix; dropping the `r#` keeps the map one-to-one, because a
+        // keyword never sanitizes to its bare spelling.
+        let bind = format!(
+            "__cap_{}",
+            sanitize_ident(&c.name).trim_start_matches("r#")
+        );
         cap_names.push(bind.clone());
         let _ = write!(out, "{}let {}: __sir::Value = ", pad, bind);
         emit_expr(out, &c.value, indent + 1);
@@ -2964,11 +2974,28 @@ const TAG_ESCAPED: &str = "e";
 /// loop below verbatim. The fix: every `_` is now escaped too, as a
 /// fixed-width `_u{6-hex}_` token — see `semantic-ir-to-python::
 /// escape_body`'s own doc comment for the full argument.
+///
+/// # Generated names are reserved too (#18466)
+///
+/// The emitter invents names of its own — see [`is_generated_name`] — and a
+/// user name spelled the same way used to pass straight through and become
+/// the *same* Rust variable.  `(define (f A __cap_A) (lambda () (+ A
+/// __cap_A)))` bound the capture temporary `__cap_A` (for `A`) and then read
+/// it back as the user's `__cap_A`, printing 2 instead of 11.  A reserved
+/// name now takes the marker branch exactly like a keyword does, so no user
+/// name can spell a generated one:
+///
+/// ```text
+/// __cap_A          ->  __sir_esc_v__cap_A
+/// __sir_user_main  ->  __sir_esc_v__sir_user_main
+/// None             ->  __sir_esc_vNone
+/// A                ->  A                 (ordinary names are untouched)
+/// ```
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
-    if is_valid_rust_ident(s) && !is_rust_keyword(s) && !s.starts_with(ESCAPE_MARKER) {
+    if is_valid_rust_ident(s) && !is_rust_keyword(s) && !is_generated_name(s) {
         return s.to_string();
     }
     if is_rust_keyword(s) && !is_raw_incompatible_keyword(s) {
@@ -2995,6 +3022,44 @@ pub fn sanitize_ident(s: &str) -> String {
         }
     }
     out
+}
+
+/// Names the emitter generates itself, which a user name must never spell
+/// (#18466).  [`sanitize_ident`] routes every one of them into its escaped
+/// branch, so the generated name and the user's can never be one variable.
+///
+/// | reserved                  | where the emitter writes it                          |
+/// |---------------------------|------------------------------------------------------|
+/// | `__sir…`                  | the runtime module `__sir`, `__sir_user_main` (SIR's `main`), loop temporaries `__sir_i_N`/`__sir_stop_N`/`__sir_step_N`, and [`ESCAPE_MARKER`] itself |
+/// | `__cap_…`                 | a closure's capture temporaries, `__cap_<capture>` ([`emit_make_closure`]) |
+/// | `__args`, `__it`          | the closure adapter's argument vector and its iterator |
+/// | `__l`                     | the short-circuit `and`/`or` operand binding          |
+/// | `__r`, `__payload`, `__exc` | `catch_unwind` around a `TryCatch` and the entry point |
+/// | `Some`, `None`, `Ok`, `Err` | prelude variants the emitted `match` arms name — a user item or `let` of that name would shadow or refute them |
+///
+/// The prefixes make the reservation open-ended: a new `__sir_*` temporary
+/// is reserved the moment it is written.  A new temporary outside these
+/// families must be added here.
+/// `__sir_block__` is the one exception to the `__sir` family: it is not
+/// generated here but is the SIR-level name the Ruby frontend gives a
+/// method's block parameter, shared by every frontend and backend, so it
+/// keeps its spelling.
+fn is_generated_name(s: &str) -> bool {
+    (s.starts_with("__sir") && s != "__sir_block__")
+        || s.starts_with("__cap_")
+        || matches!(
+            s,
+            "__args"
+                | "__it"
+                | "__l"
+                | "__r"
+                | "__payload"
+                | "__exc"
+                | "Some"
+                | "None"
+                | "Ok"
+                | "Err"
+        )
 }
 
 /// The subset of `is_rust_keyword` that raw-identifier syntax cannot
@@ -3241,6 +3306,40 @@ mod tests {
         let escaped_keyword = sanitize_ident("self"); // "__sir_esc_vself"
         assert_ne!(sanitize_ident(&escaped_keyword), escaped_keyword);
         assert!(sanitize_ident(&escaped_keyword).starts_with("__sir_esc_"));
+    }
+
+    /// The names the emitter binds are escaped; ordinary names are not
+    /// (#18466).  `__sir_block__` is the frontends' shared block-parameter
+    /// name, not a generated one, so it keeps its spelling.
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in [
+            "__sir", "__sir_user_main", "__sir_i_0", "__cap_A", "__args", "__it", "__l", "__r",
+            "__payload", "__exc", "Some", "None", "Ok", "Err",
+        ] {
+            assert_eq!(sanitize_ident(name), format!("__sir_esc_v{name}"), "{name}");
+        }
+        for name in ["A", "__cap", "__lambda_0", "__sir_block__", "__self", "some", "Okay"] {
+            assert_eq!(sanitize_ident(name), name, "{name}");
+        }
+    }
+
+    /// A capture temporary is `__cap_` + the capture's sanitized name, with
+    /// a keyword's `r#` dropped so the result is one identifier.
+    #[test]
+    fn capture_temporaries_are_single_identifiers_for_keyword_captures() {
+        let e = Expr::MakeClosure {
+            fn_name: "__lambda_0".into(),
+            captures: vec![semantic_ir::CaptureValue {
+                name: "fn".into(),
+                value: Expr::IntLit { value: 1, span: Span::synthetic() },
+            }],
+            span: Span::synthetic(),
+        };
+        let mut out = String::new();
+        emit_expr(&mut out, &e, 0);
+        assert!(out.contains("let __cap_fn: __sir::Value"), "got: {out}");
+        assert!(!out.contains("__cap_r#"), "got: {out}");
     }
 
     #[test]

@@ -626,6 +626,29 @@ def test_lambda_is_strict_on_too_few_args() -> None:
         sir.apply(c, [1])
 
 
+def test_lambda_arity_error_is_tagged_argument_error() -> None:
+    # Issue #18466: the mismatch is SIR's ArgumentError on every backend.
+    # The check runs before the call, so the message is the shared one and
+    # the closure's own body never runs.
+    ran = []
+    c = sir.as_lambda(sir.make_closure(lambda x, y: ran.append((x, y)), []))
+    with pytest.raises(sir.ArityError) as info:
+        sir.apply(c, [1])
+    assert info.value.sir_class == "ArgumentError"
+    assert str(info.value) == "arity mismatch: closure expects 2 argument(s), got 1"
+    assert isinstance(info.value, TypeError)  # still catchable as before
+    assert ran == []
+
+
+def test_lambda_arity_counts_call_arguments_not_captures() -> None:
+    # The captured values are bound ahead of the call; the closure's arity is
+    # what is left, so one call argument satisfies `(cap, x)` with one capture.
+    c = sir.as_lambda(sir.make_closure(lambda cap, x: cap + x, [10]))
+    assert sir.apply(c, [5]) == 15
+    with pytest.raises(sir.ArityError):
+        sir.apply(c, [5, 6])
+
+
 def test_as_lambda_returns_same_closure_and_sets_flag() -> None:
     c = sir.make_closure(lambda x: x, [])
     assert c.is_lambda is False

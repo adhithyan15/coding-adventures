@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased — User functions and the closure wrapper in the `sir_` namespace (issue #18466)
+
+- **Every user function is `sir_fn_<name>`.**  A top-level Ruby `def` is a
+  private method on `Object`, found ahead of `Kernel`, and the runtime calls
+  `Kernel` methods by bare name — so `(define (raise a b) 0)` turned every
+  runtime error, a strict closure's arity error included, into a quiet `0`.
+  `main` and `_init` stay `sir_user_main` and `sir_user_init`.
+- **The closure wrapper's argument list is `sir_args`**, inside the
+  reserved `sir_` namespace.  It was `__sir_args`, which a user could
+  spell: the captured values are evaluated inside the wrapper, so
+  `(define (f __sir_args) (lambda (x) (* x __sir_args)))` read the
+  argument array.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
 ## Unreleased — Strict closures (issue #18461)
 
 The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) was

@@ -200,7 +200,7 @@ pub fn emit_module(m: &Module) -> String {
         out.push_str("    sir_user_init();\n");
     }
     if m.functions.iter().any(|f| f.name == "main") {
-        out.push_str("    user_main();\n");
+        out.push_str("    sir_user_main();\n");
     }
     out.push_str("    return 0;\n}\n");
 
@@ -232,12 +232,29 @@ fn emit_globals_comment(out: &mut String, globals: &[Global]) {
 // ---------------------------------------------------------------------------
 
 /// The C name for a SIR function.  `main` and `_init` are renamed so they
-/// never collide with C's process entry or a reserved platform symbol.
+/// never collide with C's process entry; every other function lives in the
+/// `sir_fn_` namespace (#18466).
+///
+/// A C function is an external symbol in the same namespace as the C
+/// library the program links against and the headers it includes.  A user
+/// function spelled like any of those clashed: `(define (free x) x)` is
+/// "conflicting types for 'free'", and `(define (SirValue x) x)` redeclared
+/// the runtime's own value type.  No list of reserved names can keep up with
+/// every libc and platform header, so instead every user function gets a
+/// prefix no library uses.  The prefix sits inside the `sir…` namespace that
+/// [`sanitize_ident`] reserves, so no user name — a local included — can
+/// spell one, and [`sanitize_ident`] being one-to-one keeps the map
+/// one-to-one:
+///
+/// ```text
+/// main   ->  sir_user_main        free      ->  sir_fn_free
+/// _init  ->  sir_user_init        SirValue  ->  sir_fn_sir_esc_vSirValue
+/// ```
 fn function_emit_name(name: &str) -> String {
     match name {
-        "main" => "user_main".to_string(),
+        "main" => "sir_user_main".to_string(),
         "_init" => "sir_user_init".to_string(),
-        other => sanitize_ident(other),
+        other => format!("sir_fn_{}", sanitize_ident(other)),
     }
 }
 
@@ -2964,6 +2981,16 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             if !is_supported_builtin(name) {
                 return Some((name.clone(), span.clone()));
             }
+            // SIR10's strict-closure marker wraps exactly one closure.  Any
+            // other count used to compile to a runtime
+            // `_sir_unknown_builtin("lambda")` (#18466); only a hand-built or
+            // non-Twig module can carry one, and it is refused here instead.
+            if name == "lambda" && args.len() != 1 {
+                return Some((
+                    format!("`lambda` with {} argument(s) (it wraps exactly one closure)", args.len()),
+                    span.clone(),
+                ));
+            }
             // `__new__` must start with `StrLit(class)` — a constant class name;
             // any further args are constructor arguments forwarded to
             // `initialize` and emitted like ordinary call args, so they need no
@@ -3437,16 +3464,35 @@ fn is_valid_c_ident(s: &str) -> bool {
 }
 
 /// Whether a syntactically-valid C identifier still needs the escape
-/// marker: a C keyword, a reserved platform macro (`min`/`max`), this
-/// backend's own reserved names, or already starting with the runtime's
-/// `_sir` namespace.
+/// marker: a C keyword, a reserved platform macro (`min`/`max`), a name this
+/// backend or its runtime generates, or a name the C library may define as
+/// a macro (#18466).
+///
+/// | reserved                                  | why                                    |
+/// |-------------------------------------------|----------------------------------------|
+/// | `sir…`, `_sir…` (any case)                | the runtime's functions (`_sir_apply`), types (`SirValue`), macros and enum constants (`SIR_INT`), the entry points `sir_user_main`/`sir_user_init`, every user function's `sir_fn_` prefix, and [`ESCAPE_MARKER`] |
+/// | `main`                                    | C's process entry                      |
+/// | no lowercase letter (`EOF`, `NAN`, `N`)   | the headers' object-like macros are upper case: `EOF`, `NAN`, `INFINITY`, `INT64_MAX`, `EXIT_SUCCESS`, … — a local of that name expands into garbage |
+/// | `__…`, `_` + upper case                   | reserved to the C implementation, which defines macros there (`__STDC__`, glibc's `__THROW`) |
+/// | `errno`, `math_errhandling`, `stdin`, `stdout`, `stderr`, `L_tmpnam` | the lower-case object-like macros of the included headers (MSVC's `stdin` is `(__acrt_iob_func(0))`) |
+///
+/// Function-like macros (`isnan`, `setjmp`) need no entry: they expand only
+/// before `(`, which a local never meets, and a user *function* is never
+/// spelled bare (see [`function_emit_name`]).
 fn needs_marker(s: &str) -> bool {
+    let lower = s.to_ascii_lowercase();
     is_c_keyword(s)
         || is_reserved_macro(s)
-        || s.starts_with("_sir")
+        || lower.starts_with("sir")
+        || lower.starts_with("_sir")
         || s == "main"
-        || s == "user_main"
-        || s == "sir_user_init"
+        || !s.chars().any(|c| c.is_ascii_lowercase())
+        || s.starts_with("__")
+        || (s.starts_with('_') && s.chars().nth(1).is_some_and(|c| c.is_ascii_uppercase()))
+        || matches!(
+            s,
+            "errno" | "math_errhandling" | "stdin" | "stdout" | "stderr" | "L_tmpnam"
+        )
 }
 
 /// Per-character encoding for a name containing at least one illegal

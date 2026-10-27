@@ -2179,6 +2179,23 @@ const TAG_ESCAPED: &str = "e";
 /// a complete, fixed-width `_u{6-hex}_` token — see
 /// `semantic-ir-to-python::escape_body`'s own doc comment for the full
 /// argument.
+///
+/// # Generated names are reserved too (#18466)
+///
+/// The emitted file is one Go `package main`: the inlined runtime's types and
+/// functions, its imports, and the user's functions share one package
+/// scope, and a user's locals shadow all of them.  A user name spelled like
+/// any of them used to pass straight through — `(define (_sir_user_main)
+/// 42)` redeclared the renamed SIR `main`, `(define (fmt x) x)` collided
+/// with the `fmt` import, and a parameter named `_sir_plus` shadowed the
+/// runtime's `+`.  [`is_generated_name`] lists them; each now takes the
+/// marker branch exactly like a keyword:
+///
+/// ```text
+/// _sir_user_main  ->  sir_esc_v_sir_user_main
+/// fmt             ->  sir_esc_vfmt
+/// Value           ->  sir_esc_vValue
+/// ```
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
@@ -2186,7 +2203,7 @@ pub fn sanitize_ident(s: &str) -> String {
     if is_valid_go_ident(s)
         && !is_go_keyword(s)
         && !is_go_builtin(s)
-        && !s.starts_with(ESCAPE_MARKER)
+        && !is_generated_name(s)
     {
         return s.to_string();
     }
@@ -2203,6 +2220,56 @@ pub fn sanitize_ident(s: &str) -> String {
         }
     }
     out
+}
+
+/// Names the emitted Go file declares or binds that a user name must never
+/// spell (#18466).  [`sanitize_ident`] escapes every one of them.
+///
+/// | reserved                     | what the emitter or runtime declares               |
+/// |------------------------------|----------------------------------------------------|
+/// | `sir…`, `_sir…`, `__sir…` (any case) | every runtime function and helper type (`_sir_plus`, `SirError`, `sirCasKind`, …), `_sir_user_main` (SIR's `main`), loop temporaries `__sir_i_N`/`__sir_stop_N`/`__sir_step_N`, and [`ESCAPE_MARKER`] |
+/// | `Value`, `Symbol`, `Pair`, `Closure`, `Seq`, `Map`, `MapEntry`, `NDArray`, `_missingMarker` | the runtime's other package-level types |
+/// | `fmt`, `math`, `os`, `sort`, `strconv`, `strings` | the imported packages             |
+/// | `main`, `init`               | Go's process entry and package initialiser — a user `init` with parameters is a compile error |
+/// | `_`                          | the blank identifier, which cannot be read back    |
+/// | `__l`, `__args`, `__lam`     | the short-circuit operand, a closure adapter's argument slice, a hoisted lambda |
+///
+/// The unit test `every_runtime_declaration_is_reserved` scans the runtime
+/// source for package-level declarations, so a new runtime type that is not
+/// covered here fails the build rather than becoming spellable.
+/// `__sir_block__` is the one exception to the `__sir` family: it is not
+/// generated here but is the SIR-level name the Ruby frontend gives a
+/// method's block parameter, shared by every frontend and backend, so it
+/// keeps its spelling.
+fn is_generated_name(s: &str) -> bool {
+    let lower = s.to_ascii_lowercase();
+    lower.starts_with("sir")
+        || lower.starts_with("_sir")
+        || (lower.starts_with("__sir") && s != "__sir_block__")
+        || matches!(
+            s,
+            "Value"
+                | "Symbol"
+                | "Pair"
+                | "Closure"
+                | "Seq"
+                | "Map"
+                | "MapEntry"
+                | "NDArray"
+                | "_missingMarker"
+                | "fmt"
+                | "math"
+                | "os"
+                | "sort"
+                | "strconv"
+                | "strings"
+                | "main"
+                | "init"
+                | "_"
+                | "__l"
+                | "__args"
+                | "__lam"
+        )
 }
 
 fn is_valid_go_ident(s: &str) -> bool {
@@ -2411,6 +2478,61 @@ mod tests {
     fn quote_go_string_control_chars() {
         let q = quote_go_string("\u{0001}");
         assert!(q.contains(r"\x01"), "got: {}", q);
+    }
+
+    /// Every package-level name the inlined runtime declares — a `func`,
+    /// `type`, `var` or `const`, alone or inside a `( … )` group — must be
+    /// escaped, so no user name can redeclare or shadow it (#18466).
+    #[test]
+    fn every_runtime_declaration_is_reserved() {
+        let mut names = Vec::new();
+        let mut in_group = false;
+        for line in crate::runtime::RUNTIME.lines() {
+            if in_group {
+                if line.starts_with(')') {
+                    in_group = false;
+                } else if let Some(rest) = line.strip_prefix('\t') {
+                    if let Some(name) = rest.split(|c: char| !(c.is_ascii_alphanumeric() || c == '_')).next() {
+                        if !name.is_empty() && !rest.starts_with("//") {
+                            names.push(name.to_string());
+                        }
+                    }
+                }
+                continue;
+            }
+            if matches!(line, "const (" | "var (" | "type (") {
+                in_group = true;
+                continue;
+            }
+            for kw in ["func ", "type ", "var ", "const "] {
+                if let Some(rest) = line.strip_prefix(kw) {
+                    if rest.starts_with('(') {
+                        continue; // a method: `func (r *T) name`
+                    }
+                    let name: String = rest
+                        .chars()
+                        .take_while(|c| c.is_ascii_alphanumeric() || *c == '_')
+                        .collect();
+                    if !name.is_empty() {
+                        names.push(name);
+                    }
+                }
+            }
+        }
+        assert!(names.len() > 50, "scanned too few declarations: {names:?}");
+        let spellable: Vec<_> = names.iter().filter(|n| sanitize_ident(n) == **n).collect();
+        assert!(spellable.is_empty(), "runtime names a user could spell: {spellable:?}");
+    }
+
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in ["_sir_user_main", "_sir_plus", "SirError", "fmt", "Value", "init", "_", "__l"] {
+            assert_eq!(sanitize_ident(name), format!("sir_esc_v{name}"), "{name}");
+        }
+        for name in ["x", "fact", "values", "format", "initial", "siren_x"] {
+            let want = if name.starts_with("sir") { format!("sir_esc_v{name}") } else { name.to_string() };
+            assert_eq!(sanitize_ident(name), want, "{name}");
+        }
     }
 
     #[test]

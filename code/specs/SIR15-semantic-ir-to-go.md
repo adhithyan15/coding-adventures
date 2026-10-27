@@ -95,6 +95,15 @@ the original was; for unexported names a simple suffix suffices.
 SIR's `main` is renamed to `_sir_user_main` so it does not collide
 with Go's process entry `main()`.
 
+The emitted file is one `package main`, so the runtime, its imports and the
+user's code share a scope.  `sanitize_ident` escapes into `sir_esc_v<name>`
+every name the file declares or binds: `sir…`/`_sir…`/`__sir…` in any case
+(runtime functions and types, `_sir_user_main`, loop temporaries), the
+runtime's other types (`Value`, `Symbol`, `Pair`, `Closure`, `Seq`, `Map`,
+`MapEntry`, `NDArray`, `_missingMarker`), the imports (`fmt`, `math`, `os`,
+`sort`, `strconv`, `strings`), `main`, `init`, `_`, and the temporaries
+`__l`, `__args`, `__lam` (SIR10 "Generated names", issue #18466).
+
 ## Output formatting
 
 - Indentation: tab (`\t`) per Go convention.
