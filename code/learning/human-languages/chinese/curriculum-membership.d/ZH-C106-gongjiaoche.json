@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C106-gongjiaoche",
+  "pathSegment": "ZH-PATH-106-STOP106",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-106-STOP106",
+      "order": 3
+    }
+  ]
+}

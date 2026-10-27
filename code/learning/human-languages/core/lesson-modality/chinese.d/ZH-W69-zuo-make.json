@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W69-zuo-make",
+    "language": "chinese",
+    "chapter": 69,
+    "sequence": 5565,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c2fa8f7100fa885d",
+    "detachableSegments": [
+      "Script — the person, gǔ, and a striking hand"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

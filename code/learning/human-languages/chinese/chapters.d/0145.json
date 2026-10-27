@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Late Again",
+  "label": "ch:zh-late-again",
+  "canDo": "I can give reasons for being late: the train, the alarm clock, a lie-in.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C145-gankuai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: I can give reasons for being late: the train, the alarm clock, a lie-in.",
+    "assesses": [
+      "ZH-LEX-C145-LATE145-03",
+      "ZH-LEX-C145-LATE145-04",
+      "ZH-LEX-C145-LATE145-05"
+    ]
+  }
+}

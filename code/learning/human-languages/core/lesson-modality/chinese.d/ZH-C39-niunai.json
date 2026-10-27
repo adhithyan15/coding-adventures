@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C39-niunai",
+    "language": "chinese",
+    "chapter": 39,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec97e7c244f46c71"
+  },
+  "findings": []
+}

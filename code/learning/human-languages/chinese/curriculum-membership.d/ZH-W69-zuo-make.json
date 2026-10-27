@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W69-zuo-make",
+  "pathSegment": "ZH-PATH-69-MEALS69",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-69-MEALS69",
+      "order": 1
+    }
+  ]
+}

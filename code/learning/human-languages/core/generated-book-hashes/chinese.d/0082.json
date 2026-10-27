@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:2b7f592f6eff2778",
+  "lessonIds": [
+    "ZH-C82-hou",
+    "ZH-C82-zuobian",
+    "ZH-C82-youbian",
+    "ZH-C82-zhongjian",
+    "ZH-C82-duimian"
+  ],
+  "tex": "chinese/book/chapters/ch82-behind-left-and-right.tex"
+}

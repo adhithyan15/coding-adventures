@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:15e978266f8938cf",
+  "lessonIds": [
+    "ZH-C34-jiao",
+    "ZH-W34-jiao",
+    "ZH-C34-nin",
+    "ZH-C34-xing",
+    "ZH-C34-renshi",
+    "ZH-C34-pengyou"
+  ],
+  "tex": "chinese/book/chapters/ch34-what-you-are-called.tex"
+}

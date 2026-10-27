@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:54415c0c0b3b2c0d",
+  "lessonIds": [
+    "ZH-C125-shengqi",
+    "ZH-C125-danxin",
+    "ZH-C125-fangxin",
+    "ZH-C125-zhaoji",
+    "ZH-C125-nanguo"
+  ],
+  "tex": "chinese/book/chapters/ch125-angry-and-worried.tex"
+}

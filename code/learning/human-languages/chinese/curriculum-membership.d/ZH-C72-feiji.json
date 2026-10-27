@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C72-feiji",
+  "pathSegment": "ZH-PATH-72-TRAVEL72",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-72-TRAVEL72",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C135-duanlian",
+  "pathSegment": "ZH-PATH-135-SPORT135",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-135-SPORT135",
+      "order": 4
+    }
+  ]
+}

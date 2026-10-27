@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C64-bangmang",
+  "pathSegment": "ZH-PATH-64-HELP64",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-64-HELP64",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W48-dian",
+    "language": "chinese",
+    "chapter": 48,
+    "sequence": 3885,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:52258cd25ae2f7c8",
+    "detachableSegments": [
+      "Script — a mark on 口, over four dots"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

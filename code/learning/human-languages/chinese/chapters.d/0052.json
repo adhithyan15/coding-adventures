@@ -1,0 +1,22 @@
+{
+  "chapter": 52,
+  "title": "Head, Hands and Feet",
+  "label": "ch:zh-head-hands-and-feet",
+  "canDo": "I can name my head, hands, feet, eyes and ears.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ZH-R52-review-48-52",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: I can name my head, hands, feet, eyes and ears.",
+    "assesses": [
+      "ZH-LEX-C52-BODY52-01",
+      "ZH-LEX-C52-BODY52-02",
+      "ZH-LEX-C52-BODY52-03",
+      "ZH-LEX-C52-BODY52-04",
+      "ZH-LEX-C52-BODY52-05",
+      "ZH-SCRIPT-SHOU-01"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W41-duo",
+    "language": "chinese",
+    "chapter": 41,
+    "sequence": 3513,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:64b0f845037e1e04",
+    "detachableSegments": [
+      "Script — the same three strokes, twice"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

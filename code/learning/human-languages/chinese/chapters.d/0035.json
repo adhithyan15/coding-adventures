@@ -1,0 +1,19 @@
+{
+  "chapter": 35,
+  "title": "Who Does What",
+  "label": "ch:zh-who-does-what",
+  "canDo": "I can say what people do and where somebody lives.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C35-zhu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 35: I can say what people do and where somebody lives.",
+    "assesses": [
+      "ZH-LEX-C35-WORK35-03",
+      "ZH-LEX-C35-WORK35-04",
+      "ZH-LEX-C35-WORK35-05"
+    ]
+  }
+}

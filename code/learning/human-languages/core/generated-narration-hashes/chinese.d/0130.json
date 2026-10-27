@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:c9bc989bc034c6e7",
+  "lessonIds": [
+    "ZH-C130-bingren",
+    "ZH-W130-bing-ill",
+    "ZH-C130-ganmao",
+    "ZH-C130-fashao",
+    "ZH-C130-teng",
+    "ZH-C130-kanbing"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch130.txt",
+  "json": "chinese/narration/ch130.json",
+  "textHash": "fnv1a64:546f7d4b6bf70db6",
+  "jsonHash": "fnv1a64:674c4a86419d4e43",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-117-COMPASS117",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say east, south, west and north, and ask which way to go.",
+  "prerequisites": []
+}

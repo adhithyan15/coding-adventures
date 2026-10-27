@@ -1,0 +1,22 @@
+{
+  "chapter": 128,
+  "title": "Music",
+  "label": "ch:zh-music",
+  "canDo": "I can talk about music: songs, the piano and the guitar, and what sounds good.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R128-review-123-128",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: I can talk about music: songs, the piano and the guitar, and what sounds good.",
+    "assesses": [
+      "ZH-LEX-C128-MUSIC128-01",
+      "ZH-LEX-C128-MUSIC128-02",
+      "ZH-LEX-C128-MUSIC128-03",
+      "ZH-LEX-C128-MUSIC128-04",
+      "ZH-LEX-C128-MUSIC128-05",
+      "ZH-SCRIPT-YIN-SOUND-01"
+    ]
+  }
+}

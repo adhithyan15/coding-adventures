@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 101,
+  "output": "chinese/book/chapters/ch101-in-the-kitchen.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C138-mei",
+    "language": "chinese",
+    "chapter": 138,
+    "sequence": 10770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6a0265cb2aa5481"
+  },
+  "findings": []
+}

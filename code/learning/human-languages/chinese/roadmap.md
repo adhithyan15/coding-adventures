@@ -209,6 +209,54 @@ hand-authored, font-checked ductus rather than a re-subset.
 Realises part of `SPINE-TIME-OF-DAY` and pays back Chapter 1 by showing that 好
 was a building block, not a one-off.
 
+## How are you *(delivered, chapter 30)*
+
+*nǐ zěnmeyàng* — how are you doing? — beside the textbook 你好吗, answered with
+很好, *máng*, *lèi* or *hái xíng*. Realizes `SPINE-CHECK-WELLBEING`, the seventh
+and last pre-A1 spine node. One character is written, 很, the plain link in front
+of an adjective; the four words whose characters are not written yet are taught
+by ear with pinyin headwords, because a character shown but never written would
+count against the track's letter-anchoring ratchet.
+
+## The pre-A1 vocabulary, first half *(delivered, chapters 31-57)*
+
+135 words (37 verbs) on the pre-A1 nodes, five a chapter, and 30 characters written
+(他 们 妈 男 叫 来 这 那 吃 饭 喝 水 买 多 少 去 车 天 今 星 期 年 明 点 午 晚 手 说 话 想), each
+right after the word that first shows it. Words whose characters are not written yet
+are taught by ear with pinyin headwords. Pre-A1 headwords 54 -> 189 and verbs 0 -> 37.
+
+## The pre-A1 vocabulary, second half *(delivered, chapters 58-84)*
+
+135 more words (34 verbs) and 24 more characters written (机 白 长 快 电 打 起 门 问 气 雨 马
+山 做 火 开 下 进 客 乐 会 前 课 里). Chinese attains pre-A1: 324 headwords, 71 verbs, all
+seven pre-A1 spine nodes. Next: the A1 core (location with 在, 没, 想 / 要, 会 / 能,
+everyday actions and things, qualities, 因为 … 所以, measure words and 两), whose
+characters to write are re-picked now that stage 2 writes 这 吃 喝 去 今 会 想.
+
+## The A1 core (delivered, chapters 85-98)
+
+Fourteen hand-authored chapters, 85 lessons. Twelve realize the six A1 spine nodes
+Chinese lacked: `SPINE-ASK-LOCATION` (在, 那儿, 哪儿 and four place words),
+`SPINE-NAME-EVERYDAY-THINGS` (没有, 不 against 没, four things, 两 and four measure
+words, and the tone of 一), `SPINE-NAME-EVERYDAY-ACTIONS` (给, 做, put, bring, stand),
+`SPINE-SAY-WHAT-I-WANT` (想要, 不要, *xūyào*, 一点儿, 也 and ordering at a table),
+`SPINE-DESCRIBE-QUALITIES` (太好了, 有点儿, clean, dirty, 都, the same, young, fat,
+thin) and `SPINE-SAY-WHY` (为什么, 因为, *suǒyǐ* and three reasons), with 会, 能 and
+*kěyǐ* on `SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO`. Thirteen characters are written (在 哪 没
+两 给 能 要 也 太 都 为 因 时), 129 in all. Chapter 97 reads a 57-character day and proves
+controlled composition; chapter 98 proves timed production on this book's own
+three-minute clock and closes with a review of the core. A1 headwords 347 -> 401,
+verbs 73 -> 87; all twelve A1 nodes realized, both A1 writing stages proved. A1 is
+not attained: the vocabulary tranches (about 200 more headwords) come next.
+
+## The A1 vocabulary (delivered, chapters 99-146)
+
+240 words (85 verbs) in two reviewed tranches on the A1 nodes, and 24 more characters
+written (洗 菜 用 本 站 试 网 外 边 出 心 包 以 些 音 吵 病 春 千 扫 重 节 每 半), 153 inventory
+rows in all. Chinese attains A1: 641 headwords and 172 verbs at or below A1. Next:
+the A2 rung, whose two missing spine nodes are talking about the future and reading
+practical texts.
+
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 
 Continue the official vocabulary tranche with oral meaning, source-verified

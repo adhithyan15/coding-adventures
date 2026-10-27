@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:60325e36cdb9cef7",
+  "lessonIds": [
+    "ZH-C50-shuijiao",
+    "ZH-C50-qichuang",
+    "ZH-C50-xiuxi",
+    "ZH-C50-shenti",
+    "ZH-C50-bing"
+  ],
+  "tex": "chinese/book/chapters/ch50-sleeping-and-waking.tex"
+}

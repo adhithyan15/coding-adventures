@@ -1,0 +1,22 @@
+{
+  "chapter": 86,
+  "title": "Where Is It?",
+  "label": "ch:zh-where-is-it",
+  "canDo": "I can ask where something is and understand the answer.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C86-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Asking where with 哪儿 and placing the answer in the same slot, on top of, under, and the question every traveller needs, built on one new written character: 哪.",
+    "assesses": [
+      "ZH-LEX-C86-NAR-01",
+      "ZH-SCRIPT-NA-WHERE-01",
+      "ZH-LEX-C86-SHANGBIAN-01",
+      "ZH-LEX-C86-XIABIAN-01",
+      "ZH-LEX-C86-XISHOUJIAN-01",
+      "ZH-PERFORMANCE-WHERE-01"
+    ]
+  }
+}

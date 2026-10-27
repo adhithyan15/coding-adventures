@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C35-xiansheng",
+    "language": "chinese",
+    "chapter": 35,
+    "sequence": 3230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74f61ce1bf4dd1e5"
+  },
+  "findings": []
+}
