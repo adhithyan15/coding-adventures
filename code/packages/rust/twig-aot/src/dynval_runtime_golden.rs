@@ -33,8 +33,9 @@ use dynval_runtime::{
 // `runtime/dynval_runtime.c` and that cargo links into this test binary.
 //
 // SAFETY: each function is a pure value transform over `u64`s with the tag
-// discipline documented in LANG77; `car`/`cdr` are only ever called here on
-// values we just built with `cons`, so the heap dereference is in-bounds.
+// discipline documented in LANG77; `car`/`cdr` read only through a word that
+// carries the pair tag (a non-pair aborts before any read — see 5b), and the
+// tests only build such words with `cons`, so the heap dereference is in-bounds.
 extern "C" {
     fn __dyn_box_int(n: i64) -> u64;
     fn __dyn_unbox_int(v: u64) -> i64;
@@ -165,6 +166,102 @@ fn c_pair_p_returns_tagged_booleans() {
     assert_eq!(unsafe { __dyn_is_pair(pair) }, LispyValue::TRUE.bits());
     assert_eq!(unsafe { __dyn_is_pair(__dyn_box_int(7)) }, LispyValue::FALSE.bits());
     assert_eq!(unsafe { __dyn_is_pair(__dyn_nil()) }, LispyValue::FALSE.bits());
+}
+
+// ---------------------------------------------------------------------------
+// 5b. car / cdr of a non-pair fail closed — never a read through the word.
+// ---------------------------------------------------------------------------
+//
+// `__dyn_pair_first(8000000)` — Twig's `(car 1000000)` — used to clear the low
+// bits of the boxed integer and read the 8 bytes at address 8000000. The C
+// runtime now checks the tag first and, like the two Rust implementations of
+// the same ABI (the VM's `TypeError`, `dynval-runtime`'s `extern "C"` panic),
+// refuses: it flushes stdout, names the operation on stderr and aborts.
+//
+// An abort cannot be observed from inside the test process, so the test
+// re-runs *this test binary* filtered to *this test*, with an environment
+// variable telling the child which call to make. The parent checks that the
+// child died (a non-zero status — SIGABRT on Unix) and said why on stderr.
+//
+//   parent:  for each (op, word):  spawn self  ──env──▶  child
+//   child:   __dyn_pair_first(word)  →  abort()   (never reaches `exit(0)`)
+//   parent:  assert !status.success() && stderr names op and "not a pair"
+
+/// The environment variable that turns a run of
+/// [`c_pair_reads_of_a_non_pair_fail_closed`] into the child that makes the
+/// bad call: `"first:<hex word>"` or `"rest:<hex word>"`.
+const NOT_A_PAIR_CHILD: &str = "DYNVAL_GOLDEN_NOT_A_PAIR_CHILD";
+
+#[test]
+fn c_pair_reads_of_a_non_pair_fail_closed() {
+    use std::process::Command;
+
+    if let Ok(call) = std::env::var(NOT_A_PAIR_CHILD) {
+        // ── The child: make the call the parent asked for. ──
+        let (op, word) = call.split_once(':').expect("child spec is op:hex");
+        let word = u64::from_str_radix(word, 16).expect("child word is hex");
+        let got = unsafe {
+            match op {
+                "first" => __dyn_pair_first(word),
+                "rest" => __dyn_pair_rest(word),
+                other => panic!("unknown child op {other}"),
+            }
+        };
+        // Reaching here means the runtime returned instead of refusing. Exit
+        // 0 so the parent's `!status.success()` assertion reports it.
+        println!("returned {got:#x}");
+        std::process::exit(0);
+    }
+
+    // ── The parent. ──
+    // The test's own libtest name: this module's path without the crate.
+    let module = module_path!().split_once("::").map_or("", |(_, m)| m);
+    let test_name = format!("{module}::c_pair_reads_of_a_non_pair_fail_closed");
+    let exe = std::env::current_exe().expect("current test binary");
+
+    let words = unsafe {
+        [
+            ("an integer, (car 1000000)", __dyn_box_int(1_000_000)),
+            ("the integer 5", __dyn_box_int(5)),
+            ("nil", __dyn_nil()),
+            ("#f", LispyValue::FALSE.bits()),
+            ("#t", LispyValue::TRUE.bits()),
+            ("a symbol", __dyn_symbol(b"NOT-A-PAIR".as_ptr(), 10)),
+        ]
+    };
+    for (what, word) in words {
+        // The Rust reference refuses this word too: `heap::car`/`cdr` (what the
+        // VM's `field_load` and `dynval-runtime`'s `dyn_pair_first` call) return `None`.
+        // SAFETY: every word above is a well-formed immediate LispyValue.
+        let v = unsafe { LispyValue::from_raw_bits(word) };
+        assert!(unsafe { dynval_runtime::heap::car(v) }.is_none(), "Rust car of {what}");
+        assert!(unsafe { dynval_runtime::heap::cdr(v) }.is_none(), "Rust cdr of {what}");
+
+        for (op, c_name) in [("first", "dyn_pair_first"), ("rest", "dyn_pair_rest")] {
+            let out = Command::new(&exe)
+                .args(["--exact", &test_name, "--test-threads=1", "--nocapture"])
+                .env(NOT_A_PAIR_CHILD, format!("{op}:{word:x}"))
+                .output()
+                .expect("spawn the child test process");
+            let stdout = String::from_utf8_lossy(&out.stdout);
+            let stderr = String::from_utf8_lossy(&out.stderr);
+            assert!(
+                !out.status.success(),
+                "{c_name}({what} = {word:#x}) returned instead of failing closed: \
+                 status {:?}, stdout {stdout}",
+                out.status
+            );
+            let want = format!("{c_name}: argument {word:#x} is not a pair");
+            assert!(stderr.contains(&want), "{c_name}({what}): stderr {stderr:?} lacks {want:?}");
+        }
+    }
+
+    // And a real pair still reads (the check costs nothing on the good path).
+    unsafe {
+        let pair = __dyn_pair_new(__dyn_box_int(4), __dyn_box_int(2));
+        assert_eq!(__dyn_unbox_int(__dyn_pair_first(pair)), 4);
+        assert_eq!(__dyn_unbox_int(__dyn_pair_rest(pair)), 2);
+    }
 }
 
 // ---------------------------------------------------------------------------

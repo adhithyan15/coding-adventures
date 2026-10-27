@@ -43,6 +43,7 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -157,16 +158,82 @@ uint64_t __dyn_pair_new(uint64_t car, uint64_t cdr) {
     return ((uint64_t)(uintptr_t)cell) | LISPY_TAG_HEAP;
 }
 
-/* Recover the cell pointer by clearing the tag bits, then read the field.
- * Reading car/cdr of a non-pair is undefined (V1 has no type checking — the
- * frontend is responsible for only calling car/cdr on pairs), matching the
- * permissive contract of the rest of the runtime. */
+/* ── Reading a pair, and refusing to read a non-pair ────────────────────
+ *
+ * Recover the cell pointer by clearing the tag bits, then read the field —
+ * but only after checking that the word *is* a pair.
+ *
+ * Why the check is here and not "the frontend's job": the word arrives from
+ * a compiled program, and a dynamically typed program can hand `car` any
+ * value at all.  Twig's `(car 1000000)` is perfectly legal source; it lowers
+ * to `dyn_pair_first(8000000)` (the boxed integer, `n << 3`).  Without a
+ * check this function would clear the low bits (they are already 0) and
+ * read the 8 bytes at address 8000000 — an arbitrary memory read steered by
+ * program data.  `(car #t)` would read address 0b101 & ~0b111 = 0.  None of
+ * those words point at a cons cell.
+ *
+ * The test is the same one `__dyn_is_pair` makes — the low three bits equal
+ * the heap tag 0b111 — so it costs one AND and one compare:
+ *
+ *   | word passed          | tag   | what happens                         |
+ *   |----------------------|-------|--------------------------------------|
+ *   | a pair (ptr | 0b111) | 0b111 | read cell[0] / cell[1]               |
+ *   | an integer (n << 3)  | 0b000 | fail closed, no memory read          |
+ *   | nil (1)              | 0b001 | fail closed, no memory read          |
+ *   | a symbol             | 0b010 | fail closed, no memory read          |
+ *   | #f (3) / #t (5)      | 0b011 / 0b101 | fail closed, no memory read  |
+ *
+ * What "fail closed" means is copied from the other implementations of the
+ * same ABI, so every backend agrees on what a program observes:
+ *
+ *   - the VM (`twig-vm`'s `field_load`, `dynval-runtime`'s `car` builtin)
+ *     returns a `TypeError` ("… is not a cons cell") and the run fails;
+ *   - `dynval-runtime`'s own `extern "C" dyn_pair_first` panics with
+ *     "dyn_pair_first: argument 0x… is not a cons cell".
+ *
+ * So the C runtime stops the program too, never returning a made-up value
+ * (returning nil would let `(car 5)` quietly exit 0 here while the VM
+ * fails).  It follows the order `__twig_trap` (twig_runtime.c) uses for a
+ * LANG83 trap — flush stdout so the output written before the error reaches
+ * its reader, name the error on stderr, then `abort()` — but it is a local
+ * helper rather than a call to `__twig_trap`, for two reasons: a type error
+ * is not one of the closed LANG83 trap kinds (`Trap.Bounds`, …), and this
+ * file is linked on its own by some harnesses (`lang-aot`'s McCarthy
+ * `conformance` LLVM runner links `dynval_runtime.c` without
+ * `twig_runtime.c`), so it may not depend on a symbol defined there.
+ *
+ * What the tag check does *not* prove: a heap-tagged word that is some
+ * other heap object (a backend that lays a closure out as a tag-0b111
+ * block) still reads that object's first two words.  That is a type
+ * confusion inside a live, at-least-16-byte GC block, not a wild read; a
+ * full answer would ask the collector for the block's kind
+ * (`__gc_kind_of`), which walks the heap and is too slow for every `car`.
+ */
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((noreturn))
+#elif defined(_MSC_VER)
+__declspec(noreturn)
+#endif
+static void lispy_not_a_pair(const char *op, uint64_t word) {
+    fflush(stdout);
+    fprintf(stderr, "%s: argument 0x%llx is not a pair\n", op,
+            (unsigned long long)word);
+    fflush(stderr);
+    abort();
+}
+
 uint64_t __dyn_pair_first(uint64_t pair) {
+    if ((pair & LISPY_TAG_BITS) != LISPY_TAG_HEAP) {
+        lispy_not_a_pair("dyn_pair_first", pair);
+    }
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[0];
 }
 
 uint64_t __dyn_pair_rest(uint64_t pair) {
+    if ((pair & LISPY_TAG_BITS) != LISPY_TAG_HEAP) {
+        lispy_not_a_pair("dyn_pair_rest", pair);
+    }
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[1];
 }

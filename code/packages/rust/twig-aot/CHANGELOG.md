@@ -1,4 +1,9 @@
 # Changelog — `twig-aot`
+## Unreleased — LANG83 PR7f follow-up — pair reads check the tag
+
+- `runtime/dynval_runtime.c`: `__dyn_pair_first` / `__dyn_pair_rest` check that the word carries the pair tag (`0b111`) before reading the cell. A non-pair used to be read through: Twig's `(car 1000000)` lowers to `__dyn_pair_first(8000000)` and read the 8 bytes at address 8000000. Now, matching the VM (`TypeError`) and the Rust `extern "C" dyn_pair_first` (panic), the program stops: stdout is flushed, `dyn_pair_first: argument 0x… is not a pair` goes to stderr, then `abort()`. The helper is local to the file (not `__twig_trap`): a type error is not a LANG83 trap kind, and `dynval_runtime.c` is linked without `twig_runtime.c` by some harnesses. A heap-tagged non-pair object is still read as a pair (a type confusion inside a live GC block, not a wild read).
+- `dynval_runtime_golden`: new `c_pair_reads_of_a_non_pair_fail_closed` re-runs the test binary as a child for each of an integer, nil, `#f`, `#t` and a symbol, through both functions, and asserts the child died with the refusal on stderr; it also asserts the Rust reference (`heap::car` / `heap::cdr`) refuses each word, and that a real pair still reads.
+
 ## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
 
 - `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).
