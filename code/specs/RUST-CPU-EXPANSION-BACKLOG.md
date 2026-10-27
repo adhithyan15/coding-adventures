@@ -95,21 +95,44 @@ merged, while Cortex-M33 is already in review.
 | 12 | ARM7TDMI | published ARMv4T manuals | Complete locally: bounded ARMv4T ARM/Thumb integer core; all 31 physical GPRs and five SPSRs; pipeline-visible PC, bank/state exchange, checked memory and full-span control targets; exact transactional traces/lifecycle; 39 release tests; and 88.30% line coverage (1,389/1,573). Gate partner and SoC composition remain queued. |
 | 13 | AVR classic (PR #18344) | published instruction-set manual | Complete: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, terminal-state restore round trips, whole-span two-byte call preflight, all-family terminal skip-target validation, 34 release tests with exhaustive add/subtract flag oracles and bug-sensitive fractional multiply flag regressions, and 97.43% line coverage (949/974). Squash auto-merge is armed; the gate partner remains queued. |
 | 14 | Xtensa LX | publicly documented configurable ISA subset | Configuration-pinned functional core; no proprietary extensions. |
-| 15 | RCA CDP1802 | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor with gate-authoritative legality/family/control predicates, repository-gate ALU/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused lifecycle/bus differentials, explicit I/O/DMA/interrupt seams, eleven compiler-valid hostile structural fixtures, typed atomic lifecycle including post-first-step allocation rollback, 40 release tests plus one doctest, and 95.62% line coverage (1,442/1,508). Exact-head review remains before publication. |
+| 15 | RCA CDP1802 (functional merged in PR #18354) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor with gate-authoritative legality/family/control predicates, repository-gate ALU/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused lifecycle/bus differentials, explicit I/O/DMA/interrupt seams, eleven compiler-valid hostile structural fixtures, typed atomic lifecycle including post-first-step allocation rollback, 40 release tests plus one doctest, and 95.62% line coverage (1,442/1,508). Exact-head review remains before publication. |
+| 16 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
 
-CDP1802 is complete locally from its independently reviewed specification.
-The functional cell covers the complete register matrix, instruction table,
-reset/inhibit lifecycle, flags, ports, DMA, and interrupt response. Its
+CDP1802 merged in PR #18354 after independent specification and implementation
+review. The functional cell covers the complete register matrix, instruction
+table, reset/inhibit lifecycle, flags, ports, DMA, and interrupt response. Its
 explicit bus operations make it a high-value bridge from CPU execution toward
-the requested SoC data-movement simulations. A different reviewer's exact-head
-implementation PASS is the remaining publication gate. The independently
-specified educational gate partner is complete locally.
-Source-backed SoC composition remains a separate follow-up.
+the requested SoC data-movement simulations. The functional publication
+evidence is 31 release integration tests plus one doctest, including 256-byte
+independent decode and execution sweeps, exhaustive 256x256x2 ALU relations,
+strict Clippy/rustdoc, lessons validation, affected BUILD, and 87.76% line
+coverage (832/948).
+The independently specified educational gate partner is complete locally; a
+different reviewer's exact-head implementation PASS is its remaining
+publication gate. Source-backed SoC composition remains a separate follow-up.
 The gate evidence is 40 release tests plus one doctest, including a 256-byte
 decode sweep, exact full traces/states for all 255 accepted transitions and
 focused alias/control/bus/lifecycle/fault/allocation matrices, exhaustive
 256x256x2 ALU relations, eleven compiler-valid hostile fixtures, strict
 Clippy/rustdoc, affected BUILD, and 95.62% line coverage (1,442/1,508).
+
+MSP430 follows Xtensa rather than displacing an active item. TI's public
+SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
+stack contract, while SLAS504G pins a real non-MSP430X implementation with 16
+registers and a 16-bit address space. That unusually complete primary-source
+boundary makes the CPU independently implementable now. Its educational gate
+and MSP430F2274 SoC compositions remain later cells so neither undocumented
+silicon topology nor peripheral behavior is inferred.
+
+The completed local functional cell exhaustively classifies all 65,536 first
+words, spans every Format I and II register/addressing/width combination, all
+N/Z/C/V jump inputs, exhaustive byte ADD/SUB-with-carry/borrow and packed-BCD
+domains, source-only constant-generator destinations, and typed complete-state
+lifecycle/allocation rollback. Twenty-five release
+unit tests and one doctest, strict Clippy/rustdoc, the package BUILD, lessons
+validation, and all-target release package-source line coverage of 98.56%
+(1,777/1,803; `cargo llvm-cov -p msp430-simulator --all-targets --release
+--summary-only`) are green.
 
 ## Discovered follow-up work
 
@@ -148,6 +171,14 @@ Clippy/rustdoc, affected BUILD, and 95.62% line coverage (1,442/1,508).
   bitfield, saturation, dual-register, byte/halfword exclusive, and remaining
   wide Thumb-2 encodings. This is non-blocking for the core lifecycle and SoC
   composition boundary, but it precedes declaring full Armv7-M ISA coverage.
+- Add an independently bounded classic-MSP430 interrupt/reset extension before
+  the SoC cell: reset-vector entry, maskable/NMI acceptance, stack frame,
+  RETI interaction, CPUOFF wake behavior, and deterministic priority remain
+  intentionally outside the completed instruction-only oracle.
+- Build the classic-MSP430 educational gate cell from the accepted functional
+  oracle, then compose an MSP430F2274 SoC only from public device data: explicit
+  buses, address decode, Flash/RAM, interrupt routing, timers, DMA, GPIO, and
+  serial peripherals must remain visible components rather than CPU callbacks.
 - Extend Cortex-M33 only through separate witnessed cells: encoded
   SG/BXNS/BLXNS/TT transitions, Armv8-M-exclusive integer and DSP operations,
   optional FPU, exception entry/return and interrupt targeting, MPU/IDAU/NVIC,
