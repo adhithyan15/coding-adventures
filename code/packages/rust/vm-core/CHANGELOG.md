@@ -17,6 +17,17 @@
   the laid-out strings and re-read as the same double) and
   `neutral_float_primitives_dispatch`.
 
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- `real_to_i64_checked` now fails with LANG83's typed
+  `VMError::Trap { kind: "Trap.ConvRange" }` (stable id 4) for NaN, ±∞ and
+  values outside `[-2⁶³, 2⁶³)`, as the [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) registry
+  says. It used to fail with `VMError::Custom("real_to_int: …")`, which named
+  no LANG83 kind. The single range test `t >= -2⁶³ && t < 2⁶³` also rejects
+  NaN, so the separate `is_finite` branch is gone.
+- Tests assert the trap kind for NaN, ±∞, 2⁶³ and −1e30, and that −2⁶³ still
+  converts.
+
 ## Unreleased — `real_to_i64_checked` is public
 
 - `dispatch::real_to_i64_checked` is now `pub`. jit-core's

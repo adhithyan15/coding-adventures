@@ -3910,12 +3910,15 @@ fn main() { out(1, VALUE); }\n",
     // x86-64 `cvttsd2si` returned i64::MIN (a sign-flipped answer), JVM `d2l`
     // saturated to i64::MAX, and aarch64 `fcvtzs` saturated too. The first
     // row is finite (exp(exp(4)) ≈ 5.1e23 > 2^63); the second overflows to +∞.
+    // Both stop with LANG83's typed `Trap.ConvRange` on every column — the
+    // same kind, not a SIGILL on native, `ArithmeticException` on the JVM or
+    // `OverflowException` on the CLR.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure pick; pick := 4.0; integer result; \
                   result := entier(exp(exp(pick()))); output(result) end",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.ConvRange"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -3925,7 +3928,7 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real procedure pick; pick := 2.0; integer result; \
                   result := entier(exp(exp(exp(pick())))); output(result) end",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.ConvRange"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -19882,7 +19885,7 @@ fn algol_out_of_range_entier_traps_on_every_available_standard_backend() {
         .iter()
         .filter(|program| {
             program.lang == Language::Algol60
-                && matches!(program.expect, Expect::Trap)
+                && matches!(program.expect, Expect::StdoutThenTrap("", "Trap.ConvRange"))
                 && (program.src.contains("result := entier(exp(exp(pick())))")
                     || program.src.contains("result := entier(exp(exp(exp(pick()))))"))
         })

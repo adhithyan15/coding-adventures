@@ -1,7 +1,8 @@
 //! LANG83 PR1b on the BEAM backend: `i64_div_floor`, `i64_mod_floor`, `trap`,
 //! `write_i64` — and the PR4 overflow-checked `i64_add_ovf`, `i64_sub_ovf`,
-//! `i64_mul_ovf`, `i64_neg_ovf` (end of file), whose bignum-then-range-check
-//! sequence runs on the same model (`gc_bif2` over `*` added).
+//! `i64_mul_ovf`, `i64_neg_ovf`, whose bignum-then-range-check sequence runs
+//! on the same model (`gc_bif2` over `*` added) — and, at the very end, the
+//! `Trap.ConvRange` range check after a `real_to_int_*` narrowing.
 //!
 //! There is no `erl` on the development hosts (CI's BEAM column runs the real
 //! emulator), so besides pinning the instruction shapes these tests **execute
@@ -380,4 +381,44 @@ fn checked_dest_may_alias_an_operand() {
     );
     assert_eq!(run(&m, &[-6, 7]), Outcome::Returned(-42));
     assert_eq!(run(&m, &[MAX, 2]), Outcome::Raised("Trap.Overflow".into()));
+}
+
+// ── Trap.ConvRange: a real_to_int narrowing past the i64 range ──────────────
+
+/// `trunc/1`/`floor/1` return an exact Erlang integer, a bignum for a real
+/// beyond ±2⁶³. The lowering range-checks it like the PR4 checked ops: one
+/// `gc_bif1`, then two `is_lt` against the i64 bounds, each followed by
+/// `erlang:error('Trap.ConvRange')`.
+#[test]
+fn narrowing_is_exact_bif_then_two_conv_range_checks() {
+    const OP_GC_BIF1: u8 = 124;
+    for (op, bif) in [("real_to_int_trunc", "erlang:trunc/1"), ("real_to_int_floor", "erlang:floor/1")] {
+        let m = lower(
+            "f",
+            vec![("x".into(), "f64".into())],
+            "i64",
+            vec![
+                IIRInstr::new(op, Some("n".into()), vec![v("x")], "i64"),
+                IIRInstr::new("ret", None, vec![v("n")], "i64"),
+            ],
+        );
+        let code = &m.instructions;
+        let bifs: Vec<usize> = (0..code.len()).filter(|&i| code[i].opcode == OP_GC_BIF1).collect();
+        assert_eq!(bifs.len(), 1, "{op}");
+        assert_eq!(import(&m, code[bifs[0]].operands[2].value), bif, "{op}");
+        let dest = code[bifs[0]].operands[4].value;
+        let lts: Vec<usize> = (0..code.len()).filter(|&i| code[i].opcode == OP_IS_LT).collect();
+        assert_eq!(lts.len(), 2, "{op}");
+        assert!(lts[0] > bifs[0], "{op}: the check follows the conversion");
+        assert_eq!((code[lts[0]].operands[1].value, code[lts[0]].operands[2].value as i64), (dest, MIN), "{op}: low bound");
+        assert_eq!((code[lts[1]].operands[1].value as i64, code[lts[1]].operands[2].value), (MAX, dest), "{op}: high bound");
+        let raises: Vec<usize> = (0..code.len()).filter(|&i| code[i].opcode == OP_CALL_EXT).collect();
+        assert_eq!(raises.len(), 2, "{op}: one raise per bound");
+        for at in raises {
+            assert_eq!(import(&m, code[at].operands[1].value), "erlang:error/1", "{op}");
+            let kind = &code[at - 1];
+            assert_eq!(kind.opcode, OP_MOVE, "{op}");
+            assert_eq!(atom(&m, kind.operands[0].value), "Trap.ConvRange", "{op}");
+        }
+    }
 }

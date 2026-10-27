@@ -2018,6 +2018,16 @@ fn handle_type_assert(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
 /// caller passes a value that has *already* been `trunc()`'d or `floor()`'d, so
 /// `t` is integral; this only range-checks and casts.
 ///
+/// The failure is LANG83's typed `Trap.ConvRange` (stable id 4), the same
+/// `VMError::Trap` shape `Trap.DivZero` and `Trap.Overflow` use, so a program
+/// observes one registered kind on every backend:
+///
+/// | `t`                     | result                      |
+/// |-------------------------|-----------------------------|
+/// | NaN, +∞, −∞             | `Err(Trap.ConvRange)`       |
+/// | `t < -2⁶³` or `t ≥ 2⁶³` | `Err(Trap.ConvRange)`       |
+/// | otherwise               | `Ok(t as i64)` (exact)      |
+///
 /// The bounds are written so the rejection is **exact**: `i64::MIN as f64` is
 /// exactly −2⁶³, but `i64::MAX` (2⁶³−1) is not representable as an `f64`, so
 /// `i64::MAX as f64` rounds *up* to 2⁶³.  Comparing against `-(i64::MIN as f64)`
@@ -2025,15 +2035,12 @@ fn handle_type_assert(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
 /// greatest integral `f64` strictly below 2⁶³.  (`t as i64` for an in-range
 /// integral `t` is exact — Rust's saturating cast never fires here.)
 pub fn real_to_i64_checked(t: f64) -> Result<i64, VMError> {
-    if !t.is_finite() {
-        return Err(VMError::Custom(
-            "real_to_int: operand is not finite".into(),
-        ));
-    }
-    if t < i64::MIN as f64 || t >= -(i64::MIN as f64) {
-        return Err(VMError::Custom(format!(
-            "real_to_int: {t} is outside the i64 range"
-        )));
+    // `!(lo <= t < hi)` rather than two ordered rejections: every comparison
+    // with NaN is false, so NaN fails the range test with ±∞ and needs no
+    // separate `is_finite` branch.
+    let in_range = t >= i64::MIN as f64 && t < -(i64::MIN as f64);
+    if !in_range {
+        return Err(trap(interpreter_ir::exception_kind::TRAP_CONV_RANGE));
     }
     Ok(t as i64)
 }

@@ -316,3 +316,38 @@ fn checked_ops_refuse_int_operands() {
     };
     assert!(lower_iir_to_jvm(&module, &IIRJvmConfig::new("Main")).is_err(), "defined on i64 only");
 }
+
+// ── Trap.ConvRange: a failed real_to_int narrowing ──────────────────────────
+
+/// Both narrowings guard `d2l` with a range check whose failing path is the
+/// shared 17-byte LANG83 trap for `Trap.ConvRange`, never the old
+/// `ArithmeticException`: `dup2; ldc2_w -2^63; dcmpl; iflt T;
+/// dup2; ldc2_w 2^63; dcmpg; iflt +20; T: <trap>; OK: d2l`.
+#[test]
+fn failed_narrowing_raises_the_conv_range_trap() {
+    const DCMPG: u8 = 0x98;
+    const IFLT: u8 = 0x9B;
+    const D2L: u8 = 0x8F;
+    for op in ["real_to_int_trunc", "real_to_int_floor"] {
+        let class = lower(
+            vec![
+                IIRInstr::new(op, Some("n".into()), vec![v("x")], "i64"),
+                IIRInstr::new("ret", None, vec![v("n")], "i64"),
+            ],
+            vec![("x".into(), "f64".into())],
+        );
+        let code = main_code(&class);
+        let at = code
+            .windows(4)
+            .position(|w| w[0] == DCMPG && w[1] == IFLT)
+            .unwrap_or_else(|| panic!("{op}: expected the upper-bound dcmpg; iflt"));
+        assert_eq!(u16_at(&code, at + 2), 20, "{op}: iflt must jump over the 17-byte trap");
+        assert_trap_at(&class, &code, at + 4, "Trap.ConvRange");
+        assert_eq!(code[at + 4 + 17], D2L, "{op}: OK lands on d2l");
+        let cp = &class.constant_pool;
+        assert!(
+            !cp.iter().flatten().any(|e| matches!(e, Cp::Utf8(s) if s == "java/lang/ArithmeticException")),
+            "{op}: the untyped ArithmeticException is gone"
+        );
+    }
+}
