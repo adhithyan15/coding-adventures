@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C286-feeling",
+    "language": "chinese",
+    "chapter": 286,
+    "sequence": 21650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1923e60c176fe536"
+  },
+  "findings": []
+}

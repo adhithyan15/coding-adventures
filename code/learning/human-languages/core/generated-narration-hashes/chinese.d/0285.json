@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:dead236f79d4a68d",
+  "lessonIds": [
+    "ZH-C285-zhaohui",
+    "ZH-C285-problem",
+    "ZH-C285-zhengjian",
+    "ZH-C285-guashi",
+    "ZH-C285-lianxi",
+    "ZH-C285-potential",
+    "ZH-W285-a-note",
+    "ZH-C285-practice"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch285.txt",
+  "json": "chinese/narration/ch285.json",
+  "textHash": "fnv1a64:1351ded94b8e17e1",
+  "jsonHash": "fnv1a64:ee06b76bcd59507a",
+  "findings": []
+}

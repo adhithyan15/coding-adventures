@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:0fc45ac8ebcaa73f",
+  "lessonIds": [
+    "ZH-C278-zuihou",
+    "ZH-W278-zui",
+    "ZH-C278-sequence",
+    "ZH-W278-ran",
+    "ZH-C278-shouxian",
+    "ZH-C278-jiezhe",
+    "ZH-C278-le-yihou",
+    "ZH-C278-practice"
+  ],
+  "tex": "chinese/book/chapters/ch278-first-then-last.tex"
+}

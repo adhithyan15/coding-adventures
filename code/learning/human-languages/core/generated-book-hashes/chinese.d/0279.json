@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:98324256ca399b3a",
+  "lessonIds": [
+    "ZH-C279-dier-tian",
+    "ZH-W279-di",
+    "ZH-C279-de-shihou",
+    "ZH-C279-turan",
+    "ZH-W279-tu",
+    "ZH-C279-yixiazi",
+    "ZH-C279-reading",
+    "ZH-C279-practice"
+  ],
+  "tex": "chinese/book/chapters/ch279-the-next-day.tex"
+}

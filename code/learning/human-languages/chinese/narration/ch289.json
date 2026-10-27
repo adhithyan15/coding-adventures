@@ -1,0 +1,1161 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 289,
+  "title": "If I Had the Time",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:7a028caddd5ec8b3",
+  "lessons": [
+    {
+      "id": "ZH-C289-ruguo",
+      "sequence": 21840,
+      "title": "如果 (rúguǒ) — if",
+      "headword": "如果",
+      "romanization": "rúguǒ",
+      "gloss": "if; in case",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e34e9de0ffe313a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on the if of writing and careful speech."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 要是下雨 我就不去了 — yàoshi xiàyǔ, wǒ jiù bú qù le — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 要是下雨 我就不去了 — *yàoshi xiàyǔ, wǒ jiù bú qù le* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 要是 — yàoshi, if — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 要是 — *yàoshi*, if — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiéguǒ, as a result — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiéguǒ*, as a result — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 如果",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "如果 — rúguǒ — \"if; in case\"."
+            },
+            {
+              "kind": "speech",
+              "text": "如果你有时间 就来我家 rúguǒ nǐ yǒu shíjiān, jiù lái wǒ jiā — If you have time, come round."
+            },
+            {
+              "kind": "speech",
+              "text": "如果 (rúguǒ) is 要是 in writing and in careful speech. The next lesson puts the second character in your hand; the first is the 如 of 比如, and the second is the guǒ of jiéguǒ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "如果 (rúguǒ) is built from 如 and 果 (guǒ), both inherited from Middle Chinese, nyo and kwaX (Guangyun, in Baxter's transcription). The dictionary glosses the first with several words, among them 'to resemble', and the second 'resolute' and 'the fruit of a tree'. Whether 'if' was already among the first's senses the gloss does not make clear; 'if' for the pair is the modern word's sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "如果 (rúguǒ) opens the condition as 要是 does, and 就 opens the result."
+            },
+            {
+              "kind": "speech",
+              "text": "With a friend, 要是 is more usual; in a note or a talk, 如果 (rúguǒ)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "如果你有时间 就来我家 — rúguǒ nǐ yǒu shíjiān, jiù lái wǒ jiā — If you have time, come round.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 如果你有时间 就来我家 — *rúguǒ nǐ yǒu shíjiān, jiù lái wǒ jiā* — If you have time, come round.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 要是, then 如果 (rúguǒ): the everyday if, then the careful one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 要是, then 如果: the everyday if, then the careful one]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 如果 (rúguǒ) mean? (\"If\".) Which word means the same, more casually? (要是.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W289-guo-fruit",
+      "sequence": 21850,
+      "title": "果 (guǒ) — 日, with 木 running through it",
+      "headword": "果",
+      "romanization": "guǒ",
+      "gloss": "果 — 日, with 木 running through it",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:407381424985a008",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 日, with 木 running through it",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 日, with 木 running through it and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rúguǒ — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rúguǒ* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "日 本."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — rì, běn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *rì*, *běn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 日, with 木 running through it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "果 (guǒ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you write both already, one woven through the other."
+            },
+            {
+              "kind": "speech",
+              "text": "日, four strokes, on top: the left side, the top that turns down the right side, the middle bar, the bottom bar. It is closed before anything else."
+            },
+            {
+              "kind": "speech",
+              "text": "木, four strokes, as in 本: the long horizontal under 日; then the vertical, which starts at the top of 日 and runs down through it to the foot; then the left-falling stroke and the right-falling stroke."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 4 = eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "果 (guǒ), all eight, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 果, all eight, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 果 (guǒ)? (Eight.) Which stroke runs through 日? (The vertical of 木, the sixth.) What is closed first? (日.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 果 (guǒ), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C289-ruguo-jiu",
+      "sequence": 21860,
+      "title": "如果…就… (rúguǒ … jiù …) — if, then",
+      "headword": "如果…就…",
+      "romanization": "rúguǒ … jiù …",
+      "gloss": "如果 for the condition and 就 for the result, in writing and careful speech",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9fea4f02da85df9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last chapter's frame, with this chapter's word at its front."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "如果, aloud — rúguǒ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 如果, aloud — *rúguǒ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 要是你病了 就回家 — yàoshi nǐ bìng le, jiù huí jiā — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 要是你病了 就回家 — *yàoshi nǐ bìng le, jiù huí jiā* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 的话 — dehuà — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 的话 — *dehuà* — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 如果 … 就 …, if and then",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "如果 (rúguǒ) opens the condition and 就 opens the result: 要是 … 就 … for writing and careful speech."
+            },
+            {
+              "kind": "speech",
+              "text": "如果明天不下雨 我们就去山上 rúguǒ míngtiān bú xiàyǔ, wǒmen jiù qù shān shàng — If it doesn't rain tomorrow, we'll go up the mountain. 如果你有时间的话 就来我家 rúguǒ nǐ yǒu shíjiān dehuà, jiù lái wǒ jiā — If you have the time, come round."
+            },
+            {
+              "kind": "speech",
+              "text": "就 sits where it sat after 要是: after the subject, before the verb. 的话 can close the condition here too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "如果明天不下雨 我们就去山上 — rúguǒ míngtiān bú xiàyǔ, wǒmen jiù qù shān shàng — If it doesn't rain tomorrow, we'll go up the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 如果明天不下雨 我们就去山上 — *rúguǒ míngtiān bú xiàyǔ, wǒmen jiù qù shān shàng* — If it doesn't rain tomorrow, we'll go up the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "如果你有时间的话 就来我家 — rúguǒ nǐ yǒu shíjiān dehuà, jiù lái wǒ jiā — If you have the time, come round.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 如果你有时间的话 就来我家 — *rúguǒ nǐ yǒu shíjiān dehuà, jiù lái wǒ jiā* — If you have the time, come round.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one plan for next week, with 如果 (rúguǒ) … 就 …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one plan for next week, with 如果 … 就 …]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word opens the result after 如果 (rúguǒ)? (就.) Where does it go? (After the subject, before the verb.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C289-ruguo-jiu-then",
+              "prompt": "After 如果 (rúguǒ) and the condition, which word opens the result?",
+              "assesses": [
+                "ZH-GRAMMAR-RUGUO-JIU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "就",
+                "jiù",
+                "jiu"
+              ],
+              "feedback": {
+                "correct": "就: 如果 … 就 ….",
+                "incorrect": "就, as after 要是: 如果 … 就 …."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C289-would",
+      "sequence": 21870,
+      "title": "如果…就会… (rúguǒ … jiù huì …) — what would happen",
+      "headword": "如果…就会…",
+      "romanization": "rúguǒ … jiù huì …",
+      "gloss": "会 after 就: what would happen, a result you picture",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ffbf758dd88381b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word from the A2 chapters on the future, after 就."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "如果明天不下雨 我们就去山上, aloud — rúguǒ míngtiān bú xiàyǔ, wǒmen jiù qù shān shàng",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 如果明天不下雨 我们就去山上, aloud — *rúguǒ míngtiān bú xiàyǔ, wǒmen jiù qù shān shàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 明天会下雨 — míngtiān huì xiàyǔ — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 明天会下雨 — *míngtiān huì xiàyǔ* — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 有钱 — yǒuqián, rich — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 有钱 — *yǒuqián*, rich — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 如果 … 就会 …, a result you picture",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "会 after 就 says what would happen: 如果 (rúguǒ) … 就会 … for a result you picture."
+            },
+            {
+              "kind": "speech",
+              "text": "如果我有钱 我就会去中国 rúguǒ wǒ yǒu qián, wǒ jiù huì qù Zhōngguó — If I had the money, I would go to China. 如果我有时间 我就会学开车 rúguǒ wǒ yǒu shíjiān, wǒ jiù huì xué kāichē — If I had the time, I would learn to drive."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no new form here. It is the 会 of 明天会下雨, a forecast, now forecasting a result you picture."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing in the verb says whether the condition is real: 如果我有钱 can be if I have the money, or if I had it. The rest of the conversation tells you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "如果我有钱 我就会去中国 — rúguǒ wǒ yǒu qián, wǒ jiù huì qù Zhōngguó — If I had the money, I would go to China.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 如果我有钱 我就会去中国 — *rúguǒ wǒ yǒu qián, wǒ jiù huì qù Zhōngguó* — If I had the money, I would go to China.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "如果我有时间 我就会学开车 — rúguǒ wǒ yǒu shíjiān, wǒ jiù huì xué kāichē — If I had the time, I would learn to drive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 如果我有时间 我就会学开车 — *rúguǒ wǒ yǒu shíjiān, wǒ jiù huì xué kāichē* — If I had the time, I would learn to drive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you would do if you had a free year, with 如果 (rúguǒ) … 就会 …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you would do if you had a free year, with 如果 … 就会 …]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 会 add after 就? (What would happen.) Is it a new form? (No: the 会 of a forecast.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C289-would-money",
+              "prompt": "How do you say 'if I had the money, I would go to China', in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-RUGUO-JIUHUI-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "如果我有钱我就会去中国",
+                "如果我有钱 我就会去中国",
+                "rúguǒ wǒ yǒu qián, wǒ jiù huì qù zhōngguó",
+                "ruguo wo you qian wo jiu hui qu zhongguo"
+              ],
+              "feedback": {
+                "correct": "如果我有钱 我就会去中国: 就会 before the verb.",
+                "incorrect": "如果我有钱 我就会去中国. 会 follows 就."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C289-buran",
+      "sequence": 21880,
+      "title": "不然 (bùrán) — otherwise",
+      "headword": "不然",
+      "romanization": "bùrán",
+      "gloss": "otherwise; or else",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cafe133dae23d45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's picture, and a word for hurrying."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "如果我有钱 我就会去中国, aloud — rúguǒ wǒ yǒu qián, wǒ jiù huì qù Zhōngguó",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 如果我有钱 我就会去中国, aloud — *rúguǒ wǒ yǒu qián, wǒ jiù huì qù Zhōngguó*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 快 — kuài, quick — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 快 — *kuài*, quick — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 不然",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不然 — bùrán — \"otherwise; or else\"."
+            },
+            {
+              "kind": "speech",
+              "text": "快点儿 不然我们就晚了 kuài diǎnr, bùrán wǒmen jiù wǎn le — Hurry up, or we'll be late."
+            },
+            {
+              "kind": "speech",
+              "text": "你得早点儿走 不然就晚了 nǐ děi zǎo diǎnr zǒu, bùrán jiù wǎn le — You have to leave early, or you'll be late."
+            },
+            {
+              "kind": "speech",
+              "text": "不 before the rising rán stays bù. Every character in it is one you write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不然 (bùrán) is built from 不 'not' and 然 'so', both inherited from Middle Chinese. The Guangyun lists 不 under three readings, pjuw, pjuwX and pjut, all glossed 'not'; bù is the regular modern sound of pjut. 然 is nyen, glossed 'so, like this' (Guangyun, in Baxter's transcription). 'Not so', and so 'otherwise', is the plain sum of the two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不然 (bùrán) comes after the advice and says what happens if it is not taken. 就 often opens that result: 不然我们就晚了."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bùrán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bùrán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bùrán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bùrán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "快点儿 不然我们就晚了 — kuài diǎnr, bùrán wǒmen jiù wǎn le — Hurry up, or we'll be late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 快点儿 不然我们就晚了 — *kuài diǎnr, bùrán wǒmen jiù wǎn le* — Hurry up, or we'll be late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你得早点儿走 不然就晚了 — nǐ děi zǎo diǎnr zǒu, bùrán jiù wǎn le — You have to leave early, or you'll be late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你得早点儿走 不然就晚了 — *nǐ děi zǎo diǎnr zǒu, bùrán jiù wǎn le* — You have to leave early, or you'll be late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 然后, then 不然 (bùrán): the same 然, two words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 然后, then 不然: the same 然, two words]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 不然 (bùrán) mean? (\"Otherwise\".) Where does it go? (After the advice, before what happens if it is not taken.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W289-six-lines",
+      "sequence": 21890,
+      "title": "Six lines to a friend, a story with advice at the end",
+      "headword": "(six lines)",
+      "romanization": "",
+      "gloss": "six connected lines to a friend about a trip that went wrong, told in order, with a reason and advice",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:15351f89b563046d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A trip of yours went wrong: a train missed, a bag lost, rain where there should have been sun. A friend is about to make the same trip."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson tells them what happened, and what to do."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 不然 — bùrán, otherwise — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 不然 — *bùrán*, otherwise — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 如果 … 就会 … — rúguǒ … jiù huì … — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 如果 … 就会 … — *rúguǒ … jiù huì …* — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six connected lines are not six sentences in a row: each leans on the one before, and the reader does not have to ask what happened next."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You own what does the leaning. Order words: 先, 然后, 突然, 最后. The time at the front: 那天, 第二天, 的时候. The subject said once: 我 in the first line, then the order word or the time. 因为 … 所以 … gives the reason; 如果 (rúguǒ) … 就 … or 应该 turns the story into advice."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your reader is the friend. Your purpose is to save them the same trouble."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write six lines to your friend. Here is a frame for each; the words are yours, and there is no model to copy."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 1: when and where, and what you did first, with 先 and 了."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 2: what came next, with 然后."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 3: what went wrong, with 突然, or with 的时候 and 正在."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 4: how it ended, with 最后, or what you had never done before, with 过."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 5: the reason it went wrong, with 因为 … 所以 …."
+            },
+            {
+              "kind": "speech",
+              "text": "Line 6: your advice, with 如果 (rúguǒ) … 就 … or 应该."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word whose characters you have not written goes in pinyin, inside the line, with its tone marks. Every character comes from the 227 you have learned, each in the order you learned it, each in the same size of square."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No Chinese commas or full stops: leave a space between clauses, as this book prints them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the six lines. Then read them once as your friend would, top to bottom: would they know what to do?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover lines 1 and 2, and read line 3. Does it lean on them? (It should: 突然 breaks into what was going on.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which line could your friend act on tomorrow? (Line 6, the advice.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-W289-six-lines-sudden",
+              "prompt": "Write the word for 'suddenly', in characters.",
+              "assesses": [
+                "ZH-LEX-C279-TURAN-01",
+                "ZH-SCRIPT-TU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "突然",
+                "tūrán",
+                "turan"
+              ],
+              "feedback": {
+                "correct": "突然: 突, then the 然 of 然后.",
+                "incorrect": "突然. 突 is the roof of 家, 八, and 大 with a dot."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R289-review-final-289",
+      "sequence": 21900,
+      "title": "The B1 core — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one conversation across the B1 core: in order, when, should, the way, lost things, feelings, plans and if",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:334b0373368ea9ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of the B1 core: one conversation that uses every chapter of it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say duōjiǔ, how long — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *duōjiǔ*, how long — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yíhàn, a pity — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yíhàn*, a pity — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 不然 — bùrán, otherwise — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 不然 — *bùrán*, otherwise — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 那天你做什么了 nà tiān nǐ zuò shénme le — What did you do that day? B: 我先去了书店 然后坐火车回家 wǒ xiān qù le shūdiàn, ránhòu zuò huǒchē huí jiā — First the bookshop, then home by train. B: 在火车上 我的手机突然不见了 zài huǒchē shàng, wǒ de shǒujī tūrán bú jiàn le — On the train my phone suddenly went missing. A: 你找回了吗 nǐ zhǎohuí le ma — Did you get it back? B: 最后找回了 我感觉很好 zuìhòu zhǎohuí le, wǒ gǎnjué hěn hǎo — In the end I did. I feel fine. B: wǒ de zhèngjiàn yě bú jiàn le, wǒ děi mǎshàng guàshī — My papers went missing too; I have to report them lost at once. A: wǒ juéde nǐ yīnggāi xiān liánxì wǒ — I think you should have got in touch with me first. B: yīnwèi wǒ hěn lèi, suǒyǐ wàng le — I was tired, so I forgot. A: 以后你想当什么 yǐhòu nǐ xiǎng dāng shénme — What do you want to be later on? B: wǒ de mèngxiǎng shì dāng yīshēng, wǒ de mùbiāo shì shuō hǎo Hànyǔ — My dream is to be a doctor; my goal is to speak good Chinese. A: nǐ xué le duōjiǔ — How long have you studied? B: liǎng nián, wǒ méi qù guo Zhōngguó, tài yíhàn le — Two years. I've never been to China, sadly. A: 明天去山上吗 去山上怎么走 míngtiān qù shān shàng ma, qù shān shàng zěnme zǒu — Going up the mountain tomorrow? How do you get there? B: 要看天气 要是下雨的话 我就不去了 yào kàn tiānqì, yàoshi xiàyǔ dehuà, wǒ jiù bú qù le — It depends on the weather. If it rains, I won't go. A: 如果不下雨 我们就坐火车去 rúguǒ bú xiàyǔ, wǒmen jiù zuò huǒchē qù — If it doesn't rain, we'll go by train. A: 快点儿 不然我们就晚了 kuài diǎnr, bùrán wǒmen jiù wǎn le — Hurry, or we'll be late."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines printed in characters aloud, then the rest",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines printed in characters aloud, then the rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole dialogue, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole dialogue, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "B's lines, with your own answers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: B's lines, with your own answers]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "First, then, last? (先, 然后, 最后.) Should? (应该.) Gone missing? (不见了.) How long? (duōjiǔ.) If, then? (要是 … 就 …, 如果 (rúguǒ) … 就 ….) Would? (就会.) Otherwise? (不然 (bùrán).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

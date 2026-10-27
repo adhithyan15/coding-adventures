@@ -1,0 +1,1382 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 281,
+  "title": "For Example",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:73710c380a60d33d",
+  "lessons": [
+    {
+      "id": "ZH-C281-biru",
+      "sequence": 21220,
+      "title": "比如 (bǐrú) — for instance",
+      "headword": "比如",
+      "romanization": "bǐrú",
+      "gloss": "for instance; such as",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5d6e871d4842c59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on the word that brings in an example."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我觉得这个意见很好 — wǒ juéde zhège yìjiàn hěn hǎo — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我觉得这个意见很好 — *wǒ juéde zhège yìjiàn hěn hǎo* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 这么 — zhème, so — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 这么 — *zhème*, so — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 比 — bǐ, than — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 比 — *bǐ*, than — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 比如",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "比如 — bǐrú — \"for instance; such as\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我喜欢中国菜 比如白菜 wǒ xǐhuan Zhōngguó cài, bǐrú báicài — I like Chinese food, cabbage for one."
+            },
+            {
+              "kind": "speech",
+              "text": "我喜欢喝茶 比如中国茶 wǒ xǐhuan hē chá, bǐrú Zhōngguó chá — I like tea, Chinese tea for instance."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the second character in your hand. The first is the 比 you write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "比如 (bǐrú) is built from 比 'to compare' and 如 (rú) 'like', both inherited from Middle Chinese. The Guangyun lists 比 under five readings, of which pjijX is glossed 'to compare', and 如 (rú) under two, nyo and nyoH; it glosses nyo with several words, among them 'to resemble' (Guangyun, in Baxter's transcription). 'For instance' for the pair is the word's own sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "比如 (bǐrú) comes after the general point and before the example: 中国菜, then 比如白菜."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the 比 of comparing, 比 as in 我比他大, with an example set beside the point."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bǐrú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bǐrú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bǐrú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bǐrú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我喜欢中国菜 比如白菜 — wǒ xǐhuan Zhōngguó cài, bǐrú báicài — I like Chinese food, cabbage for one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我喜欢中国菜 比如白菜 — *wǒ xǐhuan Zhōngguó cài, bǐrú báicài* — I like Chinese food, cabbage for one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我喜欢喝茶 比如中国茶 — wǒ xǐhuan hē chá, bǐrú Zhōngguó chá — I like tea, Chinese tea for instance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我喜欢喝茶 比如中国茶 — *wǒ xǐhuan hē chá, bǐrú Zhōngguó chá* — I like tea, Chinese tea for instance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 比, then 比如 (bǐrú)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 比, then 比如]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 比如 (bǐrú) mean? (\"For instance; such as\".) Where does it go? (After the general point, before the example.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W281-ru",
+      "sequence": 21230,
+      "title": "如 (rú) — 女, then 口",
+      "headword": "如",
+      "romanization": "rú",
+      "gloss": "如 — 女, then 口",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9228aaa8770fd9b7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 女, then 口",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 女, then 口 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bǐrú — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bǐrú* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "好 妈 口."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — hǎo, mā, kǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *hǎo*, *mā*, *kǒu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 女, then 口",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "如 (rú)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you write both already."
+            },
+            {
+              "kind": "speech",
+              "text": "女, three strokes, narrow, on the left, as in 好 and 妈: down to the left and turning down to the right without lifting; a left-falling stroke from the upper right; and a horizontal that rises as it crosses."
+            },
+            {
+              "kind": "speech",
+              "text": "口, three strokes, on the right: the left side, the top that turns down the right side, the bottom bar."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 3 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "如 (rú), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 如, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 如 (rú)? (Six.) Which piece comes first? (女, on the left.) Where else does 女 stand on the left? (In 好 and 妈.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 如 (rú), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C281-yinwei-suoyi",
+      "sequence": 21240,
+      "title": "因为…所以… (yīnwèi … suǒyǐ …) — because, so",
+      "headword": "因为…所以…",
+      "romanization": "yīnwèi … suǒyǐ …",
+      "gloss": "因为 for the reason and 所以 for what follows, in one sentence",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67d556cf4cf79869",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words you have had for a long time, joined into one frame."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "比如, aloud — bǐrú",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 比如, aloud — *bǐrú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 因为 — yīnwèi, because — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 因为 — *yīnwèi*, because — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say suǒyǐ, so — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *suǒyǐ*, so — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 为什么 — wèishénme, why — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 为什么 — *wèishénme*, why — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 因为 … 所以 …, a reason and what follows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "因为 opens the reason, 所以 opens what follows from it, and together they make one sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "因为下雨了 所以我们没去 yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù — Because it rained, we didn't go. 因为他病了 所以没来上课 yīnwèi tā bìng le, suǒyǐ méi lái shàngkè — He was ill, so he didn't come to class."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had 因为 and suǒyǐ as separate words; now they frame one sentence, and the next lesson puts 所 (suǒ) in your hand so the frame prints whole."
+            },
+            {
+              "kind": "speech",
+              "text": "English keeps one of the two words; Mandarin is happy with both."
+            },
+            {
+              "kind": "speech",
+              "text": "To answer 为什么, 因为 alone is enough: 为什么没去 — 因为下雨了 wèishénme méi qù — yīnwèi xiàyǔ le."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "因为下雨了 所以我们没去 — yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù — Because it rained, we didn't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 因为下雨了 所以我们没去 — *yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù* — Because it rained, we didn't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "因为他病了 所以没来上课 — yīnwèi tā bìng le, suǒyǐ méi lái shàngkè — He was ill, so he didn't come to class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 因为他病了 所以没来上课 — *yīnwèi tā bìng le, suǒyǐ méi lái shàngkè* — He was ill, so he didn't come to class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "为什么没去 — 因为下雨了 — wèishénme méi qù — yīnwèi xiàyǔ le — Why didn't you go? Because it rained.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 为什么没去 — 因为下雨了 — *wèishénme méi qù — yīnwèi xiàyǔ le* — Why didn't you go? Because it rained.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why you are tired today, with 因为 … 所以 …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why you are tired today, with 因为 … 所以 …]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word opens the reason? (因为.) Which opens what follows? (所以.) How do you answer 为什么 with a reason alone? (因为, and the reason.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C281-yinwei-suoyi-rain",
+              "prompt": "How do you say 'because it rained, we didn't go', in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-YINWEI-SUOYI-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "因为下雨了所以我们没去",
+                "因为下雨了 所以我们没去",
+                "yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù",
+                "yinwei xiayu le suoyi women mei qu"
+              ],
+              "feedback": {
+                "correct": "因为下雨了 所以我们没去: the reason, then what follows.",
+                "incorrect": "因为下雨了 所以我们没去. 因为 opens the reason, 所以 the result."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W281-suo",
+      "sequence": 21250,
+      "title": "所 (suǒ) — two four-stroke sides",
+      "headword": "所",
+      "romanization": "suǒ",
+      "gloss": "所 — two four-stroke sides",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:18b9e5dee147fe22",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — two four-stroke sides",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — two four-stroke sides and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sentence first, then the character it was waiting for."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 因为下雨了 所以我们没去 — yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 因为下雨了 所以我们没去 — *yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "房 以."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — fáng, yǐ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *fáng*, *yǐ*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — two four-stroke sides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "所 (suǒ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two sides of four strokes each, and both are new in this shape."
+            },
+            {
+              "kind": "speech",
+              "text": "The left side, four strokes: a short, flat left-falling stroke at the top; a long left-falling stroke down the left side; a horizontal that turns down at its right end; and a horizontal under it. It looks like the top of 房, but 房 opens with a dot, and this opens with a short left-falling stroke."
+            },
+            {
+              "kind": "speech",
+              "text": "The right side, four strokes: a flat left-falling stroke at the top; a long left-falling stroke that drops down and then curves to the lower left; a horizontal across it; and a long vertical down to the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 4 = eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "所 (suǒ), all eight, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 所, all eight, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 所 (suǒ)? (Eight.) How does the left side begin? (With a short left-falling stroke, not the dot of 房.) Which stroke comes last? (The long vertical on the right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 所 (suǒ), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C281-yinci",
+      "sequence": 21260,
+      "title": "yīncǐ — for this reason",
+      "headword": "yīncǐ",
+      "romanization": "yīncǐ",
+      "gloss": "for this reason; and so (written or careful speech)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0923bb35f977de9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: the character you wrote last, and the word it sits in."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "所以, aloud — suǒyǐ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 所以, aloud — *suǒyǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 因为下雨了 所以我们没去 — yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù — R1, two lessons back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 因为下雨了 所以我们没去 — *yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù* — **R1**, two lessons back]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yīncǐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yīncǐ — \"for this reason; and so\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tiānqì bù hǎo, yīncǐ wǒmen méi qù — The weather was bad, and so we didn't go."
+            },
+            {
+              "kind": "speech",
+              "text": "Its second character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yīncǐ is built from 因 and cǐ 'this', both inherited from Middle Chinese, 'jin and tshjeX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to rely on' and 'a cause'; 'for this reason' for the pair is the word's own sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suǒyǐ is the everyday so. yīncǐ belongs to writing and careful speech, and it usually stands on its own, with no 因为 in front."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens the result, after the reason: tiānqì bù hǎo, yīncǐ wǒmen méi qù."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīncǐ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīncǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīncǐ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīncǐ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiānqì bù hǎo, yīncǐ wǒmen méi qù — The weather was bad, and so we didn't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiānqì bù hǎo, yīncǐ wǒmen méi qù* — The weather was bad, and so we didn't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say suǒyǐ, then yīncǐ: the everyday so, then the careful one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *suǒyǐ*, then *yīncǐ*: the everyday so, then the careful one]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yīncǐ mean? (\"For this reason\".) Where does it belong? (In writing and careful speech.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C281-lizi",
+      "sequence": 21270,
+      "title": "lìzi — an example",
+      "headword": "lìzi",
+      "romanization": "lìzi",
+      "gloss": "an example",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cacbbf8cdaa4d25a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, and the word that brings an example in."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yīncǐ, for this reason — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yīncǐ*, for this reason — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "比如, aloud — bǐrú",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 比如, aloud — *bǐrú*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lìzi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lìzi — \"an example\"."
+            },
+            {
+              "kind": "speech",
+              "text": "qǐng shuō yí ge lìzi — Please give an example."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lìzi is built from lì 'a precedent' and the ending 子, both inherited from Middle Chinese, ljejH and tsiX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to compare' and 'all of a kind'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "比如 (bǐrú) brings an example in; lìzi is the example itself, a noun you can count: yí ge lìzi."
+            },
+            {
+              "kind": "speech",
+              "text": "So a teacher asks qǐng shuō yí ge lìzi, and you answer with 比如 (bǐrú) …."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lìzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lìzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lìzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lìzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐng shuō yí ge lìzi — Please give an example.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐng shuō yí ge lìzi* — Please give an example.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "比如白菜 — bǐrú báicài — Cabbage, for instance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 比如白菜 — *bǐrú báicài* — Cabbage, for instance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 比如 (bǐrú), then lìzi: bringing one in, then the example itself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 比如, then *lìzi*: bringing one in, then the example itself]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lìzi mean? (\"An example\".) How do you ask for one? (qǐng shuō yí ge lìzi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W281-one-reason",
+      "sequence": 21280,
+      "title": "One reason — a line of your own with 因为 and 所以",
+      "headword": "(one reason)",
+      "romanization": "",
+      "gloss": "one line of your own that answers why you learn Chinese, framed by 因为 and 所以",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:95d8aab0eac296f3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone asks you a question you have surely been asked before: 你为什么学汉语?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This lesson answers it, in one line of your own."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lìzi, an example",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lìzi*, an example]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — controlled composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write one line that answers 你为什么学汉语. Use the frame: 因为 and your reason, then 所以 and 我学汉语. If you want to add an example, 比如 (bǐrú) brings it in at the end."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word whose characters you have not written goes in pinyin, inside the line, with its tone marks: 中国菜 is all characters you write, but kěyǐ has one you do not write yet, so it goes in pinyin. Every character comes from the ones you have learned, each in the order you learned it, each in the same size of square."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No Chinese commas or full stops: leave a space between the two halves, as this book prints them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the line. Then read it back: is 因为 in front of the reason, and 所以 in front of what follows?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which half of your line could stand alone as the answer to 为什么? (The half with 因为.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character did you write for the first time this chapter, inside your line? (所 (suǒ), in 所以.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-W281-one-reason-so",
+              "prompt": "Write the word for 'so', in characters.",
+              "assesses": [
+                "ZH-SCRIPT-SUO-01",
+                "ZH-GRAMMAR-YINWEI-SUOYI-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "所以",
+                "suǒyǐ",
+                "suoyi"
+              ],
+              "feedback": {
+                "correct": "所以: 所, then 以.",
+                "incorrect": "所以. 所 is two sides of four strokes; 以 follows."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C281-practice",
+      "sequence": 21290,
+      "title": "因为我喜欢中国 所以学汉语 (yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ)",
+      "headword": "因为我喜欢中国 所以学汉语",
+      "romanization": "yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ",
+      "gloss": "two speakers give reasons and examples for learning Chinese",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbaff5d078f8078b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with the question your own line answered."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lìzi, an example — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lìzi*, an example — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yīncǐ, for this reason — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yīncǐ*, for this reason — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "如, aloud — rú, the second half of 比如 (bǐrú)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 如, aloud — *rú*, the second half of 比如]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 你为什么学汉语 nǐ wèishénme xué Hànyǔ — Why are you learning Chinese? B: 因为我喜欢中国 所以学汉语 yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ — Because I like China, so I'm learning Chinese. A: 你喜欢中国的什么 nǐ xǐhuan Zhōngguó de shénme — What do you like about China? B: 中国菜 中国茶 Zhōngguó cài, Zhōngguó chá — Chinese food, Chinese tea. A: nǐ néng shuō yí ge lìzi ma — Can you give an example? B: 比如白菜 我很喜欢 bǐrú báicài, wǒ hěn xǐhuan — Cabbage, for one. I love it. A: wǒ yě shì, yīncǐ wǒ xiǎng qù Zhōngguó — Me too, and so I want to go to China."
+            },
+            {
+              "kind": "speech",
+              "text": "因为 … 所以 … gives the reason and the result in one breath; 比如 (bǐrú) then backs it up. The line with yīncǐ sounds a little careful, as that word does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C281-practice-why",
+              "prompt": "Why is B learning Chinese?",
+              "assesses": [
+                "ZH-PERFORMANCE-REASON-01",
+                "ZH-GRAMMAR-YINWEI-SUOYI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "because b likes china",
+                "likes china",
+                "they like china",
+                "因为我喜欢中国",
+                "喜欢中国",
+                "xǐhuan zhōngguó",
+                "because they like china",
+                "he likes china",
+                "she likes china"
+              ],
+              "feedback": {
+                "correct": "因为我喜欢中国: B likes China.",
+                "incorrect": "B says 因为我喜欢中国 所以学汉语."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — a reason and an example",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A reason, what follows from it, and something to show it:"
+            },
+            {
+              "kind": "speech",
+              "text": "因为下雨了 所以我们没去 yīnwèi xiàyǔ le, suǒyǐ wǒmen méi qù — the reason and the result."
+            },
+            {
+              "kind": "speech",
+              "text": "tiānqì bù hǎo, yīncǐ wǒmen méi qù — the careful version."
+            },
+            {
+              "kind": "speech",
+              "text": "中国菜 比如白菜 Zhōngguó cài, bǐrú báicài — an example brought in."
+            },
+            {
+              "kind": "speech",
+              "text": "qǐng shuō yí ge lìzi — asking for one."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Nǐ wèishénme xué Hànyǔ?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Give two reasons for something you do every week, each with 因为 … 所以 …."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "所以 and 比如 (bǐrú)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 所以 and 比如]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "因为我病了 所以我今天不去上课 — yīnwèi wǒ bìng le, suǒyǐ wǒ jīntiān bú qù shàngkè — I'm ill, so I'm not going to class today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 因为我病了 所以我今天不去上课 — *yīnwèi wǒ bìng le, suǒyǐ wǒ jīntiān bú qù shàngkè* — I'm ill, so I'm not going to class today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "为什么 — 因为我喜欢中国 — wèishénme — yīnwèi wǒ xǐhuan Zhōngguó — Why? Because I like China.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 为什么 — 因为我喜欢中国 — *wèishénme — yīnwèi wǒ xǐhuan Zhōngguó* — Why? Because I like China.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "因为我病了 所以没去",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 因为我病了 所以没去]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say because it rained, we didn't go. (因为下雨了 所以我们没去.) Say cabbage, for instance. (比如白菜.) Ask for an example. (qǐng shuō yí ge lìzi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

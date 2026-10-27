@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:150cdea423590368",
+  "lessonIds": [
+    "ZH-C279-dier-tian",
+    "ZH-W279-di",
+    "ZH-C279-de-shihou",
+    "ZH-C279-turan",
+    "ZH-W279-tu",
+    "ZH-C279-yixiazi",
+    "ZH-C279-reading",
+    "ZH-C279-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch279.txt",
+  "json": "chinese/narration/ch279.json",
+  "textHash": "fnv1a64:fe6b14899ec21492",
+  "jsonHash": "fnv1a64:67fca127eac2280b",
+  "findings": []
+}

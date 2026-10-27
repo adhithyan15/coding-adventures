@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W278-zui",
+    "language": "chinese",
+    "chapter": 278,
+    "sequence": 21010,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c85cae4ac22ab644",
+    "detachableSegments": [
+      "Script — 日, six strokes, then 又"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

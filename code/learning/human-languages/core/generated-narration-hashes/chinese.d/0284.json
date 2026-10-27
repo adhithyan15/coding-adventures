@@ -1,0 +1,23 @@
+{
+  "language": "chinese",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:a35c8f6cf269d4b7",
+  "lessonIds": [
+    "ZH-C284-zhantai",
+    "ZH-C284-ticket",
+    "ZH-W284-zuo",
+    "ZH-C284-dancheng",
+    "ZH-C284-zuowei",
+    "ZH-C284-tuipiao",
+    "ZH-C284-v-zai",
+    "ZH-C284-jia-measure",
+    "ZH-C284-practice"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch284.txt",
+  "json": "chinese/narration/ch284.json",
+  "textHash": "fnv1a64:3ead82b99b6ee0e8",
+  "jsonHash": "fnv1a64:ab18dd141db353cd",
+  "findings": []
+}

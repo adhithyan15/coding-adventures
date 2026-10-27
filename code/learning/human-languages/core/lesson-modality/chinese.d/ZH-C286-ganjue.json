@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C286-ganjue",
+    "language": "chinese",
+    "chapter": 286,
+    "sequence": 21630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8528f1d89ca7619"
+  },
+  "findings": []
+}

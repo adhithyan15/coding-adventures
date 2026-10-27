@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:73710c380a60d33d",
+  "lessonIds": [
+    "ZH-C281-biru",
+    "ZH-W281-ru",
+    "ZH-C281-yinwei-suoyi",
+    "ZH-W281-suo",
+    "ZH-C281-yinci",
+    "ZH-C281-lizi",
+    "ZH-W281-one-reason",
+    "ZH-C281-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch281.txt",
+  "json": "chinese/narration/ch281.json",
+  "textHash": "fnv1a64:813688224f51e515",
+  "jsonHash": "fnv1a64:a374d6b0ac0e050d",
+  "findings": []
+}

@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:8cc636beb6dfce61",
+  "lessonIds": [
+    "ZH-C282-gai",
+    "ZH-W282-gai",
+    "ZH-C282-yinggai",
+    "ZH-W282-ying",
+    "ZH-C282-yinggai-grammar",
+    "ZH-C282-zuihao",
+    "ZH-C282-dei",
+    "ZH-C282-practice"
+  ],
+  "tex": "chinese/book/chapters/ch282-you-should-rest.tex"
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W282-gai",
+    "language": "chinese",
+    "chapter": 282,
+    "sequence": 21310,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f940e4fe094299cc",
+    "detachableSegments": [
+      "Script — the left of 说, then the right of 孩"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

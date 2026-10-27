@@ -1,0 +1,1392 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 282,
+  "title": "You Should Rest",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b838adf86ec4ae9a",
+  "lessons": [
+    {
+      "id": "ZH-C282-gai",
+      "sequence": 21300,
+      "title": "该 (gāi) — it's time to",
+      "headword": "该",
+      "romanization": "gāi",
+      "gloss": "it's time to; should (by now)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf554273dc1b840f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on the moment when something has to happen."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 因为我喜欢中国 所以学汉语 — yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 因为我喜欢中国 所以学汉语 — *yīnwèi wǒ xǐhuan Zhōngguó, suǒyǐ xué Hànyǔ* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lìzi, an example — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lìzi*, an example — **R1**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiūxi, to rest — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiūxi*, to rest — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 该",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "该 — gāi — \"it's time to; should (by now)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我该回家了 wǒ gāi huí jiā le — It's time I went home."
+            },
+            {
+              "kind": "speech",
+              "text": "该你了 gāi nǐ le — Your turn."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "该 (gāi) is inherited from Middle Chinese koj (Guangyun, in Baxter's transcription), glossed 'complete' and 'all'. 'Should' and 'it's time to' are not given there, so how the word came by them is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With 了 at the end, 该 (gāi) says the moment has come: 我该回家了, 该你了."
+            },
+            {
+              "kind": "speech",
+              "text": "It sits before the verb, after the person, where 要 and 想 sit."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我该回家了 — wǒ gāi huí jiā le — It's time I went home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我该回家了 — *wǒ gāi huí jiā le* — It's time I went home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "该你了 — gāi nǐ le — Your turn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 该你了 — *gāi nǐ le* — Your turn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiūxi, then 我该 xiūxi 了: time I rested",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiūxi*, then 我该 *xiūxi* 了: time I rested]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 该 (gāi) mean? (\"It's time to; should\".) What closes 我该回家了? (了: the moment has come.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W282-gai",
+      "sequence": 21310,
+      "title": "该 (gāi) — the left of 说, then the right of 孩",
+      "headword": "该",
+      "romanization": "gāi",
+      "gloss": "该 — the left of 说, then the right of 孩",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f940e4fe094299cc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the left of 说, then the right of 孩",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the left of 说, then the right of 孩 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gāi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gāi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "说 孩."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — shuō, hái",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *shuō*, *hái*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the left of 说, then the right of 孩",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "该 (gāi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you write both already."
+            },
+            {
+              "kind": "speech",
+              "text": "The left of 说, two strokes: a dot, then a short horizontal that turns down and flicks up to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The right of 孩, six strokes: a dot at the top; a horizontal under it; a stroke that falls to the lower left and turns up to the right; a long left-falling stroke; a shorter left-falling stroke under it; and a dot at the lower right."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 6 = eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "该 (gāi), all eight, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 该, all eight, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 该 (gāi)? (Eight.) Where have you written its left side? (On 说.) And its right side? (On 孩.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 该 (gāi), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C282-yinggai",
+      "sequence": 21320,
+      "title": "应该 (yīnggāi) — should; ought to",
+      "headword": "应该",
+      "romanization": "yīnggāi",
+      "gloss": "should; ought to",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f00d81305823646e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: the character you wrote last, in the sentence it belongs to."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我该回家了, aloud — wǒ gāi huí jiā le",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我该回家了, aloud — *wǒ gāi huí jiā le*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 医生 — yīshēng, a doctor — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 医生 — *yīshēng*, a doctor — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 应该",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "应该 — yīnggāi — \"should; ought to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你应该去看医生 nǐ yīnggāi qù kàn yīshēng — You should see a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the first character in your hand. The second is the 该 (gāi) you wrote last."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "应该 (yīnggāi) is built from 应 and 该 (gāi), both inherited from Middle Chinese. The Guangyun lists 应 under two readings: 'ing, glossed with a word that can mean 'ought to', and 'ingH, glossed 'things answering each other'; yīng is the first. 该 (gāi) is koj, glossed 'complete' (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "该 (gāi) says the moment has come; 应该 (yīnggāi) gives advice, or says what is right."
+            },
+            {
+              "kind": "speech",
+              "text": "Both sit before the verb: 你应该去看医生 nǐ yīnggāi qù kàn yīshēng. 看医生 is to see a doctor."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīnggāi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīnggāi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīnggāi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīnggāi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你应该去看医生 — nǐ yīnggāi qù kàn yīshēng — You should see a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你应该去看医生 — *nǐ yīnggāi qù kàn yīshēng* — You should see a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 该 (gāi), then 应该 (yīnggāi): it's time, then you should",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 该, then 应该: it's time, then you should]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 应该 (yīnggāi) mean? (\"Should; ought to\".) How is it different from 该 (gāi)? (该 (gāi) says it's time; 应该 (yīnggāi) gives advice.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W282-ying",
+      "sequence": 21330,
+      "title": "应 (yīng) — the roof of 店, two dots, a falling stroke and a base",
+      "headword": "应",
+      "romanization": "yīng",
+      "gloss": "应 — the roof of 店, two dots, a falling stroke and a base",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:81ca15330a6b2187",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the roof of 店, two dots, a falling stroke and a base",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the roof of 店, two dots, a falling stroke and a base and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yīnggāi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yīnggāi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "店 点."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — diàn, diǎn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *diàn*, *diǎn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the roof of 店, two dots, a falling stroke and a base",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "应 (yīng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you write the first already."
+            },
+            {
+              "kind": "speech",
+              "text": "The roof of 店, three strokes: the dot on top, the bar, and a long left-falling stroke down the left side."
+            },
+            {
+              "kind": "speech",
+              "text": "Under it, four strokes: a dot on the left, a dot in the middle, a left-falling stroke on the right, and last a long horizontal along the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 4 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "应 (yīng), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 应, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 应 (yīng)? (Seven.) Which character you write has the same roof? (店.) Which stroke comes last? (The long horizontal along the foot.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 应 (yīng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C282-yinggai-grammar",
+      "sequence": 21340,
+      "title": "你应该… (nǐ yīnggāi …) — you should",
+      "headword": "你应该…",
+      "romanization": "nǐ yīnggāi …",
+      "gloss": "应该 and 不应该 before a verb: advice, and what is right",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80e436187771b139",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word you have, and the advice it gives."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "应该, aloud — yīnggāi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 应该, aloud — *yīnggāi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我该回家了 — wǒ gāi huí jiā le — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我该回家了 — *wǒ gāi huí jiā le* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zěnme bàn, what should I do — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zěnme bàn*, what should I do — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 应该 and 不应该, advice and what is right",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "应该 (yīnggāi) before a verb gives advice, or says what is right; 不应该 says what is not."
+            },
+            {
+              "kind": "speech",
+              "text": "你应该去看医生 nǐ yīnggāi qù kàn yīshēng — You should see a doctor. 你不应该这么晚回家 nǐ bù yīnggāi zhème wǎn huí jiā — You shouldn't come home so late."
+            },
+            {
+              "kind": "speech",
+              "text": "不 goes in front of 应该 (yīnggāi), and stays bù before the level yīng."
+            },
+            {
+              "kind": "speech",
+              "text": "To ask for advice: wǒ yīnggāi zěnme bàn?, what should I do?"
+            },
+            {
+              "kind": "speech",
+              "text": "该 (gāi) says the time has come; 应该 (yīnggāi) says what is right, whatever the time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你应该去看医生 — nǐ yīnggāi qù kàn yīshēng — You should see a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你应该去看医生 — *nǐ yīnggāi qù kàn yīshēng* — You should see a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你不应该这么晚回家 — nǐ bù yīnggāi zhème wǎn huí jiā — You shouldn't come home so late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你不应该这么晚回家 — *nǐ bù yīnggāi zhème wǎn huí jiā* — You shouldn't come home so late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yīnggāi zěnme bàn — What should I do?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yīnggāi zěnme bàn* — What should I do?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one piece of advice for a friend who is ill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one piece of advice for a friend who is ill]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does 应该 go? (Before the verb.) How do you say someone shouldn't? (不应该, said bù yīnggāi.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C282-yinggai-grammar-doctor",
+              "prompt": "How do you tell someone they should see a doctor, in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-YINGGAI-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "你应该去看医生",
+                "nǐ yīnggāi qù kàn yīshēng",
+                "ni yinggai qu kan yisheng",
+                "你应该看医生"
+              ],
+              "feedback": {
+                "correct": "你应该去看医生: 应该 before the verb.",
+                "incorrect": "你应该去看医生. 应该 goes before 去."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C282-zuihao",
+      "sequence": 21350,
+      "title": "最好 (zuìhǎo) — had better",
+      "headword": "最好",
+      "romanization": "zuìhǎo",
+      "gloss": "had better; it would be best to",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44461f6031ea6246",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: advice, and the character it starts with."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "你不应该这么晚回家, aloud — nǐ bù yīnggāi zhème wǎn huí jiā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 你不应该这么晚回家, aloud — *nǐ bù yīnggāi zhème wǎn huí jiā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "最后, aloud — zuìhòu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 最后, aloud — *zuìhòu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 最好",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "最好 — zuìhǎo — \"had better; it would be best to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你最好早点儿回家 nǐ zuìhǎo zǎo diǎnr huí jiā — You'd better go home early."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ zuìhǎo bié qù — You'd better not go."
+            },
+            {
+              "kind": "speech",
+              "text": "Every character in it is one you write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "最好 (zuìhǎo) is built from 最 'most' and 好 'good', both inherited from Middle Chinese, tswajH and xawX (Guangyun, in Baxter's transcription), glossed 'utmost' and 'good'. 'Best' is the plain sum of the two; 'had better' is the word's own use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "应该 (yīnggāi) says what is right; 最好 (zuìhǎo) says what is wise, the best of the choices."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes where 应该 (yīnggāi) goes, before the verb: 你最好早点儿回家 nǐ zuìhǎo zǎo diǎnr huí jiā."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuìhǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuìhǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuìhǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuìhǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你最好早点儿回家 — nǐ zuìhǎo zǎo diǎnr huí jiā — You'd better go home early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你最好早点儿回家 — *nǐ zuìhǎo zǎo diǎnr huí jiā* — You'd better go home early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ zuìhǎo bié qù — You'd better not go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ zuìhǎo bié qù* — You'd better not go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 最后, then 最好 (zuìhǎo): the same 最, two words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 最后, then 最好: the same 最, two words]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 最好 (zuìhǎo) mean? (\"Had better\".) Where does it go? (Before the verb, where 应该 (yīnggāi) goes.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C282-dei",
+      "sequence": 21360,
+      "title": "děi — to have to",
+      "headword": "děi",
+      "romanization": "děi",
+      "gloss": "to have to; must",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46a82c3cb750d185",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, and a character you know in another job."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 最好 — zuìhǎo, had better — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 最好 — *zuìhǎo*, had better — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "你说得很好, aloud — nǐ shuō de hěn hǎo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 你说得很好, aloud — *nǐ shuō de hěn hǎo*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: děi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "děi — \"to have to; must\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我得回家了 wǒ děi huí jiā le — I have to go home now."
+            },
+            {
+              "kind": "speech",
+              "text": "明天我得去上课 míngtiān wǒ děi qù shàngkè — I have to go to class tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "It is written 得, the character of 说得好, but it is a different word with its own sound, děi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "děi is written with 得, which is inherited from Middle Chinese tok (Guangyun, in Baxter's transcription), glossed 'to get'. děi is not the regular modern sound of tok, and 'to have to' is not given there; how the character came to write this word is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "应该 (yīnggāi) is advice, 最好 (zuìhǎo) is what is wise, and děi leaves no choice: 我得回家了."
+            },
+            {
+              "kind": "speech",
+              "text": "So 得 in a sentence has two sounds: de after a verb, as in 说得好, and děi before one, as here."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "děi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *děi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "děi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *děi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我得回家了 — wǒ děi huí jiā le — I have to go home now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我得回家了 — *wǒ děi huí jiā le* — I have to go home now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "明天我得去上课 — míngtiān wǒ děi qù shàngkè — I have to go to class tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 明天我得去上课 — *míngtiān wǒ děi qù shàngkè* — I have to go to class tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 你说得很好, then 我得回家了: de, then děi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 你说得很好, then 我得回家了: *de*, then *děi*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does děi mean? (\"To have to\".) How is 得 said in 说得好? (de, light.) And in 我得回家了? (děi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C282-practice",
+      "sequence": 21370,
+      "title": "你病了 应该去看医生 (nǐ bìng le, yīnggāi qù kàn yīshēng)",
+      "headword": "你病了 应该去看医生",
+      "romanization": "nǐ bìng le, yīnggāi qù kàn yīshēng",
+      "gloss": "two speakers weigh what a sick friend should, had better and has to do",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d977cd438e2eaa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with a friend who is not well and wants to go to class."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我得回家了 — wǒ děi huí jiā le — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我得回家了 — *wǒ děi huí jiā le* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 最好 — zuìhǎo — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 最好 — *zuìhǎo* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hǎoxiàng, as if — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hǎoxiàng*, as if — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: wǒ hǎoxiàng bìng le — I think I'm ill. B: 你应该去看医生 nǐ yīnggāi qù kàn yīshēng — You should see a doctor. A: 我得去上课 wǒ děi qù shàngkè — I have to go to class. B: 你病了 不应该去上课 nǐ bìng le, bù yīnggāi qù shàngkè — You're ill. You shouldn't go to class. A: 那我该做什么 nà wǒ gāi zuò shénme — Then what should I do? B: 你最好在家 nǐ zuìhǎo zài jiā — You'd better stay at home. A: 好 我该回家了 hǎo, wǒ gāi huí jiā le — All right. Time I went home."
+            },
+            {
+              "kind": "speech",
+              "text": "Four words of advice and duty, in rising order of force: 最好 (zuìhǎo) is wise, 应该 (yīnggāi) is right, 该 (gāi) says the time has come, děi allows no choice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C282-practice-home",
+              "prompt": "Where does B say A had better stay?",
+              "assesses": [
+                "ZH-PERFORMANCE-SHOULD-01",
+                "ZH-LEX-C282-ZUIHAO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "at home",
+                "home",
+                "在家",
+                "zài jiā",
+                "stay at home",
+                "家"
+              ],
+              "feedback": {
+                "correct": "你最好在家: at home.",
+                "incorrect": "B says 你最好在家: at home."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — advice and duty",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four words before the verb, each with its own force:"
+            },
+            {
+              "kind": "speech",
+              "text": "你应该去看医生 nǐ yīnggāi qù kàn yīshēng — what is right."
+            },
+            {
+              "kind": "speech",
+              "text": "你最好在家 nǐ zuìhǎo zài jiā — what is wise."
+            },
+            {
+              "kind": "speech",
+              "text": "我该回家了 wǒ gāi huí jiā le — the time has come."
+            },
+            {
+              "kind": "speech",
+              "text": "我得去上课 wǒ děi qù shàngkè — no choice."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Nǐ juéde wǒ yīnggāi qù ma?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Give a friend two pieces of advice about the weekend, one with 应该 (yīnggāi) and one with 最好 (zuìhǎo)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "应该 (yīnggāi) — the roof of 店 first, then the right of 孩 after the left of 说",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 应该 — the roof of 店 first, then the right of 孩 after the left of 说]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你病了 应该在家 — nǐ bìng le, yīnggāi zài jiā — You're ill; you should stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你病了 应该在家 — *nǐ bìng le, yīnggāi zài jiā* — You're ill; you should stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你最好早点儿回家 — nǐ zuìhǎo zǎo diǎnr huí jiā — You'd better go home early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你最好早点儿回家 — *nǐ zuìhǎo zǎo diǎnr huí jiā* — You'd better go home early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "你应该去看医生",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 你应该去看医生]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say you should see a doctor. (你应该去看医生.) Say you'd better stay at home. (你最好在家.) Say it's time you went home. (我该回家了.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

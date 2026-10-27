@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:ceff696e1204e0ba",
+  "lessonIds": [
+    "ZH-C286-ganjue",
+    "ZH-W286-gan",
+    "ZH-C286-feeling",
+    "ZH-C286-duration",
+    "ZH-C286-duojiu",
+    "ZH-C286-yihan",
+    "ZH-C286-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch286.txt",
+  "json": "chinese/narration/ch286.json",
+  "textHash": "fnv1a64:1baa3e3c31250835",
+  "jsonHash": "fnv1a64:67ced891b8b46798",
+  "findings": []
+}

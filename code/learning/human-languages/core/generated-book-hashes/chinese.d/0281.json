@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:c42c5103f3a05873",
+  "lessonIds": [
+    "ZH-C281-biru",
+    "ZH-W281-ru",
+    "ZH-C281-yinwei-suoyi",
+    "ZH-W281-suo",
+    "ZH-C281-yinci",
+    "ZH-C281-lizi",
+    "ZH-W281-one-reason",
+    "ZH-C281-practice"
+  ],
+  "tex": "chinese/book/chapters/ch281-for-example.tex"
+}

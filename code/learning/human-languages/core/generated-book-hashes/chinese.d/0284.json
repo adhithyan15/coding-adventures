@@ -1,0 +1,17 @@
+{
+  "language": "chinese",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:063de13f8c535ea8",
+  "lessonIds": [
+    "ZH-C284-zhantai",
+    "ZH-C284-ticket",
+    "ZH-W284-zuo",
+    "ZH-C284-dancheng",
+    "ZH-C284-zuowei",
+    "ZH-C284-tuipiao",
+    "ZH-C284-v-zai",
+    "ZH-C284-jia-measure",
+    "ZH-C284-practice"
+  ],
+  "tex": "chinese/book/chapters/ch284-two-tickets.tex"
+}

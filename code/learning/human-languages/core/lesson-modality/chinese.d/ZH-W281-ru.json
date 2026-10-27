@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W281-ru",
+    "language": "chinese",
+    "chapter": 281,
+    "sequence": 21230,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9228aaa8770fd9b7",
+    "detachableSegments": [
+      "Script — 女, then 口"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
