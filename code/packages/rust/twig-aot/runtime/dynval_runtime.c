@@ -36,15 +36,17 @@
  *   | 0b101 | #t singleton     | whole word == 5           | x == 5          |
  *   | 0b111 | heap pointer     | ptr | 0b111 (ptr 8-aligned)| x & ~0b111     |
  *
- * Truthiness (Scheme/lispy): a value is FALSE iff it is #f or nil; every
- * other value (including the integer 0) is TRUE.
+ * What these values *mean* — Lisp truthiness (false iff #f or nil), `not`,
+ * `equal?`, an exit code — is not this file's business (LANG83 PR7f-2): each
+ * compiler writes its language's rules over `__dyn_tag` and the pair
+ * accessors.
  */
 
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* TWIG-GC (twig_gc.c) — used by __dyn_cons to allocate cons cells on
+/* TWIG-GC (twig_gc.c) — used by __dyn_pair_new to allocate cons cells on
  * the managed heap instead of leaking via calloc. */
 extern int64_t __twig_gc_alloc(int64_t n);
 
@@ -97,9 +99,24 @@ int64_t __dyn_unbox_int(uint64_t v) {
 }
 
 /* The nil singleton.  Provided as a function for the lowering/boundary even
- * though it is a compile-time constant — keeps the backend uniform. */
+ * though it is a compile-time constant — keeps the backend uniform.
+ * (`dyn_nil`, LANG83 PR7f.) */
 uint64_t __dyn_nil(void) {
     return LISPY_NIL;
+}
+
+/* `dyn_tag` (LANG83 PR7f) — the tag number of a value: its low three bits,
+ * from the table at the top of this file.
+ *
+ *   tag(box_int 7) = 0   tag(nil) = 1   tag('A) = 2
+ *   tag(#f)        = 3   tag(#t)  = 5   tag(pair) = 7
+ *
+ * It is the one question a compiler needs to write its own language's rules
+ * over these values (truthiness, structural equality, an exit code): which
+ * kind of value is this?  The rules themselves are the compiler's, not the
+ * runtime's. */
+int64_t __dyn_tag(uint64_t v) {
+    return (int64_t)(v & LISPY_TAG_BITS);
 }
 
 /* ── Cons cells ─────────────────────────────────────────────────────────
@@ -117,7 +134,7 @@ uint64_t __dyn_nil(void) {
  * collected when the cell becomes unreachable.  Out-of-memory returns nil
  * rather than crashing inside the runtime.
  */
-uint64_t __dyn_cons(uint64_t car, uint64_t cdr) {
+uint64_t __dyn_pair_new(uint64_t car, uint64_t cdr) {
     /* Register the cons-cell kind once (its two fields are references at bytes
      * 0 and 8), then allocate the cell under that kind so the compacting collector
      * may RELOCATE it (a kind-0 conservative cell would pin). The runtime is
@@ -144,134 +161,54 @@ uint64_t __dyn_cons(uint64_t car, uint64_t cdr) {
  * Reading car/cdr of a non-pair is undefined (V1 has no type checking — the
  * frontend is responsible for only calling car/cdr on pairs), matching the
  * permissive contract of the rest of the runtime. */
-uint64_t __dyn_car(uint64_t pair) {
+uint64_t __dyn_pair_first(uint64_t pair) {
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[0];
 }
 
-uint64_t __dyn_cdr(uint64_t pair) {
+uint64_t __dyn_pair_rest(uint64_t pair) {
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[1];
 }
 
 /* `pair?` — true iff the value is heap-tagged.  Returns a *tagged* boolean
  * (#t/#f), not a C 0/1, so the result is itself a LispyValue. */
-uint64_t __dyn_pair_p(uint64_t v) {
+uint64_t __dyn_is_pair(uint64_t v) {
     return ((v & LISPY_TAG_BITS) == LISPY_TAG_HEAP) ? LISPY_TRUE : LISPY_FALSE;
 }
 
 /* `null?` — true iff the value is the nil sentinel (the empty list).
  *
- * Returns a *tagged* boolean (#t/#f), exactly like `__dyn_pair_p`, so `null?` is
+ * Returns a *tagged* boolean (#t/#f), exactly like `__dyn_is_pair`, so `null?` is
  * a first-class lisp value: `(null? (list))` as a whole program exit-codes as #t
- * (→ 1) through the runtime tag switch, not misread as the nil word.
+ * (→ 1) through the exit coercion, not misread as the nil word.
  *
  * Inside the cons-walk helpers (`length`, `append`, …) the result feeds a
- * `jmp_if_false`; that is safe because the compiler tracks a `dyn_null_p` result
+ * `jmp_if_false`; that is safe because the compiler tracks a `dyn_is_nil` result
  * as a tagged `LispyValue` (it is in `dyn_repr`'s LISP_BUILTINS) and inserts a
- * `dyn_truthy` before the branch — so a tagged #t/#f is normalised to a raw 0/1
+ * Lisp truthiness test (inline IIR) before the branch — so a tagged #t/#f is normalised to a raw 0/1
  * there. (A raw #t/#f fed straight to `jmp_if_false` would be wrong, since both
  * LISPY_TRUE=5 and LISPY_FALSE=3 are non-zero.)
  *
  * It compares against the whole-word LISPY_NIL (1), not 0: nil is a tagged
  * immediate here, so the native `is_null` opcode's zero-test would never match.
  */
-uint64_t __dyn_null_p(uint64_t v) {
+uint64_t __dyn_is_nil(uint64_t v) {
     return (v == LISPY_NIL) ? LISPY_TRUE : LISPY_FALSE;
 }
 
-/* ── Booleans ───────────────────────────────────────────────────────────
+/* ── What is not here: Lisp's rules ─────────────────────────────────────
  *
- * `not` follows lispy truthiness: a value is false iff it is #f or nil.
- * `not(x)` returns #t when x is false-y, else #f.
- *
- *   not(#f)  = #t      not(nil) = #t
- *   not(#t)  = #f      not(0)   = #f   (0 is a truthy integer)
+ * Until LANG83 PR7f-2 this file also held `__dyn_not`, `__dyn_truthy`,
+ * `__dyn_equal` and `__dyn_to_exit_code`: Lisp truthiness (false iff #f or
+ * nil, so the integer 0 is true), `not`, `equal?`'s structural walk and the
+ * exit-code coercion.  Those are one language family's rules, not the value
+ * representation, and a runtime shared by every frontend may not carry them
+ * (LANG83 PR7: the IIR names no source language).  The Lisp-family lowering
+ * (`iir-builtin-lowering`'s `lisp_semantics`) now writes them as IIR in each
+ * module, over `__dyn_tag`, `__dyn_unbox_int` and `__dyn_pair_first` /
+ * `__dyn_pair_rest` above.
  */
-uint64_t __dyn_not(uint64_t v) {
-    int is_falsey = (v == LISPY_FALSE) || (v == LISPY_NIL);
-    return is_falsey ? LISPY_TRUE : LISPY_FALSE;
-}
-
-/* __dyn_truthy — normalise a tagged value to a RAW machine boolean
- * (0 or 1) for a conditional branch.
- *
- * Unlike `not`, this does NOT return a tagged `LispyValue` — it returns a
- * plain `int64_t` 0/1 so the backend's `jmp_if_false` (which tests a raw
- * machine word against zero) branches correctly on a `LispyValue` condition.
- * It is the bridge `COND` needs: a McCarthy predicate evaluates to a tagged
- * value (#t/#f, a symbol, a pair, …), and lisp truthiness is "false iff #f
- * or nil, true otherwise" — including the integer 0 and the empty… no, nil
- * is false, but a *boxed* integer 0 (whole word 0b000 = 0) is truthy.
- *
- *   truthy(#f)  = 0      truthy(nil)      = 0
- *   truthy(#t)  = 1      truthy(box_int 0)= 1   (0 is a truthy atom)
- *   truthy('A)  = 1      truthy(pair)     = 1
- */
-int64_t __dyn_truthy(uint64_t v) {
-    return (v == LISPY_FALSE || v == LISPY_NIL) ? 0 : 1;
-}
-
-/* __dyn_to_exit_code — coerce ANY tagged LispyValue to a raw exit code,
- * dispatching on its RUNTIME tag.  This is the program-exit boundary for a
- * value whose tag the compiler cannot know statically — a lambda result (F7),
- * which the frontend types as the polymorphic `any`.  The static coercions each
- * cover one tag; this switch covers them all at once:
- *
- *   tag (v & 0b111)  value           exit code
- *   ───────────────  ──────────────  ──────────────────────────────────────
- *   0b000  INT       boxed integer   arithmetic  v >> 3   (sign-extended)
- *   0b101  TRUE      #t              1
- *   0b011  FALSE     #f              0
- *   0b001  NIL       ()              0   (nil is falsy, like #f)
- *   0b010  SYMBOL    interned atom   the tagged word verbatim (stable id+tag)
- *   0b111  HEAP      cons pair       the tagged word verbatim (stable pointer)
- *
- * Agreement with the static helpers (so this is a safe superset):
- *   to_exit_code(box_int n) == unbox_int(box_int n) == n
- *   to_exit_code(#t/#f/nil) == truthy(#t/#f/nil)    == 1/0/0
- *   to_exit_code(symbol)    == (symbol returned verbatim)
- */
-int64_t __dyn_to_exit_code(uint64_t v) {
-    switch (v & LISPY_TAG_BITS) {
-        case LISPY_TAG_INT:   return ((int64_t)v) >> 3;  /* integer atom    */
-        case LISPY_TAG_TRUE:  return 1;                  /* #t              */
-        case LISPY_TAG_FALSE: return 0;                  /* #f              */
-        case LISPY_TAG_NIL:   return 0;                  /* () is falsy     */
-        default:              return (int64_t)v;         /* symbol / pair   */
-    }
-}
-
-/* `equal?` — structural deep equality, returning a tagged boolean.
- *
- *   - Two atoms (neither is a pair) are equal iff their bits are equal.
- *     This makes integer/symbol/nil/bool equality fall out for free,
- *     because each has a unique bit pattern (interning guarantees one id
- *     per symbol name).
- *   - Two pairs are equal iff their cars are equal AND their cdrs are
- *     equal (recursive).
- *   - A pair and an atom are never equal.
- *
- * Recursion depth is bounded by the list/tree depth the program built;
- * pathological cyclic structures cannot occur because V1 cons is
- * write-once at construction with no mutation primitive.
- */
-uint64_t __dyn_equal(uint64_t a, uint64_t b) {
-    int a_pair = (a & LISPY_TAG_BITS) == LISPY_TAG_HEAP;
-    int b_pair = (b & LISPY_TAG_BITS) == LISPY_TAG_HEAP;
-
-    if (!a_pair && !b_pair) {
-        return (a == b) ? LISPY_TRUE : LISPY_FALSE;
-    }
-    if (a_pair != b_pair) {
-        return LISPY_FALSE;
-    }
-    /* both pairs — recurse on car and cdr */
-    if (__dyn_equal(__dyn_car(a), __dyn_car(b)) != LISPY_TRUE) {
-        return LISPY_FALSE;
-    }
-    return __dyn_equal(__dyn_cdr(a), __dyn_cdr(b));
-}
 
 /* ── Symbol interning ───────────────────────────────────────────────────
  *
@@ -312,7 +249,7 @@ static uint64_t lispy_fnv1a(const char *s, int64_t len) {
     return h;
 }
 
-uint64_t __dyn_make_symbol(const char *name, int64_t len) {
+uint64_t __dyn_symbol(const char *name, int64_t len) {
     if (len < 0) {
         len = 0;
     }
