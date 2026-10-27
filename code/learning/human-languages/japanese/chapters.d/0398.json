@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "The Hot Spring",
+  "label": "ch:ja-the-hot-spring",
+  "canDo": "I can enjoy a hot spring and say how it feels.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C398-kutsurogu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can enjoy a hot spring and say how it feels.",
+    "assesses": [
+      "JA-LEX-C398-ONSEN398-03",
+      "JA-LEX-C398-ONSEN398-04",
+      "JA-LEX-C398-ONSEN398-05"
+    ]
+  }
+}

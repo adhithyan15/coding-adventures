@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:6d65753c630b49d1",
+  "lessonIds": [
+    "JA-C392-yorimichi",
+    "JA-C392-mawarimichi",
+    "JA-C392-ikidomari",
+    "JA-C392-hikikaesu",
+    "JA-C392-tachiyoru"
+  ],
+  "tex": "japanese/book/chapters/ch392-stopping-on-the-way.tex"
+}

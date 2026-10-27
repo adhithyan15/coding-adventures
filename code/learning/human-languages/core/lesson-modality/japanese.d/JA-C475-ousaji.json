@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C475-ousaji",
+    "language": "japanese",
+    "chapter": 475,
+    "sequence": 27550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee4cc02058019618"
+  },
+  "findings": []
+}

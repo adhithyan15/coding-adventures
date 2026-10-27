@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:f755a72808e94054",
+  "lessonIds": [
+    "JA-C474-shiboru",
+    "JA-C474-tsubusu",
+    "JA-C474-kuwaeru",
+    "JA-C474-chigiru",
+    "JA-C474-usumeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch474.txt",
+  "json": "japanese/narration/ch474.json",
+  "textHash": "fnv1a64:73b80d2eba9ae44d",
+  "jsonHash": "fnv1a64:8a973b827df90f2d",
+  "findings": []
+}

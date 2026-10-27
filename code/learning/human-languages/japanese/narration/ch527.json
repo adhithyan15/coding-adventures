@@ -1,0 +1,934 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 527,
+  "title": "Now and the Future",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1567ec9ae7c60d22",
+  "lessons": [
+    {
+      "id": "JA-C527-genzai",
+      "sequence": 30420,
+      "title": "げんざい (genzai) — the present; now",
+      "headword": "げんざい",
+      "romanization": "genzai",
+      "gloss": "the present; now",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45b84dc2bc0f41bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to turn for the better, then the Japanese for rapidly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: げんざい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんざい — genzai — \"the present; now\"."
+            },
+            {
+              "kind": "speech",
+              "text": "げんざいの じかんは くにに よります。 — genzai no jikan wa kuni ni yorimasu — \"The time right now depends on the country.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんざい (genzai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, \"present\" (Middle Chinese henH) and zai, \"exist\" (dzojX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genzai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genzai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genzai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genzai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genzai no jikan wa kuni ni yorimasu — The time right now depends on the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genzai no jikan wa kuni ni yorimasu* — The time right now depends on the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to turn for the better, then the Japanese for rapidly, then say genzai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to turn for the better, then the Japanese for rapidly, then say *genzai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does げんざい (genzai) mean? (\"The present; now\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C527-genzai-type",
+              "prompt": "Say the Japanese for 'the present'.",
+              "assesses": [
+                "JA-LEX-C527-TIME527-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "げんざい",
+                "genzai"
+              ],
+              "feedback": {
+                "correct": "Right: げんざい (genzai) is 'the present; now'.",
+                "incorrect": "'The present' is げんざい (genzai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C527-mirai",
+      "sequence": 30430,
+      "title": "みらい (mirai) — the distant future",
+      "headword": "みらい",
+      "romanization": "mirai",
+      "gloss": "the distant future",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d74a8789b3ae6c0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for rapidly, then the Japanese for the present."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みらい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みらい — mirai — \"the distant future\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みらいは いまの まいにちに よります。 — mirai wa ima no mainichi ni yorimasu — \"The future depends on how we live each day now.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みらい (mirai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mi, \"not yet\" and rai, \"come\" (Middle Chinese loj) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mirai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mirai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mirai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mirai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mirai wa ima no mainichi ni yorimasu — The future depends on how we live each day now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mirai wa ima no mainichi ni yorimasu* — The future depends on how we live each day now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for rapidly, then the Japanese for the present, then say mirai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for rapidly, then the Japanese for the present, then say *mirai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みらい (mirai) mean? (\"The distant future\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C527-mirai-type",
+              "prompt": "Say the Japanese for 'the distant future'.",
+              "assesses": [
+                "JA-LEX-C527-TIME527-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みらい",
+                "mirai"
+              ],
+              "feedback": {
+                "correct": "Right: みらい (mirai) is 'the distant future'.",
+                "incorrect": "'The distant future' is みらい (mirai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C527-saikin",
+      "sequence": 30440,
+      "title": "さいきん (saikin) — recently; these days",
+      "headword": "さいきん",
+      "romanization": "saikin",
+      "gloss": "recently; these days",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a48d3404bfcc67a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the present, then the Japanese for the distant future."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さいきん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいきん — saikin — \"recently; these days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さいきんの てんきは ばしょに よります。 — saikin no tenki wa basho ni yorimasu — \"The weather lately depends on where you are.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいきん (saikin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, \"utmost\" (Middle Chinese tswajH) and kin, \"near\" (gj+nX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saikin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saikin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saikin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saikin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saikin no tenki wa basho ni yorimasu — The weather lately depends on where you are.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saikin no tenki wa basho ni yorimasu* — The weather lately depends on where you are.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the present, then the Japanese for the distant future, then say saikin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the present, then the Japanese for the distant future, then say *saikin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さいきん (saikin) mean? (\"Recently; these days\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C527-saikin-type",
+              "prompt": "Say the Japanese for 'recently'.",
+              "assesses": [
+                "JA-LEX-C527-TIME527-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さいきん",
+                "saikin"
+              ],
+              "feedback": {
+                "correct": "Right: さいきん (saikin) is 'recently; these days'.",
+                "incorrect": "'Recently' is さいきん (saikin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C527-korekara",
+      "sequence": 30450,
+      "title": "これから (korekara) — from now on; after this",
+      "headword": "これから",
+      "romanization": "korekara",
+      "gloss": "from now on; after this",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84e6b40fed9ced6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the distant future, then the Japanese for recently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: これから",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "これから — korekara — \"from now on; after this\"."
+            },
+            {
+              "kind": "speech",
+              "text": "これから さむく なったら、かぜに ちゅういして ください。 — korekara samuku nattara, kaze ni chūi shite kudasai — \"If it gets colder from now on, take care not to catch a cold.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "これから (korekara) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korekara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korekara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korekara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korekara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korekara samuku nattara, kaze ni chūi shite kudasai — If it gets colder from now on, take care not to catch a cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korekara samuku nattara, kaze ni chūi shite kudasai* — If it gets colder from now on, take care not to catch a cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the distant future, then the Japanese for recently, then say korekara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the distant future, then the Japanese for recently, then say *korekara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does これから (korekara) mean? (\"From now on; after this\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C527-korekara-type",
+              "prompt": "Say the Japanese for 'from now on'.",
+              "assesses": [
+                "JA-LEX-C527-TIME527-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "これから",
+                "korekara"
+              ],
+              "feedback": {
+                "correct": "Right: これから (korekara) is 'from now on; after this'.",
+                "incorrect": "'From now on' is これから (korekara)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C527-gendai",
+      "sequence": 30460,
+      "title": "げんだい (gendai) — the present day; modern times",
+      "headword": "げんだい",
+      "romanization": "gendai",
+      "gloss": "the present day; modern times",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e2564fac1b60481",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for recently, then the Japanese for from now on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: げんだい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんだい — gendai — \"the present day; modern times\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし そふの そふが げんだいに きたら、おどろくでしょう。 — moshi sofu no sofu ga gendai ni kitara, odoroku deshō — \"If my grandfather's grandfather came to the present day, he would be amazed.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんだい (gendai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, \"present\" (Middle Chinese henH) and dai, \"age\" (dojH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gendai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gendai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gendai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gendai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi sofu no sofu ga gendai ni kitara, odoroku deshō — If my grandfather's grandfather came to the present day, he would be amazed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi sofu no sofu ga gendai ni kitara, odoroku deshō* — If my grandfather's grandfather came to the present day, he would be amazed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for recently, then the Japanese for from now on, then say gendai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for recently, then the Japanese for from now on, then say *gendai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does げんだい (gendai) mean? (\"The present day; modern times\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C527-gendai-type",
+              "prompt": "Say the Japanese for 'the present day'.",
+              "assesses": [
+                "JA-LEX-C527-TIME527-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "げんだい",
+                "gendai"
+              ],
+              "feedback": {
+                "correct": "Right: げんだい (gendai) is 'the present day; modern times'.",
+                "incorrect": "'The present day' is げんだい (gendai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R527-review-522-527",
+      "sequence": 30470,
+      "title": "Looking back: from Something, Someone, Somewhere to Now and the Future",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Something, Someone, Somewhere to Now and the Future",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:311e473ae3564f7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for something and someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something, someone, somewhere, at any time, anything",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something, someone, somewhere, at any time, anything]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anyone, any one (of them), no doubt, as it happens, somehow (or other)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: anyone, any one (of them), no doubt, as it happens, somehow (or other)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a supposition, to picture (in one's mind), to imagine, reasoning, to be realized",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a supposition, to picture (in one's mind), to imagine, reasoning, to be realized]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the real thing, a fake, (not) in the least, to compare (to), sooner or later",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the real thing, a fake, (not) in the least, to compare (to), sooner or later]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to progress, to develop, to improve (something), to turn for the better, rapidly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to progress, to develop, to improve (something), to turn for the better, rapidly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the present, the distant future, recently, from now on, the present day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the present, the distant future, recently, from now on, the present day]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Something? (なにか, nanika.) Someone? (だれか, dareka.) Somewhere? (どこか, dokoka.) At any time? (いつでも, itsudemo.) Anything? (なんでも, nandemo.) Anyone? (だれでも, daredemo.) Any one (of them)? (どれでも, doredemo.) No doubt? (さぞ, sazo.) As it happens? (たまたま, tamatama.) Somehow (or other)? (なんとか, nantoka.) A supposition? (かてい, katei.) To picture (in one's mind)? (おもいえがく, omoiegaku.) To imagine? (そうぞうする, sōzō suru.) Reasoning? (すいり, suiri.) To be realized? (じつげんする, jitsugen suru.) The real thing? (ほんもの, honmono.) A fake? (にせもの, nisemono.) (not) in the least? (まるで, marude.) To compare (to)? (たとえる, tatoeru.) Sooner or later? (いずれ, izure.) To progress? (しんぽする, shinpo suru.) To develop? (はってんする, hatten suru.) To improve (something)? (かいぜんする, kaizen suru.) To turn for the better? (こうてんする, kōten suru.) Rapidly? (どんどん, dondon.) The present? (げんざい, genzai.) The distant future? (みらい, mirai.) Recently? (さいきん, saikin.) From now on? (これから, korekara.) The present day? (げんだい, gendai.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R527-review-522-527-type",
+              "prompt": "Say the Japanese for 'something'.",
+              "assesses": [
+                "JA-LEX-C522-SOME522-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なにか",
+                "nanika"
+              ],
+              "feedback": {
+                "correct": "Right: なにか (nanika) is 'something; anything'.",
+                "incorrect": "'Something' is なにか (nanika)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

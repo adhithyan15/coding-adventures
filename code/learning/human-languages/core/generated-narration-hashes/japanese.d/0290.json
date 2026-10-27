@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:2cc0d217a4118f7a",
+  "lessonIds": [
+    "JA-C290-utsuru",
+    "JA-C290-shinkon",
+    "JA-C290-furusato",
+    "JA-C290-miokuru",
+    "JA-C290-atarashii"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch290.txt",
+  "json": "japanese/narration/ch290.json",
+  "textHash": "fnv1a64:4b4fa5b8489604bb",
+  "jsonHash": "fnv1a64:d17087f5e6063044",
+  "findings": []
+}

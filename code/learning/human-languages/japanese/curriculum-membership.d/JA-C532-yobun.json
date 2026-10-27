@@ -1,0 +1,11 @@
+{
+  "id": "JA-C532-yobun",
+  "pathSegment": "JA-PATH-532-LIMIT532",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-532-LIMIT532",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C297-omen",
+  "pathSegment": "JA-PATH-297-ONI297",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-297-ONI297",
+      "order": 1
+    }
+  ]
+}

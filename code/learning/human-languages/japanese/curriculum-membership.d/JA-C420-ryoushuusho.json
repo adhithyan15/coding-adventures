@@ -1,0 +1,11 @@
+{
+  "id": "JA-C420-ryoushuusho",
+  "pathSegment": "JA-PATH-420-RYOUSHUUSHO420",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-420-RYOUSHUUSHO420",
+      "order": 1
+    }
+  ]
+}

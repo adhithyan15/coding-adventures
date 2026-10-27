@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C527-genzai",
+    "language": "japanese",
+    "chapter": 527,
+    "sequence": 30420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45b84dc2bc0f41bf"
+  },
+  "findings": []
+}

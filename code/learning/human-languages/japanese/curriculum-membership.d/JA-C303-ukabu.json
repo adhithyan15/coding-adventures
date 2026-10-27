@@ -1,0 +1,11 @@
+{
+  "id": "JA-C303-ukabu",
+  "pathSegment": "JA-PATH-303-RYUU303",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-303-RYUU303",
+      "order": 2
+    }
+  ]
+}

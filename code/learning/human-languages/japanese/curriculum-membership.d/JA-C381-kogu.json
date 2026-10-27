@@ -1,0 +1,11 @@
+{
+  "id": "JA-C381-kogu",
+  "pathSegment": "JA-PATH-381-FUNATABI381",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-381-FUNATABI381",
+      "order": 3
+    }
+  ]
+}

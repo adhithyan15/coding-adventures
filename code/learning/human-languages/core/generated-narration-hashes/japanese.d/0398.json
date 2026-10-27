@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:ebbdde95abd9f0ad",
+  "lessonIds": [
+    "JA-C398-onsen",
+    "JA-C398-yuge",
+    "JA-C398-noboseru",
+    "JA-C398-tsukaru",
+    "JA-C398-kutsurogu"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "japanese/narration/ch398.txt",
+  "json": "japanese/narration/ch398.json",
+  "textHash": "fnv1a64:4ec0d0499a986588",
+  "jsonHash": "fnv1a64:3b5d2afefd3c817b",
+  "findings": []
+}

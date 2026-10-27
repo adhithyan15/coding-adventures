@@ -1,0 +1,11 @@
+{
+  "id": "JA-C481-chie",
+  "pathSegment": "JA-PATH-481-SKILL481",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-481-SKILL481",
+      "order": 3
+    }
+  ]
+}

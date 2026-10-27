@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-300-KITSUNE300",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the fox and the badger did.",
+  "prerequisites": []
+}

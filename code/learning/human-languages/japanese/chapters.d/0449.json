@@ -1,0 +1,21 @@
+{
+  "chapter": 449,
+  "title": "Burns, Sprains and Scars",
+  "label": "ch:ja-burns-sprains-and-scars",
+  "canDo": "I can talk about burns, sprains and scars.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R449-review-444-449",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can talk about burns, sprains and scars.",
+    "assesses": [
+      "JA-LEX-C449-BURN449-01",
+      "JA-LEX-C449-BURN449-02",
+      "JA-LEX-C449-BURN449-03",
+      "JA-LEX-C449-BURN449-04",
+      "JA-LEX-C449-BURN449-05"
+    ]
+  }
+}

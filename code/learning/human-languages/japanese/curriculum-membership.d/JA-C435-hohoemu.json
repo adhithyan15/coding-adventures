@@ -1,0 +1,11 @@
+{
+  "id": "JA-C435-hohoemu",
+  "pathSegment": "JA-PATH-435-CONTENT435",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-435-CONTENT435",
+      "order": 3
+    }
+  ]
+}

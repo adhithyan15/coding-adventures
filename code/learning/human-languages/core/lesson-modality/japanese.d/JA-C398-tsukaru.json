@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C398-tsukaru",
+    "language": "japanese",
+    "chapter": 398,
+    "sequence": 23370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7587d04e2c8f4072"
+  },
+  "findings": []
+}

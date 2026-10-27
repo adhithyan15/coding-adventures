@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 338,
+  "title": "Less and More",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3150ac836dbec630",
+  "lessons": [
+    {
+      "id": "JA-C338-muda",
+      "sequence": 20080,
+      "title": "むだ (muda) — useless; a waste",
+      "headword": "むだ",
+      "romanization": "muda",
+      "gloss": "useless; a waste",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fc21f1bdee5f16f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for petroleum, then the Japanese for too good to waste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むだ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むだ — muda — \"useless; a waste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひるに でんきを つかったら、むだです。 — hiru ni denki o tsukattara, muda desu — \"Using the lights in the daytime is a waste.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むだ (muda) is written as Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese, mu, \"nothing\" (Middle Chinese mju) and da, \"burdensome\". JMdict marks that spelling as ateji, characters chosen for their sound, so whether the word itself came from Chinese is not settled (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hiru ni denki o tsukattara, muda desu — Using the lights in the daytime is a waste.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hiru ni denki o tsukattara, muda desu* — Using the lights in the daytime is a waste.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for petroleum, then the Japanese for too good to waste, then say muda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for petroleum, then the Japanese for too good to waste, then say *muda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むだ (muda) mean? (\"Useless; a waste\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C338-muda-type",
+              "prompt": "Say the Japanese for 'useless'.",
+              "assesses": [
+                "JA-LEX-C338-MUDA338-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むだ",
+                "muda"
+              ],
+              "feedback": {
+                "correct": "Right: むだ (muda) is 'useless; a waste'.",
+                "incorrect": "'Useless' is むだ (muda)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C338-herasu",
+      "sequence": 20090,
+      "title": "へらす (herasu) — to reduce; to cut down",
+      "headword": "へらす",
+      "romanization": "herasu",
+      "gloss": "to reduce; to cut down",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb6f905ec280e979",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for too good to waste, then the Japanese for useless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: へらす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へらす — herasu — \"to reduce; to cut down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かんきょうの ために、ごみを へらした ほうが いいです。 — kankyō no tame ni, gomi o herashita hō ga ii desu — \"For the environment, we should reduce our rubbish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite へらします, herashimasu; a godan verb. Past (polite): まちが ごみを へらしました。, machi ga gomi o herashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "へらす (herasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "herasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *herasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "herasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *herasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kankyō no tame ni, gomi o herashita hō ga ii desu — For the environment, we should reduce our rubbish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kankyō no tame ni, gomi o herashita hō ga ii desu* — For the environment, we should reduce our rubbish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for too good to waste, then the Japanese for useless, then say herasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for too good to waste, then the Japanese for useless, then say *herasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does へらす (herasu) mean? (\"To reduce; to cut down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C338-herasu-type",
+              "prompt": "Say the Japanese for 'to reduce'.",
+              "assesses": [
+                "JA-LEX-C338-MUDA338-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "へらす",
+                "herasu"
+              ],
+              "feedback": {
+                "correct": "Right: へらす (herasu) is 'to reduce; to cut down'.",
+                "incorrect": "'To reduce' is へらす (herasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C338-fuyasu",
+      "sequence": 20100,
+      "title": "ふやす (fuyasu) — to increase something; to add to",
+      "headword": "ふやす",
+      "romanization": "fuyasu",
+      "gloss": "to increase something; to add to",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8095b2748b2cdae0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for useless, then the Japanese for to reduce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふやす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふやす — fuyasu — \"to increase something; to add to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けんこうの ために、やさいを ふやした ほうが いいです。 — kenkō no tame ni, yasai o fuyashita hō ga ii desu — \"For your health, you should eat more vegetables.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ふやします, fuyashimasu; a godan verb. Past (polite): ちちが やさいを ふやしました。, chichi ga yasai o fuyashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふやす (fuyasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuyasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuyasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuyasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuyasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkō no tame ni, yasai o fuyashita hō ga ii desu — For your health, you should eat more vegetables.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkō no tame ni, yasai o fuyashita hō ga ii desu* — For your health, you should eat more vegetables.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for useless, then the Japanese for to reduce, then say fuyasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for useless, then the Japanese for to reduce, then say *fuyasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふやす (fuyasu) mean? (\"To increase something; to add to\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C338-fuyasu-type",
+              "prompt": "Say the Japanese for 'to increase something'.",
+              "assesses": [
+                "JA-LEX-C338-MUDA338-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふやす",
+                "fuyasu"
+              ],
+              "feedback": {
+                "correct": "Right: ふやす (fuyasu) is 'to increase something; to add to'.",
+                "incorrect": "'To increase something' is ふやす (fuyasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C338-moyasu",
+      "sequence": 20110,
+      "title": "もやす (moyasu) — to burn something",
+      "headword": "もやす",
+      "romanization": "moyasu",
+      "gloss": "to burn something",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c417a45b4b176358",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to reduce, then the Japanese for to increase something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もやす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もやす — moyasu — \"to burn something\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ごみを もやしたら、くうきが よごれます。 — gomi o moyashitara, kūki ga yogoremasu — \"Burning rubbish makes the air dirty.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite もやします, moyashimasu; a godan verb. Past (polite): おとこが ごみを もやしました。, otoko ga gomi o moyashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もやす (moyasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moyasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moyasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moyasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moyasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gomi o moyashitara, kūki ga yogoremasu — Burning rubbish makes the air dirty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gomi o moyashitara, kūki ga yogoremasu* — Burning rubbish makes the air dirty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to reduce, then the Japanese for to increase something, then say moyasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to reduce, then the Japanese for to increase something, then say *moyasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もやす (moyasu) mean? (\"To burn something\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C338-moyasu-type",
+              "prompt": "Say the Japanese for 'to burn something'.",
+              "assesses": [
+                "JA-LEX-C338-MUDA338-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もやす",
+                "moyasu"
+              ],
+              "feedback": {
+                "correct": "Right: もやす (moyasu) is 'to burn something'.",
+                "incorrect": "'To burn something' is もやす (moyasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C338-shigen",
+      "sequence": 20120,
+      "title": "しげん (shigen) — resources",
+      "headword": "しげん",
+      "romanization": "shigen",
+      "gloss": "resources",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b89078a798f09c1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to increase something, then the Japanese for to burn something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しげん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しげん — shigen — \"resources\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しげんが すくないので、せつやくした ほうが いいです。 — shigen ga sukunai node, setsuyaku shita hō ga ii desu — \"Resources are scarce, so we should use them carefully.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しげん (shigen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"resources\" (Middle Chinese tsij) and gen, \"source\" (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shigen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shigen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shigen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shigen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shigen ga sukunai node, setsuyaku shita hō ga ii desu — Resources are scarce, so we should use them carefully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shigen ga sukunai node, setsuyaku shita hō ga ii desu* — Resources are scarce, so we should use them carefully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to increase something, then the Japanese for to burn something, then say shigen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to increase something, then the Japanese for to burn something, then say *shigen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しげん (shigen) mean? (\"Resources\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C338-shigen-type",
+              "prompt": "Say the Japanese for 'resources'.",
+              "assesses": [
+                "JA-LEX-C338-MUDA338-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しげん",
+                "shigen"
+              ],
+              "feedback": {
+                "correct": "Right: しげん (shigen) is 'resources'.",
+                "incorrect": "'Resources' is しげん (shigen)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

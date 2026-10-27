@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-480-MAKE480",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who makes things and how long it takes.",
+  "prerequisites": []
+}

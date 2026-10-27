@@ -1,0 +1,11 @@
+{
+  "id": "JA-C416-hiekomu",
+  "pathSegment": "JA-PATH-416-YOAKE416",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-416-YOAKE416",
+      "order": 3
+    }
+  ]
+}

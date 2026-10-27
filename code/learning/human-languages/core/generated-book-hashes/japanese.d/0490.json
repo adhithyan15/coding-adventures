@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:20d5ae2d6e098b78",
+  "lessonIds": [
+    "JA-C490-ryoushi",
+    "JA-C490-gyogyou",
+    "JA-C490-gyosen",
+    "JA-C490-esa",
+    "JA-C490-haneru"
+  ],
+  "tex": "japanese/book/chapters/ch490-fishing-boats.tex"
+}

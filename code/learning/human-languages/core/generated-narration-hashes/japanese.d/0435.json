@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:1349b55154a89359",
+  "lessonIds": [
+    "JA-C435-manzoku",
+    "JA-C435-fuman",
+    "JA-C435-taikutsu",
+    "JA-C435-hohoemu",
+    "JA-C435-damaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch435.txt",
+  "json": "japanese/narration/ch435.json",
+  "textHash": "fnv1a64:717daf0e8032362d",
+  "jsonHash": "fnv1a64:d7b132d80aadbc26",
+  "findings": []
+}

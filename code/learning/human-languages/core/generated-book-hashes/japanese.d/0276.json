@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:c5e26abc5e2ed2ac",
+  "lessonIds": [
+    "JA-C276-ouame",
+    "JA-C276-oumizu",
+    "JA-C276-afureru",
+    "JA-C276-gake",
+    "JA-C276-taihen"
+  ],
+  "tex": "japanese/book/chapters/ch276-the-river-rose.tex"
+}

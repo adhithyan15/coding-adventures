@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 516,
+  "title": "Getting Ahead",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a6bdb0ee31e3d049",
+  "lessons": [
+    {
+      "id": "JA-C516-shusse-suru",
+      "sequence": 29860,
+      "title": "しゅっせする (shusse suru) — to get ahead (in life)",
+      "headword": "しゅっせする",
+      "romanization": "shusse suru",
+      "gloss": "to get ahead (in life)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:201433700a0865ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for grades, then the Japanese for a cram school (for entrance exams)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅっせする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっせする — shusse suru — \"to get ahead (in life)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし かれが しゅっせしたら、しゃちょうに なるでしょう。 — moshi kare ga shusseshitara, shachō ni naru deshō — \"If he gets ahead, he will probably become company president.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しゅっせします, shusseshimasu; a する verb. Past (polite): あにが かいしゃで しゅっせしました。, ani ga kaisha de shusseshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっせする (shusse suru) is the Sino-Japanese (kango) noun shusse with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shu, \"exit\" (Middle Chinese tsyhwit) and se, \"generation\" (syejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shusse suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shusse suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shusse suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shusse suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi kare ga shusseshitara, shachō ni naru deshō — If he gets ahead, he will probably become company president.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi kare ga shusseshitara, shachō ni naru deshō* — If he gets ahead, he will probably become company president.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for grades, then the Japanese for a cram school (for entrance exams), then say shusse suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for grades, then the Japanese for a cram school (for entrance exams), then say *shusse suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅっせする (shusse suru) mean? (\"To get ahead (in life)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C516-shusse-suru-type",
+              "prompt": "Say the Japanese for 'to get ahead (in life)'.",
+              "assesses": [
+                "JA-LEX-C516-AHEAD516-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅっせする",
+                "shusse suru"
+              ],
+              "feedback": {
+                "correct": "Right: しゅっせする (shusse suru) is 'to get ahead (in life)'.",
+                "incorrect": "'To get ahead (in life)' is しゅっせする (shusse suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C516-norikoeru",
+      "sequence": 29870,
+      "title": "のりこえる (norikoeru) — to get over; to overcome",
+      "headword": "のりこえる",
+      "romanization": "norikoeru",
+      "gloss": "to get over; to overcome",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:429425efab9ad681",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cram school (for entrance exams), then the Japanese for to get ahead (in life)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のりこえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のりこえる — norikoeru — \"to get over; to overcome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし この しけんを のりこえたら、そつぎょうです。 — moshi kono shiken o norikoetara, sotsugyō desu — \"If I get through this exam, I graduate.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite のりこえます, norikoemasu; an ichidan verb. Past (polite): かれが びょうきを のりこえました。, kare ga byōki o norikoemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のりこえる (norikoeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from noru, \"to ride\", and koeru, \"to cross\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "norikoeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *norikoeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "norikoeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *norikoeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi kono shiken o norikoetara, sotsugyō desu — If I get through this exam, I graduate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi kono shiken o norikoetara, sotsugyō desu* — If I get through this exam, I graduate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cram school (for entrance exams), then the Japanese for to get ahead (in life), then say norikoeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cram school (for entrance exams), then the Japanese for to get ahead (in life), then say *norikoeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のりこえる (norikoeru) mean? (\"To get over; to overcome\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C516-norikoeru-type",
+              "prompt": "Say the Japanese for 'to get over'.",
+              "assesses": [
+                "JA-LEX-C516-AHEAD516-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のりこえる",
+                "norikoeru"
+              ],
+              "feedback": {
+                "correct": "Right: のりこえる (norikoeru) is 'to get over; to overcome'.",
+                "incorrect": "'To get over' is のりこえる (norikoeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C516-zenryoku",
+      "sequence": 29880,
+      "title": "ぜんりょく (zenryoku) — all one's strength; one's utmost",
+      "headword": "ぜんりょく",
+      "romanization": "zenryoku",
+      "gloss": "all one's strength; one's utmost",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9fcee5aace93424",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get ahead (in life), then the Japanese for to get over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぜんりょく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜんりょく — zenryoku — \"all one's strength; one's utmost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし ぜんりょくで はしったら、かれは まにあうでしょう。 — moshi zenryoku de hashittara, kare wa maniau deshō — \"If he runs with all his strength, he will make it.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜんりょく (zenryoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zen, \"whole\" (Middle Chinese dzjwen) and ryoku, \"power\" (lik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zenryoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zenryoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zenryoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zenryoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi zenryoku de hashittara, kare wa maniau deshō — If he runs with all his strength, he will make it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi zenryoku de hashittara, kare wa maniau deshō* — If he runs with all his strength, he will make it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get ahead (in life), then the Japanese for to get over, then say zenryoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get ahead (in life), then the Japanese for to get over, then say *zenryoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぜんりょく (zenryoku) mean? (\"All one's strength; one's utmost\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C516-zenryoku-type",
+              "prompt": "Say the Japanese for 'all one's strength'.",
+              "assesses": [
+                "JA-LEX-C516-AHEAD516-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぜんりょく",
+                "zenryoku"
+              ],
+              "feedback": {
+                "correct": "Right: ぜんりょく (zenryoku) is 'all one's strength; one's utmost'.",
+                "incorrect": "'All one's strength' is ぜんりょく (zenryoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C516-yaruki",
+      "sequence": 29890,
+      "title": "やるき (yaruki) — the will to do something; motivation",
+      "headword": "やるき",
+      "romanization": "yaruki",
+      "gloss": "the will to do something; motivation",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:700d225bf3507070",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get over, then the Japanese for all one's strength."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やるき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やるき — yaruki — \"the will to do something; motivation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし やるきが あったら、かれは しゅっせするでしょう。 — moshi yaruki ga attara, kare wa shusse suru deshō — \"If he had the drive, he would get ahead.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やるき (yaruki) mixes the two layers, native and Sino-Japanese: native yaru, \"to do\", and Sino-Japanese ki, \"spirit\" (Middle Chinese khj+jH), borrowed from Chinese (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaruki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaruki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaruki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaruki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi yaruki ga attara, kare wa shusse suru deshō — If he had the drive, he would get ahead.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi yaruki ga attara, kare wa shusse suru deshō* — If he had the drive, he would get ahead.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get over, then the Japanese for all one's strength, then say yaruki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get over, then the Japanese for all one's strength, then say *yaruki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やるき (yaruki) mean? (\"The will to do something; motivation\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C516-yaruki-type",
+              "prompt": "Say the Japanese for 'the will to do something'.",
+              "assesses": [
+                "JA-LEX-C516-AHEAD516-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やるき",
+                "yaruki"
+              ],
+              "feedback": {
+                "correct": "Right: やるき (yaruki) is 'the will to do something; motivation'.",
+                "incorrect": "'The will to do something' is やるき (yaruki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C516-idomu",
+      "sequence": 29900,
+      "title": "いどむ (idomu) — to tackle (a challenge); to take on",
+      "headword": "いどむ",
+      "romanization": "idomu",
+      "gloss": "to tackle (a challenge); to take on",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:059dc575f95294ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for all one's strength, then the Japanese for the will to do something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いどむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いどむ — idomu — \"to tackle (a challenge); to take on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし まけたら、らいねん もう いちど いどみます。 — moshi maketara, rainen mō ichido idomimasu — \"If I lose, I will take it on once more next year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite いどみます, idomimasu; a godan verb. Past (polite): かれが たかい やまに いどみました。, kare ga takai yama ni idomimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いどむ (idomu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "idomu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *idomu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi maketara, rainen mō ichido idomimasu — If I lose, I will take it on once more next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi maketara, rainen mō ichido idomimasu* — If I lose, I will take it on once more next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for all one's strength, then the Japanese for the will to do something, then say idomu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for all one's strength, then the Japanese for the will to do something, then say *idomu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いどむ (idomu) mean? (\"To tackle (a challenge); to take on\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C516-idomu-type",
+              "prompt": "Say the Japanese for 'to tackle (a challenge)'.",
+              "assesses": [
+                "JA-LEX-C516-AHEAD516-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いどむ",
+                "idomu"
+              ],
+              "feedback": {
+                "correct": "Right: いどむ (idomu) is 'to tackle (a challenge); to take on'.",
+                "incorrect": "'To tackle (a challenge)' is いどむ (idomu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

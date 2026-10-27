@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:37d19135c99dc11b",
+  "lessonIds": [
+    "JA-C374-senro",
+    "JA-C374-fumikiri",
+    "JA-C374-teisha",
+    "JA-C374-hassha",
+    "JA-C374-chikayoru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch374.txt",
+  "json": "japanese/narration/ch374.json",
+  "textHash": "fnv1a64:6ff78ea797cabde9",
+  "jsonHash": "fnv1a64:360b19d59873d63e",
+  "findings": []
+}

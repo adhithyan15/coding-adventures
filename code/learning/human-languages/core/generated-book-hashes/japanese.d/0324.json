@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:cf7ae45b0ec0ef89",
+  "lessonIds": [
+    "JA-C324-monku",
+    "JA-C324-kujou",
+    "JA-C324-fuhei",
+    "JA-C324-hihan-suru",
+    "JA-C324-iiwake"
+  ],
+  "tex": "japanese/book/chapters/ch324-complaints.tex"
+}

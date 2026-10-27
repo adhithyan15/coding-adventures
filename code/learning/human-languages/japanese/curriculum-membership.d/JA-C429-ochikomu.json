@@ -1,0 +1,11 @@
+{
+  "id": "JA-C429-ochikomu",
+  "pathSegment": "JA-PATH-429-DOWN429",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-429-DOWN429",
+      "order": 1
+    }
+  ]
+}

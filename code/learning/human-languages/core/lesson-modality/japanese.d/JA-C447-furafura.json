@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C447-furafura",
+    "language": "japanese",
+    "chapter": 447,
+    "sequence": 26090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d22edaa1220d9e2"
+  },
+  "findings": []
+}

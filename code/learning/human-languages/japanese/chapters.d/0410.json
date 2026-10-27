@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Where I Come From",
+  "label": "ch:ja-where-i-come-from",
+  "canDo": "I can say where I come from and describe the land there.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C410-shigeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can say where I come from and describe the land there.",
+    "assesses": [
+      "JA-LEX-C410-JIMOTO410-03",
+      "JA-LEX-C410-JIMOTO410-04",
+      "JA-LEX-C410-JIMOTO410-05"
+    ]
+  }
+}

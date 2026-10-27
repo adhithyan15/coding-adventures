@@ -1,0 +1,11 @@
+{
+  "id": "JA-C285-shukujitsu",
+  "pathSegment": "JA-PATH-285-MOYOOSHI285",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-285-MOYOOSHI285",
+      "order": 4
+    }
+  ]
+}

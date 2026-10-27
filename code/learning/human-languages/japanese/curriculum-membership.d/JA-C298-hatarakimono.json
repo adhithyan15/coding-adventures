@@ -1,0 +1,11 @@
+{
+  "id": "JA-C298-hatarakimono",
+  "pathSegment": "JA-PATH-298-MUKASHI298",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-298-MUKASHI298",
+      "order": 4
+    }
+  ]
+}

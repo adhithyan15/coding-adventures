@@ -1,0 +1,11 @@
+{
+  "id": "JA-C413-hantou",
+  "pathSegment": "JA-PATH-413-HEIYA413",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-413-HEIYA413",
+      "order": 2
+    }
+  ]
+}

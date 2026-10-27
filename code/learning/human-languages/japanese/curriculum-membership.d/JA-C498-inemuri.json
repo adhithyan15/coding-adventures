@@ -1,0 +1,11 @@
+{
+  "id": "JA-C498-inemuri",
+  "pathSegment": "JA-PATH-498-REST498",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-498-REST498",
+      "order": 3
+    }
+  ]
+}

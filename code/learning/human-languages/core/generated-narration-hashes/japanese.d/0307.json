@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:c761ccdc94e2d3a4",
+  "lessonIds": [
+    "JA-C307-tsunagaru",
+    "JA-C307-tsunagu",
+    "JA-C307-dengon",
+    "JA-C307-keitai",
+    "JA-C307-kakenaosu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch307.txt",
+  "json": "japanese/narration/ch307.json",
+  "textHash": "fnv1a64:022137bf709aae1b",
+  "jsonHash": "fnv1a64:e62210207af29efa",
+  "findings": []
+}

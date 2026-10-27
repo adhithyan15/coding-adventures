@@ -1,0 +1,11 @@
+{
+  "id": "JA-C285-kuwawaru",
+  "pathSegment": "JA-PATH-285-MOYOOSHI285",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-285-MOYOOSHI285",
+      "order": 2
+    }
+  ]
+}
