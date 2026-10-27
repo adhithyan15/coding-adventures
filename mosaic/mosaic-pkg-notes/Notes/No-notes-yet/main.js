@@ -2,11 +2,22 @@
 // Fork the file (remove this banner) to customise.
 const componentName = "Notes";
 const fallbackProps = {
+  "bodyLabel": "Note",
+  "bodyPlaceholder": "Write something…",
   "bodyValue": "",
+  "cancelLabel": "Cancel",
+  "deleteLabel": "Delete",
+  "emptyHint": "Select a note, or start a new one.",
+  "newNoteLabel": "+ New note",
   "noteRows": [],
   "notesTitle": "Notes",
+  "saveLabel": "Save",
   "selectedNoteId": "",
+  "taskLabel": "Attach to task",
   "taskNameValue": "",
+  "taskPlaceholder": "Task name (optional)",
+  "titleLabel": "Title",
+  "titlePlaceholder": "Untitled",
   "titleValue": ""
 };
 const emitPayloads = {

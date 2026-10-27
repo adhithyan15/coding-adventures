@@ -16,38 +16,84 @@
         <div style="display: flex; flex-direction: row; gap: 16px">
           <div style="display: flex; flex-direction: column; width: 220px; flex-shrink: 0; gap: 4px; padding-right: 12px; border-right-width: 1px; border-right-color: #e6ded3; border-right-style: solid">
             <!-- emit "onNewNote" dropped: HTML is static -->
-            <button data-on-click="onNewNote" style="width: 100%; padding-top: 8px; padding-right: 12px; padding-bottom: 8px; padding-left: 12px; border-radius: 8px; border-width: 0; background: #e0942a; color: #ffffff; font-size: 13px; font-weight: bold">+ New note</button>
-            <!-- mosaic-for each="noteRows" as="n" index="ni" -->
-              <!-- mosaic-if when="( n [ 0 ] == selectedNoteId )" -->
-                <!-- emit "onSelectNote" dropped: HTML is static -->
-                <button data-on-click="onSelectNote" style="width: 100%; text-align: left; padding-top: 8px; padding-right: 12px; padding-bottom: 8px; padding-left: 12px; border-radius: 8px; border-width: 0; background: #fffdfa; color: #2b2723; font-size: 13px; font-weight: bold; box-shadow: 0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05); elevation: raised">{{n.1}}</button>
-              <!-- mosaic-else -->
-                <!-- emit "onSelectNote" dropped: HTML is static -->
-                <button data-on-click="onSelectNote" style="width: 100%; text-align: left; padding-top: 8px; padding-right: 12px; padding-bottom: 8px; padding-left: 12px; border-radius: 8px; border-width: 0; background: transparent; color: #6a625a; font-size: 13px">{{n.1}}</button>
-              <!-- /mosaic-if -->
-            <!-- /mosaic-for -->
+            <button data-on-click="onNewNote" style="width: 100%; padding-top: 8px; padding-right: 12px; padding-bottom: 8px; padding-left: 12px; border-radius: 8px; border-width: 0; background: #e0942a; color: #ffffff; font-size: 13px; font-weight: bold">{{newNoteLabel}}</button>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <!-- mosaic-for each="noteRows" as="row" index="i" -->
+                <!-- mosaic-if when="( row [ 1 ] )" -->
+                  <span style="color: #9ca3af; font-size: 12px">{{row.1}}</span>
+                <!-- /mosaic-if -->
+                <!-- mosaic-if when="( row [ 0 ] == selectedNoteId )" -->
+                  <div style="display: flex; flex-direction: column; padding: 12px; gap: 4px; background: #1e3a8a; border-width: 1px; border-color: #3b82f6; border-radius: 4px">
+                    <div style="display: flex; flex-direction: row; gap: 8px">
+                      <!-- emit "onSelectNote" dropped: HTML is static -->
+                      <button data-on-click="onSelectNote" aria-pressed="true" style="padding: 0; background: transparent; color: #dbeafe; border-width: 0; font-size: 14px; border-radius: 0">{{row.2}}</button>
+                      <!-- mosaic-if when="( row [ 4 ] )" -->
+                        <span style="color: #9ca3af; font-size: 12px">{{row.4}}</span>
+                      <!-- /mosaic-if -->
+                      <!-- mosaic-if when="( row [ 5 ] )" -->
+                        <span style="color: #fbbf24; font-size: 12px">{{row.5}}</span>
+                      <!-- /mosaic-if -->
+                    </div>
+                    <!-- mosaic-if when="( row [ 3 ] )" -->
+                      <span style="color: #9ca3af; font-size: 13px">{{row.3}}</span>
+                    <!-- /mosaic-if -->
+                  </div>
+                <!-- mosaic-else -->
+                  <div style="display: flex; flex-direction: column; padding: 12px; gap: 4px; background: #111827; border-width: 1px; border-color: #374151; border-radius: 4px">
+                    <div style="display: flex; flex-direction: row; gap: 8px">
+                      <!-- emit "onSelectNote" dropped: HTML is static -->
+                      <button data-on-click="onSelectNote" aria-pressed="false" style="padding: 0; background: transparent; color: #f9fafb; border-width: 0; font-size: 14px; border-radius: 0">{{row.2}}</button>
+                      <!-- mosaic-if when="( row [ 4 ] )" -->
+                        <span style="color: #9ca3af; font-size: 12px">{{row.4}}</span>
+                      <!-- /mosaic-if -->
+                      <!-- mosaic-if when="( row [ 5 ] )" -->
+                        <span style="color: #fbbf24; font-size: 12px">{{row.5}}</span>
+                      <!-- /mosaic-if -->
+                    </div>
+                    <!-- mosaic-if when="( row [ 3 ] )" -->
+                      <span style="color: #9ca3af; font-size: 13px">{{row.3}}</span>
+                    <!-- /mosaic-if -->
+                  </div>
+                <!-- /mosaic-if -->
+              <!-- /mosaic-for -->
+            </div>
           </div>
           <!-- mosaic-if when="selectedNoteId" -->
             <div style="display: flex; flex-direction: column; flex-grow: 1; gap: 10px">
-              <!-- emit "onTitleChange" dropped: HTML is static -->
-              <input type="text" value="{{titleValue}}" placeholder="Title" data-on-change="onTitleChange" style="padding: 10px; border-radius: 6px; background: #ffffff; color: #2b2723; border-width: 1px; border-color: #e6ded3; font-size: 14px; font-weight: bold">
-              <!-- emit "onBodyChange" dropped: HTML is static -->
-              <!-- emit "onSave" dropped: HTML is static -->
-              <textarea placeholder="Write something…" data-on-change="onBodyChange" data-on-commit="onSave" data-commit-key="mod+Enter" style="width: 100%; min-height: 200px; padding: 10px; border-radius: 6px; background: #ffffff; color: #2b2723; border-width: 1px; border-color: #e6ded3; font-size: 13px">{{bodyValue}}</textarea>
+              <span style="font-size: 12px; color: #6a625a">{{taskLabel}}</span>
               <!-- emit "onTaskNameChange" dropped: HTML is static -->
-              <input type="text" value="{{taskNameValue}}" placeholder="Attach to task (optional)" data-on-change="onTaskNameChange" style="padding: 10px; border-radius: 6px; background: #ffffff; color: #6a625a; border-width: 1px; border-color: #e6ded3; font-size: 13px">
-              <div style="display: flex; flex-direction: row; gap: 8px">
+              <input type="text" aria-label="{{taskLabel}}" value="{{taskNameValue}}" placeholder="{{taskPlaceholder}}" data-on-change="onTaskNameChange" style="padding: 10px; border-radius: 6px; background: #ffffff; color: #6a625a; border-width: 1px; border-color: #e6ded3; font-size: 13px">
+              <div style="display: flex; flex-direction: column; padding: 16px; gap: 8px; background: #111827; border-width: 1px; border-color: #374151; border-radius: 4px">
+                <!-- mosaic-if when="titleLabel" -->
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <span style="color: #9ca3af; font-size: 12px">{{titleLabel}}</span>
+                    <!-- emit "onTitleChange" dropped: HTML is static -->
+                    <input type="text" aria-label="{{titleLabel}}" value="{{titleValue}}" placeholder="{{titlePlaceholder}}" data-on-change="onTitleChange" style="width: 100%; padding: 8px; background: #1f2937; color: #f9fafb; border-width: 1px; border-color: #374151; border-radius: 4px; font-size: 16px">
+                  </div>
+                <!-- /mosaic-if -->
+                <span style="color: #9ca3af; font-size: 12px">{{bodyLabel}}</span>
+                <!-- emit "onBodyChange" dropped: HTML is static -->
                 <!-- emit "onSave" dropped: HTML is static -->
-                <button data-on-click="onSave" style="padding-top: 8px; padding-right: 16px; padding-bottom: 8px; padding-left: 16px; border-radius: 8px; border-width: 0; background: #e0942a; color: #ffffff; font-size: 13px; font-weight: bold">Save</button>
-                <!-- emit "onDelete" dropped: HTML is static -->
-                <button data-on-click="onDelete" style="padding-top: 8px; padding-right: 16px; padding-bottom: 8px; padding-left: 16px; border-radius: 8px; border-width: 0; background: #f8e4df; color: #cf4b34; font-size: 13px; font-weight: bold">Delete</button>
-                <!-- emit "onCancel" dropped: HTML is static -->
-                <button data-on-click="onCancel" style="padding-top: 8px; padding-right: 16px; padding-bottom: 8px; padding-left: 16px; border-radius: 8px; border-width: 0; background: transparent; color: #6a625a; font-size: 13px">Cancel</button>
+                <textarea aria-label="{{bodyLabel}}" placeholder="{{bodyPlaceholder}}" data-on-change="onBodyChange" data-on-commit="onSave" data-commit-key="mod+Enter" style="width: 100%; min-height: 160px; padding: 8px; background: #1f2937; color: #f9fafb; border-width: 1px; border-color: #374151; border-radius: 4px; font-size: 14px">{{bodyValue}}</textarea>
+                <div style="display: flex; flex-direction: row; gap: 8px">
+                  <!-- mosaic-if when="saveLabel" -->
+                    <!-- emit "onSave" dropped: HTML is static -->
+                    <button data-on-click="onSave" style="padding: 8px; background: #1d4ed8; color: #ffffff; border-width: 1px; border-color: #60a5fa; border-radius: 4px; font-size: 14px">{{saveLabel}}</button>
+                  <!-- /mosaic-if -->
+                  <!-- mosaic-if when="deleteLabel" -->
+                    <!-- emit "onDelete" dropped: HTML is static -->
+                    <button data-on-click="onDelete" style="padding: 8px; background: #111827; color: #f87171; border-width: 1px; border-color: #f87171; border-radius: 4px; font-size: 14px">{{deleteLabel}}</button>
+                  <!-- /mosaic-if -->
+                  <!-- mosaic-if when="cancelLabel" -->
+                    <!-- emit "onCancel" dropped: HTML is static -->
+                    <button data-on-click="onCancel" style="padding: 8px; background: #111827; color: #f9fafb; border-width: 1px; border-color: #374151; border-radius: 4px; font-size: 14px">{{cancelLabel}}</button>
+                  <!-- /mosaic-if -->
+                </div>
               </div>
             </div>
           <!-- mosaic-else -->
             <div style="display: flex; flex-direction: column; flex-grow: 1; align-items: center; justify-content: center">
-              <span style="font-size: 13px; color: #9b9289">Select a note, or start a new one.</span>
+              <span style="font-size: 13px; color: #9b9289">{{emptyHint}}</span>
             </div>
           <!-- /mosaic-if -->
         </div>

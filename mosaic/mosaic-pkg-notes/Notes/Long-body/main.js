@@ -2,20 +2,39 @@
 // Fork the file (remove this banner) to customise.
 const componentName = "Notes";
 const fallbackProps = {
+  "bodyLabel": "Note",
+  "bodyPlaceholder": "Write something…",
   "bodyValue": "What happened\n\nAt 09:12 the scheduler stopped picking up jobs. The queue grew for forty minutes before the first alert fired, because the alert watched the error rate and the scheduler was not erroring: it was idle.\n\nWhat went well\n\n- The rollback took four minutes once someone started it.\n- Support had a status message out within ten minutes of the alert.\n\nWhat to change\n\n- Alert on queue depth, not only on errors.\n- Write down who may start a rollback without asking first.\n- Rehearse the rollback once a quarter, so the four minutes stays four minutes.\n\nFollow-ups are filed against the Reliability project.",
+  "cancelLabel": "Cancel",
+  "deleteLabel": "Delete",
+  "emptyHint": "Select a note, or start a new one.",
+  "newNoteLabel": "+ New note",
   "noteRows": [
     [
       "note-1",
-      "Kickoff agenda"
+      "",
+      "Kickoff agenda",
+      "",
+      "",
+      ""
     ],
     [
       "note-5",
-      "Retrospective: the March outage"
+      "",
+      "Retrospective: the March outage",
+      "",
+      "",
+      ""
     ]
   ],
   "notesTitle": "Notes",
+  "saveLabel": "Save",
   "selectedNoteId": "note-5",
+  "taskLabel": "Attach to task",
   "taskNameValue": "",
+  "taskPlaceholder": "Task name (optional)",
+  "titleLabel": "Title",
+  "titlePlaceholder": "Untitled",
   "titleValue": "Retrospective: the March outage"
 };
 const emitPayloads = {
