@@ -336,6 +336,14 @@ describe("the gate that would have caught the A2 claim", () => {
     // past, future and practical-reading nodes, plus the letters ઓ ડ ઊ) and
     // chapters 153-272 (600 headwords, 234 verbs), which moved it from the A1
     // row of HELD to the A2 row.
+    // Marwadi followed, with chapters 152-165 (the pronouns वो, यो, हूं, म्हैं
+    // and आप; the present, of to be and of other verbs, for हूं, वो and आप;
+    // कोनी and yes-or-no questions by voice; the past, with म्हैं as the only
+    // agent of a transitive verb; the first-person -सूं future; and two
+    // practical readings, realizing the negation and questions, past, future
+    // and practical-reading nodes, plus the letters ऊ ध झ ओ ढ फ) and chapters
+    // 166-290 (1,265 headwords, 276 verbs), which moved it from the A1 row of
+    // HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious

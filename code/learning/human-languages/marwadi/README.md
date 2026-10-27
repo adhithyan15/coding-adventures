@@ -108,8 +108,23 @@ each from a word just learned: **ऊ ध झ ओ ढ फ**. What stays untaught 
 in the changelog: forms no reachable Marwari source prints -- **वा, वै, थे,
 आपां**, the past copula, most futures and the noun genitive -- wait for a source
 rather than being invented, and the few taught cells no source prints are
-hedged in the lesson as central Marwari as this book writes it. With 962 lessons and 640 headwords, all five A2
-spine nodes are realized but the A2 vocabulary is not: that is still not A2.
+hedged in the lesson as central Marwari as this book writes it.
+
+Chapters 166--290 then add the A2 vocabulary: 625 words, five to a chapter,
+with 25 reviews. They cover the day at home and the kitchen; notices, money,
+the post, the office, the town and buying; journeys, the weather, the desert
+land, the herd and the harvest; what happened, the body, feelings and the
+family by marriage; and asking, refusing and agreeing, music, games, crafts,
+school and work. Each word arrives in a sentence built only from what the book
+has already taught, and says where it comes from: a Marwari or Old Marwari row
+of Turner's dictionary where the entry has one, otherwise a Hindi, Gujarati or
+Sindhi row named as such, Monier-Williams for the learned Sanskrit words, and
+"usually traced to" for the Persian, Arabic and English loans. No letter is
+added: the six of the core stay the last ones written, and **ऋ ऐ औ ञ ष** remain
+unread. With 1,612 lessons, 1,265 headwords and 276 verbs at or below A2, and
+all five A2 spine nodes realized, the level gate now records Marwadi as having
+attained A2. That is a measure of vocabulary and grammar, not exam readiness:
+the forms named above still wait for a source, and no A2 mock exists yet.
 
 Marwadi has no single external pre-A1-to-C2 examination ladder suitable for the
 book's completion contract. The project therefore maps it to CEFR through its

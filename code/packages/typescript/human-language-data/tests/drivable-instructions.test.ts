@@ -1388,8 +1388,12 @@ const SPOKEN_HAND_VERB_ALLOWLIST: ReadonlyMap<string, readonly string[]> = new M
   ["JA-C340-kokorogakeru", ["Say the Japanese for 'to make a point of'."]],
   ["JA-C403-midokoro", ["Say the Japanese for 'a highlight'."]],
   ["JA-C491-jaguchi", ["Say the Japanese for 'a tap'."]],
+  ["MW-C276-tali", ["Say the Marwadi for 'a clap'."]],
   ["JA-C509-chuusen-suru", ["Say the Japanese for 'to hold a draw'."]],
   ["MW-C57-likhno", ["Say the Marwadi for 'to write'."]],
+  ["MW-C199-madno", ["Say the Marwadi for 'to write down'."]],
+  // "draw" in "to draw near" is coming closer, not drawing: the gloss of ढूकणो.
+  ["MW-C245-dhukno", ["Say the Marwadi for 'to draw near'."]],
   ["UR-C07-likhna", ["Say the Urdu verb meaning 'to write'."]],
   ["PA-C08-likhna", ["What did the Sanskrit root behind likhna mean before it meant to write?"]],
   // A grammar question whose subject is the WORD: "does it point" asks what a

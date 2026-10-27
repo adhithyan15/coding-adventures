@@ -316,7 +316,8 @@ describe("corpus level summary", () => {
       // left this list, and its B1 vocabulary, chapters 262-533, took attained
       // to B1.
       // Marwadi's A2 core, chapters 152-165, realized the negation, past,
-      // future and practical-reading nodes; it touches no B1 node, so it stays.
+      // future and practical-reading nodes; it touches no B1 node, so it stays,
+      // and its A2 vocabulary, chapters 166-290, took attained to A2.
       "marwadi",
       "punjabi",
     ]);

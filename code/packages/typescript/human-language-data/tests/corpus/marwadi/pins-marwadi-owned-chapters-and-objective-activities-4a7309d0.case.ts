@@ -26,12 +26,15 @@ it("pins Marwadi-owned chapters and objective activities", () => {
   // 901 -> 962, chapters 151 -> 165: the A2 core, 26 grammar, 12 word, 6
   // letter, 2 reading and 15 review lessons, each with one hand-written
   // objective activity; all 61 ids are in the hand-authored list below.
-  expect(lessons).toHaveLength(962);
+  // 962 -> 1612, chapters 165 -> 290: the A2 vocabulary, 625 word lessons and
+  // 25 reviews, each with the generated typed recall (`<lesson>-type`), so the
+  // tranche pattern below grows to cover chapters 166-290 and their reviews.
+  expect(lessons).toHaveLength(1612);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set(Array.from({ length: 165 }, (unused, index) => index + 1)),
+    new Set(Array.from({ length: 290 }, (unused, index) => index + 1)),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(961);
+  expect(activities).toHaveLength(1611);
   expect(
     lessons.every((lesson) =>
       compileLessonActivities(lesson.blocks).length ===
@@ -39,8 +42,9 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     ),
   ).toBe(true);
   const vocabularyTranche =
-    /^MW-(C(4[4-9]|[5-9][0-9]|1[0-4][0-9])|R66|R89|R99|R109|R119|R129|R139|R149)-.+-type$/;
-  expect(activities.filter((activity) => vocabularyTranche.test(activity.id))).toHaveLength(546);
+    /^MW-(C(4[4-9]|[5-9][0-9]|1[0-4][0-9]|16[6-9]|1[7-9][0-9]|2[0-8][0-9]|290)|R66|R89|R99|R109|R119|R129|R139|R149|R17[28]|R184|R190|R197|R203|R209|R215|R222|R228|R234|R240|R247|R253|R259|R265|R272|R278|R284|R290)-.+-type$/;
+  // 546 -> 1196: the A2 vocabulary's 625 word and 25 review activities.
+  expect(activities.filter((activity) => vocabularyTranche.test(activity.id))).toHaveLength(1196);
   expect(
     activities
       .map((activity) => activity.id)
@@ -467,7 +471,7 @@ it("pins Marwadi-owned chapters and objective activities", () => {
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 962,
+    lessonCount: 1612,
     neverTaughtGlyphs: 0,
     violations: 0,
   });
