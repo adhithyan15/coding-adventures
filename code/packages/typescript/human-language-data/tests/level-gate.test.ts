@@ -336,6 +336,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // past, future and practical-reading nodes, plus the letters ઓ ડ ઊ) and
     // chapters 153-272 (600 headwords, 234 verbs), which moved it from the A1
     // row of HELD to the A2 row.
+    // Chinese followed, with chapters 147-157 (the A2 core: the future with 要 and
+    // 会, practical texts and the A2 grammar, realizing all five A2 nodes, plus
+    // ten written characters) and chapters 158-277 (600 headwords, 48 more
+    // characters written; 1,290 headwords and 403 verbs at or below A2), which
+    // moved it from the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
