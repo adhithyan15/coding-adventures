@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C100-gongyuan",
+  "pathSegment": "ZH-PATH-100-TOWN100",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-100-TOWN100",
+      "order": 2
+    }
+  ]
+}

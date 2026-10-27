@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C94-nianqing",
+  "pathSegment": "ZH-PATH-94-ALL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-94-ALL",
+      "order": 3
+    }
+  ]
+}

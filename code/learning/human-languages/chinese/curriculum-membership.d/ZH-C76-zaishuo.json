@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C76-zaishuo",
+  "pathSegment": "ZH-PATH-76-GOODBYE76",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-76-GOODBYE76",
+      "order": 3
+    }
+  ]
+}

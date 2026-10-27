@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W72-kai",
+    "language": "chinese",
+    "chapter": 72,
+    "sequence": 5735,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bd5429537f5a7365",
+    "detachableSegments": [
+      "Script — two bars, two legs"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

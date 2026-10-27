@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C135-lanqiu",
+    "language": "chinese",
+    "chapter": 135,
+    "sequence": 10630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ad4c739e5727c14"
+  },
+  "findings": []
+}

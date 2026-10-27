@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W112-chu",
+  "pathSegment": "ZH-PATH-112-EXIT112",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-112-EXIT112",
+      "order": 1
+    }
+  ]
+}

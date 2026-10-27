@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W66-yu-rain",
+    "language": "chinese",
+    "chapter": 66,
+    "sequence": 5425,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d63d4ef0c753770e",
+    "detachableSegments": [
+      "Script — a lid, a frame and four drops"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

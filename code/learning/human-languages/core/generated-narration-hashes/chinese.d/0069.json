@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:bb25b1a3b82de89a",
+  "lessonIds": [
+    "ZH-C69-zuofan",
+    "ZH-W69-zuo-make",
+    "ZH-C69-zaofan",
+    "ZH-C69-wufan",
+    "ZH-C69-wanfan",
+    "ZH-C69-haochi",
+    "ZH-R69-review-64-69"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch69.txt",
+  "json": "chinese/narration/ch69.json",
+  "textHash": "fnv1a64:401a5a81b7a7998f",
+  "jsonHash": "fnv1a64:bdbc921bd70a064f",
+  "findings": []
+}

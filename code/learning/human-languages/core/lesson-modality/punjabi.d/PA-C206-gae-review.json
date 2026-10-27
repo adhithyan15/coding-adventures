@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C206-gae-review",
+    "language": "punjabi",
+    "chapter": 206,
+    "sequence": 11200,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:41a0754a3a0da330"
+  },
+  "findings": []
+}

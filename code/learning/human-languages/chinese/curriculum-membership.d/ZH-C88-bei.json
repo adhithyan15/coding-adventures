@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C88-bei",
+  "pathSegment": "ZH-PATH-88-HOW-MANY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-88-HOW-MANY",
+      "order": 3
+    }
+  ]
+}

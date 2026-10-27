@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:e115a9b99179aee1",
+  "lessonIds": [
+    "ZH-C123-congming",
+    "ZH-C123-renzhen",
+    "ZH-C123-keai",
+    "ZH-C123-reqing",
+    "ZH-C123-guanxin"
+  ],
+  "tex": "chinese/book/chapters/ch123-what-people-are-like.tex"
+}

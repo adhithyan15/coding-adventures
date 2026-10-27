@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:da9f03827a686392",
+  "lessonIds": [
+    "ZH-C128-yinyue",
+    "ZH-W128-yin-sound",
+    "ZH-C128-ge",
+    "ZH-C128-haoting",
+    "ZH-C128-yinyuehui",
+    "ZH-C128-jita",
+    "ZH-R128-review-123-128"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch128.txt",
+  "json": "chinese/narration/ch128.json",
+  "textHash": "fnv1a64:401fa0e97618375f",
+  "jsonHash": "fnv1a64:996b174a3ba94af8",
+  "findings": []
+}

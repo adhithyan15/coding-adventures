@@ -1,0 +1,20 @@
+{
+  "chapter": 72,
+  "title": "Getting About",
+  "label": "ch:zh-getting-about",
+  "canDo": "I can talk about trains, driving, planes, roads and arriving.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C72-dao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: I can talk about trains, driving, planes, roads and arriving.",
+    "assesses": [
+      "ZH-LEX-C72-TRAVEL72-01",
+      "ZH-LEX-C72-TRAVEL72-03",
+      "ZH-LEX-C72-TRAVEL72-04",
+      "ZH-LEX-C72-TRAVEL72-05"
+    ]
+  }
+}

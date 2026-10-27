@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W33-nan",
+    "language": "chinese",
+    "chapter": 33,
+    "sequence": 3105,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b06d786edf30baf5",
+    "detachableSegments": [
+      "Script — a field above, strength below"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -86,6 +86,75 @@ Unknown-tag-at-resolve-time is **not** an error — `resolve()` returns
 `None` and lets the *compiler* decide what to do (typically: emit a
 "no such component `Foo` (did you mean `Bar`?)" diagnostic).
 
+## Inlining `pkg::P::C` call sites: required slots
+
+`LayoutPackageResolver` replaces each `pkg::P::C ( … )` node in a compiled
+layout with `C`'s own layout, rewriting `C`'s `slot:` references to the
+values bound at the call site (UI34 §5.1).
+
+Before it substitutes anything, it checks every call site against `C`'s
+interface. Each slot `C.mil` declares without a default must be bound
+(UI13 §1). Otherwise the result is `SlotBindingMissing` (UI34 §7):
+
+```
+// mosaic-pkg-lib/src/Card.mil       // ProbeApp.mll
+component Card {                     layout ProbeApp { Column [ app-root ] {
+  slot title : text ;                  pkg::mosaic-pkg-lib::Card ( title: slot: heading )
+  slot hint  : text ;      ← required } }
+  slot tone  : text = "" ; ← optional
+}
+
+`ProbeApp` mounts `pkg::mosaic-pkg-lib::Card` at Column[app-root] >
+pkg::mosaic-pkg-lib::Card#1 without binding its required slot `hint`;
+bind `hint` at the call site, or give it a default in Card.mil
+(`slot hint : <type> = <value> ;`)
+```
+
+- An omitted slot with a default takes the default.
+- The slot that the layout's `slot: <name>` child mount names is filled by
+  the caller's children, so it needs no binding. Every other `node` or
+  `list<node>` slot is read as a prop, so it does need one.
+- An emit the call site does not forward is dropped.
+- A call-site prop that names no slot or emit of `C` is ignored. It never
+  rewrites anything.
+- Every miss in the whole tree is reported at once, as
+  `LayoutResolveError::Multiple`. That includes misses inside the layouts
+  of the packages it reaches. At most 100 are listed, followed by
+  "… and N more".
+
+When a package component is loaded, its own names are checked too:
+
+- **Free names in expressions.** Every free name must be a declared slot,
+  a `For` `as:`/`index:` binding in scope, or `true`/`false`. Otherwise
+  the result is `UndeclaredExpressionIdentifier`. Without this check,
+  `If ( when: ( hint > 0 ) )` with no `slot hint` would compile, and after
+  inlining would read the consumer's `hint`.
+- **Bare NAME prop values.** `Text ( content: title )` lowers to a
+  variable on React (`{title}`) and HTML (`{{title}}`), so a bare NAME is
+  checked like an expression name. Exempt are `true`/`false`, the kernel's
+  enum positions (`moslayout_compiler::KEYWORD_LITERAL_PROPS`, such as
+  `axis: both` or `a11y-role: heading`), and, at a call site, one of the
+  declared values of the `one-of` slot it binds. A bare NAME that names one
+  of the component's own slots becomes `slot: <name>`, so it takes the call
+  site's binding. That includes forwarding: `Badge ( tone: tone )`.
+- **`one-of` values.** A `one-of` value bound at a call site (`tone: loud`)
+  reaches the callee as the string `"loud"`, except in an enum position,
+  where it stays a bare value. It is never a variable.
+  - Afterwards, expressions that have become constant are evaluated:
+    `( "loud" == "calm" )` becomes `false`. TypeScript rejects that
+    comparison as written.
+- **The child-mount slot.** It may be read only at the mount. A read
+  anywhere else is `ChildMountSlotReferenced`, because nothing ever binds
+  that slot by prop.
+- **Loop variables.** Inside a `For`, a name that matches the loop's
+  binding is the loop variable, and substitution leaves it alone.
+
+The check reads the interface rather than the layout, because an unbound
+name that survives substitution means a slot of the *consumer*. It was
+then either silently captured by a consumer slot with the same name, or
+left in generated code as an undeclared identifier.
+(`mosaic-unbound-slot-semantics-v1.md` §1.3 has the probes.)
+
 ## Version requirements
 
 A `[dependencies]` value is checked, not ignored

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:4f4d90d391bae5df",
+  "lessonIds": [
+    "ZH-C71-haohe",
+    "ZH-C71-tian",
+    "ZH-C71-la",
+    "ZH-C71-xian",
+    "ZH-C71-diancai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch71.txt",
+  "json": "chinese/narration/ch71.json",
+  "textHash": "fnv1a64:a431f733d2a0a21e",
+  "jsonHash": "fnv1a64:d1bad9afb8de1d4d",
+  "findings": []
+}

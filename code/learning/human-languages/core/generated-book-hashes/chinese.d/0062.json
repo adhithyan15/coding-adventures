@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:0438ff201af1c6f0",
+  "lessonIds": [
+    "ZH-C62-kuai",
+    "ZH-W62-kuai-fast",
+    "ZH-C62-jiu",
+    "ZH-C62-yuan",
+    "ZH-C62-jin",
+    "ZH-C62-zhidao"
+  ],
+  "tex": "chinese/book/chapters/ch62-fast-far-and-near.tex"
+}

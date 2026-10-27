@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:b65c6b86548e7bc3",
+  "lessonIds": [
+    "ZH-C55-xiang",
+    "ZH-W55-xiang",
+    "ZH-C55-ai",
+    "ZH-C55-dianying",
+    "ZH-C55-changge",
+    "ZH-C55-kafei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch55.txt",
+  "json": "chinese/narration/ch55.json",
+  "textHash": "fnv1a64:f89629b70a43acee",
+  "jsonHash": "fnv1a64:fc3c88d05b277d9a",
+  "findings": []
+}

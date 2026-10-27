@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:e7a310f8aaa9ecec",
+  "lessonIds": [
+    "ZH-C127-zhexie",
+    "ZH-W127-xie-few",
+    "ZH-C127-naxie",
+    "ZH-C127-naxie-which",
+    "ZH-C127-yixie",
+    "ZH-C127-zheyang"
+  ],
+  "tex": "chinese/book/chapters/ch127-these-and-those.tex"
+}

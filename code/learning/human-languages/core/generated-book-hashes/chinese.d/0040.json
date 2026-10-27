@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:5e5fa8a31f143eae",
+  "lessonIds": [
+    "ZH-C40-mai",
+    "ZH-W40-mai",
+    "ZH-C40-pingguo",
+    "ZH-C40-shuiguo",
+    "ZH-C40-mianbao",
+    "ZH-C40-jidan"
+  ],
+  "tex": "chinese/book/chapters/ch40-fruit-bread-and-eggs.tex"
+}

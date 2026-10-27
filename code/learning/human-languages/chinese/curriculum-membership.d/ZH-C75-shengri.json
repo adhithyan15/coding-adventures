@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C75-shengri",
+  "pathSegment": "ZH-PATH-75-PARTY75",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-75-PARTY75",
+      "order": 2
+    }
+  ]
+}

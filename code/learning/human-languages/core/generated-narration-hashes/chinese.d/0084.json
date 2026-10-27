@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:01399490ef3df702",
+  "lessonIds": [
+    "ZH-C84-yiqi",
+    "ZH-C84-jianmian",
+    "ZH-C84-liaotian",
+    "ZH-C84-canjia",
+    "ZH-C84-zhunbei",
+    "ZH-R84-review-80-84",
+    "ZH-R84-review-final-84"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch84.txt",
+  "json": "chinese/narration/ch84.json",
+  "textHash": "fnv1a64:1754c1cfbc310895",
+  "jsonHash": "fnv1a64:6410f5511f49633f",
+  "findings": []
+}

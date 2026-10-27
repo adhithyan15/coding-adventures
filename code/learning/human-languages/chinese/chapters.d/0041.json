@@ -1,0 +1,20 @@
+{
+  "chapter": 41,
+  "title": "Paying",
+  "label": "ch:zh-paying",
+  "canDo": "I can ask how much something costs and say how much I want.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ZH-C41-yao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 41: I can ask how much something costs and say how much I want.",
+    "assesses": [
+      "ZH-LEX-C41-MONEY41-01",
+      "ZH-LEX-C41-MONEY41-03",
+      "ZH-LEX-C41-MONEY41-04",
+      "ZH-LEX-C41-MONEY41-05"
+    ]
+  }
+}

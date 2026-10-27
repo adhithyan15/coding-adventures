@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C124-xiang-resemble",
+  "pathSegment": "ZH-PATH-124-BUILD124",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-124-BUILD124",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:0fab715883ba221b",
+  "lessonIds": [
+    "ZH-C112-chukou",
+    "ZH-W112-chu",
+    "ZH-C112-rukou",
+    "ZH-C112-tui",
+    "ZH-C112-la",
+    "ZH-C112-louti"
+  ],
+  "tex": "chinese/book/chapters/ch112-way-in-way-out.tex"
+}

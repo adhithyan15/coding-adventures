@@ -174,7 +174,8 @@ pub(crate) mod opcode {
     /// `F64_TO_I64_TRUNC <dst> <a>` — LANG83 `real_to_int_trunc`: the float
     /// register `a` rounded toward zero, narrowed by vm-core's
     /// `real_to_i64_checked` into the integer register `dst`. A non-finite or
-    /// out-of-range value writes the VM's exact error text and stops.
+    /// out-of-range value writes `trap: Trap.ConvRange` and stops, which
+    /// `take_error` hands back as the VM's own `VMError::Trap`.
     pub const F64_TO_I64_TRUNC: u8 = 0x5A;
     /// `F64_TO_I64_FLOOR <dst> <a>` — LANG83 `real_to_int_floor`: like
     /// `F64_TO_I64_TRUNC`, rounding toward −∞ (ALGOL `entier`).
@@ -227,9 +228,6 @@ const TRAP_PREFIX: &str = "trap: ";
 /// The error-slot text for `DIV_I64` by zero (the non-LANG83 `div_*` ops).
 pub const DIV_BY_ZERO_MESSAGE: &str = "GenericCirJit: division by zero";
 
-/// Prefix of vm-core's `real_to_i64_checked` errors (`real_to_int: …`).
-const REAL_TO_INT_PREFIX: &str = "real_to_int: ";
-
 /// Turn an error-slot message back into the [`VMError`] the interpreter tier
 /// would have raised for the same failure, so both tiers fail identically:
 ///
@@ -237,7 +235,6 @@ const REAL_TO_INT_PREFIX: &str = "real_to_int: ";
 /// |-----------------------------------|--------------------------------|
 /// | `trap: <registered trap kind>`    | `Trap { kind }`                |
 /// | [`DIV_BY_ZERO_MESSAGE`]           | `DivisionByZero`               |
-/// | `real_to_int: …` (vm-core's text) | `Custom(<that text>)`          |
 /// | anything else (malformed binary,  | `Custom("generic-cir-jit: …")` |
 /// | fuel cap, bad memory access, …)   |                                |
 ///
@@ -252,12 +249,6 @@ pub fn error_from_message(msg: String) -> VMError {
     }
     if msg == DIV_BY_ZERO_MESSAGE {
         return VMError::DivisionByZero;
-    }
-    // A failed `real_to_int_*` narrowing: the slot holds vm-core's own
-    // `real_to_i64_checked` text, so hand it back as the very same
-    // `VMError::Custom` the interpreter tier raises.
-    if msg.starts_with(REAL_TO_INT_PREFIX) {
-        return VMError::Custom(msg);
     }
     VMError::Custom(format!("generic-cir-jit: {msg}"))
 }
@@ -723,12 +714,14 @@ impl Backend for GenericCirJit {
                     }
                     let x = f64::from_bits(regs[code[pc + 1] as usize] as u64);
                     let t = if op == opcode::F64_TO_I64_TRUNC { x.trunc() } else { x.floor() };
-                    // vm-core's own check, so the accepted range and the
-                    // error text are the interpreter tier's, byte for byte.
+                    // vm-core's own check, so the accepted range is the
+                    // interpreter tier's. Its failure is the typed
+                    // `Trap.ConvRange`, written to the slot as a trap message
+                    // so `error_from_message` returns the same `VMError::Trap`.
                     match vm_core::dispatch::real_to_i64_checked(t) {
                         Ok(n) => regs[code[pc] as usize] = n,
-                        Err(VMError::Custom(msg)) => {
-                            self.set_error(msg);
+                        Err(VMError::Trap { kind }) => {
+                            self.set_error(trap_message(&kind));
                             return Value::Null;
                         }
                         Err(other) => {
@@ -2121,8 +2114,8 @@ mod tests {
         assert!(matches!(j.take_error(), Some(VMError::DivisionByZero)));
         j.set_error("trap: Not.A.Kind");
         assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.contains("Not.A.Kind")));
-        j.set_error("real_to_int: operand is not finite");
-        assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m == "real_to_int: operand is not finite"));
+        j.set_error(trap_message("Trap.ConvRange"));
+        assert!(matches!(j.take_error(), Some(VMError::Trap { kind }) if kind == "Trap.ConvRange"));
         j.set_error("malformed bytecode: truncated TRAP");
         assert!(matches!(j.take_error(), Some(VMError::Custom(m)) if m.starts_with("generic-cir-jit: ")));
     }
@@ -2475,10 +2468,10 @@ mod tests {
 
     /// The two narrowing ops, compiled and run: trunc rounds toward zero,
     /// floor toward −∞, and every failure is the interpreter tier's own
-    /// `VMError::Custom` text (vm-core's `real_to_i64_checked`), never a
+    /// typed `Trap.ConvRange` (vm-core's `real_to_i64_checked`), never a
     /// garbage integer.
     #[test]
-    fn real_to_int_narrows_like_the_vm_and_fails_with_its_error() {
+    fn real_to_int_narrows_like_the_vm_and_traps_conv_range() {
         let params = [("x".to_string(), "f64".to_string())];
         let ctx = FunctionContext { name: "f", params: &params, return_type: "i64" };
         let two63 = 9_223_372_036_854_775_808.0_f64;
@@ -2502,6 +2495,7 @@ mod tests {
                 let vm = vm_core::dispatch::real_to_i64_checked(rounded).unwrap_err();
                 let jit = j.take_error().unwrap_or_else(|| panic!("{op}({x}) must fail"));
                 assert_eq!(format!("{jit:?}"), format!("{vm:?}"), "{op}({x}) must fail exactly as the VM does");
+                assert!(matches!(&jit, VMError::Trap { kind } if kind == "Trap.ConvRange"), "{op}({x}): {jit:?}");
             }
             // A float literal folded into the operand narrows too.
             let lit = vec![

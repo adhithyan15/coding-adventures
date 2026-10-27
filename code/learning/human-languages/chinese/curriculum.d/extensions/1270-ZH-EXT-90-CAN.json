@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-90-CAN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I can do and ask whether I may.",
+  "prerequisites": []
+}
