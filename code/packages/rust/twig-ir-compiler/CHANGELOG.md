@@ -59,7 +59,7 @@
   `collect_main_direct_string_call_evidence`) now walks every function body,
   lambda and `match` arm in a new `EvidenceMode::Elsewhere`, which can only
   weaken evidence. It also marks a function `Conflict` when the function is
-  used as a value (an escape), and when the module exports it. Only direct
+  used as a value (an escape). Only direct
   calls in `main` can establish `str`.
 - **Scoped type facts no longer leak.** `compile_let`, `compile_let_star` and
   the two `match` binding paths restored `locals` and (for `let`) the E4
@@ -80,6 +80,45 @@
   `lang-aot`'s `lang_matrix` and for about 430 other Twig programs taken from
   the test sources of the twig and lang-aot crates. Only the new shadowing
   test programs change.
+
+### Fixed (second security re-review)
+
+- **`unshadow` could restore a type the register no longer held.** This was
+  a regression from the first follow-up. The first version treated an outer
+  alias as proof that register `name` was never written. But a nested
+  same-name binding (a `mov`, a `str_const` or a `match` arm) writes that
+  register. So in
+  `(define (g x) (let ((x (string-append x "b"))) (let ((x 5)) x)) (string-length x))`
+  the `str` type came back on a register holding 5, and the call lowered to
+  `str_len`. The same happened through a `match` arm, through `let*`
+  rebinding a `str` parameter, and in
+  `(let ((y (let ((x 5)) x))) (string-length y))` under an outer string `x`.
+
+  `FnCtx::emit` now keeps a per-register write counter, and `shadow` records
+  it. If the counter has moved when the scope closes and the name has an
+  outer binding, the type becomes `any`. If the counter has not moved, the
+  outer type is restored. If the counter moved but the name has no outer
+  binding, the register's current type is kept, so `(let ((x 1)) x)` still
+  returns a typed `i64`.
+
+  `var_types` now describes registers only: alias bindings no longer record
+  `str` under the alias name, and `is_known_value_type` resolves an alias to
+  its target register. So `(let ((y x)) (let ((x 5)) (string-length y)))`,
+  where `y` aliases the `str` parameter register `x`, no longer reaches
+  `str_len`. That register's type is updated when it is overwritten.
+- **Module code gets no call-site string inference.** The export-only
+  conflict rule missed the module driver, which registers every module's
+  function names, private ones included, as externs of every other module.
+  So a private `strlen` in `lib.tw`, called only with `"abc"` there, got
+  `x : str`, and `main.tw`'s `(strlen 5)` reached `str_len`.
+  `infer_main_direct_string_param_types` now returns early for any program
+  with a `(module …)` declaration or with externs registered by
+  `with_extern_fns` (tracked by a new `has_externs` flag). The export rule
+  is subsumed by this and removed. This does not rely on #18437: the repro
+  also works through an exported function.
+- The IIR diff was re-run over 505 harvested programs, including all 49
+  `lang_matrix` Twig programs. Only the 22 shadowing test programs differ
+  from `origin/main`.
 
 ### Docs
 
@@ -104,6 +143,13 @@
   an argument, and an exported function. Five cover scope type leaks: after a
   `let`/`let*` and after a `match` arm, a literal `let`, an inherited outer
   `i64`, and an inner binding hiding an outer alias.
+- 7 more tests for the second re-review, all failing before it:
+  - review programs A and B
+  - a `match` arm over an aliased outer binding
+  - `let*` rebinding a `str` parameter
+  - an alias whose target register is overwritten (two shapes)
+  - module code with a `(module …)` declaration
+  - code compiled with externs
 - End-to-end runs of the same programs are in `twig-vm`'s dispatch tests
   (the example from the issue now returns 2). The imported-function case is
   in `twig-module-driver`.

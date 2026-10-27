@@ -1426,6 +1426,98 @@ mod tests {
         assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
     }
 
+    // ---- A nested same-name binding overwrites the shared register -----
+    //
+    // Same-name locals share one register (#18439).  So when a nested
+    // binding writes register `x` with `mov` / `str_const`, the outer
+    // binding's type fact for `x` is dead even if the outer value itself
+    // lives in an alias register.  After the scopes unwind, `var_types["x"]`
+    // must describe what register `x` HOLDS (here the integer 5), never the
+    // restored outer `str`.
+
+    /// Assert function `func` in `src` has no typed `str_len`.
+    fn assert_no_str_len_in(src: &str, func: &str) {
+        let instrs = fn_instrs(src, func);
+        assert!(
+            !instrs.iter().any(|i| i.op == "str_len"),
+            "{func} must not lower to str_len for: {src}\n{instrs:?}"
+        );
+    }
+
+    #[test]
+    fn nested_mov_over_aliased_outer_binding_drops_str_type() {
+        // Program A from the review.
+        assert_no_str_len_in(
+            "(define (g x) (let ((x (string-append x \"b\"))) (let ((x 5)) x)) \
+             (string-length x)) (g \"a\")",
+            "g",
+        );
+    }
+
+    #[test]
+    fn let_result_register_overwritten_by_nested_binding_is_not_str() {
+        // Program B: `y` is bound to register `x`, which the innermost `let`
+        // overwrote with 5.
+        assert_no_str_len_in(
+            "(let ((x (string-append \"a\" \"b\"))) \
+             (let ((y (let ((x 5)) x))) (string-length y)))",
+            "main",
+        );
+    }
+
+    #[test]
+    fn match_arm_over_aliased_outer_binding_drops_str_type() {
+        assert_no_str_len_in(
+            "(define (g x) (let ((x (string-append x \"b\"))) (match 5 (x x))) \
+             (string-length x)) (g \"a\")",
+            "g",
+        );
+    }
+
+    #[test]
+    fn let_star_rebinding_over_str_param_drops_str_type() {
+        assert_no_str_len_in(
+            "(define (g x) (let* ((x x) (x 5)) x) (string-length x)) (g \"a\")",
+            "g",
+        );
+    }
+
+    #[test]
+    fn alias_whose_target_register_is_overwritten_is_not_str() {
+        // `y` aliases the `str` parameter register `x`; the inner `let`
+        // overwrites that register, so `y` must not still count as `str`.
+        assert_no_str_len_in(
+            "(define (g x) (let ((y x)) (begin (let ((x 5)) x) (string-length y)))) (g \"a\")",
+            "g",
+        );
+        assert_no_str_len_in(
+            "(define (g x) (let ((y x)) (let ((x 5)) (string-length y)))) (g \"a\")",
+            "g",
+        );
+    }
+
+    // ---- Module code gets no call-site string inference ---------------
+    //
+    // Under `twig-module-driver` every module's functions are visible to
+    // every other module as externs — private ones included — so no
+    // single module sees all of a function's call sites.
+
+    #[test]
+    fn module_code_gets_no_string_param_inference() {
+        assert_strlen_param_dynamic(
+            "(module lib (export run)) (define (strlen x) (string-length x)) \
+             (define (run) 0) (define n (strlen \"abc\"))",
+        );
+    }
+
+    #[test]
+    fn extern_compiled_code_gets_no_string_param_inference() {
+        let cst = parse_to_ast(STRLEN).unwrap();
+        let m = compile_ast_with_externs(&cst, "test", &["other"]).unwrap();
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(strlen.params, vec![("x".to_string(), "any".to_string())]);
+    }
+
     // ---- Realistic shapes --------------------------------------------
 
     #[test]

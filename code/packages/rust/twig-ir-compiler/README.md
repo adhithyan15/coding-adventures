@@ -94,7 +94,11 @@ is true:
 - A call has the wrong number of arguments.
 - The function is used as a value, as in `(define h strlen)`,
   `(let ((g strlen)) …)` or `(map strlen xs)`, so its callers cannot be known.
-- The module exports the function, so another module may call it.
+- The program is module code: it has a `(module …)` declaration, or it was
+  compiled with externs by `twig-module-driver`. The driver makes every
+  module's functions, private ones included, visible to every other module,
+  so no single module sees all the call sites. Module code gets no
+  call-site inference. Explicit `(x : str)` annotations still apply.
 
 Twig remains dynamically typed, so functions keep `type_status = Untyped` and
 dynamic paths still carry `type_hint = "any"`. The LANG-FULL fast paths above
@@ -153,6 +157,12 @@ program returned 100. Every lookup now checks the lexical scope first:
   string `x` does not make a later `(string-length x)` on an integer
   parameter lower to `str_len`. An inner `s` bound to 5 also no longer reads
   the outer string's alias register.
+- **`var_types` describes registers.** Same-name locals still share one
+  register (#18439). `FnCtx::emit` therefore counts the writes to every
+  register. If a nested binding rewrote register `x` while an outer `x` was
+  in scope, the outer type is not restored; `x` becomes `any`. An aliased
+  name takes its type from its alias register. So an alias whose target
+  register was overwritten is no longer treated as a `str`.
 
 `and` and `or` are special forms, not bindings, so a local cannot shadow
 them.

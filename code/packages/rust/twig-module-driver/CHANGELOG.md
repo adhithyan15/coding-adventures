@@ -9,6 +9,10 @@
   `double`, and the real imported `double`, and checks for 6 + 105 + 10 = 121.
   Before the `twig-ir-compiler` fix all three calls went to the import, which
   gave 30.
+- `private_library_function_gets_no_string_param_inference`: in `lib.tw`,
+  a private `strlen` is only ever called with `"abc"`, and `main.tw` calls it
+  with 5. The linked `strlen` must keep `x : any` and must not contain
+  `str_len`. Before the `twig-ir-compiler` fix it was `x : str`.
 
 ## 0.15.0 - Unreleased - LANG84: hand the IIR compiler the parse tree
 

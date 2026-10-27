@@ -329,6 +329,10 @@ struct OuterBinding {
     alias: Option<String>,
     /// The outer binding's statically-known type, if any.
     ty: Option<String>,
+    /// How many times register `name` had been written when the scope
+    /// opened ([`FnCtx::writes`]).  If the count has moved by the time the
+    /// scope closes, the register no longer holds the outer value.
+    writes: u64,
 }
 
 /// Mutable state while lowering one [`IIRFunction`].
@@ -369,6 +373,11 @@ struct FnCtx {
     /// backends (wasm/jvm/clr/beam) actually accept the result.
     /// See [`crate::lib`]'s "Twig path A" notes for the larger story.
     var_types: HashMap<String, String>,
+    /// How many instructions have written each register (`dest == reg`),
+    /// bumped by [`FnCtx::emit`].  Same-name locals share one register
+    /// (#18439), so this is how [`FnCtx::unshadow`] tells whether a nested
+    /// binding overwrote the register an outer binding's type fact is about.
+    writes: HashMap<String, u64>,
 }
 
 impl FnCtx {
@@ -382,6 +391,7 @@ impl FnCtx {
             label_counter: 0,
             depth: 0,
             var_types: HashMap::new(),
+            writes: HashMap::new(),
         }
     }
 
@@ -401,8 +411,16 @@ impl FnCtx {
     /// construction.  See [`SourceLoc::SYNTHETIC`] for instructions
     /// the compiler synthesises with no real source counterpart.
     fn emit(&mut self, instr: IIRInstr, loc: SourceLoc) {
+        if let Some(dest) = &instr.dest {
+            *self.writes.entry(dest.clone()).or_insert(0) += 1;
+        }
         self.instrs.push(instr);
         self.source_map.push(loc);
+    }
+
+    /// How many instructions so far have written register `reg`.
+    fn write_count(&self, reg: &str) -> u64 {
+        self.writes.get(reg).copied().unwrap_or(0)
     }
 
     /// Record that `var` was statically inferred to have type `ty`.
@@ -447,9 +465,12 @@ impl FnCtx {
     ///
     /// Everything the compiler knows about a name lives in three tables:
     /// `locals` (is it bound?), `local_aliases` (is it an E4 string held in
-    /// another register?) and `var_types` (its static type).  A new binding
-    /// starts with *no* alias and *no* type: the caller records whatever the
-    /// new value supports.  Without this, an inner `x` bound to `(car l)`
+    /// another register?) and `var_types`.  `var_types` is keyed by
+    /// REGISTER and describes what that register currently holds; an
+    /// aliased name's type is its alias register's (see
+    /// `Compiler::is_known_value_type`).  A new binding starts with *no*
+    /// alias and *no* type: the caller records whatever the new value
+    /// supports.  Without this, an inner `x` bound to `(car l)`
     /// inherited an outer `x`'s `i64` and lowered `(+ x 1)` to a typed `add`,
     /// and an inner `s` bound to 5 still read the outer string's alias.
     fn shadow(&mut self, name: &str) -> OuterBinding {
@@ -458,6 +479,7 @@ impl FnCtx {
             was_local: self.locals.contains(name),
             alias: self.local_aliases.remove(name),
             ty: self.var_types.remove(name),
+            writes: self.write_count(name),
         };
         self.locals.insert(name.to_string());
         outer
@@ -465,35 +487,39 @@ impl FnCtx {
 
     /// Close a binding opened by [`Self::shadow`], restoring the outer meaning.
     ///
-    /// The alias and local-ness come back exactly.  The type needs care,
-    /// because a binding written with `mov` / `str_const` overwrites the
-    /// register named `name` itself (same-name locals share one register —
-    /// tracked separately), so after the scope that register may hold the
-    /// INNER value:
+    /// Local-ness and the outer alias come back exactly.  The type is a
+    /// fact about REGISTER `name`, and same-name locals share that register
+    /// (#18439): a binding written with `mov` / `str_const` — this scope's,
+    /// or any nested same-name binding's, or a `match` arm's — overwrites it.
+    /// So the write counter decides, not the shape of the bindings:
     ///
-    /// | Situation                                   | `var_types[name]` after |
-    /// |---------------------------------------------|-------------------------|
-    /// | no outer binding, inner wrote register      | inner type — the scope  |
-    /// | `name`                                      | may RETURN that register|
-    /// |                                             | (`(let ((x 1)) x)`)     |
-    /// | no outer binding, inner was an alias        | none (unused)           |
-    /// | outer value intact — inner was an alias, or | outer type, restored    |
-    /// | outer was one (reads go through it)         |                         |
-    /// | outer clobbered, inner type == outer type   | that type               |
-    /// | outer clobbered, types differ / unknown     | none — dynamic `any`    |
+    /// | Register `name` rewritten while the scope was open? | `var_types[name]` after       |
+    /// |-----------------------------------------------------|-------------------------------|
+    /// | no  (e.g. the inner binding was an E4 alias)        | the outer type, restored      |
+    /// | yes, and `name` has an outer binding                | none — dynamic `any`          |
+    /// | yes, and `name` has no outer binding                | what the register now holds,  |
+    /// |                                                     | as its last writer recorded it|
     ///
-    /// Dropping to `any` is always safe: dynamic code handles every value.
+    /// The middle row never restores a stale `str` onto a register that a
+    /// nested binding filled with 5 (the outer *value* is lost too until
+    /// #18439 gives each binding its own register — but `any` keeps that a
+    /// wrong-value bug rather than type confusion in a typed op).  The last
+    /// row is safe because the name is unbound after the scope; it keeps
+    /// `(let ((x 1)) x)` returning a typed `i64` register.
+    ///
+    /// The restored outer alias needs no such check: a read of an aliased
+    /// name goes through the alias register's own `var_types` entry, and a
+    /// named register is only ever written right after a `shadow` cleared
+    /// its entry, so that entry always describes the register's contents.
     fn unshadow(&mut self, outer: OuterBinding) {
-        let OuterBinding { name, was_local, alias, ty } = outer;
-        let inner_was_alias = self.local_aliases.remove(&name).is_some();
-        let inner_ty = self.var_types.remove(&name);
-        let outer_value_intact = inner_was_alias || alias.is_some();
-        let ty = if !was_local {
-            if inner_was_alias { None } else { inner_ty }
-        } else if outer_value_intact || ty == inner_ty {
-            ty
-        } else {
-            None
+        let OuterBinding { name, was_local, alias, ty, writes } = outer;
+        self.local_aliases.remove(&name);
+        let current_ty = self.var_types.remove(&name);
+        let register_rewritten = self.write_count(&name) != writes;
+        let ty = match (register_rewritten, was_local) {
+            (false, _) => ty,
+            (true, true) => None,
+            (true, false) => current_ty,
         };
         if let Some(ty) = ty {
             self.var_types.insert(name.clone(), ty);
@@ -597,6 +623,11 @@ pub struct Compiler {
     /// pattern whose name is in this map is a variant pattern;
     /// otherwise it is a bare-name binding.
     variant_tags: HashMap<String, usize>,
+    /// True once [`Self::with_extern_fns`] registered at least one extern —
+    /// i.e. this program is one module of a `twig-module-driver` tree, where
+    /// other modules can call its functions (see
+    /// [`Self::infer_main_direct_string_param_types`]).
+    has_externs: bool,
 }
 
 impl Compiler {
@@ -613,6 +644,7 @@ impl Compiler {
             functions: Vec::new(),
             lambda_counter: 0,
             variant_tags: HashMap::new(),
+            has_externs: false,
         }
     }
 
@@ -634,6 +666,7 @@ impl Compiler {
         for name in extern_fns {
             self.fn_globals.insert((*name).to_string());
         }
+        self.has_externs |= !extern_fns.is_empty();
         self
     }
 
@@ -899,6 +932,24 @@ impl Compiler {
     }
 
     fn infer_main_direct_string_param_types(&mut self, program: ProgramView<'_>) {
+        // Module code gets no call-site inference at all.  `twig-module-driver`
+        // registers EVERY module's function names — private ones included —
+        // as externs of every other module, so no single module sees all the
+        // call sites of its functions:
+        //
+        //   lib.tw   (module lib (export run))
+        //            (define (strlen x) (string-length x))   ; private
+        //            (define n (strlen "abc"))               ; only call here
+        //   main.tw  (module main (import lib)) (strlen 5)   ; ← an integer
+        //
+        // Inferring `x : str` from lib alone would lower `strlen` to `str_len`
+        // and then hand it 5.  A `(module …)` declaration, or any extern
+        // registered by the driver, marks the program as module code; every
+        // parameter then stays dynamic (`fn_inferred_param_types` is left
+        // empty).  Explicit `(x : str)` annotations still apply.
+        if self.has_externs || program.module().is_some() {
+            return;
+        }
         let mut evidence: HashMap<String, Vec<StaticParamEvidence>> = HashMap::new();
         let mut known_static_string_values: HashSet<String> = HashSet::new();
         let mut defined_value_globals: HashSet<String> = HashSet::new();
@@ -970,17 +1021,6 @@ impl Compiler {
                     defined_value_globals.insert(name.to_string());
                 }
                 _ => {}
-            }
-        }
-
-        // An exported function can be imported and called by another module
-        // with arguments this module never sees, so it gets no inferred
-        // parameter types at all.
-        if let Some(module) = program.module() {
-            for name in module.exports() {
-                if let Some(slots) = evidence.get_mut(name) {
-                    slots.fill(StaticParamEvidence::Conflict);
-                }
             }
         }
 
@@ -1102,7 +1142,7 @@ impl Compiler {
     /// | wrong number of arguments                         | all ⇒ Conflict           |
     /// | `f` as a value: `(let ((g f)) …)`, `(define h f)`,| all ⇒ Conflict (escape:  |
     /// | `(map f xs)`, returning `f`, …                    | callers are unknowable)  |
-    /// | `f` exported from the module                      | all ⇒ Conflict (driver)  |
+    /// | program is module code (`(module …)` or externs)  | no inference at all      |
     ///
     /// Only `main` may *establish* `Str`; everywhere else can only weaken it.
     /// That keeps the old behaviour for the programs the fast path was built
@@ -1901,9 +1941,10 @@ impl Compiler {
         for (name, src) in &binding_values {
             outer_bindings.push(ctx.shadow(name));
             match src {
+                // The alias register carries the `str` type; register `name`
+                // is not written, so nothing is recorded for it.
                 BindingValue::Reg(src) if ctx.type_of(src) == "str" => {
                     ctx.local_aliases.insert(name.clone(), src.clone());
-                    ctx.record_type(name, "str");
                 }
                 BindingValue::Reg(src) => ctx.emit_move(name, src, loc),
                 BindingValue::StrLiteral(value, value_loc) => {
@@ -1970,7 +2011,6 @@ impl Compiler {
             outer_bindings.push(ctx.shadow(name));
             if rhs_is_str {
                 ctx.local_aliases.insert(name.to_string(), v);
-                ctx.record_type(name, "str");
             } else {
                 ctx.emit_move(name, &v, loc);
             }
@@ -2147,9 +2187,20 @@ impl Compiler {
             && matches!(self.value_global_locals.get(name), Some(reg) if ctx.type_of(reg) == ty)
     }
 
+    /// Does the lexical name `name` statically hold a `ty` value?
+    ///
+    /// An aliased local is answered by its alias REGISTER's type, which is
+    /// what a read of the name returns.  If that register was overwritten
+    /// since the alias was made — `(let ((y x)) (let ((x 5)) (string-length y)))`
+    /// with `x` a `str` parameter, where `y` aliases register `x` (#18439) —
+    /// the register's type now says `i64`, so `y` is no longer a known
+    /// string and never reaches a typed `str_len`.
     fn is_known_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
         self.is_known_main_value_type(name, ctx, ty)
-            || (ctx.locals.contains(name) && ctx.type_of(name) == ty)
+            || (ctx.locals.contains(name) && {
+                let reg = ctx.local_aliases.get(name).map_or(name, String::as_str);
+                ctx.type_of(reg) == ty
+            })
     }
 
     fn can_compile_e4_string_expr(&self, expr: ExprNode<'_>, ctx: &FnCtx) -> bool {
