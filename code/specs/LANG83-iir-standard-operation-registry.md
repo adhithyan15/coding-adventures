@@ -1646,9 +1646,12 @@ the frontends.
   agreement (LLVM, native x86-64, VM, JIT, JVM). A heap-tagged word that is
   some other heap object is still read as a pair by the C runtime; that is a
   type confusion inside a live GC block, not a wild read, and telling the
-  kinds apart there needs `__gc_kind_of`, a heap walk. One known divergence
-  remains: `lang_aot::jit_lisp`'s McCarthy callbacks answer nil for `car` of
-  a non-pair rather than failing.
+  kinds apart there needs `__gc_kind_of`, a heap walk. `lang_aot::jit_lisp`'s
+  McCarthy callbacks used to answer nil for `car` of a non-pair; they now
+  fail on both JIT tiers (#18417). The interpreter tier returns a
+  `VMError::TypeError`. The compiled tier records the refusal in the JIT's
+  error slot, and `GenericCirJit` stops after the call. Both use the same
+  tag-only text.
 - *Renamed everywhere they are lowered or handled.* `iir-builtin-lowering`'s
   native runtime-call path (`heap.rs`'s `RUNTIME_RENAMES`, `dyn_repr.rs`,
   `list_ops.rs`, `closure_heap.rs`, `dynamic_arith.rs`); the x86-64 and
