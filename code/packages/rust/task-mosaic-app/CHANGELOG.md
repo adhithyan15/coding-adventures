@@ -1,5 +1,29 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — a refused note Save says why; note drafts are capped (E5)
+
+- **Fixed: Save silently did nothing for an unknown task.** When the note's
+  *Attach to task* field named no task in the active project, `save_note`
+  returned an unchanged update: no message, no announcement, no log. It now
+  sets the new `note-error` prop to a one-line reason and announces it
+  politely. The draft (title, body and the typed name) is kept exactly as
+  typed and nothing is written. Any other event clears the message, and a
+  successful Save clears it, as Journal's `draft-error` behaves. It is
+  `#[serde(skip)]`: it describes the last attempt, not the data.
+- **Note drafts are capped as typed**, with Journal's limits: a title of at
+  most 512 characters (`MAX_NOTE_TITLE_CHARS`) and a body of at most 1 MiB
+  of UTF-8 (`MAX_NOTE_BODY_BYTES`). An edit past a cap is refused with
+  `InvalidPayload`, so `dispatch` rolls back and the draft keeps its last
+  value; it is never truncated.
+- **Stored notes are not cut down.** A snapshot holding a note or draft over
+  the caps restores whole and still saves. An edit to such a draft is
+  refused only if it would make it longer, so it can be edited down towards
+  the cap but never grown past it (`capped_draft_payload`).
+- Six unit tests cover the refusal, its clearing and non-persistence, the
+  unattached save, both caps in their own units, and the over-cap legacy
+  note. `note-error` joins `REQUIRED_PROPS`. Spec:
+  `task-app-notes-ui-v1.md`, addendum v1.2.
+
 ## [Unreleased] — Trestle's phone UI tests (UI89 §4.4)
 
 - `conformance/compose-android/TrestleAndroidUiTest.kt` is an instrumented
