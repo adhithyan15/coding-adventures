@@ -245,6 +245,54 @@ plan if the consumer is missing from discovery.
 |---|---|
 | `rust/mosaic-package-resolver` | any `mosaic-package.toml`, `.mil`, `.mll`, or `.msl` under `code/` |
 
+#### Cargo dev-dependency test triggers
+
+A Cargo `[dev-dependencies]` entry links a crate into another crate's tests,
+never its library, so it is not a build-graph edge (the
+`resolution/rust-field-aware` conformance case pins that). It must still
+re-run the dependent's tests: every Mosaic package and app is tested by a
+Cargo smoke harness whose only in-repository dependencies are dev-dependencies
+on the Mosaic compilers and artifact builder, so without this a change to a
+`mosaic-emit-*` backend re-ran none of those suites.
+
+The Go tool therefore keeps a second relation, *test triggers*: for each
+package `D`, the packages whose `Cargo.toml` top-level `[dev-dependencies]`
+table names `D`. It is read for languages `rust`, `wasm` and `mosaic` (the
+harness beside `mosaic-package.toml`), and entries resolve exactly as
+`[dependencies]` entries do: only entries with a quoted `path`, by key or
+`package =` rename, through the same name table (Rust's, for a Mosaic
+harness). Self-references are dropped. Change detection applies it **one hop**:
+
+```
+closure  = AffectedNodes(changed)
+closure ∪= triggers[a]  for every a in closure
+affected = closure + prerequisites
+```
+
+A dev-dependent's own dependents are not added (its library is unchanged),
+triggers are never chased transitively, and prerequisites are added after the
+hop so they trigger nothing. Keeping the relation out of the graph is also
+what keeps the graph acyclic: Cargo allows A to dev-depend on B while B
+depends on A (the repository has such pairs), and as a graph edge that cycle
+would fail every package's build.
+
+The cost is deliberate. Measured on the repository when this was added, a
+one-line change to `mosaic-emit-qt`, `mosaic-emit-flutter` or
+`mosaic-package-artifact-builder` went from 73 selected packages to 151
+(`moslayout-compiler`: 74 to 153): 27–28 Mosaic package and app suites,
+`rust/venture-browser-qt` (which dev-depends on the artifact builder), and
+about 51 of that crate's build prerequisites brought in by the normal
+prerequisite expansion. Dev-dependents keep that expansion like every other
+selected package; the larger fan-out was reviewed and accepted. Target-specific
+`[target.*.dev-dependencies]` tables are not read, matching `[dependencies]`.
+
+The reader fails closed: inside `[dev-dependencies]` every entry must be one
+line, a bare key with either a version string or a one-line inline table.
+A sub-table header (`[dev-dependencies.x]`), the `[dev_dependencies]`
+spelling, a dotted or quoted key, a multi-line value, `workspace = true`, any
+other value shape, or a root-level or dotted key spelling the table is an
+error that stops the plan.
+
 ### Hash-Based Fallback
 
 When git diff is unavailable, the build system falls back to SHA256 hashing:
