@@ -14,5 +14,9 @@
 - Add 256 isolated full-memory instruction boundaries and four multistep,
   external-bus, and interrupt scenarios produced by checksum-pinned upstream
   VHDL under GHDL, plus independent Rust and Python semantic consumers.
+- Run the BUILD oracle-vector verifier as `tools/...` from the package
+  directory (the build tool's working directory) and drop the `ruff` lint
+  lines, since ruff is only installed for Python packages, not on Rust build
+  runners.
 - Keep SoC, physical-netlist, transistor, timing, and SPICE claims outside the
   functional CPU boundary.
