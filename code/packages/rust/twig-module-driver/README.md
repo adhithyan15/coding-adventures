@@ -27,6 +27,28 @@ extension is implicit:
 | `stdlib/io` | `<root>/stdlib/io.tw` |
 | `utils` | `<root>/utils.tw` |
 
+Inside the link, each file's **module name** is its file stem (`lexer` for
+`compiler/lexer.tw`).  The linker rejects two modules with the same name,
+so when two files share a stem (`a/util.tw`, `b/util.tw`) the later one in
+discovery order gets a numeric suffix (`util~2`).  The name only appears as
+the prefix of renamed private functions, e.g. `util~2::helper`.
+
+## Exported names must be unique
+
+Twig calls a function in another module by its bare name, and the linker
+keeps every exported function's bare name.  So two modules may not export
+the same name: `(module left (export foo))` next to
+`(module right (export foo))` fails with
+`ModuleDriverError::Link([LinkError::ConflictingExport { .. }])` instead of
+quietly running `left`'s `foo` everywhere (issue #18429).  Same-named
+*private* functions are fine — the linker renames them apart.
+
+`main` is the one exception the driver handles for you.  A library's
+entry point is cleared (only the root's `main` runs), and any export of
+`main` from a library is withdrawn along with it.  That lets a file such as
+`compiler/main.tw`, which exports `main` so it can run on its own, be
+imported by a test root that also exports `main`.
+
 ## Quick start
 
 ```rust

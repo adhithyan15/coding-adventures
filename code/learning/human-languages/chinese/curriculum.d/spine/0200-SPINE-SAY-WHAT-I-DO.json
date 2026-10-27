@@ -3,9 +3,7 @@
     "VERB-INFINITIVE",
     "VERB-PRESENT-HABITUAL",
     "VERB-BE",
-    "VERB-TAKE",
-    "VERB-GET",
-    "VERB-ANSWER"
+    "VERB-GET"
   ],
   "relocates": {}
 }
