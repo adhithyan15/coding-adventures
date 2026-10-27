@@ -406,10 +406,10 @@ impl JournalMosaicApp {
         !self.search_query.trim().is_empty()
     }
 
-    /// The rows `RecordList` shows, and that `onSelectEntry`'s index refers
-    /// to: search results while [`searching`](Self::searching), else the
-    /// timeline.
-    fn timeline_rows(&self) -> Vec<[String; 6]> {
+    /// The timeline's rows (drawn as Cards by the package), and what
+    /// `onSelectEntry`'s index refers to: search results while
+    /// [`searching`](Self::searching), else the timeline.
+    fn timeline_rows(&self) -> Vec<[String; ROW_FIELDS]> {
         if self.searching() {
             self.search_rows()
         } else {
@@ -420,14 +420,14 @@ impl JournalMosaicApp {
     /// The engine's recall for the user's today, as `RecordList` rows:
     ///
     /// ```text
-    ///   [key, "1 year ago · 24 Sep 2025", title, subtitle, "", badge]
-    ///   [key, "",                          title, subtitle, "", badge]   same year
-    ///   [key, "3 years ago · 24 Sep 2023", title, subtitle, "", badge]
+    ///   [key, "1 year ago · 24 Sep 2025", title, subtitle, "", badge, open-label]
+    ///   [key, "",                          title, subtitle, "", badge, open-label]   same year
+    ///   [key, "3 years ago · 24 Sep 2023", title, subtitle, "", badge, open-label]
     /// ```
     ///
     /// The heading opens each year; `meta` stays empty because the heading
     /// already says when. Today is the LOCAL day, as for filing entries.
-    fn on_this_day_rows(&self) -> Vec<[String; 6]> {
+    fn on_this_day_rows(&self) -> Vec<[String; ROW_FIELDS]> {
         let today = today((self.clock)(), self.utc_offset_minutes);
         let mut rows = Vec::new();
         for group in on_this_day(&self.state.journal, today, &self.filter()) {
@@ -445,6 +445,7 @@ impl JournalMosaicApp {
                     continue;
                 };
                 let (title, subtitle) = row_text(entry);
+                let open = open_label(&title);
                 rows.push([
                     id.as_str().to_string(),
                     if i == 0 { heading.clone() } else { String::new() },
@@ -452,6 +453,7 @@ impl JournalMosaicApp {
                     subtitle,
                     tags_meta(entry),
                     star_badge(entry),
+                    open,
                 ]);
             }
         }
@@ -461,7 +463,7 @@ impl JournalMosaicApp {
     /// Search hits in rank order, as rows:
     ///
     /// ```text
-    ///   [key, "", title, snippet, "24 Sep 2026", badge]
+    ///   [key, "", title, snippet, "24 Sep 2026", badge, open-label]
     /// ```
     ///
     /// No heading: results are ranked, not grouped by day, so the day moves to
@@ -470,12 +472,13 @@ impl JournalMosaicApp {
     /// Compose, the long "Thursday, 24 September 2026" did not fit beside a
     /// title and was drawn over it. The snippet is the
     /// engine's, at most `SNIPPET_CHARS` characters around the first body match.
-    fn search_rows(&self) -> Vec<[String; 6]> {
+    fn search_rows(&self) -> Vec<[String; ROW_FIELDS]> {
         search(&self.state.journal, &self.search_query, &self.filter())
             .into_iter()
             .filter_map(|hit| {
                 let entry = self.state.journal.entry(&hit.entry)?;
                 let (title, _) = row_text(entry);
+                let open = open_label(&title);
                 Some([
                     hit.entry.as_str().to_string(),
                     String::new(),
@@ -483,14 +486,15 @@ impl JournalMosaicApp {
                     hit.snippet,
                     short_date(entry.date),
                     star_badge(entry),
+                    open,
                 ])
             })
             .collect()
     }
 
-    /// `RecordList` rows `[key, heading, title, subtitle, meta, badge]`, newest
+    /// Rows `[key, heading, title, subtitle, meta, badge, open-label]`, newest
     /// day first, the day heading only on each day's first row.
-    fn day_rows(&self) -> Vec<[String; 6]> {
+    fn day_rows(&self) -> Vec<[String; ROW_FIELDS]> {
         let mut rows = Vec::new();
         for day in timeline(&self.state.journal, &self.filter()) {
             for (i, id) in day.entries.iter().enumerate() {
@@ -498,6 +502,7 @@ impl JournalMosaicApp {
                     continue;
                 };
                 let (title, subtitle) = row_text(entry);
+                let open = open_label(&title);
                 rows.push([
                     id.as_str().to_string(),
                     if i == 0 {
@@ -509,6 +514,7 @@ impl JournalMosaicApp {
                     subtitle,
                     tags_meta(entry),
                     star_badge(entry),
+                    open,
                 ]);
             }
         }
@@ -1404,6 +1410,35 @@ fn star_badge(entry: &Entry) -> String {
     }
 }
 
+/// The fields in every row the app hands the layout, in this order:
+///
+/// ```text
+///   row[0] key         stable entry id, compared with `selected-key`
+///   row[1] heading     the group's heading, on its first row only
+///   row[2] title       never empty (see `row_text`)
+///   row[3] subtitle    excerpt or search snippet, "" for none
+///   row[4] meta        tags, or the short day while searching
+///   row[5] badge       "★" for a starred entry
+///   row[6] open-label  "Open {title}", the Open button's accessible name
+/// ```
+///
+/// The first six are the toolkit `RecordList`'s positions, which "On this
+/// day" still uses. The seventh exists because the timeline draws each row as
+/// a `mosaic-pkg-card` Card with an *Open* button beside it (a `HostButton`
+/// cannot yet wrap the card on most backends, EM-8), and a layout expression
+/// cannot join "Open " to the title itself. Rows are append-only, so a list
+/// that reads fewer fields is unaffected.
+const ROW_FIELDS: usize = 7;
+
+/// The Open button's accessible name: `Open First light`.
+///
+/// It names the entry, as the title button did when rows were `RecordList`
+/// rows, and it contains the button's visible word "Open", which WCAG 2.5.3
+/// (label in name) asks of a control whose name differs from its label.
+fn open_label(title: &str) -> String {
+    format!("Open {title}")
+}
+
 /// At most `max` characters, cut on a character boundary, with `…` if cut.
 fn truncate(text: &str, max: usize) -> String {
     if text.chars().count() <= max {
@@ -2119,6 +2154,36 @@ mod tests {
         assert_eq!(recalled[0][4], "", "the heading already says when");
     }
 
+    /// Every row list carries `open-label` as `row[6]`, so the layout can index
+    /// it anywhere. A short row would throw an out-of-range error in the
+    /// Kotlin, Swift and Dart hosts, not just show a blank. The label is
+    /// "Open " and the row's own title, including the fallback title of an
+    /// untitled entry.
+    #[test]
+    fn every_row_list_names_its_open_button_after_the_title() {
+        let mut a = app();
+        set_now(THU + 3_600_000 - YEAR_MS);
+        write(&mut a, "Harbour", "a year ago");
+        set_now(THU + 3_600_000);
+        write(&mut a, "", "Opening words only");
+
+        let check = |list: &[Vec<String>], what: &str| {
+            assert!(!list.is_empty(), "{what} has rows");
+            for row in list {
+                assert_eq!(row.len(), ROW_FIELDS, "{what}: {row:?}");
+                assert_eq!(row[6], format!("Open {}", row[2]), "{what}: {row:?}");
+            }
+        };
+        check(&rows(&a), "the timeline");
+        check(&on_this_day_rows_of(&a), "on this day");
+        let titles: Vec<String> = rows(&a).iter().map(|r| r[6].clone()).collect();
+        assert!(titles.contains(&"Open Opening words only".to_string()), "{titles:?}");
+
+        let hits = search_for(&mut a, "harbour");
+        let hits: Vec<Vec<String>> = serde_json::from_value(hits["timeline-rows"].clone()).unwrap();
+        check(&hits, "search results");
+    }
+
     #[test]
     fn selecting_a_recalled_entry_opens_it_and_bad_indexes_change_nothing() {
         let mut a = app();
@@ -2394,6 +2459,7 @@ mod tests {
                 "Dawn".to_string(),
                 String::new(),
                 String::new(),
+                "Open First light".to_string(),
             ]]
         );
         let props = a.props();
