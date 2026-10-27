@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+- `toolchainForPackageLanguage("mosaic")` now returns `rust`. Every Mosaic
+  package and app BUILD runs `cargo test` on its smoke harness, but the
+  language mapped to the unknown toolchain `mosaic`, so a plan whose only
+  affected packages were Mosaic ones did not ask CI for Rust (`needs_rust`).
+  It already worked whenever `rust/mosaic-package-resolver` was selected
+  alongside them, which hid the gap for most `.mil`/`.mll`/`.msl` edits.
+
 ## 2026-10-26 — Mosaic manifest dependencies and repository-wide Mosaic guards
 
 - The resolver reads `mosaic-package.toml` for language-`mosaic` packages

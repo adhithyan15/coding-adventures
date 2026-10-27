@@ -1441,7 +1441,11 @@ var allToolchains = discovery.CanonicalToolchains()
 
 func toolchainForPackageLanguage(language string) string {
 	switch language {
-	case "wasm":
+	case "wasm", "mosaic":
+		// A WASM wrapper is a Cargo crate, and a Mosaic package or app is
+		// tested by a Cargo smoke harness (its BUILD is `cargo test`), so
+		// both need the Rust toolchain. "mosaic" is not a toolchain at all:
+		// left as-is it named nothing CI could install.
 		return "rust"
 	case "csharp", "fsharp", "dotnet":
 		return "dotnet"
