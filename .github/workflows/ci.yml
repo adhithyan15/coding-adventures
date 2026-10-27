@@ -2662,6 +2662,20 @@ jobs:
             flutter test test/widget_test.dart
           )
 
+          # A TextField one container below a Row child lays out: NoteEditor's
+          # `Row [ editor-body ] { Column, Box { HostInput } }` asserted
+          # "InputDecorator ... cannot have an unbounded width" until the
+          # emitter wrapped such a Row child in Expanded.
+          row_child_input_output="$RUNNER_TEMP/mosaic-flutter-row-child-input"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-flutter/fixtures/row-child-input --backend flutter --output "$row_child_input_output" --emit-project
+          (
+            cd "$row_child_input_output/flutter"
+            cp "$GITHUB_WORKSPACE/code/packages/rust/mosaic-emit-flutter/fixtures/row-child-input-test/widget_test.dart" test/widget_test.dart
+            flutter pub get
+            flutter analyze
+            flutter test test/widget_test.dart
+          )
+
           # UI48 §7.9 (ENV2/ENV3): the resize gate §7 asks for. The fixture has
           # a default and a `compact` layout; its widget test changes the
           # window's size across 600 logical pixels and asserts the root

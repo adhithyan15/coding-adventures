@@ -232,6 +232,29 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("tester.view.physicalSize = const Size(400, 800);", test)
         self.assertIn("find.byType(LayoutProbeCompact), findsOneWidget", test)
 
+    def test_row_child_input_fixture_is_pumped_in_the_lane(self) -> None:
+        """A TextField one container below a Row child must lay out: the lane
+        emits the row-child-input fixture and runs its widget test, which
+        fails on any exception the pump raises."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# A TextField one container below a Row child")
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn("fixtures/row-child-input --backend flutter", block)
+        self.assertIn("fixtures/row-child-input-test/widget_test.dart", block)
+        self.assertIn("flutter analyze", block)
+        self.assertIn("flutter test test/widget_test.dart", block)
+        test = (
+            Path(__file__).resolve().parents[2]
+            / "packages"
+            / "rust"
+            / "mosaic-emit-flutter"
+            / "fixtures"
+            / "row-child-input-test"
+            / "widget_test.dart"
+        ).read_text(encoding="utf-8")
+        self.assertIn("expect(tester.takeException(), isNull);", test)
+
     def test_workflow_runs_the_platform_library_harness(self) -> None:
         """UI87 §7.7: the lane checks TaskApp installs the platform library on
         its started host, then runs the headless harness against TaskApp's
