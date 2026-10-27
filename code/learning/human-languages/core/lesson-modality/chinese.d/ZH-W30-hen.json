@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W30-hen",
+    "language": "chinese",
+    "chapter": 30,
+    "sequence": 2560,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:861900716ea10f8d",
+    "detachableSegments": [
+      "Script — two pieces, left before right"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

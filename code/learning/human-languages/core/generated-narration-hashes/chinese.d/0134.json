@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:4eca5a541fd47753",
+  "lessonIds": [
+    "ZH-C134-zhong",
+    "ZH-W134-zhong-heavy",
+    "ZH-C134-ruan",
+    "ZH-C134-ying",
+    "ZH-C134-kong",
+    "ZH-C134-man",
+    "ZH-R134-review-129-134"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch134.txt",
+  "json": "chinese/narration/ch134.json",
+  "textHash": "fnv1a64:f7c2aa034e2c6e47",
+  "jsonHash": "fnv1a64:548821b5739332a2",
+  "findings": []
+}

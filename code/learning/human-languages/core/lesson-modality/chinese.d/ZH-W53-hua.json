@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W53-hua",
+    "language": "chinese",
+    "chapter": 53,
+    "sequence": 4155,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b66fbb1a8105b19d",
+    "detachableSegments": [
+      "Script — the speech piece, then a mouth"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

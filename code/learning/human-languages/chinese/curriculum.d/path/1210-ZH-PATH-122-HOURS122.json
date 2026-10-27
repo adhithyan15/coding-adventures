@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-122-HOURS122",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "ZH-EXT-122-HOURS122"
+  ],
+  "after": []
+}

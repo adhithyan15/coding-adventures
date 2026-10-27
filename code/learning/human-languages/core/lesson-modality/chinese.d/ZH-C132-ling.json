@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C132-ling",
+    "language": "chinese",
+    "chapter": 132,
+    "sequence": 10480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ff7c547e649cd57"
+  },
+  "findings": []
+}

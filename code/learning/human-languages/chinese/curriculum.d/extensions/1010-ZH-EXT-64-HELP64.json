@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-64-HELP64",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say sorry, ask for help, borrow something and give it back.",
+  "prerequisites": []
+}

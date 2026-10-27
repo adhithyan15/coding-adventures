@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W99-xi-wash",
+    "language": "chinese",
+    "chapter": 99,
+    "sequence": 8005,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:762eb71dc88d80ed",
+    "detachableSegments": [
+      "Script — the water piece, then xiān"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Getting Washed",
+  "label": "ch:zh-getting-washed",
+  "canDo": "I can say wash, brush my teeth, wash my face, have a shower and comb my hair.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C99-shutou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: I can say wash, brush my teeth, wash my face, have a shower and comb my hair.",
+    "assesses": [
+      "ZH-LEX-C99-WASH99-03",
+      "ZH-LEX-C99-WASH99-04",
+      "ZH-LEX-C99-WASH99-05"
+    ]
+  }
+}

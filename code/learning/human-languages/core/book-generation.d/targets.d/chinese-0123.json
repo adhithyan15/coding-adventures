@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 123,
+  "output": "chinese/book/chapters/ch123-what-people-are-like.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

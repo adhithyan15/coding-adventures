@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W66-qi-air",
+  "pathSegment": "ZH-PATH-66-WEATHER66",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-66-WEATHER66",
+      "order": 1
+    }
+  ]
+}

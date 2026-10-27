@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C32-gege",
+  "pathSegment": "ZH-PATH-32-FAMILY32",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-32-FAMILY32",
+      "order": 3
+    }
+  ]
+}

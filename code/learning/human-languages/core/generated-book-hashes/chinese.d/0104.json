@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:37172380facbe3fe",
+  "lessonIds": [
+    "ZH-C104-benzi",
+    "ZH-W104-ben",
+    "ZH-C104-bi",
+    "ZH-C104-qianbi",
+    "ZH-C104-zhi",
+    "ZH-C104-cidian",
+    "ZH-R104-review-99-104"
+  ],
+  "tex": "chinese/book/chapters/ch104-on-the-desk.tex"
+}

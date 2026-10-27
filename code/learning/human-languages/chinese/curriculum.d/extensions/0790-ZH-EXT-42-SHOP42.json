@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-42-SHOP42",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what a shop sells and whether it is cheap or dear.",
+  "prerequisites": []
+}

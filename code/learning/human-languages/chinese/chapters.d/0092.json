@@ -1,0 +1,22 @@
+{
+  "chapter": 92,
+  "title": "Me Too",
+  "label": "ch:zh-me-too",
+  "canDo": "I can order at a table and say 'me too'.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C92-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Ordering at a table, the menu, the waiter and anything else, and 'me too' with 也, built on one new written character: 也.",
+    "assesses": [
+      "ZH-LEX-C92-YE-01",
+      "ZH-SCRIPT-YE-01",
+      "ZH-LEX-C92-CAIDAN-01",
+      "ZH-LEX-C92-FUWUYUAN-01",
+      "ZH-LEX-C92-BIEDE-01",
+      "ZH-PERFORMANCE-ORDER-01"
+    ]
+  }
+}

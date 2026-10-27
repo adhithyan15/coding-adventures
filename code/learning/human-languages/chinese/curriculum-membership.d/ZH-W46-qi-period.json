@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W46-qi-period",
+  "pathSegment": "ZH-PATH-46-WEEK46",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-46-WEEK46",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:9bd7bdd36dae9b15",
+  "lessonIds": [
+    "ZH-C33-nan",
+    "ZH-W33-nan",
+    "ZH-C33-nanren",
+    "ZH-C33-nuren",
+    "ZH-C33-meimei",
+    "ZH-C33-haizi"
+  ],
+  "tex": "chinese/book/chapters/ch33-the-rest-of-the-family.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:1dfd7cfe48da4057",
+  "lessonIds": [
+    "ZH-C109-shangwang",
+    "ZH-W109-wang-net",
+    "ZH-C109-dianshi",
+    "ZH-C109-zhaopian",
+    "ZH-C109-chongdian",
+    "ZH-C109-xiazai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch109.txt",
+  "json": "chinese/narration/ch109.json",
+  "textHash": "fnv1a64:5b033ce43a33950f",
+  "jsonHash": "fnv1a64:7c94506d7b7ec3f8",
+  "findings": []
+}

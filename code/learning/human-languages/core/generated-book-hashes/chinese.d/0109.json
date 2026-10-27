@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:dc746d255a8dc1e9",
+  "lessonIds": [
+    "ZH-C109-shangwang",
+    "ZH-W109-wang-net",
+    "ZH-C109-dianshi",
+    "ZH-C109-zhaopian",
+    "ZH-C109-chongdian",
+    "ZH-C109-xiazai"
+  ],
+  "tex": "chinese/book/chapters/ch109-screens.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:49f9116e4be4d2cc",
+  "lessonIds": [
+    "ZH-C84-yiqi",
+    "ZH-C84-jianmian",
+    "ZH-C84-liaotian",
+    "ZH-C84-canjia",
+    "ZH-C84-zhunbei",
+    "ZH-R84-review-80-84",
+    "ZH-R84-review-final-84"
+  ],
+  "tex": "chinese/book/chapters/ch84-doing-things-together.tex"
+}

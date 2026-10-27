@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Angry and Worried",
+  "label": "ch:zh-angry-and-worried",
+  "canDo": "I can give a feeling as a reason: angry, worried, at ease, anxious or upset.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C125-nanguo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: I can give a feeling as a reason: angry, worried, at ease, anxious or upset.",
+    "assesses": [
+      "ZH-LEX-C125-FEEL125-03",
+      "ZH-LEX-C125-FEEL125-04",
+      "ZH-LEX-C125-FEEL125-05"
+    ]
+  }
+}

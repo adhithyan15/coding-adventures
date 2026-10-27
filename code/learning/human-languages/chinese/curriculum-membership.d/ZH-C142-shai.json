@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C142-shai",
+  "pathSegment": "ZH-PATH-142-CHORE142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-142-CHORE142",
+      "order": 2
+    }
+  ]
+}

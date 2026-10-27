@@ -91,6 +91,8 @@ fn task_app_sources_compile() {
         "new-task-due-focus",
         "summary",
         "task-rows",
+        // A refused note Save's reason (E5).
+        "note-error",
         // Checklists (C3a, task-app-checklists-view-v1.md).
         "checklists-mode",
         "checklist-library-rows",

@@ -1,0 +1,1090 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 93,
+  "title": "Too Much",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:abaa853a775980c2",
+  "lessons": [
+    {
+      "id": "ZH-C93-taihaole",
+      "sequence": 7530,
+      "title": "太好了 (tài hǎo le) — great!",
+      "headword": "太好了",
+      "romanization": "tài hǎo le",
+      "gloss": "great!; that's wonderful",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:671e5f85d23a08aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens with a sound you have made since the chapter on money."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我也要 — wǒ yě yào, me too",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我也要 — *wǒ yě yào*, me too]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nǐ yào biéde ma, anything else — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nǐ yào biéde ma*, anything else — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tài guì le, too expensive — R4, from the chapter on money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tài guì le*, too expensive — **R4**, from the chapter on money]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 太好了",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "太好了 — tài hǎo le — \"great!; that's wonderful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们明天去 太好了 wǒmen míngtiān qù, tài hǎo le — We're going tomorrow? Great!"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the first character in your hand. It is the tài you have said since tài guì le."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "太好了 (tài hǎo le) is built from 太 'too; extremely', 好 'good' and 了. 太 and 好 are inherited from Middle Chinese, thajH and xawX (Guangyun, in Baxter's transcription), thajH glossed 'extreme; great'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tài … le around an adjective says too much: tài guì le, too expensive. Around 好 it is not 'too good'. It is the everyday 'great!'"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tài hǎo le",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tài hǎo le*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tài hǎo le, once more, as if you meant it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tài hǎo le*, once more, as if you meant it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我们明天去 太好了 — wǒmen míngtiān qù, tài hǎo le — We're going tomorrow? Great!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我们明天去 太好了 — *wǒmen míngtiān qù, tài hǎo le* — We're going tomorrow? Great!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tài guì le, then tài hǎo le, and hear one complaint and one delight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tài guì le*, then *tài hǎo le*, and hear one complaint and one delight]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 太好了 (tài hǎo le) mean? (\"Great!\".) Is it 'too good'? (No: tài … le around 好 is plain delight.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W93-tai",
+      "sequence": 7540,
+      "title": "太 (tài) — 大, then a dot",
+      "headword": "太",
+      "romanization": "tài",
+      "gloss": "太 — 大, then a dot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3c9d71cfb4eb5900",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 大, then a dot",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 大, then a dot and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tài hǎo le — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tài hǎo le* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "大 天."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — dà, tiān",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *dà*, *tiān*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 大, then a dot",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "太 (tài)."
+            },
+            {
+              "kind": "speech",
+              "text": "大 with one stroke added, and the added stroke comes last."
+            },
+            {
+              "kind": "speech",
+              "text": "大, three strokes: the bar, the left-falling stroke through it, the right-falling stroke from the crossing."
+            },
+            {
+              "kind": "speech",
+              "text": "One dot, between the two legs."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 1 = four."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "太 (tài), all four, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 太, all four, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 太 (tài)? (Four.) Which character is inside it? (大.) Where does the dot go? (Between the legs, last.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 太 (tài), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C93-youdianr",
+      "sequence": 7550,
+      "title": "有点儿 (yǒudiǎnr) — a bit, and not in a good way",
+      "headword": "有点儿",
+      "romanization": "yǒudiǎnr",
+      "gloss": "a bit (of something unwanted); rather",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:947a42617724da93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read the last lesson's character, then two words this one is made from."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "太好了, aloud — tài hǎo le",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 太好了, aloud — *tài hǎo le*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 一点儿 — yìdiǎnr, a little",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 一点儿 — *yìdiǎnr*, a little]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lěng, cold — R4, recognition at distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lěng*, cold — **R4**, recognition at distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 有点儿",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "有点儿 — yǒudiǎnr — \"a bit (of something unwanted); rather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "有点儿大 yǒudiǎnr dà — It's a bit big."
+            },
+            {
+              "kind": "speech",
+              "text": "太大了 tài dà le — It's too big."
+            },
+            {
+              "kind": "speech",
+              "text": "Two dips in a row: spoken, the first rises, yóudiǎnr. It is written yǒudiǎnr."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "有点儿 (yǒudiǎnr) is built from 有 'to have', 点 'a dot' and the r ending: having a dot of it. 有 and 点 are inherited from Middle Chinese, hjuwX and temX (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "有点儿 + an adjective is a mild complaint: yǒudiǎnr lěng, it's a bit cold. 很 is neutral; 太 (tài) … 了 is strong. And 一点儿 is a different job: it goes after a verb, 要一点儿水."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒudiǎnr — and hear it as yóudiǎnr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒudiǎnr* — and hear it as *yóudiǎnr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "有点儿大 — yǒudiǎnr dà — It's a bit big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 有点儿大 — *yǒudiǎnr dà* — It's a bit big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "太大了 — tài dà le — It's too big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 太大了 — *tài dà le* — It's too big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒudiǎnr lěng — It's a bit cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒudiǎnr lěng* — It's a bit cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yào yìdiǎnr shuǐ, then yǒudiǎnr dà, and hear the two jobs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yào yìdiǎnr shuǐ*, then *yǒudiǎnr dà*, and hear the two jobs]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 有点儿 (yǒudiǎnr) say about an adjective? (A bit, and not welcome.) Which is stronger, 有点儿大 or 太大了 (tài dà le)? (太大了 (tài dà le).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C93-ganjing",
+      "sequence": 7560,
+      "title": "gānjìng — clean",
+      "headword": "gānjìng",
+      "romanization": "gānjìng",
+      "gloss": "clean",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f5625106510e522",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then a room, then 很."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 有点儿大 — yǒudiǎnr dà",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 有点儿大 — *yǒudiǎnr dà*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say fángjiān, a room — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *fángjiān*, a room — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 很好 — hěn hǎo, fine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 很好 — *hěn hǎo*, fine]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gānjìng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gānjìng — \"clean\"."
+            },
+            {
+              "kind": "speech",
+              "text": "fángjiān hěn gānjìng — The room is clean."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gānjìng is built from gān 'dry' and jìng, both inherited from Middle Chinese, kan and dzjengH (Guangyun, in Baxter's transcription), glossed 'dry' and 'without dirt'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An adjective takes a plain 很 where English has is: fángjiān hěn gānjìng. No 是."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gānjìng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gānjìng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gānjìng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gānjìng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fángjiān hěn gānjìng — The room is clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fángjiān hěn gānjìng* — The room is clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fángjiān bù gānjìng — The room isn't clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fángjiān bù gānjìng* — The room isn't clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yǒudiǎnr dà, then gānjìng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yǒudiǎnr dà*, then *gānjìng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gānjìng mean? (\"Clean\".) What goes in front of it, 是 or 很? (很.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C93-zang",
+      "sequence": 7570,
+      "title": "zāng — dirty",
+      "headword": "zāng",
+      "romanization": "zāng",
+      "gloss": "dirty",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1431bc2af9e04a0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then two things that get dirty."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gānjìng, clean — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gānjìng*, clean — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xié, shoes — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xié*, shoes — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yīfu, clothes — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yīfu*, clothes — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zāng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zāng — \"dirty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "xié tài zāng le — The shoes are too dirty."
+            },
+            {
+              "kind": "speech",
+              "text": "yīfu yǒudiǎnr zāng — The clothes are a bit dirty."
+            },
+            {
+              "kind": "speech",
+              "text": "Its character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The older character for zāng is in the Guangyun as tsangX (Guangyun, in Baxter's transcription), but only inside a two-character word for a sturdy body, and that reading would give zǎng, not zāng. No dictionary we use records the word 'dirty' in an older form, so the history of zāng is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gānjìng and zāng, clean and dirty, and three strengths for each: 很, 有点儿 (yǒudiǎnr), 太 (tài) … 了."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xié tài zāng le — The shoes are too dirty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xié tài zāng le* — The shoes are too dirty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīfu yǒudiǎnr zāng — The clothes are a bit dirty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīfu yǒudiǎnr zāng* — The clothes are a bit dirty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gānjìng, then zāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gānjìng*, then *zāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zāng mean? (\"Dirty\".) Say the shoes are too dirty. (xié tài zāng le.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C93-practice",
+      "sequence": 7580,
+      "title": "太大了 (tài dà le)",
+      "headword": "太大了",
+      "romanization": "tài dà le",
+      "gloss": "shopping that goes badly: too big, a bit small, a bit dirty, and great",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:739a249984b2d8a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with two people shopping and not finding it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zāng, dirty — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zāng*, dirty — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zěnmeyàng, how is it — R4, recognition at distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zěnmeyàng*, how is it — **R4**, recognition at distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say piányi, cheap — R4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *piányi*, cheap — **R4**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: zhège zěnmeyàng — How's this one? B: 太大了 tài dà le — Too big. A: 那个呢 nàge ne — And that one? B: 有点儿小 yǒudiǎnr xiǎo — A bit small. A: 这个很好看 zhège hěn hǎokàn — This one's nice. B: yǒudiǎnr zāng — It's a bit dirty. A: 我们去吃饭 wǒmen qù chī fàn — Let's go and eat, then. B: 太好了 tài hǎo le — Great!"
+            },
+            {
+              "kind": "speech",
+              "text": "Three strengths of complaint, 有点儿 (yǒudiǎnr), 很 and 太 … 了, and one delight to finish: 太好了 (tài hǎo le)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C93-practice-small",
+              "prompt": "What is wrong with the second one?",
+              "assesses": [
+                "ZH-PERFORMANCE-TOO-01",
+                "ZH-LEX-C93-YOUDIANR-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "a bit small",
+                "too small",
+                "small",
+                "yǒudiǎnr xiǎo",
+                "有点儿小"
+              ],
+              "feedback": {
+                "correct": "A bit small: 有点儿小.",
+                "incorrect": "B says 有点儿小: a bit small."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — three strengths",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "很大 hěn dà — big; a plain statement."
+            },
+            {
+              "kind": "speech",
+              "text": "有点儿大 yǒudiǎnr dà — a bit big, and I'd rather it wasn't."
+            },
+            {
+              "kind": "speech",
+              "text": "太大了 tài dà le — too big."
+            },
+            {
+              "kind": "speech",
+              "text": "太好了 tài hǎo le — great!"
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Fángjiān zěnmeyàng?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Answer it three ways: gānjìng, a bit dirty, too dirty."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "太 (tài) — 大, then the dot",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 太 — 大, then the dot]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "太大了 — tài dà le — Too big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 太大了 — *tài dà le* — Too big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "有点儿小 — yǒudiǎnr xiǎo — A bit small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 有点儿小 — *yǒudiǎnr xiǎo* — A bit small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fángjiān hěn gānjìng — The room is clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fángjiān hěn gānjìng* — The room is clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "太好了 (tài hǎo le)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 太好了]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it is too big. (太大了 (tài dà le).) Say it is a bit small. (有点儿小.) Say great. (太好了 (tài hǎo le).) Say the room is clean. (fángjiān hěn gānjìng.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

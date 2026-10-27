@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C72-dao",
+    "language": "chinese",
+    "chapter": 72,
+    "sequence": 5760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e55c0f1822f1e1b0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:83533e20b378b7e2",
+  "lessonIds": [
+    "ZH-C124-gezi",
+    "ZH-C124-toufa",
+    "ZH-C124-shuai",
+    "ZH-C124-nankan",
+    "ZH-C124-xiang-resemble"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch124.txt",
+  "json": "chinese/narration/ch124.json",
+  "textHash": "fnv1a64:811262e41f056dc3",
+  "jsonHash": "fnv1a64:a54d7c2f719cc34b",
+  "findings": []
+}

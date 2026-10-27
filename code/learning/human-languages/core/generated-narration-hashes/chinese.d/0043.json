@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:7dc113cc17ce1c10",
+  "lessonIds": [
+    "ZH-C43-qu",
+    "ZH-W43-qu",
+    "ZH-C43-hui",
+    "ZH-C43-zou",
+    "ZH-C43-chumen",
+    "ZH-C43-xuexiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch43.txt",
+  "json": "chinese/narration/ch43.json",
+  "textHash": "fnv1a64:ceb87c7264efe776",
+  "jsonHash": "fnv1a64:6ec568b79d415587",
+  "findings": []
+}

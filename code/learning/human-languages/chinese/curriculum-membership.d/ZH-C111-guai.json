@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C111-guai",
+  "pathSegment": "ZH-PATH-111-FRONT111",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-111-FRONT111",
+      "order": 5
+    }
+  ]
+}

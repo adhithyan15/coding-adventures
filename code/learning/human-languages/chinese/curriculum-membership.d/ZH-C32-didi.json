@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C32-didi",
+  "pathSegment": "ZH-PATH-32-FAMILY32",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-32-FAMILY32",
+      "order": 5
+    }
+  ]
+}

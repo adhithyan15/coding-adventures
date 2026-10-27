@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:3958a7600dc5f4fe",
+  "lessonIds": [
+    "ZH-C46-xingqi",
+    "ZH-W46-xing",
+    "ZH-W46-qi-period",
+    "ZH-C46-xingqiyi",
+    "ZH-C46-shihou",
+    "ZH-C46-zhoumo",
+    "ZH-C46-xingqitian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch46.txt",
+  "json": "chinese/narration/ch46.json",
+  "textHash": "fnv1a64:09948844f31c57ad",
+  "jsonHash": "fnv1a64:68791b596a6fc2cb",
+  "findings": []
+}

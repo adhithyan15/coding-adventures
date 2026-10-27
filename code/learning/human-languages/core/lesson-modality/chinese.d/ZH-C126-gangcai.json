@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C126-gangcai",
+    "language": "chinese",
+    "chapter": 126,
+    "sequence": 10180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:513d39f16a69a952"
+  },
+  "findings": []
+}

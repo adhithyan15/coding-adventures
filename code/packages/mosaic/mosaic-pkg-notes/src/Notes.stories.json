@@ -1,8 +1,74 @@
 {
   "stories": [
     {
-      "name": "Default",
-      "fixtures": {}
+      "name": "Several notes, one open",
+      "fixtures": {
+        "notes-title": "Notes",
+        "note-rows": [
+          ["note-1", "Kickoff agenda"],
+          ["note-2", "Release checklist"],
+          ["note-3", "Untitled"],
+          ["note-4", "Ideas for the onboarding flow"]
+        ],
+        "selected-note-id": "note-2",
+        "title-value": "Release checklist",
+        "body-value": "- tag the release\n- update the changelog\n- tell support",
+        "task-name-value": "Ship 2.4"
+      }
+    },
+    {
+      "name": "Long body",
+      "fixtures": {
+        "notes-title": "Notes",
+        "note-rows": [
+          ["note-1", "Kickoff agenda"],
+          ["note-5", "Retrospective: the March outage"]
+        ],
+        "selected-note-id": "note-5",
+        "title-value": "Retrospective: the March outage",
+        "body-value": "What happened\n\nAt 09:12 the scheduler stopped picking up jobs. The queue grew for forty minutes before the first alert fired, because the alert watched the error rate and the scheduler was not erroring: it was idle.\n\nWhat went well\n\n- The rollback took four minutes once someone started it.\n- Support had a status message out within ten minutes of the alert.\n\nWhat to change\n\n- Alert on queue depth, not only on errors.\n- Write down who may start a rollback without asking first.\n- Rehearse the rollback once a quarter, so the four minutes stays four minutes.\n\nFollow-ups are filed against the Reliability project.",
+        "task-name-value": ""
+      }
+    },
+    {
+      "name": "New unsaved note",
+      "fixtures": {
+        "notes-title": "Notes",
+        "note-rows": [
+          ["note-1", "Kickoff agenda"],
+          ["note-2", "Release checklist"]
+        ],
+        "selected-note-id": "note-6",
+        "title-value": "",
+        "body-value": "",
+        "task-name-value": ""
+      }
+    },
+    {
+      "name": "Notes, none selected",
+      "fixtures": {
+        "notes-title": "Notes",
+        "note-rows": [
+          ["note-1", "Kickoff agenda"],
+          ["note-2", "Release checklist"],
+          ["note-4", "Ideas for the onboarding flow"]
+        ],
+        "selected-note-id": "",
+        "title-value": "",
+        "body-value": "",
+        "task-name-value": ""
+      }
+    },
+    {
+      "name": "No notes yet",
+      "fixtures": {
+        "notes-title": "Notes",
+        "note-rows": [],
+        "selected-note-id": "",
+        "title-value": "",
+        "body-value": "",
+        "task-name-value": ""
+      }
     }
   ]
 }

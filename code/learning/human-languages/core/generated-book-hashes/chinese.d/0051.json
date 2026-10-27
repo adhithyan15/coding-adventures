@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:51961ac18dd0022d",
+  "lessonIds": [
+    "ZH-C51-gaoxing",
+    "ZH-C51-pa",
+    "ZH-C51-leng",
+    "ZH-C51-re",
+    "ZH-C51-ku"
+  ],
+  "tex": "chinese/book/chapters/ch51-how-you-feel.tex"
+}

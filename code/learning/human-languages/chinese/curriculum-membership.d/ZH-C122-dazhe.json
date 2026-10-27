@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C122-dazhe",
+  "pathSegment": "ZH-PATH-122-HOURS122",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-122-HOURS122",
+      "order": 4
+    }
+  ]
+}

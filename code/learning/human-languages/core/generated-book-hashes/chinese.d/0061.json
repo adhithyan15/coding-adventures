@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:72b311d543647165",
+  "lessonIds": [
+    "ZH-C61-chang",
+    "ZH-W61-chang-long",
+    "ZH-C61-duan",
+    "ZH-C61-gao",
+    "ZH-C61-ai",
+    "ZH-C61-xin"
+  ],
+  "tex": "chinese/book/chapters/ch61-long-and-short.tex"
+}

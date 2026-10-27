@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Because of the Weather",
+  "label": "ch:zh-because-of-the-weather",
+  "canDo": "I can give the weather as a reason: sunny, overcast, windy, thundery or cool.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C136-liangkuai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: I can give the weather as a reason: sunny, overcast, windy, thundery or cool.",
+    "assesses": [
+      "ZH-LEX-C136-WEATHER136-03",
+      "ZH-LEX-C136-WEATHER136-04",
+      "ZH-LEX-C136-WEATHER136-05"
+    ]
+  }
+}
