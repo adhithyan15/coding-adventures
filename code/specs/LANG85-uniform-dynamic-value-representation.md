@@ -1006,28 +1006,32 @@ record the same history from the implementer's side. They live on the
 
 ---
 
-## 11. Open questions for the owner
+## 11. Decisions and open questions
 
-1. **Should 61-bit fixnums be Twig's integer semantics on every column?**
-   §5.4 makes native and LLVM trap outside ±2^60. The VM, JIT, WASM, JVM
-   and CLR keep `i64`. Making all columns trap (frontend-emitted checks,
-   per LANG83 PR7) gives full parity but changes the VM's answers for
-   large values.
-2. **Is `dyn` the right spelling for Twig's dynamic values, or `ref<any>`?**
-   `ref<any>` would unify Twig with McCarthy Lisp, but it would also move
-   Twig onto the managed columns' uniform-anyref model at the same time.
-   `dyn` (already the registry's operand type) keeps PR4 a no-op outside
+### 11.1 Decided by the repo owner (2026-10-27)
+
+1. **61-bit fixnums are Twig's integer semantics on every column.** Any
+   result outside [−2^60, 2^60−1] raises `Trap.Overflow`: on VM, JIT,
+   native, LLVM, WASM, JVM, CLR and BEAM alike. On the non-tagged columns
+   the check is frontend-emitted IIR (LANG83 PR7), so no backend learns a
+   Twig rule. PR7 implements this on every column, not only the tagged ones,
+   and the fuzz gate compares all columns over the full range.
+2. **Twig spells its dynamic values `dyn`.** Bare `any` keeps its current
+   meaning, an unresolved machine value. PR4 is therefore a no-op outside
    the tagged columns.
-3. **Should dynamic arithmetic fail closed on a non-integer operand?** It
+3. **The fuzz harness, generators (gen.py–gen5) and `ref.py` move into the
+   repo** in PR1, as an informational CI job that gates PR3–PR9.
+4. **`=` is word equality, and only `#f` and nil are false.** `(= 0 #f)` is
+   false. Integer 0 is truthy, as TW00 says. The VM's Twig lowering and
+   `ref.py` must be fixed to agree (#18493) before PR5's gate. The fix
+   belongs in the frontend's lowering; `vm-core` itself stays
+   language-neutral.
+
+### 11.2 Still open
+
+1. **Should dynamic arithmetic fail closed on a non-integer operand?** It
    needs a trap kind. LANG83's closed table has none for a type error
    (`Trap.Type`, id 8, would be new). Without it, `(+ pair 1)` yields a
    harmless but wrong integer, as on main.
-4. **Strings:** a reserved tag (`100` or `110`) for string handles, or
+2. **Strings:** a reserved tag (`100` or `110`) for string handles, or
    tag `111` with a GC-header kind check in `pair?`?
-5. **May the fuzz harness and generators live in the repo** (PR1)? They
-   were kept out deliberately until now. The gate in §7.3 needs them to be
-   reproducible by anyone reviewing PR3–PR9.
-6. **What is `=` on two different kinds?** Word equality (§5.1) says
-   `(= 0 #f)` is false. The VM may coerce `#f` to 0 and say true. One of
-   the two is the language's answer, and the oracle (`ref.py` and the VM)
-   should agree with it before PR5.
