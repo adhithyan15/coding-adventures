@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C84-yiqi",
+    "language": "chinese",
+    "chapter": 84,
+    "sequence": 6340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6703c81758496bf5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C93-ganjing",
+    "language": "chinese",
+    "chapter": 93,
+    "sequence": 7560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f5625106510e522"
+  },
+  "findings": []
+}

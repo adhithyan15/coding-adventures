@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:3c75d6a518d27e72",
+  "lessonIds": [
+    "ZH-C79-shangke",
+    "ZH-W79-ke-lesson",
+    "ZH-C79-xiake",
+    "ZH-C79-jiaoshi",
+    "ZH-C79-zuoye",
+    "ZH-C79-kaoshi",
+    "ZH-R79-review-75-79"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch79.txt",
+  "json": "chinese/narration/ch79.json",
+  "textHash": "fnv1a64:dbeb93869aaf229d",
+  "jsonHash": "fnv1a64:963091249d170015",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W60-bai-white",
+  "pathSegment": "ZH-PATH-60-COLOR60",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-60-COLOR60",
+      "order": 1
+    }
+  ]
+}

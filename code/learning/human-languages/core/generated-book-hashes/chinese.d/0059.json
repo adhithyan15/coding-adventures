@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:fa3e984f80f333d3",
+  "lessonIds": [
+    "ZH-C59-chuan",
+    "ZH-C59-xie",
+    "ZH-C59-maozi",
+    "ZH-C59-kuzi",
+    "ZH-C59-piaoliang"
+  ],
+  "tex": "chinese/book/chapters/ch59-clothes.tex"
+}

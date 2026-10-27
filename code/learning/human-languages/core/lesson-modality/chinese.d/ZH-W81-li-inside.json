@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W81-li-inside",
+    "language": "chinese",
+    "chapter": 81,
+    "sequence": 6195,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3867ea8251381eb5",
+    "detachableSegments": [
+      "Script — 日, a line through it, two bars"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

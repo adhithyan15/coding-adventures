@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C119-xingli",
+    "language": "chinese",
+    "chapter": 119,
+    "sequence": 9070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67b8d111e3dae197"
+  },
+  "findings": []
+}

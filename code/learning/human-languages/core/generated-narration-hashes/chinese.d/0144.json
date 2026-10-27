@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:0ce9687fb43c4934",
+  "lessonIds": [
+    "ZH-C144-zhongyao",
+    "ZH-C144-rongyi",
+    "ZH-C144-jiandan",
+    "ZH-C144-tebie",
+    "ZH-C144-juede"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch144.txt",
+  "json": "chinese/narration/ch144.json",
+  "textHash": "fnv1a64:24652d2da5a8f104",
+  "jsonHash": "fnv1a64:919bce94c03abb27",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C114-xianjin",
+  "pathSegment": "ZH-PATH-114-PAY114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-114-PAY114",
+      "order": 2
+    }
+  ]
+}

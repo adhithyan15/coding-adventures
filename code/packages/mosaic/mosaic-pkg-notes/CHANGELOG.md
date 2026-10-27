@@ -6,6 +6,22 @@ the package follows semantic versioning.
 
 ## [Unreleased]
 
+### Added — a native-complete gate pinning today's 12 style drops (E2)
+
+- `tests/native_complete_gate.rs`, modelled on `mosaic-pkg-draft-editor`'s:
+  the five native backends in both themes, zero capability degradations
+  with no allowlist, and style drops pinned in both directions (a pin that
+  stops occurring fails too). Measured on the audit base, identical in both
+  themes: 12 drops per theme — SwiftUI 3, Qt 6, XAML 1, Flutter 2, Compose
+  0 — matching `mosaic-editor-convergence-audit-v1.md` §3.1. Each pin names
+  the backend, property **and part**, so E3's move to `RecordList` and
+  `DraftEditor` (probe C: 12 → 10) shows up as exactly the pins it deletes.
+- MosaicBook: five populated stories replace the single empty `Default` —
+  several notes with one open (and an `Untitled` row), a long body, a new
+  unsaved note, notes with none selected, and no notes yet.
+- The package's layout, styles and interface are unchanged, so the version
+  stays 0.2.0.
+
 ### Changed — the note body is `HostInput` and saves on Ctrl/Cmd+Enter (UI25 §4)
 
 - `notes-body-input` moved from the retiring legacy `Input` to

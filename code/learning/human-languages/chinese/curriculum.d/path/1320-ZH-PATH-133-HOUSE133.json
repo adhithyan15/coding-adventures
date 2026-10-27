@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-133-HOUSE133",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-133-HOUSE133"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 57,
+  "title": "At Home",
+  "label": "ch:zh-at-home",
+  "canDo": "I can name my house, my room and the things in it, and say here.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-R57-review-final-57",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: I can name my house, my room and the things in it, and say here.",
+    "assesses": [
+      "ZH-LEX-C57-HOME57-01",
+      "ZH-LEX-C57-HOME57-02",
+      "ZH-LEX-C57-HOME57-03",
+      "ZH-LEX-C57-HOME57-04",
+      "ZH-LEX-C57-HOME57-05"
+    ]
+  }
+}

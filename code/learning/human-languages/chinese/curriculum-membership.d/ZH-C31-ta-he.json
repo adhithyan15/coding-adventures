@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C31-ta-he",
+  "pathSegment": "ZH-PATH-31-PEOPLE31",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-31-PEOPLE31",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C88-zhi",
+  "pathSegment": "ZH-PATH-88-HOW-MANY",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-88-HOW-MANY",
+      "order": 6
+    }
+  ]
+}

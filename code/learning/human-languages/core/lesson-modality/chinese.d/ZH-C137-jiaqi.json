@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C137-jiaqi",
+    "language": "chinese",
+    "chapter": 137,
+    "sequence": 10760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8628c4c2ca4a183"
+  },
+  "findings": []
+}

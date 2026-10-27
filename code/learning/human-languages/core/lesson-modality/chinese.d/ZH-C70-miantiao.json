@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C70-miantiao",
+    "language": "chinese",
+    "chapter": 70,
+    "sequence": 5640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:605eaf1943e995b2"
+  },
+  "findings": []
+}

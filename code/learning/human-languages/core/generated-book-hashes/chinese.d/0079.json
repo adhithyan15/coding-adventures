@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:d6d3becb17ab0a2f",
+  "lessonIds": [
+    "ZH-C79-shangke",
+    "ZH-W79-ke-lesson",
+    "ZH-C79-xiake",
+    "ZH-C79-jiaoshi",
+    "ZH-C79-zuoye",
+    "ZH-C79-kaoshi",
+    "ZH-R79-review-75-79"
+  ],
+  "tex": "chinese/book/chapters/ch79-at-school.tex"
+}

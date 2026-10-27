@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C126-gangcai",
+  "pathSegment": "ZH-PATH-126-OFTEN126",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-126-OFTEN126",
+      "order": 4
+    }
+  ]
+}

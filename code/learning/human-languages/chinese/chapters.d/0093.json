@@ -1,0 +1,22 @@
+{
+  "chapter": 93,
+  "title": "Too Much",
+  "label": "ch:zh-too-much",
+  "canDo": "I can say something is too much, or a bit too much.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C93-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Too much with 太 … 了, a bit too much with 有点儿, great with 太好了, and clean and dirty, built on one new written character: 太.",
+    "assesses": [
+      "ZH-LEX-C93-TAIHAOLE-01",
+      "ZH-SCRIPT-TAI-01",
+      "ZH-LEX-C93-YOUDIANR-01",
+      "ZH-LEX-C93-GANJING-01",
+      "ZH-LEX-C93-ZANG-01",
+      "ZH-PERFORMANCE-TOO-01"
+    ]
+  }
+}

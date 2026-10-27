@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-104-DESK104",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-104-DESK104"
+  ],
+  "after": []
+}

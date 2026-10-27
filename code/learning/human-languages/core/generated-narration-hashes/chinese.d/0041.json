@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:9e68cb93ba367784",
+  "lessonIds": [
+    "ZH-C41-duoshao",
+    "ZH-W41-duo",
+    "ZH-W41-shao",
+    "ZH-C41-qian",
+    "ZH-C41-kuai",
+    "ZH-C41-tai",
+    "ZH-C41-yao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch41.txt",
+  "json": "chinese/narration/ch41.json",
+  "textHash": "fnv1a64:6760dac9f8a46c36",
+  "jsonHash": "fnv1a64:f0a9660b89ab05e3",
+  "findings": []
+}

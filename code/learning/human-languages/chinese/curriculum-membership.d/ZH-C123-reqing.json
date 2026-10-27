@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C123-reqing",
+  "pathSegment": "ZH-PATH-123-PEOPLE123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-123-PEOPLE123",
+      "order": 3
+    }
+  ]
+}

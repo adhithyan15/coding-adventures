@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W109-wang-net",
+    "language": "chinese",
+    "chapter": 109,
+    "sequence": 8515,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7a72ba0938a444d8",
+    "detachableSegments": [
+      "Script — the frame of 两, and two crosses"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

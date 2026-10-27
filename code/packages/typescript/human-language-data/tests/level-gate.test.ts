@@ -264,7 +264,16 @@ describe("the gate that would have caught the A2 claim", () => {
     // after its two over-budget lessons were split.
     // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
     // only with glyphs the script lessons have taught).
-    // The count stays 22 when a track climbs a second rung: Hindi was the first to
+    // 22 -> 23: Chinese, with chapter 30 (the wellbeing node, the last pre-A1
+    // spine node it lacked) and chapters 31-84 (324 headwords, 71 verbs; a word
+    // whose characters the reader has not written yet is taught by ear with a
+    // pinyin headword; 55 characters written, 很 and the 54 of chapters 31-84).
+    // Chinese then climbed its second rung with chapters 85-98 (the A1 core: all
+    // twelve A1 spine nodes and both A1 writing stages) and chapters 99-146 (the
+    // A1 vocabulary), 641 headwords and 172 verbs at or below A1, and 37 more
+    // characters written (13 in the core, 24 in the vocabulary), which moved it
+    // from the pre-A1 row of HELD to A1.
+    // The count stays put when a track climbs a second rung: Hindi was the first to
     // attain A2, with chapters 166-275 (the practical-reading node, 540 headwords,
     // sixty verbs), which moved it from the A1 row of HELD to the A2 row.
     // German followed as the second, with

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C112-chukou",
+    "language": "chinese",
+    "chapter": 112,
+    "sequence": 8670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5adbc0af30521433"
+  },
+  "findings": []
+}

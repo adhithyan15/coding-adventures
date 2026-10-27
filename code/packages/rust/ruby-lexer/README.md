@@ -85,7 +85,9 @@ assert!(releases::token_grammar("2.7.8").is_none());     // no pair yet
 
 Releases with identical token files share one compiled module
 (`releases::grammar_class`). Slice R0 (numbers, names, variables, keywords,
-operators, comments, separators) is in place for 0.49, 0.50 and 3.3.5–3.3.7;
+operators, comments, separators) is in place for 0.49, 0.50 and 3.3.5–3.3.7.
+On 3.3.5–3.3.7, slice R1b adds `=begin`/`=end` and `__END__` (E1 line-start
+skip patterns) and refuses every literal opener the pairs cannot lex.
 `ruby-parser`'s `tokenize_ruby_at` / `parse_ruby_at` are the entry points
 that apply budgets and typed errors. The state-machine lexer described above
 is unchanged and still serves every existing caller until the later slices

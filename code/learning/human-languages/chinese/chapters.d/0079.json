@@ -1,0 +1,22 @@
+{
+  "chapter": 79,
+  "title": "At School",
+  "label": "ch:zh-at-school",
+  "canDo": "I can talk about classes, the classroom, homework and exams.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-R79-review-75-79",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: I can talk about classes, the classroom, homework and exams.",
+    "assesses": [
+      "ZH-LEX-C79-SCHOOL79-01",
+      "ZH-LEX-C79-SCHOOL79-02",
+      "ZH-LEX-C79-SCHOOL79-03",
+      "ZH-LEX-C79-SCHOOL79-04",
+      "ZH-LEX-C79-SCHOOL79-05",
+      "ZH-SCRIPT-KE-LESSON-01"
+    ]
+  }
+}

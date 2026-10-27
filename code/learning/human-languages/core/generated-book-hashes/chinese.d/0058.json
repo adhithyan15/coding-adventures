@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:c5a11b675bf07e21",
+  "lessonIds": [
+    "ZH-C58-shouji",
+    "ZH-W58-ji-machine",
+    "ZH-C58-bao",
+    "ZH-C58-diannao",
+    "ZH-C58-beizi",
+    "ZH-C58-yifu"
+  ],
+  "tex": "chinese/book/chapters/ch58-things-you-carry.tex"
+}

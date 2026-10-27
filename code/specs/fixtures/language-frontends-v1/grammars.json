@@ -826,7 +826,7 @@
       "version": "ruby0.49",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby0.49.tokens",
-      "sha256": "992187c7bd54b5ad59e535987ba52e6ef2d4b0509b25185ebf2d0044bb213850"
+      "sha256": "c900768f383129aee68ab394702509e26cbf7285c36d74c3b32f2789d8ff93f6"
     },
     {
       "family": "ruby",
@@ -840,7 +840,7 @@
       "version": "ruby0.50",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby0.50.tokens",
-      "sha256": "ccea3f4880eb70a4045563f297c204d338c33f58e908bd2c389923e12a19dbf4"
+      "sha256": "2c803c6845cfe6d0e820bfe942c39a0682185219c6cb81ef92531ceb6f7637d5"
     },
     {
       "family": "ruby",
@@ -854,7 +854,7 @@
       "version": "ruby3.3.5",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby3.3.5.tokens",
-      "sha256": "59ffca2a7f1a5586ee5cc63f107e1a684f91901f43a13cd67035dd33e2039666"
+      "sha256": "cefc1780a0ea6e5ba8e8bdbc6086298cdef5dfbaccdab46a926c6380fe5e264b"
     },
     {
       "family": "ruby",
@@ -868,7 +868,7 @@
       "version": "ruby3.3.6",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby3.3.6.tokens",
-      "sha256": "6b981074af7fb2e789a7d5ae6ff0c4efcb16869d8498657cd0262dd0b04b7544"
+      "sha256": "ffd58e539428779c53d401568483f2291f775ef11f92e0023ad9b7834d1e817f"
     },
     {
       "family": "ruby",
@@ -882,7 +882,7 @@
       "version": "ruby3.3.7",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby3.3.7.tokens",
-      "sha256": "b605886404df95dba61cac50153e45eed8a267ee263c6740e989f9c6f2a0d3bb"
+      "sha256": "8f09cb7c4f8988931574c79a8ca87ee38daddd7fb7e9590f48b6d5feb326ba3d"
     },
     {
       "family": "sql",

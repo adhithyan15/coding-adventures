@@ -62,8 +62,8 @@ mod stackmap_registry;
 
 /// Precise stack walk — turns a live frame-pointer chain into the precise slots +
 /// conservative regions that `gc_core::FlatHeap::collect_mixed` consumes. The
-/// platform-independent walk logic; the `asm!` entry that captures the running
-/// thread's frame pointer and calls it is a follow-up. See [`precise_walk`].
+/// platform-independent walk logic; the naked frame-building trampolines in
+/// [`stack_scan`] (section 2b) supply its anchor. See [`precise_walk`].
 mod precise_walk;
 
 /// The one process-wide heap.  `None` until the first allocation (lazy init);

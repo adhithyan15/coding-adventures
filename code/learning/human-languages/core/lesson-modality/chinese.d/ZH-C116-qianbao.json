@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C116-qianbao",
+    "language": "chinese",
+    "chapter": 116,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff9032037901c989"
+  },
+  "findings": []
+}

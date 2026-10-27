@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R134-review-129-134",
+    "language": "chinese",
+    "chapter": 134,
+    "sequence": 10610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b3bf7da8233fe70"
+  },
+  "findings": []
+}

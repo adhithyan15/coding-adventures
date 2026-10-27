@@ -124,6 +124,66 @@ things Mandarin does not do (no verb endings, no agreement, no article, no separ
 nationality word) and joins 中国 to 人. The ten are 的, 有, 个, 了, 呢, 对, 岁, 和 and
 喜欢. Exam coverage goes **73/191 to 98/191**.
 
+**Chapter 29** is reading: six characters read cold, six words that are not six
+characters, and a first passage of thirty-four.
+
+**Chapter 30** asks how somebody is (*nǐ zěnmeyàng*) and answers it four ways:
+很好, *máng*, *lèi*, *hái xíng*. It writes one character, 很, the plain link Mandarin
+puts in front of an adjective, and it realizes the last pre-A1 spine node the
+track had not reached.
+
+A word whose characters the track does not write yet is taught by ear, with a
+pinyin headword, and its characters are not shown. A character shown but never
+written would count against the letter-anchoring ratchet, which keeps Chinese at
+zero unwritten characters, and it would ask the reader to read a shape nobody
+taught them. Every hanzi the book prints is one the reader writes.
+
+**Chapters 31-57** are the first half of the pre-A1 vocabulary: 135 words (37 verbs),
+five a chapter, from family and names through eating, shopping, coming and going,
+days, weeks, months and the time, to the body, feelings, learning and free time.
+Thirty characters are written along the way, one or two a chapter, each right after
+the word that first shows it (他 们 妈 男 叫 来 这 那 吃 饭 喝 水 买 多 少 去 车 天 今 星
+期 年 明 点 午 晚 手 说 话 想), with its stroke order and a stroke-by-stroke strip. 41
+words are headed in characters the reader has written; the other 94 are taught by
+ear with pinyin headwords, as in chapter 30, and change to characters once their
+characters are written.
+
+**Chapters 58-84** are the second half: 135 more words (34 verbs), from things you
+carry, clothes and colours through the phone, asking for help, the weather,
+animals, meals and tastes, getting about and the station, visiting, celebrating,
+parting and thanks, school, jobs and the city, to running late and doing things
+together. Twenty-four more characters are written (机 白 长 快 电 打 起 门 问 气 雨 马
+山 做 火 开 下 进 客 乐 会 前 课 里), 55 in all since chapter 30. With them Chinese
+attains pre-A1 on the level gate: 324 headwords and 71 verbs, all seven pre-A1
+spine nodes realized.
+
+**Chapters 85-98** are the A1 core, hand-authored. Twelve chapters realize the six
+A1 spine nodes the track had not reached: where things are and the where-question
+(在, 那儿, 哪儿, inside, outside, on top, under, the toilet), what there is and is not
+(没有, and 不 against 没), counting with 两 and the measure words *bēi*, *běn*,
+*zhāng* and *zhī* (with the tone 一 takes before each), five everyday actions (给,
+做, put, bring, stand), 会, 能 and *kěyǐ*, wanting and needing (想要, 不要, 一点儿),
+ordering at a table with 也, too much and a bit too much (太好了, 有点儿), all of them
+(都), and why and because (为什么, 因为, *suǒyǐ*). Thirteen characters are written,
+one a chapter, each right after the word that first shows it: 在 哪 没 两 给 能 要 也 太
+都 为 因 时, every one built from pieces the reader already writes. Chapter 97 reads a
+57-character day in characters the reader has written and then writes the first
+line of Chinese with nothing to copy (controlled composition); chapter 98 fills a
+five-field form and writes a short message under this book's own three-minute
+clock (timed production), then reviews the whole core. Words whose characters are
+not written yet go in pinyin inside the learner's own writing. All twelve A1 spine
+nodes are realized and both A1 writing stages are proved; A1 is not attained yet,
+because the level gate asks for 600 headwords at or below A1 and the core brings
+the track to 401.
+
+**Chapters 99-146** are the A1 vocabulary: 240 words (85 verbs), five a chapter, on
+the A1 nodes, from washing, the desk, getting about and things you can do to signs
+and notices, takeaway, what people are like, music, weather, festivals, first and
+half, and day and night. Twenty-four more characters are written, each right after
+the word that first shows it (洗 菜 用 本 站 试 网 外 边 出 心 包 以 些 音 吵 病 春 千 扫 重
+节 每 半). With them Chinese attains A1 on the level gate: 641 headwords and 172
+verbs at or below A1.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path

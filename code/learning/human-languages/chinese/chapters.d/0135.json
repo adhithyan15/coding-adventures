@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Sport",
+  "label": "ch:zh-sport",
+  "canDo": "I can talk about football, basketball, matches and working out.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C135-duanlian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: I can talk about football, basketball, matches and working out.",
+    "assesses": [
+      "ZH-LEX-C135-SPORT135-03",
+      "ZH-LEX-C135-SPORT135-04",
+      "ZH-LEX-C135-SPORT135-05"
+    ]
+  }
+}
