@@ -36,6 +36,11 @@ impl StateRegister {
         register(&bits, 0, &mut self.state);
         register(&bits, 1, &mut self.state);
     }
+
+    /// Return the number of physical D flip-flops owned by this register.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
+    }
 }
 
 #[derive(Clone)]
@@ -79,5 +84,10 @@ impl DffMemory {
             .map(|address| self.read(address))
             .collect::<Vec<_>>()
             .into_boxed_slice()
+    }
+
+    /// Return the number of physical D flip-flops owned by memory.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
     }
 }

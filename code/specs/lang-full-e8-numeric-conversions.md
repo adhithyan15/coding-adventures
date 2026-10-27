@@ -112,6 +112,16 @@ exactly `2^63`, and no in-range double truncates to it. The matrix rows
 `entier(exp(exp(exp(pick()))))` (+∞) pin the trap on all seven standard
 backends.
 
+⁵ **Typed trap (LANG83).** The traps in ² – ⁴ were all different: a JVM
+`ArithmeticException`, a CLR `OverflowException`, a bare native `ud2` /
+`udf`, the VM's `VMError::Custom`. None was a registered LANG83 kind.
+Every backend, BEAM and the JIT included, now raises `Trap.ConvRange`
+(id 4) through the mechanism it uses for `Trap.DivZero`. The CLR range-checks
+before `conv.ovf.*`, so that opcode no longer throws. The per-backend table
+is in `LANG83-iir-standard-operation-registry.md` ("Conversions on the
+JIT"). The two matrix rows above now expect `StdoutThenTrap("",
+"Trap.ConvRange")`.
+
 **No backend needs a new capability** — every one already emits float
 arithmetic (E3); these are just the convert opcodes that sit next to the
 arithmetic ones. The `native floor` path is the only mildly involved case

@@ -409,14 +409,19 @@ release gate restores a committed v0.1.0 fixture from this same path.
 
 Uninstall while retaining data by deleting only the extracted application. To
 uninstall and purge, first make any wanted backup, then delete the application
-and the live state file, its `.tmp` sibling, its `.corrupt` sibling, and the
-`backups` directory documented below.
+and the live state file, its `.tmp` sibling, its `.corrupt` siblings
+(`.corrupt` and `.corrupt.1` to `.corrupt.9`), and the `backups` directory
+documented below.
 
 If JSON parsing or the Rust snapshot contract rejects the live file, Trestle
-renames it to `mosaic-state.v1.json.corrupt` and starts with an empty workspace.
-Close Trestle before inspecting that quarantined copy or restoring a known-good
-backup. Never overwrite the only copy of a damaged file while attempting manual
-recovery.
+moves it to the first free name of `mosaic-state.v1.json.corrupt`,
+`mosaic-state.v1.json.corrupt.1`, ... `mosaic-state.v1.json.corrupt.9` and
+starts with an empty workspace. It never replaces an earlier quarantined copy.
+If it cannot move the file, or all ten names are taken, it leaves the file in
+place and says this session will not be saved; move the quarantined copies
+somewhere safe to let it save again. Close Trestle before inspecting a
+quarantined copy or restoring a known-good backup. Never overwrite the only
+copy of a damaged file while attempting manual recovery.
 
 Automatic pre-upgrade backup: {automatic_backup}
 """

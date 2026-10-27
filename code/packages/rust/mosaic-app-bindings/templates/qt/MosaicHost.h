@@ -227,6 +227,12 @@ private:
     QStringList requiredProps_;
     QString error_;
     QString persistenceWarning_;
+    // Set when a state file the runtime rejected could not be moved aside
+    // (see quarantinePersistedState), so it still sits at the live path. Every
+    // save is skipped from then on, because the next one would write over it.
+    // Sticky, unlike persistenceWarning_, which a successful write clears:
+    // here no write is attempted, so the warning saying why stays showing.
+    bool persistenceDisabled_ = false;
     // The revision the state file was last saved at by an answer, so an
     // answer at that same revision skips the write. Invalid until the first
     // save: the first answer after launch always writes, so a fresh install

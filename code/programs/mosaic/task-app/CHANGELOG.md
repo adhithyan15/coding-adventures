@@ -11,6 +11,14 @@ cut.
 
 ### Fixed
 
+- Never replace an earlier quarantined state file. Every native Trestle (Qt,
+  Flutter, Compose, SwiftUI, WinUI) used to delete `mosaic-state.v1.json.corrupt`
+  before moving a newly rejected file there, so a second rejection destroyed
+  the first, which may hold real tasks. A rejected file now moves to the first
+  free name of `.corrupt` and `.corrupt.1` to `.corrupt.9`; if it cannot move,
+  or all ten are taken, it stays in place and Trestle saves nothing that
+  session and says so. `LOCAL-DATA.txt` and the release gate's upgrade check
+  follow the new names.
 - Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
   without changing shared styles or claiming general flex support.
 
