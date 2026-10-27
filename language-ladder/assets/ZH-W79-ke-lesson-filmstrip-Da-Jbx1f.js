@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W79-ke-lesson-filmstrip-DNOJMh7n.svg`,import.meta.url).href;export{e as default};

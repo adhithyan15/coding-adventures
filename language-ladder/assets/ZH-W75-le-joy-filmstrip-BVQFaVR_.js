@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W75-le-joy-filmstrip-B8djoD_4.svg`,import.meta.url).href;export{e as default};

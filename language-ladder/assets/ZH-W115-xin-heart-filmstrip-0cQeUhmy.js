@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W115-xin-heart-filmstrip-BMCsad_A.svg`,import.meta.url).href;export{e as default};

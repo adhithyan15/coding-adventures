@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W140-ban-half-filmstrip-CIASNxAC.svg`,import.meta.url).href;export{e as default};

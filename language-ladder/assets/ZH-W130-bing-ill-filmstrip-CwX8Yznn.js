@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W130-bing-ill-filmstrip-DAiqscWk.svg`,import.meta.url).href;export{e as default};

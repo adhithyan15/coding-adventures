@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W119-bao-wrap-filmstrip-BJFhSap5.svg`,import.meta.url).href;export{e as default};

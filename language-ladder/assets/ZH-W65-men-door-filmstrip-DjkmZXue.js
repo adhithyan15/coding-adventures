@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W65-men-door-filmstrip-C8O6H7yp.svg`,import.meta.url).href;export{e as default};

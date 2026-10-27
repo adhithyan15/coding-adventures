@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W131-chun-spring-filmstrip-Cb_XUS7R.svg`,import.meta.url).href;export{e as default};
