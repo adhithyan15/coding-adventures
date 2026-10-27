@@ -1,0 +1,24 @@
+{
+  "chapter": 148,
+  "title": "Next Month",
+  "label": "ch:zh-next-month",
+  "canDo": "I can say what I am going to do next week and next month.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C148-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what you are going to do with 要 and dǎsuàn, next week, next month and last month, and what is about to happen with 要…了, built on one new written character: 月.",
+    "assesses": [
+      "ZH-LEX-C148-XIAGEYUE-01",
+      "ZH-SCRIPT-YUE-MONTH-01",
+      "ZH-GRAMMAR-YAO-FUTURE-01",
+      "ZH-LEX-C148-XIAXINGQI-01",
+      "ZH-LEX-C148-SHANGGEYUE-01",
+      "ZH-LEX-C148-DASUAN-01",
+      "ZH-LEX-C148-JIANGLAI-01",
+      "ZH-PERFORMANCE-PLANS-01"
+    ]
+  }
+}

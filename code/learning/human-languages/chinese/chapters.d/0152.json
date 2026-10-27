@@ -1,0 +1,23 @@
+{
+  "chapter": 152,
+  "title": "Well Said",
+  "label": "ch:zh-well-said",
+  "canDo": "I can say how well someone does something.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C152-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying how well something is done with a verb, 得 and an adjective, fluent, not bad and clear, built on one new written character: 得.",
+    "assesses": [
+      "ZH-LEX-C152-DE-01",
+      "ZH-SCRIPT-DE-COMPLEMENT-01",
+      "ZH-GRAMMAR-DE-COMPLEMENT-01",
+      "ZH-LEX-C152-LIULI-01",
+      "ZH-LEX-C152-BUCUO-01",
+      "ZH-LEX-C152-QINGCHU-01",
+      "ZH-PERFORMANCE-HOW-WELL-01"
+    ]
+  }
+}
