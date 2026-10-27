@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Holidays",
+  "label": "ch:zh-holidays",
+  "canDo": "I can talk about festivals, the Spring Festival, the New Year and time off.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C137-jiaqi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: I can talk about festivals, the Spring Festival, the New Year and time off.",
+    "assesses": [
+      "ZH-LEX-C137-HOLIDAY137-03",
+      "ZH-LEX-C137-HOLIDAY137-04",
+      "ZH-LEX-C137-HOLIDAY137-05"
+    ]
+  }
+}

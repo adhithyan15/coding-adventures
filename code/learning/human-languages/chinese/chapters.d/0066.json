@@ -1,0 +1,20 @@
+{
+  "chapter": 66,
+  "title": "The Weather",
+  "label": "ch:zh-the-weather",
+  "canDo": "I can say what the weather is like: rain, snow and wind.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ZH-C66-feng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: I can say what the weather is like: rain, snow and wind.",
+    "assesses": [
+      "ZH-LEX-C66-WEATHER66-01",
+      "ZH-LEX-C66-WEATHER66-03",
+      "ZH-LEX-C66-WEATHER66-04",
+      "ZH-LEX-C66-WEATHER66-05"
+    ]
+  }
+}

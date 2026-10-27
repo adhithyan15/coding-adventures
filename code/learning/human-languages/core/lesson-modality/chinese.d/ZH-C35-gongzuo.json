@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C35-gongzuo",
+    "language": "chinese",
+    "chapter": 35,
+    "sequence": 3200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60a72a83b3046c41"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Using Things",
+  "label": "ch:zh-using-things",
+  "canDo": "I can say use, take, throw away and repair, and say something is broken.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C103-huai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: I can say use, take, throw away and repair, and say something is broken.",
+    "assesses": [
+      "ZH-LEX-C103-USE103-03",
+      "ZH-LEX-C103-USE103-04",
+      "ZH-LEX-C103-USE103-05"
+    ]
+  }
+}

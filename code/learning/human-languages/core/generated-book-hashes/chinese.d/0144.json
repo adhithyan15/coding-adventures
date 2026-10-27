@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:b755a5f81cb84179",
+  "lessonIds": [
+    "ZH-C144-zhongyao",
+    "ZH-C144-rongyi",
+    "ZH-C144-jiandan",
+    "ZH-C144-tebie",
+    "ZH-C144-juede"
+  ],
+  "tex": "chinese/book/chapters/ch144-easy-and-important.tex"
+}

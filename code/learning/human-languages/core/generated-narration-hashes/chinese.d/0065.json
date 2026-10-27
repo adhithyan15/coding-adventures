@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:1e064890e9740264",
+  "lessonIds": [
+    "ZH-C65-men",
+    "ZH-W65-men-door",
+    "ZH-C65-qingwen",
+    "ZH-W65-wen-ask",
+    "ZH-C65-buhaoyisi",
+    "ZH-C65-kai",
+    "ZH-C65-guan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch65.txt",
+  "json": "chinese/narration/ch65.json",
+  "textHash": "fnv1a64:28060f43874c6ad5",
+  "jsonHash": "fnv1a64:4b103fa1c20a890f",
+  "findings": []
+}

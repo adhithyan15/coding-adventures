@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:775bf5c16e43b84a",
+  "lessonIds": [
+    "ZH-C139-lu",
+    "ZH-C139-huang",
+    "ZH-C139-hui",
+    "ZH-C139-yuan",
+    "ZH-C139-fenhong"
+  ],
+  "tex": "chinese/book/chapters/ch139-colours-and-shapes.tex"
+}

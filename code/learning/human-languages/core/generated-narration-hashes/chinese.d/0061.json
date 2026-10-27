@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:db692182c6f1cf76",
+  "lessonIds": [
+    "ZH-C61-chang",
+    "ZH-W61-chang-long",
+    "ZH-C61-duan",
+    "ZH-C61-gao",
+    "ZH-C61-ai",
+    "ZH-C61-xin"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch61.txt",
+  "json": "chinese/narration/ch61.json",
+  "textHash": "fnv1a64:d1ca2bf60f9a8de6",
+  "jsonHash": "fnv1a64:c5f89a5898aaa38d",
+  "findings": []
+}

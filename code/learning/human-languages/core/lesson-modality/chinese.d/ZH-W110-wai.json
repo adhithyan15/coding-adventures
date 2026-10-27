@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W110-wai",
+    "language": "chinese",
+    "chapter": 110,
+    "sequence": 8565,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:012885204d2c45b4",
+    "detachableSegments": [
+      "Script — the top of 多, then a vertical and a dot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

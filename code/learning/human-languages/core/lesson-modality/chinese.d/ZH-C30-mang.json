@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C30-mang",
+    "language": "chinese",
+    "chapter": 30,
+    "sequence": 2580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eaea93903d702350"
+  },
+  "findings": []
+}

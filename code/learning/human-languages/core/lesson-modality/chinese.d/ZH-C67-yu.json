@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C67-yu",
+    "language": "chinese",
+    "chapter": 67,
+    "sequence": 5500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:143e3e83b008d307"
+  },
+  "findings": []
+}

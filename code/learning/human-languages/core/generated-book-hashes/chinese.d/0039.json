@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:8eddbc847cfe04f9",
+  "lessonIds": [
+    "ZH-C39-he",
+    "ZH-W39-he-drink",
+    "ZH-C39-shui",
+    "ZH-W39-shui",
+    "ZH-C39-ke",
+    "ZH-C39-niunai",
+    "ZH-C39-cha"
+  ],
+  "tex": "chinese/book/chapters/ch39-drinking.tex"
+}

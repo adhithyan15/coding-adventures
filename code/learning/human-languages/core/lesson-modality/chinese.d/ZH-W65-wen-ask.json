@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W65-wen-ask",
+    "language": "chinese",
+    "chapter": 65,
+    "sequence": 5375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3ac79adb6cdc5c4e",
+    "detachableSegments": [
+      "Script — 门 with 口 inside"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

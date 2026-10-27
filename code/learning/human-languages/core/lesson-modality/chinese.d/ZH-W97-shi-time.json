@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W97-shi-time",
+    "language": "chinese",
+    "chapter": 97,
+    "sequence": 7780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:293c6ee82158acbc",
+    "detachableSegments": [
+      "Script — 日, then the right half of 对"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Careful!",
+  "label": "ch:zh-careful",
+  "canDo": "I can say be careful, no smoking, pay attention and dangerous.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C115-weixian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: I can say be careful, no smoking, pay attention and dangerous.",
+    "assesses": [
+      "ZH-LEX-C115-CAREFUL115-03",
+      "ZH-LEX-C115-CAREFUL115-04",
+      "ZH-LEX-C115-CAREFUL115-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Paying",
+  "label": "ch:zh-paying",
+  "canDo": "I can ask for the bill, pay in cash or by card, and get my change.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C114-zhaoqian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: I can ask for the bill, pay in cash or by card, and get my change.",
+    "assesses": [
+      "ZH-LEX-C114-PAY114-03",
+      "ZH-LEX-C114-PAY114-04",
+      "ZH-LEX-C114-PAY114-05"
+    ]
+  }
+}

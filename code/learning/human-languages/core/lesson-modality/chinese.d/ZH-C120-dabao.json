@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C120-dabao",
+    "language": "chinese",
+    "chapter": 120,
+    "sequence": 9110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab5bb4fb9e9a472d"
+  },
+  "findings": []
+}

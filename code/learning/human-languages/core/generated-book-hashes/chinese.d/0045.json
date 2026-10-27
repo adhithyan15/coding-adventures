@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:b3cd223d5f0dc933",
+  "lessonIds": [
+    "ZH-C45-tian",
+    "ZH-W45-tian",
+    "ZH-C45-jintian",
+    "ZH-W45-jin",
+    "ZH-C45-zuotian",
+    "ZH-C45-xianzai",
+    "ZH-C45-mingtian"
+  ],
+  "tex": "chinese/book/chapters/ch45-today-and-tomorrow.tex"
+}

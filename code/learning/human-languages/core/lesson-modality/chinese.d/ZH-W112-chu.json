@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W112-chu",
+    "language": "chinese",
+    "chapter": 112,
+    "sequence": 8675,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:402b0ff89bd283b5",
+    "detachableSegments": [
+      "Script — two halves like 山, one long vertical"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

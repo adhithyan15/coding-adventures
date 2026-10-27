@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C107-pa-climb",
+  "pathSegment": "ZH-PATH-107-MOVE107",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-107-MOVE107",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:4bc172c08315cbe1",
+  "lessonIds": [
+    "ZH-C71-haohe",
+    "ZH-C71-tian",
+    "ZH-C71-la",
+    "ZH-C71-xian",
+    "ZH-C71-diancai"
+  ],
+  "tex": "chinese/book/chapters/ch71-tastes.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 39,
+  "title": "Drinking",
+  "label": "ch:zh-drinking",
+  "canDo": "I can say what I drink and ask somebody what they would like.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C39-cha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 39: I can say what I drink and ask somebody what they would like.",
+    "assesses": [
+      "ZH-LEX-C39-DRINK39-01",
+      "ZH-LEX-C39-DRINK39-03",
+      "ZH-LEX-C39-DRINK39-04",
+      "ZH-LEX-C39-DRINK39-05"
+    ]
+  }
+}

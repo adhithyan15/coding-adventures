@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-39-DRINK39",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ZH-EXT-39-DRINK39"
+  ],
+  "after": []
+}

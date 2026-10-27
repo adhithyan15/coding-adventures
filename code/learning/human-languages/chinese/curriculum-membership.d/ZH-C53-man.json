@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C53-man",
+  "pathSegment": "ZH-PATH-53-SPEAK53",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-53-SPEAK53",
+      "order": 6
+    }
+  ]
+}

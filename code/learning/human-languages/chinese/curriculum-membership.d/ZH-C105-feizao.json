@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C105-feizao",
+  "pathSegment": "ZH-PATH-105-BATH105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-105-BATH105",
+      "order": 3
+    }
+  ]
+}

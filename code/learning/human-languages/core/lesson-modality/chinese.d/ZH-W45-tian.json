@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W45-tian",
+    "language": "chinese",
+    "chapter": 45,
+    "sequence": 3725,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5b2ba5db0f1a49f7",
+    "detachableSegments": [
+      "Script — one more bar over 大"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

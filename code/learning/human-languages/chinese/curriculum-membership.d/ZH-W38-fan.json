@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W38-fan",
+  "pathSegment": "ZH-PATH-38-EAT38",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-38-EAT38",
+      "order": 3
+    }
+  ]
+}

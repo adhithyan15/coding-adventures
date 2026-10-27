@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Stops and Stations",
+  "label": "ch:zh-stops-and-stations",
+  "canDo": "I can ask for the station, and talk about the metro, buses and bikes.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C106-qi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: I can ask for the station, and talk about the metro, buses and bikes.",
+    "assesses": [
+      "ZH-LEX-C106-STOP106-03",
+      "ZH-LEX-C106-STOP106-04",
+      "ZH-LEX-C106-STOP106-05"
+    ]
+  }
+}
