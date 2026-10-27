@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Fireworks over the River",
+  "label": "ch:ja-fireworks-over-the-river",
+  "canDo": "I can say where the fireworks were and who came.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C293-nigiwau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say where the fireworks were and who came.",
+    "assesses": [
+      "JA-LEX-C293-HANABI293-03",
+      "JA-LEX-C293-HANABI293-04",
+      "JA-LEX-C293-HANABI293-05"
+    ]
+  }
+}

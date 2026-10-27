@@ -1,0 +1,11 @@
+{
+  "id": "JA-C415-bisshori",
+  "pathSegment": "JA-PATH-415-YUUDACHI415",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-415-YUUDACHI415",
+      "order": 2
+    }
+  ]
+}

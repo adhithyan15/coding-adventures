@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Anyway and After All",
+  "label": "ch:ja-anyway-and-after-all",
+  "canDo": "I can comment on how things will turn out.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C529-sasuga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can comment on how things will turn out.",
+    "assesses": [
+      "JA-LEX-C529-ANYWAY529-03",
+      "JA-LEX-C529-ANYWAY529-04",
+      "JA-LEX-C529-ANYWAY529-05"
+    ]
+  }
+}

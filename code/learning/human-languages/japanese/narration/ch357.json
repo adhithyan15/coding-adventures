@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 357,
+  "title": "Contracts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:aafce0acb6e61818",
+  "lessons": [
+    {
+      "id": "JA-C357-keiyaku-suru",
+      "sequence": 21070,
+      "title": "けいやくする (keiyaku suru) — to sign a contract",
+      "headword": "けいやくする",
+      "romanization": "keiyaku suru",
+      "gloss": "to sign a contract",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c77a606ff4af7de4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for in most cases, then the Japanese for forever."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けいやくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいやくする — keiyaku suru — \"to sign a contract\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じょうけんに さんせいしたら、けいやくします。 — jōken ni sansei shitara, keiyaku shimasu — \"If I agree to the terms, I will sign the contract.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite けいやくします, keiyakushimasu; a する verb. Past (polite): ちちが かいしゃと けいやくしました。, chichi ga kaisha to keiyaku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいやくする (keiyaku suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, keiyaku, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: kei, \"pledge\" (Middle Chinese khejH) and yaku, \"promise\" ('jak) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keiyaku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keiyaku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keiyaku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keiyaku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōken ni sansei shitara, keiyaku shimasu — If I agree to the terms, I will sign the contract.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōken ni sansei shitara, keiyaku shimasu* — If I agree to the terms, I will sign the contract.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for in most cases, then the Japanese for forever, then say keiyaku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for in most cases, then the Japanese for forever, then say *keiyaku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けいやくする (keiyaku suru) mean? (\"To sign a contract\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C357-keiyaku-suru-type",
+              "prompt": "Say the Japanese for 'to sign a contract'.",
+              "assesses": [
+                "JA-LEX-C357-KEIYAKU357-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けいやくする",
+                "keiyaku suru"
+              ],
+              "feedback": {
+                "correct": "Right: けいやくする (keiyaku suru) is 'to sign a contract'.",
+                "incorrect": "'To sign a contract' is けいやくする (keiyaku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C357-hoshou",
+      "sequence": 21080,
+      "title": "ほしょう (hoshō) — a guarantee; a warranty",
+      "headword": "ほしょう",
+      "romanization": "hoshō",
+      "gloss": "a guarantee; a warranty",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8a2abf983406e21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for forever, then the Japanese for to sign a contract."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほしょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほしょう — hoshō — \"a guarantee; a warranty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こわれたら、ほしょうが ありますか。 — kowaretara, hoshō ga arimasu ka — \"If it breaks, is there a warranty?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほしょう (hoshō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, \"preserve\" (Middle Chinese pawX) and shō, \"evidence\" (tsyingH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoshō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoshō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoshō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoshō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kowaretara, hoshō ga arimasu ka — If it breaks, is there a warranty?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kowaretara, hoshō ga arimasu ka* — If it breaks, is there a warranty?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for forever, then the Japanese for to sign a contract, then say hoshō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for forever, then the Japanese for to sign a contract, then say *hoshō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほしょう (hoshō) mean? (\"A guarantee; a warranty\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C357-hoshou-type",
+              "prompt": "Say the Japanese for 'a warranty'.",
+              "assesses": [
+                "JA-LEX-C357-KEIYAKU357-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほしょう",
+                "hoshō",
+                "hoshou",
+                "hoshoo",
+                "hosho"
+              ],
+              "feedback": {
+                "correct": "Right: ほしょう (hoshō) is 'a guarantee; a warranty'.",
+                "incorrect": "'A warranty' is ほしょう (hoshō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C357-naiyou",
+      "sequence": 21090,
+      "title": "ないよう (naiyō) — the contents; the details",
+      "headword": "ないよう",
+      "romanization": "naiyō",
+      "gloss": "the contents; the details",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8019c3a4f4a0b7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to sign a contract, then the Japanese for a warranty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ないよう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ないよう — naiyō — \"the contents; the details\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ないようを よんだら、はんこを おして ください。 — naiyō o yondara, hanko o oshite kudasai — \"Once you have read the contents, please stamp it with your seal.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ないよう (naiyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nai, \"inside\" (Middle Chinese nwojH) and yō, \"contain\" (yowng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naiyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naiyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naiyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naiyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naiyō o yondara, hanko o oshite kudasai — Once you have read the contents, please stamp it with your seal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naiyō o yondara, hanko o oshite kudasai* — Once you have read the contents, please stamp it with your seal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to sign a contract, then the Japanese for a warranty, then say naiyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to sign a contract, then the Japanese for a warranty, then say *naiyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ないよう (naiyō) mean? (\"The contents; the details\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C357-naiyou-type",
+              "prompt": "Say the Japanese for 'the contents'.",
+              "assesses": [
+                "JA-LEX-C357-KEIYAKU357-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ないよう",
+                "naiyō",
+                "naiyou",
+                "naiyoo",
+                "naiyo"
+              ],
+              "feedback": {
+                "correct": "Right: ないよう (naiyō) is 'the contents; the details'.",
+                "incorrect": "'The contents' is ないよう (naiyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C357-yutori",
+      "sequence": 21100,
+      "title": "ゆとり (yutori) — leeway; room to spare",
+      "headword": "ゆとり",
+      "romanization": "yutori",
+      "gloss": "leeway; room to spare",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ef6e905ca72a167",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a warranty, then the Japanese for the contents."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆとり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆとり — yutori — \"leeway; room to spare\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おかねに ゆとりが あったら、ちょきんします。 — okane ni yutori ga attara, chokin shimasu — \"If I have money to spare, I save it.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆとり (yutori) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled; JMdict gives it no kanji spelling (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yutori",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yutori*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yutori, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yutori*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okane ni yutori ga attara, chokin shimasu — If I have money to spare, I save it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okane ni yutori ga attara, chokin shimasu* — If I have money to spare, I save it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a warranty, then the Japanese for the contents, then say yutori again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a warranty, then the Japanese for the contents, then say *yutori* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆとり (yutori) mean? (\"Leeway; room to spare\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C357-yutori-type",
+              "prompt": "Say the Japanese for 'leeway'.",
+              "assesses": [
+                "JA-LEX-C357-KEIYAKU357-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆとり",
+                "yutori"
+              ],
+              "feedback": {
+                "correct": "Right: ゆとり (yutori) is 'leeway; room to spare'.",
+                "incorrect": "'Leeway' is ゆとり (yutori)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C357-kettei-suru",
+      "sequence": 21110,
+      "title": "けっていする (kettei suru) — to decide officially",
+      "headword": "けっていする",
+      "romanization": "kettei suru",
+      "gloss": "to decide officially",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2aad6187a8e139f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the contents, then the Japanese for leeway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けっていする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっていする — kettei suru — \"to decide officially\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みんなが さんせいしたら、けっていします。 — minna ga sansei shitara, kettei shimasu — \"If everyone agrees, it will be decided.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite けっていします, ketteishimasu; a する verb. Past (polite): かいしゃが けっていしました。, kaisha ga kettei shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっていする (kettei suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, kettei, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: ketsu, \"decide\" (Middle Chinese kwet) and tei, \"determine\" (dengH) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription). The two join as ket-tei."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kettei suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kettei suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kettei suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kettei suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minna ga sansei shitara, kettei shimasu — If everyone agrees, it will be decided.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minna ga sansei shitara, kettei shimasu* — If everyone agrees, it will be decided.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the contents, then the Japanese for leeway, then say kettei suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the contents, then the Japanese for leeway, then say *kettei suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けっていする (kettei suru) mean? (\"To decide officially\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C357-kettei-suru-type",
+              "prompt": "Say the Japanese for 'to decide officially'.",
+              "assesses": [
+                "JA-LEX-C357-KEIYAKU357-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けっていする",
+                "kettei suru"
+              ],
+              "feedback": {
+                "correct": "Right: けっていする (kettei suru) is 'to decide officially'.",
+                "incorrect": "'To decide officially' is けっていする (kettei suru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

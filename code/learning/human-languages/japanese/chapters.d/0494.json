@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "Onions and Mushrooms",
+  "label": "ch:ja-onions-and-mushrooms",
+  "canDo": "I can name more vegetables.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C494-shiitake",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can name more vegetables.",
+    "assesses": [
+      "JA-LEX-C494-VEG494-03",
+      "JA-LEX-C494-VEG494-04",
+      "JA-LEX-C494-VEG494-05"
+    ]
+  }
+}

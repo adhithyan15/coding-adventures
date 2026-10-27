@@ -1,0 +1,11 @@
+{
+  "id": "JA-C282-seifu",
+  "pathSegment": "JA-PATH-282-SEKAI282",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-282-SEKAI282",
+      "order": 4
+    }
+  ]
+}

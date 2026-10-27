@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C206-gae",
+    "language": "punjabi",
+    "chapter": 206,
+    "sequence": 11180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d44e06083e91611c"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Careful and Careless",
+  "label": "ch:ja-careful-and-careless",
+  "canDo": "I can say whether someone is careful or careless.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C440-tekitou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can say whether someone is careful or careless.",
+    "assesses": [
+      "JA-LEX-C440-CAREFUL440-03",
+      "JA-LEX-C440-CAREFUL440-04",
+      "JA-LEX-C440-CAREFUL440-05"
+    ]
+  }
+}

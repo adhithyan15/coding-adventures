@@ -1,0 +1,11 @@
+{
+  "id": "JA-C408-shuukyou",
+  "pathSegment": "JA-PATH-408-SENKOU408",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-408-SENKOU408",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "At the Match",
+  "label": "ch:ja-at-the-match",
+  "canDo": "I can talk about a match I went to.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C464-ubau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can talk about a match I went to.",
+    "assesses": [
+      "JA-LEX-C464-CROWD464-03",
+      "JA-LEX-C464-CROWD464-04",
+      "JA-LEX-C464-CROWD464-05"
+    ]
+  }
+}

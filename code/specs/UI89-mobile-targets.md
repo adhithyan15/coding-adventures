@@ -108,7 +108,10 @@ Venture scale from one generator rather than four hand-made projects.
   driving the UI (step 3):
   1. state the runtime rejects (`{}`) is quarantined to `….corrupt` **inside
      the app's container** — proof the host found and read that path — and the
-     app keeps running on a fresh start;
+     app keeps running on a fresh start. (`.corrupt` is the first free
+     quarantine name: the gate clears it first. A later rejection would take
+     `.corrupt.1` to `.corrupt.9`, never replacing an earlier one; see
+     task-app-local-data-operations-v1.md.);
   2. the snapshot the macOS TaskApp run just persisted (the same engine) is
      restored with nothing quarantined, and the app keeps running;
   3. the same app is installed and launched on an iPad simulator too.
@@ -143,7 +146,9 @@ simulators. Nothing in Journal changes.
      appears in the app's data container;
   2. again: that state is restored, with nothing quarantined;
   3. seeded with `{}`, which the runtime refuses: the seed is moved to
-     `….corrupt` holding `{}`, and fresh state is written.
+     `….corrupt` holding `{}`, and fresh state is written. (The gate removes
+     any `.corrupt` first, so the seed takes that first free name; with it
+     taken, the host would use `.corrupt.1`, never replace it.)
   The app restores its own state, not a macOS snapshot. The macOS lane only
   builds Journal; it never runs it, so there is no snapshot to take.
   Trestle's gate stays as it is. The same `.app` then installs and runs on
@@ -424,7 +429,9 @@ What step 4 changed from §3.4, and why:
      persisted state" on `System.err`;
   3. seeded with `{}`, which the runtime refuses: it is moved to
      `mosaic-state.v1.json.corrupt` inside the app's storage, and fresh state
-     is written.
+     is written. (The first free quarantine name: the gate removes any
+     `.corrupt` first. A host never replaces an earlier quarantine; a later
+     rejection takes `.corrupt.1` to `.corrupt.9`.)
   Unlike the iOS gate, which restores the macOS run's snapshot, the app
   restores its own: the Linux job has no desktop TaskApp snapshot to hand,
   and one written by the same APK is the case a user meets.

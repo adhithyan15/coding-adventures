@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:f217d511a66629a3",
+  "lessonIds": [
+    "JA-C337-setsuyaku-suru",
+    "JA-C337-denryoku",
+    "JA-C337-nenryou",
+    "JA-C337-sekiyu",
+    "JA-C337-mottainai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch337.txt",
+  "json": "japanese/narration/ch337.json",
+  "textHash": "fnv1a64:019eac7fe8c6b021",
+  "jsonHash": "fnv1a64:d790b0eed4e9f843",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C415-kosame",
+    "language": "japanese",
+    "chapter": 415,
+    "sequence": 24230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c87b65521d48ce6f"
+  },
+  "findings": []
+}

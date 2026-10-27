@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C458-sakka",
+    "language": "japanese",
+    "chapter": 458,
+    "sequence": 26680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b5e17fbbf4a6a0b"
+  },
+  "findings": []
+}

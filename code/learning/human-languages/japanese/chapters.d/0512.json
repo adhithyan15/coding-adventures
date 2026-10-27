@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "When Things Change",
+  "label": "ch:ja-when-things-change",
+  "canDo": "I can say what I will do if plans change.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C512-higawari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can say what I will do if plans change.",
+    "assesses": [
+      "JA-LEX-C512-CHANGE512-03",
+      "JA-LEX-C512-CHANGE512-04",
+      "JA-LEX-C512-CHANGE512-05"
+    ]
+  }
+}

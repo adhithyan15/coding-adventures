@@ -291,6 +291,8 @@ def test_archives_verified_linux_bundle_with_launcher_contract(tmp_path: Path) -
     assert "pre-v0.2.0-compose.json" in launcher
     assert "Application identifier: task-app" in operations
     assert "mosaic-state.v1.json.corrupt" in operations
+    assert "mosaic-state.v1.json.corrupt.9" in operations
+    assert "never replaces an earlier quarantined copy" in operations
     assert launcher_mode & 0o111
 
 
@@ -308,6 +310,13 @@ def test_materializes_and_verifies_v0_1_0_upgrade_fixture(tmp_path: Path) -> Non
 
     Path(f"{state}.corrupt").write_text("damaged", encoding="utf-8")
     with pytest.raises(ValueError, match="quarantined a compatible"):
+        verify_upgrade_state(UPGRADE_FIXTURE, state)
+
+    # Hosts quarantine to the first FREE name, so a leftover `.corrupt` pushes
+    # a fresh refusal to `.corrupt.1`; that must fail the check too.
+    Path(f"{state}.corrupt").unlink()
+    Path(f"{state}.corrupt.1").write_text("damaged", encoding="utf-8")
+    with pytest.raises(ValueError, match=r"quarantined a compatible.*\.corrupt\.1"):
         verify_upgrade_state(UPGRADE_FIXTURE, state)
 
 
@@ -625,6 +634,11 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert workflow.count("release-upgrade-v0.1.0.json") >= 10
     assert "windows-corrupt-probe" in workflow
     assert "macos-corrupt-probe" in workflow
+    # Every backend's corrupt-recovery probe goes through the shared gate,
+    # which also catches a host that copied the bad file instead of moving it.
+    assert workflow.count("mosaic_release_state_gate.py verify-quarantine") == 5
+    assert 'cmp "$probe" "$state_file.corrupt"' not in workflow
+    assert "Get-FileHash $corruptProbe" not in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow
     assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" in workflow

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C301-umeru",
+  "pathSegment": "JA-PATH-301-TAKARA301",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-301-TAKARA301",
+      "order": 2
+    }
+  ]
+}

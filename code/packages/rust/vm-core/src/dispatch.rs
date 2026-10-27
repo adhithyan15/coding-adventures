@@ -75,6 +75,11 @@ pub struct DispatchCtx<'a> {
     pub builtins: &'a crate::builtins::BuiltinRegistry,
     pub u8_wrap: bool,
     pub max_frames: usize,
+    /// VM-wide register-slot budget, summed over every live frame
+    /// (`VMCore::max_register_slots`).  `handle_call` hands each callee
+    /// frame what the frames beneath it already hold, so the frame can
+    /// enforce the budget itself whenever it grows.
+    pub max_register_slots: usize,
     /// Maximum number of distinct memory-address entries before `store_mem` /
     /// `io_out` return `VMError::Custom`.  Guards against unbounded HashMap
     /// growth from looping IIR programs.
@@ -273,7 +278,7 @@ fn handle_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
         resolve_src(frame, &instr.srcs, 0)?
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -293,7 +298,7 @@ macro_rules! binary_arith_handler {
                 }
             };
             if let Some(dest) = &instr.dest {
-                ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+                ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
             }
             Ok(Some(result))
         }
@@ -326,7 +331,7 @@ fn handle_div(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         }
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -341,7 +346,7 @@ fn handle_mod(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // `wrapping_rem` returns the 0.
     let result = mask_result(a.wrapping_rem(b), &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -398,7 +403,7 @@ fn handle_i64_div_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
     }
     let result = Value::Int(floor_divmod(a, b)?.0);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -411,7 +416,7 @@ fn handle_i64_mod_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
     };
     let result = Value::Int(floor_divmod(a, b)?.1);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -473,7 +478,7 @@ fn checked_i64_op(
     };
     let result = Value::Int(f(a, b).ok_or_else(|| trap(interpreter_ir::exception_kind::TRAP_OVERFLOW))?);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -515,7 +520,7 @@ fn handle_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         }
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -534,7 +539,7 @@ macro_rules! binary_bitwise_handler {
             // result is kept canonical for downstream width-sensitive ops).
             let result = mask_result(a $op b, &instr.type_hint, ctx.u8_wrap);
             if let Some(dest) = &instr.dest {
-                ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+                ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
             }
             Ok(Some(result))
         }
@@ -556,7 +561,7 @@ fn handle_not(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // must flip exactly 8 bits (`~0 == 255`, not `-1`).
     let result = mask_result(!a, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -574,7 +579,7 @@ fn handle_shl(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // `1u8 << 7` stays `128` and `1u8 << 8` wraps to `0`.
     let result = mask_result(a << shift, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -591,7 +596,7 @@ fn handle_shr(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // result stays canonical for its width.
     let result = mask_result(a >> shift, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -616,7 +621,7 @@ macro_rules! int_cmp_handler {
                 }
             };
             if let Some(dest) = &instr.dest {
-                ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+                ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
             }
             Ok(Some(result))
         }
@@ -630,7 +635,7 @@ fn handle_cmp_eq(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value
     };
     let result = Value::Bool(a == b);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -642,7 +647,7 @@ fn handle_cmp_ne(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value
     };
     let result = Value::Bool(a != b);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -777,10 +782,10 @@ fn handle_ret(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     };
     ctx.frames.pop();
     if let (Some(dest_idx), Some(caller)) = (return_dest, ctx.frames.last_mut()) {
-        if dest_idx >= caller.registers.len() {
-            caller.registers.resize(dest_idx + 1, Value::Null);
-        }
-        caller.registers[dest_idx] = value.clone();
+        // `call` allocated this slot before pushing the callee (see
+        // `register_index`), so this never grows the caller — `store_index`
+        // is the bounds-safe write, and the one place growth is checked.
+        caller.store_index(dest_idx, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -796,7 +801,11 @@ fn handle_ret_void(ctx: &mut DispatchCtx, _instr: &IIRInstr) -> Result<Option<Va
 /// user-supplied IIR program must be rejected — `(-1i64) as usize` wraps to
 /// `usize::MAX`, making the subsequent `resize(idx + 1, …)` wrap back to 0
 /// and then the index access panics.
-const MAX_REGISTER_IDX: usize = 65_535;
+///
+/// It is the last index of a full frame (65,535), tied to
+/// `VMFrame::MAX_FRAME_REGISTERS` so the by-index and by-name views of the
+/// register file share one limit.
+const MAX_REGISTER_IDX: usize = VMFrame::MAX_FRAME_REGISTERS - 1;
 
 /// `mov dest = src` — copy `src`'s value to the named slot `dest`.
 ///
@@ -814,7 +823,7 @@ fn handle_mov(ctx: &mut DispatchCtx<'_>, instr: &IIRInstr) -> Result<Option<Valu
         resolve_src(frame, &instr.srcs, 0)?
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -829,7 +838,7 @@ fn handle_load_reg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
         frame.registers.get(raw as usize).cloned().unwrap_or(Value::Null)
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -844,11 +853,11 @@ fn handle_store_reg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         let value = resolve_src(frame, &instr.srcs, 1)?;
         (raw as usize, value)
     };
-    let frame = ctx.frames.last_mut().unwrap();
-    if idx >= frame.registers.len() {
-        frame.registers.resize(idx + 1, Value::Null);
-    }
-    frame.registers[idx] = value;
+    // `store_index` grows the file to reach `idx` only within the frame's
+    // share of the VM-wide register-slot budget: an index the frame never
+    // names still costs memory, and a recursive `store_reg 65535` would
+    // otherwise pin 65,536 slots in every frame of the stack.
+    ctx.frames.last_mut().unwrap().store_index(idx, value)?;
     Ok(None)
 }
 
@@ -859,7 +868,7 @@ fn handle_load_mem(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     };
     let value = ctx.memory.get(&addr).cloned().unwrap_or(Value::Int(0));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -905,7 +914,7 @@ fn handle_global_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     let name = global_name(instr, 0)?;
     let value = ctx.globals.get(&name).cloned().unwrap_or(Value::Int(0));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -945,7 +954,7 @@ fn handle_str_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         .to_string();
     let value = Value::Str(s);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -957,7 +966,7 @@ fn handle_str_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     };
     let value = Value::Int(len);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -984,7 +993,7 @@ fn handle_str_index(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     };
     let value = Value::Int(byte);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -998,7 +1007,7 @@ fn handle_str_concat(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<V
         Value::Str(a)
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1032,7 +1041,7 @@ fn handle_str_slice(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         Value::Str(sliced)
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1046,7 +1055,7 @@ fn handle_str_eq(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value
     };
     let value = Value::Int(if same { 1 } else { 0 });
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1064,7 +1073,7 @@ fn handle_str_cmp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
         Ordering::Greater => 1,
     });
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1104,7 +1113,7 @@ fn handle_alloc_bytes(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
         ctx.frames
             .last_mut()
             .ok_or_else(|| VMError::Custom("no frame".into()))?
-            .assign(dest, base.clone());
+            .assign(dest, base.clone())?;
     }
     Ok(Some(base))
 }
@@ -1122,7 +1131,7 @@ fn handle_load_byte(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     let cell = ctx.memory.get(&addr).and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF;
     let value = Value::Int(cell);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1203,7 +1212,7 @@ fn handle_alloc_array(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     ctx.arrays.push(vec![default; count as usize]);
     let value = Value::Int(handle);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1249,7 +1258,7 @@ fn handle_is_null(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     };
     let result = Value::Bool(is_null);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -1270,7 +1279,7 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         resolve_src(frame, &instr.srcs, 0)?
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, v.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, v.clone())?;
     }
     Ok(Some(v))
 }
@@ -1403,7 +1412,7 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     *ctx.gc_object_count += 1;
     let value = Value::HeapRef(gc_core::HeapRef::new(ptr as usize));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1487,7 +1496,7 @@ fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
         Value::Int(word >> FIELD_TAG_BITS)
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1740,7 +1749,7 @@ fn handle_array_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     let arr = array_ref(ctx, handle)?;
     let value = Value::Int(arr.len() as i64);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1758,7 +1767,7 @@ fn handle_array_get(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     let arr = array_ref(ctx, handle)?;
     let value = bounds_checked(arr, idx, "array_get")?.clone();
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1840,7 +1849,7 @@ fn handle_call(
         *ctx.metrics_jit_hits += 1;
         let result = handler(&args)?;
         if let Some(dest) = &dest_name {
-            ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+            ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
         }
         return Ok(Some(result));
     }
@@ -1855,20 +1864,31 @@ fn handle_call(
 
     // Step 4: Determine the return-value register slot in the CALLER frame.
     // We need to look up / allocate it in the caller frame before pushing
-    // the callee frame.
-    let ret_dest: Option<usize> = dest_name.as_ref().map(|dest_name| {
-        let frame = ctx.frames.last_mut().unwrap();
-        let next_idx = frame.name_to_reg.len();
-        *frame.name_to_reg.entry(dest_name.clone()).or_insert(next_idx)
-    });
+    // the callee frame.  `register_index` applies the frame register limit
+    // and the register-slot budget, the same as `assign` — this slot is a
+    // register like any other — and grows the caller's file to cover it
+    // *now*: once the callee is pushed the caller must not grow (the budget
+    // accounting below assumes only the top frame does).
+    let ret_dest: Option<usize> = match dest_name.as_ref() {
+        Some(dest_name) => Some(ctx.frames.last_mut().unwrap().register_index(dest_name)?),
+        None => None,
+    };
 
-    // Step 5: Build and push the callee frame.
-    let callee_params = ctx.module_fns[callee_idx].params.clone();
-    let callee_reg_count = ctx.module_fns[callee_idx].register_count;
-    let mut callee_frame = VMFrame::for_function(
-        &fn_name, &callee_params, callee_reg_count, ret_dest,
-    );
-    for (i, val) in args.into_iter().enumerate().take(callee_params.len()) {
+    // Step 5: Build and push the callee frame.  `for_call` gives every
+    // parameter its own slot (or refuses a function with more parameters than
+    // a frame holds), so the positional argument writes stay in bounds.
+    //
+    // The callee's share of the register-slot budget is what the caller's
+    // stack has left:
+    //
+    //   slots_below(callee) = caller.stack_slots()   (caller and everything beneath)
+    //   callee may hold     ≤ max_register_slots − slots_below(callee)
+    let slots_below = ctx.frames.last().map_or(0, VMFrame::stack_slots);
+    let callee = &ctx.module_fns[callee_idx];
+    let n_params = callee.params.len();
+    let mut callee_frame =
+        VMFrame::for_call(callee, ret_dest, slots_below, ctx.max_register_slots)?;
+    for (i, val) in args.into_iter().enumerate().take(n_params) {
         callee_frame.registers[i] = val;
     }
 
@@ -1898,7 +1918,7 @@ fn handle_call_builtin(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option
     // builtins is &BuiltinRegistry (immutable), ctx.frames is the only mutable borrow — fine.
     let result = ctx.builtins.call(&name, &args)?;
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -1912,7 +1932,7 @@ fn handle_io_in(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
     };
     let value = ctx.memory.get(&port).cloned().unwrap_or(Value::Int(0));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1956,7 +1976,7 @@ fn handle_cast(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>,
         _          => value,
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -1999,6 +2019,16 @@ fn handle_type_assert(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
 /// caller passes a value that has *already* been `trunc()`'d or `floor()`'d, so
 /// `t` is integral; this only range-checks and casts.
 ///
+/// The failure is LANG83's typed `Trap.ConvRange` (stable id 4), the same
+/// `VMError::Trap` shape `Trap.DivZero` and `Trap.Overflow` use, so a program
+/// observes one registered kind on every backend:
+///
+/// | `t`                     | result                      |
+/// |-------------------------|-----------------------------|
+/// | NaN, +∞, −∞             | `Err(Trap.ConvRange)`       |
+/// | `t < -2⁶³` or `t ≥ 2⁶³` | `Err(Trap.ConvRange)`       |
+/// | otherwise               | `Ok(t as i64)` (exact)      |
+///
 /// The bounds are written so the rejection is **exact**: `i64::MIN as f64` is
 /// exactly −2⁶³, but `i64::MAX` (2⁶³−1) is not representable as an `f64`, so
 /// `i64::MAX as f64` rounds *up* to 2⁶³.  Comparing against `-(i64::MIN as f64)`
@@ -2006,15 +2036,12 @@ fn handle_type_assert(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
 /// greatest integral `f64` strictly below 2⁶³.  (`t as i64` for an in-range
 /// integral `t` is exact — Rust's saturating cast never fires here.)
 pub fn real_to_i64_checked(t: f64) -> Result<i64, VMError> {
-    if !t.is_finite() {
-        return Err(VMError::Custom(
-            "real_to_int: operand is not finite".into(),
-        ));
-    }
-    if t < i64::MIN as f64 || t >= -(i64::MIN as f64) {
-        return Err(VMError::Custom(format!(
-            "real_to_int: {t} is outside the i64 range"
-        )));
+    // `!(lo <= t < hi)` rather than two ordered rejections: every comparison
+    // with NaN is false, so NaN fails the range test with ±∞ and needs no
+    // separate `is_finite` branch.
+    let in_range = t >= i64::MIN as f64 && t < -(i64::MIN as f64);
+    if !in_range {
+        return Err(trap(interpreter_ir::exception_kind::TRAP_CONV_RANGE));
     }
     Ok(t as i64)
 }
@@ -2030,7 +2057,7 @@ fn handle_int_to_real(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     };
     let result = Value::Float(n as f64);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2046,7 +2073,7 @@ fn handle_real_to_int_trunc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<O
     };
     let result = Value::Int(real_to_i64_checked(f.trunc())?);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2062,7 +2089,7 @@ fn handle_real_to_int_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<O
     };
     let result = Value::Int(real_to_i64_checked(f.floor())?);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2079,7 +2106,7 @@ fn handle_f64_sqrt(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     };
     let result = Value::Float(f.sqrt());
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2100,7 +2127,7 @@ fn handle_f64_transcendental(
     };
     let result = Value::Float(f(x));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2120,7 +2147,7 @@ fn handle_f64_pow(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     };
     let result = Value::Float(base.powf(exp_));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2155,7 +2182,7 @@ fn handle_f64_ieee_binop(
     let b = f64_operand(ctx, instr, 1)?;
     let result = Value::Float(op(a, b));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2179,7 +2206,7 @@ fn handle_f64_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     let x = f64_operand(ctx, instr, 0)?;
     let result = Value::Float(-x);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2190,7 +2217,7 @@ fn handle_f64_signbit(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     let x = f64_operand(ctx, instr, 0)?;
     let result = Value::Int(i64::from(x.is_sign_negative()));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }

@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 465,
+  "title": "Paints and Brushes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1080b23540ed3f57",
+  "lessons": [
+    {
+      "id": "JA-C465-enogu",
+      "sequence": 27010,
+      "title": "えのぐ (enogu) — paints",
+      "headword": "えのぐ",
+      "romanization": "enogu",
+      "gloss": "paints",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6d805a53f6553f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to attack, then the Japanese for to snatch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えのぐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えのぐ — enogu — \"paints\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あかい えのぐを つかいました。 — akai enogu o tsukaimashita — \"I used red paint.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えのぐ (enogu) is a mixed phrase: Sino-Japanese e, \"picture\", and gu, \"tool\" (Middle Chinese gjuH), both borrowed from Chinese, joined by the native particle no, \"of\" (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enogu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enogu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enogu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enogu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akai enogu o tsukaimashita — I used red paint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akai enogu o tsukaimashita* — I used red paint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to attack, then the Japanese for to snatch, then say enogu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to attack, then the Japanese for to snatch, then say *enogu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えのぐ (enogu) mean? (\"Paints\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C465-enogu-type",
+              "prompt": "Say the Japanese for 'paints'.",
+              "assesses": [
+                "JA-LEX-C465-PAINT465-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えのぐ",
+                "enogu"
+              ],
+              "feedback": {
+                "correct": "Right: えのぐ (enogu) is 'paints'.",
+                "incorrect": "'Paints' is えのぐ (enogu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C465-fude",
+      "sequence": 27020,
+      "title": "ふで (fude) — a brush; a writing brush",
+      "headword": "ふで",
+      "romanization": "fude",
+      "gloss": "a brush; a writing brush",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95834b2cf7a5bfb3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to snatch, then the Japanese for paints."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふで",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふで — fude — \"a brush; a writing brush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふでで なまえを かきました。 — fude de namae o kakimashita — \"I wrote my name with a brush.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふで (fude) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fude",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fude*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fude, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fude*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fude de namae o kakimashita — I wrote my name with a brush.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fude de namae o kakimashita* — I wrote my name with a brush.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to snatch, then the Japanese for paints, then say fude again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to snatch, then the Japanese for paints, then say *fude* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふで (fude) mean? (\"A brush; a writing brush\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C465-fude-type",
+              "prompt": "Say the Japanese for 'a brush'.",
+              "assesses": [
+                "JA-LEX-C465-PAINT465-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふで",
+                "fude"
+              ],
+              "feedback": {
+                "correct": "Right: ふで (fude) is 'a brush; a writing brush'.",
+                "incorrect": "'A brush' is ふで (fude)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C465-egaku",
+      "sequence": 27030,
+      "title": "えがく (egaku) — to paint a picture; to depict",
+      "headword": "えがく",
+      "romanization": "egaku",
+      "gloss": "to paint a picture; to depict",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13a0c8c2b9c9cea2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for paints, then the Japanese for a brush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えがく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えがく — egaku — \"to paint a picture; to depict\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは うみを えがきました。 — kare wa umi o egakimashita — \"He painted the sea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite えがきます, egakimasu; a godan verb. Past (polite): むすめが はなを えがきました。, musume ga hana o egakimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えがく (egaku) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "egaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *egaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "egaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *egaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa umi o egakimashita — He painted the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa umi o egakimashita* — He painted the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for paints, then the Japanese for a brush, then say egaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for paints, then the Japanese for a brush, then say *egaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えがく (egaku) mean? (\"To paint a picture; to depict\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C465-egaku-type",
+              "prompt": "Say the Japanese for 'to paint a picture'.",
+              "assesses": [
+                "JA-LEX-C465-PAINT465-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えがく",
+                "egaku"
+              ],
+              "feedback": {
+                "correct": "Right: えがく (egaku) is 'to paint a picture; to depict'.",
+                "incorrect": "'To paint a picture' is えがく (egaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C465-gaka",
+      "sequence": 27040,
+      "title": "がか (gaka) — a painter; an artist",
+      "headword": "がか",
+      "romanization": "gaka",
+      "gloss": "a painter; an artist",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5a62842177ff470",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a brush, then the Japanese for to paint a picture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がか — gaka — \"a painter; an artist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おじさんは がかです。 — ojisan wa gaka desu — \"My uncle is a painter.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がか (gaka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ga, \"picture\" (Middle Chinese hweaH) and ka, \"expert\" (kae) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojisan wa gaka desu — My uncle is a painter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojisan wa gaka desu* — My uncle is a painter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a brush, then the Japanese for to paint a picture, then say gaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a brush, then the Japanese for to paint a picture, then say *gaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がか (gaka) mean? (\"A painter; an artist\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C465-gaka-type",
+              "prompt": "Say the Japanese for 'a painter'.",
+              "assesses": [
+                "JA-LEX-C465-PAINT465-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がか",
+                "gaka"
+              ],
+              "feedback": {
+                "correct": "Right: がか (gaka) is 'a painter; an artist'.",
+                "incorrect": "'A painter' is がか (gaka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C465-bijutsu",
+      "sequence": 27050,
+      "title": "びじゅつ (bijutsu) — fine art",
+      "headword": "びじゅつ",
+      "romanization": "bijutsu",
+      "gloss": "fine art",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a319f714109c2480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to paint a picture, then the Japanese for a painter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: びじゅつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びじゅつ — bijutsu — \"fine art\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あねは だいがくで びじゅつを べんきょうしています。 — ane wa daigaku de bijutsu o benkyō shite imasu — \"My elder sister studies fine art at university.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "びじゅつ (bijutsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bi, \"beauty\" (Middle Chinese mijX) and jutsu, \"art\" (zywit) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bijutsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bijutsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bijutsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bijutsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ane wa daigaku de bijutsu o benkyō shite imasu — My elder sister studies fine art at university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ane wa daigaku de bijutsu o benkyō shite imasu* — My elder sister studies fine art at university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to paint a picture, then the Japanese for a painter, then say bijutsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to paint a picture, then the Japanese for a painter, then say *bijutsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does びじゅつ (bijutsu) mean? (\"Fine art\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C465-bijutsu-type",
+              "prompt": "Say the Japanese for 'fine art'.",
+              "assesses": [
+                "JA-LEX-C465-PAINT465-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "びじゅつ",
+                "bijutsu"
+              ],
+              "feedback": {
+                "correct": "Right: びじゅつ (bijutsu) is 'fine art'.",
+                "incorrect": "'Fine art' is びじゅつ (bijutsu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

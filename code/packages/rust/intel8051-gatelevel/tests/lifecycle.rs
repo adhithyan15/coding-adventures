@@ -7,8 +7,17 @@ const XDATA_SIZE: usize = 65_536;
 
 #[test]
 fn exact_persistent_topology_and_power_on_state() {
-    assert_eq!(FLIP_FLOP_COUNT, 1_050_641);
     let cpu = Cpu8051::new();
+    let inventory = cpu.physical_storage_inventory();
+    assert_eq!(inventory.code_dffs, cpu.code.len() * 8);
+    assert_eq!(inventory.code_dffs, 524_288);
+    assert_eq!(inventory.xdata_dffs, cpu.xdata.len() * 8);
+    assert_eq!(inventory.xdata_dffs, 524_288);
+    assert_eq!(inventory.iram_dffs, 2_048);
+    assert_eq!(inventory.program_counter_dffs, 16);
+    assert_eq!(inventory.halt_dffs, 1);
+    assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
+    assert_eq!(inventory.total(), 1_050_641);
     let state = cpu.get_state();
     assert_eq!(state.code.len(), CODE_SIZE);
     assert_eq!(state.xdata.len(), XDATA_SIZE);
@@ -70,6 +79,94 @@ fn checked_step_rejects_halt_and_truncation_without_mutation() {
     let halted = cpu.get_state();
     assert_eq!(cpu.step_checked(), Err(Intel8051Error::Halted));
     assert_eq!(cpu.get_state(), halted);
+}
+
+#[test]
+fn halt_dff_q_overrides_both_compatibility_observer_divergences() {
+    let mut running = Cpu8051::new();
+    running.load_checked(&[0x00, 0xA5]).unwrap();
+    running.halted = true;
+    assert!(!running.halted());
+    assert!(!running.get_state().halted);
+    let first = running.step_checked().unwrap();
+    assert_eq!(first.raw, vec![0x00]);
+    assert_eq!(first.pc_after, 1);
+    assert!(!running.halted);
+
+    let result = running.run_loaded_checked(2).unwrap();
+    assert!(result.halted);
+    assert_eq!(result.steps, 1);
+    assert!(running.halted());
+    assert!(running.halted);
+
+    running.halted = false;
+    let before = running.get_state();
+    assert!(before.halted);
+    assert_eq!(running.step_checked(), Err(Intel8051Error::Halted));
+    assert_eq!(running.get_state(), before);
+    assert!(running.halted);
+}
+
+#[test]
+fn pc_dff_q_drives_snapshot_step_restore_run_and_results() {
+    let mut cpu = Cpu8051::new();
+    cpu.load_checked(&[0x00, 0xA5]).unwrap();
+    cpu.rf.pc = 0x4321;
+    assert_eq!(cpu.rf.read_pc(), 0);
+    assert_eq!(cpu.get_state().pc, 0);
+
+    let trace = cpu.step_checked().unwrap();
+    assert_eq!(trace.pc_before, 0);
+    assert_eq!(trace.pc_after, 1);
+    assert_eq!(cpu.rf.pc, 1);
+
+    cpu.rf.pc = 0x9999;
+    let result = cpu.run_loaded_checked(2).unwrap();
+    assert!(result.halted);
+    assert_eq!(result.steps, 1);
+    assert_eq!(result.pc, 2);
+    assert_eq!(result.final_state.pc, 2);
+    assert_eq!(cpu.rf.pc, 2);
+
+    let mut restored = cpu.get_state();
+    restored.pc = 0x1234;
+    restored.halted = false;
+    cpu.restore(&restored).unwrap();
+    assert_eq!(cpu.rf.read_pc(), 0x1234);
+    assert_eq!(cpu.rf.pc, 0x1234);
+    assert_eq!(cpu.get_state(), restored);
+}
+
+#[test]
+fn restore_clocks_halt_q_and_fault_rollback_preserves_it() {
+    let mut cpu = Cpu8051::new();
+    let mut halted = cpu.get_state();
+    halted.halted = true;
+    cpu.restore(&halted).unwrap();
+    assert!(cpu.halted());
+    assert!(cpu.halted);
+
+    let mut running = halted;
+    running.halted = false;
+    running.code.fill(0);
+    running.code[0] = 0xE6; // MOV A,@R0
+    running.iram[0] = 0x80; // invalid base-8051 indirect address
+    running.pc = 0;
+    running.loaded_origin = 0;
+    running.loaded_len = 1;
+    cpu.restore(&running).unwrap();
+    cpu.halted = true;
+    cpu.rf.pc = 0x4321;
+    let before = cpu.get_state();
+    assert!(matches!(
+        cpu.run_loaded_checked(1),
+        Err(Intel8051Error::Execution(_))
+    ));
+    assert_eq!(cpu.get_state(), before);
+    assert!(!cpu.halted());
+    assert!(!cpu.halted);
+    assert_eq!(cpu.rf.read_pc(), 0);
+    assert_eq!(cpu.rf.pc, 0);
 }
 
 #[test]

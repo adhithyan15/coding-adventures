@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:d4952a00b3bd6900",
+  "lessonIds": [
+    "JA-C312-rekishi",
+    "JA-C312-jidai",
+    "JA-C312-kako",
+    "JA-C312-izen",
+    "JA-C312-touji"
+  ],
+  "tex": "japanese/book/chapters/ch312-history.tex"
+}

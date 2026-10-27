@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:880c25513fe9fef0",
+  "lessonIds": [
+    "JA-C491-suiji",
+    "JA-C491-jaguchi",
+    "JA-C491-konro",
+    "JA-C491-suidousui",
+    "JA-C491-futtou-suru",
+    "JA-R491-review-486-491"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch491.txt",
+  "json": "japanese/narration/ch491.json",
+  "textHash": "fnv1a64:62eb7d93ab655b66",
+  "jsonHash": "fnv1a64:87f71d538a950dea",
+  "findings": []
+}

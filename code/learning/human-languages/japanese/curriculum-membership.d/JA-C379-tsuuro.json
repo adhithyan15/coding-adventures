@@ -1,0 +1,11 @@
+{
+  "id": "JA-C379-tsuuro",
+  "pathSegment": "JA-PATH-379-SHARYOU379",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-379-SHARYOU379",
+      "order": 2
+    }
+  ]
+}

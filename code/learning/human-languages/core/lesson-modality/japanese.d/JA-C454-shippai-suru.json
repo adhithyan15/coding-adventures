@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C454-shippai-suru",
+    "language": "japanese",
+    "chapter": 454,
+    "sequence": 26480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ae6b7435f76c39f"
+  },
+  "findings": []
+}

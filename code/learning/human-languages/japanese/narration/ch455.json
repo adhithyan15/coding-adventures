@@ -1,0 +1,952 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 455,
+  "title": "Working Together",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:0aead649aa76d801",
+  "lessons": [
+    {
+      "id": "JA-C455-kyouryoku-suru",
+      "sequence": 26490,
+      "title": "きょうりょくする (kyōryoku suru) — to cooperate",
+      "headword": "きょうりょくする",
+      "romanization": "kyōryoku suru",
+      "gloss": "to cooperate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efce8681b2ebc4cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to do over, then the Japanese for to fail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きょうりょくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きょうりょくする — kyōryoku suru — \"to cooperate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みんなで きょうりょくして、しごとを おえました。 — minna de kyōryoku shite, shigoto o oemashita — \"We all cooperated and finished the work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きょうりょくします, kyōryokushimasu; a する verb. Past (polite): どうりょうが きょうりょくしました。, dōryō ga kyōryoku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きょうりょくする (kyōryoku suru) is Sino-Japanese (kango) kyōryoku with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyō, \"cooperation\" (Middle Chinese hep) and ryoku, \"power\" (lik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyōryoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyōryoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyōryoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyōryoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "minna de kyōryoku shite, shigoto o oemashita — We all cooperated and finished the work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *minna de kyōryoku shite, shigoto o oemashita* — We all cooperated and finished the work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to do over, then the Japanese for to fail, then say kyōryoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to do over, then the Japanese for to fail, then say *kyōryoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きょうりょくする (kyōryoku suru) mean? (\"To cooperate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C455-kyouryoku-suru-type",
+              "prompt": "Say the Japanese for 'to cooperate'.",
+              "assesses": [
+                "JA-LEX-C455-TEAM455-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きょうりょくする",
+                "kyōryoku suru",
+                "kyouryoku suru",
+                "kyooryoku suru",
+                "kyoryoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: きょうりょくする (kyōryoku suru) is 'to cooperate'.",
+                "incorrect": "'To cooperate' is きょうりょくする (kyōryoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C455-shiji-suru",
+      "sequence": 26500,
+      "title": "しじする (shiji suru) — to give instructions",
+      "headword": "しじする",
+      "romanization": "shiji suru",
+      "gloss": "to give instructions",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86b5addb40eb5a60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to fail, then the Japanese for to cooperate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しじする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しじする — shiji suru — \"to give instructions\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かちょうは ぶかに しじしました。 — kachō wa buka ni shiji shimashita — \"The section chief gave instructions to his staff.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しじします, shijishimasu; a する verb. Past (polite): ぶちょうが しゃいんに しじしました。, buchō ga shain ni shiji shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しじする (shiji suru) is Sino-Japanese (kango) shiji with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"point to\" (Middle Chinese tsyijX) and ji, \"show\" (zyijH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiji suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiji suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiji suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiji suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kachō wa buka ni shiji shimashita — The section chief gave instructions to his staff.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kachō wa buka ni shiji shimashita* — The section chief gave instructions to his staff.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to fail, then the Japanese for to cooperate, then say shiji suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to fail, then the Japanese for to cooperate, then say *shiji suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しじする (shiji suru) mean? (\"To give instructions\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C455-shiji-suru-type",
+              "prompt": "Say the Japanese for 'to give instructions'.",
+              "assesses": [
+                "JA-LEX-C455-TEAM455-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しじする",
+                "shiji suru"
+              ],
+              "feedback": {
+                "correct": "Right: しじする (shiji suru) is 'to give instructions'.",
+                "incorrect": "'To give instructions' is しじする (shiji suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C455-meirei",
+      "sequence": 26510,
+      "title": "めいれい (meirei) — a command; an order",
+      "headword": "めいれい",
+      "romanization": "meirei",
+      "gloss": "a command; an order",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:921f7d17a0fc2c9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to cooperate, then the Japanese for to give instructions."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めいれい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいれい — meirei — \"a command; an order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "それは しゃちょうの めいれいです。 — sore wa shachō no meirei desu — \"That is the company president's order.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいれい (meirei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mei, \"command\" (Middle Chinese mjaengH) and rei, \"orders\" (ljengH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meirei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meirei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meirei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meirei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sore wa shachō no meirei desu — That is the company president's order.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sore wa shachō no meirei desu* — That is the company president's order.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to cooperate, then the Japanese for to give instructions, then say meirei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to cooperate, then the Japanese for to give instructions, then say *meirei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めいれい (meirei) mean? (\"A command; an order\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C455-meirei-type",
+              "prompt": "Say the Japanese for 'a command'.",
+              "assesses": [
+                "JA-LEX-C455-TEAM455-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めいれい",
+                "meirei"
+              ],
+              "feedback": {
+                "correct": "Right: めいれい (meirei) is 'a command; an order'.",
+                "incorrect": "'A command' is めいれい (meirei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C455-tantou",
+      "sequence": 26520,
+      "title": "たんとう (tantō) — being in charge",
+      "headword": "たんとう",
+      "romanization": "tantō",
+      "gloss": "being in charge",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9abcf60bbe94faca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to give instructions, then the Japanese for a command."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たんとう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たんとう — tantō — \"being in charge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは かいぎの たんとうです。 — kare wa kaigi no tantō desu — \"He is in charge of the meeting.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たんとう (tantō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tan, \"shouldering\" (Middle Chinese tam) and tō, \"appropriate\" (tangH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tantō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tantō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tantō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tantō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa kaigi no tantō desu — He is in charge of the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa kaigi no tantō desu* — He is in charge of the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to give instructions, then the Japanese for a command, then say tantō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to give instructions, then the Japanese for a command, then say *tantō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たんとう (tantō) mean? (\"Being in charge\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C455-tantou-type",
+              "prompt": "Say the Japanese for 'being in charge'.",
+              "assesses": [
+                "JA-LEX-C455-TEAM455-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たんとう",
+                "tantō",
+                "tantou",
+                "tantoo",
+                "tanto"
+              ],
+              "feedback": {
+                "correct": "Right: たんとう (tantō) is 'being in charge'.",
+                "incorrect": "'Being in charge' is たんとう (tantō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C455-hikitsugu",
+      "sequence": 26530,
+      "title": "ひきつぐ (hikitsugu) — to take over (duties); to hand over",
+      "headword": "ひきつぐ",
+      "romanization": "hikitsugu",
+      "gloss": "to take over (duties); to hand over",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fa376dff5bf4961",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a command, then the Japanese for being in charge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひきつぐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきつぐ — hikitsugu — \"to take over (duties); to hand over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは ちちの しごとを ひきつぎました。 — kare wa chichi no shigoto o hikitsugimashita — \"He took over his father's work.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひきつぎます, hikitsugimasu; a godan verb. Past (polite): むすこが みせを ひきつぎました。, musuko ga mise o hikitsugimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきつぐ (hikitsugu) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: hiki, \"pulling (hiku)\" and tsugu, \"to succeed to\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikitsugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikitsugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikitsugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikitsugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa chichi no shigoto o hikitsugimashita — He took over his father's work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa chichi no shigoto o hikitsugimashita* — He took over his father's work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a command, then the Japanese for being in charge, then say hikitsugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a command, then the Japanese for being in charge, then say *hikitsugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひきつぐ (hikitsugu) mean? (\"To take over (duties); to hand over\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C455-hikitsugu-type",
+              "prompt": "Say the Japanese for 'to take over (duties)'.",
+              "assesses": [
+                "JA-LEX-C455-TEAM455-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひきつぐ",
+                "hikitsugu"
+              ],
+              "feedback": {
+                "correct": "Right: ひきつぐ (hikitsugu) is 'to take over (duties); to hand over'.",
+                "incorrect": "'To take over (duties)' is ひきつぐ (hikitsugu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R455-review-450-455",
+      "sequence": 26540,
+      "title": "Looking back: from At the Clinic to Working Together",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from At the Clinic to Working Together",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:070048ead6beb1aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for internal medicine and the surgery department."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "internal medicine, the surgery department, nutrition, eye drops, to nurse the sick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: internal medicine, the surgery department, nutrition, eye drops, to nurse the sick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go in to work, to commute, to arrive late, to take a break, to work overtime",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go in to work, to commute, to arrive late, to take a break, to work overtime]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a department head, a section chief, a subordinate, a company employee, a business card",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a department head, a section chief, a subordinate, a company employee, a business card]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "handouts, a briefing, a cut-off date, to hand in, to stay up all night",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: handouts, a briefing, a cut-off date, to hand in, to stay up all night]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to tackle, to make good progress, to take on, to do over, to fail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to tackle, to make good progress, to take on, to do over, to fail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cooperate, to give instructions, a command, being in charge, to take over (duties)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cooperate, to give instructions, a command, being in charge, to take over (duties)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Internal medicine? (ないか, naika.) The surgery department? (げか, geka.) Nutrition? (えいよう, eiyō.) Eye drops? (めぐすり, megusuri.) To nurse the sick? (かんびょうする, kanbyō suru.) To go in to work? (しゅっきんする, shukkin suru.) To commute? (つうきんする, tsūkin suru.) To arrive late? (ちこくする, chikoku suru.) To take a break? (きゅうけいする, kyūkei suru.) To work overtime? (ざんぎょうする, zangyō suru.) A department head? (ぶちょう, buchō.) A section chief? (かちょう, kachō.) A subordinate? (ぶか, buka.) A company employee? (しゃいん, shain.) A business card? (めいし, meishi.) Handouts? (しりょう, shiryō.) A briefing? (うちあわせ, uchiawase.) A cut-off date? (しめきり, shimekiri.) To hand in? (ていしゅつする, teishutsu suru.) To stay up all night? (てつやする, tetsuya suru.) To tackle? (とりくむ, torikumu.) To make good progress? (はかどる, hakadoru.) To take on? (ひきうける, hikiukeru.) To do over? (やりなおす, yarinaosu.) To fail? (しっぱいする, shippai suru.) To cooperate? (きょうりょくする, kyōryoku suru.) To give instructions? (しじする, shiji suru.) A command? (めいれい, meirei.) Being in charge? (たんとう, tantō.) To take over (duties)? (ひきつぐ, hikitsugu.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R455-review-450-455-type",
+              "prompt": "Say the Japanese for 'internal medicine'.",
+              "assesses": [
+                "JA-LEX-C450-CLINIC450-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ないか",
+                "naika"
+              ],
+              "feedback": {
+                "correct": "Right: ないか (naika) is 'internal medicine'.",
+                "incorrect": "'Internal medicine' is ないか (naika)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

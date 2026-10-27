@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-519-GIVEUP519",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-519-GIVEUP519"
+  ],
+  "after": []
+}

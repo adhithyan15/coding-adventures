@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Jobs People Do",
+  "label": "ch:ja-jobs-people-do",
+  "canDo": "I can name some jobs people do.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C458-shokunin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can name some jobs people do.",
+    "assesses": [
+      "JA-LEX-C458-CAREER458-03",
+      "JA-LEX-C458-CAREER458-04",
+      "JA-LEX-C458-CAREER458-05"
+    ]
+  }
+}

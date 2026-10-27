@@ -37,5 +37,7 @@ pub mod ram;
 pub mod registers;
 pub mod stack;
 
-pub use cpu::{GateState, GateTrace, Intel4004GateLevel, FLIP_FLOP_COUNT};
+pub use cpu::{
+    GateState, GateTrace, Intel4004GateLevel, PhysicalStorageInventory, FLIP_FLOP_COUNT,
+};
 pub use intel4004_simulator::Intel4004Error;

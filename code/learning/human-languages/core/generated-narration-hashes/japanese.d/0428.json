@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:8a7b00a13f7d1b64",
+  "lessonIds": [
+    "JA-C428-wakuwaku-suru",
+    "JA-C428-koufun-suru",
+    "JA-C428-kandou-suru",
+    "JA-C428-hashagu",
+    "JA-C428-harikiru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch428.txt",
+  "json": "japanese/narration/ch428.json",
+  "textHash": "fnv1a64:2184734720bba7fa",
+  "jsonHash": "fnv1a64:ccb4bcd325b0725c",
+  "findings": []
+}

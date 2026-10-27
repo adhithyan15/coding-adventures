@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-493-FREEZE493",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-493-FREEZE493"
+  ],
+  "after": []
+}

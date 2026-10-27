@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:5c52d1cf93229f4a",
+  "lessonIds": [
+    "JA-C275-tsunami",
+    "JA-C275-nagareru",
+    "JA-C275-nagasu",
+    "JA-C275-uku",
+    "JA-C275-mata"
+  ],
+  "tex": "japanese/book/chapters/ch275-the-great-wave.tex"
+}

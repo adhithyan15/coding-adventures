@@ -1,0 +1,11 @@
+{
+  "id": "JA-C469-suzu",
+  "pathSegment": "JA-PATH-469-INSTR469",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-469-INSTR469",
+      "order": 1
+    }
+  ]
+}

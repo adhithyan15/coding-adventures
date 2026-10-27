@@ -1,0 +1,21 @@
+{
+  "chapter": 455,
+  "title": "Working Together",
+  "label": "ch:ja-working-together",
+  "canDo": "I can talk about working with others.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R455-review-450-455",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can talk about working with others.",
+    "assesses": [
+      "JA-LEX-C455-TEAM455-01",
+      "JA-LEX-C455-TEAM455-02",
+      "JA-LEX-C455-TEAM455-03",
+      "JA-LEX-C455-TEAM455-04",
+      "JA-LEX-C455-TEAM455-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C462-jun-i",
+  "pathSegment": "JA-PATH-462-CONTEST462",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-462-CONTEST462",
+      "order": 3
+    }
+  ]
+}

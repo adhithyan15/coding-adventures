@@ -1,15 +1,53 @@
 //! LANG-FULL E8 — numeric conversions (`integer` ↔ `real`) on real wasm.
 //!
-//! `int_to_real` → `f64.convert_i64_s`; `real_to_int_trunc` → `i64.trunc_f64_s`
-//! (toward zero); `real_to_int_floor` → `f64.floor` then `i64.trunc_f64_s`.
-//! The non-saturating `i64.trunc_f64_s` **traps** on NaN/±∞/out-of-`i64`-range,
-//! matching vm-core's `real_to_i64_checked` fail-closed contract exactly (no
-//! explicit range guard needed). These tests lower → encode → **run on a real
-//! wasm runtime** → check the value, mirroring the vm-core/JIT/LLVM proofs.
+//! `int_to_real` → `f64.convert_i64_s`; `real_to_int_trunc` → `f64.trunc`,
+//! a range check, then `i64.trunc_f64_s`; `real_to_int_floor` → the same with
+//! `f64.floor`. A value that fails the check (NaN, ±∞, outside `i64`) raises
+//! LANG83's typed `Trap.ConvRange` through the `env.__trap` import, so every
+//! module with a narrowing imports it; `tests/lang83_pr1b.rs` runs the failing
+//! inputs. These tests lower → encode → **run on a real wasm runtime** → check
+//! the value, mirroring the vm-core/JIT/LLVM proofs.
+
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_wasm::{encode_module, lower_iir_to_wasm, IIRWasmConfig};
+use wasm_execution::{GlobalStorage, HostFunction, HostInterface, LinearMemory, Table, TrapError, WasmValue};
 use wasm_runtime::WasmRuntime;
+use wasm_types::{FuncType, GlobalType, ValueType};
+
+/// `env.__trap(i32)`: these programs never fail a narrowing, so a call is an
+/// error. The module's own `unreachable` would stop it anyway.
+struct TrapImport(FuncType);
+
+impl HostFunction for TrapImport {
+    fn func_type(&self) -> &FuncType {
+        &self.0
+    }
+    fn call(&self, args: &[WasmValue], _memory: Option<&mut LinearMemory>) -> Result<Vec<WasmValue>, TrapError> {
+        Err(TrapError::new(format!("env.__trap({args:?}) on an in-range narrowing")))
+    }
+}
+
+/// A host with only the `env.__trap` import a narrowing needs.
+struct Host;
+
+impl HostInterface for Host {
+    fn resolve_function(&self, module: &str, name: &str) -> Option<Box<dyn HostFunction>> {
+        (module == "env" && name == "__trap")
+            .then(|| Box::new(TrapImport(FuncType { params: vec![ValueType::I32], results: vec![] })) as Box<dyn HostFunction>)
+    }
+    fn resolve_global(&self, _: &str, _: &str) -> Option<(GlobalType, Rc<RefCell<GlobalStorage>>)> {
+        None
+    }
+    fn resolve_memory(&self, _: &str, _: &str) -> Option<LinearMemory> {
+        None
+    }
+    fn resolve_table(&self, _: &str, _: &str) -> Option<Table> {
+        None
+    }
+}
 
 fn run_main(instrs: Vec<IIRInstr>) -> i64 {
     let f = IIRFunction::new("main", vec![], "i64", instrs);
@@ -24,7 +62,7 @@ fn run_main(instrs: Vec<IIRInstr>) -> i64 {
     };
     let wasm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
-    WasmRuntime::new()
+    WasmRuntime::with_host(Box::new(Host))
         .load_and_run(&bytes, "main", &[])
         .expect("wasm run failed")
         .first()

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C413-hantou",
+    "language": "japanese",
+    "chapter": 413,
+    "sequence": 24130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ac756fdaec11403"
+  },
+  "findings": []
+}

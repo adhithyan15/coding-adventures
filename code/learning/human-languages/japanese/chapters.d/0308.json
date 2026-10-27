@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "A Wrong Number",
+  "label": "ch:ja-a-wrong-number",
+  "canDo": "I can say that a call went wrong and who spoke to whom.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C308-isogashii",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can say that a call went wrong and who spoke to whom.",
+    "assesses": [
+      "JA-LEX-C308-MACHIGAI308-03",
+      "JA-LEX-C308-MACHIGAI308-04",
+      "JA-LEX-C308-MACHIGAI308-05"
+    ]
+  }
+}

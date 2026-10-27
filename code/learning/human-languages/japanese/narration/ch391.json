@@ -1,0 +1,813 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 391,
+  "title": "Crossing Safely",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c89e6aedf931edf6",
+  "lessons": [
+    {
+      "id": "JA-C391-oudanhodou",
+      "sequence": 22980,
+      "title": "おうだんほどう (ōdanhodō) — a pedestrian crossing",
+      "headword": "おうだんほどう",
+      "romanization": "ōdanhodō",
+      "gloss": "a pedestrian crossing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5c334951f73f083",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a licence, then the Japanese for to overtake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おうだんほどう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おうだんほどう — ōdanhodō — \"a pedestrian crossing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おうだんほどうを わたって ください。 — ōdanhodō o watatte kudasai — \"Please cross at the pedestrian crossing.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おうだんほどう (ōdanhodō) is Sino-Japanese (kango): four Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ō, \"sideways\" (Middle Chinese hwaeng), dan, \"severance\" (dwanX), ho, \"walk\" (buH) and dō, \"street\" (dawX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōdanhodō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōdanhodō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōdanhodō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōdanhodō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōdanhodō o watatte kudasai — Please cross at the pedestrian crossing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōdanhodō o watatte kudasai* — Please cross at the pedestrian crossing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a licence, then the Japanese for to overtake, then say ōdanhodō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a licence, then the Japanese for to overtake, then say *ōdanhodō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おうだんほどう (ōdanhodō) mean? (\"A pedestrian crossing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C391-oudanhodou-type",
+              "prompt": "Say the Japanese for 'a pedestrian crossing'.",
+              "assesses": [
+                "JA-LEX-C391-OUDAN391-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おうだんほどう",
+                "ōdanhodō",
+                "oudanhodou",
+                "oodanhodoo",
+                "odanhodo"
+              ],
+              "feedback": {
+                "correct": "Right: おうだんほどう (ōdanhodō) is 'a pedestrian crossing'.",
+                "incorrect": "'A pedestrian crossing' is おうだんほどう (ōdanhodō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C391-hokousha",
+      "sequence": 22990,
+      "title": "ほこうしゃ (hokōsha) — a pedestrian",
+      "headword": "ほこうしゃ",
+      "romanization": "hokōsha",
+      "gloss": "a pedestrian",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52c2c85b897e3c28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to overtake, then the Japanese for a pedestrian crossing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほこうしゃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほこうしゃ — hokōsha — \"a pedestrian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ほこうしゃは ほどうを あるきます。 — hokōsha wa hodō o arukimasu — \"Pedestrians walk on the pavement.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほこうしゃ (hokōsha) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, \"walk\" (Middle Chinese buH), kō, \"going\" (haeng) and sha, \"someone\" (tsyaeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hokōsha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hokōsha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hokōsha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hokōsha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hokōsha wa hodō o arukimasu — Pedestrians walk on the pavement.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hokōsha wa hodō o arukimasu* — Pedestrians walk on the pavement.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to overtake, then the Japanese for a pedestrian crossing, then say hokōsha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to overtake, then the Japanese for a pedestrian crossing, then say *hokōsha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほこうしゃ (hokōsha) mean? (\"A pedestrian\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C391-hokousha-type",
+              "prompt": "Say the Japanese for 'a pedestrian'.",
+              "assesses": [
+                "JA-LEX-C391-OUDAN391-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほこうしゃ",
+                "hokōsha",
+                "hokousha",
+                "hokoosha",
+                "hokosha"
+              ],
+              "feedback": {
+                "correct": "Right: ほこうしゃ (hokōsha) is 'a pedestrian'.",
+                "incorrect": "'A pedestrian' is ほこうしゃ (hokōsha)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C391-ippoutsuukou",
+      "sequence": 23000,
+      "title": "いっぽうつうこう (ippōtsūkō) — one-way traffic",
+      "headword": "いっぽうつうこう",
+      "romanization": "ippōtsūkō",
+      "gloss": "one-way traffic",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7057a34f2c3b2019",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a pedestrian crossing, then the Japanese for a pedestrian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いっぽうつうこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いっぽうつうこう — ippōtsūkō — \"one-way traffic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みちは いっぽうつうこうです。 — kono michi wa ippōtsūkō desu — \"This street is one-way.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いっぽうつうこう (ippōtsūkō) is Sino-Japanese (kango): four Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit), hō, \"direction\" (pjang), tsū, \"traffic\" (thuwng) and kō, \"going\" (haeng), joined as ippōtsūkō (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippōtsūkō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippōtsūkō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippōtsūkō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippōtsūkō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono michi wa ippōtsūkō desu — This street is one-way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono michi wa ippōtsūkō desu* — This street is one-way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a pedestrian crossing, then the Japanese for a pedestrian, then say ippōtsūkō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a pedestrian crossing, then the Japanese for a pedestrian, then say *ippōtsūkō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いっぽうつうこう (ippōtsūkō) mean? (\"One-way traffic\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C391-ippoutsuukou-type",
+              "prompt": "Say the Japanese for 'one-way traffic'.",
+              "assesses": [
+                "JA-LEX-C391-OUDAN391-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いっぽうつうこう",
+                "ippōtsūkō",
+                "ippoutsuukou",
+                "ippootsuukoo",
+                "ippotsuko"
+              ],
+              "feedback": {
+                "correct": "Right: いっぽうつうこう (ippōtsūkō) is 'one-way traffic'.",
+                "incorrect": "'One-way traffic' is いっぽうつうこう (ippōtsūkō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C391-tachidomaru",
+      "sequence": 23010,
+      "title": "たちどまる (tachidomaru) — to stop walking; to stand still",
+      "headword": "たちどまる",
+      "romanization": "tachidomaru",
+      "gloss": "to stop walking; to stand still",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff3d98e834f80597",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a pedestrian, then the Japanese for one-way traffic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たちどまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たちどまる — tachidomaru — \"to stop walking; to stand still\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しんごうの まえで たちどまりました。 — shingō no mae de tachidomarimashita — \"I stopped in front of the traffic light.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たちどまります, tachidomarimasu; a godan verb. Past (polite): ほこうしゃが たちどまりました。, hokōsha ga tachidomarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たちどまる (tachidomaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tachi, \"standing\" (from tatsu) and domaru, \"stopping\" (from tomaru); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tachidomaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tachidomaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tachidomaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tachidomaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shingō no mae de tachidomarimashita — I stopped in front of the traffic light.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shingō no mae de tachidomarimashita* — I stopped in front of the traffic light.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a pedestrian, then the Japanese for one-way traffic, then say tachidomaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a pedestrian, then the Japanese for one-way traffic, then say *tachidomaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たちどまる (tachidomaru) mean? (\"To stop walking; to stand still\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C391-tachidomaru-type",
+              "prompt": "Say the Japanese for 'to stop walking'.",
+              "assesses": [
+                "JA-LEX-C391-OUDAN391-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たちどまる",
+                "tachidomaru"
+              ],
+              "feedback": {
+                "correct": "Right: たちどまる (tachidomaru) is 'to stop walking; to stand still'.",
+                "incorrect": "'To stop walking' is たちどまる (tachidomaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C391-saegiru",
+      "sequence": 23020,
+      "title": "さえぎる (saegiru) — to block; to obstruct",
+      "headword": "さえぎる",
+      "romanization": "saegiru",
+      "gloss": "to block; to obstruct",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1894effe579ccf2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for one-way traffic, then the Japanese for to stop walking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さえぎる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さえぎる — saegiru — \"to block; to obstruct\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くるまが みちを さえぎっていました。 — kuruma ga michi o saegitte imashita — \"A car was blocking the road.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さえぎります, saegirimasu; a godan verb. Past (polite): くるまが どうろを さえぎりました。, kuruma ga dōro o saegirimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さえぎる (saegiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saegiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saegiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saegiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saegiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruma ga michi o saegitte imashita — A car was blocking the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruma ga michi o saegitte imashita* — A car was blocking the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for one-way traffic, then the Japanese for to stop walking, then say saegiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for one-way traffic, then the Japanese for to stop walking, then say *saegiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さえぎる (saegiru) mean? (\"To block; to obstruct\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C391-saegiru-type",
+              "prompt": "Say the Japanese for 'to block'.",
+              "assesses": [
+                "JA-LEX-C391-OUDAN391-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さえぎる",
+                "saegiru"
+              ],
+              "feedback": {
+                "correct": "Right: さえぎる (saegiru) is 'to block; to obstruct'.",
+                "incorrect": "'To block' is さえぎる (saegiru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

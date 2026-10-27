@@ -1,0 +1,11 @@
+{
+  "id": "JA-C464-tokuten",
+  "pathSegment": "JA-PATH-464-CROWD464",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-464-CROWD464",
+      "order": 2
+    }
+  ]
+}

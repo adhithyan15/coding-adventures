@@ -1,0 +1,809 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 353,
+  "title": "Checking Things Work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4aebc0854ccbfc7e",
+  "lessons": [
+    {
+      "id": "JA-C353-tenken-suru",
+      "sequence": 20860,
+      "title": "てんけんする (tenken suru) — to inspect; to check over",
+      "headword": "てんけんする",
+      "romanization": "tenken suru",
+      "gloss": "to inspect; to check over",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47e33749085eae79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to slip out of place, then the Japanese for a tool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てんけんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんけんする — tenken suru — \"to inspect; to check over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ながく つかったら、くるまを てんけんした ほうが いいです。 — nagaku tsukattara, kuruma o tenken shita hō ga ii desu — \"Once a car has been used for a long time, it should be checked over.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite てんけんします, tenkenshimasu; a する verb. Past (polite): ちちが くるまを てんけんしました。, chichi ga kuruma o tenken shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんけんする (tenken suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, tenken, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: ten, \"spot\" (Middle Chinese temX) and ken, \"examination\" (kjemX) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenken suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenken suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenken suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenken suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagaku tsukattara, kuruma o tenken shita hō ga ii desu — Once a car has been used for a long time, it should be checked over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagaku tsukattara, kuruma o tenken shita hō ga ii desu* — Once a car has been used for a long time, it should be checked over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to slip out of place, then the Japanese for a tool, then say tenken suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to slip out of place, then the Japanese for a tool, then say *tenken suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てんけんする (tenken suru) mean? (\"To inspect; to check over\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C353-tenken-suru-type",
+              "prompt": "Say the Japanese for 'to inspect'.",
+              "assesses": [
+                "JA-LEX-C353-TENKEN353-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てんけんする",
+                "tenken suru"
+              ],
+              "feedback": {
+                "correct": "Right: てんけんする (tenken suru) is 'to inspect; to check over'.",
+                "incorrect": "'To inspect' is てんけんする (tenken suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C353-choushi",
+      "sequence": 20870,
+      "title": "ちょうし (chōshi) — how things are running; condition",
+      "headword": "ちょうし",
+      "romanization": "chōshi",
+      "gloss": "how things are running; condition",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8a14d9ff6caccf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a tool, then the Japanese for to inspect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちょうし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうし — chōshi — \"how things are running; condition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちょうしが なおったら、しごとに もどって ください。 — chōshi ga naottara, shigoto ni modotte kudasai — \"When you are back in shape, please come back to work.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうし (chōshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chō, \"tune\" (Middle Chinese dewH, the reading for a tone or melody) and shi, \"child\" (tsiX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōshi ga naottara, shigoto ni modotte kudasai — When you are back in shape, please come back to work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōshi ga naottara, shigoto ni modotte kudasai* — When you are back in shape, please come back to work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a tool, then the Japanese for to inspect, then say chōshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a tool, then the Japanese for to inspect, then say *chōshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちょうし (chōshi) mean? (\"How things are running; condition\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C353-choushi-type",
+              "prompt": "Say the Japanese for 'how things are running'.",
+              "assesses": [
+                "JA-LEX-C353-TENKEN353-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちょうし",
+                "chōshi",
+                "choushi",
+                "chooshi",
+                "choshi"
+              ],
+              "feedback": {
+                "correct": "Right: ちょうし (chōshi) is 'how things are running; condition'.",
+                "incorrect": "'How things are running' is ちょうし (chōshi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C353-shoukaki",
+      "sequence": 20880,
+      "title": "しょうかき (shōkaki) — a fire extinguisher",
+      "headword": "しょうかき",
+      "romanization": "shōkaki",
+      "gloss": "a fire extinguisher",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1af010d952c0a6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to inspect, then the Japanese for how things are running."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょうかき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうかき — shōkaki — \"a fire extinguisher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひが ちいさかったら、しょうかきを つかって ください。 — hi ga chiisakattara, shōkaki o tsukatte kudasai — \"If the fire is small, use the fire extinguisher.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうかき (shōkaki) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shō, \"extinguish\" (Middle Chinese sjew), ka, \"fire\" (xwaX) and ki, \"utensil\" (khijH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōkaki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōkaki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōkaki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōkaki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hi ga chiisakattara, shōkaki o tsukatte kudasai — If the fire is small, use the fire extinguisher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hi ga chiisakattara, shōkaki o tsukatte kudasai* — If the fire is small, use the fire extinguisher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to inspect, then the Japanese for how things are running, then say shōkaki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to inspect, then the Japanese for how things are running, then say *shōkaki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょうかき (shōkaki) mean? (\"A fire extinguisher\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C353-shoukaki-type",
+              "prompt": "Say the Japanese for 'a fire extinguisher'.",
+              "assesses": [
+                "JA-LEX-C353-TENKEN353-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょうかき",
+                "shōkaki",
+                "shoukaki",
+                "shookaki",
+                "shokaki"
+              ],
+              "feedback": {
+                "correct": "Right: しょうかき (shōkaki) is 'a fire extinguisher'.",
+                "incorrect": "'A fire extinguisher' is しょうかき (shōkaki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C353-dansui",
+      "sequence": 20890,
+      "title": "だんすい (dansui) — a water outage",
+      "headword": "だんすい",
+      "romanization": "dansui",
+      "gloss": "a water outage",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62cca029a8974ca7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for how things are running, then the Japanese for a fire extinguisher."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だんすい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だんすい — dansui — \"a water outage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "だんすいに なったら、おふろの みずを つかいます。 — dansui ni nattara, ofuro no mizu o tsukaimasu — \"If the water is cut off, we use the water in the bath.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だんすい (dansui) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dan, \"severance\" (Middle Chinese dwanX) and sui, \"water\" (sywijX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dansui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dansui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dansui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dansui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dansui ni nattara, ofuro no mizu o tsukaimasu — If the water is cut off, we use the water in the bath.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dansui ni nattara, ofuro no mizu o tsukaimasu* — If the water is cut off, we use the water in the bath.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for how things are running, then the Japanese for a fire extinguisher, then say dansui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for how things are running, then the Japanese for a fire extinguisher, then say *dansui* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だんすい (dansui) mean? (\"A water outage\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C353-dansui-type",
+              "prompt": "Say the Japanese for 'a water outage'.",
+              "assesses": [
+                "JA-LEX-C353-TENKEN353-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だんすい",
+                "dansui"
+              ],
+              "feedback": {
+                "correct": "Right: だんすい (dansui) is 'a water outage'.",
+                "incorrect": "'A water outage' is だんすい (dansui)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C353-ichiou",
+      "sequence": 20900,
+      "title": "いちおう (ichiō) — tentatively; for the time being",
+      "headword": "いちおう",
+      "romanization": "ichiō",
+      "gloss": "tentatively; for the time being",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39589e1725cb5087",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a fire extinguisher, then the Japanese for a water outage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いちおう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いちおう — ichiō — \"tentatively; for the time being\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふったら こまるので、いちおう かさを もちます。 — ame ga futtara komaru node, ichiō kasa o mochimasu — \"Rain would be a nuisance, so I'll take an umbrella anyway.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いちおう (ichiō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ichi, \"one\" (Middle Chinese 'jit) and ō, \"answer\" ('ingH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichiō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichiō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichiō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichiō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame ga futtara komaru node, ichiō kasa o mochimasu — Rain would be a nuisance, so I'll take an umbrella anyway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame ga futtara komaru node, ichiō kasa o mochimasu* — Rain would be a nuisance, so I'll take an umbrella anyway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a fire extinguisher, then the Japanese for a water outage, then say ichiō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a fire extinguisher, then the Japanese for a water outage, then say *ichiō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いちおう (ichiō) mean? (\"Tentatively; for the time being\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C353-ichiou-type",
+              "prompt": "Say the Japanese for 'tentatively'.",
+              "assesses": [
+                "JA-LEX-C353-TENKEN353-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いちおう",
+                "ichiō",
+                "ichiou",
+                "ichioo",
+                "ichio"
+              ],
+              "feedback": {
+                "correct": "Right: いちおう (ichiō) is 'tentatively; for the time being'.",
+                "incorrect": "'Tentatively' is いちおう (ichiō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
