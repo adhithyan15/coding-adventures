@@ -2,7 +2,18 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
-## Unreleased — `Function::exact_arity` for strict closures (issue #18461)
+## Unreleased — `Function::exact_arity` for strict closures; capture-count check (issue #18461)
+
+**Validator: a `MakeClosure` must supply exactly as many capture values as
+its target function declares** (`make-closure of `f` supplies N capture
+value(s) but the function declares M`).  Backends unpack captures by
+position — the C backend's thunk reads `caps[i]` from a buffer sized by the
+closure node — so a short closure was an out-of-bounds or NULL read in the
+emitted program, and a long one misaligned every parameter.  The security
+review of the #18461 fix found `twig-to-semantic-ir` could build one (F1);
+the frontend is fixed, and this check refuses a hand-written module that
+does the same.  Every in-tree frontend that builds closures (Twig, Ruby,
+Python, JavaScript, Java, Q) already satisfies it.
 
 Additive.  `Function::exact_arity()` returns the one argument count a
 *strict* closure over the function accepts, or `None` when no single count

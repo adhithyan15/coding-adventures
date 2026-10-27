@@ -223,14 +223,26 @@ just `(nil)`.
 the function namespace with the user's definitions, so they are
 reserved:
 
-- A top-level `define` of one of them is a `TwigLowerError` at the
-  `define`'s position: "`` `main` is reserved: the compiler generates
-  a function with that name … ``".
-- `main` and `_init` are not in the table user names resolve against,
-  so `(main)` or `(print _init)` is an "unresolved name" error, not a
-  call into generated code.
+- *Binding* one is a `TwigLowerError` — by a top-level `define`, as a
+  function or lambda parameter, or with `let` / `let*` — at the
+  binding form's position: "`` `main` is reserved: the compiler
+  generates a function with that name … ``".
+- None of them is in the table user names resolve against, so every
+  reference — `(main)`, `(print _init)`, `(define g __lambda_0)`,
+  `(__lambda_0 5)` — is an "unresolved name" error, not a reach into
+  generated code.
 - Only the exact names are reserved: `main2`, `_init_count`,
-  `__lambda_x`, and a parameter or `let` named `main` are ordinary.
+  `__lambda_x` and `my-main` are ordinary.
+
+> **Revision (security review of the #18461 fix, F1).** The first fix
+> still added each generated `__lambda_<n>` to the resolution table, so
+> `(define (adder n) (lambda (x) (+ x n))) (define g __lambda_0)` made a
+> closure with no capture values over a body that expects one; the C
+> backend read `caps[0]` through a NULL pointer.  Binding a reserved
+> name as a parameter or `let` variable was also allowed, and collided
+> with the function of that name in the emitted JS, Python and Go.  The
+> validator now also refuses any `MakeClosure` whose capture count
+> differs from its function's (SIR10 "Closure construction").
 
 > **Revision (issue #18461).** The function table used to contain
 > `main` and `_init`, so `(define main 5) (main)` lowered the bare
@@ -335,9 +347,10 @@ pub struct TwigLowerError {
 
 Error sites:
 
-- Unresolved name reference (including `main` / `_init`)
-- A top-level `define` of a reserved name (`main`, `_init`,
-  `__lambda_<digits>`)
+- Unresolved name reference (including every reference to `main`,
+  `_init` or `__lambda_<digits>`)
+- A binding of a reserved name (`main`, `_init`, `__lambda_<digits>`)
+  by `define`, a parameter, or `let` / `let*`
 - Empty lambda body
 - Empty let / let* / begin body
 - Apply on a non-callable atom (e.g. `(42 1 2)`)

@@ -34,8 +34,24 @@ program                                   before                         now
   `__lambda_<digits>` are the compiler's: `define`-ing one is an error at
   the `define`'s line and column, and a *reference* to `main` / `_init` is
   an unresolved name (they are no longer in the function table user code
-  resolves against).  `main2`, `_init_count`, `__lambda_x` and a local
-  named `main` are ordinary.
+  resolves against).  `main2`, `_init_count` and `__lambda_x` are
+  ordinary.
+- **Security review follow-up (F1) — gensym'd names are not Twig names.**
+  `fresh_lambda_name` used to add each `__lambda_<n>` to the function
+  table user names resolve against, so with item 2 above
+  `(define (adder n) (lambda (x) (+ x n))) (define g __lambda_0)` built a
+  closure with **no** capture values over a body that expects one — the C
+  backend then read `caps[0]` through a NULL pointer, JS/TS computed a
+  wrong value, Go/Rust failed to compile — and `(__lambda_0 5)` was a
+  `DirectCall` passing `5` into the capture slot (broken before this
+  release too).  Now:
+  - generated closure bodies are never added to the resolution table, and
+    every reference to a reserved name (`main`, `_init`,
+    `__lambda_<digits>`), called or not, is an "unresolved name" error;
+  - a reserved name cannot be *bound* either — not as a function or
+    lambda parameter, nor by `let` / `let*` — a positioned "reserved"
+    error.  (`(define (f __lambda_0) …)` collided with the closure body of
+    that name in the emitted JS, Python and Go.)
 
 `tests/name_resolution.rs` no longer tolerates the missing-`pairs`
 validator error, its call collector skips the `lambda` marker (it builds a

@@ -383,6 +383,15 @@ the IR — its representation is the backend's choice (JS function
 object, Python lambda, etc.).  An `IndirectCall` whose target
 evaluates to a closure handle is the natural use site.
 
+`captures` must supply exactly one value per capture the target
+`Function` declares — a validation error otherwise.  Backends bind
+captures by position into the body's leading slots (the C backend reads
+`caps[i]` from a buffer sized by this node), so a short list is an
+out-of-bounds read in the emitted program and a long one shifts every
+parameter.  (Added after the security review of issue #18461's fix,
+which found a Twig program that built a capture-less closure over a
+body expecting one.)
+
 #### Strict closures
 
 An `IndirectCall` cannot be arity-checked by the validator — its target

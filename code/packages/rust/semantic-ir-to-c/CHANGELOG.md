@@ -16,8 +16,18 @@
   argument with `nil`, so Twig's `((lambda (x y) (+ x y)) 4)` used to
   print `4`.  `SirClosure` gains an `arity` field (`-1` = lenient, the
   unchanged default for a bare `MakeClosure`).
+- **One way into a closure body.**  `_sir_call_closure` performs the strict
+  arity check and is now the only caller of a closure's `fn`: `_sir_apply`
+  and the four OOP dispatchers (method call, `initialize`, `super`, class
+  method) all go through it, where the dispatchers used to call `clo->fn`
+  directly and would have skipped the check (security review F3).  Today a
+  method body is always a bare, lenient `MakeClosure` (`__def_method__`
+  requires that shape), so this changes no current program; it keeps the
+  check from depending on which path reaches the closure.
 - `tests/twig_pairs_and_closures.rs` compiles and runs the #18460/#18461
-  Twig programs with the host C compiler.
+  Twig programs with the host C compiler, and checks that a closure
+  missing its capture values is refused before any C is emitted (the
+  NULL `caps` read the security review found, F1).
 
 ## 0.42.1 — Security fix: `sanitize_ident` was not injective
 

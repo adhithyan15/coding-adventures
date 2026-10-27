@@ -40,7 +40,8 @@ Implements the entire TW00 surface:
   (see "Closure model")
 - `define` — value form → `Global` + ExprStmt in `_init`; function
   form → top-level `Function`.  `main`, `_init` and `__lambda_<n>` are
-  the compiler's own names: defining one is a positioned error
+  the compiler's own names: binding one (`define`, a parameter, `let` /
+  `let*`) is a positioned error, and any reference to one is unresolved
 - A top-level function named outside call position (`(define g h)`)
   becomes a capture-less closure over it
 - Apply-site dispatch picks `DirectCall` / `IndirectCall` /

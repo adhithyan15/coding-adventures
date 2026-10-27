@@ -307,9 +307,68 @@ fn the_generated_entry_points_are_not_user_visible_names() {
     }
 }
 
+/// Security review of the first #18461 fix (finding F1): the gensym'd
+/// `__lambda_<n>` names were in the table user names resolve against, so a
+/// program could name a closure body directly.  In value position that made
+/// a closure with **zero** captures over a body that expects some — the C
+/// backend then read `caps[0]` through a NULL `caps`; JS/TS computed a wrong
+/// value; Go/Rust failed to compile.  In call position it was a `DirectCall`
+/// that passed the captures' slots as arguments (broken before #18461 too).
+/// Now no reserved name resolves, in either position.
 #[test]
-fn a_local_named_main_is_still_allowed() {
-    // A parameter or `let` named `main` shadows nothing the compiler owns.
-    lower("(define (f main) (main 1)) (f (lambda (x) x))");
-    lower("(let ((main 5)) main)");
+fn a_generated_lambda_name_is_never_a_user_visible_name() {
+    for src in [
+        // value position — the F1 repro
+        "(define (adder n) (lambda (x) (+ x n))) (define g __lambda_0) (print (g 5))",
+        // call position
+        "(define (adder n) (lambda (x) (+ x n))) (print (__lambda_0 5))",
+        // a capture-less body is refused too: the name is the compiler's
+        "(define (k) (lambda () 1)) (print (__lambda_0))",
+        // inside a lambda body, where the gensym already exists
+        "(define (f) (lambda () __lambda_0))",
+    ] {
+        let err = compile_source(src, "t").expect_err(src);
+        assert!(
+            err.message.contains("unresolved name `__lambda_0`"),
+            "{src}: {}",
+            err.message
+        );
+    }
+}
+
+/// F1 follow-up: a reserved name may not be *bound* locally either — not as
+/// a function or lambda parameter, nor by `let` / `let*`.  Such a binding
+/// could never be referenced (every reference to a reserved name is
+/// unresolved, above), and backends name their own entry points and closure
+/// bodies after these names: `(define (f __lambda_0) (lambda (x) (+ x
+/// __lambda_0)))` produced broken JS, Python and Go before this check.
+#[test]
+fn a_reserved_name_cannot_be_bound_locally() {
+    for (src, name) in [
+        (
+            "(define (f __lambda_0) (lambda (x) (+ x __lambda_0)))",
+            "__lambda_0",
+        ),
+        ("(define (f main) (main 1))", "main"),
+        ("(define (f x _init) x)", "_init"),
+        ("((lambda (main) main) 1)", "main"),
+        ("(define (f) (lambda (__lambda_9) 1))", "__lambda_9"),
+        ("(let ((main 5)) 1)", "main"),
+        ("(define (f) (let* ((a 1) (_init a)) a))", "_init"),
+    ] {
+        let err = compile_source(src, "t").expect_err(src);
+        assert!(
+            err.message.starts_with(&format!("`{name}` is reserved")),
+            "{src}: {}",
+            err.message
+        );
+        assert_eq!(err.line, 1, "{src}: {err}");
+        assert!(err.column >= 1, "{src}: {err}");
+    }
+}
+
+#[test]
+fn ordinary_local_names_that_only_look_reserved_are_allowed() {
+    lower("(define (f main2 _init_x __lambda_y) (+ main2 _init_x __lambda_y)) (f 1 2 3)");
+    lower("(let ((my-main 5)) my-main)");
 }

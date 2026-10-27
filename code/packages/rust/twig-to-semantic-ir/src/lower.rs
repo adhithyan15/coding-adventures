@@ -56,10 +56,14 @@
 //!
 //! The synthesised entry points `main` and `_init`, and the gensym'd
 //! `__lambda_<n>` closure bodies, live in the same function namespace as
-//! the user's definitions.  So a user may not `define` any of them (a
-//! positioned error), and a user *reference* to `main` or `_init` is an
-//! unresolved name rather than a call into generated code: before #18461,
-//! `(define main 5) (main)` made the generated `main` call itself forever.
+//! the user's definitions.  So a user may not bind any of them — by
+//! `define`, as a parameter, or with `let` / `let*` (a positioned error) —
+//! and every *reference* to one, called or not, is an unresolved name
+//! rather than a reach into generated code.  Before #18461,
+//! `(define main 5) (main)` made the generated `main` call itself forever;
+//! and naming a closure body (`(define g __lambda_0)`) built a closure
+//! missing the body's captures, which the C backend read through a NULL
+//! pointer (security review of the first fix, F1).
 
 use std::collections::HashSet;
 
@@ -117,9 +121,9 @@ const FILE: &str = "<twig>";
 struct Lowerer {
     module_name: String,
     /// Top-level function names a Twig name can resolve to: the user's
-    /// function defines and the synthesised `__lambda_<n>` bodies.  The
-    /// generated `main` and `_init` are deliberately absent — user code
-    /// cannot call them (see "Names the compiler owns" above).
+    /// function defines, and nothing else.  The generated `main`, `_init`
+    /// and `__lambda_<n>` bodies are deliberately absent — user code can
+    /// neither call nor name them (see "Names the compiler owns" above).
     function_names: HashSet<String>,
     /// Top-level value defines.
     global_names: HashSet<String>,
@@ -183,18 +187,7 @@ impl Lowerer {
         //    resolves to them.
         for form in &p.forms {
             if let Form::Define(def) = form {
-                if is_reserved_name(&def.name) {
-                    return Err(TwigLowerError {
-                        message: format!(
-                            "`{}` is reserved: the compiler generates a function \
-                             with that name (the program entry `main`, the value \
-                             initialiser `_init`, or a `__lambda_<n>` closure body)",
-                            def.name
-                        ),
-                        line: def.line,
-                        column: def.column,
-                    });
-                }
+                check_binding_name(&def.name, def.line, def.column)?;
                 if let TExpr::Lambda(_) = &def.expr {
                     self.function_names.insert(def.name.clone());
                 } else {
@@ -393,6 +386,9 @@ impl Lowerer {
         //    typos at lowering time, not just at runtime).
         // 2. Surface a clear error message at lowering time when a
         //    name escapes.
+        for p in &lam.params {
+            check_binding_name(p, lam.line, lam.column)?;
+        }
         let mut ctx = FunctionCtx::new(
             lam.params.clone(),
             HashSet::new(), // no captures at top level
@@ -443,10 +439,25 @@ impl Lowerer {
         Ok(Block { stmts, value, span })
     }
 
+    /// A fresh `__lambda_<n>` name for a closure body.
+    ///
+    /// The name is **not** added to `function_names`.  It used to be, and
+    /// that made the gensym a name user code could write: security review
+    /// of the #18461 fix (F1) found that
+    ///
+    /// ```scheme
+    /// (define (adder n) (lambda (x) (+ x n)))
+    /// (define g __lambda_0)      ; a closure over adder's lambda, 0 captures
+    /// (print (g 5))              ; C: the body reads caps[0] through NULL
+    /// ```
+    ///
+    /// built a closure with no capture values for a body that expects one,
+    /// and `(__lambda_0 5)` was a `DirectCall` passing `5` into the capture
+    /// slot.  The synthesised function lives only in `self.synthesised`;
+    /// its one legitimate reference is the `MakeClosure` built beside it.
     fn fresh_lambda_name(&mut self) -> String {
         let name = format!("__lambda_{}", self.lambda_counter);
         self.lambda_counter += 1;
-        self.function_names.insert(name.clone());
         name
     }
 
@@ -547,6 +558,9 @@ impl Lowerer {
                 column,
             });
         }
+        for (name, _) in bindings {
+            check_binding_name(name, line, column)?;
+        }
         let span = self.span_at(line, column);
 
         // Lower the RHS expressions.  For `let`, all RHS use the
@@ -630,6 +644,9 @@ impl Lowerer {
         lam: &TLambda,
         ctx: &mut FunctionCtx,
     ) -> Result<Expr, TwigLowerError> {
+        for p in &lam.params {
+            check_binding_name(p, lam.line, lam.column)?;
+        }
         self.observed.add(Feature::Closures);
         let span = self.span_at(lam.line, lam.column);
         // 1. Free-variable analysis.
@@ -748,6 +765,12 @@ impl Lowerer {
         // them into their own AST nodes, so they stay syntax whatever the
         // program defines.
         if let TExpr::VarRef(VarRef { name, .. }) = fn_expr {
+            // A compiler-owned name (`main`, `_init`, `__lambda_<n>`) is
+            // bound by no row: it cannot be defined or bound locally, and
+            // the generated functions are not callable from Twig.
+            if is_reserved_name(name) {
+                return Err(unresolved(name, &span));
+            }
             // Row 1 — lexical.  The callee is whatever value the local
             // holds, known only at run time.
             if ctx.is_lexical(name) {
@@ -843,6 +866,10 @@ impl Lowerer {
         ctx: &FunctionCtx,
         span: &Span,
     ) -> Result<Expr, TwigLowerError> {
+        // A compiler-owned name resolves to nothing (see `lower_apply`).
+        if is_reserved_name(name) {
+            return Err(unresolved(name, span));
+        }
         // Local (innermost-first).  We iterate in reverse so inner
         // shadowing wins.
         if ctx.locals.iter().rev().any(|n| n == name) {
@@ -938,6 +965,29 @@ fn strict_closure(fn_name: String, captures: Vec<CaptureValue>, span: Span) -> E
         effects: EffectSet::PURE.with(Effect::MayAllocate),
         span,
     }
+}
+
+/// Refuse a binding of a reserved name — by a top-level `define`, a
+/// function or lambda parameter, or a `let` / `let*` — at `line:column`.
+///
+/// A reserved name never resolves (see `resolve_varref`), so such a binding
+/// could not be read anyway; and the backends name their entry points and
+/// closure bodies after exactly these names, so a parameter called
+/// `__lambda_0` collided with the function of that name in the emitted JS,
+/// Python and Go (security review of the #18461 fix, F1).
+fn check_binding_name(name: &str, line: usize, column: usize) -> Result<(), TwigLowerError> {
+    if !is_reserved_name(name) {
+        return Ok(());
+    }
+    Err(TwigLowerError {
+        message: format!(
+            "`{name}` is reserved: the compiler generates a function with that \
+             name (the program entry `main`, the value initialiser `_init`, or a \
+             `__lambda_<n>` closure body)"
+        ),
+        line,
+        column,
+    })
 }
 
 /// `true` for a name only the compiler may define: the generated entry

@@ -166,3 +166,34 @@ fn a_closure_called_with_the_wrong_arity_raises() {
     }
     assert!(failures.is_empty(), "{}", failures.join("\n\n"));
 }
+
+/// Security review of the #18461 fix (F1): a `MakeClosure` that supplies
+/// fewer capture values than its body declares made this backend emit
+/// `_sir_make_closure(_sir_thunk___lambda_0, 0)` — `caps` is NULL — for a
+/// thunk that reads `caps[0]`.  The frontend can no longer produce one, but
+/// a hand-written module can; the shared validator now refuses it before a
+/// line of C is emitted.
+#[test]
+fn a_closure_missing_its_captures_is_refused_before_emission() {
+    let mut module =
+        twig_to_semantic_ir::compile_source("(define (adder n) (lambda (x) (+ x n)))", "t")
+            .expect("lower");
+    // Strip the capture value from every `MakeClosure` (here: adder's one).
+    fn strip(e: &mut semantic_ir::Expr) {
+        match e {
+            semantic_ir::Expr::MakeClosure { captures, .. } => captures.clear(),
+            semantic_ir::Expr::BuiltinCall { args, .. } => args.iter_mut().for_each(strip),
+            _ => {}
+        }
+    }
+    for f in &mut module.functions {
+        strip(&mut f.body.value);
+    }
+    let err = semantic_ir_to_c::compile(&module).expect_err("must refuse");
+    assert_eq!(
+        err.kind,
+        semantic_ir::BackendErrorKind::InvalidModule,
+        "{err:?}"
+    );
+    assert!(err.message.contains("capture value(s)"), "{err:?}");
+}
