@@ -14242,6 +14242,77 @@ fn tagged_word_stderr(p: &Prog) -> Vec<(&'static str, String)> {
     out
 }
 
+/// A heap value passed as a parameter survives its callee allocating under GC
+/// pressure (#18492).
+///
+/// In each program the pair `(cons 7 8)` reaches the function that reads it
+/// only through a parameter, and that function first runs `(churn)`: 4 096
+/// fresh 64-element lists, 4 MiB of pairs — four times the native collector's
+/// 1 MiB threshold, so the tagged-word columns collect several times while the
+/// parameter is live. The three shapes are the plain parameter, a value
+/// returned by another function, and a captured variable (which reaches the
+/// lifted lambda body as a parameter of the closure dispatch). Nothing recurses
+/// on integers, so the programs stay clear of the boxed/raw issues in #18480.
+///
+/// On NativeAot a dynamic parameter used to be retyped `i64` before the stack
+/// map was built, so it was never a precise root; the allocation-triggered
+/// collections these programs reach are conservative (the whole stack is
+/// scanned), which is why they still exited 7 before the fix. The moving case
+/// that did corrupt the parameter needs a compacting collection inside the
+/// callee, which Twig source cannot request; twig-aot's `gc_param_roots` test
+/// splices one in. This test pins the observable contract on every column it
+/// can run, under real allocation pressure. CLR and BEAM are left to a host
+/// with `dotnet` / `erl`. WASM and the JVM skip the captured shape, for reasons
+/// unrelated to collection: WASM traps (`i31.get_s: expected an i31
+/// reference`) on a lambda that captures a pair even with no allocation at all
+/// (`(define (g p) (lambda () (car p))) ((g (cons 7 8)))`), and the JVM throws
+/// a `ClassCastException` (an `Object[]` cell cast to `Integer`) on it.
+#[test]
+fn twig_heap_parameter_survives_gc_pressure_in_its_callee() {
+    const CHURN: &str = "(define (g64) (list 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64)) \
+        (define (w4) (begin (g64) (g64) (g64) (g64))) \
+        (define (w16) (begin (w4) (w4) (w4) (w4))) \
+        (define (w64) (begin (w16) (w16) (w16) (w16))) \
+        (define (w256) (begin (w64) (w64) (w64) (w64))) \
+        (define (w1024) (begin (w256) (w256) (w256) (w256))) \
+        (define (churn) (begin (w1024) (w1024) (w1024) (w1024))) ";
+    const ALL: &[Backend] = &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit];
+    const CLOSURE_OK: &[Backend] = &[NativeAot, Llvm, Vm, Jit];
+    let programs: [(&str, &'static [Backend]); 3] = [
+        ("(define (f p) (begin (churn) (car p))) (f (cons 7 8))", ALL),
+        ("(define (mk) (cons 7 8)) (define (f p) (begin (churn) (car p))) (f (mk))", ALL),
+        ("(define (g p) (lambda () (begin (churn) (car p)))) ((g (cons 7 8)))", CLOSURE_OK),
+    ];
+    let mut ran = Vec::new();
+    for (body, backends) in programs {
+        // `Prog::src` is `&'static str`; a test-lifetime leak of three short
+        // strings is the simplest way to build them from the shared prelude.
+        let src: &'static str = Box::leak(format!("{CHURN}{body}").into_boxed_str());
+        let p = Prog {
+            lang: Language::Twig,
+            ext: "twig",
+            src,
+            expect: Expect::Exit(7),
+            backends,
+            release: None,
+            case: None,
+        };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    assert!(ran.contains(&Vm), "the VM always runs");
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        assert!(ran.contains(&NativeAot), "the native column must run on an x86-64 Linux host");
+    }
+}
+
 /// LANG83 PR7f-2 security review: the Lisp lowering recognises its own
 /// helpers (`__lisp_equal`, …) and inline-rule markers (`__lisp_not`, …) by
 /// name, so no program may define or call one. Twig refuses the name at the

@@ -582,15 +582,17 @@ pub fn compile_typed_module_to_arm64_bytes(
     let mut module = module.clone();
     for func in &mut module.functions {
         pre_lower_aot_builtins(func);
-        // Promote any params still marked "any" or "polymorphic" to "i64".
+        // Params still marked "any" or "polymorphic" are *read* as "i64" — by
+        // `propagate_aot_types` here and by the `specialisation_view` the
+        // compile step specialises — but keep their declared type so the
+        // backend's GC stack map still names them as roots (#18492).
         //
         // The caller may have already set some params to "i64" from source-level
-        // annotations (e.g. `(x : int)`).  `normalize_params_to_i64` only touches
-        // params that are STILL "any" — so caller-set types are never overwritten.
-        // This ensures that unannotated functions (no param_refinements) also get
+        // annotations (e.g. `(x : int)`); those are never overwritten. This
+        // ensures that unannotated functions (no param_refinements) also get
         // signed-integer semantics, matching Twig's semantic model.
-        normalize_params_to_i64(func);
-        // Propagate types seeded from the (now-concrete) params.
+        //
+        // Propagate types seeded from the params.
         // This fills in instructions like `sub dest, param, const` that
         // iir-type-checker missed because it doesn't seed from func.params.
         propagate_aot_types(func);
@@ -1373,6 +1375,41 @@ fn check_direct_call_arities(module: &IIRModule) -> Result<(), AotError> {
     Ok(())
 }
 
+/// Compile one prepared `IIRFunction` with the x86-64 backend, returning its bytes,
+/// its call relocations and its GC stack-map records — `(pc_offset, rbp-relative
+/// reference slots)` per safepoint, the shape `__gc_init_stackmaps` registers.
+///
+/// Typing and GC roots come from two different views of the params (#18492):
+///
+/// | consumer                    | sees param `p : any` as | because                          |
+/// |-----------------------------|-------------------------|----------------------------------|
+/// | `infer_types`/`aot_specialise` | `i64` ([`specialisation_view`]) | Twig ints are signed 64-bit words |
+/// | the backend's stack map     | `any` (declared)        | the word may be a heap reference |
+///
+/// So the machine code is exactly what the `i64` typing produces, and the slot the
+/// prologue spills `p` into is still named at every safepoint — a precise
+/// collection keeps `p`'s object alive and a compacting one rewrites the slot when
+/// it moves the object.
+#[allow(clippy::type_complexity)]
+fn compile_one_x86_64(
+    fn_: &IIRFunction,
+    abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>, Vec<(u32, Vec<i32>)>), AotError> {
+    let typed = specialisation_view(fn_);
+    let inferred = infer_types(&typed);
+    let cir = aot_specialise(&typed, Some(&inferred));
+    let ctx = FunctionContext {
+        name: &fn_.name,
+        params: &fn_.params,
+        return_type: &fn_.return_type,
+    };
+    let (bytes, relocs, stack_map) = x86_64_compile_with_stackmap(&ctx, &cir, abi, global_slots)
+        .map_err(|_| AotError::BackendRefused { function: fn_.name.clone() })?;
+    let records = stack_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+    Ok((bytes, relocs, records))
+}
+
 #[allow(clippy::type_complexity)]
 fn compile_module_x86_64_to_text(
     module: &IIRModule,
@@ -1389,17 +1426,7 @@ fn compile_module_x86_64_to_text(
     // both ABIs — SysV and MsX64 both do real registration now, PR-x3/PR-x6).
     let mut fn_maps: Vec<FnStackMap> = Vec::with_capacity(module.functions.len());
     for fn_ in &module.functions {
-        let ctx = FunctionContext {
-            name: &fn_.name,
-            params: &fn_.params,
-            return_type: &fn_.return_type,
-        };
-        let inferred = infer_types(fn_);
-        let cir = aot_specialise(fn_, Some(&inferred));
-        let (bytes, relocs, stack_map) =
-            x86_64_compile_with_stackmap(&ctx, &cir, abi, &global_slots)
-                .map_err(|_| AotError::BackendRefused { function: fn_.name.clone() })?;
-        let records = stack_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+        let (bytes, relocs, records) = compile_one_x86_64(fn_, abi, &global_slots)?;
         fn_maps.push(FnStackMap { name: fn_.name.clone(), len: bytes.len(), records });
         fn_results.push((fn_.name.clone(), bytes, relocs));
     }
@@ -2088,14 +2115,33 @@ fn find_windows_linker() -> Option<WinLinker> {
 //    `mov n`, etc.  This happens at the IIR level so that type propagation can
 //    see the named ops and infer concrete types.
 //
-//  Step 2 — Normalise param types.
-//    The Twig IR compiler declares every param as `"any"`.  We promote them to
-//    `"i64"` — Twig integers are semantically signed 64-bit values, so using
-//    the signed default ensures that comparisons (e.g. `cmp_lt`) emit signed
-//    ARM64 condition codes (`B.LT`) rather than unsigned ones (`B.CC`), which
-//    matters for programs that test against negative numbers.  `infer_types`
-//    (from `aot-core`) seeds its environment from `func.params`, so this is
-//    the right place to override the "any" sentinel.
+//  Step 2 — Read dynamic params as `i64` for typing (but keep them roots).
+//    The Twig IR compiler declares every param as `"any"`.  Type propagation
+//    and the specialiser read them as `"i64"` — Twig integers are semantically
+//    signed 64-bit values, so using the signed default ensures that
+//    comparisons (e.g. `cmp_lt`) emit signed ARM64 condition codes (`B.LT`)
+//    rather than unsigned ones (`B.CC`), which matters for programs that test
+//    against negative numbers.  `infer_types` (from `aot-core`) seeds its
+//    environment from `func.params`, so the specialiser is handed a
+//    [`specialisation_view`] whose dynamic params say `"i64"`.
+//
+//    The prepared module itself keeps the declared `"any"` (#18492).  An
+//    `any` param is a 64-bit *tagged word*: an integer for arithmetic, but
+//    just as often a pair, a closure or a string — a heap reference.  The
+//    native backends build each function's GC stack map from the param types
+//    in its `FunctionContext`, and they treat `i64` as "can never be a
+//    reference".  Retyping the param in place therefore dropped it from every
+//    stack map, and a moving collection relocated the object it named without
+//    rewriting the param's frame slot: the callee then read the freed
+//    from-space copy.  So the *typing* sees `i64` and the *stack map* sees
+//    `any`:
+//
+//    ```text
+//                        param `p` declared "any"
+//                       /                         \
+//      specialisation_view (i64)          FunctionContext.params (any)
+//      → typed CIR: cmp_lt_i64, sub_i64…  → stack map: p's slot is a root
+//    ```
 //
 //  Step 3 — Propagate and default types.
 //    A lightweight fixed-point pass populates `type_hint` on every instruction
@@ -2130,6 +2176,18 @@ fn pre_lower_aot_builtins(func: &mut IIRFunction) {
     }).collect();
 }
 
+/// Is `ty` a dynamic param type — one the Twig IR compiler leaves undecided?
+///
+/// | declared type      | dynamic? | typed as | GC root?                      |
+/// |--------------------|----------|----------|-------------------------------|
+/// | `any`              | yes      | `i64`    | yes — may hold a heap word    |
+/// | `polymorphic`      | yes      | `i64`    | yes — may hold a heap word    |
+/// | `i64` (annotated)  | no       | `i64`    | no — a plain integer          |
+/// | `ref<any>`         | no       | `ref<any>` | yes (already a reference)   |
+fn is_dynamic_param_type(ty: &str) -> bool {
+    ty == "any" || ty == "polymorphic"
+}
+
 /// Step 2: promote `"any"` / `"polymorphic"` param types to `"i64"`.
 ///
 /// Twig integers are semantically signed 64-bit values.  Using `i64` as the
@@ -2138,11 +2196,43 @@ fn pre_lower_aot_builtins(func: &mut IIRFunction) {
 /// This matters for any program that compares against negative numbers — e.g.
 /// `(if (< x 0) …)` — where unsigned semantics would treat `-5` as a huge
 /// positive number and take the wrong branch.
+///
+/// **Only ever applied to a copy** — the [`specialisation_view`] handed to
+/// `infer_types` / `aot_specialise`. The prepared module keeps the declared
+/// `any`, because the backends derive the GC stack map from the param types,
+/// and an `i64` param is never a root (#18492; see the Step 2 notes above).
 fn normalize_params_to_i64(func: &mut IIRFunction) {
     for (_, ty) in &mut func.params {
-        if ty == "any" || ty == "polymorphic" {
+        if is_dynamic_param_type(ty) {
             *ty = "i64".to_string();
         }
+    }
+}
+
+/// The view of `func` that **type inference and the specialiser** see: the same
+/// function with every dynamic param (`any` / `polymorphic`) read as `i64`
+/// ([`normalize_params_to_i64`]). Borrowed unchanged when there is nothing to
+/// retype, so a fully-typed function costs no clone.
+///
+/// The caller still builds the backend's `FunctionContext` from the
+/// **original** `func.params`, so a dynamic param stays a GC root:
+///
+/// ```text
+///   let typed = specialisation_view(fn_);           // p : i64
+///   let cir   = aot_specialise(&typed, …);          // cmp_lt_i64 p, …
+///   let ctx   = FunctionContext { params: &fn_.params, … };  // p : any → root
+/// ```
+///
+/// Before #18492 the param was retyped in place, the stack map never named its
+/// slot, and a compacting collection left the callee holding a pointer to the
+/// freed from-space copy of its argument.
+fn specialisation_view(func: &IIRFunction) -> std::borrow::Cow<'_, IIRFunction> {
+    if func.params.iter().any(|(_, ty)| is_dynamic_param_type(ty)) {
+        let mut typed = func.clone();
+        normalize_params_to_i64(&mut typed);
+        std::borrow::Cow::Owned(typed)
+    } else {
+        std::borrow::Cow::Borrowed(func)
     }
 }
 
@@ -2165,15 +2255,17 @@ fn normalize_params_to_i64(func: &mut IIRFunction) {
 /// selecting the right condition code in each case.  The boolean result value
 /// (0 or 1 stored to the dest register) is the same either way.
 ///
-/// Runs in a loop until stable.  Function params (already "i64" or a typed hint)
-/// seed the environment together with already-typed instructions.
+/// Runs in a loop until stable.  Function params seed the environment together
+/// with already-typed instructions: a typed param with its own type, a dynamic
+/// one (`any` / `polymorphic`) as `"i64"` — exactly what the
+/// [`specialisation_view`] will tell the specialiser, without retyping the param
+/// itself (which would drop it from the GC stack map, #18492).
 fn propagate_aot_types(func: &mut IIRFunction) {
     // Build initial env from params + any already-typed instructions.
     let mut env: HashMap<String, String> = HashMap::new();
     for (name, ty) in &func.params {
-        if ty != "any" && ty != "polymorphic" {
-            env.insert(name.clone(), ty.clone());
-        }
+        let seed = if is_dynamic_param_type(ty) { "i64" } else { ty.as_str() };
+        env.insert(name.clone(), seed.to_string());
     }
     for instr in &func.instructions {
         if let Some(dest) = &instr.dest {
@@ -3244,7 +3336,9 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///     functions with many folded string comparisons, keeping the aarch64 stack
 ///     frame within the 504-byte stp/ldp limit.
 ///  1. `pre_lower_aot_builtins` — lowers `call_builtin "+"` → `add`, etc.
-///  2. `normalize_params_to_i64` — promotes untyped params to `i64`.
+///  2. dynamic params are *read* as `i64` (`propagate_aot_types` seeds them so,
+///     and the compile step specialises a [`specialisation_view`]) but keep
+///     their declared `any`, so they stay GC roots (#18492).
 ///  3. `propagate_aot_types` — fixed-point type propagation.
 ///  4. `default_any_to_i64` — defaults unresolved arithmetic types to `i64`.
 fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
@@ -3316,7 +3410,10 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
         strip_dead_string_consts(func);
         strip_dead_aot_string_allocs(func);
         pre_lower_aot_builtins(func);
-        normalize_params_to_i64(func);
+        // Step 2 deliberately does NOT retype the params in place: dynamic
+        // params are read as `i64` by `propagate_aot_types` and by the
+        // `specialisation_view` the compile step specialises, but stay `any`
+        // here so the backend stack map keeps them as GC roots (#18492).
         propagate_aot_types(func);
         default_any_to_i64(func);
     }
@@ -3344,7 +3441,7 @@ fn compile_module_to_text(
     // `prepare_module_for_aot` runs four passes (LANG39 adds step 0):
     //   0. `lower_global_io` — `call_builtin "global_set/get"` → `global_store/load`
     //   1. `call_builtin "+"` → `add`, etc.   (see `pre_lower_aot_builtins`)
-    //   2. param types "any" → "i64"           (see `normalize_params_to_i64`)
+    //   2. param types "any" read as "i64"     (see `specialisation_view`)
     //   3. propagate + default remaining "any" (see `propagate_aot_types` /
     //                                            `default_any_to_i64`)
     let mut module = module.clone();
@@ -3687,8 +3784,10 @@ fn compile_one_with_globals(
     fn_: &IIRFunction,
     global_slots: &HashMap<String, usize>,
 ) -> Option<(Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>, Vec<(u32, Vec<i32>)>)> {
-    let inferred = infer_types(fn_);
-    let cir = aot_specialise(fn_, Some(&inferred));
+    // Typed view for the specialiser; declared params for the stack map (#18492).
+    let typed = specialisation_view(fn_);
+    let inferred = infer_types(&typed);
+    let cir = aot_specialise(&typed, Some(&inferred));
     let ctx = FunctionContext {
         name:        &fn_.name,
         params:      &fn_.params,
@@ -5520,5 +5619,154 @@ mod tests {
         strip_dead_string_consts(&mut func);
         strip_dead_aot_string_allocs(&mut func);
         assert!(func.source_map.is_empty(), "no map in, no map out");
+    }
+}
+
+
+// ── #18492: dynamic (`any`) params stay GC roots ──────────────────────────────
+//
+// These run on every host (no linker, no executable): they compile a prepared
+// module function by function, exactly as the two native paths do, and compare
+// the stack maps against what the pre-fix pipeline produced — the same function
+// with its params retyped `any` → `i64` in place. The end-to-end proof (a real
+// compacting collection inside the callee) lives in `tests/gc_param_roots.rs`.
+#[cfg(test)]
+mod gc_param_root_tests {
+    use super::*;
+
+    /// A callee whose only parameter is the sole reference to a pair, read after a
+    /// call (a safepoint) that may collect.
+    const SRC: &str = "\
+(define (churn) (list 1 2 3 4))
+(define (f p) (begin (churn) (car p)))
+(f (cons 7 8))
+";
+
+    fn prepared() -> IIRModule {
+        let mut module = twig_ir_compiler::compile_source(SRC, "gc_param_roots").unwrap();
+        prepare_module_for_aot(&mut module).unwrap();
+        module
+    }
+
+    fn func<'m>(module: &'m IIRModule, name: &str) -> &'m IIRFunction {
+        module.functions.iter().find(|f| f.name == name).unwrap()
+    }
+
+    /// The function as the pre-#18492 pipeline left it: dynamic params retyped in
+    /// place, so the backend's `FunctionContext` said `i64`.
+    fn retyped_in_place(f: &IIRFunction) -> IIRFunction {
+        let mut old = f.clone();
+        normalize_params_to_i64(&mut old);
+        old
+    }
+
+    /// Every slot named by a stack map, across all its safepoints.
+    fn all_slots(records: &[(u32, Vec<i32>)]) -> HashSet<i32> {
+        records.iter().flat_map(|(_, s)| s.iter().copied()).collect()
+    }
+
+    #[test]
+    fn prepared_module_keeps_declared_any_params() {
+        let module = prepared();
+        assert_eq!(func(&module, "f").params, vec![("p".to_string(), "any".to_string())]);
+    }
+
+    #[test]
+    fn specialisation_view_reads_dynamic_params_as_i64_and_borrows_typed_ones() {
+        let module = prepared();
+        let f = func(&module, "f");
+        let view = specialisation_view(f);
+        assert!(matches!(view, std::borrow::Cow::Owned(_)), "f has a dynamic param to retype");
+        assert_eq!(view.params, vec![("p".to_string(), "i64".to_string())]);
+        let shape = |f: &IIRFunction| -> Vec<String> {
+            f.instructions.iter().map(|i| format!("{:?} {} {:?} {}", i.dest, i.op, i.srcs, i.type_hint)).collect()
+        };
+        assert_eq!(shape(&view), shape(f), "only the params differ");
+
+        let typed = IIRFunction::new("g", vec![("n".into(), "i64".into())], "i64", vec![]);
+        assert!(matches!(specialisation_view(&typed), std::borrow::Cow::Borrowed(_)));
+        assert!(is_dynamic_param_type("any") && is_dynamic_param_type("polymorphic"));
+        assert!(!is_dynamic_param_type("i64") && !is_dynamic_param_type("ref<any>"));
+    }
+
+    /// x86-64 (SysV and Win64): the machine code is byte-for-byte what the `i64`
+    /// typing produced before the fix, and the stack map names exactly one more
+    /// slot — the one the prologue spills `p` into, `[rbp - 8]` (param 0 gets
+    /// frame slot 0) — at every safepoint.
+    #[test]
+    fn x86_64_dynamic_param_slot_is_named_at_every_safepoint() {
+        let module = prepared();
+        let globals = collect_global_slots(&module);
+        let f = func(&module, "f");
+        for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
+            let (bytes, _, records) = compile_one_x86_64(f, abi, &globals).unwrap();
+            let (old_bytes, _, old_records) =
+                compile_one_x86_64(&retyped_in_place(f), abi, &globals).unwrap();
+            assert_eq!(bytes, old_bytes, "{abi:?}: the fix changes no instruction");
+            assert!(!records.is_empty(), "{abi:?}: f has safepoints");
+            for (pc, slots) in &records {
+                assert!(slots.contains(&-8), "{abi:?}: p's slot [rbp-8] is a root at pc {pc}");
+            }
+            for (_, slots) in &old_records {
+                assert!(!slots.contains(&-8), "{abi:?}: the pre-fix map left p unrooted");
+            }
+            let added: Vec<i32> =
+                all_slots(&records).difference(&all_slots(&old_records)).copied().collect();
+            assert_eq!(added, vec![-8], "{abi:?}: only p's slot is new");
+        }
+    }
+
+    /// AArch64: same contract on the other native backend — identical code, and
+    /// exactly one more root slot (p's) named at every safepoint.
+    #[test]
+    fn aarch64_dynamic_param_slot_is_named_at_every_safepoint() {
+        let module = prepared();
+        let globals = collect_global_slots(&module);
+        let f = func(&module, "f");
+        let (bytes, _, _, records) = compile_one_with_globals(f, &globals).unwrap();
+        let (old_bytes, _, _, old_records) =
+            compile_one_with_globals(&retyped_in_place(f), &globals).unwrap();
+        assert_eq!(bytes, old_bytes, "the fix changes no instruction");
+        let added: Vec<i32> =
+            all_slots(&records).difference(&all_slots(&old_records)).copied().collect();
+        assert_eq!(added.len(), 1, "exactly p's slot is new, got {added:?}");
+        assert!(!records.is_empty());
+        for (pc, slots) in &records {
+            assert!(slots.contains(&added[0]), "p's slot is a root at pc {pc}");
+        }
+    }
+
+    /// Closures: a lambda's captured values reach its lifted body as ordinary
+    /// dynamic params, so the same rule roots them. (The body is the function that
+    /// reads `car p`.)
+    #[test]
+    fn captured_value_param_of_a_lambda_body_is_a_root() {
+        let mut module = twig_ir_compiler::compile_source(
+            "(define (g p) (lambda () (begin (list 1 2) (car p))))\n((g (cons 7 8)))\n",
+            "gc_capture_roots",
+        )
+        .unwrap();
+        prepare_module_for_aot(&mut module).unwrap();
+        let globals = collect_global_slots(&module);
+        let body = module
+            .functions
+            .iter()
+            .find(|f| {
+                f.name != "g"
+                    && f.params.iter().any(|(n, _)| n == "p")
+                    && f.instructions.iter().any(|i| {
+                        matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "dyn_pair_first")
+                    })
+            })
+            .expect("the lifted lambda body reads car p");
+        let idx = body.params.iter().position(|(n, _)| n == "p").unwrap();
+        assert_eq!(body.params[idx].1, "any", "the captured value arrives as a dynamic param");
+        let (_, _, records) = compile_one_x86_64(body, X86_64Abi::SysV, &globals).unwrap();
+        // Params take frame slots 0, 1, … in order: slot k lives at [rbp - 8 - 8k].
+        let p_slot = -8 - 8 * idx as i32;
+        assert!(!records.is_empty());
+        for (pc, slots) in &records {
+            assert!(slots.contains(&p_slot), "captured p ([rbp{p_slot}]) is a root at pc {pc}");
+        }
     }
 }

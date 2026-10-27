@@ -182,9 +182,30 @@ Getting a record *wrong* is worse than emitting none, so these are obligations:
    neither the caller's record nor the callee's — and is freed while live. The
    slot-per-variable native backends satisfy this naturally (§1.1).
 2. **Declare incoming reference parameters** — they arrive in registers and the
-   prologue spills them.
-3. **Declare only reference-typed slots** (a non-reference slot is a wasted root, not
-   unsafe).
+   prologue spills them. "Reference parameter" means *may hold a heap word* by its
+   **declared** type, not by the type the specialiser computes with: a dynamic
+   (`any` / `polymorphic`) parameter is one tagged word that is as often a pair or
+   closure as an integer, so it is a root even when arithmetic reads it as `i64`.
+   The backends derive param root-ness from `FunctionContext.params` (deny-list:
+   only machine scalars are non-roots), so a driver must hand them the declared
+   types. **Divergence fixed in #18492:** twig-aot used to retype `any` params to
+   `i64` in place (for signed comparisons), which dropped every Twig parameter from
+   every stack map. Non-moving collections were unaffected — allocation-triggered
+   ones scan the stack conservatively, and under `gc_collect_precise` the caller's
+   `any` temporary still rooted the argument — but a compacting collection inside
+   the callee moved the argument, rewrote the caller's slot, and left the callee's
+   parameter pointing at the freed from-space copy (a use-after-free, also for a
+   closure's captured values, which reach the lifted body as parameters). twig-aot
+   now types a *copy* of the function with those params read as `i64`
+   (`specialisation_view`) and builds `FunctionContext` from the declared params,
+   so the machine code is unchanged and the parameter's slot is named at every
+   safepoint. Regression tests: `twig-aot/tests/gc_param_roots.rs` (compacting and
+   precise collections spliced into the callee, a 4 MiB allocation-pressure run, and
+   a valgrind memcheck run) and the `gc_param_root_tests` unit tests.
+3. **Declare only reference-typed slots** (a non-reference slot is a wasted root under
+   a non-moving collection; under compaction a declared slot whose word *exactly*
+   equals a movable object's payload address is rewritten, so a plain integer must
+   never be declared — which is why the deny-list keeps `i64` and friends out).
 
 Naming a slot the executed path has not written yet is safe: every slot word goes
 through the same validated candidate-pointer lookup as a conservative scan.
