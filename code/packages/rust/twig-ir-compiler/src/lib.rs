@@ -1496,6 +1496,59 @@ mod tests {
         );
     }
 
+    // ---- A scope's result register outlives the scope ----------------
+    //
+    // `(let ((x "s")) x)` evaluates to register `x` itself, and that value
+    // can be consumed AFTER the name is out of scope.  A later sibling
+    // binding of the same name — here inside an `if` branch that may not
+    // run — rewrites register `x` and records its own type for it.  So
+    // `unshadow` may keep the current type of a register with no outer
+    // binding only when this binding was the register's FIRST write.
+
+    #[test]
+    fn sibling_let_in_branch_does_not_type_earlier_let_result() {
+        // 1: the first `+` operand is register `x` holding "s"; the branch's
+        //    `x = 1` must not make it look `i64` to the typed `add`.
+        let main = main_instrs("(define c #f) (+ (let ((x \"s\")) x) (if c (let ((x 1)) x) 3))");
+        assert!(!main.iter().any(|i| i.op == "add"), "{main:?}");
+        assert!(
+            main.iter().any(|i| i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s) if s == "+")),
+            "{main:?}"
+        );
+    }
+
+    #[test]
+    fn sibling_let_in_branch_does_not_type_earlier_let_result_as_str() {
+        // 2: `y` is register `x` holding 1; the branch's `x = "s"` must not
+        //    make `(string-length y)` a typed `str_len`.
+        let main = main_instrs(
+            "(define c #f) (let ((y (let ((x 1)) x)) (z (if c (let ((x \"s\")) 0) 0))) \
+             (string-length y))",
+        );
+        assert!(!main.iter().any(|i| i.op == "str_len"), "{main:?}");
+    }
+
+    #[test]
+    fn later_let_in_branch_does_not_retype_value_global_register() {
+        // 3: `g` lives in register `x` (holding "abc"); the branch's `x = 5`
+        //    must not make `(+ g 1)` a typed `add`.
+        let main = main_instrs(
+            "(define g (let ((x \"abc\")) x)) (define c #f) (if c (let ((x 5)) x) 0) (+ g 1)",
+        );
+        assert!(!main.iter().any(|i| i.op == "add"), "{main:?}");
+    }
+
+    #[test]
+    fn let_returning_its_own_binding_keeps_its_type() {
+        // The first write to a register still keeps its type after the
+        // scope, so this stays a typed `i64` return.
+        let main = main_instrs("(let ((x 1)) x)");
+        let ret = main.iter().rfind(|i| i.op == "ret").unwrap();
+        assert_eq!(ret.srcs[0], Operand::Var("x".into()), "{main:?}");
+        assert_eq!(ret.type_hint, "i64", "{main:?}");
+    }
+
     // ---- Module code gets no call-site string inference ---------------
     //
     // Under `twig-module-driver` every module's functions are visible to

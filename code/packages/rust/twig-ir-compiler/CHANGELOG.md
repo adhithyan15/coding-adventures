@@ -119,6 +119,18 @@
 - The IIR diff was re-run over 505 harvested programs, including all 49
   `lang_matrix` Twig programs. Only the 22 shadowing test programs differ
   from `origin/main`.
+- **Third review: keep a register's type only after its first-ever write.**
+  "Rewritten, no outer binding ⇒ keep the current type" was unsafe. A scope
+  can return its named register (`(let ((x "s")) x)`) for use after the name
+  is out of scope. A later sibling binding of the same name, possibly in an
+  `if` branch that never runs, then stamped its own type onto that register.
+  For example, `(+ (let ((x "s")) x) (if c (let ((x 1)) x) 3))` became a
+  typed `add` on `"s"`. `unshadow` now keeps the type only when the count
+  recorded at `shadow` time is 0; otherwise the type is `any`.
+  `(let ((x 1)) x)` still returns an `i64` register. Three new tests cover
+  the review's programs and all failed before the fix; a fourth guards the
+  `i64` return. The re-run IIR diff over 508 programs changes only the 25
+  shadowing test programs.
 
 ### Docs
 

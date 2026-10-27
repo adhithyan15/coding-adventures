@@ -497,15 +497,31 @@ impl FnCtx {
     /// |-----------------------------------------------------|-------------------------------|
     /// | no  (e.g. the inner binding was an E4 alias)        | the outer type, restored      |
     /// | yes, and `name` has an outer binding                | none — dynamic `any`          |
-    /// | yes, and `name` has no outer binding                | what the register now holds,  |
-    /// |                                                     | as its last writer recorded it|
+    /// | yes, no outer binding, this binding was the         | what the register now holds,  |
+    /// | register's FIRST write ever (`writes == 0`)         | as its last writer recorded it|
+    /// | yes, no outer binding, register written before      | none — dynamic `any`          |
     ///
-    /// The middle row never restores a stale `str` onto a register that a
+    /// The second row never restores a stale `str` onto a register that a
     /// nested binding filled with 5 (the outer *value* is lost too until
     /// #18439 gives each binding its own register — but `any` keeps that a
-    /// wrong-value bug rather than type confusion in a typed op).  The last
-    /// row is safe because the name is unbound after the scope; it keeps
-    /// `(let ((x 1)) x)` returning a typed `i64` register.
+    /// wrong-value bug rather than type confusion in a typed op).
+    ///
+    /// The last two rows exist because a scope can RETURN its named
+    /// register: `(let ((x 1)) x)` evaluates to register `x`, and that value
+    /// is consumed after `x` is out of scope.  Keeping the type is what lets
+    /// that stay a typed `i64` register — but it is only safe on the
+    /// register's first write.  If an earlier sibling scope already wrote
+    /// register `x`, its result may still be live and in use, and this
+    /// binding's type would be stamped onto it:
+    ///
+    /// ```text
+    /// (+ (let ((x "s")) x)            ; operand 1 = register x, "s"
+    ///    (if c (let ((x 1)) x) 3))    ; rewrites x, records i64
+    ///                                 ; → typed `add` on "s" if kept
+    /// ```
+    ///
+    /// The branch may not even run, so no single type describes the
+    /// register afterwards; it drops to `any`.
     ///
     /// The restored outer alias needs no such check: a read of an aliased
     /// name goes through the alias register's own `var_types` entry, and a
@@ -519,7 +535,10 @@ impl FnCtx {
         let ty = match (register_rewritten, was_local) {
             (false, _) => ty,
             (true, true) => None,
-            (true, false) => current_ty,
+            // `writes` is the count recorded at `shadow` time: 0 means this
+            // binding made the register's first-ever write.
+            (true, false) if writes == 0 => current_ty,
+            (true, false) => None,
         };
         if let Some(ty) = ty {
             self.var_types.insert(name.clone(), ty);
