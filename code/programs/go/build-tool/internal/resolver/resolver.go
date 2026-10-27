@@ -574,8 +574,9 @@ func parseRustDeps(pkg discovery.Package, knownNames map[string]string) []string
 //	gates = { package = "logic-gates", path = "../logic-gates" } → logic-gates
 //	serde = "1"                                                 → not a path dep
 //
-// parseRustDeps and parseRustDevDeps share it so both tables resolve names
-// identically.
+// Only parseRustDeps uses it: the build graph resolves Cargo dependencies by
+// name. Test triggers resolve path entries by directory instead (see
+// test_triggers.go), so no crate can capture another's triggers by name.
 func cargoPathDependencyName(key, value string) (string, bool) {
 	if cargoInlineStringValue(value, "path") == "" {
 		return "", false
@@ -2309,8 +2310,9 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 
 // ResolveWithTestTriggers returns the build graph together with the Cargo
 // dev-dependency relation that change detection applies one hop past the
-// graph's closure. The two share one set of name tables, so a dev-dependency
-// resolves exactly as a normal dependency on the same crate would.
+// graph's closure. Graph edges resolve by name, as each ecosystem names its
+// dependencies; test triggers resolve Cargo path entries by directory (see
+// test_triggers.go), so no crate can capture another's triggers by name.
 func ResolveWithTestTriggers(packages []discovery.Package) (*directedgraph.Graph, TestTriggers, error) {
 	graph := directedgraph.New()
 
@@ -2401,7 +2403,7 @@ func ResolveWithTestTriggers(packages []discovery.Package) (*directedgraph.Graph
 		}
 	}
 
-	triggers, err := resolveTestTriggers(packages, nameTable)
+	triggers, err := resolveTestTriggers(packages)
 	if err != nil {
 		return nil, nil, err
 	}

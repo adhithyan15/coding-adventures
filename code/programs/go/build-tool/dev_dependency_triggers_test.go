@@ -141,7 +141,9 @@ func TestRealRepositoryEmitterChangeSelectsMosaicSuites(t *testing.T) {
 
 	without := affectedForGraph(graph, changed, nil, false)
 	with := affectedForGraphWithTriggers(graph, triggers, changed, nil, false)
-	for _, name := range []string{"mosaic/mosaic-pkg-notes", "mosaic/programs/engram-app"} {
+	// venture-browser-macos reaches the artifact builder only through a
+	// [target.'cfg(target_os = "macos")'.dev-dependencies] table.
+	for _, name := range []string{"mosaic/mosaic-pkg-notes", "mosaic/programs/engram-app", "rust/venture-browser-macos"} {
 		if without[name] {
 			t.Fatalf("%s is reachable through build edges alone; this test no longer pins the dev-dependency path", name)
 		}

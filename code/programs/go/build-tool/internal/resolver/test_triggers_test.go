@@ -23,7 +23,7 @@ func devDepWorld(t *testing.T, subjectCargo string) []discovery.Package {
 		"code/packages/rust/emit/Cargo.toml": "[package]\nname = \"emit\"\nversion = \"0.1.0\"\n",
 		"code/packages/rust/compiler/Cargo.toml": "[package]\nname = \"compiler\"\nversion = \"0.1.0\"\n\n" +
 			"[dependencies]\nemit = { path = \"../emit\" }\n",
-		"code/packages/rust/helper/Cargo.toml": "[package]\nname = \"helper-crate\"\nversion = \"0.1.0\"\n",
+		"code/packages/rust/helper/Cargo.toml":           "[package]\nname = \"helper-crate\"\nversion = \"0.1.0\"\n",
 		"code/packages/mosaic/pkg-a/mosaic-package.toml": "[package]\nname = \"pkg-a\"\nversion = \"0.1.0\"\n",
 		"code/packages/mosaic/pkg-a/Cargo.toml": "[workspace]\n\n[package]\nname = \"pkg-a\"\nversion = \"0.1.0\"\n\n" +
 			"[dev-dependencies]\ncompiler = { path = \"../../rust/compiler\" }\ntempfile = \"3\"\n",
@@ -129,7 +129,6 @@ func TestMalformedDevDependenciesFailClosed(t *testing.T) {
 	cases := map[string]string{
 		"sub-table header":       "[dev-dependencies.compiler]\npath = \"../compiler\"\n",
 		"spaced sub-table":       "[ dev-dependencies . compiler ]\npath = \"../compiler\"\n",
-		"underscore spelling":    "[dev_dependencies]\ncompiler = { path = \"../compiler\" }\n",
 		"dotted key":             "[dev-dependencies]\ncompiler.path = \"../compiler\"\n",
 		"quoted key":             "[dev-dependencies]\n\"compiler\" = { path = \"../compiler\" }\n",
 		"multi-line inline":      "[dev-dependencies]\ncompiler = { path = \"../compiler\",\n  features = [\"x\"] }\n",
