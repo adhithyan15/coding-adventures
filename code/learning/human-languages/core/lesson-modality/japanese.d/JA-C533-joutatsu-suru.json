@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C533-joutatsu-suru",
+    "language": "japanese",
+    "chapter": 533,
+    "sequence": 30770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b9e2c97d5f5b31d"
+  },
+  "findings": []
+}

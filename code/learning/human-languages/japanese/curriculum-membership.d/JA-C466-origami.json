@@ -1,0 +1,11 @@
+{
+  "id": "JA-C466-origami",
+  "pathSegment": "JA-PATH-466-ARTS466",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-466-ARTS466",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:3f3beff867518485",
+  "lessonIds": [
+    "JA-C420-tesuuryou",
+    "JA-C420-ryoushuusho",
+    "JA-C420-souryou",
+    "JA-C420-shiharau",
+    "JA-C420-haraimodosu"
+  ],
+  "tex": "japanese/book/chapters/ch420-receipts-and-fees.tex"
+}

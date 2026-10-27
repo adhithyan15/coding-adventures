@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C512-higawari",
+    "language": "japanese",
+    "chapter": 512,
+    "sequence": 29690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:903ed1aa14f012b6"
+  },
+  "findings": []
+}

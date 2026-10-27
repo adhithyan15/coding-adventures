@@ -4,7 +4,7 @@ defmodule CodingAdventures.GrammarTools.MixProject do
   def project do
     [
       app: :coding_adventures_grammar_tools,
-      version: "0.6.1",
+      version: "0.6.2",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps()

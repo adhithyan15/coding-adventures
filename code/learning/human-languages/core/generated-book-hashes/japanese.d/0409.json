@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:b6e09dba77776fc3",
+  "lessonIds": [
+    "JA-C409-chiiki",
+    "JA-C409-shuto",
+    "JA-C409-kokkyou",
+    "JA-C409-sakai",
+    "JA-C409-hougen"
+  ],
+  "tex": "japanese/book/chapters/ch409-regions-and-borders.tex"
+}

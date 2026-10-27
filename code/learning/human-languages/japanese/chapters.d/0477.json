@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Parents and Children",
+  "label": "ch:ja-parents-and-children",
+  "canDo": "I can talk about parents and children.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C477-shitsuke",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can talk about parents and children.",
+    "assesses": [
+      "JA-LEX-C477-PARENT477-03",
+      "JA-LEX-C477-PARENT477-04",
+      "JA-LEX-C477-PARENT477-05"
+    ]
+  }
+}

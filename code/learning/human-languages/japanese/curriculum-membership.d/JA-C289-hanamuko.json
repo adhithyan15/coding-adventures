@@ -1,0 +1,11 @@
+{
+  "id": "JA-C289-hanamuko",
+  "pathSegment": "JA-PATH-289-KEKKON289",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-289-KEKKON289",
+      "order": 1
+    }
+  ]
+}

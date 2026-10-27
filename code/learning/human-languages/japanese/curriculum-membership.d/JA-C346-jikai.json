@@ -1,0 +1,11 @@
+{
+  "id": "JA-C346-jikai",
+  "pathSegment": "JA-PATH-346-KONDO346",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-346-KONDO346",
+      "order": 3
+    }
+  ]
+}

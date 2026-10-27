@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C268-tasukeau",
+    "language": "japanese",
+    "chapter": 268,
+    "sequence": 16340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f92cecad1a6ecc0c"
+  },
+  "findings": []
+}

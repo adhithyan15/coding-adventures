@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "A Cold Coming On",
+  "label": "ch:ja-a-cold-coming-on",
+  "canDo": "I can say I am catching a cold.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C446-taichou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can say I am catching a cold.",
+    "assesses": [
+      "JA-LEX-C446-CHILL446-03",
+      "JA-LEX-C446-CHILL446-04",
+      "JA-LEX-C446-CHILL446-05"
+    ]
+  }
+}

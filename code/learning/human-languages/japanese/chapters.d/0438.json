@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Stubborn and Hasty",
+  "label": "ch:ja-stubborn-and-hasty",
+  "canDo": "I can describe a stubborn or an impatient person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C438-ibaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can describe a stubborn or an impatient person.",
+    "assesses": [
+      "JA-LEX-C438-STUBBORN438-03",
+      "JA-LEX-C438-STUBBORN438-04",
+      "JA-LEX-C438-STUBBORN438-05"
+    ]
+  }
+}

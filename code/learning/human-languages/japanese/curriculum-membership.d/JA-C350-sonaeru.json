@@ -1,0 +1,11 @@
+{
+  "id": "JA-C350-sonaeru",
+  "pathSegment": "JA-PATH-350-YOUJIN350",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-350-YOUJIN350",
+      "order": 2
+    }
+  ]
+}

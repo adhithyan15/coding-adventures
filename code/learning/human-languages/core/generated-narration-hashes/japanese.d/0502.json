@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:fcbb46d92cf2e851",
+  "lessonIds": [
+    "JA-C502-gekijou",
+    "JA-C502-engeki",
+    "JA-C502-yakusha",
+    "JA-C502-joyuu",
+    "JA-C502-enjiru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch502.txt",
+  "json": "japanese/narration/ch502.json",
+  "textHash": "fnv1a64:d059d55af9ebca59",
+  "jsonHash": "fnv1a64:b761d9d40598d96e",
+  "findings": []
+}

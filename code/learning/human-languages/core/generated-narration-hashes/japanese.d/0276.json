@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:58485edf46b9074c",
+  "lessonIds": [
+    "JA-C276-ouame",
+    "JA-C276-oumizu",
+    "JA-C276-afureru",
+    "JA-C276-gake",
+    "JA-C276-taihen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch276.txt",
+  "json": "japanese/narration/ch276.json",
+  "textHash": "fnv1a64:6d3e917c306f0dd1",
+  "jsonHash": "fnv1a64:4f1b325688351626",
+  "findings": []
+}

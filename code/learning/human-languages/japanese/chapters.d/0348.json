@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "If You Cannot Come",
+  "label": "ch:ja-if-you-cannot-come",
+  "canDo": "I can say what to do if someone is late or absent.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C348-renkyuu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say what to do if someone is late or absent.",
+    "assesses": [
+      "JA-LEX-C348-KESSEKI348-03",
+      "JA-LEX-C348-KESSEKI348-04",
+      "JA-LEX-C348-KESSEKI348-05"
+    ]
+  }
+}

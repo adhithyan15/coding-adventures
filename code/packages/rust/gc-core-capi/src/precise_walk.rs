@@ -64,10 +64,11 @@
 //! This module does the **walk logic only** — it takes the frame pointer, stack
 //! pointer and stack base as plain integers, so it is exhaustively unit-testable
 //! against *synthetic* stacks (arrays that simulate frames and return addresses)
-//! with no `asm!` and no real thread stack. Capturing the real `fp`/`sp`/`base` of
-//! the running thread and calling this is the tiny `asm!` entry point layered on top
-//! (a follow-up), exactly as [`stack_scan`](crate::stack_scan) layers its `asm!`
-//! capture on `collect_region`.
+//! with no `asm!` and no real thread stack. The real `fp`/`sp`/`base` of the running
+//! thread come from [`stack_scan`](crate::stack_scan): each precise entry point is a
+//! naked trampoline that pushes its own frame record and passes that record's address
+//! as `fp` (section 2b there), so the anchor is valid on every ABI regardless of
+//! compiler flags.
 
 use crate::stackmap_registry;
 use core::ptr;
@@ -106,10 +107,10 @@ const MAX_FRAMES: usize = 1 << 20;
 /// place. The emitted slot addresses and regions are only *recorded* here, not
 /// dereferenced — `collect_mixed` reads them later under its own contract.
 ///
-/// Consumed by the `asm!` entry point [`__gc_collect`](crate::stack_scan)'s sibling
-/// `__gc_collect_precise` (in [`crate::stack_scan`]), which captures the running
-/// thread's `fp`/`sp`/`base` and hands them here; also exhaustively exercised by this
-/// module's synthetic-stack unit tests.
+/// Consumed by `__gc_collect_precise` and its siblings in [`crate::stack_scan`], whose
+/// trampolines build the frame record at `start_fp` and hand it here with the running
+/// thread's `sp`/`base`; also exhaustively exercised by this module's synthetic-stack
+/// unit tests.
 pub(crate) unsafe fn build_precise_roots(
     start_fp: usize,
     sp: usize,

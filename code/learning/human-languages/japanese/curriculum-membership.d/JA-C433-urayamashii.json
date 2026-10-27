@@ -1,0 +1,11 @@
+{
+  "id": "JA-C433-urayamashii",
+  "pathSegment": "JA-PATH-433-LONG433",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-433-LONG433",
+      "order": 2
+    }
+  ]
+}

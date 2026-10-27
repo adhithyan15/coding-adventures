@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C262-nigeru",
+    "language": "japanese",
+    "chapter": 262,
+    "sequence": 16020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc0b55c9dfec7127"
+  },
+  "findings": []
+}

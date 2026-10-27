@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:7da2a131202b972a",
+  "lessonIds": [
+    "JA-C457-shuushoku-suru",
+    "JA-C457-mensetsu",
+    "JA-C457-rirekisho",
+    "JA-C457-oubo-suru",
+    "JA-C457-boshuu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch457.txt",
+  "json": "japanese/narration/ch457.json",
+  "textHash": "fnv1a64:d6da6e3527d51467",
+  "jsonHash": "fnv1a64:429144838330a08e",
+  "findings": []
+}

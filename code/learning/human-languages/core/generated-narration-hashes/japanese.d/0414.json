@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:300a063438baebbd",
+  "lessonIds": [
+    "JA-C414-shitsudo",
+    "JA-C414-jimejime",
+    "JA-C414-hizashi",
+    "JA-C414-hikage",
+    "JA-C414-mabushii"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch414.txt",
+  "json": "japanese/narration/ch414.json",
+  "textHash": "fnv1a64:462cf0af9b9aba51",
+  "jsonHash": "fnv1a64:64b492aa412b3d5e",
+  "findings": []
+}

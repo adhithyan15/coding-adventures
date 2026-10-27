@@ -16,6 +16,7 @@
 //! | `pr4_ops_are_lowered_on_every_backend` | LANG83 PR4 landed everywhere: every backend lowers `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf` |
 //! | `pr7e_float_writers_are_gone_and_the_layouts_run_everywhere` | LANG83 PR7e: `write_f64_py` / `write_f64_js` are in no registry and no backend (each refuses a module that calls one), and the PR6a table, printed by the Python and JavaScript compilers' own layout helpers, runs on every executable column |
 //! | `pr6c_ops_follow_the_ieee_contract` | LANG83 PR6c: the IEEE arithmetic is lowered everywhere but BEAM (which refuses it at compile time), `f64_signbit` on all nine, and the PR6c cases run on every executable column |
+//! | `failed_narrowing_traps_conv_range_on_every_executable_column` | a `real_to_int_*` of NaN, ±∞, 2⁶³ or −1e30 stops with the typed `Trap.ConvRange` after earlier output on every executable column, and compiles for CLR and (finite rows) BEAM |
 //! | `float_table_matches_host_python3_and_node` | the PR6a expected strings (the oracle the PR7e helper cases print) are what host `python3` (`repr`) and `node` (`String(x)`) print today, whenever they are installed |
 //! | `harness_builtins_name_no_language` | LANG83 PR7e: no builtin a conformance runner registers names a source language |
 //! | `pr7b_ops_are_lowered_on_every_backend` | LANG83 PR7b: `f64_class`, `f64_digits` and `f64_exp10` are lowered on all nine backends, the PR7b cases run on every executable column, and BEAM compiles the finite ones |
@@ -327,6 +328,15 @@ fn checked_then_trap(name: &str, before: i64, a: i64, b: i64) -> IIRModule {
 
 const MAX: i64 = i64::MAX;
 const MIN: i64 = i64::MIN;
+
+/// 2⁶³: the first double a `real_to_int_*` narrowing cannot hold.
+const TWO_63: f64 = 9_223_372_036_854_775_808.0;
+
+/// Print `1`, then narrow `x` with `name` — which must trap `Trap.ConvRange`
+/// — then print the result (never reached).
+fn narrow_then_trap(name: &str, x: f64) -> IIRModule {
+    program(vec![int("p", 1), print_i64("p"), real("x", x), op(name, "n", &["x"], "i64"), print_i64("n")])
+}
 
 // --- LANG83 PR6a: the float-output table -------------------------------------
 //
@@ -1433,6 +1443,64 @@ fn cases() -> Vec<Case> {
             name: "real_to_int_floor rounds toward -inf",
             build: || program(vec![real("x", -2.5), op("real_to_int_floor", "n", &["x"], "i64"), print_i64("n")]),
             expect: Expect::Stdout("-3"),
+        },
+        // A narrowing that cannot fit raises the typed `Trap.ConvRange` on
+        // every column, after the output written before it. BEAM runs only
+        // the finite rows: an Erlang float is never NaN or ±∞.
+        Case {
+            name: "real_to_int_trunc of NaN traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_trunc", f64::NAN),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_trunc of +inf traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_trunc", f64::INFINITY),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_trunc of -inf traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_trunc", f64::NEG_INFINITY),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_trunc of 2^63 traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_trunc", TWO_63),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_trunc of -1e30 traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_trunc", -1e30),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_floor of NaN traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_floor", f64::NAN),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_floor of +inf traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_floor", f64::INFINITY),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_floor of -inf traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_floor", f64::NEG_INFINITY),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_floor of 2^63 traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_floor", TWO_63),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int_floor of -1e30 traps Trap.ConvRange",
+            build: || narrow_then_trap("real_to_int_floor", -1e30),
+            expect: Expect::StdoutThenTrap("1", "Trap.ConvRange"),
+        },
+        Case {
+            name: "real_to_int of -2^63 fits (the inclusive lower bound)",
+            build: || program(vec![real("x", -TWO_63), op("real_to_int_trunc", "n", &["x"], "i64"), print_i64("n")]),
+            expect: Expect::Stdout("-9223372036854775808"),
         },
         // ── Errors ──────────────────────────────────────────────────────────
         Case {
@@ -2567,6 +2635,43 @@ for h in sys.argv[1:]: print(*split(struct.unpack('<d', bytes.fromhex(h)[::-1])[
             assert_eq!(got, want, "python3's digits drifted from the checked-in table");
             eprintln!("LANG83 PR7b: python3 agrees on {} values", got.len());
         }
+    }
+}
+
+/// A failed `real_to_int_*` narrowing — NaN, ±∞, 2⁶³, −1e30 — raises the
+/// typed `Trap.ConvRange` (id 4) after the output written before it, on every
+/// executable column whose toolchain is present (and always on WASM, VM and
+/// JIT). CLR and BEAM compile here and execute in CI's `lang_matrix`
+/// columns. BEAM is given only the finite rows, since its floats are never
+/// NaN or ±∞, and must compile them.
+#[test]
+fn failed_narrowing_traps_conv_range_on_every_executable_column() {
+    let mut required = vec!["Wasm", "Vm", "Jit"];
+    if clang_ok() {
+        required.push("Llvm");
+    }
+    if cfg!(target_os = "linux") {
+        required.push("NativeAot");
+    }
+    if java_ok() {
+        required.push("Jvm");
+    }
+    let corpus = cases();
+    let conv: Vec<&Case> = corpus.iter().filter(|c| c.name.ends_with("traps Trap.ConvRange")).collect();
+    assert_eq!(conv.len(), 10, "five values × two narrowing ops");
+    for case in conv {
+        assert!(matches!(case.expect, Expect::StdoutThenTrap("1", "Trap.ConvRange")), "{}", case.name);
+        let ran = execute_everywhere(case);
+        for column in &required {
+            assert!(ran.contains(column), "{}: did not run on {column} (ran {ran:?})", case.name);
+        }
+        compile_on(Backend::Clr, case.module()).unwrap_or_else(|e| panic!("{}: CLR: {e}", case.name));
+        let finite = !case.has_non_finite_float_const();
+        assert_eq!(case.lowered_on(Backend::Beam), finite, "{}", case.name);
+        if finite {
+            compile_on(Backend::Beam, case.module()).unwrap_or_else(|e| panic!("{}: BEAM: {e}", case.name));
+        }
+        eprintln!("Trap.ConvRange `{}` proven on {ran:?}", case.name);
     }
 }
 

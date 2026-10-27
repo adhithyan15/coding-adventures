@@ -1,0 +1,11 @@
+{
+  "id": "JA-C438-tanki",
+  "pathSegment": "JA-PATH-438-STUBBORN438",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-438-STUBBORN438",
+      "order": 2
+    }
+  ]
+}

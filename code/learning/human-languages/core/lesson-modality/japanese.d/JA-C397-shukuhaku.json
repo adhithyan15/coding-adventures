@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C397-shukuhaku",
+    "language": "japanese",
+    "chapter": 397,
+    "sequence": 23300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71d86c72fa184f13"
+  },
+  "findings": []
+}

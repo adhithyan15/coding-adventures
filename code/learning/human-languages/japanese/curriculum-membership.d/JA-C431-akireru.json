@@ -1,0 +1,11 @@
+{
+  "id": "JA-C431-akireru",
+  "pathSegment": "JA-PATH-431-SHOCK431",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-431-SHOCK431",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Simmer, Soak and Steam",
+  "label": "ch:ja-simmer-soak-and-steam",
+  "canDo": "I can say how food is cooked.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C492-muku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can say how food is cooked.",
+    "assesses": [
+      "JA-LEX-C492-BOIL492-03",
+      "JA-LEX-C492-BOIL492-04",
+      "JA-LEX-C492-BOIL492-05"
+    ]
+  }
+}

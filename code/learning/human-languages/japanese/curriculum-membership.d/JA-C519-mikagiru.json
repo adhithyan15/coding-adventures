@@ -1,0 +1,11 @@
+{
+  "id": "JA-C519-mikagiru",
+  "pathSegment": "JA-PATH-519-GIVEUP519",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-519-GIVEUP519",
+      "order": 2
+    }
+  ]
+}

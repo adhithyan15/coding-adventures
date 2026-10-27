@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-338-MUDA338",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-338-MUDA338"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C528-izureka",
+  "pathSegment": "JA-PATH-528-OR528",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-528-OR528",
+      "order": 4
+    }
+  ]
+}

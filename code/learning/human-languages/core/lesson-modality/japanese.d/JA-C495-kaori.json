@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C495-kaori",
+    "language": "japanese",
+    "chapter": 495,
+    "sequence": 28780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9da4bbab42f856d9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C416-hiekomu",
+    "language": "japanese",
+    "chapter": 416,
+    "sequence": 24300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8a4ca79acff959c"
+  },
+  "findings": []
+}

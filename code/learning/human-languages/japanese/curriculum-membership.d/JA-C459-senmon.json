@@ -1,0 +1,11 @@
+{
+  "id": "JA-C459-senmon",
+  "pathSegment": "JA-PATH-459-STUDY459",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-459-STUDY459",
+      "order": 3
+    }
+  ]
+}

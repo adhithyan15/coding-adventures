@@ -1,0 +1,11 @@
+{
+  "id": "JA-C344-nittei",
+  "pathSegment": "JA-PATH-344-KEIKAKU344",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-344-KEIKAKU344",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C485-nunoji",
+  "pathSegment": "JA-PATH-485-CLOTH485",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-485-CLOTH485",
+      "order": 2
+    }
+  ]
+}

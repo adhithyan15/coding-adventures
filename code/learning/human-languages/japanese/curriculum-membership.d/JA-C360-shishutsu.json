@@ -1,0 +1,11 @@
+{
+  "id": "JA-C360-shishutsu",
+  "pathSegment": "JA-PATH-360-SHUUNYUU360",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-360-SHUUNYUU360",
+      "order": 1
+    }
+  ]
+}

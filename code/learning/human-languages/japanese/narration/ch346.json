@@ -1,0 +1,934 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 346,
+  "title": "This Time and Next Time",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:da71909d7d21c134",
+  "lessons": [
+    {
+      "id": "JA-C346-kondo",
+      "sequence": 20490,
+      "title": "こんど (kondo) — next time; this time",
+      "headword": "こんど",
+      "romanization": "kondo",
+      "gloss": "next time; this time",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69ea952aafa80e2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to shift a time, then the Japanese for to bring forward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こんど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんど — kondo — \"next time; this time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こんど じかんが あったら、うちに きて ください。 — kondo jikan ga attara, uchi ni kite kudasai — \"Next time you have a moment, please come to my house.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんど (kondo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kon, \"now\" (Middle Chinese kim) and do, \"degrees\" (duH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kondo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kondo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kondo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kondo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kondo jikan ga attara, uchi ni kite kudasai — Next time you have a moment, please come to my house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kondo jikan ga attara, uchi ni kite kudasai* — Next time you have a moment, please come to my house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to shift a time, then the Japanese for to bring forward, then say kondo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to shift a time, then the Japanese for to bring forward, then say *kondo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こんど (kondo) mean? (\"Next time; this time\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C346-kondo-type",
+              "prompt": "Say the Japanese for 'next time'.",
+              "assesses": [
+                "JA-LEX-C346-KONDO346-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こんど",
+                "kondo"
+              ],
+              "feedback": {
+                "correct": "Right: こんど (kondo) is 'next time; this time'.",
+                "incorrect": "'Next time' is こんど (kondo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C346-konkai",
+      "sequence": 20500,
+      "title": "こんかい (konkai) — this time; on this occasion",
+      "headword": "こんかい",
+      "romanization": "konkai",
+      "gloss": "this time; on this occasion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:982a550d3d9682db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to bring forward, then the Japanese for next time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こんかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんかい — konkai — \"this time; on this occasion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こんかい まけたら、つぎは がんばります。 — konkai maketara, tsugi wa ganbarimasu — \"If we lose this time, we will try harder next time.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんかい (konkai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kon, \"now\" (Middle Chinese kim) and kai, \"-times\" (hwoj) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konkai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konkai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konkai maketara, tsugi wa ganbarimasu — If we lose this time, we will try harder next time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konkai maketara, tsugi wa ganbarimasu* — If we lose this time, we will try harder next time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to bring forward, then the Japanese for next time, then say konkai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to bring forward, then the Japanese for next time, then say *konkai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こんかい (konkai) mean? (\"This time; on this occasion\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C346-konkai-type",
+              "prompt": "Say the Japanese for 'on this occasion'.",
+              "assesses": [
+                "JA-LEX-C346-KONDO346-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こんかい",
+                "konkai"
+              ],
+              "feedback": {
+                "correct": "Right: こんかい (konkai) is 'this time; on this occasion'.",
+                "incorrect": "'On this occasion' is こんかい (konkai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C346-zenkai",
+      "sequence": 20510,
+      "title": "ぜんかい (zenkai) — last time; the previous time",
+      "headword": "ぜんかい",
+      "romanization": "zenkai",
+      "gloss": "last time; the previous time",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a3e386082224172",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for next time, then the Japanese for on this occasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぜんかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜんかい — zenkai — \"last time; the previous time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぜんかいより はやく ついたら、えきで まって ください。 — zenkai yori hayaku tsuitara, eki de matte kudasai — \"If you arrive earlier than last time, please wait at the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜんかい (zenkai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zen, \"before\" (Middle Chinese dzen) and kai, \"-times\" (hwoj) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zenkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zenkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zenkai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zenkai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zenkai yori hayaku tsuitara, eki de matte kudasai — If you arrive earlier than last time, please wait at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zenkai yori hayaku tsuitara, eki de matte kudasai* — If you arrive earlier than last time, please wait at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for next time, then the Japanese for on this occasion, then say zenkai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for next time, then the Japanese for on this occasion, then say *zenkai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぜんかい (zenkai) mean? (\"Last time; the previous time\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C346-zenkai-type",
+              "prompt": "Say the Japanese for 'the previous time'.",
+              "assesses": [
+                "JA-LEX-C346-KONDO346-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぜんかい",
+                "zenkai"
+              ],
+              "feedback": {
+                "correct": "Right: ぜんかい (zenkai) is 'last time; the previous time'.",
+                "incorrect": "'The previous time' is ぜんかい (zenkai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C346-jikai",
+      "sequence": 20520,
+      "title": "じかい (jikai) — the next occasion",
+      "headword": "じかい",
+      "romanization": "jikai",
+      "gloss": "the next occasion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:992011ec7b276772",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for on this occasion, then the Japanese for the previous time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じかい — jikai — \"the next occasion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じかいの かいぎは、てんきに よります。 — jikai no kaigi wa, tenki ni yorimasu — \"Whether the next meeting goes ahead depends on the weather.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じかい (jikai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"next\" (Middle Chinese tshijH) and kai, \"-times\" (hwoj) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jikai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jikai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jikai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jikai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jikai no kaigi wa, tenki ni yorimasu — Whether the next meeting goes ahead depends on the weather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jikai no kaigi wa, tenki ni yorimasu* — Whether the next meeting goes ahead depends on the weather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for on this occasion, then the Japanese for the previous time, then say jikai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for on this occasion, then the Japanese for the previous time, then say *jikai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じかい (jikai) mean? (\"The next occasion\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C346-jikai-type",
+              "prompt": "Say the Japanese for 'the next occasion'.",
+              "assesses": [
+                "JA-LEX-C346-KONDO346-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じかい",
+                "jikai"
+              ],
+              "feedback": {
+                "correct": "Right: じかい (jikai) is 'the next occasion'.",
+                "incorrect": "'The next occasion' is じかい (jikai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C346-jiki",
+      "sequence": 20530,
+      "title": "じき (jiki) — a time; a season; a period",
+      "headword": "じき",
+      "romanization": "jiki",
+      "gloss": "a time; a season; a period",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea6f2705636ad85c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the previous time, then the Japanese for the next occasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じき — jiki — \"a time; a season; a period\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あつい じきに なったら、みずを のんで ください。 — atsui jiki ni nattara, mizu o nonde kudasai — \"When the hot season comes, please drink water.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じき (jiki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"time\" (Middle Chinese dzyi) and ki, \"period\" (gi) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atsui jiki ni nattara, mizu o nonde kudasai — When the hot season comes, please drink water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atsui jiki ni nattara, mizu o nonde kudasai* — When the hot season comes, please drink water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the previous time, then the Japanese for the next occasion, then say jiki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the previous time, then the Japanese for the next occasion, then say *jiki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じき (jiki) mean? (\"A time; a season; a period\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C346-jiki-type",
+              "prompt": "Say the Japanese for 'a period of time'.",
+              "assesses": [
+                "JA-LEX-C346-KONDO346-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じき",
+                "jiki"
+              ],
+              "feedback": {
+                "correct": "Right: じき (jiki) is 'a time; a season; a period'.",
+                "incorrect": "'A period of time' is じき (jiki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R346-review-341-346",
+      "sequence": 20540,
+      "title": "Looking back: from Persuading Someone to This Time and Next Time",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Persuading Someone to This Time and Next Time",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a35dbcd2ad064985",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for to persuade and to urge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to persuade, to urge, to ask someone to stay, as much as possible, for example",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to persuade, to urge, to ask someone to stay, as much as possible, for example]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cause, an influence, a result, the reason is, an attitude",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cause, an influence, a result, the reason is, an attitude]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to trust, confidence, to stand up for, to be found out, to jump to conclusions",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to trust, confidence, to stand up for, to be found out, to jump to conclusions]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a detailed plan, to get things ready, an errand, a schedule, going smoothly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a detailed plan, to get things ready, an errand, a schedule, going smoothly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to change a plan, to postpone, to cancel, to shift a time, to bring forward",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to change a plan, to postpone, to cancel, to shift a time, to bring forward]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "next time, on this occasion, the previous time, the next occasion, a period of time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: next time, on this occasion, the previous time, the next occasion, a period of time]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To persuade? (せっとくする, settoku suru.) To urge? (うながす, unagasu.) To ask someone to stay? (ひきとめる, hikitomeru.) As much as possible? (なるべく, narubeku.) For example? (たとえば, tatoeba.) A cause? (げんいん, gen'in.) An influence? (えいきょう, eikyō.) A result? (けっか, kekka.) The reason is? (なぜなら, nazenara.) An attitude? (たいど, taido.) To trust? (しんようする, shin'yō suru.) Confidence? (しんらい, shinrai.) To stand up for? (かばう, kabau.) To be found out? (ばれる, bareru.) To jump to conclusions? (きめつける, kimetsukeru.) A detailed plan? (けいかく, keikaku.) To get things ready? (よういする, yōi suru.) An errand? (ようじ, yōji.) A schedule? (にってい, nittei.) Going smoothly? (じゅんちょう, junchō.) To change a plan? (へんこうする, henkō suru.) To postpone? (えんきする, enki suru.) To cancel? (とりけす, torikesu.) To shift a time? (ずらす, zurasu.) To bring forward? (はやめる, hayameru.) Next time? (こんど, kondo.) On this occasion? (こんかい, konkai.) The previous time? (ぜんかい, zenkai.) The next occasion? (じかい, jikai.) A period of time? (じき, jiki.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R346-review-341-346-type",
+              "prompt": "Say the Japanese for 'to persuade'.",
+              "assesses": [
+                "JA-LEX-C341-SETTOKU341-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せっとくする",
+                "settoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: せっとくする (settoku suru) is 'to persuade'.",
+                "incorrect": "'To persuade' is せっとくする (settoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

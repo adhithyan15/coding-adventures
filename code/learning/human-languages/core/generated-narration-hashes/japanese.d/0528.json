@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:16b8a386fa710377",
+  "lessonIds": [
+    "JA-C528-aruiwa",
+    "JA-C528-matawa",
+    "JA-C528-soretomo",
+    "JA-C528-moshikuwa",
+    "JA-C528-izureka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch528.txt",
+  "json": "japanese/narration/ch528.json",
+  "textHash": "fnv1a64:1faf0769e8aabc59",
+  "jsonHash": "fnv1a64:94912118be35e3e0",
+  "findings": []
+}

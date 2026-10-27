@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:74a54a8ec908dd46",
+  "lessonIds": [
+    "JA-C368-zentai",
+    "JA-C368-bubun",
+    "JA-C368-ryouhou",
+    "JA-C368-katahou",
+    "JA-C368-katayoru"
+  ],
+  "tex": "japanese/book/chapters/ch368-all-or-part.tex"
+}

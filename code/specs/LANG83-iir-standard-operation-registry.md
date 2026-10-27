@@ -963,7 +963,7 @@ fit the bit-pattern scheme above:
 | Op | Bytecode | Source | Destination | Semantics |
 | --- | --- | --- | --- | --- |
 | `int_to_real` | `I64_TO_F64 <dst> <a>` | an integer register, or an integer literal that constant propagation folded in | a float register | Rust `a as f64`: round to nearest, ties to even. It is exact for \|a\| ≤ 2⁵³, and `2⁵³ + 1` becomes `2⁵³`, as on every other backend (`cvtsi2sd`, `scvtf`, `sitofp`, `f64.convert_i64_s`, `l2d`, `conv.r8`) |
-| `real_to_int_trunc` | `F64_TO_I64_TRUNC <dst> <a>` | a float register, or a folded float literal | an integer register | `t = x.trunc()`, then the VM's checked narrowing |
+| `real_to_int_trunc` | `F64_TO_I64_TRUNC <dst> <a>` | a float register, or a folded float literal | an integer register | `t = x.trunc()`, then the VM's checked narrowing (`Trap.ConvRange` on failure) |
 | `real_to_int_floor` | `F64_TO_I64_FLOOR <dst> <a>` | the same | an integer register | `t = x.floor()`, then the same check |
 
 Because `int_to_real` writes a float register, its destination joins the
@@ -991,23 +991,43 @@ Both used to collapse to 0, so `int_to_real` of a parameter that received
 It now fails closed. An `f64` parameter is still checked by its `PARAM_F64`
 prologue instruction.
 
-**The narrowing failure matches the VM, not `Trap.ConvRange`.** vm-core's
-`real_to_i64_checked` rejects a non-finite `t` with
-`VMError::Custom("real_to_int: operand is not finite")`. It rejects a `t`
-outside `[-2⁶³, 2⁶³)` with `VMError::Custom("real_to_int: {t} is outside the
-i64 range")`. The JIT writes exactly that text to its error slot and stops,
-and `error_from_message` passes it through unchanged as the same
-`VMError::Custom`. This way the two tiers fail identically, which is what the
-JIT's declaration rule requires.
+**A failed narrowing raises `Trap.ConvRange` on every backend.** A narrowing
+fails when the rounded value `t` is NaN, ±∞, or outside `[-2⁶³, 2⁶³)`. Every
+backend reports that failure as the registered kind `Trap.ConvRange` (id 4).
+It uses the same mechanism it already uses for `Trap.DivZero` and
+`Trap.Overflow`, so output written before the trap is flushed and the kind is
+observable:
 
-The registry table above names `Trap.ConvRange` (id 4) for this case. No
-backend reports it today:
-- the VM raises the custom error above;
-- native x86-64 executes `ud2` and AArch64 executes `udf`;
-- the CLR throws `OverflowException` from `conv.ovf.i8`.
+| Backend | Range check | Failure |
+| --- | --- | --- |
+| VM | `real_to_i64_checked`: `!t.is_finite()`, `t < -2⁶³` or `t ≥ 2⁶³` | `VMError::Trap { kind: "Trap.ConvRange" }` |
+| JIT | the VM's `real_to_i64_checked`, called from the narrowing helper | the same `VMError::Trap`. The helper writes `trap: Trap.ConvRange` to the error slot, and `error_from_message` maps that text to the typed trap |
+| native x86-64 | `roundsd`, `cvttsd2si`, then a `cvtsi2sd` + `ucomisd` round trip (unordered or unequal → trap) | `mov edi, 4; call __twig_trap; ud2` (`trap: Trap.ConvRange` on stderr) |
+| native AArch64 | `frintz`/`frintm`, `fcvtzs`, then an `scvtf` + `fcmp` round trip and a check against the saturated `i64::MAX` | `movz x0, #4; bl __twig_trap; udf` |
+| LLVM | `fcmp oge`/`olt` against ±2⁶³ | `call void @__iir_trap(ptr @__iir_trap_msg.4, i64 …); unreachable` |
+| WASM | `f64.ge -2⁶³` and `f64.lt 2⁶³` on the rounded value. Both are false for NaN | `i32.const 4; call env.__trap; unreachable`, before `i64.trunc_f64_s` could raise an untyped WASM trap |
+| JVM | `dcmpl`/`dcmpg` against the destination's range | the shared LANG83 sequence: flush `System.out`, `throw new RuntimeException("Trap.ConvRange")` |
+| CLR | `blt.un`/`blt` against the destination's range (unordered → trap) | the shared LANG83 sequence: flush `Console.Out`, `throw new System.Exception("Trap.ConvRange")`. The `conv.ovf.i8`/`conv.ovf.i4` that follows can then never throw `OverflowException` |
+| BEAM | `erlang:trunc/1`/`floor/1` return an exact bignum, tested with `is_lt` against `i64::MIN`/`i64::MAX` | `erlang:error('Trap.ConvRange')` |
 
-Moving every backend to the typed trap is a separate change. The JIT follows
-the VM until that change lands.
+BEAM checks only the range. An Erlang float is always finite, and
+`validate_for_beam` refuses a non-finite constant. So NaN and ±∞ cannot reach a
+BEAM narrowing.
+
+Before this change, the backends disagreed:
+- the VM, and the JIT copying it, raised
+  `VMError::Custom("real_to_int: …")`;
+- native x86-64 executed a bare `ud2`, and AArch64 a bare `udf`;
+- LLVM called `@llvm.trap`;
+- WASM relied on `i64.trunc_f64_s`'s own untyped trap;
+- the JVM threw `ArithmeticException`;
+- the CLR threw `OverflowException` from `conv.ovf.i8`;
+- BEAM returned the bignum unchecked.
+
+None of these was a LANG83 kind, so a program could not tell a failed narrowing
+from a crash. `op_conformance` now holds a narrowing of NaN, +∞, −∞, 2⁶³ and
+−1e30 (truncating and flooring) to `StdoutThenTrap(…, "Trap.ConvRange")` on
+every executable column. BEAM is given the finite rows only.
 
 ### Conformance cases
 

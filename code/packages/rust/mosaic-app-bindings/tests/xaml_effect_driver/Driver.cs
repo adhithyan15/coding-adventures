@@ -54,6 +54,12 @@ internal sealed class EffectComponent
     public string Status { get; set; } = "unset";
 }
 
+internal sealed class Increment
+{
+    public string MosaicName => "increment";
+    public object MosaicPayload => new Dictionary<string, object?> { ["amount"] = 1 };
+}
+
 internal sealed class RequestEffect
 {
     public RequestEffect(bool batch) => MosaicName = batch
@@ -547,6 +553,71 @@ internal static class Driver
         Check(Counted(settled, "own answer") == 4, "and its value, not the stale one, reached the app");
     }
 
+    /// A state file the runtime rejects moves to the first FREE quarantine
+    /// name, never over an earlier quarantine, which may be someone's real
+    /// data. With all ten names taken it stays where it is, and nothing is
+    /// saved over it.
+    ///
+    /// <code>
+    ///   launch | before                        | afterwards
+    ///   -------+-------------------------------+------------------------------
+    ///   first  | `{}`, `.corrupt` held         | `{}` in `.corrupt.1`, saving
+    ///   second | `{}`, `.corrupt` to `.9` held | `{}` still live, not saving
+    /// </code>
+    ///
+    /// Each launch is a <c>LoadRequired</c> after a <c>Close</c>, the startup
+    /// retry path. The first <c>Close</c> comes before any seeding, so the
+    /// runtime the static initializer loaded (whenever it ran) saw no file.
+    private static async Task CaseQuarantine()
+    {
+        var path = Environment.GetEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        if (string.IsNullOrEmpty(path))
+        {
+            Check(false, "MOSAIC_APP_STATE_PATH names the quarantine state file");
+            return;
+        }
+        MosaicRuntimeHost.Close();
+        // `{}` parses, so it reaches the runtime, which refuses it: no schema.
+        const string rejected = "{}";
+        File.WriteAllText(path + ".corrupt", "earlier");
+        File.WriteAllText(path, rejected);
+
+        MosaicRuntimeHost.LoadRequired();
+        var moved = MosaicRuntimeHost.ApplyProps(new EffectComponent()) ?? string.Empty;
+        Check(File.ReadAllText(path + ".corrupt") == "earlier", "an earlier quarantine is never replaced");
+        Check(
+            File.Exists(path + ".corrupt.1") && File.ReadAllText(path + ".corrupt.1") == rejected,
+            "a rejected file moves to the first free name");
+        Check(
+            moved.Contains("rejected persisted state", StringComparison.Ordinal)
+                && !moved.Contains("will not be saved", StringComparison.Ordinal),
+            "a file moved aside leaves saving on");
+        await MosaicRuntimeHost.HandleEvent(new EffectComponent(), new Increment());
+        Check(
+            File.Exists(path) && File.ReadAllText(path) != rejected,
+            "fresh state is saved once the rejected file is aside");
+
+        MosaicRuntimeHost.Close();
+        for (var index = 2; index < 10; index++)
+            File.WriteAllText($"{path}.corrupt.{index}", $"taken {index}");
+        File.WriteAllText(path, rejected);
+        MosaicRuntimeHost.LoadRequired();
+        var blocked = MosaicRuntimeHost.ApplyProps(new EffectComponent()) ?? string.Empty;
+        Check(
+            blocked.Contains("This session will not be saved.", StringComparison.Ordinal),
+            "with every name taken, the warning says nothing is saved");
+        var answer = await MosaicRuntimeHost.HandleEvent(new EffectComponent(), new Increment());
+        Check(File.ReadAllText(path) == rejected, "a file that could not move aside is not written over");
+        Check(
+            answer?.Status.Contains("This session will not be saved.", StringComparison.Ordinal) == true,
+            "the warning stays showing after an event");
+        Check(
+            File.ReadAllText(path + ".corrupt") == "earlier"
+                && File.ReadAllText(path + ".corrupt.1") == rejected
+                && File.ReadAllText(path + ".corrupt.9") == "taken 9",
+            "no quarantine was replaced");
+    }
+
     public static async Task<int> Main()
     {
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
@@ -697,6 +768,7 @@ internal static class Driver
             case "closes": await CaseHandlerClosesHost(); break;
             case "deferred": await CaseDeferred(); break;
             case "scoped": await CaseScopedAcrossRetry(); break;
+            case "quarantine": await CaseQuarantine(); break;
             default:
                 Console.WriteLine($"unknown MOSAIC_PROBE_CASE `{probeCase}`");
                 return 2;

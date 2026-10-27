@@ -82,9 +82,8 @@ let picked = ct_select_bytes(&option_a, &option_b, predicate);
 ## How It Fits
 
 Part of the D18 Chief-of-Staff Vault crypto stack. Used by Poly1305 AEAD
-decryption, Argon2id password verification, and Vault unlock-key comparison.
-It is a future prerequisite for HMAC verification; the generic HMAC crate has
-not yet migrated to it.
+decryption, HMAC tag verification, Argon2id password verification, and Vault
+unlock-key comparison.
 
 Self-contained: no runtime dependencies. Two private safe wrappers contain the
 audited volatile-pointer operations; public callers never handle pointers or

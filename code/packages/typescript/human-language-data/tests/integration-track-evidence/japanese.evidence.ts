@@ -48,11 +48,15 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     // lessons, six copy-only kanji lessons (月 年 出 人 中 今, each right
     // after its anchor word), one reading, one six-line writing task and
     // twelve reviews. Each carries exactly one activity.
-    expect(japanese).toHaveLength(1446);
+    // 1446 -> 2858: chapters 262-533, the B1 vocabulary: 1,360 headwords (439
+    // verbs), one word per lesson, plus 52 review lessons (11, 11, 10, 10 and
+    // 10 in the five tranches).
+    expect(japanese).toHaveLength(2858);
     // 142 -> 145: the same three writing chapters, one lesson each.
     // 145 -> 249: the A2 vocabulary chapters. 249 -> 261: the B1 core.
+    // 261 -> 533: the B1 vocabulary chapters.
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 261 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 533 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

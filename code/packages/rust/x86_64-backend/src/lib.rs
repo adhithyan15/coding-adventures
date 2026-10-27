@@ -861,7 +861,7 @@ fn emit_instr(
     //                      cvttsd2si rax,xmm0
     //                      cvtsi2sd xmm1,rax ; ucomisd xmm0,xmm1   ; round-trip check
     //                      jp trap ; je ok
-    //               trap:  ud2
+    //               trap:  mov edi,4 ; call __twig_trap ; ud2   ; Trap.ConvRange
     //                 ok:  mov [dest],rax
     //
     // `cvttsd2si` does not trap: on NaN/±∞/out-of-range it yields the
@@ -871,7 +871,11 @@ fn emit_instr(
     // already-rounded input. An in-range integral value survives the round
     // trip exactly. i64::MIN comes back as -2^63, which only matches a genuine
     // -2^63 input. NaN compares unordered and sets PF. xmm1 (`Reg::Rcx`) is
-    // free scratch here.
+    // free scratch here. A failed check is the LANG83 typed trap
+    // `Trap.ConvRange` (stable id 4) through the shared `__twig_trap` call,
+    // exactly like `Trap.DivZero`, so buffered output is flushed first and
+    // the program reports `trap: Trap.ConvRange` rather than dying on a bare
+    // `ud2` (SIGILL).
     if op == "int_to_real" {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
@@ -899,7 +903,11 @@ fn emit_instr(
         asm.jcc(Cond::P, trap);                        // unordered: NaN input
         asm.jcc(Cond::E, ok);                          // exact round trip: in range
         asm.bind(trap).map_err(BackendError::from)?;
-        asm.ud2();
+        let conv_range = interpreter_ir::exception_kind::trap_kind_id(
+            interpreter_ir::exception_kind::TRAP_CONV_RANGE,
+        )
+        .expect("Trap.ConvRange is a built-in kind");
+        emit_trap_call(asm, abi, conv_range);
         asm.bind(ok).map_err(BackendError::from)?;
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store rax

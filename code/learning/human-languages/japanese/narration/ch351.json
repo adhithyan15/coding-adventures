@@ -1,0 +1,932 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 351,
+  "title": "In Case Something Happens",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:e5750d420952e145",
+  "lessons": [
+    {
+      "id": "JA-C351-man-ichi",
+      "sequence": 20750,
+      "title": "まんいち (man'ichi) — in the unlikely event; by any chance",
+      "headword": "まんいち",
+      "romanization": "man'ichi",
+      "gloss": "in the unlikely event; by any chance",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1859dfa74bd57809",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a countermeasure, then the Japanese for disaster preparedness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まんいち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まんいち — man'ichi — \"in the unlikely event; by any chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まんいち おくれたら、でんわして ください。 — man'ichi okuretara, denwa shite kudasai — \"If by any chance you are late, please phone.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まんいち (man'ichi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are man, \"ten thousand\" (Middle Chinese mjonH) and ichi, \"one\" ('jit) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "man'ichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *man'ichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "man'ichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *man'ichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "man'ichi okuretara, denwa shite kudasai — If by any chance you are late, please phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *man'ichi okuretara, denwa shite kudasai* — If by any chance you are late, please phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a countermeasure, then the Japanese for disaster preparedness, then say man'ichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a countermeasure, then the Japanese for disaster preparedness, then say *man'ichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まんいち (man'ichi) mean? (\"In the unlikely event; by any chance\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C351-man-ichi-type",
+              "prompt": "Say the Japanese for 'in the unlikely event'.",
+              "assesses": [
+                "JA-LEX-C351-MANICHI351-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まんいち",
+                "man'ichi"
+              ],
+              "feedback": {
+                "correct": "Right: まんいち (man'ichi) is 'in the unlikely event; by any chance'.",
+                "incorrect": "'In the unlikely event' is まんいち (man'ichi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C351-hoken",
+      "sequence": 20760,
+      "title": "ほけん (hoken) — insurance",
+      "headword": "ほけん",
+      "romanization": "hoken",
+      "gloss": "insurance",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b18a9a39adeb11ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for disaster preparedness, then the Japanese for in the unlikely event."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほけん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほけん — hoken — \"insurance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ほけんが あったら、あんしんでしょう。 — hoken ga attara, anshin deshō — \"If you have insurance, you can feel easy.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほけん (hoken) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ho, \"preserve\" (Middle Chinese pawX) and ken, \"steep place\" (xjemX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hoken ga attara, anshin deshō — If you have insurance, you can feel easy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hoken ga attara, anshin deshō* — If you have insurance, you can feel easy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for disaster preparedness, then the Japanese for in the unlikely event, then say hoken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for disaster preparedness, then the Japanese for in the unlikely event, then say *hoken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほけん (hoken) mean? (\"Insurance\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C351-hoken-type",
+              "prompt": "Say the Japanese for 'insurance'.",
+              "assesses": [
+                "JA-LEX-C351-MANICHI351-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほけん",
+                "hoken"
+              ],
+              "feedback": {
+                "correct": "Right: ほけん (hoken) is 'insurance'.",
+                "incorrect": "'Insurance' is ほけん (hoken)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C351-kakunin-suru",
+      "sequence": 20770,
+      "title": "かくにんする (kakunin suru) — to confirm; to check",
+      "headword": "かくにんする",
+      "romanization": "kakunin suru",
+      "gloss": "to confirm; to check",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83bfb8fcd5172bec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for in the unlikely event, then the Japanese for insurance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かくにんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かくにんする — kakunin suru — \"to confirm; to check\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まちがえたら、もう いちど かくにんして ください。 — machigaetara, mō ichido kakunin shite kudasai — \"If you make a mistake, please check it again.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かくにんします, kakuninshimasu; a する verb. Past (polite): てんいんが よやくを かくにんしました。, ten'in ga yoyaku o kakunin shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かくにんする (kakunin suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, kakunin, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: kaku, \"firm\" (Middle Chinese khaewk) and nin, \"recognize\" (nyinH) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakunin suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakunin suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakunin suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakunin suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "machigaetara, mō ichido kakunin shite kudasai — If you make a mistake, please check it again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *machigaetara, mō ichido kakunin shite kudasai* — If you make a mistake, please check it again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for in the unlikely event, then the Japanese for insurance, then say kakunin suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for in the unlikely event, then the Japanese for insurance, then say *kakunin suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かくにんする (kakunin suru) mean? (\"To confirm; to check\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C351-kakunin-suru-type",
+              "prompt": "Say the Japanese for 'to confirm'.",
+              "assesses": [
+                "JA-LEX-C351-MANICHI351-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かくにんする",
+                "kakunin suru"
+              ],
+              "feedback": {
+                "correct": "Right: かくにんする (kakunin suru) is 'to confirm; to check'.",
+                "incorrect": "'To confirm' is かくにんする (kakunin suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C351-anpi",
+      "sequence": 20780,
+      "title": "あんぴ (anpi) — whether someone is safe",
+      "headword": "あんぴ",
+      "romanization": "anpi",
+      "gloss": "whether someone is safe",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:531ce55df68a9334",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for insurance, then the Japanese for to confirm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あんぴ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あんぴ — anpi — \"whether someone is safe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいふうが きたら、かぞくの あんぴを かくにんします。 — taifū ga kitara, kazoku no anpi o kakunin shimasu — \"If a typhoon comes, I check that my family are safe.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あんぴ (anpi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are an, \"peaceful\" (Middle Chinese 'an) and hi, \"negate\" (KANJIDIC2; Middle Chinese in Baxter's transcription). After an the second is said pi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anpi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anpi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū ga kitara, kazoku no anpi o kakunin shimasu — If a typhoon comes, I check that my family are safe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū ga kitara, kazoku no anpi o kakunin shimasu* — If a typhoon comes, I check that my family are safe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for insurance, then the Japanese for to confirm, then say anpi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for insurance, then the Japanese for to confirm, then say *anpi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あんぴ (anpi) mean? (\"Whether someone is safe\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C351-anpi-type",
+              "prompt": "Say the Japanese for 'whether someone is safe'.",
+              "assesses": [
+                "JA-LEX-C351-MANICHI351-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あんぴ",
+                "anpi"
+              ],
+              "feedback": {
+                "correct": "Right: あんぴ (anpi) is 'whether someone is safe'.",
+                "incorrect": "'Whether someone is safe' is あんぴ (anpi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C351-nen-no-tame",
+      "sequence": 20790,
+      "title": "ねんのため (nen no tame) — to be on the safe side; to make sure",
+      "headword": "ねんのため",
+      "romanization": "nen no tame",
+      "gloss": "to be on the safe side; to make sure",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc40f66c51399f37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to confirm, then the Japanese for whether someone is safe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねんのため",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねんのため — nen no tame — \"to be on the safe side; to make sure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねんのため、ついたら でんわして ください。 — nen no tame, tsuitara denwa shite kudasai — \"To be on the safe side, please phone when you arrive.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねんのため (nen no tame) is built from the Sino-Japanese nen, \"sense\" or attention, an on'yomi borrowed from Chinese (Middle Chinese nemH), and the native no tame, \"for the sake of\": \"for the sake of care\" (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nen no tame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nen no tame*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nen no tame, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nen no tame*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nen no tame, tsuitara denwa shite kudasai — To be on the safe side, please phone when you arrive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nen no tame, tsuitara denwa shite kudasai* — To be on the safe side, please phone when you arrive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to confirm, then the Japanese for whether someone is safe, then say nen no tame again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to confirm, then the Japanese for whether someone is safe, then say *nen no tame* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねんのため (nen no tame) mean? (\"To be on the safe side; to make sure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C351-nen-no-tame-type",
+              "prompt": "Say the Japanese for 'to be on the safe side'.",
+              "assesses": [
+                "JA-LEX-C351-MANICHI351-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねんのため",
+                "nen no tame"
+              ],
+              "feedback": {
+                "correct": "Right: ねんのため (nen no tame) is 'to be on the safe side; to make sure'.",
+                "incorrect": "'To be on the safe side' is ねんのため (nen no tame)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R351-review-347-351",
+      "sequence": 20800,
+      "title": "Looking back: from Visiting Someone to In Case Something Happens",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Visiting Someone to In Case Something Happens",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f426c69c2c2a339",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for to pay a visit and the matter in hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pay a visit, the matter in hand, in person, while you are at it, a caller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pay a visit, the matter in hand, in person, while you are at it, a caller]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be absent, slow, at the last minute, the hour, consecutive holidays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be absent, slow, at the last minute, the hour, consecutive holidays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an expectation, the situation, an opportunity, to miss a chance, at great pains",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an expectation, the situation, an opportunity, to miss a chance, at great pains]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take precautions, carelessness, to prepare for, a countermeasure, disaster preparedness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take precautions, carelessness, to prepare for, a countermeasure, disaster preparedness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in the unlikely event, insurance, to confirm, whether someone is safe, to be on the safe side",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in the unlikely event, insurance, to confirm, whether someone is safe, to be on the safe side]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To pay a visit? (ほうもんする, hōmon suru.) The matter in hand? (ようけん, yōken.) In person? (ちょくせつ, chokusetsu.) While you are at it? (ついでに, tsuideni.) A caller? (らいきゃく, raikyaku.) To be absent? (けっせきする, kesseki suru.) Slow? (おそい, osoi.) At the last minute? (ぎりぎり, girigiri.) The hour? (じこく, jikoku.) Consecutive holidays? (れんきゅう, renkyū.) An expectation? (よそう, yosō.) The situation? (じょうきょう, jōkyō.) An opportunity? (きかい, kikai.) To miss a chance? (のがす, nogasu.) At great pains? (せっかく, sekkaku.) To take precautions? (ようじんする, yōjin suru.) Carelessness? (ゆだん, yudan.) To prepare for? (そなえる, sonaeru.) A countermeasure? (たいさく, taisaku.) Disaster preparedness? (ぼうさい, bōsai.) In the unlikely event? (まんいち, man'ichi.) Insurance? (ほけん, hoken.) To confirm? (かくにんする, kakunin suru.) Whether someone is safe? (あんぴ, anpi.) To be on the safe side? (ねんのため, nen no tame.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R351-review-347-351-type",
+              "prompt": "Say the Japanese for 'to pay a visit'.",
+              "assesses": [
+                "JA-LEX-C347-HOUMON347-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうもんする",
+                "hōmon suru",
+                "houmon suru",
+                "hoomon suru",
+                "homon suru"
+              ],
+              "feedback": {
+                "correct": "Right: ほうもんする (hōmon suru) is 'to pay a visit; to call on'.",
+                "incorrect": "'To pay a visit' is ほうもんする (hōmon suru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

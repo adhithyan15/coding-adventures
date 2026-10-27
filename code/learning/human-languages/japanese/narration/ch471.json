@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 471,
+  "title": "On Stage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b3b67562632a5cde",
+  "lessons": [
+    {
+      "id": "JA-C471-butai",
+      "sequence": 27320,
+      "title": "ぶたい (butai) — a stage",
+      "headword": "ぶたい",
+      "romanization": "butai",
+      "gloss": "a stage",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9877f4fc7c62bc68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an enka ballad, then the Japanese for whistling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶたい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶたい — butai — \"a stage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぶたいで うたいました。 — butai de utaimashita — \"I sang on stage.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶたい (butai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bu, \"dance\" (Middle Chinese mjuX) and tai, \"pedestal\" (doj) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "butai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *butai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "butai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *butai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "butai de utaimashita — I sang on stage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *butai de utaimashita* — I sang on stage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an enka ballad, then the Japanese for whistling, then say butai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an enka ballad, then the Japanese for whistling, then say *butai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶたい (butai) mean? (\"A stage\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C471-butai-type",
+              "prompt": "Say the Japanese for 'a stage'.",
+              "assesses": [
+                "JA-LEX-C471-STAGE471-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶたい",
+                "butai"
+              ],
+              "feedback": {
+                "correct": "Right: ぶたい (butai) is 'a stage'.",
+                "incorrect": "'A stage' is ぶたい (butai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C471-engi",
+      "sequence": 27330,
+      "title": "えんぎ (engi) — acting; a performance",
+      "headword": "えんぎ",
+      "romanization": "engi",
+      "gloss": "acting; a performance",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b65c34c1e3537b61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for whistling, then the Japanese for a stage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えんぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんぎ — engi — \"acting; a performance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あの はいゆうの えんぎは すごいです。 — ano haiyū no engi wa sugoi desu — \"That actor's acting is amazing.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えんぎ (engi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are en, \"performance\" (Middle Chinese yenX) and gi, \"skill\" (gjeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "engi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *engi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano haiyū no engi wa sugoi desu — That actor's acting is amazing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano haiyū no engi wa sugoi desu* — That actor's acting is amazing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for whistling, then the Japanese for a stage, then say engi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for whistling, then the Japanese for a stage, then say *engi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えんぎ (engi) mean? (\"Acting; a performance\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C471-engi-type",
+              "prompt": "Say the Japanese for 'acting'.",
+              "assesses": [
+                "JA-LEX-C471-STAGE471-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えんぎ",
+                "engi"
+              ],
+              "feedback": {
+                "correct": "Right: えんぎ (engi) is 'acting; a performance'.",
+                "incorrect": "'Acting' is えんぎ (engi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C471-hakushu-suru",
+      "sequence": 27340,
+      "title": "はくしゅする (hakushu suru) — to applaud; to clap",
+      "headword": "はくしゅする",
+      "romanization": "hakushu suru",
+      "gloss": "to applaud; to clap",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0edd6cba680410ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a stage, then the Japanese for acting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はくしゅする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はくしゅする — hakushu suru — \"to applaud; to clap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えんそうの あと、みんな はくしゅしました。 — ensō no ato, minna hakushu shimashita — \"After the performance, everyone applauded.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はくしゅします, hakushushimasu; a する verb. Past (polite): かんきゃくが はくしゅしました。, kankyaku ga hakushu shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はくしゅする (hakushu suru) is Sino-Japanese (kango) hakushu with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are haku, \"clap\" (Middle Chinese phaek) and shu, \"hand\" (syuwX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakushu suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakushu suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakushu suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakushu suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ensō no ato, minna hakushu shimashita — After the performance, everyone applauded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ensō no ato, minna hakushu shimashita* — After the performance, everyone applauded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a stage, then the Japanese for acting, then say hakushu suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a stage, then the Japanese for acting, then say *hakushu suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はくしゅする (hakushu suru) mean? (\"To applaud; to clap\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C471-hakushu-suru-type",
+              "prompt": "Say the Japanese for 'to applaud'.",
+              "assesses": [
+                "JA-LEX-C471-STAGE471-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はくしゅする",
+                "hakushu suru"
+              ],
+              "feedback": {
+                "correct": "Right: はくしゅする (hakushu suru) is 'to applaud; to clap'.",
+                "incorrect": "'To applaud' is はくしゅする (hakushu suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C471-gasshou-suru",
+      "sequence": 27350,
+      "title": "がっしょうする (gasshō suru) — to sing in a choir",
+      "headword": "がっしょうする",
+      "romanization": "gasshō suru",
+      "gloss": "to sing in a choir",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d6cc0b9dd7feff0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for acting, then the Japanese for to applaud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がっしょうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がっしょうする — gasshō suru — \"to sing in a choir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がっこうで みんなで がっしょうしました。 — gakkō de minna de gasshō shimashita — \"We all sang together as a choir at school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite がっしょうします, gasshōshimasu; a する verb. Past (polite): こどもが がっしょうしました。, kodomo ga gasshō shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がっしょうする (gasshō suru) is Sino-Japanese (kango) gasshō with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ga, \"join\" (Middle Chinese hop) and shō, \"chant\" (tsyhangH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gasshō suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gasshō suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gasshō suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gasshō suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakkō de minna de gasshō shimashita — We all sang together as a choir at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakkō de minna de gasshō shimashita* — We all sang together as a choir at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for acting, then the Japanese for to applaud, then say gasshō suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for acting, then the Japanese for to applaud, then say *gasshō suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がっしょうする (gasshō suru) mean? (\"To sing in a choir\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C471-gasshou-suru-type",
+              "prompt": "Say the Japanese for 'to sing in a choir'.",
+              "assesses": [
+                "JA-LEX-C471-STAGE471-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がっしょうする",
+                "gasshō suru",
+                "gasshou suru",
+                "gasshoo suru",
+                "gassho suru"
+              ],
+              "feedback": {
+                "correct": "Right: がっしょうする (gasshō suru) is 'to sing in a choir'.",
+                "incorrect": "'To sing in a choir' is がっしょうする (gasshō suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C471-sakkyoku-suru",
+      "sequence": 27360,
+      "title": "さっきょくする (sakkyoku suru) — to compose music",
+      "headword": "さっきょくする",
+      "romanization": "sakkyoku suru",
+      "gloss": "to compose music",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19d1d45ca5a475ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to applaud, then the Japanese for to sing in a choir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さっきょくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さっきょくする — sakkyoku suru — \"to compose music\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かのじょは この うたを さっきょくしました。 — kanojo wa kono uta o sakkyoku shimashita — \"She composed this song.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さっきょくします, sakkyokushimasu; a する verb. Past (polite): せんせいが きょくを さっきょくしました。, sensei ga kyoku o sakkyoku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さっきょくする (sakkyoku suru) is Sino-Japanese (kango) sakkyoku with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"make\" (Middle Chinese tsak) and kyoku, \"melody\" (khjowk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakkyoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakkyoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakkyoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakkyoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanojo wa kono uta o sakkyoku shimashita — She composed this song.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanojo wa kono uta o sakkyoku shimashita* — She composed this song.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to applaud, then the Japanese for to sing in a choir, then say sakkyoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to applaud, then the Japanese for to sing in a choir, then say *sakkyoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さっきょくする (sakkyoku suru) mean? (\"To compose music\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C471-sakkyoku-suru-type",
+              "prompt": "Say the Japanese for 'to compose music'.",
+              "assesses": [
+                "JA-LEX-C471-STAGE471-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さっきょくする",
+                "sakkyoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: さっきょくする (sakkyoku suru) is 'to compose music'.",
+                "incorrect": "'To compose music' is さっきょくする (sakkyoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

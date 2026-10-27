@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-487-SHOP487",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-487-SHOP487"
+  ],
+  "after": []
+}
