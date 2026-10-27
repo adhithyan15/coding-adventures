@@ -3,7 +3,7 @@
 //! # Halting convention
 //!
 //! `ta 0` encodes as `0x91D0_2000`.  When the CPU decodes this trap with
-//! `cond=8` (always) and `trap_number=0`, it sets `halted = true` and stops.
+//! `cond=8` (always) and `trap_number=0`, it clocks the HALT DFF and stops.
 //!
 //! # Memory
 //!
@@ -24,7 +24,7 @@ use crate::alu::{
 use crate::bits::{sext22, sext30, u32_to_bits};
 use crate::decoder::{decode, Instruction, Src2};
 use crate::register_file::{RegisterFile, MEM_SIZE};
-use crate::state::{clock_bit, DffMemory};
+use crate::state::{DffBit, DffMemory};
 use sparc_v8_simulator::execute::Psr;
 use sparc_v8_simulator::{ExecutionResult, SparcError, SparcState, SparcV8Simulator, StepTrace};
 
@@ -36,13 +36,41 @@ const MEM_MASK: u32 = (MEM_SIZE - 1) as u32;
 /// one halt bit.
 pub const FLIP_FLOP_COUNT: usize = MEM_SIZE * 8 + 56 * 32 + 2 * 32 + 2 * 2 + 4 + 32 + 1;
 
+/// Counts read from the machine's concrete persistent storage containers.
+///
+/// This inventory is independent from [`FLIP_FLOP_COUNT`], allowing callers
+/// to verify that the published topology matches the storage actually owned by
+/// the machine.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    /// DFFs owned by the 64 KiB memory.
+    pub memory_dffs: usize,
+    /// DFFs owned by physical registers, PC/nPC, Y, PSR, CWP, and depth.
+    pub register_dffs: usize,
+    /// DFFs owned by the HALT latch.
+    pub halt_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum all independently inventoried storage banks.
+    #[must_use]
+    pub const fn total(self) -> usize {
+        self.memory_dffs + self.register_dffs + self.halt_dffs
+    }
+}
+
 /// The SPARC V8 CPU.
 pub struct SparcCpu {
     pub rf: RegisterFile,
     pub mem: DffMemory,
+    /// Source-compatible observation mirror of the authoritative HALT DFF Q.
+    ///
+    /// Execution operations synchronize this value for existing callers.
+    /// Writing it directly cannot clock architectural state; use
+    /// [`Self::halted`] to observe the authoritative value.
     pub halted: bool,
     pub steps: u64,
-    halt_q: u8,
+    halt: DffBit,
     loaded_origin: u32,
     loaded_len: usize,
 }
@@ -54,7 +82,7 @@ impl SparcCpu {
             mem: DffMemory::new(MEM_SIZE),
             halted: false,
             steps: 0,
-            halt_q: 0,
+            halt: DffBit::new(),
             loaded_origin: 0,
             loaded_len: MEM_SIZE,
         }
@@ -64,8 +92,7 @@ impl SparcCpu {
     pub fn reset(&mut self) {
         self.rf.reset();
         self.mem.clear();
-        self.halted = false;
-        clock_bit(&mut self.halt_q, false);
+        self.clock_halted(false);
         self.steps = 0;
         self.loaded_origin = 0;
         self.loaded_len = MEM_SIZE;
@@ -87,7 +114,7 @@ impl SparcCpu {
             psr: self.rf.read_psr(),
             y: self.rf.read_y(),
             memory: self.mem.snapshot(),
-            halted: self.halted,
+            halted: self.halted(),
             loaded_origin: self.loaded_origin,
             loaded_len: self.loaded_len,
         }
@@ -107,8 +134,7 @@ impl SparcCpu {
         rf.write_y(state.y);
         self.rf = rf;
         self.mem.restore_snapshot(&state.memory);
-        self.halted = state.halted;
-        clock_bit(&mut self.halt_q, state.halted);
+        self.clock_halted(state.halted);
         self.loaded_origin = state.loaded_origin;
         self.loaded_len = state.loaded_len;
         self.steps = 0;
@@ -197,6 +223,33 @@ impl SparcCpu {
         Ok(())
     }
 
+    /// Read the authoritative HALT DFF Q output.
+    #[must_use]
+    pub const fn halted(&self) -> bool {
+        self.halt.q()
+    }
+
+    /// Inventory the machine's concrete persistent storage containers.
+    #[must_use]
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        PhysicalStorageInventory {
+            memory_dffs: self.mem.dff_count(),
+            register_dffs: self.rf.dff_count(),
+            halt_dffs: self.halt.dff_count(),
+        }
+    }
+
+    /// Clock the physical HALT bit, then refresh the compatibility observer.
+    fn clock_halted(&mut self, value: bool) {
+        self.halt.clock(value);
+        self.synchronize_halted_mirror();
+    }
+
+    /// Repair the legacy public observer from the physical Q output.
+    fn synchronize_halted_mirror(&mut self) {
+        self.halted = self.halted();
+    }
+
     /// Run the program until halted or `max_steps` are reached.
     pub fn execute(
         &mut self,
@@ -205,7 +258,7 @@ impl SparcCpu {
         max_steps: u64,
     ) -> Result<(), SparcError> {
         self.load(program, origin)?;
-        while !self.halted && self.steps < max_steps {
+        while !self.halted() && self.steps < max_steps {
             self.step()?;
         }
         Ok(())
@@ -218,7 +271,8 @@ impl SparcCpu {
 
     /// Execute one instruction atomically with a complete shared trace.
     pub fn step_checked(&mut self) -> Result<StepTrace, SparcError> {
-        if self.halted {
+        self.synchronize_halted_mirror();
+        if self.halted() {
             return Err(SparcError::Halted);
         }
         let before = self.get_state();
@@ -250,7 +304,8 @@ impl SparcCpu {
     pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, SparcError> {
         let original = self.get_state();
         let mut traces = Vec::new();
-        while traces.len() < max_steps && !self.halted {
+        self.synchronize_halted_mirror();
+        while traces.len() < max_steps && !self.halted() {
             match self.step_checked() {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
@@ -260,7 +315,7 @@ impl SparcCpu {
             }
         }
         Ok(ExecutionResult {
-            halted: self.halted,
+            halted: self.halted(),
             steps: traces.len(),
             pc: self.rf.read_pc() as i32,
             final_state: self.get_state(),
@@ -287,8 +342,7 @@ impl SparcCpu {
     fn execute_one(&mut self) -> Result<(), SparcError> {
         let word = self.fetch();
         if word == HALT_WORD {
-            self.halted = true;
-            clock_bit(&mut self.halt_q, true);
+            self.clock_halted(true);
             self.rf
                 .write_npc(self.rf.read_pc().wrapping_add(4) & MEM_MASK);
             self.steps += 1;
@@ -412,7 +466,7 @@ impl SparcCpu {
                 if self.branch_taken(cond) {
                     let trap_num = add32(self.rf.read(rs1), self.resolve_src2(&src2)) & 0x7F;
                     if trap_num == 0 {
-                        self.halted = true;
+                        self.clock_halted(true);
                     }
                 }
             }

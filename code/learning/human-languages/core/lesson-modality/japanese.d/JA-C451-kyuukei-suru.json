@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C451-kyuukei-suru",
+    "language": "japanese",
+    "chapter": 451,
+    "sequence": 26320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bfc01fdc8f55204"
+  },
+  "findings": []
+}

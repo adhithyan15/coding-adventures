@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:0450617047c403ce",
+  "lessonIds": [
+    "JA-C268-ochitsuku",
+    "JA-C268-kyuujo",
+    "JA-C268-ikinokoru",
+    "JA-C268-tasukeau",
+    "JA-C268-anzen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch268.txt",
+  "json": "japanese/narration/ch268.json",
+  "textHash": "fnv1a64:288699944628f166",
+  "jsonHash": "fnv1a64:ca97d9dcc9771c66",
+  "findings": []
+}

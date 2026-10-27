@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-301-TAKARA301",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who buried the treasure and who dug it up.",
+  "prerequisites": []
+}

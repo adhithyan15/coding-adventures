@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "A New Home",
+  "label": "ch:ja-a-new-home",
+  "canDo": "I can say where a family moved and who saw them off.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C290-atarashii",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can say where a family moved and who saw them off.",
+    "assesses": [
+      "JA-LEX-C290-UTSURU290-03",
+      "JA-LEX-C290-UTSURU290-04",
+      "JA-LEX-C290-UTSURU290-05"
+    ]
+  }
+}

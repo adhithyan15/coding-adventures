@@ -1,0 +1,11 @@
+{
+  "id": "JA-C300-kitsune",
+  "pathSegment": "JA-PATH-300-KITSUNE300",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-300-KITSUNE300",
+      "order": 0
+    }
+  ]
+}

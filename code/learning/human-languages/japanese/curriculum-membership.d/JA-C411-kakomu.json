@@ -1,0 +1,11 @@
+{
+  "id": "JA-C411-kakomu",
+  "pathSegment": "JA-PATH-411-OGAWA411",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-411-OGAWA411",
+      "order": 3
+    }
+  ]
+}

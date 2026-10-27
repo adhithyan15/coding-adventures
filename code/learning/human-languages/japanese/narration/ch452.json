@@ -1,0 +1,802 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 452,
+  "title": "People at Work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8dcf18ea59622b13",
+  "lessons": [
+    {
+      "id": "JA-C452-buchou",
+      "sequence": 26340,
+      "title": "ぶちょう (buchō) — a department head",
+      "headword": "ぶちょう",
+      "romanization": "buchō",
+      "gloss": "a department head",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:338638e26557a916",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to take a break, then the Japanese for to work overtime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶちょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶちょう — buchō — \"a department head\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぶちょうは かいぎで はなしました。 — buchō wa kaigi de hanashimashita — \"The department head spoke at the meeting.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶちょう (buchō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bu, \"section\" (Middle Chinese buX) and chō, \"leader\" (trjangX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buchō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buchō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buchō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buchō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buchō wa kaigi de hanashimashita — The department head spoke at the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buchō wa kaigi de hanashimashita* — The department head spoke at the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to take a break, then the Japanese for to work overtime, then say buchō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to take a break, then the Japanese for to work overtime, then say *buchō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶちょう (buchō) mean? (\"A department head\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C452-buchou-type",
+              "prompt": "Say the Japanese for 'a department head'.",
+              "assesses": [
+                "JA-LEX-C452-BOSS452-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶちょう",
+                "buchō",
+                "buchou",
+                "buchoo",
+                "bucho"
+              ],
+              "feedback": {
+                "correct": "Right: ぶちょう (buchō) is 'a department head'.",
+                "incorrect": "'A department head' is ぶちょう (buchō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C452-kachou",
+      "sequence": 26350,
+      "title": "かちょう (kachō) — a section chief",
+      "headword": "かちょう",
+      "romanization": "kachō",
+      "gloss": "a section chief",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a2cc7425543c02a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to work overtime, then the Japanese for a department head."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かちょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かちょう — kachō — \"a section chief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かちょうは まいあさ はやく きます。 — kachō wa maiasa hayaku kimasu — \"The section chief comes in early every morning.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かちょう (kachō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"section\" (Middle Chinese khwaH) and chō, \"leader\" (trjangX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kachō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kachō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kachō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kachō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kachō wa maiasa hayaku kimasu — The section chief comes in early every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kachō wa maiasa hayaku kimasu* — The section chief comes in early every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to work overtime, then the Japanese for a department head, then say kachō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to work overtime, then the Japanese for a department head, then say *kachō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かちょう (kachō) mean? (\"A section chief\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C452-kachou-type",
+              "prompt": "Say the Japanese for 'a section chief'.",
+              "assesses": [
+                "JA-LEX-C452-BOSS452-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かちょう",
+                "kachō",
+                "kachou",
+                "kachoo",
+                "kacho"
+              ],
+              "feedback": {
+                "correct": "Right: かちょう (kachō) is 'a section chief'.",
+                "incorrect": "'A section chief' is かちょう (kachō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C452-buka",
+      "sequence": 26360,
+      "title": "ぶか (buka) — a subordinate",
+      "headword": "ぶか",
+      "romanization": "buka",
+      "gloss": "a subordinate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d764488d6b068724",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a department head, then the Japanese for a section chief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶか — buka — \"a subordinate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれの ぶかは よく はたらきます。 — kare no buka wa yoku hatarakimasu — \"His staff work hard.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶか (buka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bu, \"section\" (Middle Chinese buX) and ka, \"below\" (haeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare no buka wa yoku hatarakimasu — His staff work hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare no buka wa yoku hatarakimasu* — His staff work hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a department head, then the Japanese for a section chief, then say buka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a department head, then the Japanese for a section chief, then say *buka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶか (buka) mean? (\"A subordinate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C452-buka-type",
+              "prompt": "Say the Japanese for 'a subordinate'.",
+              "assesses": [
+                "JA-LEX-C452-BOSS452-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶか",
+                "buka"
+              ],
+              "feedback": {
+                "correct": "Right: ぶか (buka) is 'a subordinate'.",
+                "incorrect": "'A subordinate' is ぶか (buka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C452-shain",
+      "sequence": 26370,
+      "title": "しゃいん (shain) — a company employee",
+      "headword": "しゃいん",
+      "romanization": "shain",
+      "gloss": "a company employee",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a81443e1ea2bd55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a section chief, then the Japanese for a subordinate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゃいん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃいん — shain — \"a company employee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゃいんは みんな まじめです。 — shain wa minna majime desu — \"The employees are all hard-working.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃいん (shain) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sha, \"company\" (Middle Chinese dzyaeX) and in, \"member\" (hjwen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shain*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shain, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shain*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shain wa minna majime desu — The employees are all hard-working.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shain wa minna majime desu* — The employees are all hard-working.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a section chief, then the Japanese for a subordinate, then say shain again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a section chief, then the Japanese for a subordinate, then say *shain* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゃいん (shain) mean? (\"A company employee\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C452-shain-type",
+              "prompt": "Say the Japanese for 'a company employee'.",
+              "assesses": [
+                "JA-LEX-C452-BOSS452-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃいん",
+                "shain"
+              ],
+              "feedback": {
+                "correct": "Right: しゃいん (shain) is 'a company employee'.",
+                "incorrect": "'A company employee' is しゃいん (shain)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C452-meishi",
+      "sequence": 26380,
+      "title": "めいし (meishi) — a business card",
+      "headword": "めいし",
+      "romanization": "meishi",
+      "gloss": "a business card",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3471e92f93b785d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a subordinate, then the Japanese for a company employee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めいし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいし — meishi — \"a business card\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かいぎで めいしを わたしました。 — kaigi de meishi o watashimashita — \"I handed over my business card at the meeting.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいし (meishi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mei, \"name\" (Middle Chinese mjieng) and shi, \"calling card\" (tshjeH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meishi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meishi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meishi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meishi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigi de meishi o watashimashita — I handed over my business card at the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigi de meishi o watashimashita* — I handed over my business card at the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a subordinate, then the Japanese for a company employee, then say meishi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a subordinate, then the Japanese for a company employee, then say *meishi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めいし (meishi) mean? (\"A business card\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C452-meishi-type",
+              "prompt": "Say the Japanese for 'a business card'.",
+              "assesses": [
+                "JA-LEX-C452-BOSS452-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めいし",
+                "meishi"
+              ],
+              "feedback": {
+                "correct": "Right: めいし (meishi) is 'a business card'.",
+                "incorrect": "'A business card' is めいし (meishi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

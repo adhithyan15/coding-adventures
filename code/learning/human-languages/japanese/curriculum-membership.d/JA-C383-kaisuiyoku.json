@@ -1,0 +1,11 @@
+{
+  "id": "JA-C383-kaisuiyoku",
+  "pathSegment": "JA-PATH-383-SHIMAGUNI383",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-383-SHIMAGUNI383",
+      "order": 3
+    }
+  ]
+}

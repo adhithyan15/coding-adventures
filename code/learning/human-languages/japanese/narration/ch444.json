@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 444,
+  "title": "Breathing and Pulse",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e7b4971b11507221",
+  "lessons": [
+    {
+      "id": "JA-C444-kokyuu-suru",
+      "sequence": 25930,
+      "title": "こきゅうする (kokyū suru) — to breathe",
+      "headword": "こきゅうする",
+      "romanization": "kokyū suru",
+      "gloss": "to breathe",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62b836f39eedc357",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for lips, then the Japanese for an eyelid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こきゅうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こきゅうする — kokyū suru — \"to breathe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆっくり こきゅうして ください。 — yukkuri kokyū shite kudasai — \"Please breathe slowly.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こきゅうします, kokyūshimasu; a する verb. Past (polite): かんじゃが ゆっくり こきゅうしました。, kanja ga yukkuri kokyū shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こきゅうする (kokyū suru) is Sino-Japanese (kango) kokyū with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ko, \"call\" (Middle Chinese xu) and kyū, \"inhale\" (xip) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokyū suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokyū suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokyū suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokyū suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukkuri kokyū shite kudasai — Please breathe slowly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukkuri kokyū shite kudasai* — Please breathe slowly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for lips, then the Japanese for an eyelid, then say kokyū suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for lips, then the Japanese for an eyelid, then say *kokyū suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こきゅうする (kokyū suru) mean? (\"To breathe\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C444-kokyuu-suru-type",
+              "prompt": "Say the Japanese for 'to breathe'.",
+              "assesses": [
+                "JA-LEX-C444-PULSE444-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こきゅうする",
+                "kokyū suru",
+                "kokyuu suru",
+                "kokyu suru"
+              ],
+              "feedback": {
+                "correct": "Right: こきゅうする (kokyū suru) is 'to breathe'.",
+                "incorrect": "'To breathe' is こきゅうする (kokyū suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C444-myaku",
+      "sequence": 25940,
+      "title": "みゃく (myaku) — a pulse",
+      "headword": "みゃく",
+      "romanization": "myaku",
+      "gloss": "a pulse",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20113d48689592e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an eyelid, then the Japanese for to breathe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みゃく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みゃく — myaku — \"a pulse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かんごしが みゃくを はかりました。 — kangoshi ga myaku o hakarimashita — \"The nurse took my pulse.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みゃく (myaku) is Sino-Japanese (kango): one Chinese character read with its on'yomi, a reading borrowed from Chinese. It is myaku, \"pulse\" (Middle Chinese meak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "myaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *myaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "myaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *myaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kangoshi ga myaku o hakarimashita — The nurse took my pulse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kangoshi ga myaku o hakarimashita* — The nurse took my pulse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an eyelid, then the Japanese for to breathe, then say myaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an eyelid, then the Japanese for to breathe, then say *myaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みゃく (myaku) mean? (\"A pulse\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C444-myaku-type",
+              "prompt": "Say the Japanese for 'a pulse'.",
+              "assesses": [
+                "JA-LEX-C444-PULSE444-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みゃく",
+                "myaku"
+              ],
+              "feedback": {
+                "correct": "Right: みゃく (myaku) is 'a pulse'.",
+                "incorrect": "'A pulse' is みゃく (myaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C444-ketsuatsu",
+      "sequence": 25950,
+      "title": "けつあつ (ketsuatsu) — blood pressure",
+      "headword": "けつあつ",
+      "romanization": "ketsuatsu",
+      "gloss": "blood pressure",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:745d440d87bac046",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to breathe, then the Japanese for a pulse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けつあつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けつあつ — ketsuatsu — \"blood pressure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふは けつあつが たかいです。 — sofu wa ketsuatsu ga takai desu — \"My grandfather has high blood pressure.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けつあつ (ketsuatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ketsu, \"blood\" (Middle Chinese xwet) and atsu, \"pressure\" ('aep) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ketsuatsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ketsuatsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ketsuatsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ketsuatsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu wa ketsuatsu ga takai desu — My grandfather has high blood pressure.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu wa ketsuatsu ga takai desu* — My grandfather has high blood pressure.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to breathe, then the Japanese for a pulse, then say ketsuatsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to breathe, then the Japanese for a pulse, then say *ketsuatsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けつあつ (ketsuatsu) mean? (\"Blood pressure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C444-ketsuatsu-type",
+              "prompt": "Say the Japanese for 'blood pressure'.",
+              "assesses": [
+                "JA-LEX-C444-PULSE444-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けつあつ",
+                "ketsuatsu"
+              ],
+              "feedback": {
+                "correct": "Right: けつあつ (ketsuatsu) is 'blood pressure'.",
+                "incorrect": "'Blood pressure' is けつあつ (ketsuatsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C444-taijuu",
+      "sequence": 25960,
+      "title": "たいじゅう (taijū) — one's weight",
+      "headword": "たいじゅう",
+      "romanization": "taijū",
+      "gloss": "one's weight",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9aa8e6ef02077ebb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a pulse, then the Japanese for blood pressure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいじゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいじゅう — taijū — \"one's weight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいじゅうが すこし ふえました。 — taijū ga sukoshi fuemashita — \"I have put on a little weight.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいじゅう (taijū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"body\" (Middle Chinese thejX) and jū, \"heavy\" (drjowngX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taijū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taijū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taijū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taijū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taijū ga sukoshi fuemashita — I have put on a little weight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taijū ga sukoshi fuemashita* — I have put on a little weight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a pulse, then the Japanese for blood pressure, then say taijū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a pulse, then the Japanese for blood pressure, then say *taijū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいじゅう (taijū) mean? (\"One's weight\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C444-taijuu-type",
+              "prompt": "Say the Japanese for 'one's weight'.",
+              "assesses": [
+                "JA-LEX-C444-PULSE444-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいじゅう",
+                "taijū",
+                "taijuu",
+                "taiju"
+              ],
+              "feedback": {
+                "correct": "Right: たいじゅう (taijū) is 'one's weight'.",
+                "incorrect": "'One's weight' is たいじゅう (taijū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C444-ibiki",
+      "sequence": 25970,
+      "title": "いびき (ibiki) — snoring; a snore",
+      "headword": "いびき",
+      "romanization": "ibiki",
+      "gloss": "snoring; a snore",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5370420f500b3fb8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for blood pressure, then the Japanese for one's weight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いびき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いびき — ibiki — \"snoring; a snore\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちの いびきは おおきいです。 — chichi no ibiki wa ōkii desu — \"My father snores loudly.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いびき (ibiki) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibiki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibiki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi no ibiki wa ōkii desu — My father snores loudly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi no ibiki wa ōkii desu* — My father snores loudly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for blood pressure, then the Japanese for one's weight, then say ibiki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for blood pressure, then the Japanese for one's weight, then say *ibiki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いびき (ibiki) mean? (\"Snoring; a snore\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C444-ibiki-type",
+              "prompt": "Say the Japanese for 'snoring'.",
+              "assesses": [
+                "JA-LEX-C444-PULSE444-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いびき",
+                "ibiki"
+              ],
+              "feedback": {
+                "correct": "Right: いびき (ibiki) is 'snoring; a snore'.",
+                "incorrect": "'Snoring' is いびき (ibiki)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C298-mukashibanashi",
+    "language": "japanese",
+    "chapter": 298,
+    "sequence": 17870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8998539ba51a9a3f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:54a145dfa30677e6",
+  "lessonIds": [
+    "JA-C422-washoku",
+    "JA-C422-youshoku",
+    "JA-C422-teishoku",
+    "JA-C422-sashimi",
+    "JA-C422-yakitori"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch422.txt",
+  "json": "japanese/narration/ch422.json",
+  "textHash": "fnv1a64:884ce8b32404ec66",
+  "jsonHash": "fnv1a64:ce54eeb4a692ffa7",
+  "findings": []
+}

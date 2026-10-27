@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Explaining Why",
+  "label": "ch:ja-explaining-why",
+  "canDo": "I can explain my reasons and ask for an explanation.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C318-naze",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can explain my reasons and ask for an explanation.",
+    "assesses": [
+      "JA-LEX-C318-SETSUMEI318-03",
+      "JA-LEX-C318-SETSUMEI318-04",
+      "JA-LEX-C318-SETSUMEI318-05"
+    ]
+  }
+}

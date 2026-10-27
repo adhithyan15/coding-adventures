@@ -1,0 +1,11 @@
+{
+  "id": "JA-C391-tachidomaru",
+  "pathSegment": "JA-PATH-391-OUDAN391",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-391-OUDAN391",
+      "order": 3
+    }
+  ]
+}

@@ -2,6 +2,83 @@ using CodingAdventures.Point2D;
 
 namespace CodingAdventures.Bezier2D;
 
+internal static class Flattening
+{
+    internal const int MaxDepth = 32;
+    internal const int MaxSubdivisions = 65_535;
+
+    internal static void ValidateInputs(double tolerance, params Point[] controlPoints)
+    {
+        if (!double.IsFinite(tolerance) || tolerance <= 0.0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(tolerance), tolerance, "tolerance must be finite and positive");
+        }
+
+        foreach (var point in controlPoints)
+        {
+            if (!double.IsFinite(point.X) || !double.IsFinite(point.Y))
+            {
+                throw new ArgumentOutOfRangeException(nameof(controlPoints), point, "control points must be finite");
+            }
+        }
+    }
+
+    internal static double DistanceToSegment(Point point, Point start, Point end)
+    {
+        var dx = Finite(end.X - start.X);
+        var dy = Finite(end.Y - start.Y);
+        var scale = Math.Max(Math.Abs(dx), Math.Abs(dy));
+
+        if (scale == 0.0)
+        {
+            return Distance(point, start);
+        }
+
+        var normalizedX = dx / scale;
+        var normalizedY = dy / scale;
+        var normalizedLengthSquared = Finite(
+            Finite(normalizedX * normalizedX) + Finite(normalizedY * normalizedY));
+        var offsetX = Finite(point.X - start.X);
+        var offsetY = Finite(point.Y - start.Y);
+        var normalizedOffsetX = Finite(offsetX / scale);
+        var normalizedOffsetY = Finite(offsetY / scale);
+        var projection = Finite(
+            Finite(
+                Finite(normalizedOffsetX * normalizedX)
+                + Finite(normalizedOffsetY * normalizedY))
+            / normalizedLengthSquared);
+        projection = Math.Clamp(projection, 0.0, 1.0);
+        var nearest = new Point(
+            Finite(start.X + projection * dx),
+            Finite(start.Y + projection * dy));
+        return Distance(point, nearest);
+    }
+
+    internal static InvalidOperationException BudgetExceeded() =>
+        new("Bezier flattening exceeded the depth or subdivision budget");
+
+    private static double Distance(Point left, Point right)
+    {
+        var dx = Finite(left.X - right.X);
+        var dy = Finite(left.Y - right.Y);
+        var scale = Math.Max(Math.Abs(dx), Math.Abs(dy));
+        if (scale == 0.0)
+        {
+            return 0.0;
+        }
+
+        var normalizedX = dx / scale;
+        var normalizedY = dy / scale;
+        return Finite(scale * Math.Sqrt(Finite(
+            Finite(normalizedX * normalizedX) + Finite(normalizedY * normalizedY))));
+    }
+
+    private static double Finite(double value) =>
+        double.IsFinite(value)
+            ? value
+            : throw new InvalidOperationException("Bezier subdivision produced nonfinite geometry");
+}
+
 public readonly record struct QuadraticBezier(Point P0, Point P1, Point P2)
 {
     public Point Evaluate(double t)
@@ -28,17 +105,33 @@ public readonly record struct QuadraticBezier(Point P0, Point P1, Point P2)
 
     public IReadOnlyList<Point> ToPolyline(double tolerance)
     {
-        EnsureTolerance(tolerance);
-        var chordMid = P0.Lerp(P2, 0.5);
-        var curveMid = Evaluate(0.5);
-        if (chordMid.Distance(curveMid) <= tolerance)
+        Flattening.ValidateInputs(tolerance, P0, P1, P2);
+        var points = new List<Point> { P0 };
+        var pending = new Stack<(QuadraticBezier Curve, int Depth)>();
+        pending.Push((this, 0));
+        var subdivisions = 0;
+
+        while (pending.Count > 0)
         {
-            return [P0, P2];
+            var (curve, depth) = pending.Pop();
+            var error = Flattening.DistanceToSegment(curve.P1, curve.P0, curve.P2);
+            if (error <= tolerance)
+            {
+                points.Add(curve.P2);
+                continue;
+            }
+
+            if (depth >= Flattening.MaxDepth || subdivisions >= Flattening.MaxSubdivisions)
+            {
+                throw Flattening.BudgetExceeded();
+            }
+
+            subdivisions++;
+            var (left, right) = curve.Split(0.5);
+            pending.Push((right, depth + 1));
+            pending.Push((left, depth + 1));
         }
 
-        var (left, right) = Split(0.5);
-        var points = left.ToPolyline(tolerance).ToList();
-        points.AddRange(right.ToPolyline(tolerance).Skip(1));
         return points;
     }
 
@@ -83,13 +176,6 @@ public readonly record struct QuadraticBezier(Point P0, Point P1, Point P2)
         return new CubicBezier(P0, q1, q2, P2);
     }
 
-    private static void EnsureTolerance(double tolerance)
-    {
-        if (!double.IsFinite(tolerance) || tolerance < 0.0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(tolerance), tolerance, "tolerance must be finite and non-negative");
-        }
-    }
 }
 
 public readonly record struct CubicBezier(Point P0, Point P1, Point P2, Point P3)
@@ -133,17 +219,35 @@ public readonly record struct CubicBezier(Point P0, Point P1, Point P2, Point P3
 
     public IReadOnlyList<Point> ToPolyline(double tolerance)
     {
-        EnsureTolerance(tolerance);
-        var chordMid = P0.Lerp(P3, 0.5);
-        var curveMid = Evaluate(0.5);
-        if (chordMid.Distance(curveMid) <= tolerance)
+        Flattening.ValidateInputs(tolerance, P0, P1, P2, P3);
+        var points = new List<Point> { P0 };
+        var pending = new Stack<(CubicBezier Curve, int Depth)>();
+        pending.Push((this, 0));
+        var subdivisions = 0;
+
+        while (pending.Count > 0)
         {
-            return [P0, P3];
+            var (curve, depth) = pending.Pop();
+            var error = Math.Max(
+                Flattening.DistanceToSegment(curve.P1, curve.P0, curve.P3),
+                Flattening.DistanceToSegment(curve.P2, curve.P0, curve.P3));
+            if (error <= tolerance)
+            {
+                points.Add(curve.P3);
+                continue;
+            }
+
+            if (depth >= Flattening.MaxDepth || subdivisions >= Flattening.MaxSubdivisions)
+            {
+                throw Flattening.BudgetExceeded();
+            }
+
+            subdivisions++;
+            var (left, right) = curve.Split(0.5);
+            pending.Push((right, depth + 1));
+            pending.Push((left, depth + 1));
         }
 
-        var (left, right) = Split(0.5);
-        var points = left.ToPolyline(tolerance).ToList();
-        points.AddRange(right.ToPolyline(tolerance).Skip(1));
         return points;
     }
 
@@ -169,14 +273,6 @@ public readonly record struct CubicBezier(Point P0, Point P1, Point P2, Point P3
         }
 
         return new Rect(minX, minY, maxX - minX, maxY - minY);
-    }
-
-    private static void EnsureTolerance(double tolerance)
-    {
-        if (!double.IsFinite(tolerance) || tolerance < 0.0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(tolerance), tolerance, "tolerance must be finite and non-negative");
-        }
     }
 
     private static IReadOnlyList<double> ExtremaOfCubicDerivative(double v0, double v1, double v2, double v3)

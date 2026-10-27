@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:63cba504c7b8b905",
+  "lessonIds": [
+    "JA-C352-koboreru",
+    "JA-C352-hodokeru",
+    "JA-C352-hikkurikaeru",
+    "JA-C352-zureru",
+    "JA-C352-dougu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch352.txt",
+  "json": "japanese/narration/ch352.json",
+  "textHash": "fnv1a64:61eaf9a6712b1a5e",
+  "jsonHash": "fnv1a64:2564c2b003e7a7e8",
+  "findings": []
+}

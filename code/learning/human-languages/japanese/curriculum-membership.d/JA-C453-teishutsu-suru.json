@@ -1,0 +1,11 @@
+{
+  "id": "JA-C453-teishutsu-suru",
+  "pathSegment": "JA-PATH-453-PAPERS453",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-453-PAPERS453",
+      "order": 3
+    }
+  ]
+}

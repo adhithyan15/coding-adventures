@@ -1,0 +1,11 @@
+{
+  "id": "JA-C496-shiokarai",
+  "pathSegment": "JA-PATH-496-SOFT496",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-496-SOFT496",
+      "order": 1
+    }
+  ]
+}

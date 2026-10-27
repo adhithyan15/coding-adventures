@@ -1,0 +1,11 @@
+{
+  "id": "JA-C306-funabin",
+  "pathSegment": "JA-PATH-306-AISATSU306",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-306-AISATSU306",
+      "order": 3
+    }
+  ]
+}

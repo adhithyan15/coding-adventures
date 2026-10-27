@@ -50,15 +50,14 @@ pub fn count_branch_selected(count: u32, target_register: u8) -> u8 {
     and_gate(nonzero_32(count), register_field_nonzero(target_register))
 }
 
-/// The BXH/BXLE predicate from one-hot opcode lines and comparator CC wires.
-pub fn index_branch_selected(opcode: u8, compare_condition_code: u8) -> u8 {
-    let decode = decode_byte(opcode);
+/// The BXH/BXLE predicate from the transition's already-settled one-hot lines.
+pub fn index_branch_selected(bxh_select: u8, bxle_select: u8, compare_condition_code: u8) -> u8 {
     let low = compare_condition_code & 1;
     let high_bit = (compare_condition_code >> 1) & 1;
     let high = and_gate(high_bit, not_gate(low));
     or_gate(
-        and_gate(decode[0x86], high),
-        and_gate(decode[0x87], not_gate(high)),
+        and_gate(bxh_select, high),
+        and_gate(bxle_select, not_gate(high)),
     )
 }
 

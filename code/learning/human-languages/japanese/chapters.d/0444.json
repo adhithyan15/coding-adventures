@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Breathing and Pulse",
+  "label": "ch:ja-breathing-and-pulse",
+  "canDo": "I can talk about breathing, pulse and weight.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C444-ibiki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can talk about breathing, pulse and weight.",
+    "assesses": [
+      "JA-LEX-C444-PULSE444-03",
+      "JA-LEX-C444-PULSE444-04",
+      "JA-LEX-C444-PULSE444-05"
+    ]
+  }
+}

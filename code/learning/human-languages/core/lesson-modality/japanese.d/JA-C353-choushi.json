@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C353-choushi",
+    "language": "japanese",
+    "chapter": 353,
+    "sequence": 20870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8a14d9ff6caccf2"
+  },
+  "findings": []
+}

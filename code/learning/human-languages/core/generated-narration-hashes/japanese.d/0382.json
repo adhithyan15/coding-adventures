@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:be21904a7f0d356b",
+  "lessonIds": [
+    "JA-C382-kaigan",
+    "JA-C382-sunahama",
+    "JA-C382-misaki",
+    "JA-C382-suiheisen",
+    "JA-C382-kagayaku"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "japanese/narration/ch382.txt",
+  "json": "japanese/narration/ch382.json",
+  "textHash": "fnv1a64:52aa0f75c062786e",
+  "jsonHash": "fnv1a64:369424a9b6c9e102",
+  "findings": []
+}

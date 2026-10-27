@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "A Wedding",
+  "label": "ch:ja-a-wedding",
+  "canDo": "I can say who married and what they promised.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C289-fuufu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say who married and what they promised.",
+    "assesses": [
+      "JA-LEX-C289-KEKKON289-03",
+      "JA-LEX-C289-KEKKON289-04",
+      "JA-LEX-C289-KEKKON289-05"
+    ]
+  }
+}

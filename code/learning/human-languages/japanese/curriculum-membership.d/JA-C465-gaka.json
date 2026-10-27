@@ -1,0 +1,11 @@
+{
+  "id": "JA-C465-gaka",
+  "pathSegment": "JA-PATH-465-PAINT465",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-465-PAINT465",
+      "order": 3
+    }
+  ]
+}

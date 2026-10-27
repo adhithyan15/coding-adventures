@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 403,
+  "title": "Culture and Places to Visit",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e4e9c04d2db8fb96",
+  "lessons": [
+    {
+      "id": "JA-C403-bunka",
+      "sequence": 23600,
+      "title": "ぶんか (bunka) — culture",
+      "headword": "ぶんか",
+      "romanization": "bunka",
+      "gloss": "culture",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a358b02e9652ffd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a local speciality, then the Japanese for to tour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶんか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶんか — bunka — \"culture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がいこくの ぶんかを まなびたいです。 — gaikoku no bunka o manabitai desu — \"I want to learn about other countries' cultures.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶんか (bunka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bun, \"literature\" (Middle Chinese mjun) and ka, \"change\" (xwaeH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bunka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bunka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bunka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bunka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaikoku no bunka o manabitai desu — I want to learn about other countries' cultures.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaikoku no bunka o manabitai desu* — I want to learn about other countries' cultures.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a local speciality, then the Japanese for to tour, then say bunka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a local speciality, then the Japanese for to tour, then say *bunka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶんか (bunka) mean? (\"Culture\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C403-bunka-type",
+              "prompt": "Say the Japanese for 'culture'.",
+              "assesses": [
+                "JA-LEX-C403-BUNKA403-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶんか",
+                "bunka"
+              ],
+              "feedback": {
+                "correct": "Right: ぶんか (bunka) is 'culture'.",
+                "incorrect": "'Culture' is ぶんか (bunka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C403-midokoro",
+      "sequence": 23610,
+      "title": "みどころ (midokoro) — a highlight; the part worth seeing",
+      "headword": "みどころ",
+      "romanization": "midokoro",
+      "gloss": "a highlight; the part worth seeing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a07714b7877de47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to tour, then the Japanese for culture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みどころ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みどころ — midokoro — \"a highlight; the part worth seeing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この てらの みどころは にわです。 — kono tera no midokoro wa niwa desu — \"The highlight of this temple is its garden.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みどころ (midokoro) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mi, \"seeing\" (from miru) and dokoro, \"place\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "midokoro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *midokoro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "midokoro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *midokoro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono tera no midokoro wa niwa desu — The highlight of this temple is its garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono tera no midokoro wa niwa desu* — The highlight of this temple is its garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to tour, then the Japanese for culture, then say midokoro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to tour, then the Japanese for culture, then say *midokoro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みどころ (midokoro) mean? (\"A highlight; the part worth seeing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C403-midokoro-type",
+              "prompt": "Say the Japanese for 'a highlight'.",
+              "assesses": [
+                "JA-LEX-C403-BUNKA403-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みどころ",
+                "midokoro"
+              ],
+              "feedback": {
+                "correct": "Right: みどころ (midokoro) is 'a highlight; the part worth seeing'.",
+                "incorrect": "'A highlight' is みどころ (midokoro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C403-kengaku",
+      "sequence": 23620,
+      "title": "けんがく (kengaku) — a study visit; a tour of a place",
+      "headword": "けんがく",
+      "romanization": "kengaku",
+      "gloss": "a study visit; a tour of a place",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a34e40e340a554d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for culture, then the Japanese for a highlight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けんがく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんがく — kengaku — \"a study visit; a tour of a place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうじょうを けんがくしました。 — kōjō o kengaku shimashita — \"We went on a tour of the factory.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんがく (kengaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ken, \"see\" (Middle Chinese kenH) and gaku, \"study\" (haewk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kengaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kengaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kengaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kengaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōjō o kengaku shimashita — We went on a tour of the factory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōjō o kengaku shimashita* — We went on a tour of the factory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for culture, then the Japanese for a highlight, then say kengaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for culture, then the Japanese for a highlight, then say *kengaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けんがく (kengaku) mean? (\"A study visit; a tour of a place\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C403-kengaku-type",
+              "prompt": "Say the Japanese for 'a study visit'.",
+              "assesses": [
+                "JA-LEX-C403-BUNKA403-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けんがく",
+                "kengaku"
+              ],
+              "feedback": {
+                "correct": "Right: けんがく (kengaku) is 'a study visit; a tour of a place'.",
+                "incorrect": "'A study visit' is けんがく (kengaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C403-tabisaki",
+      "sequence": 23630,
+      "title": "たびさき (tabisaki) — a place visited on a trip",
+      "headword": "たびさき",
+      "romanization": "tabisaki",
+      "gloss": "a place visited on a trip",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c7cfde59375985e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a highlight, then the Japanese for a study visit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たびさき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たびさき — tabisaki — \"a place visited on a trip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たびさきで ともだちに てがみを かきました。 — tabisaki de tomodachi ni tegami o kakimashita — \"I wrote to a friend from the place I was visiting.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たびさき (tabisaki) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tabi, \"journey\" and saki, \"ahead\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabisaki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabisaki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabisaki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabisaki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabisaki de tomodachi ni tegami o kakimashita — I wrote to a friend from the place I was visiting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabisaki de tomodachi ni tegami o kakimashita* — I wrote to a friend from the place I was visiting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a highlight, then the Japanese for a study visit, then say tabisaki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a highlight, then the Japanese for a study visit, then say *tabisaki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たびさき (tabisaki) mean? (\"A place visited on a trip\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C403-tabisaki-type",
+              "prompt": "Say the Japanese for 'a place visited on a trip'.",
+              "assesses": [
+                "JA-LEX-C403-BUNKA403-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たびさき",
+                "tabisaki"
+              ],
+              "feedback": {
+                "correct": "Right: たびさき (tabisaki) is 'a place visited on a trip'.",
+                "incorrect": "'A place visited on a trip' is たびさき (tabisaki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C403-otozureru",
+      "sequence": 23640,
+      "title": "おとずれる (otozureru) — to visit a place; to call on",
+      "headword": "おとずれる",
+      "romanization": "otozureru",
+      "gloss": "to visit a place; to call on",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb0ebba72e270d7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a study visit, then the Japanese for a place visited on a trip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おとずれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おとずれる — otozureru — \"to visit a place; to call on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつに ふるい てらを おとずれました。 — natsu ni furui tera o otozuremashita — \"In summer I visited an old temple.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おとずれます, otozuremasu; an ichidan verb. Past (polite): かんこうきゃくが しまを おとずれました。, kankōkyaku ga shima o otozuremashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おとずれる (otozureru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otozureru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otozureru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otozureru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otozureru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsu ni furui tera o otozuremashita — In summer I visited an old temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsu ni furui tera o otozuremashita* — In summer I visited an old temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a study visit, then the Japanese for a place visited on a trip, then say otozureru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a study visit, then the Japanese for a place visited on a trip, then say *otozureru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おとずれる (otozureru) mean? (\"To visit a place; to call on\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C403-otozureru-type",
+              "prompt": "Say the Japanese for 'to visit a place'.",
+              "assesses": [
+                "JA-LEX-C403-BUNKA403-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おとずれる",
+                "otozureru"
+              ],
+              "feedback": {
+                "correct": "Right: おとずれる (otozureru) is 'to visit a place; to call on'.",
+                "incorrect": "'To visit a place' is おとずれる (otozureru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

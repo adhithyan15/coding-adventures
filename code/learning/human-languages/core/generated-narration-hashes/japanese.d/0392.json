@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:df63797b2eff2d82",
+  "lessonIds": [
+    "JA-C392-yorimichi",
+    "JA-C392-mawarimichi",
+    "JA-C392-ikidomari",
+    "JA-C392-hikikaesu",
+    "JA-C392-tachiyoru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch392.txt",
+  "json": "japanese/narration/ch392.json",
+  "textHash": "fnv1a64:e754806ceca2328f",
+  "jsonHash": "fnv1a64:32077db658f73933",
+  "findings": []
+}

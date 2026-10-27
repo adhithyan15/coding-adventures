@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C466-origami",
+    "language": "japanese",
+    "chapter": 466,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99b89ffd3ae31fee"
+  },
+  "findings": []
+}

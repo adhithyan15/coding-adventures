@@ -1,0 +1,11 @@
+{
+  "id": "JA-C476-choujo",
+  "pathSegment": "JA-PATH-476-KIN476",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-476-KIN476",
+      "order": 4
+    }
+  ]
+}

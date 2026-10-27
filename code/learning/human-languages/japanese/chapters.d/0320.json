@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Seeing Both Sides",
+  "label": "ch:ja-seeing-both-sides",
+  "canDo": "I can say how a problem looks from another side.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C320-tokuni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can say how a problem looks from another side.",
+    "assesses": [
+      "JA-LEX-C320-TACHIBA320-03",
+      "JA-LEX-C320-TACHIBA320-04",
+      "JA-LEX-C320-TACHIBA320-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R316-review-final-316",
+    "language": "japanese",
+    "chapter": 316,
+    "sequence": 18850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e212b3fecc64c974"
+  },
+  "findings": []
+}

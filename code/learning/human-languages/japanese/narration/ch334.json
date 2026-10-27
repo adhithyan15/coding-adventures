@@ -1,0 +1,945 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 334,
+  "title": "Helping the Community",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:549ac343fd322ea8",
+  "lessons": [
+    {
+      "id": "JA-C334-fukushi",
+      "sequence": 19870,
+      "title": "ふくし (fukushi) — welfare; social services",
+      "headword": "ふくし",
+      "romanization": "fukushi",
+      "gloss": "welfare; social services",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c32522d822065efb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to give care, then the Japanese for bringing up children."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふくし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふくし — fukushi — \"welfare; social services\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうれいしゃが ふえたので、ふくしが ひつようです。 — kōreisha ga fueta node, fukushi ga hitsuyō desu — \"The elderly have grown in number, so welfare is needed.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふくし (fukushi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fuku, \"blessing\" and shi, \"welfare\" (Middle Chinese trhiX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fukushi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fukushi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fukushi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fukushi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōreisha ga fueta node, fukushi ga hitsuyō desu — The elderly have grown in number, so welfare is needed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōreisha ga fueta node, fukushi ga hitsuyō desu* — The elderly have grown in number, so welfare is needed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to give care, then the Japanese for bringing up children, then say fukushi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to give care, then the Japanese for bringing up children, then say *fukushi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふくし (fukushi) mean? (\"Welfare; social services\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C334-fukushi-type",
+              "prompt": "Say the Japanese for 'welfare'.",
+              "assesses": [
+                "JA-LEX-C334-FUKUSHI334-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふくし",
+                "fukushi"
+              ],
+              "feedback": {
+                "correct": "Right: ふくし (fukushi) is 'welfare; social services'.",
+                "incorrect": "'Welfare' is ふくし (fukushi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C334-kifu-suru",
+      "sequence": 19880,
+      "title": "きふする (kifu suru) — to donate",
+      "headword": "きふする",
+      "romanization": "kifu suru",
+      "gloss": "to donate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ec33e4b60138e99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for bringing up children, then the Japanese for welfare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きふする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きふする — kifu suru — \"to donate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいふうで みんなが こまったので、おかねを きふしました。 — taifū de minna ga komatta node, okane o kifu shimashita — \"The typhoon left everyone in trouble, so I gave money.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きふします, kifushimasu; a する verb. Past (polite): ちちが おかねを きふしました。, chichi ga okane o kifu shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きふする (kifu suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, kifu, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: ki, \"draw near\" (Middle Chinese kjeH) and fu, \"attach\" (pjuH) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kifu suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kifu suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kifu suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kifu suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū de minna ga komatta node, okane o kifu shimashita — The typhoon left everyone in trouble, so I gave money.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū de minna ga komatta node, okane o kifu shimashita* — The typhoon left everyone in trouble, so I gave money.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for bringing up children, then the Japanese for welfare, then say kifu suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for bringing up children, then the Japanese for welfare, then say *kifu suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きふする (kifu suru) mean? (\"To donate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C334-kifu-suru-type",
+              "prompt": "Say the Japanese for 'to donate'.",
+              "assesses": [
+                "JA-LEX-C334-FUKUSHI334-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きふする",
+                "kifu suru"
+              ],
+              "feedback": {
+                "correct": "Right: きふする (kifu suru) is 'to donate'.",
+                "incorrect": "'To donate' is きふする (kifu suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C334-bokin",
+      "sequence": 19890,
+      "title": "ぼきん (bokin) — fund-raising; a collection",
+      "headword": "ぼきん",
+      "romanization": "bokin",
+      "gloss": "fund-raising; a collection",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e6a33d8c9798ae6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for welfare, then the Japanese for to donate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぼきん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼきん — bokin — \"fund-raising; a collection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいふうが あったので、えきで ぼきんを しています。 — taifū ga atta node, eki de bokin o shite imasu — \"There was a typhoon, so people are collecting money at the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼきん (bokin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bo, \"recruit\" (Middle Chinese muH) and kin, \"gold\" (kim) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bokin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bokin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bokin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bokin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū ga atta node, eki de bokin o shite imasu — There was a typhoon, so people are collecting money at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū ga atta node, eki de bokin o shite imasu* — There was a typhoon, so people are collecting money at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for welfare, then the Japanese for to donate, then say bokin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for welfare, then the Japanese for to donate, then say *bokin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぼきん (bokin) mean? (\"Fund-raising; a collection\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C334-bokin-type",
+              "prompt": "Say the Japanese for 'fund-raising'.",
+              "assesses": [
+                "JA-LEX-C334-FUKUSHI334-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぼきん",
+                "bokin"
+              ],
+              "feedback": {
+                "correct": "Right: ぼきん (bokin) is 'fund-raising; a collection'.",
+                "incorrect": "'Fund-raising' is ぼきん (bokin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C334-sewa",
+      "sequence": 19900,
+      "title": "せわ (sewa) — looking after; care",
+      "headword": "せわ",
+      "romanization": "sewa",
+      "gloss": "looking after; care",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78cb93d3cb71265a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to donate, then the Japanese for fund-raising."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せわ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せわ — sewa — \"looking after; care\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いぬの せわを するから、はやく かえります。 — inu no sewa o suru kara, hayaku kaerimasu — \"I look after the dog, so I go home early.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せわ (sewa) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are se, \"world\" (Middle Chinese syejH) and wa, \"talk\" (hwaejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sewa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sewa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sewa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sewa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inu no sewa o suru kara, hayaku kaerimasu — I look after the dog, so I go home early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inu no sewa o suru kara, hayaku kaerimasu* — I look after the dog, so I go home early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to donate, then the Japanese for fund-raising, then say sewa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to donate, then the Japanese for fund-raising, then say *sewa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せわ (sewa) mean? (\"Looking after; care\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C334-sewa-type",
+              "prompt": "Say the Japanese for 'looking after'.",
+              "assesses": [
+                "JA-LEX-C334-FUKUSHI334-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せわ",
+                "sewa"
+              ],
+              "feedback": {
+                "correct": "Right: せわ (sewa) is 'looking after; care'.",
+                "incorrect": "'Looking after' is せわ (sewa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C334-atsukau",
+      "sequence": 19910,
+      "title": "あつかう (atsukau) — to handle; to treat",
+      "headword": "あつかう",
+      "romanization": "atsukau",
+      "gloss": "to handle; to treat",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d1893b606a183d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for fund-raising, then the Japanese for looking after."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あつかう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あつかう — atsukau — \"to handle; to treat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この おさらは たかいから、こどもは あつかわないで ください。 — kono osara wa takai kara, kodomo wa atsukawanaide kudasai — \"This plate is expensive, so children, please do not handle it.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あつかいます, atsukaimasu; a godan verb. Past (polite): てんいんが にもつを あつかいました。, ten'in ga nimotsu o atsukaimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あつかう (atsukau) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atsukau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atsukau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atsukau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atsukau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono osara wa takai kara, kodomo wa atsukawanaide kudasai — This plate is expensive, so children, please do not handle it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono osara wa takai kara, kodomo wa atsukawanaide kudasai* — This plate is expensive, so children, please do not handle it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for fund-raising, then the Japanese for looking after, then say atsukau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for fund-raising, then the Japanese for looking after, then say *atsukau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あつかう (atsukau) mean? (\"To handle; to treat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C334-atsukau-type",
+              "prompt": "Say the Japanese for 'to handle'.",
+              "assesses": [
+                "JA-LEX-C334-FUKUSHI334-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あつかう",
+                "atsukau"
+              ],
+              "feedback": {
+                "correct": "Right: あつかう (atsukau) is 'to handle; to treat'.",
+                "incorrect": "'To handle' is あつかう (atsukau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R334-review-329-334",
+      "sequence": 19920,
+      "title": "Looking back: from Common Sense to Helping the Community",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Common Sense to Helping the Community",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5263b73f2a318d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for common sense and only natural."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "common sense, only natural, naturally, one's turn, a cigarette end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: common sense, only natural, naturally, one's turn, a cigarette end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "as one should, firmly, to follow an example, to line up neatly, to revise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: as one should, firmly, to follow an example, to line up neatly, to revise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "society, a citizen, a resident, politics, a law",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: society, a citizen, a resident, politics, a law]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a right, a duty, equal, discrimination, all members",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a right, a duty, equal, discrimination, all members]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "young people, an elderly person, population, to give care, bringing up children",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: young people, an elderly person, population, to give care, bringing up children]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "welfare, to donate, fund-raising, looking after, to handle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: welfare, to donate, fund-raising, looking after, to handle]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Common sense? (じょうしき, jōshiki.) Only natural? (あたりまえ, atarimae.) Naturally? (とうぜん, tōzen.) One's turn? (じゅんばん, junban.) A cigarette end? (すいがら, suigara.) As one should? (ちゃんと, chanto.) Firmly? (しっかり, shikkari.) To follow an example? (みならう, minarau.) To line up neatly? (そろえる, soroeru.) To revise? (あらためる, aratameru.) Society? (しゃかい, shakai.) A citizen? (しみん, shimin.) A resident? (じゅうみん, jūmin.) Politics? (せいじ, seiji.) A law? (ほうりつ, hōritsu.) A right? (けんり, kenri.) A duty? (ぎむ, gimu.) Equal? (びょうどう, byōdō.) Discrimination? (さべつ, sabetsu.) All members? (ぜんいん, zen'in.) Young people? (わかもの, wakamono.) An elderly person? (こうれいしゃ, kōreisha.) Population? (じんこう, jinkō.) To give care? (かいごする, kaigo suru.) Bringing up children? (こそだて, kosodate.) Welfare? (ふくし, fukushi.) To donate? (きふする, kifu suru.) Fund-raising? (ぼきん, bokin.) Looking after? (せわ, sewa.) To handle? (あつかう, atsukau.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R334-review-329-334-type",
+              "prompt": "Say the Japanese for 'common sense'.",
+              "assesses": [
+                "JA-LEX-C329-JOUSHIKI329-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じょうしき",
+                "jōshiki",
+                "joushiki",
+                "jooshiki",
+                "joshiki"
+              ],
+              "feedback": {
+                "correct": "Right: じょうしき (jōshiki) is 'common sense'.",
+                "incorrect": "'Common sense' is じょうしき (jōshiki)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

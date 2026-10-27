@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Instruments",
+  "label": "ch:ja-instruments",
+  "canDo": "I can talk about musical instruments.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C469-neiro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can talk about musical instruments.",
+    "assesses": [
+      "JA-LEX-C469-INSTR469-03",
+      "JA-LEX-C469-INSTR469-04",
+      "JA-LEX-C469-INSTR469-05"
+    ]
+  }
+}
