@@ -21,14 +21,14 @@
 //! # Halt sentinel
 //!
 //! Opcode `0xA5` is reserved/undefined on the real 8051.  This simulator
-//! uses it as a soft HALT: `step()` sets `halted=true` and returns.
+//! uses it as a soft HALT: `step()` clocks the HALT DFF and returns.
 
 use crate::alu::{
     add8, anl8, da8, dec8, div8, inc8, mul8, orl8, rl8, rlc8, rr8, rrc8, subb8, swap8, xrl8,
 };
 use crate::bits::{add_16bit_full, int_to_bits8};
 use crate::registers::RegisterFile8051;
-use crate::state::{DffMemory, StateRegister};
+use crate::state::{DffBit, DffMemory};
 use intel8051_simulator::{
     decode::operand_len, ExecutionResult, Intel8051Error, Intel8051Simulator, Intel8051State,
     StepTrace,
@@ -43,6 +43,37 @@ const IRAM_SIZE: usize = 256;
 /// Exact persistent topology: 524,288 code bits, 524,288 XDATA bits,
 /// 2,048 IRAM/SFR bits, 16 PC bits, and one halt bit.
 pub const FLIP_FLOP_COUNT: usize = (CODE_SIZE + XDATA_SIZE + IRAM_SIZE) * 8 + 16 + 1;
+
+/// Concrete inventory of every persistent DFF bank owned by the machine.
+///
+/// Each field is derived from its storage container, independently from
+/// [`FLIP_FLOP_COUNT`], so topology tests detect omitted or double-counted
+/// banks instead of merely restating the published constant.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    /// DFFs owned by the 64 KiB code bank.
+    pub code_dffs: usize,
+    /// DFFs owned by the 64 KiB external-data bank.
+    pub xdata_dffs: usize,
+    /// DFFs owned by the 256-byte IRAM/SFR bank.
+    pub iram_dffs: usize,
+    /// DFFs owned by the program counter.
+    pub program_counter_dffs: usize,
+    /// DFFs owned by the HALT latch.
+    pub halt_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum all independently inventoried storage banks.
+    #[must_use]
+    pub const fn total(self) -> usize {
+        self.code_dffs
+            + self.xdata_dffs
+            + self.iram_dffs
+            + self.program_counter_dffs
+            + self.halt_dffs
+    }
+}
 
 // ─── SFR addresses ────────────────────────────────────────────────────────────
 
@@ -88,7 +119,7 @@ const HALT_OPCODE: u8 = 0xA5;
 /// // MOV A, #0x0A; MOV R0, #0x05; ADD A, R0; HALT
 /// cpu.execute(&[0x74, 0x0A, 0x78, 0x05, 0x28, 0xA5], 0, 100);
 /// assert_eq!(cpu.rf.read_iram8(0xE0), 0x0F); // ACC = 0x0A + 0x05
-/// assert!(cpu.halted);
+/// assert!(cpu.halted());
 /// ```
 pub struct Cpu8051 {
     /// Register file: IRAM (including SFRs) + PC.
@@ -97,11 +128,14 @@ pub struct Cpu8051 {
     pub code: DffMemory,
     /// External data memory: 64 KB, accessed via MOVX.
     pub xdata: DffMemory,
-    /// True after a HALT opcode (0xA5) is executed.
+    /// Source-compatible observer of the HALT DFF Q output.
+    ///
+    /// Architectural behavior is driven by [`Self::halted`]. External writes
+    /// to this observer are repaired at the next mutating execution boundary.
     pub halted: bool,
     loaded_origin: u16,
     loaded_len: usize,
-    halt_state: StateRegister,
+    halt: DffBit,
 }
 
 impl Cpu8051 {
@@ -114,7 +148,7 @@ impl Cpu8051 {
             halted: false,
             loaded_origin: 0,
             loaded_len: CODE_SIZE,
-            halt_state: StateRegister::new(1),
+            halt: DffBit::new(),
         };
         cpu.reset();
         cpu
@@ -126,14 +160,13 @@ impl Cpu8051 {
     /// P0-P3=0xFF (all port latches high).
     pub fn reset(&mut self) {
         self.rf = RegisterFile8051::new();
-        self.halted = false;
+        self.clock_halted(false);
         // Initial SFR values
         self.rf.write_iram8(SFR_SP, 0x07);
         self.rf.write_iram8(SFR_P0, 0xFF);
         self.rf.write_iram8(SFR_P1, 0xFF);
         self.rf.write_iram8(SFR_P2, 0xFF);
         self.rf.write_iram8(SFR_P3, 0xFF);
-        self.clock_wires_into_state();
     }
 
     /// Load a program into code memory at `origin` and reset CPU state.
@@ -157,7 +190,6 @@ impl Cpu8051 {
         self.rf.write_pc(origin);
         self.loaded_origin = origin;
         self.loaded_len = end - start;
-        self.clock_wires_into_state();
     }
 
     /// Return a complete owned snapshot of every architectural bit.
@@ -167,7 +199,7 @@ impl Cpu8051 {
             iram: self.rf.iram_snapshot(),
             xdata: self.xdata.snapshot(),
             code: self.code.snapshot(),
-            halted: self.halted,
+            halted: self.halted(),
             loaded_origin: self.loaded_origin,
             loaded_len: self.loaded_len,
         }
@@ -181,10 +213,9 @@ impl Cpu8051 {
         self.rf.write_pc(state.pc);
         self.xdata.restore_snapshot(&state.xdata);
         self.code.restore_snapshot(&state.code);
-        self.halted = state.halted;
+        self.clock_halted(state.halted);
         self.loaded_origin = state.loaded_origin;
         self.loaded_len = state.loaded_len;
-        self.clock_wires_into_state();
         Ok(())
     }
 
@@ -209,7 +240,6 @@ impl Cpu8051 {
         self.rf.write_pc(origin);
         self.loaded_origin = origin;
         self.loaded_len = program.len();
-        self.clock_wires_into_state();
         Ok(())
     }
 
@@ -222,7 +252,8 @@ impl Cpu8051 {
     /// Execute one instruction atomically and compare its complete transition
     /// with the functional simulator.
     pub fn step_checked(&mut self) -> Result<StepTrace, Intel8051Error> {
-        if self.halted {
+        self.synchronize_compatibility_observers();
+        if self.halted() {
             return Err(Intel8051Error::Halted);
         }
         let pc_before = self.rf.read_pc();
@@ -276,7 +307,8 @@ impl Cpu8051 {
     ) -> Result<ExecutionResult, Intel8051Error> {
         let original = self.get_state();
         let mut traces = Vec::new();
-        while !self.halted && traces.len() < max_steps {
+        self.synchronize_compatibility_observers();
+        while !self.halted() && traces.len() < max_steps {
             match self.step_checked() {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
@@ -286,7 +318,7 @@ impl Cpu8051 {
             }
         }
         Ok(ExecutionResult {
-            halted: self.halted,
+            halted: self.halted(),
             steps: traces.len(),
             pc: self.rf.read_pc(),
             final_state: self.get_state(),
@@ -317,7 +349,7 @@ impl Cpu8051 {
     pub fn execute(&mut self, program: &[u8], origin: u16, max_steps: u32) -> u32 {
         self.load(program, origin);
         let mut steps = 0u32;
-        while !self.halted && steps < max_steps {
+        while !self.halted() && steps < max_steps {
             self.step();
             steps += 1;
         }
@@ -326,16 +358,47 @@ impl Cpu8051 {
 
     /// Execute one instruction.
     pub fn step(&mut self) {
-        if self.halted {
+        self.synchronize_compatibility_observers();
+        if self.halted() {
             return;
         }
         let opcode = self.fetch8();
         self.execute_one(opcode);
-        self.clock_wires_into_state();
     }
 
-    fn clock_wires_into_state(&mut self) {
-        self.halt_state.write(u16::from(self.halted));
+    /// Read the authoritative HALT DFF Q output.
+    #[must_use]
+    pub fn halted(&self) -> bool {
+        self.halt.q()
+    }
+
+    /// Inventory the concrete persistent storage containers.
+    #[must_use]
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        PhysicalStorageInventory {
+            code_dffs: self.code.dff_count(),
+            xdata_dffs: self.xdata.dff_count(),
+            iram_dffs: self.rf.iram_dff_count(),
+            program_counter_dffs: self.rf.program_counter_dff_count(),
+            halt_dffs: self.halt.dff_count(),
+        }
+    }
+
+    /// Clock the physical HALT bit, then refresh the compatibility observer.
+    fn clock_halted(&mut self, value: bool) {
+        self.halt.clock(value);
+        self.synchronize_halted_mirror();
+    }
+
+    /// Repair the legacy public observer from the physical Q output.
+    fn synchronize_halted_mirror(&mut self) {
+        self.halted = self.halted();
+    }
+
+    /// Repair every legacy public observer from its physical Q outputs.
+    fn synchronize_compatibility_observers(&mut self) {
+        self.rf.synchronize_pc_mirror();
+        self.synchronize_halted_mirror();
     }
 
     // ── Fetch helpers ─────────────────────────────────────────────────────────
@@ -572,7 +635,7 @@ impl Cpu8051 {
     fn execute_one(&mut self, opcode: u8) {
         // ── Soft HALT ────────────────────────────────────────────────────────
         if opcode == HALT_OPCODE {
-            self.halted = true;
+            self.clock_halted(true);
             return;
         }
 
@@ -1495,7 +1558,7 @@ mod tests {
         assert_eq!(cpu.rf.latched_pc(), 0x1234);
         cpu.load_checked(&[HALT_OPCODE]).unwrap();
         cpu.step();
-        assert_eq!(cpu.halt_state.read(), 1);
+        assert!(cpu.halted());
     }
 
     /// Build a program bytes slice, prepended with HALT sentinel (0xA5) terminator.
