@@ -1,31 +1,38 @@
 # mosaic-package.toml — manifest for mosaic-pkg-notes.
 #
 # A list-plus-editor view over task-core's Note entity (upsert_note/
-# delete_note). Adapted from mosaic-pkg-note-editor (built for a different
-# domain — Anki-style flashcard notes: note types, decks, focused-field
-# editing — none of which apply to a plain title+body note). Built entirely
-# from kernel primitives, plus one deliberate use of the legacy `Input`
-# primitive for its `multiline` textarea support (UI29's kernel HostInput
-# is single-line only — see code/specs/task-app-notes-ui-v1.md).
+# delete_note). See code/specs/task-app-notes-ui-v1.md for the scope.
 #
-# v0.1.0 scope — see code/specs/task-app-notes-ui-v1.md for the full
-# rationale. Create/edit/delete a note (title + plain-text body), standalone
-# only (no attachment picker yet), no tags, no rich text, no search.
+# v0.1.0 — create/edit/delete a note (title + plain-text body), standalone
+# only, no tags, no rich text, no search. Built from kernel primitives.
 #
 # v0.2.0 — the spec's addendum adds a minimal "attach to task" text field
 # (task-name-value/onTaskNameChange), resolved by the host to a task id on
 # Save. Still not a real picker (no dropdown/search) — see the addendum.
+#
+# v0.3.0 — Notes is a composition (addendum v1.3; E3 of
+# mosaic-editor-convergence-audit-v1.md). The list is the toolkit's
+# RecordList and the title, body and actions are DraftEditor, whose body is
+# the kernel's multi-line HostInput (Ctrl/Cmd+Enter saves). Notes keeps the
+# "+ New note" button, the attach-to-task field and the empty hint, and
+# takes every label as a slot. BREAKING: `note-rows` rows are RecordList's
+# six fields, and the eleven new label slots have no defaults, so every
+# consumer must bind them.
 
 [package]
 name = "mosaic-pkg-notes"
-version = "0.2.0"
-description = "List-plus-editor view over task-core's Note entity (create/edit/delete)"
+version = "0.3.0"
+description = "List-plus-editor view over task-core's Note entity (create/edit/delete), composed from RecordList and DraftEditor"
 license = "MIT OR Apache-2.0"
 
 [components]
 exports = ["Notes"]
 
 [dependencies]
+# RecordList (the note list) ships in the toolkit since 0.16.0.
+mosaic-pkg-toolkit = "0.16.0"
+# DraftEditor 0.2.0 is the first with `body-placeholder`, which Notes binds.
+mosaic-pkg-draft-editor = "0.2.0"
 
 [kernel]
 version = "1"

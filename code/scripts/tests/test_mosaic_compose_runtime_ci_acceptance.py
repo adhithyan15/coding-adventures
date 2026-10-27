@@ -694,7 +694,17 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
 
             def git(*arguments: str) -> None:
                 subprocess.run(
-                    ["git", "-c", "user.name=t", "-c", "user.email=t@example.com", *arguments],
+                    [
+                        "git",
+                        # A `git commit` may start a detached `gc --auto` /
+                        # `maintenance run --auto` that is still writing into
+                        # `.git` when TemporaryDirectory removes it, which fails
+                        # cleanup with "Directory not empty: '.git'".  Throwaway
+                        # repositories never need maintenance, so turn it off.
+                        "-c", "gc.auto=0", "-c", "maintenance.auto=false",
+                        "-c", "user.name=t", "-c", "user.email=t@example.com",
+                        *arguments,
+                    ],
                     cwd=repo,
                     check=True,
                     capture_output=True,

@@ -11,7 +11,7 @@ exports = ["TaskApp"]
 mosaic-pkg-toolkit = "0.16.0"
 mosaic-pkg-sheet = "0.1.0"
 mosaic-pkg-calendar = "0.1.0"
-mosaic-pkg-notes = "0.2.0"
+mosaic-pkg-notes = "0.3.0"
 mosaic-pkg-project-nav = "0.1.0"
 mosaic-pkg-checklist = "0.1.0"
 

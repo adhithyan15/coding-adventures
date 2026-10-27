@@ -1,0 +1,8 @@
+[package]
+name = "pic16f84a-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked functional simulator for the PIC16F84A classic mid-range CPU"
+license = "MIT"
+
+[dependencies]
