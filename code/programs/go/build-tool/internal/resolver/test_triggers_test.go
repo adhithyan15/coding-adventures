@@ -19,7 +19,15 @@ import (
 // plus whatever Cargo.toml the test supplies for rust/subject.
 func devDepWorld(t *testing.T, subjectCargo string) []discovery.Package {
 	t.Helper()
-	root := makeFixture(t, map[string]string{
+	return devDepWorldWith(t, subjectCargo, nil)
+}
+
+// devDepWorldWith is devDepWorld plus extra repository-relative files (for
+// example a .git marker and code/BUILD-EXEMPTIONS, or crates that are not
+// discovered packages).
+func devDepWorldWith(t *testing.T, subjectCargo string, extra map[string]string) []discovery.Package {
+	t.Helper()
+	tree := map[string]string{
 		"code/packages/rust/emit/Cargo.toml": "[package]\nname = \"emit\"\nversion = \"0.1.0\"\n",
 		"code/packages/rust/compiler/Cargo.toml": "[package]\nname = \"compiler\"\nversion = \"0.1.0\"\n\n" +
 			"[dependencies]\nemit = { path = \"../emit\" }\n",
@@ -28,7 +36,11 @@ func devDepWorld(t *testing.T, subjectCargo string) []discovery.Package {
 		"code/packages/mosaic/pkg-a/Cargo.toml": "[workspace]\n\n[package]\nname = \"pkg-a\"\nversion = \"0.1.0\"\n\n" +
 			"[dev-dependencies]\ncompiler = { path = \"../../rust/compiler\" }\ntempfile = \"3\"\n",
 		"code/packages/rust/subject/Cargo.toml": subjectCargo,
-	})
+	}
+	for path, content := range extra {
+		tree[path] = content
+	}
+	root := makeFixture(t, tree)
 	at := func(rel string) string { return filepath.Join(root, filepath.FromSlash(rel)) }
 	return []discovery.Package{
 		{Name: "rust/emit", Path: at("code/packages/rust/emit"), Language: "rust"},

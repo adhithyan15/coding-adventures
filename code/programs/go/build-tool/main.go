@@ -1033,6 +1033,8 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// Cargo dev-dependency triggers, applied one hop past the graph closure.
 	// Plan-file runs leave it nil: their affected set already includes them.
 	var testTriggers resolver.TestTriggers
+	// Every discovered package, before the -language filter.
+	var triggerKnown []discovery.Package
 	var affectedSet map[string]bool
 	var changedPackageRoots map[string]bool
 	var changedFilesForPlan []string
@@ -1241,7 +1243,10 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			fmt.Printf("Evaluated %d Starlark BUILD files\n", starlarkCount)
 		}
 
-		// Step 3: Filter by language if requested.
+		// Step 3: Filter by language if requested. Cargo path entries still
+		// resolve against every discovered package (triggerKnown), so a path
+		// into a filtered-out package is not mistaken for an unlisted crate.
+		triggerKnown = packages
 		if *language != "all" {
 			var filtered []discovery.Package
 			for _, pkg := range packages {
@@ -1259,7 +1264,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 		fmt.Printf("Discovered %d packages\n", len(packages))
 
 		// Step 4: Resolve dependencies.
-		graph, testTriggers, err = resolver.ResolveWithTestTriggers(packages)
+		graph, testTriggers, err = resolver.ResolveWithTestTriggersAgainst(packages, triggerKnown)
 		if err != nil {
 			message, exitCode := formatResolverError(err)
 			fmt.Fprintln(os.Stderr, message)
@@ -1397,7 +1402,8 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 	// These are early-exit modes that compute metadata but don't build.
 
 	if *emitPlan != "" {
-		return emitBuildPlan(
+		return emitBuildPlanAgainst(
+			triggerKnown,
 			packages,
 			graph,
 			affectedSet,
@@ -1656,6 +1662,32 @@ func emitBuildPlan(
 	ciGatesPath string,
 	language string,
 ) int {
+	return emitBuildPlanAgainst(nil, packages, graph, affectedSet, changedPackageRoots, changedFiles,
+		force, ciToolchains, diffBase, repoRoot, outputPath, alsoDetectLanguages, shardCount,
+		alsoEmitShardMatrix, ciGatesPath, language)
+}
+
+// emitBuildPlanAgainst is emitBuildPlan with the unfiltered discovery list
+// that Cargo path entries resolve against (nil means packages itself; see
+// resolver.ResolveWithTestTriggersAgainst).
+func emitBuildPlanAgainst(
+	known []discovery.Package,
+	packages []discovery.Package,
+	graph *directedgraph.Graph,
+	affectedSet map[string]bool,
+	changedPackageRoots map[string]bool,
+	changedFiles []string,
+	force bool,
+	ciToolchains map[string]bool,
+	diffBase string,
+	repoRoot string,
+	outputPath string,
+	alsoDetectLanguages bool,
+	shardCount int,
+	alsoEmitShardMatrix bool,
+	ciGatesPath string,
+	language string,
+) int {
 	// Build package entries with repo-root-relative paths.
 	entries := make([]plan.PackageEntry, len(packages))
 	for i, pkg := range packages {
@@ -1686,7 +1718,11 @@ func emitBuildPlan(
 	platformLanguages := make(map[string]bool)
 	for _, goos := range []string{"linux", "darwin", "windows"} {
 		platformPackages := packagesForPlatform(packages, goos)
-		platformGraph, platformTriggers, err := resolver.ResolveWithTestTriggers(platformPackages)
+		platformKnown := known
+		if platformKnown == nil {
+			platformKnown = platformPackages
+		}
+		platformGraph, platformTriggers, err := resolver.ResolveWithTestTriggersAgainst(platformPackages, platformKnown)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error resolving %s build plan: %v\n", goos, err)
 			return 1

@@ -157,3 +157,28 @@ func TestRealRepositoryEmitterChangeSelectsMosaicSuites(t *testing.T) {
 		}
 	}
 }
+
+// TestRealRepositoryOrphanCrateDependenciesAreFollowed pins round-2 security
+// finding A on the checked-out repository: engram-app dev-depends on
+// engram-core-wasm, a crate code/BUILD-EXEMPTIONS lists as EXCLUDED (it has
+// no BUILD of its own), and engram-core-wasm depends on engram-core. A change
+// to engram-core is linked into engram-app's tests, so it must select it.
+func TestRealRepositoryOrphanCrateDependenciesAreFollowed(t *testing.T) {
+	root := toolchainFixtureRepoRoot(t)
+	packages, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	graph, triggers, err := resolver.ResolveWithTestTriggers(packages)
+	if err != nil {
+		t.Fatal(err)
+	}
+	changedFile := "code/packages/rust/engram-core/src/lib.rs"
+	changed, err := changedPackageRootsForPlatformAndLanguage([]string{changedFile}, packages, root, runtime.GOOS, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !affectedForGraphWithTriggers(graph, triggers, changed, nil, false)["mosaic/programs/engram-app"] {
+		t.Fatalf("mosaic/programs/engram-app must be affected by a change to %s", changedFile)
+	}
+}

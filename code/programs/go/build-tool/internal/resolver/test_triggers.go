@@ -69,7 +69,9 @@ package resolver
 // For every Rust or WASM crate: `[dev-dependencies]` and every
 // `[target.<cfg>.dev-dependencies]` (the union over all targets — CI runs on
 // several hosts, and any of them may compile the entry). `dev_dependencies`
-// is Cargo's legacy spelling of the same table and is read too.
+// is Cargo's legacy spelling of the same table and is read too. So is every
+// `[patch.<source>]` table: Cargo builds the crate's tests against a patched
+// path even when the dependency itself is a registry version.
 //
 // For a Mosaic package's smoke harness, additionally `[dependencies]` and
 // `[build-dependencies]` (and their target forms): a Mosaic package has no
@@ -79,28 +81,33 @@ package resolver
 // # Resolution by path, not by name
 //
 // A `path = "..."` entry names a directory, so it resolves by directory:
-// filepath.Join(manifest directory, path), cleaned, matched against the
-// discovered packages' directories. A lookup by Cargo name would let any
-// crate declaring `name = "compiler"` capture every trigger meant for the
-// real compiler (the name table keeps one entry per name). The target is:
+// filepath.Join(manifest directory, path) with every symlink resolved
+// (EvalSymlinks), matched against the discovered packages' real
+// directories. A lookup by Cargo name would let any crate declaring
+// `name = "compiler"` capture every trigger meant for the real compiler, and
+// a textual comparison would let `../compiler-link` (a symlink) or
+// `../Compiler` (another case on a case-insensitive disk) slip past. The
+// target is:
 //
-//   - a discovered package          → that package;
-//   - inside a discovered package   → the containing package, because prefix
-//     matching attributes a change there to that package;
-//   - an existing crate directory that no discovered package covers → no
-//     trigger. This is the one tolerated miss and it is not a silent one:
-//     such a crate is not a package to this tool at all — a change inside it
-//     selects nothing, not even its own tests — and that state is governed
-//     by the orphan-crate gate, which requires each one to be listed in
-//     code/BUILD-EXEMPTIONS. Four entries in the repository point at such
-//     crates today (jit-loader-macos, paint-vm-cairo ×2, engram-core-wasm),
-//     and refusing them would fail every plan. The same rule covers a
-//     package excluded by -language: it cannot be in that run's changed set;
-//   - anything else (no Cargo.toml there, an absolute or empty path, a
-//     backslash) → refused.
+//   - a discovered package root → that package, and the chain ends: what
+//     that package links is the build graph's business;
+//   - any other crate → its own [dependencies] and [build-dependencies]
+//     (target forms included) are linked into the dependent's tests too, so
+//     they are followed recursively (visited set, depth cap). If the crate
+//     lies inside a discovered package — another package, or the dependent
+//     itself — that package is also a trigger, because prefix matching
+//     attributes a change there to it. If no package covers it, it must be
+//     listed exactly in code/BUILD-EXEMPTIONS (the orphan-crate ledger):
+//     engram-core-wasm, for one, is how engram-app's tests reach
+//     engram-core. Anything else — a crate under a skipped directory such as
+//     vendor/, outside code/, or a case variant — is refused.
+//   - nothing (or an absolute or empty path, or a backslash) → refused.
 //
 // `workspace = true` inherits the path from a workspace manifest this reader
-// does not follow, so it is refused; no repository harness uses it.
+// does not follow, so it is refused; no repository harness uses it. So is
+// `[replace]`, the deprecated predecessor of `[patch]`. A `.cargo/config`
+// or `.cargo/config.toml` from the package directory up to the repository
+// root that sets `paths` or `[patch]` is refused too (checkCargoConfigs).
 //
 // # The strict reader
 //
@@ -125,7 +132,9 @@ package resolver
 //     a rename), unique, and its value a one-line string, true/false, or an
 //     array of strings; nested inline tables and trailing commas are
 //     refused. Only an array may continue onto the next line (TOML 1.0).
-//   - a manifest that is not a regular file or exceeds 1 MiB.
+//   - a manifest that is not a regular file or exceeds 1 MiB, or one entry
+//     continuing past 256 lines or 64 KiB (lines are joined once, so even a
+//     1 MiB manifest is read in linear time).
 //
 // A leading UTF-8 byte-order mark is stripped, as TOML allows. Every Cargo
 // manifest of a Rust, WASM or Mosaic package in the repository passes.
@@ -190,13 +199,20 @@ func usesCargoDevDependencies(language string) bool {
 // are test triggers for a package of the given language (see "Which tables
 // are read"). Both spellings Cargo accepts are listed.
 func triggerTableNames(language string) map[string]bool {
-	names := map[string]bool{"dev-dependencies": true, "dev_dependencies": true}
+	names := map[string]bool{"dev-dependencies": true, "dev_dependencies": true, "patch": true}
 	if language == "mosaic" {
-		for _, name := range []string{"dependencies", "build-dependencies", "build_dependencies"} {
+		for name := range dependencyTableNames() {
 			names[name] = true
 		}
 	}
 	return names
+}
+
+// dependencyTableNames are the tables read inside a crate that is not a
+// discovered package root (see follow): what links into whoever depends on
+// it. `[patch]` is absent because Cargo honours it only in the root manifest.
+func dependencyTableNames() map[string]bool {
+	return map[string]bool{"dependencies": true, "build-dependencies": true, "build_dependencies": true}
 }
 
 // readCargoManifestBytes returns the manifest, found=false when there is
@@ -327,6 +343,9 @@ const (
 // name; any other header that mentions one (or an array of tables that
 // does) is refused with a reason.
 func classifyCargoHeader(path []string, arrayOfTables bool, names map[string]bool) (cargoTableKind, string) {
+	if len(path) > 0 && path[0] == "replace" {
+		return cargoOtherTable, "uses [replace], which this reader does not model; use [patch.<source>]"
+	}
 	mentions := false
 	for _, segment := range path {
 		if names[segment] {
@@ -337,10 +356,15 @@ func classifyCargoHeader(path []string, arrayOfTables bool, names map[string]boo
 		return cargoOtherTable, ""
 	}
 	if !arrayOfTables {
-		if len(path) == 1 {
+		// [patch.<source>] is a table of dependency-shaped overrides; a
+		// bare [patch] or [target.<cfg>.patch] is not a shape Cargo uses.
+		if len(path) == 2 && path[0] == "patch" {
 			return cargoTriggerTable, ""
 		}
-		if len(path) == 3 && path[0] == "target" && names[path[2]] {
+		if len(path) == 1 && path[0] != "patch" {
+			return cargoTriggerTable, ""
+		}
+		if len(path) == 3 && path[0] == "target" && names[path[2]] && path[2] != "patch" {
 			return cargoTriggerTable, ""
 		}
 	}
@@ -352,6 +376,9 @@ func classifyCargoHeader(path []string, arrayOfTables bool, names map[string]boo
 // a trigger table, or it assigns an inline table at `target` or
 // `target.<cfg>`, which could spell `{ dev-dependencies = { ... } }`.
 func keyReachesTriggerTable(full []string, value string, names map[string]bool) bool {
+	if len(full) > 0 && full[0] == "replace" {
+		return true
+	}
 	for _, segment := range full {
 		if names[segment] {
 			return true
@@ -369,28 +396,28 @@ type cargoEntry struct {
 	path string // "" for a registry dependency
 }
 
-// readCargoTriggerEntries reads a package's Cargo.toml and returns every
-// entry of its trigger tables, or found=false when it has no Cargo.toml.
-func readCargoTriggerEntries(pkg discovery.Package) (entries []cargoEntry, manifest string, found bool, err error) {
-	manifest = filepath.Join(pkg.Path, "Cargo.toml")
+// readCargoTriggerEntries reads the Cargo.toml at manifest and returns every
+// entry of the tables named by names (their target forms included), or
+// found=false when there is no such file.
+func readCargoTriggerEntries(manifest string, names map[string]bool) (entries []cargoEntry, found bool, err error) {
 	data, found, err := readCargoManifestBytes(manifest)
 	if err != nil || !found {
-		return nil, manifest, found, err
+		return nil, found, err
 	}
-	refuse := func(format string, args ...any) ([]cargoEntry, string, bool, error) {
-		return nil, manifest, true, &CargoManifestError{Path: manifest, Reason: fmt.Sprintf(format, args...)}
+	refuse := func(format string, args ...any) ([]cargoEntry, bool, error) {
+		return nil, true, &CargoManifestError{Path: manifest, Reason: fmt.Sprintf(format, args...)}
 	}
 	data = bytes.TrimPrefix(data, []byte("\xEF\xBB\xBF"))
 	if bytes.Contains(data, []byte(`"""`)) || bytes.Contains(data, []byte("'''")) {
 		return refuse("uses a multi-line string, which could hide a dependency table")
 	}
 
-	names := triggerTableNames(pkg.Language)
 	var table []string // current header path; nil is the root table
 	kind := cargoOtherTable
-	var stack []byte    // brackets open across lines
-	var pending string  // a read-table entry continuing onto the next line
-	var pendingLine int // where it started, for messages
+	var stack []byte     // brackets open across lines
+	var pending []string // a read-table entry continuing onto later lines
+	var pendingBytes int // its length so far, capped at maxCargoEntryBytes
+	var pendingLine int  // where it started, for messages
 
 	for number, rawLine := range strings.Split(string(data), "\n") {
 		lineNumber := number + 1
@@ -405,18 +432,25 @@ func readCargoTriggerEntries(pkg discovery.Package) (entries []cargoEntry, manif
 			if !ok {
 				return refuse("line %d: unbalanced brackets or an unterminated string", lineNumber)
 			}
-			if pending != "" {
-				pending += " " + line
+			if pending != nil {
+				// Collect the lines and join them once: appending to one
+				// string per line is quadratic in the entry's length.
+				pending = append(pending, line)
+				pendingBytes += len(line) + 1
+				if len(pending) > maxCargoEntryLines || pendingBytes > maxCargoEntryBytes {
+					return refuse("line %d: one dependency entry spans more than %d lines or %d bytes",
+						pendingLine, maxCargoEntryLines, maxCargoEntryBytes)
+				}
 				if len(stack) > 0 && stack[len(stack)-1] == '{' {
 					return refuse("line %d: an inline table in a dependency table spans lines", pendingLine)
 				}
 				if len(stack) == 0 {
-					entry, reason := parseCargoTriggerEntry(pending)
+					entry, reason := parseCargoTriggerEntry(strings.Join(pending, " "))
 					if reason != "" {
 						return refuse("line %d: %s", pendingLine, reason)
 					}
 					entries = append(entries, entry)
-					pending = ""
+					pending, pendingBytes = nil, 0
 				}
 			}
 			continue
@@ -474,7 +508,7 @@ func readCargoTriggerEntries(pkg discovery.Package) (entries []cargoEntry, manif
 			if stack[len(stack)-1] == '{' {
 				return refuse("line %d: an inline table in a dependency table spans lines", lineNumber)
 			}
-			pending, pendingLine = line, lineNumber
+			pending, pendingBytes, pendingLine = []string{line}, len(line), lineNumber
 			continue
 		}
 		entry, reason := parseCargoTriggerEntry(line)
@@ -486,7 +520,7 @@ func readCargoTriggerEntries(pkg discovery.Package) (entries []cargoEntry, manif
 	if len(stack) > 0 {
 		return refuse("ends with a value still open")
 	}
-	return entries, manifest, true, nil
+	return entries, true, nil
 }
 
 // oneLineTomlString returns the contents of a one-line basic or literal
@@ -619,74 +653,327 @@ func parseCargoTriggerEntry(line string) (cargoEntry, string) {
 	return entry, ""
 }
 
-// packageDirectoryIndex maps each discovered package's cleaned directory to
-// its name, for resolving path entries.
-func packageDirectoryIndex(packages []discovery.Package) map[string]string {
-	index := make(map[string]string, len(packages))
-	for _, pkg := range packages {
-		index[filepath.Clean(pkg.Path)] = pkg.Name
-	}
-	return index
+// maxCargoPathDepth caps how many non-package crates deep a path chain is
+// followed. The repository's deepest chain is two; a longer one is refused
+// rather than truncated, because truncating would drop triggers.
+const maxCargoPathDepth = 16
+
+// maxCargoEntryLines and maxCargoEntryBytes cap one dependency entry that
+// continues onto later lines (a long `features = [ ... ]`). Real entries span
+// a handful of lines.
+const (
+	maxCargoEntryLines = 256
+	maxCargoEntryBytes = 64 << 10
+)
+
+// buildExemptionsLedger is the repository-relative orphan-crate ledger owned
+// by internal/validator (orphans.go). Only directories it lists exactly may
+// be crates that no discovered package covers.
+const buildExemptionsLedger = "code/BUILD-EXEMPTIONS"
+
+// triggerWalk holds the per-resolution caches for following path entries.
+type triggerWalk struct {
+	index   map[string]string          // real package directory → package name
+	roots   map[string]string          // directory → repository root ("" if none)
+	ledgers map[string]map[string]bool // repository root → real exempt directories
+	configs map[string]error           // directory → result of checking it and its ancestors
 }
 
-// resolveCargoPath maps a path entry of pkg to a discovered package (see
-// "Resolution by path"). It returns "" with no error for an existing crate
-// directory no discovered package covers, and an error for anything else
-// that matches nothing.
-func resolveCargoPath(pkg discovery.Package, manifest, path string, index map[string]string) (string, error) {
-	target := filepath.Clean(filepath.Join(pkg.Path, filepath.FromSlash(path)))
-	for directory := target; ; directory = filepath.Dir(directory) {
-		if name, ok := index[directory]; ok {
-			return name, nil
+// realDirectory resolves every symlink in path. A path that does not exist
+// is an error: a path dependency on nothing would fail in Cargo anyway, and
+// silently resolving it could hide a typo that drops a trigger.
+func realDirectory(path string) (string, error) {
+	real, err := filepath.EvalSymlinks(path)
+	if err != nil {
+		return "", err
+	}
+	return filepath.Clean(real), nil
+}
+
+func newTriggerWalk(known []discovery.Package) *triggerWalk {
+	walk := &triggerWalk{
+		index:   make(map[string]string, len(known)),
+		roots:   make(map[string]string),
+		ledgers: make(map[string]map[string]bool),
+		configs: make(map[string]error),
+	}
+	for _, pkg := range known {
+		directory := filepath.Clean(pkg.Path)
+		if real, err := realDirectory(directory); err == nil {
+			directory = real
+		}
+		walk.index[directory] = pkg.Name
+	}
+	return walk
+}
+
+// repositoryRoot returns the nearest ancestor of directory (itself included)
+// holding a `.git` entry — a directory in a checkout, a file in a worktree —
+// or "" when there is none.
+func (walk *triggerWalk) repositoryRoot(directory string) string {
+	if root, ok := walk.roots[directory]; ok {
+		return root
+	}
+	root := ""
+	if _, err := os.Lstat(filepath.Join(directory, ".git")); err == nil {
+		root = directory
+	} else if parent := filepath.Dir(directory); parent != directory {
+		root = walk.repositoryRoot(parent)
+	}
+	walk.roots[directory] = root
+	return root
+}
+
+// exempt reports whether code/BUILD-EXEMPTIONS lists real exactly. A ledger
+// line is `<EXCLUDED|PENDING> <repo-relative path>  # reason`; a line in any
+// other shape is skipped here (the validator rejects it), which can only
+// make this check stricter.
+func (walk *triggerWalk) exempt(root, real string) bool {
+	if root == "" {
+		return false
+	}
+	ledger, ok := walk.ledgers[root]
+	if !ok {
+		ledger = make(map[string]bool)
+		if data, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(buildExemptionsLedger))); err == nil {
+			for _, line := range strings.Split(string(data), "\n") {
+				fields := strings.Fields(line)
+				if len(fields) < 2 || (fields[0] != "EXCLUDED" && fields[0] != "PENDING") {
+					continue
+				}
+				if directory, err := realDirectory(filepath.Join(root, filepath.FromSlash(fields[1]))); err == nil {
+					ledger[directory] = true
+				}
+			}
+		}
+		walk.ledgers[root] = ledger
+	}
+	return ledger[real]
+}
+
+// containing returns the discovered package whose directory strictly
+// contains real, or "".
+func (walk *triggerWalk) containing(real string) string {
+	for directory := filepath.Dir(real); ; directory = filepath.Dir(directory) {
+		if name, ok := walk.index[directory]; ok {
+			return name
 		}
 		if filepath.Dir(directory) == directory {
-			break
+			return ""
 		}
-	}
-	if info, err := os.Stat(filepath.Join(target, "Cargo.toml")); err == nil && info.Mode().IsRegular() {
-		return "", nil
-	}
-	return "", &CargoManifestError{
-		Path:   manifest,
-		Reason: fmt.Sprintf("the path dependency %q is neither a discovered package nor a crate directory", path),
 	}
 }
 
-// parseRustDevDeps returns the repository packages pkg's trigger tables
-// name by path, in file order (duplicates allowed; the caller de-duplicates).
-func parseRustDevDeps(pkg discovery.Package, index map[string]string) ([]string, error) {
-	entries, manifest, found, err := readCargoTriggerEntries(pkg)
-	if err != nil || !found {
-		return nil, err
+// follow resolves one path entry, written in the manifest at fromDir, into
+// out. A discovered package root is a trigger and ends the chain: what it
+// links is the graph's business. Any other crate — one nested inside a
+// package (the dependent included) or a listed orphan — is linked into the
+// dependent's tests together with its own dependencies, so its containing
+// package (if any) is a trigger and its [dependencies] and
+// [build-dependencies] (target forms included) are followed in turn. Its
+// [dev-dependencies] are not: they build only that crate's own tests.
+func (walk *triggerWalk) follow(fromDir, manifest, path, root string, depth int, visited, out map[string]bool) error {
+	refuse := func(format string, args ...any) error {
+		return &CargoManifestError{Path: manifest, Reason: fmt.Sprintf(format, args...)}
 	}
-	var deps []string
+	target := filepath.Clean(filepath.Join(fromDir, filepath.FromSlash(path)))
+	real, err := realDirectory(target)
+	if err != nil {
+		return refuse("the path dependency %q does not exist", path)
+	}
+	if name, ok := walk.index[real]; ok {
+		out[name] = true
+		return nil
+	}
+	if container := walk.containing(real); container != "" {
+		out[container] = true
+	} else if !walk.exempt(root, real) {
+		return refuse("the path dependency %q is not a discovered package, not inside one, "+
+			"and not listed exactly in %s", path, buildExemptionsLedger)
+	}
+	if visited[real] {
+		return nil
+	}
+	visited[real] = true
+	if depth >= maxCargoPathDepth {
+		return refuse("the path dependency %q is more than %d crates deep", path, maxCargoPathDepth)
+	}
+	crateManifest := filepath.Join(target, "Cargo.toml")
+	entries, found, err := readCargoTriggerEntries(crateManifest, dependencyTableNames())
+	if err != nil {
+		return err
+	}
+	if !found {
+		return refuse("the path dependency %q has no Cargo.toml", path)
+	}
 	for _, entry := range entries {
 		if entry.path == "" {
 			continue
 		}
-		name, err := resolveCargoPath(pkg, manifest, entry.path, index)
-		if err != nil {
-			return nil, err
-		}
-		if name != "" {
-			deps = append(deps, name)
+		if err := walk.follow(target, crateManifest, entry.path, root, depth+1, visited, out); err != nil {
+			return err
 		}
 	}
+	return nil
+}
+
+// cargoConfigNames are the configuration files Cargo reads from a
+// `.cargo` directory in the invocation directory and every ancestor.
+var cargoConfigNames = []string{"config", "config.toml"}
+
+// checkCargoConfigs refuses a Cargo configuration file, in directory or any
+// ancestor up to and including root (or the filesystem root when root is
+// ""), that could redirect dependencies: a `paths` override list or a
+// `[patch]` table. Either would make a package's tests build against a
+// directory no manifest names, which no trigger can see.
+//
+// Refusing is the fail-closed choice. Treating such a file as a shared input
+// that rebuilds everything would also be safe, but it would turn every later
+// pull request into a full rebuild without anyone being told why; a refusal
+// names the file on the first run. The repository's configs only choose a
+// Windows linker, so they pass. Directories above the repository root are
+// not read: they belong to the machine, not the change under test.
+func (walk *triggerWalk) checkCargoConfigs(directory, root string) error {
+	if result, ok := walk.configs[directory]; ok {
+		return result
+	}
+	var result error
+	for _, name := range cargoConfigNames {
+		path := filepath.Join(directory, ".cargo", name)
+		data, found, err := readCargoManifestBytes(path)
+		if err != nil {
+			result = err
+			break
+		}
+		if found {
+			if result = scanCargoConfig(path, data); result != nil {
+				break
+			}
+		}
+	}
+	if result == nil && directory != root {
+		if parent := filepath.Dir(directory); parent != directory {
+			result = walk.checkCargoConfigs(parent, root)
+		}
+	}
+	walk.configs[directory] = result
+	return result
+}
+
+// scanCargoConfig refuses `paths` and `patch` in a Cargo configuration file,
+// in every spelling a header or key can give them, and anything it cannot
+// decode.
+func scanCargoConfig(path string, data []byte) error {
+	refuse := func(format string, args ...any) error {
+		return &CargoManifestError{Path: path, Reason: fmt.Sprintf(format, args...)}
+	}
+	data = bytes.TrimPrefix(data, []byte("\xEF\xBB\xBF"))
+	if bytes.Contains(data, []byte(`"""`)) || bytes.Contains(data, []byte("'''")) {
+		return refuse("uses a multi-line string")
+	}
+	redirects := func(full []string) bool {
+		return len(full) > 0 && (full[0] == "paths" || full[0] == "patch")
+	}
+	var table []string
+	var stack []byte
+	for number, rawLine := range strings.Split(string(data), "\n") {
+		line := strings.TrimSpace(stripTomlComment(rawLine))
+		if line == "" {
+			continue
+		}
+		var ok bool
+		if len(stack) > 0 {
+			if stack, ok = tomlBracketStack(line, stack); !ok {
+				return refuse("line %d: unbalanced brackets or an unterminated string", number+1)
+			}
+			continue
+		}
+		if strings.HasPrefix(line, "[") {
+			inner := strings.TrimSuffix(strings.TrimPrefix(line, "[["), "]]")
+			if inner == line {
+				inner = strings.TrimSuffix(strings.TrimPrefix(line, "["), "]")
+			}
+			header, decoded := decodeTomlKey(inner)
+			if !decoded || !strings.HasSuffix(line, "]") {
+				return refuse("line %d: cannot decode the table header %q", number+1, line)
+			}
+			if redirects(header) {
+				return refuse("line %d: redirects dependencies with %q, which no test trigger can see", number+1, line)
+			}
+			table = header
+			continue
+		}
+		eq := tomlKeyValueSplit(line)
+		if eq < 0 {
+			return refuse("line %d: %q is neither a table header nor a key = value line", number+1, line)
+		}
+		key, decoded := decodeTomlKey(line[:eq])
+		if !decoded {
+			return refuse("line %d: cannot decode the key %q", number+1, strings.TrimSpace(line[:eq]))
+		}
+		if redirects(append(append([]string{}, table...), key...)) {
+			return refuse("line %d: redirects dependencies with %q, which no test trigger can see", number+1, strings.TrimSpace(line[:eq]))
+		}
+		if stack, ok = tomlBracketStack(strings.TrimSpace(line[eq+1:]), nil); !ok {
+			return refuse("line %d: unbalanced brackets or an unterminated string", number+1)
+		}
+	}
+	if len(stack) > 0 {
+		return refuse("ends with a value still open")
+	}
+	return nil
+}
+
+// parseRustDevDeps returns the repository packages pkg's trigger tables
+// reach by path, following non-package crates (see follow). It returns nil
+// for a package without a Cargo.toml.
+func (walk *triggerWalk) parseRustDevDeps(pkg discovery.Package) ([]string, error) {
+	manifest := filepath.Join(pkg.Path, "Cargo.toml")
+	entries, found, err := readCargoTriggerEntries(manifest, triggerTableNames(pkg.Language))
+	if err != nil || !found {
+		return nil, err
+	}
+	directory := filepath.Clean(pkg.Path)
+	real, err := realDirectory(directory)
+	if err != nil {
+		return nil, &CargoManifestError{Path: manifest, Reason: err.Error()}
+	}
+	root := walk.repositoryRoot(real)
+	if err := walk.checkCargoConfigs(real, root); err != nil {
+		return nil, err
+	}
+	out := make(map[string]bool)
+	visited := map[string]bool{real: true}
+	for _, entry := range entries {
+		if entry.path == "" {
+			continue
+		}
+		if err := walk.follow(directory, manifest, entry.path, root, 0, visited, out); err != nil {
+			return nil, err
+		}
+	}
+	deps := make([]string, 0, len(out))
+	for name := range out {
+		deps = append(deps, name)
+	}
+	sort.Strings(deps)
 	return deps, nil
 }
 
-// resolveTestTriggers reads every Cargo-backed package's trigger tables and
-// inverts them into TestTriggers. Self-references (including a path into
-// the package's own directory) are dropped. A malformed manifest anywhere is
-// an error for the whole resolution.
-func resolveTestTriggers(packages []discovery.Package) (TestTriggers, error) {
-	index := packageDirectoryIndex(packages)
+// resolveTestTriggers reads the trigger tables of every Cargo-backed package
+// in packages and inverts them into TestTriggers. Path entries resolve
+// against known (every discovered package, before any -language filter), so
+// a filtered-out package still resolves to its own name rather than looking
+// like an unlisted orphan. Self-references are dropped. A malformed manifest
+// anywhere is an error for the whole resolution.
+func resolveTestTriggers(packages, known []discovery.Package) (TestTriggers, error) {
+	walk := newTriggerWalk(append(append([]discovery.Package{}, known...), packages...))
 	sets := make(map[string]map[string]bool)
 	for _, pkg := range packages {
 		if !usesCargoDevDependencies(pkg.Language) {
 			continue
 		}
-		devDeps, err := parseRustDevDeps(pkg, index)
+		devDeps, err := walk.parseRustDevDeps(pkg)
 		if err != nil {
 			return nil, err
 		}

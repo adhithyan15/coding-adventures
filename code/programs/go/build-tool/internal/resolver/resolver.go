@@ -2314,6 +2314,14 @@ func ResolveDependencies(packages []discovery.Package) (*directedgraph.Graph, er
 // dependencies; test triggers resolve Cargo path entries by directory (see
 // test_triggers.go), so no crate can capture another's triggers by name.
 func ResolveWithTestTriggers(packages []discovery.Package) (*directedgraph.Graph, TestTriggers, error) {
+	return ResolveWithTestTriggersAgainst(packages, packages)
+}
+
+// ResolveWithTestTriggersAgainst is ResolveWithTestTriggers for a filtered
+// package list (a -language run): the graph and the triggers cover packages,
+// but Cargo path entries resolve against known, every discovered package, so
+// a path into a filtered-out package is not mistaken for an unlisted crate.
+func ResolveWithTestTriggersAgainst(packages, known []discovery.Package) (*directedgraph.Graph, TestTriggers, error) {
 	graph := directedgraph.New()
 
 	// First, add all packages as nodes. Even packages with no dependencies
@@ -2403,7 +2411,7 @@ func ResolveWithTestTriggers(packages []discovery.Package) (*directedgraph.Graph
 		}
 	}
 
-	triggers, err := resolveTestTriggers(packages)
+	triggers, err := resolveTestTriggers(packages, known)
 	if err != nil {
 		return nil, nil, err
 	}

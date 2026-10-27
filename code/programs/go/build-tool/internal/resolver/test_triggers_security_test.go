@@ -205,22 +205,23 @@ func TestSecurityPathEntriesResolveByPathNotName(t *testing.T) {
 // Finding 5: how a path that is not exactly a package resolves.
 func TestSecurityPathEntryResolution(t *testing.T) {
 	// Into a package's sub-directory: the containing package, because a change
-	// there is attributed to that package by prefix matching.
+	// there is attributed to that package by prefix matching. (Round 2: the
+	// nested crate must exist, and its own dependencies are followed.)
 	world := plainSubject + "\n[dev-dependencies]\nnested = { path = \"../compiler/crates/nested\" }\n"
-	wantSubjectTriggers(t, world, "rust/compiler")
+	wantSubjectTriggersWith(t, world, map[string]string{
+		"code/packages/rust/compiler/crates/nested/Cargo.toml": "[package]\nname = \"nested\"\n",
+	}, "rust/compiler")
 
-	// A crate directory that is not a discovered package (the repository's
-	// BUILD-EXEMPTIONS orphans): no trigger, no error.
-	packages := devDepWorld(t, plainSubject+"\n[dev-dependencies]\norphan = { path = \"../orphan\" }\n")
-	orphan := filepath.Join(filepath.Dir(packages[0].Path), "orphan")
-	if err := os.MkdirAll(orphan, 0o755); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(filepath.Join(orphan, "Cargo.toml"), []byte("[package]\nname = \"orphan\"\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
+	// A crate directory that is not a discovered package resolves to no
+	// trigger of its own only when code/BUILD-EXEMPTIONS lists it (round 2
+	// finding A; see TestSecurityRound2* for what is then read inside it).
+	packages := devDepWorldWith(t, plainSubject+"\n[dev-dependencies]\norphan = { path = \"../orphan\" }\n", map[string]string{
+		".git/HEAD":                            "ref: refs/heads/main\n",
+		"code/BUILD-EXEMPTIONS":                "PENDING code/packages/rust/orphan  # test orphan\n",
+		"code/packages/rust/orphan/Cargo.toml": "[package]\nname = \"orphan\"\n",
+	})
 	if _, triggers, err := ResolveWithTestTriggers(packages); err != nil || len(triggers.Dependents("rust/subject")) != 0 {
-		t.Fatalf("an orphan crate should resolve to nothing, got %v / %v", triggers, err)
+		t.Fatalf("a listed orphan crate with no dependencies should resolve to nothing, got %v / %v", triggers, err)
 	}
 
 	for name, entry := range map[string]string{
