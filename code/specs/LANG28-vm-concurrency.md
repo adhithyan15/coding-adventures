@@ -246,6 +246,36 @@ They are not produced by lightweight task opcodes.
 | `group_cancel` | none | `(group, reason)` | Cancel all children | no |
 | `group_close` | none | `(group)` | End scope; fail if live detached children remain | yes |
 
+### The `fn` operand is a function name
+
+In `task_spawn` (`srcs[0]`) and `group_spawn` (`srcs[1]`), `fn` is the
+**name of a function** in the module — the same kind of operand as the
+callee of `call` — not a register holding a closure value.  Producers
+write it as `Operand::Var("<function name>")` (or `Operand::Str`, which
+consumers treat identically):
+
+```text
+t = task_spawn  worker, x, opts        ; spawns the function named `worker`
+c = group_spawn g, worker, x, opts     ; same, inside group g
+```
+
+Two consumers depend on this contract:
+
+- **The static linker (LANG33).**  When `iir-linker` renames a function to
+  avoid a collision (e.g. a second module's private `worker` becomes
+  `"<module>::worker"`), it rewrites every operand that names a function —
+  including these two slots — by matching the operand's text.  If a
+  producer put a *register* in this slot and that register happened to be
+  spelled like a renamed function, the linker would rewrite the register
+  reference too and break the program.
+- **Backends and the runtime** can resolve the spawned body statically, the
+  same way they resolve `call` targets, without dataflow.
+
+To spawn a closure, spawn a named trampoline function and pass the closure
+as an ordinary argument (`task_spawn run_closure, clo, opts`, where
+`run_closure` does `call_closure clo`).  This contract was pinned in issue
+#18429; no IIR producer emitted either opcode before it was written down.
+
 ### Channel opcodes
 
 | Mnemonic | Dest | Operands | Description | May park |
@@ -421,7 +451,8 @@ Later lowering:
 
 - inline fast-path `chan_try_send` and `chan_try_recv`;
 - inline cancellation checks;
-- specialize task-spawn closures with known signatures;
+- specialize spawned task bodies (named by the `fn` operand) with known
+  signatures;
 - elide scheduler calls in proven single-task regions;
 - use PGO to choose queue and worker placement hints.
 

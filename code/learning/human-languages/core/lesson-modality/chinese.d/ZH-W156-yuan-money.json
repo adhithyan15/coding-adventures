@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W156-yuan-money",
+    "language": "chinese",
+    "chapter": 156,
+    "sequence": 12650,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:047ac4940f0dbf75",
+    "detachableSegments": [
+      "Script — 二, then 儿 under it"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -17,7 +17,8 @@
 //! list to forget.
 
 use interpreter_ir::op_registry::{
-    lookup, OpKind, OpSupport, NOT_YET_LOWERED_PR1B, STANDARD_OPS,
+    lookup, OpFamily, OpKind, OpSupport, NOT_YET_LOWERED_PR1B, NO_TAGGED_WORD_RUNTIME,
+    STANDARD_OPS,
 };
 
 use crate::builtins::BuiltinRegistry;
@@ -51,6 +52,10 @@ pub fn op_support(name: &str) -> OpSupport {
         OpSupport::Lowered
     } else if spec.is_pr1b() {
         OpSupport::Refused(NOT_YET_LOWERED_PR1B)
+    } else if spec.family == OpFamily::Dynamic {
+        // LANG83 PR7f: the VM's dynamic values are structural heap cells
+        // (`alloc` / `field_*`); it has no tagged-word runtime to call.
+        OpSupport::Refused(NO_TAGGED_WORD_RUNTIME)
     } else {
         OpSupport::Refused(NO_VM_HANDLER)
     }
@@ -77,9 +82,16 @@ mod tests {
         // Pins today's answer so a regression (a handler removed from the
         // dispatch table, a default builtin dropped) is loud. Since LANG83
         // PR1b this includes write_i64, i64_div_floor, i64_mod_floor and trap,
-        // and since PR4 the four i64_*_ovf ops.
+        // and since PR4 the four i64_*_ovf ops. The PR7f dynamic-value
+        // primitives are the one family the VM refuses: they call the
+        // tagged-word runtime, and the VM's dynamic values are structural.
         for spec in STANDARD_OPS {
-            assert_eq!(op_support(spec.name), OpSupport::Lowered, "{}", spec.name);
+            let want = if spec.family == OpFamily::Dynamic {
+                OpSupport::Refused(NO_TAGGED_WORD_RUNTIME)
+            } else {
+                OpSupport::Lowered
+            };
+            assert_eq!(op_support(spec.name), want, "{}", spec.name);
         }
     }
 

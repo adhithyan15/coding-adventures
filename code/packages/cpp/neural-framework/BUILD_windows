@@ -1,0 +1,2 @@
+# build-tool: deps=cpp/matrix,cpp/float-math,cpp/bounded-json,c/iso-harness
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/run.ps1

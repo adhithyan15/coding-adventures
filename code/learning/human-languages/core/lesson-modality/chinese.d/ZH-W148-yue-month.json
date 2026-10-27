@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W148-yue-month",
+    "language": "chinese",
+    "chapter": 148,
+    "sequence": 12080,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:640fefae7ac2e5a6",
+    "detachableSegments": [
+      "Script — the moon piece, standing on its own"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

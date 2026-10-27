@@ -53,6 +53,11 @@ impl DffMemory {
         self.q[address]
     }
 
+    /// Count the physical DFF Q outputs owned by this memory bank.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.q.len() * 8
+    }
+
     pub(crate) fn write(&mut self, address: usize, value: u8) {
         let old = self.q[address];
         let input: Vec<u8> = (0..8).map(|bit| (value >> bit) & 1).collect();
