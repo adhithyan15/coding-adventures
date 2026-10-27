@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C152-bucuo",
+  "pathSegment": "ZH-PATH-152-WELL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-152-WELL",
+      "order": 4
+    }
+  ]
+}

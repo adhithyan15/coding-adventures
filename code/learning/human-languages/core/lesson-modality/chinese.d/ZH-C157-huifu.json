@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C157-huifu",
+    "language": "chinese",
+    "chapter": 157,
+    "sequence": 12740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85efab7946af1f22"
+  },
+  "findings": []
+}

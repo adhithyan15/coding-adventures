@@ -525,6 +525,10 @@ impl Compiler {
     /// lives in [`crate::compile_ast`] and its siblings.
     pub fn compile(mut self, program: &GrammarASTNode, module_name: &str) -> Result<IIRModule, TwigCompileError> {
         check_cst(program)?;
+        // Names beginning `__lisp_` / `__dyn_` belong to the compiler's own
+        // functions and the runtime's symbols, which later passes recognise
+        // by name — a program may not define, bind or call one.
+        crate::reserved_names::check_reserved_names(program)?;
         let program = ProgramView(program);
 
         // ── Pre-pass: classify top-level defines + register typed forms ────

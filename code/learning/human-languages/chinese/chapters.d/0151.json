@@ -1,0 +1,24 @@
+{
+  "chapter": 151,
+  "title": "Seen and Understood",
+  "label": "ch:zh-seen-and-understood",
+  "canDo": "I can say that I saw, heard, understood or finished something.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C151-practice",
+    "kind": "four-skill-function-map",
+    "summary": "A verb and its result: seeing, learning how, understanding by ear and by eye, and finishing, each negated with 没, built on one new written character: 到.",
+    "assesses": [
+      "ZH-LEX-C151-KANDAO-01",
+      "ZH-SCRIPT-DAO-ARRIVE-01",
+      "ZH-GRAMMAR-RESULT-COMPLEMENT-01",
+      "ZH-LEX-C151-XUEHUI-01",
+      "ZH-LEX-C151-TINGDONG-01",
+      "ZH-LEX-C151-KANDONG-01",
+      "ZH-LEX-C151-ZUOWAN-01",
+      "ZH-PERFORMANCE-RESULT-01"
+    ]
+  }
+}

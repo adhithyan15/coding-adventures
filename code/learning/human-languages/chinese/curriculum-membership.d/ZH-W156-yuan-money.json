@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W156-yuan-money",
+  "pathSegment": "ZH-PATH-156-PRICES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-156-PRICES",
+      "order": 1
+    }
+  ]
+}
