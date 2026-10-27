@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 161,
-  "sourceHash": "fnv1a64:b042ea9ecd7b7f91",
+  "sourceHash": "fnv1a64:d66ef0a230ab24a2",
   "lessonIds": [
     "MW-C161-mhai",
     "MW-C161-kiyo-liyo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "marwadi/narration/ch161.txt",
   "json": "marwadi/narration/ch161.json",
-  "textHash": "fnv1a64:f8a1a391adf65cd5",
-  "jsonHash": "fnv1a64:68d0015d6cdccdf7",
+  "textHash": "fnv1a64:0908ed6001a2692e",
+  "jsonHash": "fnv1a64:86e7d7fa5d74e8b2",
   "findings": []
 }

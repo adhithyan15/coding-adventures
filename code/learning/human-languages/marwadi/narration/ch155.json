@@ -4,7 +4,7 @@
   "chapter": 155,
   "title": "Eat, Drink, Go, Come",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:bad6690d156cbebc",
+  "sourceHash": "fnv1a64:49941e7e66adbff1",
   "lessons": [
     {
       "id": "MW-C155-jau-javai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b82be2124045cf8f",
+      "sourceHash": "fnv1a64:8af69e97235e2d5d",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "After आप, the व stays: आप जावो हो, the ending of the request लावो. Old Marwari had jāvaï, \"goes\" (CDIAL 10452)."
+              "text": "After आप, the व stays: आप जावो हो, the ending of the request लावो. CDIAL lists Old Marwari jāvaï, \"to go\", with the same -aï (CDIAL 10452). जाऊं is central Marwari as this book writes it; other districts differ."
             }
           ]
         },

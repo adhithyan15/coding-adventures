@@ -16,7 +16,7 @@ prerequisites: [MW-C57-bolno, MW-C51-sunno, MW-C95-roj, MW-C153-hu-hai, MW-C88-g
 sounds: []
 roots: []
 duration:
-  max_seconds: 150
+  max_seconds: 160
 requires:
   knowledge: [MW-LEX-C57-VERBS57-03, MW-LEX-C51-VERBS51-05, MW-LEX-C95-TIME95-04, MW-GRAMMAR-C153-BE-HU-01, MW-LEX-C88-WORLD88-02, MW-SCRIPT-THODU-01]
 introduces:
@@ -49,8 +49,10 @@ on **हूं**:
 >
 > *hū̃ thoṛu bolū̃ hū̃.* — I speak a little.
 
-The **-ूं** sounds like **हूं**, *I*, so the sentence says *I* at both ends. The same
-two pieces fit any stem that ends in a consonant: **सुणूं हूं**, **देखूं हूं**.
+The **-ूं** sounds like **हूं**, *I*: an easy way to hear that the sentence is
+about you. The same two pieces fit any stem that ends in a consonant: **सुणूं हूं**,
+**देखूं हूं**. This is central Marwari as this book writes it; other districts
+differ.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-GRAMMAR-C154-PRES-1SG-01, MW-LEX-C51-VERBS51-05, MW-LEX-C95-TIME95-04, MW-LEX-C88-WORLD88-02, MW-SCRIPT-THODU-01] -->

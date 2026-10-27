@@ -4,7 +4,7 @@
   "chapter": 159,
   "title": "Went Home",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ed5961508b841710",
+  "sourceHash": "fnv1a64:ab93e4ec7cb4aabb",
   "lessons": [
     {
       "id": "MW-C159-gharai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b373e870343edbee",
+      "sourceHash": "fnv1a64:26a6861ae16f2b55",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "Old Marwari had the same ending in āgai, \"before\" (CDIAL 68)."
+              "text": "Old Marwari shows a place ending like it: āgai, \"before\", beside āgo, \"front\" (CDIAL 68)."
             }
           ]
         },

@@ -11,8 +11,11 @@ cold 0, buildsToward 49, unread ऋ ऐ औ ञ ष, unwritten 0.
 
 What the A2 rung still needs is vocabulary: 640 headwords and 89 verbs against
 1,200 and 120, which the A2 vocabulary tranches (chapters 166-290) are planned
-to supply. Every paradigm cell was taught only where a CDIAL Marwari or Old
-Marwari row, or the track's own text, prints it. The cells no reachable source
-prints wait: the feminine and plural pronouns, the first-person plural and its
-endings, the past copula, the third-person and plural futures, noun genitives
-with **रो / री / रा**, **नै**, **में** and the oblique.
+to supply. Each taught paradigm rests on a CDIAL Marwari or Old Marwari row or
+on the track's own text; the few cells neither prints (the first-person present
+**-ूं**, **म्हैं** with a past that agrees with the thing, **ली**) are hedged in
+the lesson as central Marwari as this book writes it. The cells no reachable
+source prints wait: the feminine and plural pronouns, the first-person plural
+and its endings, the past copula, the third-person and plural futures, the
+feminine of **कियो**, noun genitives with **रो / री / रा**, **नै**, **में** and the
+oblique.

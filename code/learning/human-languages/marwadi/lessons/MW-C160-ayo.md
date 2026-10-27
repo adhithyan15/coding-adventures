@@ -15,7 +15,7 @@ concept_tag: MW-GRAMMAR-PAST-AYO
 prerequisites: [MW-C159-gayo, MW-C51-avno, MW-C155-khau-pivai, MW-C79-kal, MW-C156-su, MW-C158-kad, MW-C158-polar, MW-C102-sagla, MW-C90-athan]
 sounds: []
 roots: []
-etymology_hook: 'āyo: CDIAL lists Old Marwari āīyo ''he came'' under Sanskrit āgata ''come'' (CDIAL 1045)'
+etymology_hook: 'āyo: CDIAL lists Old Marwari āīyo ''he came'' under Sanskrit āgata ''arrived'' (CDIAL 1045)'
 duration:
   max_seconds: 150
 requires:

@@ -17,7 +17,7 @@ sounds: []
 roots: []
 etymology_hook: 'mhaĩ: Old Marwari had mẽ ''I'' beside hũ ''I'' (CDIAL 9691, 992)'
 duration:
-  max_seconds: 155
+  max_seconds: 170
 requires:
   knowledge: [MW-GRAMMAR-C155-VSTEM-MORE-01, MW-SCRIPT-ROTI-01, MW-SCRIPT-PAANI-01, MW-GRAMMAR-C159-GAYO-01, MW-LEX-C50-FAMILY50-05, MW-SCRIPT-HOON-01, MW-LEX-C51-VERBS51-01, MW-LEX-C155-FOOD155-01, MW-LEX-C70-NATURE70-04, MW-SCRIPT-GHAR-01, MW-LEX-C51-VERBS51-04]
 introduces:
@@ -61,7 +61,9 @@ masculine, so **पीयो**:
 >
 > *mhaĩ pāṇī pīyo.* — I drank water.
 
-A man and a woman say the same: the roti decides, and so does the water.
+A man and a woman say the same: the roti decides, and so does the water. This
+past, with **म्हैं** and an ending that follows the thing, is central Marwari as
+this book writes it; other districts differ.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-GRAMMAR-C161-MHAI-AGENT-01, MW-GRAMMAR-C161-OBJ-AGREE-01, MW-LEX-C155-FOOD155-01, MW-LEX-C70-NATURE70-04, MW-SCRIPT-GHAR-01, MW-LEX-C51-VERBS51-04] -->

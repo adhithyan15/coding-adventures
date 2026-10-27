@@ -17,7 +17,7 @@ sounds: []
 roots: []
 etymology_hook: 'the -s- future: CDIAL quotes an Old Marwari line with this future in it, ''I will fan'' (CDIAL 5593)'
 duration:
-  max_seconds: 165
+  max_seconds: 175
 requires:
   knowledge: [MW-GRAMMAR-C159-GAYO-01, MW-LEX-C79-TIME79-04, MW-GRAMMAR-C155-VSTEM-01, MW-LEX-C51-VERBS51-02, MW-SCRIPT-BAJAR-01, MW-SCRIPT-PACHHE-MILSOO-01, MW-SCRIPT-FINAL-PRICE-01, MW-LEX-C90-TIME90-02, MW-LEX-C155-FOOD155-01]
 introduces:
@@ -51,7 +51,8 @@ Add **-सूं** to a stem and you have *I will*:
 
 No **हूं** at the end: the future stands on its own. Every stem takes it the same
 way: **आसूं**, **खासूं**, **बोलसूं**, **समझसूं**. CDIAL quotes an Old Marwari line
-with this future in it, "I will fan" (CDIAL 5593).
+with this future in it, "I will fan" (CDIAL 5593). The spelling **-सूं** is central
+Marwari as this book writes it; other districts differ.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-GRAMMAR-C162-FUT-1SG-01, MW-SCRIPT-PACHHE-MILSOO-01, MW-SCRIPT-FINAL-PRICE-01, MW-LEX-C90-TIME90-02, MW-LEX-C155-FOOD155-01] -->

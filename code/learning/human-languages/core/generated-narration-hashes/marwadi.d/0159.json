@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 159,
-  "sourceHash": "fnv1a64:ed5961508b841710",
+  "sourceHash": "fnv1a64:ab93e4ec7cb4aabb",
   "lessonIds": [
     "MW-C159-gharai",
     "MW-C159-gayo",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "marwadi/narration/ch159.txt",
   "json": "marwadi/narration/ch159.json",
-  "textHash": "fnv1a64:a310a2da581ad1b0",
-  "jsonHash": "fnv1a64:f5eefc71a6897c62",
+  "textHash": "fnv1a64:5d0685bb1fa8df7b",
+  "jsonHash": "fnv1a64:6aa934b182d3c0e2",
   "findings": []
 }

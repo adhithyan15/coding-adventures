@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 160,
-  "sourceHash": "fnv1a64:34c651cd807bae11",
+  "sourceHash": "fnv1a64:d70911f0533d862e",
   "lessonIds": [
     "MW-C160-ayo",
     "MW-C160-uthyo",
@@ -12,6 +12,6 @@
   "text": "marwadi/narration/ch160.txt",
   "json": "marwadi/narration/ch160.json",
   "textHash": "fnv1a64:6d3ad79f635949ad",
-  "jsonHash": "fnv1a64:fe62e123162aabc9",
+  "jsonHash": "fnv1a64:e0aacacbf393e468",
   "findings": []
 }

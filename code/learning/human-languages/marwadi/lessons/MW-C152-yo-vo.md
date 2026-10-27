@@ -69,7 +69,7 @@ this or that?
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-GRAMMAR-C152-VO-THAT-01, MW-GRAMMAR-ALTERNATIVE-CHOICE-01, MW-FUNCTION-ASK-PREFERENCE-ALTERNATIVES-01] -->
-<!-- hl-activity: {"id":"MW-C152-yo-vo-choice","kind":"text","assesses":["MW-GRAMMAR-C152-VO-THAT-01","MW-GRAMMAR-ALTERNATIVE-CHOICE-01"],"prompt":"Offer someone a choice: this or that?","answer":"यो अर वो?","accepted":["yo ar vo?","yo or vo"],"feedback":{"correct":"Right: यो is near, वो is over there, and अर offers both.","incorrect":"Say यो, then अर, then वो, with a question in your voice."},"response_seconds":12} -->
+<!-- hl-activity: {"id":"MW-C152-yo-vo-choice","kind":"text","assesses":["MW-GRAMMAR-C152-VO-THAT-01","MW-GRAMMAR-ALTERNATIVE-CHOICE-01"],"prompt":"Offer someone a choice: this or that?","answer":"यो अर वो?","accepted":["yo ar vo?"],"feedback":{"correct":"Right: यो is near, वो is over there, and अर offers both.","incorrect":"Say यो, then अर, then वो, with a question in your voice."},"response_seconds":12} -->
 
 [PAUSE 3s] Which is near, **यो** or **वो**? (**यो**.) What else can **वो** be?
 (*He*.)

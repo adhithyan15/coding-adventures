@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 162,
-  "sourceHash": "fnv1a64:c276809e062d34be",
+  "sourceHash": "fnv1a64:4397904adf804e93",
   "lessonIds": [
     "MW-C162-jasu",
     "MW-C162-koni-jasu",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marwadi/narration/ch162.txt",
   "json": "marwadi/narration/ch162.json",
-  "textHash": "fnv1a64:039494ecd448da61",
-  "jsonHash": "fnv1a64:a6814e02ead921ae",
+  "textHash": "fnv1a64:9af49b06dd9acdf2",
+  "jsonHash": "fnv1a64:41a0defa5c0f9026",
   "findings": []
 }

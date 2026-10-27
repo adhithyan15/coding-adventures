@@ -107,7 +107,8 @@ neighbour's note well enough to act on them. Six more letters are written,
 each from a word just learned: **ऊ ध झ ओ ढ फ**. What stays untaught is named
 in the changelog: forms no reachable Marwari source prints -- **वा, वै, थे,
 आपां**, the past copula, most futures and the noun genitive -- wait for a source
-rather than being invented. With 962 lessons and 640 headwords, all five A2
+rather than being invented, and the few taught cells no source prints are
+hedged in the lesson as central Marwari as this book writes it. With 962 lessons and 640 headwords, all five A2
 spine nodes are realized but the A2 vocabulary is not: that is still not A2.
 
 Marwadi has no single external pre-A1-to-C2 examination ladder suitable for the

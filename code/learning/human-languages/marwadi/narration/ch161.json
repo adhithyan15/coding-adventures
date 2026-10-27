@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "What I Did",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b042ea9ecd7b7f91",
+  "sourceHash": "fnv1a64:d66ef0a230ab24a2",
   "lessons": [
     {
       "id": "MW-C161-mhai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77b17d755e30008c",
+      "sourceHash": "fnv1a64:1b5d03e6e0593491",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "A man and a woman say the same: the roti decides, and so does the water."
+              "text": "A man and a woman say the same: the roti decides, and so does the water. This past, with म्हैं and an ending that follows the thing, is central Marwari as this book writes it; other districts differ."
             }
           ]
         },
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d24c772e4e4de02",
+      "sourceHash": "fnv1a64:12d08ea7ccc8423c",
       "notice": null,
       "blocks": [
         {
@@ -197,7 +197,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "करणो and लेणो have short pasts: कियो and लियो. For a feminine thing, की and ली:"
+              "text": "करणो and लेणो have short pasts: कियो and लियो."
             },
             {
               "kind": "speech",
@@ -205,15 +205,19 @@
             },
             {
               "kind": "speech",
-              "text": "म्हैं बात की। mhaĩ bāt kī. — I talked."
-            },
-            {
-              "kind": "speech",
               "text": "म्हैं दूध लियो। mhaĩ dūdh liyo. — I took milk."
             },
             {
               "kind": "speech",
-              "text": "CDIAL lists Old Marwari kiyo, \"made\", and liyo, \"takes\" (CDIAL 2814, 10948)."
+              "text": "For a feminine thing, लियो turns into ली:"
+            },
+            {
+              "kind": "speech",
+              "text": "म्हैं रोटी ली। mhaĩ roṭī lī. — I took a roti."
+            },
+            {
+              "kind": "speech",
+              "text": "CDIAL lists Old Marwari kiyo, \"made\", and liyo, \"takes\" (CDIAL 2814, 10948). This book pairs कियो with a masculine thing only. ली is central Marwari as this book writes it; other districts differ."
             }
           ]
         },
@@ -290,7 +294,7 @@
             },
             {
               "kind": "speech",
-              "text": "Did, of water? (कियो.) Did, of a talk? (की.) Took, of a roti? (ली.)"
+              "text": "Did, of water? (कियो.) Took, of milk? (लियो.) Took, of a roti? (ली.)"
             },
             {
               "kind": "activity",
@@ -674,7 +678,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db2df1eddaed9d06",
+      "sourceHash": "fnv1a64:305d9da4acc5aff8",
       "notice": null,
       "blocks": [
         {
@@ -726,11 +730,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "I heated the water; I talked",
+              "instruction": "I heated the water; I heated the milk",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *I heated the water*; *I talked*]"
+              "source": "[YOU SAY: *I heated the water*; *I heated the milk*]"
             },
             {
               "kind": "prompt",

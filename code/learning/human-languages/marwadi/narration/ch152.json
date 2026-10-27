@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "He and That",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a951bcffbd290e44",
+  "sourceHash": "fnv1a64:c1f5663eae9083ad",
   "lessons": [
     {
       "id": "MW-C152-vo",
@@ -159,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5102234b94e4f88e",
+      "sourceHash": "fnv1a64:a9ee541f01ee8b48",
       "notice": null,
       "blocks": [
         {
@@ -283,8 +283,7 @@
               "responseSeconds": 12,
               "acceptedResponses": [
                 "यो अर वो?",
-                "yo ar vo?",
-                "yo or vo"
+                "yo ar vo?"
               ],
               "feedback": {
                 "correct": "Right: यो is near, वो is over there, and अर offers both.",

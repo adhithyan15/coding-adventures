@@ -17,7 +17,7 @@ Old Marwari already had mẽ, "I", beside hũ (CDIAL 9691, 992).
 Grammar Lens: the thing decides.
 The ending follows the thing, not you. रोटी is feminine, so खाई; पाणी is masculine, so पीयो:
 म्हैं पाणी पीयो। mhaĩ pāṇī pīyo. — I drank water.
-A man and a woman say the same: the roti decides, and so does the water.
+A man and a woman say the same: the roti decides, and so does the water. This past, with म्हैं and an ending that follows the thing, is central Marwari as this book writes it; other districts differ.
 
 Guided Practice.
 [pause 1 second]
@@ -43,11 +43,12 @@ Warm-up.
 Say I ate a roti. Then to do and to take: करणो, लेणो.
 
 Grammar Lens: two short pasts.
-करणो and लेणो have short pasts: कियो and लियो. For a feminine thing, की and ली:
+करणो and लेणो have short pasts: कियो and लियो.
 म्हैं पाणी गरम कियो। mhaĩ pāṇī garam kiyo. — I heated the water.
-म्हैं बात की। mhaĩ bāt kī. — I talked.
 म्हैं दूध लियो। mhaĩ dūdh liyo. — I took milk.
-CDIAL lists Old Marwari kiyo, "made", and liyo, "takes" (CDIAL 2814, 10948).
+For a feminine thing, लियो turns into ली:
+म्हैं रोटी ली। mhaĩ roṭī lī. — I took a roti.
+CDIAL lists Old Marwari kiyo, "made", and liyo, "takes" (CDIAL 2814, 10948). This book pairs कियो with a masculine thing only. ली is central Marwari as this book writes it; other districts differ.
 
 Guided Practice.
 The thing changes the ending; the speaker does not:
@@ -66,7 +67,7 @@ who speaks: a woman. the thing: दूध. the verb: लियो.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Did, of water? (कियो.) Did, of a talk? (की.) Took, of a roti? (ली.)
+Did, of water? (कियो.) Took, of milk? (लियो.) Took, of a roti? (ली.)
 [question — say your answer, then pause 12 seconds]
 Say that you took milk.
 
@@ -158,7 +159,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: I saw the cow; I saw the house]
 [pause 8 seconds for the answer]
-[your turn — say: I heated the water; I talked]
+[your turn — say: I heated the water; I heated the milk]
 [pause 8 seconds for the answer]
 [your turn — say: I took a roti; I took milk]
 [pause 8 seconds for the answer]

@@ -4,7 +4,7 @@
   "chapter": 162,
   "title": "Tomorrow",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c276809e062d34be",
+  "sourceHash": "fnv1a64:4397904adf804e93",
   "lessons": [
     {
       "id": "MW-C162-jasu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05e908f8c679a8d4",
+      "sourceHash": "fnv1a64:efc76ef51ff008bb",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "No हूं at the end: the future stands on its own. Every stem takes it the same way: आसूं, खासूं, बोलसूं, समझसूं. CDIAL quotes an Old Marwari line with this future in it, \"I will fan\" (CDIAL 5593)."
+              "text": "No हूं at the end: the future stands on its own. Every stem takes it the same way: आसूं, खासूं, बोलसूं, समझसूं. CDIAL quotes an Old Marwari line with this future in it, \"I will fan\" (CDIAL 5593). The spelling -सूं is central Marwari as this book writes it; other districts differ."
             }
           ]
         },

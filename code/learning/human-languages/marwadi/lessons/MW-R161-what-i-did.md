@@ -43,7 +43,7 @@ reviews_of: [MW-C161-mhai, MW-C161-kiyo-liyo, MW-C161-kadhno, MW-W49-ddha, MW-C1
 [PAUSE 2s each]
 - [YOU SAY: *I ate a roti*; *I drank water*; *I drank milk*]
 - [YOU SAY: *I saw the cow*; *I saw the house*]
-- [YOU SAY: *I heated the water*; *I talked*]
+- [YOU SAY: *I heated the water*; *I heated the milk*]
 - [YOU SAY: *I took a roti*; *I took milk*]
 - [YOU SAY: *I drew water*; *he draws water every day*]
 - [YOU READ: **काढणो**, and name the letter after **का**]

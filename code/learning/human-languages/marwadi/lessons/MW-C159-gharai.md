@@ -15,7 +15,7 @@ concept_tag: MW-GRAMMAR-LOC-AI
 prerequisites: [MW-C82-athai, MW-C82-bathai, MW-C96-mathai, MW-C10-ghar, MW-C90-athan, MW-C158-polar, MW-C158-answer, MW-C155-jau-javai]
 sounds: []
 roots: []
-etymology_hook: 'gharai: ghar with the -ai of place words such as aṭhai; Old Marwari has the ending in āgai ''before'' (CDIAL 68)'
+etymology_hook: 'gharai: ghar with the -ai of place words such as aṭhai; Old Marwari has a like ending in āgai ''before'', beside āgo ''front'' (CDIAL 68)'
 duration:
   max_seconds: 150
 requires:
@@ -54,7 +54,8 @@ as the place you go to.
 >
 > *vo roj āthaṇ gharai āvai hai.* — He comes home every evening.
 
-Old Marwari had the same ending in *āgai*, "before" (CDIAL 68).
+Old Marwari shows a place ending like it: *āgai*, "before", beside *āgo*, "front"
+(CDIAL 68).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-GRAMMAR-C159-GHARAI-01, MW-LEX-C90-TIME90-02, MW-GRAMMAR-C158-POLAR-01, MW-GRAMMAR-C158-ANSWER-01, MW-GRAMMAR-C155-VSTEM-01] -->

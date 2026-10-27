@@ -15,9 +15,9 @@ concept_tag: MW-GRAMMAR-PRES-VOWEL-STEM
 prerequisites: [MW-C51-jano, MW-C154-bolu-hu, MW-C154-bolai-hai, MW-C10-bajar, MW-W45-uu, MW-C154-bolo-ho, MW-C25-lavo, MW-C95-roj]
 sounds: []
 roots: []
-etymology_hook: 'jāvai: Old Marwari jāvaï ''goes'' (CDIAL 10452, Old Marwari row)'
+etymology_hook: 'jāvai: Old Marwari jāvaï, which CDIAL glosses ''to go'' (CDIAL 10452, Old Marwari row)'
 duration:
-  max_seconds: 165
+  max_seconds: 180
 requires:
   knowledge: [MW-LEX-C51-VERBS51-02, MW-GRAMMAR-C154-PRES-1SG-01, MW-GRAMMAR-C154-PRES-3SG-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-C153-UU-01, MW-GRAMMAR-C154-PRES-POLITE-01, MW-SCRIPT-LAVO-01, MW-LEX-C95-TIME95-04]
 introduces:
@@ -57,7 +57,8 @@ For **वो**, a **व** comes in before **-ै**:
 > *vo roj bājār jāvai hai.* — He goes to the market every day.
 
 After **आप**, the **व** stays: **आप जावो हो**, the ending of the request **लावो**.
-Old Marwari had *jāvaï*, "goes" (CDIAL 10452).
+CDIAL lists Old Marwari *jāvaï*, "to go", with the same *-aï* (CDIAL 10452).
+**जाऊं** is central Marwari as this book writes it; other districts differ.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-GRAMMAR-C155-VSTEM-01, MW-GRAMMAR-C154-PRES-POLITE-01, MW-SCRIPT-LAVO-01, MW-LEX-C95-TIME95-04, MW-SCRIPT-BAJAR-01] -->
