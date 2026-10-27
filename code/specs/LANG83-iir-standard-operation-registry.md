@@ -1775,6 +1775,23 @@ the frontends.
   `print`. It now refuses a function named like a runtime symbol, or two
   functions of one name. Second, a program could define `__lambda_0`, the
   name of a lifted lambda. Twig now also reserves `__lambda_` and `__twig_`.
+  A third review extended this to *registers*. A Twig parameter or `let` name
+  is an IIR register, and the compiler's temporaries (`_n1`, `_else1`, …)
+  and the passes' (`__aot_str{n}_len`, `__clo_*`, …) live in the same
+  function: `(let ((_n2 40)) (+ _n2 2))` computed 4. Fixes:
+  - Twig reserves the whole `__` namespace.
+  - Its temporaries and labels are `__t{n}_{what}` / `__l{n}_{what}`. An
+    unspellable character was ruled out because LLVM already uses `.` in its
+    derived names (`%x.slot`).
+  - `closure_heap` picks temporaries the function does not already use.
+  - `twig-aot` refuses a module that already uses a register beginning
+    `__aot_`.
+  - `twig-aot`'s `__dyn_*` check fails closed, through an allowlist of the
+    pass helpers (`PASS_GENERATED_DYN_HELPERS`), and `lang-aot`'s LLVM path
+    runs the same check, so `__gc_alloc_kind` and friends are refused there
+    too.
+  - `claim_helper_name` refuses if *any* function under the helper's name
+    differs from the helper.
 - *Not moved yet.* The managed backends (WASM, JVM, CLR, BEAM) still lower
   the source-level `pair?`, `not` and `equal?` builtins in their own code
   (their value model is structural, and `lower_dyn_repr_structural` leaves

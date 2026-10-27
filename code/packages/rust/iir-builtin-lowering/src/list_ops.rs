@@ -115,15 +115,15 @@ use interpreter_ir::IIRModule;
 use crate::helper_names::{claim_helper_name, HelperNameError};
 
 /// The synthesized recursive length helper's function name.
-const LENGTH_HELPER: &str = "__dyn_list_length";
+pub(crate) const LENGTH_HELPER: &str = "__dyn_list_length";
 /// The synthesized recursive list-ref helper's function name.
-const LISTREF_HELPER: &str = "__dyn_list_ref";
+pub(crate) const LISTREF_HELPER: &str = "__dyn_list_ref";
 /// The synthesized recursive append helper's function name.
-const APPEND_HELPER: &str = "__dyn_list_append";
+pub(crate) const APPEND_HELPER: &str = "__dyn_list_append";
 /// The synthesized tail-recursive reverse (accumulator) helper's function name.
-const REVERSE_HELPER: &str = "__dyn_list_reverse";
+pub(crate) const REVERSE_HELPER: &str = "__dyn_list_reverse";
 /// The synthesized recursive assoc (association-list search) helper's name.
-const ASSOC_HELPER: &str = "__dyn_list_assoc";
+pub(crate) const ASSOC_HELPER: &str = "__dyn_list_assoc";
 /// The nil-sentinel `const` type hint (`const 0 : ref<LispyPair>`) — the exact
 /// form `desugar_list_in_function`/`make_nil` emit for the empty list. `reverse`
 /// seeds its accumulator with one.

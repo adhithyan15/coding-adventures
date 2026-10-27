@@ -1,5 +1,11 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — security review: fail-closed helper allowlist, every impostor refused, collision-proof closure temporaries
+
+- New `PASS_GENERATED_DYN_HELPERS`: the six `__dyn_` functions the passes add (the five `list_ops` helpers and the closure dispatcher), exported so a link step can refuse every other `__dyn_*` module function instead of listing the runtime's (`twig-aot` uses it). Test `every_pass_generated_dyn_helper_is_listed` runs both passes over a module that triggers every helper and compares.
+- `claim_helper_name` checks **every** function under the helper's name, not just the first: a module holding the real helper and then an impostor of the same name used to be accepted. New test `an_impostor_after_the_real_helper_is_refused`.
+- `closure_heap`'s chain temporaries (`__clo_{tag}{n}`) skip every name the function already uses (parameters, destinations, operands). The pass runs on IIR from every frontend and a Python or JavaScript local can be spelled `__clo_argnil1`. With a counter alone the program's register and the chain temporary were one register. New test `temporaries_never_reuse_a_name_the_function_already_has`, falsified with the skip disabled.
+
 ## Unreleased — the list and closure passes refuse an impostor helper
 
 - New module `helper_names`, which exports `HelperNameError`. `lower_list_ops` and `lower_closures_to_heap` used to add their helper only "if no function of that name exists". A module that already held some *other* function named `__dyn_list_length` (… `_ref`, `_append`, `_reverse`, `_assoc`) or `__dyn_call_closure` kept it, and every `length` / closure call was rewritten to call it. Both passes now claim their helper's name before rewriting anything. A different function under the name is a `HelperNameError` and the module is left unchanged. The pass's own helper, identical instruction for instruction, is still accepted, so a lowered module lowers again. This follows `lisp_semantics`' `ReservedNameError` rule.

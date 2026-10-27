@@ -1,4 +1,10 @@
 # Changelog — `twig-aot`
+## Unreleased — security review: fail-closed `__dyn_` check, shared with LLVM; the `__aot_` register namespace
+
+- `check_program_function_names` fails closed. A module function named `__dyn_*` is a runtime symbol unless it is one of `iir_builtin_lowering::PASS_GENERATED_DYN_HELPERS`. The old check listed the runtime's functions, parsed from `dynval_runtime.c` (`DYNVAL_RUNTIME_SYMBOLS`, now removed), which fails open for a function added to the runtime later. It is now `pub`, so `lang-aot`'s LLVM path runs the same check.
+- New `check_no_aot_registers`, first thing in `prepare_module_for_aot`: a module that already uses a register, parameter or operand beginning `__aot_` is refused (`AotError::Compile`). The string lowering names its registers `__aot_str{n}_len` / `_buf` / … and `__aot_ps{n}_*`, strips dead blocks by that prefix, and hands `__aot_str{n}_len` to the runtime's print as the byte count. A program register of that name would be the same register. Twig cannot spell it any more (`__` is reserved), but Python and JavaScript locals can.
+- Tests: `every_dyn_name_but_the_pass_helpers_is_a_runtime_symbol` replaces `dynval_runtime_symbols_match_the_c_source`. It requires every `__dyn_` function in the C file, every registry `dyn_*` builtin and names the runtime does not define (`__dyn_pair_firsts`, `__dyn_not_yet_in_the_runtime`) to be refused, and no pass helper to be a runtime function. Also new: `a_module_using_an_aot_register_is_refused` (Linux, Windows, macOS objects).
+
 ## Unreleased — a program function cannot stand in for a runtime symbol
 
 - The link step patches a call in place whenever its symbol names a function of the module, and the backends name a runtime call by its runtime symbol. So a program function called `__twig_print_i64` received `print`'s call: `(define (__twig_print_i64 n) 0) (begin (print 5) 0)` printed nothing on native x86-64. New `check_program_function_names`, run first by both link steps (`compile_module_x86_64_to_text`, `compile_module_to_text_raw`, so every native target), refuses two kinds of module with `AotError::Linker`:

@@ -14268,28 +14268,25 @@ fn program_names_cannot_shadow_runtime_symbols_or_compiler_functions() {
     rename_function(&mut m, "my_print", "__twig_print_i64");
     native_refuses(&m, "reserved for the compiler");
 
-    // (ii) a second function named like the lifted lambda: refused natively
-    // as a duplicate, since the link step's offset table would keep only one.
-    // LLVM emits both definitions and `clang` refuses the module ("invalid
-    // redefinition of function"), so it fails closed too.
+    // The LLVM column links the same C runtime and collector, and runs the
+    // same check (twig-aot's, shared) before any pass: a program
+    // `@__gc_alloc_kind` would replace the collector's allocator for every
+    // caller in the runtime, and any `__dyn_*` name but a pass helper's is
+    // the runtime's.
+    for runtime_name in ["__twig_print_i64", "__gc_alloc_kind", "__gc_register_kind", "__dyn_pair_first", "__dyn_not_yet_defined"] {
+        let mut m = iir("(define (my_print n) 0) (begin (print 5) (my_print 1))");
+        rename_function(&mut m, "my_print", runtime_name);
+        native_refuses(&m, "reserved for the compiler");
+        llvm_refuses(&m, "reserved for the compiler");
+    }
+
+    // (ii) a second function named like the lifted lambda: refused on both
+    // columns as a duplicate (the native link step's offset table would keep
+    // only one; LLVM would emit two definitions).
     let mut m = iir("(define (h y) y) (define (g f) (f 5)) (begin (h 1) (g (lambda (y) (+ y 1))))");
     rename_function(&mut m, "h", "__lambda_0");
     native_refuses(&m, "more than one function named \"__lambda_0\"");
-    if clang_ok() {
-        let ll = lang_aot::compile_iir_to_llvm(m, "m", "x86_64-unknown-linux-gnu").expect("IR is emitted");
-        let dir = tempfile::tempdir().expect("temp dir");
-        let ll_path = dir.path().join("dup.ll");
-        std::fs::write(&ll_path, ll).expect("write dup.ll");
-        let out = Command::new("clang")
-            .args(["-c", "-x", "ir"])
-            .arg(&ll_path)
-            .arg("-o")
-            .arg(dir.path().join("dup.o"))
-            .output()
-            .expect("spawn clang");
-        assert!(!out.status.success(), "clang must refuse two definitions of __lambda_0");
-        assert!(String::from_utf8_lossy(&out.stderr).contains("redefinition"), "{out:?}");
-    }
+    llvm_refuses(&m, "more than one function named \"__lambda_0\"");
 
     // (iii) a pass helper's name, refused by the pass on both columns.
     let mut m = iir("(define (len2 l) 99) (+ (len2 0) (length (list 1 2)))");
@@ -14300,6 +14297,50 @@ fn program_names_cannot_shadow_runtime_symbols_or_compiler_functions() {
     rename_function(&mut m, "disp", "__dyn_call_closure");
     native_refuses(&m, "lower_closures_to_heap");
     llvm_refuses(&m, "lower_closures_to_heap");
+}
+
+/// Security review, third round: a Twig parameter or `let` name is an IIR
+/// register, in the same function as the compiler's own temporaries. Those
+/// were `_n1`, `_n2`, … and labels `_else1`, … — all spellable:
+///
+/// | program                                        | old IIR                                        | old result |
+/// |------------------------------------------------|------------------------------------------------|------------|
+/// | `(let ((_n2 40)) (+ _n2 2))`                   | `const _n2 = 2` over the binding, `add _n2, _n2` | 4        |
+/// | `(define (f _n1) (+ _n1 2)) (f 40)`            | `const _n1 = 2` over the parameter             | 4          |
+/// | `(define (g _else1) (if (= _else1 5) 42 0)) (g 5)` | a parameter and a label both `_else1`: one `%` namespace in LLVM | clang: "'%_else1' is not a basic block" |
+///
+/// The temporaries are `__t{n}_{what}` and the labels `__l{n}_{what}` now,
+/// and Twig refuses every `__` name, so a program's names are its own on
+/// every column.
+#[test]
+fn twig_names_shaped_like_compiler_temporaries_keep_their_values() {
+    let mut ran = Vec::new();
+    for (src, want, backends) in [
+        ("(let ((_n2 40)) (+ _n2 2))", 42, &[Vm, Jit, Llvm, NativeAot, Wasm, Jvm][..]),
+        // A call's arithmetic result: not on the tagged-word columns, which
+        // mis-box a call result for an unrelated, pre-existing reason (see
+        // `program_names_cannot_shadow_runtime_symbols_or_compiler_functions`).
+        ("(define (f _n1) (+ _n1 2)) (f 40)", 42, &[Vm, Jit, Wasm, Jvm][..]),
+        ("(define (g _else1) (if (= _else1 5) 42 0)) (g 5)", 42, &[Vm, Jit, Llvm, NativeAot, Wasm, Jvm][..]),
+    ] {
+        let p = Prog { lang: Language::Twig, ext: "twig", src, expect: Expect::Exit(want), backends, release: None, case: None };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    assert!(ran.contains(&Vm), "the VM always runs");
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+
+    // And the generated shapes themselves are refused at the source.
+    for src in ["(let ((__t1_n 40)) __t1_n)", "(let ((__aot_str0_len 9)) 0)", "((lambda (__clo_argnil1) 0) 1)"] {
+        let err = lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect_err(src);
+        assert!(format!("{err:?}").contains("is reserved"), "{src}: {err:?}");
+    }
 }
 
 // ---------------------------------------------------------------------------

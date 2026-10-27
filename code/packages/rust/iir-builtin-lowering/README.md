@@ -211,6 +211,17 @@ instruction, is accepted, because the pass has run before. So
 `lower_list_ops`, `lower_heap_builtins`, `lower_heap_builtins_runtime` and
 `lower_closures_to_heap` all return `Result<(), HelperNameError>`.
 `lower_builtins` reports the refusal as `BuiltinLoweringError::HelperName`.
+*Every* function under the name must be the helper: a real helper followed
+by an impostor of the same name is refused too.
+
+`PASS_GENERATED_DYN_HELPERS` lists those six names. A link step that shares
+the `__dyn_` namespace with the C runtime (twig-aot, and lang-aot's LLVM
+path) refuses every other `__dyn_*` module function, failing closed rather
+than trying to list the runtime's symbols.
+
+`lower_closures_to_heap` names the registers it adds `__clo_{tag}{n}`,
+skipping any name the function already uses, so a program register from a
+frontend that can spell `__clo_argnil1` stays the program's.
 
 ```rust
 iir_builtin_lowering::lower_closures_to_heap(&mut module)?; // Err if the module has its own __dyn_call_closure

@@ -321,14 +321,28 @@ impl FnCtx {
         }
     }
 
+    /// A register name for a compiler temporary: `__t{n}_{prefix}`.
+    ///
+    /// Two properties make it collision-proof:
+    ///
+    /// | property                         | what it rules out                                      |
+    /// |----------------------------------|--------------------------------------------------------|
+    /// | it begins with `__`              | a program name — `reserved_names` refuses every `__` name, so `(let ((_n2 40)) …)` can no longer overwrite a temporary (the old `_n2` shape) |
+    /// | `__t`, a digit, and it ends in a letter | every name a later pass invents: `iir-to-llvm`'s SSA values are `__<hint><n>` (they end in a digit), `dyn_repr`'s `__truthy_<n>` / `__unbox_<n>` and the closure lowering's `__clo_…` start with other letters |
+    ///
+    /// (Before the security review these were `_{prefix}{n}` — `_n1`, `_ifv3` —
+    /// which a Twig `let` could spell.)
     fn fresh_var(&mut self, prefix: &str) -> String {
         self.var_counter += 1;
-        format!("_{prefix}{}", self.var_counter)
+        format!("__t{}_{prefix}", self.var_counter)
     }
 
+    /// A label name: `__l{n}_{prefix}`. Labels are not registers in IIR, but
+    /// LLVM puts basic-block labels and local values in one `%` namespace,
+    /// so a label must not be spellable as a program register either.
     fn fresh_label(&mut self, prefix: &str) -> String {
         self.label_counter += 1;
-        format!("_{prefix}{}", self.label_counter)
+        format!("__l{}_{prefix}", self.label_counter)
     }
 
     /// Push an instruction + its source position in lockstep.  Every

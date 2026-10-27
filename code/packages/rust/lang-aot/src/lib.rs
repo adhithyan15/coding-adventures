@@ -1099,6 +1099,19 @@ pub fn compile_iir_to_llvm(
     target_triple: &str,
 ) -> Result<String, LangAotError> {
     check_module_for(Backend::Llvm, &module)?;
+    // The program's own functions may not take a runtime symbol's name
+    // (`__twig_*`, `__gc_*`, any `__dyn_*` but the pass helpers) or share a
+    // name. The executable links the same C runtime and gc-core-capi as the
+    // native column, and a program `define i64 @__gc_alloc_kind(…)` would
+    // stand in for the collector's allocator for every caller in the runtime.
+    // It is twig-aot's link-step check, shared so the two columns refuse the
+    // same names (security review).
+    twig_aot::check_program_function_names(&module).map_err(|e| {
+        LangAotError::LlvmBackendError(match e {
+            twig_aot::AotError::Linker { stderr, .. } => stderr,
+            other => other.to_string(),
+        })
+    })?;
     // E6d-8: lower dynamic `global_get`/`global_set` → `global_load`/`global_store`
     // before the value-model passes (as the native twig-aot path does).
     iir_builtin_lowering::lower_global_io(&mut module);

@@ -182,7 +182,7 @@ pub use dynamic_arith::lower_dynamic_arith;
 pub use dynamic_arith::lower_box_unbox_to_runtime_calls;
 pub use list_ops::lower_list_ops;
 pub use closure_heap::lower_closures_to_heap;
-pub use helper_names::HelperNameError;
+pub use helper_names::{HelperNameError, PASS_GENERATED_DYN_HELPERS};
 pub use immediates::materialize_immediate_operands;
 
 use interpreter_ir::IIRModule;
