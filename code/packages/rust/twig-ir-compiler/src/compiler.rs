@@ -1413,8 +1413,13 @@ impl Compiler {
             }
             ExprKind::Apply(apply) => {
                 // Only an UNshadowed head is a direct call to the top-level
-                // function `f`; a shadowed one is a closure call.
-                if let Some(f) = apply.fn_name().filter(|f| !shadowed.contains(*f)) {
+                // function `f`; a shadowed one is a closure call.  `and` /
+                // `or` heads are the special forms (lowered inline before any
+                // lookup), never a call to a user `(define (and a b) …)`.
+                if let Some(f) = apply
+                    .fn_name()
+                    .filter(|f| !shadowed.contains(*f) && !matches!(*f, "and" | "or"))
+                {
                     if let Some(slots) = evidence.get_mut(f) {
                         if apply.args().len() == slots.len() {
                             for (slot, arg) in slots.iter_mut().zip(apply.args().iter()) {

@@ -272,8 +272,12 @@ impl TypeEnv {
     pub fn register_union(&mut self, u: &twig_parser::UnionDef) {
         let variant_names: Vec<String> = u.variants.iter().map(|v| v.name.clone()).collect();
         self.unions.insert(u.name.clone(), variant_names);
-        // Union type name itself.
-        self.define_global(u.name.clone(), TwigKind::Union(u.name.clone()));
+        // Union type name itself.  It is a TYPE name, not a function the IR
+        // compiler generates, so it does not shadow a builtin: after
+        // `(union not (A) (B))`, `(not …)` still runs the builtin `not` and
+        // must still narrow.  Hence `globals` only, not `define_global`.
+        self.globals
+            .insert(u.name.clone(), TwigKind::Union(u.name.clone()));
         // Expose each variant constructor + generated symbols.
         for v in &u.variants {
             // Constructor: callable with arity = number of fields.

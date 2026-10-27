@@ -2176,6 +2176,25 @@ mod tests {
     }
 
     #[test]
+    fn and_or_calls_are_no_string_evidence_for_a_user_and_or() {
+        // `(and "x" "y")` is the special form, not a call to the user's
+        // `and`, so it says nothing about that function's parameters.
+        for (src, name) in [
+            ("(define (and a b) (string-length a)) (and \"x\" \"y\")", "and"),
+            ("(define (or a b) (string-length a)) (or \"x\" \"y\")", "or"),
+        ] {
+            let m = module(src);
+            let f = m.functions.iter().find(|f| f.name == name).unwrap();
+            assert_eq!(
+                f.params,
+                vec![("a".to_string(), "any".to_string()), ("b".to_string(), "any".to_string())],
+                "{src}"
+            );
+            assert!(!f.instructions.iter().any(|i| i.op == "str_len"), "{src}: {f:#?}");
+        }
+    }
+
+    #[test]
     fn keyword_special_forms_cannot_be_defined() {
         // The other special forms are keywords: defining one is a parse
         // error that carries a source position.

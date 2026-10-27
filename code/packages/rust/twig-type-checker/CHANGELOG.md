@@ -15,6 +15,15 @@
   `and` / `or` for a call: the IR compiler always lowers `(and …)` inline,
   so a user `(define (and a b) …)` no longer makes `(and a b c)` an arity
   error.
+- **A union's type name does not shadow a builtin.** Found in the
+  security review of the first version of this change. `register_union`
+  marked the union *type* name as a user definition, but the IR compiler
+  generates no function of that name. So after `(union not (A) (B))`, the
+  guard `(not (>= x 128))` stopped narrowing, and strict mode reported a
+  false refinement error, while the IR still runs the builtin `not`. The type name
+  now goes into `globals` and `unions` only. Variant constructors,
+  predicates and accessors still shadow. Test:
+  `union_type_name_does_not_shadow_a_builtin`. It failed before the fix.
 - **Imported definitions shadow builtins.** `check_program_with_globals`
   used to skip an imported name that was also a builtin, so an imported `<`
   kept the builtin's kind. It now binds every imported global. The IR

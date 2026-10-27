@@ -36,6 +36,14 @@
   can see the globals. A call to a value define named like a builtin now
   takes the indirect path (`call_closure` on its value), like any other
   value define. Redefining a builtin is not an error, as in Scheme.
+- **`(and …)` / `(or …)` are no evidence about a user `and` / `or`.**
+  Found in the security review. `collect_direct_string_call_evidence` counted
+  `(and "x" "y")` as a direct call to a user `(define (and a b) …)` and
+  typed its parameters `str`, although the special form never calls that
+  function. The evidence walk now skips `and` / `or` heads, as
+  `compile_apply` does. Test:
+  `and_or_calls_are_no_string_evidence_for_a_user_and_or`. It failed
+  before the fix.
 - **Special forms are unchanged and now documented.** Keywords (`if`,
   `let`, `let*`, `lambda`, `define`, `quote`, `begin`, `match`, …) cannot
   be defined: that is a positioned parse error. `and` / `or` can be: the

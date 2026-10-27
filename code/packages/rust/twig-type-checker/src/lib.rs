@@ -1317,6 +1317,27 @@ mod tests {
     }
 
     #[test]
+    fn union_type_name_does_not_shadow_a_builtin() {
+        // A union's TYPE name is not a function the IR compiler generates:
+        // after `(union not (A) (B))`, `(not …)` still runs the builtin
+        // `not`, so the guard still narrows and the call is proven safe.
+        let src = format!(
+            "{} (union not (A) (B)) \
+             (define (process (x : int)) (if (not (>= x 128)) (ascii-info x) 0))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(r.ok, "{src}: {:?}", r.errors);
+        // A variant constructor IS a generated function, so it shadows.
+        let program = parse("(union T (not))").unwrap();
+        let r = check_program(&program, Some(TypedMode::Lenient));
+        assert!(!r.typed_ast.env.resolves_to_builtin("not"));
+        let program = parse("(union not (A))").unwrap();
+        let r = check_program(&program, Some(TypedMode::Lenient));
+        assert!(r.typed_ast.env.resolves_to_builtin("not"));
+    }
+
+    #[test]
     fn imported_definition_named_like_a_builtin_shadows_it() {
         // An imported `<` is the function that runs, so no narrowing — and
         // its own kind (arity 2) applies at the call.
