@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:e60c3090e4938fd5",
+  "lessonIds": [
+    "ZH-C141-luyou",
+    "ZH-C141-youxi",
+    "ZH-C141-guangjie",
+    "ZH-C141-sanbu",
+    "ZH-C141-diaoyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch141.txt",
+  "json": "chinese/narration/ch141.json",
+  "textHash": "fnv1a64:f2d780bb26f5ecc4",
+  "jsonHash": "fnv1a64:8f5d474dda5bd375",
+  "findings": []
+}

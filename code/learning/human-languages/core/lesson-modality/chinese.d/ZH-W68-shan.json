@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W68-shan",
+    "language": "chinese",
+    "chapter": 68,
+    "sequence": 5515,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ecac53e157a6c6b7",
+    "detachableSegments": [
+      "Script — three peaks on a base"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

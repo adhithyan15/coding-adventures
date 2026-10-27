@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Four Seasons",
+  "label": "ch:zh-four-seasons",
+  "canDo": "I can name the four seasons and ask which one someone likes.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C131-jijie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: I can name the four seasons and ask which one someone likes.",
+    "assesses": [
+      "ZH-LEX-C131-SEASON131-03",
+      "ZH-LEX-C131-SEASON131-04",
+      "ZH-LEX-C131-SEASON131-05"
+    ]
+  }
+}

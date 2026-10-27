@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W132-qian-thousand",
+  "pathSegment": "ZH-PATH-132-BIG132",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-132-BIG132",
+      "order": 1
+    }
+  ]
+}

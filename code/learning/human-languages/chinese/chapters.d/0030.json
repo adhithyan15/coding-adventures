@@ -1,0 +1,21 @@
+{
+  "chapter": 30,
+  "title": "How Are You?",
+  "label": "ch:zh-how-are-you",
+  "canDo": "I can ask how somebody is and answer that I am fine, busy, tired or so-so.",
+  "payoff": {
+    "lesson": "ZH-C30-practice",
+    "kind": "four-skill-function-map",
+    "summary": "The everyday way to ask how somebody is, and four answers to it, built on one new written character: 很, the plain link Mandarin puts in front of an adjective.",
+    "assesses": [
+      "ZH-LEX-ZENMEYANG-01",
+      "ZH-LEX-HEN-01",
+      "ZH-SCRIPT-HEN-01",
+      "ZH-LEX-HENHAO-01",
+      "ZH-LEX-MANG-01",
+      "ZH-LEX-LEI-01",
+      "ZH-LEX-HAIXING-01",
+      "ZH-PERFORMANCE-WELLBEING-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C90-youyong",
+  "pathSegment": "ZH-PATH-90-CAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-90-CAN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 80,
+  "output": "chinese/book/chapters/ch80-jobs.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

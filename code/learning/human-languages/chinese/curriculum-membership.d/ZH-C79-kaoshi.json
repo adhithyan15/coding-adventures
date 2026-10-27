@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C79-kaoshi",
+  "pathSegment": "ZH-PATH-79-SCHOOL79",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-79-SCHOOL79",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 98,
+  "title": "With a Clock",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:c23f6b083228c584",
+  "lessons": [
+    {
+      "id": "ZH-W98-with-a-clock",
+      "sequence": 7830,
+      "title": "The same writing, with a clock",
+      "headword": "(with a clock)",
+      "romanization": "",
+      "gloss": "a five-field form and a short message under this book's own three-minute clock, and what the A1 target asks of writing",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:1197b573c45009f5",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Writing — timed production",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: you can do this one in the car, but part of it needs your hands. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Writing — timed production and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You wrote your own line with as long as you liked."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A task you can only do untimed is not yet a task you can do."
+            },
+            {
+              "kind": "speech",
+              "text": "A friend has sent you a message:"
+            },
+            {
+              "kind": "speech",
+              "text": "你在哪儿 你想要什么."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the message aloud — nǐ zài nǎr, nǐ xiǎngyào shénme",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the message aloud — *nǐ zài nǎr, nǐ xiǎngyào shénme*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What is official, and what is not. This book's A1 target is project-defined: aligned to HSK 3.0 Level 1, a match this book makes, not one the HSK publishes. Because the current trial pairs no speaking paper with Level 1, the complete A1 target adds independently scored speaking and productive writing, and at A1 the candidate writes a small form and a short message. No HSK timing is given here; the clock below is this book's own, not a published one."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Set a three-minute timer. Fill five fields first. Every label is written in characters you write:"
+            },
+            {
+              "kind": "speech",
+              "text": "名字."
+            },
+            {
+              "kind": "speech",
+              "text": "多大."
+            },
+            {
+              "kind": "speech",
+              "text": "家在哪儿."
+            },
+            {
+              "kind": "speech",
+              "text": "喜欢什么."
+            },
+            {
+              "kind": "speech",
+              "text": "想要什么."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then, before the timer rings, write back to your friend: 20 to 30 characters, saying where you are, what you want, and one reason with 因为. This task allows pinyin for a word whose characters you have not written; it goes inside the message, and only characters count toward the 20 to 30. Do not look a character up."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Speed is where stroke order shows. A character written in the order you learned keeps its shape when you hurry. When the timer rings, stop, even mid-character."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Spend at most one minute checking, and do not rewrite the timed answer. Did your reason start with 因为? Did every field get an answer?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the rule worth carrying out of this lesson. In this book, writing is its own paper, scored out of 100, with 60 to pass, and it is not averaged against reading, listening or speaking. A high reading score cannot make up for writing that is not there."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-W98-with-a-clock-home",
+              "prompt": "Write the form label that asks where your home is.",
+              "assesses": [
+                "ZH-SCRIPT-NA-WHERE-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "家在哪儿",
+                "jiā zài nǎr",
+                "jia zai nar"
+              ],
+              "feedback": {
+                "correct": "家在哪儿: 哪 is 口 beside the whole of 那.",
+                "incorrect": "家在哪儿. 哪 is 口 on the left, then 那."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R98-review-final-98",
+      "sequence": 7840,
+      "title": "The A1 core — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one conversation across the A1 core: where, what there is, how many, giving, can, want, too, all, why and because",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f9e26d520163098",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson of the A1 core: one conversation that uses every chapter of it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 你在哪儿, and answer it — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 你在哪儿, and answer it — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yí ge xiǎoshí yǐhòu, an hour later — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yí ge xiǎoshí yǐhòu*, an hour later — **R1**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 你在哪儿 nǐ zài nǎr — Where are you? B: 我在家 wǒ zài jiā — At home. A: nǐ jiā yǒu méiyǒu bīngxiāng — Have you got a fridge at home? B: 有 yǒu — Yes. A: 给我一点儿水 gěi wǒ yìdiǎnr shuǐ — Give me a little water, then. B: gěi nǐ, liǎng bēi — Here you are: two glasses. A: 太好了 tài hǎo le — Great! B: nǐ huì yóuyǒng ma — Can you swim? A: 会 我也想去 huì, wǒ yě xiǎng qù — I can, and I'd like to come too. B: 我们都去吗 wǒmen dōu qù ma — Are we all going? A: 我妈妈不去 wǒ māma bú qù — My mum isn't going. B: 为什么 wèishénme — Why? A: yīnwèi tā bù shūfu — Because she isn't feeling well. B: wǒ měitiān yóuyǒng liǎng ge xiǎoshí — I swim for two hours every day. A: yí ge xiǎoshí yǐhòu qù — Let's go in an hour, then."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines printed in characters aloud, then the rest",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines printed in characters aloud, then the rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole dialogue, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole dialogue, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "B's lines again, with your own answers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: B's lines again, with your own answers]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where? (哪儿.) Not have? (没有.) Two of something? (两.) Give? (给.) Can? (会, 能, kěyǐ.) Want? (想要.) Too? (也.) Great? (太好了.) All? (都.) Why? (为什么.) Because? (因为.) An hour? (一个小时.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C95-duche",
+  "pathSegment": "ZH-PATH-95-WHY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-95-WHY",
+      "order": 3
+    }
+  ]
+}

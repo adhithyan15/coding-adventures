@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:377a1ad6c3a6d711",
+  "lessonIds": [
+    "ZH-C121-jiao-teach",
+    "ZH-C121-lianxi",
+    "ZH-C121-huida",
+    "ZH-C121-fuxi",
+    "ZH-C121-cuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch121.txt",
+  "json": "chinese/narration/ch121.json",
+  "textHash": "fnv1a64:698c8ad0bc86ebce",
+  "jsonHash": "fnv1a64:cc41b518baa13db0",
+  "findings": []
+}

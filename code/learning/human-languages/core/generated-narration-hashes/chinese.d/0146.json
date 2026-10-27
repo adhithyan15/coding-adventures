@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:3055790b1385903a",
+  "lessonIds": [
+    "ZH-C146-baitian",
+    "ZH-C146-yeli",
+    "ZH-C146-banye",
+    "ZH-C146-xing-wake",
+    "ZH-C146-pingshi",
+    "ZH-R146-review-141-146",
+    "ZH-R146-review-final-146"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch146.txt",
+  "json": "chinese/narration/ch146.json",
+  "textHash": "fnv1a64:8b49f7d8f548ee08",
+  "jsonHash": "fnv1a64:4c04d97a2db2f58c",
+  "findings": []
+}

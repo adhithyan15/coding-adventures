@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-53-SPEAK53",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I understand or not, and ask somebody to speak slowly.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:ad6b84e01d23d560",
+  "lessonIds": [
+    "ZH-C139-lu",
+    "ZH-C139-huang",
+    "ZH-C139-hui",
+    "ZH-C139-yuan",
+    "ZH-C139-fenhong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch139.txt",
+  "json": "chinese/narration/ch139.json",
+  "textHash": "fnv1a64:1fc7a27d02e106ac",
+  "jsonHash": "fnv1a64:a1ffad3e208524ff",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C111-lukou",
+  "pathSegment": "ZH-PATH-111-FRONT111",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-111-FRONT111",
+      "order": 4
+    }
+  ]
+}

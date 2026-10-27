@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:62ecb5552eba9487",
+  "lessonIds": [
+    "ZH-C94-dou",
+    "ZH-W94-dou",
+    "ZH-C94-yiyang",
+    "ZH-C94-nianqing",
+    "ZH-C94-pang",
+    "ZH-C94-shou",
+    "ZH-C94-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch94.txt",
+  "json": "chinese/narration/ch94.json",
+  "textHash": "fnv1a64:43f53dea76c22609",
+  "jsonHash": "fnv1a64:ceadccabd1521d96",
+  "findings": []
+}

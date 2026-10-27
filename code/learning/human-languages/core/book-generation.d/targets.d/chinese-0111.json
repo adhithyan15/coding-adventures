@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 111,
+  "output": "chinese/book/chapters/ch111-in-front-and-behind.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

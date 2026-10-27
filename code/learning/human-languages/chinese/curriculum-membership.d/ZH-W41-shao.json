@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W41-shao",
+  "pathSegment": "ZH-PATH-41-MONEY41",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-41-MONEY41",
+      "order": 2
+    }
+  ]
+}

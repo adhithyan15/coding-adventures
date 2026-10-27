@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W60-bai-white",
+    "language": "chinese",
+    "chapter": 60,
+    "sequence": 5105,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:818f971d867a1c96",
+    "detachableSegments": [
+      "Script — a short fall over 日"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Places in Town",
+  "label": "ch:zh-places-in-town",
+  "canDo": "I can name places in town and say how I get there.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C44-chuzuche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: I can name places in town and say how I get there.",
+    "assesses": [
+      "ZH-LEX-C44-PLACES44-03",
+      "ZH-LEX-C44-PLACES44-04",
+      "ZH-LEX-C44-PLACES44-05"
+    ]
+  }
+}

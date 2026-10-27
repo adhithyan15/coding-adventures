@@ -9624,6 +9624,9 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Ruby, ext: "rb", src: "puts(4)\nputs((7 - 7) * 3, 10 / (5 - 5))\n", expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/div_zero_nested") },
     // An empty program (one blank line) prints nothing and exits 0.
     Prog { lang: Language::Ruby, ext: "rb", src: "\n", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/empty_program") },
+    // LANG84 R1b: an `=begin`/`=end` document and everything after a
+    // `__END__` line are skipped, so `puts 2` and `puts 4` never run.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts 1\n=begin\nputs 2\n=end\nputs 3\n__END__\nputs 4\n", expect: Expect::Stdout("1\n3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/embedded_document_and_end") },
     // 3.3.5 — representative of the one IIR-identity class `ruby-iir-compiler`'s
     // release sweep finds (3.3.5, 3.3.6, 3.3.7: `code/grammars/ruby/release_classes.csv`).
     // It is the class's first release in `releases.csv` order, so it, not the
@@ -9644,6 +9647,7 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_in_second_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_in_second_argument") },
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_nested"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_nested") },
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("empty_program"), expect: Expect::Stdout(""), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/empty_program") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("embedded_document_and_end"), expect: Expect::Stdout("1\n3"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/embedded_document_and_end") },
     // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
     // initialised to zero, moved through the frontend's scalar-field path, and
     // rendered by WRITE-ITEM through the shared recursive integer printer plus
@@ -14943,8 +14947,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // Ruby: LANG84 phase 5a's thirteen rb-int-puts rows (four of them
         // StdoutThenTrap) plus 4c's empty_program row on the default 3.3.6,
         // and 5b slice 2's same fourteen cases on the IIR-identity class
-        // representative 3.3.5, all eight columns.
-        (Language::Ruby, 28, 224),
+        // representative 3.3.5, all eight columns. R1b adds the
+        // embedded_document_and_end case on both releases.
+        (Language::Ruby, 30, 240),
         (Language::Cobol60, 59, 472),
         // Perl: the `pl-int-print` corpus on the three IIR-identity class
         // representatives (LANG84 4c): 12 cases on 5.38.0, 11 on 1.000 and 10

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C51-pa",
+    "language": "chinese",
+    "chapter": 51,
+    "sequence": 4040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e8a80d592b42245"
+  },
+  "findings": []
+}

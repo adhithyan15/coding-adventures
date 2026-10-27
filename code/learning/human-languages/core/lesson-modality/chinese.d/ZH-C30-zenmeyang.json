@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C30-zenmeyang",
+    "language": "chinese",
+    "chapter": 30,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c368ba54924a8ec2"
+  },
+  "findings": []
+}

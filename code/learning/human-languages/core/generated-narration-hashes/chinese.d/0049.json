@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:9589bb958c9ce098",
+  "lessonIds": [
+    "ZH-C49-shangwu",
+    "ZH-W49-wu-noon",
+    "ZH-C49-zhongwu",
+    "ZH-C49-wanshang",
+    "ZH-W49-wan",
+    "ZH-C49-xiawu",
+    "ZH-C49-wanshanghao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch49.txt",
+  "json": "chinese/narration/ch49.json",
+  "textHash": "fnv1a64:9a22cd9e8ebae976",
+  "jsonHash": "fnv1a64:9bdc5b0bd37796e8",
+  "findings": []
+}

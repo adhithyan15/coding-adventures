@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:1702f43498a956d7",
+  "lessonIds": [
+    "ZH-C118-baoguo",
+    "ZH-C118-ji",
+    "ZH-C118-xin",
+    "ZH-C118-duanxin",
+    "ZH-C118-shou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch118.txt",
+  "json": "chinese/narration/ch118.json",
+  "textHash": "fnv1a64:ae95939f313e214a",
+  "jsonHash": "fnv1a64:54d11c116fc453ef",
+  "findings": []
+}

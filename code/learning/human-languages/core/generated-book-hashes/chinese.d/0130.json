@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:867dd70481a50ae5",
+  "lessonIds": [
+    "ZH-C130-bingren",
+    "ZH-W130-bing-ill",
+    "ZH-C130-ganmao",
+    "ZH-C130-fashao",
+    "ZH-C130-teng",
+    "ZH-C130-kanbing"
+  ],
+  "tex": "chinese/book/chapters/ch130-feeling-ill.tex"
+}

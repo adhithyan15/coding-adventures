@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C93-zang",
+    "language": "chinese",
+    "chapter": 93,
+    "sequence": 7570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1431bc2af9e04a0b"
+  },
+  "findings": []
+}

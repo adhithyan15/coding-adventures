@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:a010fb7c75837341",
+  "lessonIds": [
+    "ZH-C108-shi",
+    "ZH-W108-shi-try",
+    "ZH-C108-huan-change",
+    "ZH-C108-shuang",
+    "ZH-C108-daxiao",
+    "ZH-C108-heshi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch108.txt",
+  "json": "chinese/narration/ch108.json",
+  "textHash": "fnv1a64:b0e36187ed8507fe",
+  "jsonHash": "fnv1a64:c8569615924dba2c",
+  "findings": []
+}

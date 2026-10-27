@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C58-bao",
+    "language": "chinese",
+    "chapter": 58,
+    "sequence": 5010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6681c2bd915423b2"
+  },
+  "findings": []
+}
