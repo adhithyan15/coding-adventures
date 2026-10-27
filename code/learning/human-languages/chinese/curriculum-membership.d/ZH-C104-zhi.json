@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C104-zhi",
+  "pathSegment": "ZH-PATH-104-DESK104",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-104-DESK104",
+      "order": 4
+    }
+  ]
+}

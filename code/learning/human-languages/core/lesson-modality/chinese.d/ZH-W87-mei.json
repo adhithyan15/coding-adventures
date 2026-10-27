@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W87-mei",
+    "language": "chinese",
+    "chapter": 87,
+    "sequence": 7130,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0d9df3fdc6f1a6f8",
+    "detachableSegments": [
+      "Script — water, a small roof, and 又"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

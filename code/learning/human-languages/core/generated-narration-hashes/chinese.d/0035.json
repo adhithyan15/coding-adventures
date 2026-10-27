@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:b772f05b33a291e3",
+  "lessonIds": [
+    "ZH-C35-gongzuo",
+    "ZH-C35-lao",
+    "ZH-C35-laoshi",
+    "ZH-C35-xiansheng",
+    "ZH-C35-zhu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch35.txt",
+  "json": "chinese/narration/ch35.json",
+  "textHash": "fnv1a64:52745c8db4eb0f9e",
+  "jsonHash": "fnv1a64:dec1e9963cc38947",
+  "findings": []
+}

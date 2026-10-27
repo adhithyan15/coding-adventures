@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C136-yintian",
+  "pathSegment": "ZH-PATH-136-WEATHER136",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-136-WEATHER136",
+      "order": 1
+    }
+  ]
+}

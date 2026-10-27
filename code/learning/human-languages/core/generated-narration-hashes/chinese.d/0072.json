@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:0edcee94c9012bca",
+  "lessonIds": [
+    "ZH-C72-huoche",
+    "ZH-W72-huo",
+    "ZH-C72-kaiche",
+    "ZH-W72-kai",
+    "ZH-C72-feiji",
+    "ZH-C72-lu",
+    "ZH-C72-dao"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch72.txt",
+  "json": "chinese/narration/ch72.json",
+  "textHash": "fnv1a64:b35dc6fdb3c30c9a",
+  "jsonHash": "fnv1a64:a92f2a92293e2e16",
+  "findings": []
+}

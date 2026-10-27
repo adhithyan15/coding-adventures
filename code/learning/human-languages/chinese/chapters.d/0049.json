@@ -1,0 +1,20 @@
+{
+  "chapter": 49,
+  "title": "A Day from Morning to Night",
+  "label": "ch:zh-a-day-from-morning-to-night",
+  "canDo": "I can name the parts of the day and greet somebody in the evening.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C49-wanshanghao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: I can name the parts of the day and greet somebody in the evening.",
+    "assesses": [
+      "ZH-LEX-C49-DAY49-03",
+      "ZH-LEX-C49-DAY49-04",
+      "ZH-LEX-C49-DAY49-05",
+      "ZH-SCRIPT-WAN-01"
+    ]
+  }
+}

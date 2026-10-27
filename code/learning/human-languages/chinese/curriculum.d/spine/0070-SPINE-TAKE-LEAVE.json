@@ -1,10 +1,7 @@
 {
   "omits": [
-    "FAREWELL-CASUAL",
     "FAREWELL-LATER",
-    "FAREWELL-SOON",
-    "FAREWELL-TOMORROW",
-    "GREETING-GOODNIGHT"
+    "FAREWELL-SOON"
   ],
   "relocates": {}
 }

@@ -1164,7 +1164,7 @@ is checked by differential tests against the current `ruby-lexer` and against
 | Slice | Constructs | Needs |
 | --- | --- | --- |
 | R0 | Integers (decimal, `0x`, `0b`, `0o`/leading `0`, `_` separators), floats, identifiers, constants, `@iv`, `@@cv`, `$g`, `:sym`, `?c`, keywords, operators (`**`, `<=>`, `>>`, compound assignments, `&.` from 2.3, `..`/`...`, `->` from 1.9), `#` comments, `\` line continuation, `NEWLINE`/`;`. Newline-after-operator continuation is handled in `.grammar` with optional `NEWLINE` after binary operators | nothing new (F10 exists) |
-| R1 | Non-interpolating strings `'…'`, simple `"…"`, `=begin`/`=end`, `__END__` | E1 |
+| R1 | R1a: non-interpolating strings `'…'`, simple `"…"` (parked until after R4/R6). R1b: `=begin`/`=end`, `__END__` (**done** for 3.3.x; 0.49/0.50 had `__END__` from R0) | E1 |
 | R2 | Interpolation `"…#{…}…"`, backticks, `:"…"`, char escapes | E2, E4 |
 | R3 | `%w %W %i %I %q %Q %r %s %x %()` with nesting brackets and arbitrary delimiters | E2, E4 |
 | R4 | Regex literal versus division, and modifier `if`/`unless`/`while`/`until`/`rescue`, via F10 flat modes (EXPR_BEG/END/ARG/FNAME/DOT); newline trivia after operators and inside `[`/hash `{` | F10, E3 |
@@ -1187,6 +1187,209 @@ machine TOML, the action interpreter and `oracle.rs` are deleted, and
 `ruby-lexer` becomes the usual thin `GrammarLexer` wrapper.
 `ruby-lexer-state-machine.md` and the era list in
 `ruby-version-evolution.md` are then marked superseded by LANG84.
+
+**R1 is split, and R1a is parked until after R4 and R6 (2026-10-24).** R1's
+comments need E1 line-start guards; its strings need nothing new. So R1 became
+R1a (non-interpolating `'…'` and `"…"`) and R1b (`=begin`/`=end` and
+`__END__`).
+
+Three security reviews of R1a each found new inputs that make a string token
+span code Ruby runs, because R0's flat modes only approximate Ruby's EXPR
+states. A quote inside a literal R1a does not lex (regexp, heredoc,
+`%`-literal, `?'`) then starts a string that swallows the following lines. E8
+refusal rules closed each reported route, and the next review found another.
+The order was wrong: a string token is only safe once the lexer classifies
+`/`, `<<`, `%` and `?` the way Ruby does, which is R4's job (with R6 for
+locals). So R4 comes before R1a, and every input below is part of R4's
+regression corpus (each must be refused or lexed exactly as `Ripper.lex`
+does):
+
+| Input (valid Ruby unless noted) | What went wrong |
+| --- | --- |
+| `x = /'/⏎system("rm")⏎y = /'/` | regexp opener lexed as `SLASH` |
+| `puts /'/ … puts /'/`, `puts <<A`, `puts %q(')` | command argument |
+| `foo.nil /'/`, `foo&.end /'/`, `foo::nil /'/` | keyword as method name |
+| `foo.⏎nil /'/` | newline after `.` keeps EXPR_DOT |
+| `alias %s(a') %s(b)`, `undef %s(a')` | `%s` symbol in EXPR_FNAME |
+| `x ?' + ' : z` (local `x`) | ternary versus character literal |
+| `def foo() /'/ end` | `)` of `def` parameters sets EXPR_BEG |
+| `a.[] /'/`, `a.[] %(')` | `]` of operator method `[]` is EXPR_ARG |
+| `# encoding: shift_jis` then `'Á\'` | a multibyte character ends in `\` (also GBK, Big5, `ruby -Ks`) |
+| `{a:b /'/}` (invalid Ruby) | label versus symbol |
+
+Before any string slice lands, magic `coding:` comments naming a non-UTF-8
+encoding must be refused, since they change where a string ends. R1b needs
+only E1 and goes ahead; its own fail-closed argument is below.
+
+**R1b plan: `=begin`/`=end` and `__END__` (2026-10-25).**
+
+*What Ruby does* (3.3.x `parse.y`, blob `baf391e5`, checked against host
+ruby 3.3.6):
+
+- `=begin` is an embedded document only when the `=` is the first byte of a
+  line (`was_bol`) and `begin` is followed by end of line, end of input or one
+  of ` \t\n\v\f\r\0\x04\x1a` (`word_match_p`). `=beginx`, `  =begin` and
+  `x =begin` are ordinary tokens (and syntax errors). The rest of the
+  `=begin` line is ignored. Later lines are skipped until a line that starts
+  with `=end` under the same word rule; the rest of that line is ignored too.
+  With no such line the program is refused ("embedded document meets end of
+  file").
+- `__END__` ends the program only when it is a whole line: the line, minus a
+  trailing `\n` or `\r\n`, is exactly `__END__` (`whole_match_p`), at the
+  start of a line. Everything after it is data. `__END__ ` (trailing space),
+  `__END__x`, `  __END__` and `__END__\r` at end of input are identifiers.
+- A line start is a physical line start: after a `\` line continuation the
+  next line starts a line (so `puts 1 + \⏎=begin` is a comment), but inside
+  a multi-line literal (regexp, `%`-literal, heredoc body, string) it is not.
+- 0.49 and 0.50 have no embedded documents (their `yylex()` has no `=begin`
+  path), and `__END__` is a keyword whose token number is 0 wherever the
+  identifier appears. Both pairs have lexed it that way since R0
+  (`END_OF_PROGRAM` in `skip:`), so R1b changes only the three 3.3.x pairs.
+
+*Tokens* (3.3.5, 3.3.6, 3.3.7; one reviewed body, two copies):
+
+- `skip:` gains `EMBDOC` and `DATA_END`, both `@line_start`. `skip:` patterns
+  are tried before every token pattern and before the built-in `NEWLINE`, and
+  the regex engine has no lookahead, so each spells Ruby's word rule out with
+  an explicit character class and consumes whole lines.
+- A top-level `EMBDOC_UNTERMINATED` (`@line_start`, `=begin` plus the word
+  rule) is reached only when `EMBDOC` could not find its `=end`, and an E8
+  `-> refuse` rule turns it into a lexer error.
+
+*Fail closed.* Skipping lines is only safe where Ruby's lexer is not inside a
+multi-line literal at that line start. R0 refuses strings, backticks and
+`:"…"` already. The three remaining openers are `/` (regexp), `%`
+(`%`-literals) and `<<` (heredocs), and R0 lexes them as operators. R1b does
+not try to tell Ruby's literal openers from its operators (that is R4); it
+refuses every opener Ruby *might* read as a literal, and proves the rest are
+operators in Ruby too:
+
+1. A heredoc needs `<<` immediately followed by `-`/`~`, a quote or an
+   identifier character. `HEREDOC_OPEN` matches that shape anywhere and is
+   refused, whatever the mode (Ruby reads `x<<y` as a shift when `x` is a
+   local; refusing it is the price of not tracking locals).
+2. `/`, `/=`, `%`, `%=` with no whitespace after them are refused in every
+   mode. That covers `IS_SPCARG` (`foo /x/`, `foo %(x)`) and EXPR_FNAME's
+   `%s` (`alias %s(a) %s(b)`) without reading the mode at all.
+3. The same four are refused in mode `beg`, where Ruby always opens a literal
+   (`x = / x/` and `x = % x ` are a regexp and a string).
+4. What is left is an opener followed by whitespace in `default`, `arg` or
+   `fname`. Ruby opens a literal there only in EXPR_BEG (`IS_SPCARG` needs a
+   non-space next), so the proof obligation is: *wherever Ruby is in
+   EXPR_BEG, the pair is in `beg` or refuses*. Ruby enters EXPR_BEG from the
+   lexer (operators, `(` `[` `{` `,` `;`, most keywords, newlines) and from
+   the parser. The R0 pairs already send every operator, opening bracket and
+   non-value keyword to `beg`. Two holes remain, and R1b closes both:
+   - **Newlines.** R0's transitions predate the F10 amendment that lets the
+     built-in `NEWLINE` fire rules, so a line kept the previous line's mode
+     (a documented divergence). R1b adds `on NEWLINE -> set-mode beg`. Ruby
+     sometimes keeps the old state across a newline (after `.`, or before a
+     leading `.foo`); `beg` is then stricter, never looser.
+   - **The parser's own state changes.** `parse.y`'s grammar actions set the
+     lexer state in exactly these places: the program start (`beg`), `alias`
+     and `undef` operands (EXPR_FNAME), the `def` head (EXPR_FNAME, then
+     EXPR_ENDFN after the name), `(expr)` arguments (EXPR_ENDARG), `in`
+     patterns (EXPR_BEG; the `in` keyword already gives `beg`), symbols
+     (EXPR_END), `class Foo <` (EXPR_BEG; `<` already gives `beg`), string
+     interpolation (strings are refused) and, the one that matters, the
+     closing `)` of `def` parameters (EXPR_BEG; `f_paren_args`), plus a
+     `def (expr).name` singleton. R1b tracks the `def` head with three flat
+     modes: `deffname` after `def` (and after `.`/`::` in a singleton name;
+     a newline there is ignored, as in Ruby), `defn` after the name (`(`
+     opens the parameters), and `defparams` inside them (its `)` gives
+     `beg`). Inside the head every opener is refused, and so are nested
+     brackets inside the parameters and the `(expr)` singleton, so one `)`
+     always closes the list. A test checks that every token kind the pairs
+     can emit has a rule in `defparams`, so no token can drop the lexer out
+     of it.
+5. `__END__` inside an embedded document is part of the document, and
+   `=begin` after `__END__` is data, in both Ruby and the pairs.
+
+*Effect on R0 programs.* Programs with heredocs, regexps or `%`-literals were
+mis-lexed as operators before and are now refused. So are `x/2`, `a%b` and
+`x<<y` without spaces (over-refusal, not mis-lexing). The rb-int-puts corpus,
+which always spaces its operators, is unchanged. A line starting with `?a`
+or `:sym` after a value now lexes as Ruby does (the NEWLINE divergence is
+gone).
+
+*Gates.*
+- `ruby-parser`: per-release token tests for the word rule, CRLF, `__END__`
+  forms, the refusals and the `defparams` coverage. The Ripper differential
+  gains R1b programs: `on_embdoc_beg`/`on_embdoc`/`on_embdoc_end` and
+  `on___end__` are trivia.
+- `rb-int-puts` gains corpus cases whose output is unchanged by an embedded
+  document or `__END__`, plus `.reject` cases for an unterminated `=begin`,
+  an indented `=begin` and a heredoc, each with a host-ruby `.cite` record.
+- The release sweep and the I/B claims must not change: comments emit no IIR.
+
+**R1b result (2026-10-25).** Landed as planned for 3.3.5, 3.3.6 and 3.3.7
+(one reviewed body, two copies by `ruby_release_pairs.py`), with these
+details:
+
+- **One positive corpus case.** `rb-int-puts` gained one positive case,
+  `embedded_document_and_end`, and two `.reject` cases: `reject_heredoc` and
+  `reject_unspaced_slash`, both `Lex`.
+  - The planned rejects for an unterminated or indented `=begin` are not
+    corpus cases. The corpus rule is that Ruby must accept every `.reject`,
+    and Ruby refuses both. `tests/r1b_line_start.rs` covers them instead.
+- **Two matrix rows.** The new case runs on 3.3.6 and 3.3.5, all eight
+  columns, so Ruby is 30 rows / 240 cells.
+- **Release classes.** `release_classes.csv` is regenerated: the class
+  digest changes because a case was added, and the partition is still the
+  single class {3.3.5, 3.3.6, 3.3.7}.
+- **Exploits.** `tests/r1b_line_start.rs` holds six valid-Ruby programs that
+  run `exit(1)` behind a document. Host ruby exits 1 on each; all six are
+  refused.
+  - The heredoc, the `beg`-mode regexp, the `def`-parameter regexp, the
+    `%`-literal argument, the `%` statement and `__END__` inside a regexp
+    are each pinned.
+  - `every_token_kind_has_a_rule_in_defparams` reads each pair and fails if
+    any token kind the pair can emit has no rule in `defparams`.
+- **Ripper differential.** It gained `23_embdoc` and `24_end_marker`; the
+  embdoc and `__END__` events count as trivia.
+- **Security review (F1).** A differential fuzz of about 37,000 programs
+  against ruby 3.3.6 found no accepted program that runs differently. It did
+  find one latent lexer gap. The CHAR classes accepted `?"`, `?'`, `` ?` ``
+  and `?#`. Ruby reads `?` as a character literal only outside EXPR_END, and
+  our flat modes disagree with Ruby's state in two places:
+  - after `.end`, `.self` and the other `set-mode default` keywords used as
+    method names after `.` or `::` (Ruby is in EXPR_ARG there);
+  - after a local variable (R6).
+
+  So a quote could reach the token stream, or `?#` could become QUESTION
+  plus a comment, and a line-start document could then hide code Ruby runs.
+  Two programs show it; both fail at parse time today. The four characters
+  are now out of every CHAR class, and a new `QUESTION_OPENER` token,
+  `/\?["'`#]/`, is refused in every mode. A bare quote or backtick was
+  already a lexer error. 0.49 and 0.50 are unaffected: their `?` is always a
+  character literal (no ternary token, no state test), so no mode can
+  disagree.
+  - **F2, the other direction (second review).** Where our mode reads `?`
+    as a character literal but Ruby is in EXPR_END (after a local `x`, or
+    after a value inside a `def` parameter list), Ruby's ternary `?` is
+    followed by a character that itself opens something: `??` (a
+    character literal), `?%` (a `%`-literal), `?/` (a regexp) and `?<` (a
+    `<<` heredoc). Five programs, all parse-rejected today, made ruby
+    3.3.6 print a line our tokens treated as a comment or as data after
+    `__END__`. The general rule: **a CHAR spelling whose second character
+    opens a string, comment, literal or heredoc under the other reading of
+    `?` is refused, in both directions of mode disagreement.** Those four
+    are now out of every CHAR class too, and `QUESTION_OPENER` is
+    `/\?["'`#?%\/<]/`. The characters CHAR keeps (`! $ & ( ) * + , - . : ;
+    = > @ [ ] ^ { | } ~`) open nothing under the ternary reading (checked
+    with Ripper on 3.3.6): `:` is a symbol start whose quoted form needs a
+    quote (a lexer error), `$`/`@` start a variable, the rest are
+    operators or brackets.
+  - **R6 note:** keywords used as method names after `.`/`::` still switch
+    to `default` (EXPR_END) where Ruby is in EXPR_ARG, and a local `x`
+    leaves us in `arg` where Ruby is in EXPR_END. Neither can hide code
+    today: strings are unlexed, the regexp, `%` and heredoc openers are
+    refused, and `QUESTION_OPENER` refuses every `?` spelling whose two
+    readings differ in what they open. But a slice that adds strings,
+    symbols or `?:` ternaries must model EXPR_DOT (a `dot` mode entered on
+    `DOT`/`SAFE_NAVIGATION`/`COLON_COLON` whose identifiers and keywords
+    go to `arg`) and locals (R6), or show in a review why it is not
+    needed.
 
 **Status (3.2, R0, 2026-10-20).** Five rows have pairs and claim `partial`,
 stage `P`, subset `rb-int-puts`: the start of the inventory (`0.49`, `0.50`,

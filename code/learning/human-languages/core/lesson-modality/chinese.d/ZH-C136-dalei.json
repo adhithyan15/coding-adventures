@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C136-dalei",
+    "language": "chinese",
+    "chapter": 136,
+    "sequence": 10700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f130cdd974fd149"
+  },
+  "findings": []
+}

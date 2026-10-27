@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:8a8188719d74f849",
+  "lessonIds": [
+    "ZH-C77-bukeqi",
+    "ZH-C77-mafan",
+    "ZH-C77-ganxie",
+    "ZH-C77-feichang",
+    "ZH-C77-zhen"
+  ],
+  "tex": "chinese/book/chapters/ch77-thanks-and-replies.tex"
+}

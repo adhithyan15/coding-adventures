@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:759fc2f1c74a5a88",
+  "lessonIds": [
+    "ZH-C70-rou",
+    "ZH-C70-baozi",
+    "ZH-C70-miantiao",
+    "ZH-C70-jiaozi",
+    "ZH-C70-tang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch70.txt",
+  "json": "chinese/narration/ch70.json",
+  "textHash": "fnv1a64:e3a26b55de1c0745",
+  "jsonHash": "fnv1a64:c77140cf1b500212",
+  "findings": []
+}

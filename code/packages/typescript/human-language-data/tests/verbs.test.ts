@@ -145,7 +145,13 @@ describe("corpus snapshot", () => {
     // without, 40 with. The mean is allowed to rise for that reason and no
     // other: it moves because a track taught the shared concepts, not because
     // the denominator shrank -- `tracksWithNoCoreVerb` is unchanged at 3.
-    expect(report.summary.meanCoveredPercent).toBe(40);
+    // 40 -> 41 is the Chinese A1 core (chapters 85-98), which takes the track
+    // 2 -> 8 covered by teaching 给, 做, fàng, dài, zhàn and 能 against the
+    // canonical VERB-GIVE, VERB-DO-MAKE, VERB-PUT, VERB-BRING, VERB-STAND and
+    // VERB-CAN, each on its own spine node. Measured by running `verbCoverage`
+    // over the corpus with and without chapters 85-98: 40 without, 41 with.
+    // `tracksWithNoCoreVerb` is unchanged.
+    expect(report.summary.meanCoveredPercent).toBe(41);
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.

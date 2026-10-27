@@ -1,6 +1,6 @@
-# Ruby 0.50 (1994-08-10?) tokens: LANG84 R0 lexical slice.
+# Ruby 0.50 (1994-08-10?) tokens: LANG84 R0 and R1b lexical slices.
 # @version 1
-# PARTIAL: lexes only the R0 constructs listed below; see code/grammars/ruby/README.md.
+# PARTIAL: lexes only the R0 and R1b constructs listed below; see code/grammars/ruby/README.md.
 # source_ref: https://github.com/ruby/ruby/tree/v0_50
 # source_sha: 6e3090413652b6592346556149fed1e9aec5495d
 # evidence: parse.y blob ff1a7f669d3eb9c8c4630442422e647d30ed3828; keywords blob -; defs/keywords blob -; prism/config.yml blob -
@@ -26,6 +26,10 @@
 # xstring from this release on), regexps (`/` is division
 # here; parse.y switches the lexer into regexp mode from the PARSER, an E7
 # concern), character escapes `?\n` (lexer error).
+#
+# R1b (`=begin`/`=end`, `__END__`) adds nothing here: this yylex() has no
+# embedded documents, and `__END__` (a keyword whose token number is 0) has
+# been the END_OF_PROGRAM skip pattern since R0.
 #
 # Known R0 divergences (each has a test):
 #   * yylex drops a newline when lex_state is EXPR_BEG. This pair always

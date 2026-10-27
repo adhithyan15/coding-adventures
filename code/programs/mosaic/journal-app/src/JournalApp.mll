@@ -1,11 +1,12 @@
 // JournalApp.mll — layout.
 //
 //   HostNavigationSplit [ app-shell ]          pane: the timeline; detail: the editor
-//     Column [ timeline ]
-//       HostButton [ new-entry ]
-//       search, Starred only, tags and journals (J4a–J4f)
-//       If (timeline-empty)  toolkit EmptyState
-//       Else                 toolkit RecordList   (first product consumer)
+//     HostScroll [ timeline-scroll ]           the pane scrolls (JO-5)
+//       Column [ timeline ]
+//         HostButton [ new-entry ]
+//         search, Starred only, tags and journals (J4a–J4f)
+//         If (timeline-empty)  toolkit EmptyState
+//         Else                 toolkit RecordList   (first product consumer)
 //     Column [ editor ]
 //       DraftEditor                            (title, body, Save/Delete/Cancel)
 //
@@ -18,164 +19,177 @@ layout JournalApp {
     pane-width : 300 ,
     collapse : auto
   ) {
-    Column [ timeline ] {
-      HostButton [ new-entry ] (
-        label : "New entry" ,
-        onClick : emit: onNewEntry
-      )
-      // Search (J4a): a query turns the list below into ranked results.
-      // Clear appears only while there is something to clear.
-      Row [ search-bar ] {
-        HostInput [ search-input ] (
-          value : slot: search-query ,
-          placeholder : "Search" ,
-          a11y-label : "Search entries" ,
-          disabled : false ,
-          onChange : emit: onSearchChange
+    // The pane scrolls (JO-5). A native window scrolls nothing unless the
+    // layout says so, and the pane grows without bound: the timeline, the
+    // tags and the journals all grow with the data. Without this, entries
+    // past the first two or so were below the fold of the declared
+    // 1100x760 window on every native backend, with no scrollbar, no
+    // keyboard scroll and no gesture to reach them (only search could).
+    // The web never showed it, because a browser page scrolls by default.
+    // TaskApp hit the same bug and fixed it the same way (#14734).
+    //
+    // Wrapping from OUTSIDE the column keeps its padding inside the
+    // scroll, so the last row keeps its breathing room at the end.
+    HostScroll [ timeline-scroll ] {
+      Column [ timeline ] {
+        HostButton [ new-entry ] (
+          label : "New entry" ,
+          onClick : emit: onNewEntry
         )
-        If ( when: slot: searching ) {
-          HostButton [ search-clear ] (
-            label : "Clear" ,
-            onClick : emit: onClearSearch
+        // Search (J4a): a query turns the list below into ranked results.
+        // Clear appears only while there is something to clear.
+        Row [ search-bar ] {
+          HostInput [ search-input ] (
+            value : slot: search-query ,
+            placeholder : "Search" ,
+            a11y-label : "Search entries" ,
+            disabled : false ,
+            onChange : emit: onSearchChange
+          )
+          If ( when: slot: searching ) {
+            HostButton [ search-clear ] (
+              label : "Clear" ,
+              onClick : emit: onClearSearch
+            )
+          }
+        }
+        // Stars (J4b): the filter is a toggle button. Two parts, so the "on"
+        // state wears its own style on every backend (as Trestle's outline).
+        If ( when: slot: starred-only ) {
+          HostButton [ starred-filter-on ] (
+            label : "Starred only" ,
+            selected : true ,
+            onClick : emit: onToggleStarredFilter
           )
         }
-      }
-      // Stars (J4b): the filter is a toggle button. Two parts, so the "on"
-      // state wears its own style on every backend (as Trestle's outline).
-      If ( when: slot: starred-only ) {
-        HostButton [ starred-filter-on ] (
-          label : "Starred only" ,
-          selected : true ,
-          onClick : emit: onToggleStarredFilter
-        )
-      }
-      Else {
-        HostButton [ starred-filter ] (
-          label : "Starred only" ,
-          selected : false ,
-          onClick : emit: onToggleStarredFilter
-        )
-      }
-      // Tags (J4d): one option per tag, stacked (the pane is 300px wide);
-      // selecting filters every list, selecting it again clears the filter.
-      If ( when: slot: has-tags ) {
+        Else {
+          HostButton [ starred-filter ] (
+            label : "Starred only" ,
+            selected : false ,
+            onClick : emit: onToggleStarredFilter
+          )
+        }
+        // Tags (J4d): one option per tag, stacked (the pane is 300px wide);
+        // selecting filters every list, selecting it again clears the filter.
+        If ( when: slot: has-tags ) {
+          pkg::mosaic-pkg-toolkit::SegmentedControl (
+            options : slot: tag-options ,
+            selected-index : slot: selected-tag-index ,
+            vertical : true ,
+            disabled : false ,
+            onSelect : emit: onSelectTag
+          )
+        }
+        // Journals (J4f): a second SegmentedControl mount, after the tags so
+        // the tag options keep their part names. "All journals" first.
         pkg::mosaic-pkg-toolkit::SegmentedControl (
-          options : slot: tag-options ,
-          selected-index : slot: selected-tag-index ,
+          options : slot: journal-options ,
+          selected-index : slot: selected-journal-index ,
           vertical : true ,
           disabled : false ,
-          onSelect : emit: onSelectTag
+          onSelect : emit: onSelectJournal
         )
-      }
-      // Journals (J4f): a second SegmentedControl mount, after the tags so
-      // the tag options keep their part names. "All journals" first.
-      pkg::mosaic-pkg-toolkit::SegmentedControl (
-        options : slot: journal-options ,
-        selected-index : slot: selected-journal-index ,
-        vertical : true ,
-        disabled : false ,
-        onSelect : emit: onSelectJournal
-      )
-      // A New journal field and Add; a refused name is said below it.
-      Row [ journal-bar ] {
-        HostInput [ journal-name-input ] (
-          value : slot: new-journal-name ,
-          placeholder : "New journal" ,
-          a11y-label : "New journal name" ,
-          disabled : false ,
-          onChange : emit: onNewJournalNameChange
-        )
-        HostButton [ add-journal ] (
-          label : "Add" ,
-          onClick : emit: onAddJournal
-        )
-      }
-      // Renaming and deleting the selected journal (J4i). Rename takes the
-      // field's name; Delete moves the journal's entries to Personal.
-      Row [ journal-actions ] {
-        If ( when: slot: can-rename-journal ) {
-          HostButton [ rename-journal ] (
-            label : "Rename" ,
-            onClick : emit: onRenameJournal
+        // A New journal field and Add; a refused name is said below it.
+        Row [ journal-bar ] {
+          HostInput [ journal-name-input ] (
+            value : slot: new-journal-name ,
+            placeholder : "New journal" ,
+            a11y-label : "New journal name" ,
+            disabled : false ,
+            onChange : emit: onNewJournalNameChange
+          )
+          HostButton [ add-journal ] (
+            label : "Add" ,
+            onClick : emit: onAddJournal
           )
         }
-        If ( when: slot: can-delete-journal ) {
-          HostButton [ delete-journal ] (
-            label : "Delete journal" ,
-            onClick : emit: onDeleteJournal
+        // Renaming and deleting the selected journal (J4i). Rename takes the
+        // field's name; Delete moves the journal's entries to Personal.
+        Row [ journal-actions ] {
+          If ( when: slot: can-rename-journal ) {
+            HostButton [ rename-journal ] (
+              label : "Rename" ,
+              onClick : emit: onRenameJournal
+            )
+          }
+          If ( when: slot: can-delete-journal ) {
+            HostButton [ delete-journal ] (
+              label : "Delete journal" ,
+              onClick : emit: onDeleteJournal
+            )
+          }
+        }
+        If ( when: slot: journal-error ) {
+          Text [ journal-error ] ( content : slot: journal-error )
+        }
+        // Export (J6a): the whole journal to a file the person chooses, through
+        // Mosaic's standard files.save effect -- no host code in this app.
+        Row [ export-bar ] {
+          HostButton [ export-journal ] (
+            label : "Export" ,
+            disabled : slot: exporting ,
+            onClick : emit: onExportJournal
           )
         }
-      }
-      If ( when: slot: journal-error ) {
-        Text [ journal-error ] ( content : slot: journal-error )
-      }
-      // Export (J6a): the whole journal to a file the person chooses, through
-      // Mosaic's standard files.save effect -- no host code in this app.
-      Row [ export-bar ] {
-        HostButton [ export-journal ] (
-          label : "Export" ,
-          disabled : slot: exporting ,
-          onClick : emit: onExportJournal
-        )
-      }
-      If ( when: slot: export-status ) {
-        Text [ export-status ] ( content : slot: export-status )
-      }
-      // On this day (J4c): a second RecordList mount (#15959), above the
-      // timeline, only when earlier years have entries on today's date.
-      If ( when: slot: has-on-this-day ) {
-        Text [ on-this-day-title ] (
-          content : "On this day" ,
-          a11y-role : heading
-        )
-        pkg::mosaic-pkg-toolkit::RecordList (
-          rows : slot: on-this-day-rows ,
-          selected-key : slot: selected-key ,
-          onSelect : emit: onSelectOnThisDay
-        )
-      }
-      If ( when: slot: timeline-empty ) {
-        pkg::mosaic-pkg-toolkit::EmptyState (
-          title : "No entries yet" ,
-          message : "Write your first entry, then save it. It is filed under today." ,
-          action-label : ""
-        )
-      }
-      Else {
-        // A second EmptyState mount (#15959): the journal has entries, but
-        // none matches every word of the query.
-        If ( when: slot: no-matches ) {
+        If ( when: slot: export-status ) {
+          Text [ export-status ] ( content : slot: export-status )
+        }
+        // On this day (J4c): a second RecordList mount (#15959), above the
+        // timeline, only when earlier years have entries on today's date.
+        If ( when: slot: has-on-this-day ) {
+          Text [ on-this-day-title ] (
+            content : "On this day" ,
+            a11y-role : heading
+          )
+          pkg::mosaic-pkg-toolkit::RecordList (
+            rows : slot: on-this-day-rows ,
+            selected-key : slot: selected-key ,
+            onSelect : emit: onSelectOnThisDay
+          )
+        }
+        If ( when: slot: timeline-empty ) {
           pkg::mosaic-pkg-toolkit::EmptyState (
-            title : "No entries match" ,
-            message : "Every word must appear in an entry. Try fewer words, or Clear." ,
+            title : "No entries yet" ,
+            message : "Write your first entry, then save it. It is filed under today." ,
             action-label : ""
           )
         }
         Else {
-          // A fourth EmptyState mount (J4h): the selected journal is empty,
-          // which says more than "nothing starred" would.
-          If ( when: slot: journal-empty ) {
+          // A second EmptyState mount (#15959): the journal has entries, but
+          // none matches every word of the query.
+          If ( when: slot: no-matches ) {
             pkg::mosaic-pkg-toolkit::EmptyState (
-              title : "No entries in this journal" ,
-              message : "New entries you write while it is selected are filed here." ,
+              title : "No entries match" ,
+              message : "Every word must appear in an entry. Try fewer words, or Clear." ,
               action-label : ""
             )
           }
           Else {
-            // The last EmptyState mount: the filter is on and nothing is starred.
-            If ( when: slot: no-starred ) {
+            // A fourth EmptyState mount (J4h): the selected journal is empty,
+            // which says more than "nothing starred" would.
+            If ( when: slot: journal-empty ) {
               pkg::mosaic-pkg-toolkit::EmptyState (
-                title : "No starred entries" ,
-                message : "Star an entry to keep it here." ,
+                title : "No entries in this journal" ,
+                message : "New entries you write while it is selected are filed here." ,
                 action-label : ""
               )
             }
             Else {
-              pkg::mosaic-pkg-toolkit::RecordList (
-                rows : slot: timeline-rows ,
-                selected-key : slot: selected-key ,
-                onSelect : emit: onSelectEntry
-              )
+              // The last EmptyState mount: the filter is on and nothing is starred.
+              If ( when: slot: no-starred ) {
+                pkg::mosaic-pkg-toolkit::EmptyState (
+                  title : "No starred entries" ,
+                  message : "Star an entry to keep it here." ,
+                  action-label : ""
+                )
+              }
+              Else {
+                pkg::mosaic-pkg-toolkit::RecordList (
+                  rows : slot: timeline-rows ,
+                  selected-key : slot: selected-key ,
+                  onSelect : emit: onSelectEntry
+                )
+              }
             }
           }
         }
@@ -236,6 +250,7 @@ layout JournalApp {
         title-placeholder : "Untitled" ,
         body-label : "Entry" ,
         body-value : slot: draft-body ,
+        body-placeholder : "" ,
         save-label : "Save" ,
         delete-label : slot: delete-label ,
         cancel-label : "Cancel" ,

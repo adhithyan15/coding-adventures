@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C102-pijiu",
+    "language": "chinese",
+    "chapter": 102,
+    "sequence": 8180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7b718a06c04f25d"
+  },
+  "findings": []
+}

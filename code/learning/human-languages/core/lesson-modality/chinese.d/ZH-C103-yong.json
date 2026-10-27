@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C103-yong",
+    "language": "chinese",
+    "chapter": 103,
+    "sequence": 8200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbc25c352b74d956"
+  },
+  "findings": []
+}

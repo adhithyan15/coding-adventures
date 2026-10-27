@@ -1,4 +1,120 @@
 {
   "version": 1,
-  "language": "chinese"
+  "language": "chinese",
+  "conceptAliases": {
+    "STATE-HOW-ARE-YOU": [
+      "ZH-STATE-HOW-ARE-YOU"
+    ],
+    "WORD-GOOD": [
+      "ZH-WORD-HAO"
+    ],
+    "VERB-DRINK": [
+      "ZH-VERB-HE"
+    ],
+    "VERB-BUY": [
+      "ZH-VERB-MAI"
+    ],
+    "VERB-OPEN": [
+      "ZH-VERB-KAI"
+    ],
+    "VERB-CLOSE": [
+      "ZH-VERB-GUAN"
+    ],
+    "VERB-ASK": [
+      "ZH-VERB-WEN"
+    ],
+    "VERB-WRITE": [
+      "ZH-VERB-XIE"
+    ],
+    "VERB-WAIT": [
+      "ZH-VERB-DENG"
+    ],
+    "VERB-READ": [
+      "ZH-VERB-DU"
+    ],
+    "VERB-COME": [
+      "ZH-VERB-LAI"
+    ],
+    "VERB-WALK": [
+      "ZH-VERB-ZOU"
+    ],
+    "LODGING-ROOM": [
+      "ZH-HOME57-FANGJIAN"
+    ],
+    "TIME-DAY": [
+      "ZH-TODAY45-TIAN"
+    ],
+    "TIME-AFTERNOON": [
+      "ZH-DAY49-XIAWU"
+    ],
+    "TIME-EVENING": [
+      "ZH-DAY49-WANSHANG"
+    ],
+    "GREETING-EVENING": [
+      "ZH-DAY49-WANSHANGHAO"
+    ],
+    "VERB-GO": [
+      "ZH-VERB-QU"
+    ],
+    "VERB-SAY": [
+      "ZH-VERB-SHUO"
+    ],
+    "VERB-SPEAK": [
+      "ZH-VERB-SHUO"
+    ],
+    "VERB-SEE": [
+      "ZH-LOOKING-SEE-RESULT"
+    ],
+    "VERB-HEAR": [
+      "ZH-VERB-TING"
+    ],
+    "VERB-KNOW": [
+      "ZH-VERB-ZHIDAO"
+    ],
+    "VERB-THINK": [
+      "ZH-VERB-XIANG"
+    ],
+    "VERB-UNDERSTAND": [
+      "ZH-VERB-DONG"
+    ],
+    "VERB-LEARN": [
+      "ZH-VERB-XUEXI"
+    ],
+    "VERB-EAT": [
+      "ZH-VERB-CHI"
+    ],
+    "VERB-SLEEP": [
+      "ZH-VERB-SHUIJIAO"
+    ],
+    "VERB-LIVE": [
+      "ZH-VERB-ZHU"
+    ],
+    "VERB-WORK": [
+      "ZH-VERB-GONGZUO"
+    ],
+    "VERB-PLAY": [
+      "ZH-VERB-WAN"
+    ],
+    "VERB-RUN": [
+      "ZH-VERB-PAOBU"
+    ],
+    "VERB-SIT": [
+      "ZH-VERB-ZUO"
+    ],
+    "VERB-HELP": [
+      "ZH-VERB-BANG"
+    ],
+    "VERB-MEET": [
+      "ZH-VERB-JIANMIAN"
+    ],
+    "VERB-NEGATE": [
+      "ZH-GRAMMAR-BU-MEI"
+    ],
+    "QUESTION-POLAR": [
+      "ZH-PARTICLE-QUESTION"
+    ],
+    "CONNECTIVE-SO": [
+      "ZH-CONNECTIVE-SUOYI"
+    ]
+  }
 }

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:eed51c08737eca6a",
+  "lessonIds": [
+    "ZH-C35-gongzuo",
+    "ZH-C35-lao",
+    "ZH-C35-laoshi",
+    "ZH-C35-xiansheng",
+    "ZH-C35-zhu"
+  ],
+  "tex": "chinese/book/chapters/ch35-who-does-what.tex"
+}

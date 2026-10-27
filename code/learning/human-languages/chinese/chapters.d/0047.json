@@ -1,0 +1,23 @@
+{
+  "chapter": 47,
+  "title": "Months and Years",
+  "label": "ch:zh-months-and-years",
+  "canDo": "I can say this year, next year, the month and the date.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R47-review-43-47",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: I can say this year, next year, the month and the date.",
+    "assesses": [
+      "ZH-LEX-C47-DATE47-01",
+      "ZH-LEX-C47-DATE47-02",
+      "ZH-LEX-C47-DATE47-03",
+      "ZH-LEX-C47-DATE47-04",
+      "ZH-LEX-C47-DATE47-05",
+      "ZH-SCRIPT-NIAN-01",
+      "ZH-SCRIPT-MING-BRIGHT-01"
+    ]
+  }
+}

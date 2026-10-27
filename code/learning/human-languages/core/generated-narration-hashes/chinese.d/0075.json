@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:615aea49c362deba",
+  "lessonIds": [
+    "ZH-C75-kuaile",
+    "ZH-W75-le-joy",
+    "ZH-C75-shengri",
+    "ZH-C75-dangao",
+    "ZH-C75-liwu",
+    "ZH-C75-song"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch75.txt",
+  "json": "chinese/narration/ch75.json",
+  "textHash": "fnv1a64:0b2f48aac1ccf25a",
+  "jsonHash": "fnv1a64:ebaea6d940cf8bc6",
+  "findings": []
+}

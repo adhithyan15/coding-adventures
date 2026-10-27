@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:7b233b3acdbdbf60",
+  "lessonIds": [
+    "ZH-C54-xuexi",
+    "ZH-C54-xie",
+    "ZH-C54-du",
+    "ZH-C54-wen",
+    "ZH-C54-ke"
+  ],
+  "tex": "chinese/book/chapters/ch54-learning.tex"
+}

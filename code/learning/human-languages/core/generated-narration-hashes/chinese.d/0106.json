@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:59f2f5a05a59576d",
+  "lessonIds": [
+    "ZH-C106-chezhan",
+    "ZH-W106-zhan",
+    "ZH-C106-ditie",
+    "ZH-C106-gongjiaoche",
+    "ZH-C106-zixingche",
+    "ZH-C106-qi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch106.txt",
+  "json": "chinese/narration/ch106.json",
+  "textHash": "fnv1a64:a4d03eded723a683",
+  "jsonHash": "fnv1a64:339accecb7d29917",
+  "findings": []
+}

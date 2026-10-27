@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:a343fb6fc106218f",
+  "lessonIds": [
+    "ZH-C67-ma",
+    "ZH-W67-ma-horse",
+    "ZH-C67-gou",
+    "ZH-C67-mao",
+    "ZH-C67-niao",
+    "ZH-C67-yu"
+  ],
+  "tex": "chinese/book/chapters/ch67-animals.tex"
+}

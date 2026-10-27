@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Things You Carry",
+  "label": "ch:zh-things-you-carry",
+  "canDo": "I can name my phone, my bag, my computer, a cup and my clothes.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C58-yifu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: I can name my phone, my bag, my computer, a cup and my clothes.",
+    "assesses": [
+      "ZH-LEX-C58-THINGS58-03",
+      "ZH-LEX-C58-THINGS58-04",
+      "ZH-LEX-C58-THINGS58-05"
+    ]
+  }
+}

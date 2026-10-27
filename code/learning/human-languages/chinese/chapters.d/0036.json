@@ -1,0 +1,22 @@
+{
+  "chapter": 36,
+  "title": "Where People Come From",
+  "label": "ch:zh-where-people-come-from",
+  "canDo": "I can say where somebody comes from and ask which country.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-R36-review-31-36",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 36: I can say where somebody comes from and ask which country.",
+    "assesses": [
+      "ZH-LEX-C36-WHERE36-01",
+      "ZH-LEX-C36-WHERE36-02",
+      "ZH-LEX-C36-WHERE36-03",
+      "ZH-LEX-C36-WHERE36-04",
+      "ZH-LEX-C36-WHERE36-05",
+      "ZH-SCRIPT-LAI-01"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:fd499b6b9b56a673",
+  "lessonIds": [
+    "ZH-C94-dou",
+    "ZH-W94-dou",
+    "ZH-C94-yiyang",
+    "ZH-C94-nianqing",
+    "ZH-C94-pang",
+    "ZH-C94-shou",
+    "ZH-C94-practice"
+  ],
+  "tex": "chinese/book/chapters/ch94-all-the-same.tex"
+}

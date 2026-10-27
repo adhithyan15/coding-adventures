@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:bd6966f116792651",
+  "lessonIds": [
+    "ZH-C82-hou",
+    "ZH-C82-zuobian",
+    "ZH-C82-youbian",
+    "ZH-C82-zhongjian",
+    "ZH-C82-duimian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch82.txt",
+  "json": "chinese/narration/ch82.json",
+  "textHash": "fnv1a64:23c329946ff4a65a",
+  "jsonHash": "fnv1a64:1f63e67329ad8713",
+  "findings": []
+}

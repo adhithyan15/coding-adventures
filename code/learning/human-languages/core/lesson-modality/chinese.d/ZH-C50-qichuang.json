@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C50-qichuang",
+    "language": "chinese",
+    "chapter": 50,
+    "sequence": 3990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e529d24ed107428"
+  },
+  "findings": []
+}

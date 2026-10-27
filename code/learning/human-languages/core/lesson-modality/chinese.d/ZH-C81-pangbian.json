@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C81-pangbian",
+    "language": "chinese",
+    "chapter": 81,
+    "sequence": 6230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ed42df2fb188fc0"
+  },
+  "findings": []
+}
