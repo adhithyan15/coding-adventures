@@ -19,7 +19,7 @@
   (`prepare_module_for_aot`, used by every native entry point and by
   `lang-aot`) and `compile_typed_module_to_arm64_bytes`. A compare over a
   float, narrow or unsigned operand, or one whose hint already names an
-  operand type (Nib's `u8`), is left alone.
+  operand type (Nib and ALGOL hint `i64`, BASIC `f64`), is left alone.
 - Tagged words stay correct: a boxed integer is `n << 3`, which keeps the
   sign and order of every 61-bit `n`, and equality compares whole words
   either way. Non-integer tagged words (nil, `#f`, `#t`, pair pointers) are
@@ -35,6 +35,13 @@
   `untyped_negative_comparisons_run_signed_on_linux_x86_64` (the same
   programs run natively and exit with the VM's answer), and
   `sign_word_comparisons_leaves_float_narrow_and_typed_compares_alone`.
+- Follow-up: `sign_word_comparisons_leaves_a_u64_operand_alone` and
+  `..._u32_operand_alone` pin that an unsigned operand blocks the rewrite.
+- `infer_aot_type` now consults every comparison operand, and a typed
+  register's type wins over a literal's. Before, only the first operand was
+  read, so an `"any"`-hinted `cmp_lt 5, x` with `x: u64` became a signed
+  `cmp_lt_i64`; it is now `cmp_lt_u64`
+  (`untyped_compare_takes_the_registers_type_over_a_literals`).
 
 ## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
 

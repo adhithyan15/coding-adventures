@@ -2227,11 +2227,25 @@ fn infer_aot_type(instr: &IIRInstr, env: &HashMap<String, String>) -> Option<Str
         // Comparisons: use the operand type so the native backends can choose
         // signed vs unsigned condition codes.  `cmp_lt_u64` → unsigned CMP,
         // `cmp_lt_i64` → signed CMP.  Both store a bool 0/1 result.
+        //
+        // Every operand is consulted, and a register's type wins over a
+        // literal's: a literal only says "some integer", while the register
+        // says which kind.  So `cmp_lt 5, x` with `x: u64` is `cmp_lt_u64`,
+        // not the `i64` the literal `5` alone would suggest (which would
+        // compare a large `u64` as negative).  With no register typed, the
+        // first literal decides, as before.
+        //
         // Fall back to "bool" only when operand types are still unresolved;
         // `sign_word_comparisons` then retypes a "bool" compare over integer
         // words to "i64" (#18483).
         "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
-            resolve_src_aot_type(instr.srcs.first(), env)
+            let typed_register = instr
+                .srcs
+                .iter()
+                .filter(|src| matches!(src, Operand::Var(_)))
+                .find_map(|src| resolve_src_aot_type(Some(src), env));
+            typed_register
+                .or_else(|| instr.srcs.iter().find_map(|src| resolve_src_aot_type(Some(src), env)))
                 .or_else(|| Some("bool".into()))
         }
         // Arithmetic + move: use the type of the first source operand.
@@ -2296,11 +2310,11 @@ fn resolve_src_aot_type(src: Option<&Operand>, env: &HashMap<String, String>) ->
 /// | any operand `u*`, `i8`…`i32`, `str`, unknown      | unchanged  |
 ///
 /// Only the hint `"bool"` is rewritten.  A hint that already names an
-/// operand type (`u8` for Nib, `i64` for ALGOL, `f64` for BASIC) is the
-/// frontend's deliberate choice and is left alone, and so is a `"bool"`
-/// compare over narrow, unsigned or float operands — those are some other
-/// language's values, not Twig integers, and this pass would only be
-/// guessing.
+/// operand type is the frontend's deliberate choice and is left alone: Nib
+/// and ALGOL hint their compares `i64` (Nib's narrow `u8` / `u4` values ride
+/// `i64` slots), and BASIC hints `f64`.  So is a `"bool"` compare over
+/// narrow, unsigned or float operands — those are some other language's
+/// values, not Twig integers, and this pass would only be guessing.
 ///
 /// ## Why tagged words are safe to compare signed
 ///
@@ -3975,7 +3989,7 @@ mod tests {
     /// The pass retypes only a `bool`-hinted compare whose operands are all
     /// 64-bit integer words. A float, narrow or unsigned operand keeps the
     /// frontend's hint, and so does a compare that already names its operand
-    /// type (Nib's `u8`).
+    /// type (here a `u8` hint; Nib and ALGOL hint `i64`, BASIC `f64`).
     #[test]
     fn sign_word_comparisons_leaves_float_narrow_and_typed_compares_alone() {
         let v = |n: &str| Operand::Var(n.into());
@@ -4013,6 +4027,62 @@ mod tests {
         assert_eq!(hint("typed_u8"), "u8", "an operand-typed hint is never rewritten");
         assert_eq!(hint("words"), "i64", "an i64 against a tagged word compares signed");
         assert_eq!(hint("lit"), "i64", "an i64 against a negative literal compares signed");
+    }
+
+    /// A `bool`-hinted compare with one `u64` operand keeps its hint: an
+    /// unsigned 64-bit value above `i64::MAX` would read as negative if the
+    /// pass compared it signed.
+    #[test]
+    fn sign_word_comparisons_leaves_a_u64_operand_alone() {
+        assert_eq!(bool_compare_hint_after_pass("u64"), "bool");
+    }
+
+    /// Same for a `u32` operand: unsigned, and narrower than a word.
+    #[test]
+    fn sign_word_comparisons_leaves_a_u32_operand_alone() {
+        assert_eq!(bool_compare_hint_after_pass("u32"), "bool");
+    }
+
+    /// The hint `sign_word_comparisons` leaves on `cmp_lt w, u` where `w` is
+    /// an `i64` param and `u` a param of type `ty`, hinted `bool`.
+    fn bool_compare_hint_after_pass(ty: &str) -> String {
+        let mut func = IIRFunction::new(
+            "f",
+            vec![("w".into(), "i64".into()), ("u".into(), ty.into())],
+            "i64",
+            vec![IIRInstr::new(
+                "cmp_lt",
+                Some("r".into()),
+                vec![Operand::Var("w".into()), Operand::Var("u".into())],
+                "bool",
+            )],
+        );
+        sign_word_comparisons(&mut func);
+        func.instructions[0].type_hint.clone()
+    }
+
+    /// An untyped compare of a literal against a typed register takes the
+    /// register's type, whichever side the literal is on. Before, only the
+    /// first operand was consulted, so `cmp_lt 5, x` with `x: u64` became a
+    /// signed `i64` compare.
+    #[test]
+    fn untyped_compare_takes_the_registers_type_over_a_literals() {
+        let mut func = IIRFunction::new(
+            "f",
+            vec![("x".into(), "u64".into())],
+            "i64",
+            vec![
+                IIRInstr::new("cmp_lt", Some("a".into()),
+                    vec![Operand::Int(5), Operand::Var("x".into())], "any"),
+                IIRInstr::new("cmp_lt", Some("b".into()),
+                    vec![Operand::Var("x".into()), Operand::Int(5)], "any"),
+                IIRInstr::new("cmp_lt", Some("c".into()),
+                    vec![Operand::Int(5), Operand::Int(6)], "any"),
+            ],
+        );
+        propagate_aot_types(&mut func);
+        let hints: Vec<&str> = func.instructions.iter().map(|i| i.type_hint.as_str()).collect();
+        assert_eq!(hints, ["u64", "u64", "i64"]);
     }
 
     /// End to end on the host: each program exits with the VM's answer.
