@@ -52,6 +52,7 @@ members = [
     "cortex-m3-simulator",
     "cortex-m33-simulator",
     "cortex-m4-simulator",
+    "cortex-m7-gatelevel",
     "cortex-m7-simulator",
     "cdp1802-simulator",
     "cdp1802-gatelevel",
