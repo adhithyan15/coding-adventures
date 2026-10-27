@@ -184,6 +184,24 @@ the word that first shows it (洗 菜 用 本 站 试 网 外 边 出 心 包 �
 节 每 半). With them Chinese attains A1 on the level gate: 641 headwords and 172
 verbs at or below A1.
 
+**Chapters 147-157** are the A2 core, hand-authored. Two chapters talk about the
+future: 会 for what will happen (明天会下雨), maybe and certainly, the weather
+forecast, 要 before a verb for going to and 要 … 了 for about to, next week, next
+month and last month, planning and some day. Six teach the grammar the A2
+vocabulary needs: 在 and 正在 before a verb for what is going on now, 一边 … 一边; 过
+after a verb for what has happened at least once (你去过中国吗), 后来 and *ránhòu*; a
+verb and its result (看到, 学会, *tīngdǒng*); 得 for how well (你说得很好); comparing
+with 比 and 没有 … 那么; and 还, 还没, 还是 and *bié*. Three read practical texts: a
+station timetable and a bookshop's opening hours (从 … 到), a price list and an
+advert (prices written in 元 and said in *kuài*), and a notice at work and a
+friend's message. Ten characters are written, one a chapter, each right after the
+word that first shows it: 后 月 正 过 到 得 比 还 从 元, 163 in all. Chapter 157 then
+writes a reply of four to six connected lines to the friend who sent the message
+(connected composition: lines that lean on each other through time words, one
+subject and 因为) and reviews the whole core. All five A2 spine nodes are realized
+and the A2 writing stage is proved; A2 is not attained yet, because the level gate
+asks for 1,200 headwords at or below A2 and the core brings the track to 690.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path

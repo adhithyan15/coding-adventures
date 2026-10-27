@@ -62,17 +62,21 @@ Exception kind names (`exception_kind` module) are dotted paths, e.g. `"Trap.Bou
 `catch "Trap"` catches any `Trap.*`, and `"*"` catches anything. The closed table a
 LANG83 `trap` may name is the seven built-in leaves (`Trap.Bounds`, `Trap.Null`,
 `Trap.DivZero`, `Trap.ConvRange`, `Trap.Overflow`, `Trap.User`,
-`Trap.ReferenceError`) plus
-`LANGUAGE_TRAP_KINDS`; `trap_kind_id` gives each a stable, append-only integer id.
+`Trap.Unbound`), and nothing else; `trap_kind_id` gives each a stable, append-only
+integer id (1–7). Every kind names a condition, not a language's exception class:
+a compiler maps JavaScript's `ReferenceError` or Python's `NameError` onto
+`Trap.Unbound` (id 7, called `Trap.ReferenceError` before LANG83 PR7d, which also
+retired the never-used `LANGUAGE_TRAP_KINDS` table).
 
 ## The standard operation registry (LANG83)
 
 `op_registry::STANDARD_OPS` names every operation a frontend may emit and every
 backend must lower or refuse — output builtins (`print_i64`, `putchar`,
-`write_i64`, and since PR6a `write_f64_py` / `write_f64_js`, which print an `f64` as
-the shortest round-trip decimal in Python's or JavaScript's layout), `print_str` and the string ops, arithmetic and comparison (since PR6c also the
+`write_i64`), `print_str` and the string ops, arithmetic and comparison (since PR6c also the
 non-trapping IEEE `f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` and
-the sign test `f64_signbit`), `f64` math,
+the sign test `f64_signbit`; since PR7b the language-neutral float primitives
+`f64_class`, `f64_digits` and `f64_exp10`, which give a float's class and its
+shortest round-trip digits as integers), `f64` math,
 conversions and `trap`. Each backend crate publishes an `OP_SUPPORT` table of
 `OpSupport::{Lowered, Refused(reason)}` and checks it with
 `op_registry::check_op_support_table`, so adding a registry op fails CI in every
@@ -86,6 +90,59 @@ assert_eq!(lookup("write_i64").unwrap().kind, OpKind::Builtin);
 // New names are type-first: a `div_` prefix would be captured by the native
 // backends' prefix dispatch and silently compiled as truncating division.
 assert!(name_rule_violation("div_floor").is_some());
+```
+
+There is no float writer. PR6a's `write_f64_py` / `write_f64_js` printed an `f64`
+in Python's or JavaScript's layout; LANG83 PR7e removed them, because the IIR
+names no source language. A compiler prints a float with a module-local helper
+built from `f64_class`, `f64_digits`, `f64_exp10`, integer ops and `putchar`.
+`op_registry::language_name_violation` keeps it that way: it splits a name on `_`,
+`.`, `-` and camelCase boundaries and refuses a word that is a language token
+(`py`, `js`, `ts`, `ruby`, `node`, …, ignoring trailing digits) or reads as an
+exception class (`ReferenceError`). A test runs it over every registry
+name and trap kind; vm-core and `lang-aot` run it over their builtins.
+
+```rust
+use interpreter_ir::op_registry::{language_name_violation, lookup};
+
+assert!(lookup("write_f64_py").is_none());
+assert!(language_name_violation("write_f64_py").is_some());
+assert!(language_name_violation("Trap.ReferenceError").is_some());
+assert!(language_name_violation("f64_digits").is_none());
+```
+
+### Dynamic values (LANG83 PR7f)
+
+The `Dynamic` family is the representation a dynamically typed language's
+values share: one tagged 64-bit word whose low three bits say what it is.
+
+| Builtin | Meaning |
+|---------|---------|
+| `dyn_box_int n` / `dyn_unbox_int x` | an integer ⇄ its dynamic value (`n << 3`) |
+| `dyn_tag x` | the tag number: 0 integer, 1 nil, 2 symbol, 3 false, 5 true, 7 pair |
+| `dyn_pair_new a b` | a fresh, garbage-collected two-field pair |
+| `dyn_pair_first p` / `dyn_pair_rest p` | a pair's fields (`p` must be a pair) |
+| `dyn_is_pair x` / `dyn_is_nil x` | the pair and nil tests, as dynamic booleans |
+| `dyn_nil` | nil |
+| `dyn_symbol "name"` | the symbol a literal names |
+
+They were the unregistered Lisp-vocabulary builtins `dyn_cons`, `dyn_car`,
+`dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil` and `make_symbol`. The
+names start with the `dyn_` dispatch prefix on purpose: the native backends'
+`dyn_` arm, which calls the runtime's `__dyn_<name>`, is exactly their lowering
+(`GRANDFATHERED_PREFIXED_NAMES`). Only the backends that link the tagged-word
+runtime lower them (native x86-64 and AArch64, LLVM). The others hold dynamic
+values structurally and refuse them with the shared
+`op_registry::NO_TAGGED_WORD_RUNTIME` reason; `dyn_symbol` is refused
+everywhere (`SYMBOLS_ARE_INTERNED_CONSTANTS`), since a symbol reaches the
+tagged-word backends as an interned `const … : symbol`.
+
+```rust
+use interpreter_ir::op_registry::{lookup, OpFamily, OpKind};
+
+let pair = lookup("dyn_pair_new").unwrap();
+assert_eq!((pair.kind, pair.family, pair.arity), (OpKind::Builtin, OpFamily::Dynamic, 2));
+assert!(lookup("dyn_cons").is_none()); // the pre-PR7f name
 ```
 
 `opcodes::may_trap`, `opcodes::trap_kinds` and `opcodes::is_terminator` answer the

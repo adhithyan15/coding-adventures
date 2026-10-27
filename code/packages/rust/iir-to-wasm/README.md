@@ -276,6 +276,8 @@ add/sub, `a == MIN` for negation, and for multiply a `-1 × MIN` guard followed 
 `a != 0 && (a * b) / a != b`. Each failing test calls `env.__trap(5)`
 (`Trap.Overflow`) then `unreachable`.
 
-LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the in-module `$__iir_write_f64(f64, i32 layout)`. Eleven in-module functions compute the shortest round-trip digits (Burger–Dybvig over big integers in a scratch region reserved after the static data) and print Python's `repr` or JavaScript's `toString` layout through `env.putchar` (see `src/lang83_f64.rs`).
+LANG83 PR6a added in-module functions that compute the shortest round-trip digits of a double (Burger–Dybvig over big integers in a scratch region reserved after the static data; see `src/lang83_f64.rs`), first behind the float writers `write_f64_py` / `write_f64_js` (`$__iir_write_f64`), which printed Python's `repr` or JavaScript's `toString` layout through `env.putchar`. LANG83 PR7e removed the writers and their three printing helpers, because a backend may not carry a language's layout; a `call_builtin` of either is now refused. The digit core stays, behind the PR7b ops below.
 
 LANG83 PR6c adds the non-trapping IEEE `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` → `f64.add` … `f64.neg`, and `f64_signbit` → `i64.reinterpret_f64; i64.const 63; i64.shr_u`.
+
+LANG83 PR7b adds `f64_class` (inline: reinterpret, mask, three `i64` compares summed) and `f64_digits` / `f64_exp10` → calls of two in-module `(f64) -> i64` wrappers around that digit core. The ten helpers write nothing, so a module that only asks for digits imports nothing for them.

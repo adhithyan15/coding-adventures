@@ -1,5 +1,37 @@
 # Changelog — `aarch64-backend`
 
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- `V1_BUILTINS` drops `dyn_not`, `dyn_equal`, `dyn_truthy` and `dyn_to_exit_code` (now compiler-emitted IIR); a module that still calls one is refused. Test `lisp_semantic_builtins_are_not_in_the_table`; `dyn_pair_test_tag_and_nil_lower` replaces the predicate/truthy and exit-code tests.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives: `Lowered` for all but `dyn_symbol` (a `BL __dyn_<name>` through `V1_BUILTINS`), `Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)` for `dyn_symbol`.
+- `V1_BUILTINS`: `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil`; `dyn_tag` and `dyn_nil` are new rows. Unit tests use the new names.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave the V1 builtin table and
+  `OP_SUPPORT`: a `call_builtin` of either is now an unknown builtin,
+  refused, and nothing calls `__twig_write_f64_*` (removed from the native
+  runtime). `f64_digits` / `f64_exp10` still call `__twig_f64_digits` /
+  `__twig_f64_exp10` with the raw bits in `x0`.
+- Tests: `float_writers_pass_the_raw_bits_in_x0` is replaced by
+  `retired_float_writers_are_unknown_builtins`; the bits-in-`x0` contract
+  stays pinned by `f64_digits_and_exp10_call_the_runtime_with_the_bits`.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- `f64_class` lowers inline: `lsl`/`lsr` by 1 drop the sign, one `cmp`
+  against +Infinity's bits feeds `cset hs` and `cset hi`, plus `cset ne`
+  against zero, summed. `f64_digits` / `f64_exp10` are `bl __twig_f64_*`
+  with the bits in `x0` and the result stored from `x0`. All three
+  `Lowered`; word-shape tests (structural: no AArch64 host here).
+- The runtime helpers are named `__twig_f64_digits` / `__twig_f64_exp10`, in
+  the runtime's own namespace. An `__iir_` name would have interposed on
+  iir-to-llvm's module-local 3-argument `@__iir_f64_digits` in any LLVM
+  program that links this runtime (found in security review).
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 ### Fixed

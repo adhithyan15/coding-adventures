@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:563e8fbb612975c9",
+  "lessonIds": [
+    "ZH-C149-zhengzai",
+    "ZH-W149-zheng",
+    "ZH-C149-zai-progressive",
+    "ZH-C149-zhenghao",
+    "ZH-C149-yibian",
+    "ZH-C149-practice"
+  ],
+  "tex": "chinese/book/chapters/ch149-right-now.tex"
+}
