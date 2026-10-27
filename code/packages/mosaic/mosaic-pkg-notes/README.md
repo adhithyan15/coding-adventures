@@ -89,7 +89,7 @@ for the reference host consumer.
 
 ```bash
 cd code/packages/mosaic/mosaic-pkg-notes
-cargo test
+cargo test   # compile pins, plus the native gate (both themes)
 ```
 
 Mirrors `mosaic-pkg-calendar`'s own smoke test: manifest parses and
@@ -100,6 +100,19 @@ that the selected-note-id slot is referenced by its camelCase identifier
 inside expressions — a real bug found live-testing this package, not a
 hypothetical, see the test's own comment); both themes' `.msl` compile
 against the resulting part map.
+
+`tests/native_complete_gate.rs` is the native gate, modelled on
+`mosaic-pkg-draft-editor`'s: zero capability degradations on the five
+native backends in both themes, and the package's known style drops pinned
+in both directions — a new drop fails, and so does a pinned drop that stops
+happening. Today that is 12 drops per theme (SwiftUI 3, Qt 6, XAML 1,
+Flutter 2), pinned per part so a later change shows exactly which it fixed.
+
+## Stories
+
+`src/Notes.stories.json` gives MosaicBook five populated states: several
+notes with one open, a long body, a new unsaved note, notes with none
+selected, and no notes yet.
 
 ## License
 

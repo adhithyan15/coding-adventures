@@ -978,7 +978,7 @@ fn twig_nil_literal_accepted_by_every_backend() {
     assert!(
         !main.instructions.iter().any(|i|
             i.op == "call_builtin"
-                && matches!(&i.srcs[0], Operand::Var(s) if s == "make_nil")
+                && matches!(&i.srcs[0], Operand::Var(s) if s == "make_nil" || s == "dyn_nil")
         ),
         "increment 6a: legacy `call_builtin \"make_nil\"` must be gone; \
          got: {:?}", main.instructions,

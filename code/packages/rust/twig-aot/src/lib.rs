@@ -1579,7 +1579,7 @@ fn compile_module_x86_64_to_text(
 /// Returns the raw object bytes ready to hand to `cc` / `ld`.
 pub fn compile_module_linux_x86_64_object(module: &IIRModule) -> Result<Vec<u8>, AotError> {
     let mut module = module.clone();
-    prepare_module_for_aot(&mut module);
+    prepare_module_for_aot(&mut module)?;
     let global_slots = collect_global_slots(&module);
     let (text, _, entry_off, relocs) =
         compile_module_x86_64_to_text(&module, X86_64Abi::SysV)?;
@@ -1598,7 +1598,7 @@ pub fn compile_linux_x86_64_object(source: &str, module_name: &str) -> Result<Ve
 /// Compile an `IIRModule` to a Windows x86-64 PE/COFF object file (`*.obj`).
 pub fn compile_module_windows_x86_64_object(module: &IIRModule) -> Result<Vec<u8>, AotError> {
     let mut module = module.clone();
-    prepare_module_for_aot(&mut module);
+    prepare_module_for_aot(&mut module)?;
     let global_slots = collect_global_slots(&module);
     let (text, _, entry_off, relocs) =
         compile_module_x86_64_to_text(&module, X86_64Abi::MsX64)?;
@@ -3250,14 +3250,14 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///  2. `normalize_params_to_i64` — promotes untyped params to `i64`.
 ///  3. `propagate_aot_types` — fixed-point type propagation.
 ///  4. `default_any_to_i64` — defaults unresolved arithmetic types to `i64`.
-fn prepare_module_for_aot(module: &mut IIRModule) {
+fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
     // Phase 0: lower global_set / global_get → global_store / global_load.
     lower_global_io(module);
 
     // Phase 0a: lower lispy heap builtins to **runtime calls** (LANG77,
     // McCarthy L3b-2b).  A lisp frontend (McCarthy Lisp, Twig) emits
     // `call_builtin "cons"/"car"/"cdr"`; this rewrite renames them to
-    // `dyn_cons`/`dyn_car`/`dyn_cdr`, which the backends dispatch to
+    // `dyn_pair_new`/`dyn_pair_first`/`dyn_pair_rest`, which the backends dispatch to
     // `__dyn_*` in the linked C lisp runtime
     // (`twig-aot/runtime/dynval_runtime.c`).  Unlike the structural
     // `lower_heap_builtins` (alloc + field_*, used by the managed wasm/jvm/
@@ -3297,7 +3297,10 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // low bits would collide with) and unbox the program result at the exit
     // boundary.  Gate-free and type-directed: a module with no `dyn_*` calls
     // (every Twig/Nib/Brainfuck program) has nothing to box and is unchanged.
-    lower_dyn_repr(module);
+    // It refuses a module that defines or calls a compiler-reserved `__lisp_*`
+    // name (LANG83 PR7f-2 security review): those names mark the Lisp rules the
+    // pass writes, so a program function carrying one could stand in for them.
+    lower_dyn_repr(module).map_err(|e| AotError::Compile(e.to_string()))?;
 
     // Phase 0a⁗: tagged-i64 representation of the generic `box`/`unbox` ops that
     // `lower_dynamic_arith` emitted (E6d-2b). The structural backends lower those
@@ -3320,6 +3323,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
         propagate_aot_types(func);
         default_any_to_i64(func);
     }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -3347,7 +3351,7 @@ fn compile_module_to_text(
     //   3. propagate + default remaining "any" (see `propagate_aot_types` /
     //                                            `default_any_to_i64`)
     let mut module = module.clone();
-    prepare_module_for_aot(&mut module);
+    prepare_module_for_aot(&mut module)?;
     compile_module_to_text_raw(&module)
 }
 
@@ -3749,10 +3753,9 @@ mod tests {
         for (i, name) in names.iter().enumerate() {
             assert_eq!(interpreter_ir::exception_kind::trap_kind_id(name), Some(i as u32 + 1));
         }
-        assert!(
-            interpreter_ir::exception_kind::LANGUAGE_TRAP_KINDS.is_empty(),
-            "a language trap kind was registered: extend __twig_trap's table for ids >= 1000"
-        );
+        // LANG83 PR7d: id 7 is `Trap.Unbound` (renamed, not renumbered), so
+        // a native trap prints the neutral name.
+        assert_eq!(names[6], "Trap.Unbound");
     }
 
     /// LANG83 PR1b end to end on the host: `write_i64` shares stdout with

@@ -49,7 +49,7 @@
 //! ], 1000);
 //! assert_eq!(cpu.rf.ax, 15);
 //! assert_eq!(cpu.rf.flag_cf, 0);
-//! assert!(cpu.halted);
+//! assert!(cpu.halted());
 //! ```
 
 pub mod alu;
@@ -58,5 +58,5 @@ pub mod cpu;
 pub mod registers;
 mod state;
 
-pub use cpu::{Cpu8086, CpuState, FLIP_FLOP_COUNT};
+pub use cpu::{Cpu8086, CpuState, PhysicalStorageInventory, FLIP_FLOP_COUNT};
 pub use intel8086_simulator::{ExecutionResult, Intel8086Error, Intel8086State, StepTrace};

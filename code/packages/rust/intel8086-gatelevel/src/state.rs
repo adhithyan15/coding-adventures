@@ -24,7 +24,6 @@ impl StateRegister {
         register(&bits, 1, &mut self.state);
     }
 
-    #[cfg(test)]
     pub(crate) fn read(&self) -> u16 {
         self.state
             .iter()
@@ -32,6 +31,10 @@ impl StateRegister {
             .fold(0, |value, (bit, state)| {
                 value | (u16::from(state.slave_q) << bit)
             })
+    }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
     }
 }
 
@@ -79,5 +82,9 @@ impl DffMemory {
 
     pub(crate) fn snapshot(&self) -> Box<[u8]> {
         self.q_cache.to_vec().into_boxed_slice()
+    }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
     }
 }
