@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "A Thief in the Night",
+  "label": "ch:ja-a-thief-in-the-night",
+  "canDo": "I can say what a thief did and what we heard.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C269-sawagu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say what a thief did and what we heard.",
+    "assesses": [
+      "JA-LEX-C269-DOROBOU269-03",
+      "JA-LEX-C269-DOROBOU269-04",
+      "JA-LEX-C269-DOROBOU269-05"
+    ]
+  }
+}

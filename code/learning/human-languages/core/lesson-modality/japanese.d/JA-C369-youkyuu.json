@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C369-youkyuu",
+    "language": "japanese",
+    "chapter": 369,
+    "sequence": 21720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2bde33f676db5d3"
+  },
+  "findings": []
+}

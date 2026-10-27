@@ -1,0 +1,11 @@
+{
+  "id": "JA-C531-nozomashii",
+  "pathSegment": "JA-PATH-531-PURPOSE531",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-531-PURPOSE531",
+      "order": 3
+    }
+  ]
+}

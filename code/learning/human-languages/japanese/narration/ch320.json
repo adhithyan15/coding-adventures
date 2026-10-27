@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 320,
+  "title": "Seeing Both Sides",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:400ce8cbf4041d7b",
+  "lessons": [
+    {
+      "id": "JA-C320-tachiba",
+      "sequence": 19150,
+      "title": "たちば (tachiba) — a position; a point of view",
+      "headword": "たちば",
+      "romanization": "tachiba",
+      "gloss": "a position; a point of view",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b2122907ac28d7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to misunderstand, then the Japanese for in earnest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たちば",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たちば — tachiba — \"a position; a point of view\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんせいの たちばも かんがえた ほうが いいです。 — sensei no tachiba mo kangaeta hō ga ii desu — \"You should think about the teacher's position too.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たちば (tachiba) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from tachi, \"standing (tatsu)\" and ba, \"place\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tachiba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tachiba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tachiba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tachiba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensei no tachiba mo kangaeta hō ga ii desu — You should think about the teacher's position too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensei no tachiba mo kangaeta hō ga ii desu* — You should think about the teacher's position too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to misunderstand, then the Japanese for in earnest, then say tachiba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to misunderstand, then the Japanese for in earnest, then say *tachiba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たちば (tachiba) mean? (\"A position; a point of view\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C320-tachiba-type",
+              "prompt": "Say the Japanese for 'a point of view'.",
+              "assesses": [
+                "JA-LEX-C320-TACHIBA320-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たちば",
+                "tachiba"
+              ],
+              "feedback": {
+                "correct": "Right: たちば (tachiba) is 'a position; a point of view'.",
+                "incorrect": "'A point of view' is たちば (tachiba)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C320-gimon",
+      "sequence": 19160,
+      "title": "ぎもん (gimon) — a doubt; a question in one's mind",
+      "headword": "ぎもん",
+      "romanization": "gimon",
+      "gloss": "a doubt; a question in one's mind",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:169fa6f7c339b3df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for in earnest, then the Japanese for a point of view."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぎもん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎもん — gimon — \"a doubt; a question in one's mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぎもんが あるので、しつもんします。 — gimon ga aru node, shitsumon shimasu — \"I have a doubt, so I will ask a question.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎもん (gimon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gi, \"doubt\" (Middle Chinese ngi) and mon, \"question\" (mjunH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gimon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gimon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gimon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gimon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gimon ga aru node, shitsumon shimasu — I have a doubt, so I will ask a question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gimon ga aru node, shitsumon shimasu* — I have a doubt, so I will ask a question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for in earnest, then the Japanese for a point of view, then say gimon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for in earnest, then the Japanese for a point of view, then say *gimon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぎもん (gimon) mean? (\"A doubt; a question in one's mind\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C320-gimon-type",
+              "prompt": "Say the Japanese for 'a doubt'.",
+              "assesses": [
+                "JA-LEX-C320-TACHIBA320-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぎもん",
+                "gimon"
+              ],
+              "feedback": {
+                "correct": "Right: ぎもん (gimon) is 'a doubt; a question in one's mind'.",
+                "incorrect": "'A doubt' is ぎもん (gimon)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C320-shuchou-suru",
+      "sequence": 19170,
+      "title": "しゅちょうする (shuchō suru) — to insist; to claim",
+      "headword": "しゅちょうする",
+      "romanization": "shuchō suru",
+      "gloss": "to insist; to claim",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d55b3e82f1700283",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a point of view, then the Japanese for a doubt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅちょうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅちょうする — shuchō suru — \"to insist; to claim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ただしいと おもったから、つよく しゅちょうしました。 — tadashii to omotta kara, tsuyoku shuchō shimashita — \"He thought he was right, so he insisted strongly.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しゅちょうします, shuchōshimasu; a する verb. Past (polite): おとうとが しゅちょうしました。, otōto ga shuchō shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅちょうする (shuchō suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, shuchō, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: shu, \"main thing\" (Middle Chinese tsyuX) and chō, \"stretch\" (trjang) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuchō suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuchō suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuchō suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuchō suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadashii to omotta kara, tsuyoku shuchō shimashita — He thought he was right, so he insisted strongly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadashii to omotta kara, tsuyoku shuchō shimashita* — He thought he was right, so he insisted strongly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a point of view, then the Japanese for a doubt, then say shuchō suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a point of view, then the Japanese for a doubt, then say *shuchō suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅちょうする (shuchō suru) mean? (\"To insist; to claim\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C320-shuchou-suru-type",
+              "prompt": "Say the Japanese for 'to insist'.",
+              "assesses": [
+                "JA-LEX-C320-TACHIBA320-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅちょうする",
+                "shuchō suru",
+                "shuchou suru",
+                "shuchoo suru",
+                "shucho suru"
+              ],
+              "feedback": {
+                "correct": "Right: しゅちょうする (shuchō suru) is 'to insist; to claim'.",
+                "incorrect": "'To insist' is しゅちょうする (shuchō suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C320-rikai-suru",
+      "sequence": 19180,
+      "title": "りかいする (rikai suru) — to comprehend; to understand fully",
+      "headword": "りかいする",
+      "romanization": "rikai suru",
+      "gloss": "to comprehend; to understand fully",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd28a8e1bad4c270",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a doubt, then the Japanese for to insist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りかいする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りかいする — rikai suru — \"to comprehend; to understand fully\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くわしく せつめいしたので、みんな りかいしました。 — kuwashiku setsumei shita node, minna rikai shimashita — \"I explained it in detail, so everyone understood.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite りかいします, rikaishimasu; a する verb. Past (polite): みんなが りかいしました。, minna ga rikai shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りかいする (rikai suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, rikai, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: ri, \"reason\" (Middle Chinese liX) and kai, \"understanding\" (keaX) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rikai suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rikai suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rikai suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rikai suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuwashiku setsumei shita node, minna rikai shimashita — I explained it in detail, so everyone understood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuwashiku setsumei shita node, minna rikai shimashita* — I explained it in detail, so everyone understood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a doubt, then the Japanese for to insist, then say rikai suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a doubt, then the Japanese for to insist, then say *rikai suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りかいする (rikai suru) mean? (\"To comprehend; to understand fully\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C320-rikai-suru-type",
+              "prompt": "Say the Japanese for 'to comprehend'.",
+              "assesses": [
+                "JA-LEX-C320-TACHIBA320-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りかいする",
+                "rikai suru"
+              ],
+              "feedback": {
+                "correct": "Right: りかいする (rikai suru) is 'to comprehend; to understand fully'.",
+                "incorrect": "'To comprehend' is りかいする (rikai suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C320-tokuni",
+      "sequence": 19190,
+      "title": "とくに (tokuni) — especially; in particular",
+      "headword": "とくに",
+      "romanization": "tokuni",
+      "gloss": "especially; in particular",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c60742dbd661db8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to insist, then the Japanese for to comprehend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とくに",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とくに — tokuni — \"especially; in particular\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつは とくに あついから、みずを のんで ください。 — natsu wa tokuni atsui kara, mizu o nonde kudasai — \"Summer is especially hot, so please drink water.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とくに (tokuni) is Sino-Japanese (kango): one Chinese character read with its on'yomi, reading borrowed from Chinese. It is toku, \"special\" (Middle Chinese dok) (KANJIDIC2; Middle Chinese in Baxter's transcription). The native particle ni after it makes the adverb (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokuni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokuni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokuni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokuni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsu wa tokuni atsui kara, mizu o nonde kudasai — Summer is especially hot, so please drink water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsu wa tokuni atsui kara, mizu o nonde kudasai* — Summer is especially hot, so please drink water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to insist, then the Japanese for to comprehend, then say tokuni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to insist, then the Japanese for to comprehend, then say *tokuni* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とくに (tokuni) mean? (\"Especially; in particular\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C320-tokuni-type",
+              "prompt": "Say the Japanese for 'especially'.",
+              "assesses": [
+                "JA-LEX-C320-TACHIBA320-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とくに",
+                "tokuni"
+              ],
+              "feedback": {
+                "correct": "Right: とくに (tokuni) is 'especially; in particular'.",
+                "incorrect": "'Especially' is とくに (tokuni)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

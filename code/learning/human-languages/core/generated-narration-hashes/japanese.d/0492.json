@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:40ee62f48acff539",
+  "lessonIds": [
+    "JA-C492-nieru",
+    "JA-C492-waku",
+    "JA-C492-hitasu",
+    "JA-C492-fukasu",
+    "JA-C492-muku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch492.txt",
+  "json": "japanese/narration/ch492.json",
+  "textHash": "fnv1a64:56207f24c929f49b",
+  "jsonHash": "fnv1a64:dce648ae8df480c8",
+  "findings": []
+}

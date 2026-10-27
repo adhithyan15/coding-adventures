@@ -1,0 +1,11 @@
+{
+  "id": "JA-C490-esa",
+  "pathSegment": "JA-PATH-490-SEA490",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-490-SEA490",
+      "order": 3
+    }
+  ]
+}

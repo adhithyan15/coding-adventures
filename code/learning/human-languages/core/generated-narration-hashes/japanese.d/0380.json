@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:382e49fafd5506e6",
+  "lessonIds": [
+    "JA-C380-ekiben",
+    "JA-C380-shashou",
+    "JA-C380-nesugosu",
+    "JA-C380-utouto",
+    "JA-C380-hitokuchi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch380.txt",
+  "json": "japanese/narration/ch380.json",
+  "textHash": "fnv1a64:73b32a4203512b04",
+  "jsonHash": "fnv1a64:a9c4730875c28cae",
+  "findings": []
+}

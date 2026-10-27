@@ -106,6 +106,10 @@ impl Register8 {
     fn write(&mut self, value: u8) {
         self.state.write(u16::from(value));
     }
+
+    fn dff_count(&self) -> usize {
+        self.state.dff_count()
+    }
 }
 
 /// A 16-bit register implemented as sixteen D flip-flops.
@@ -129,6 +133,10 @@ impl Register16 {
     /// Clock a new value into the register.
     pub fn write(&mut self, value: u16) {
         self.state.write(value);
+    }
+
+    fn dff_count(&self) -> usize {
+        self.state.dff_count()
     }
 }
 
@@ -170,6 +178,16 @@ impl RegisterFile {
     /// Reset all registers to zero (power-on state).
     pub fn reset(&mut self) {
         *self = Self::new();
+    }
+
+    /// Count the D flip-flops in every concrete register-file container.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.regs.iter().map(Register8::dff_count).sum::<usize>()
+            + self.alt.iter().map(Register8::dff_count).sum::<usize>()
+            + self.f.dff_count()
+            + self.f_prime.dff_count()
+            + self.ix.dff_count()
+            + self.iy.dff_count()
     }
 
     // ── 8-bit register access ────────────────────────────────────────────────

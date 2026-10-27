@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-450-CLINIC450",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-450-CLINIC450"
+  ],
+  "after": []
+}

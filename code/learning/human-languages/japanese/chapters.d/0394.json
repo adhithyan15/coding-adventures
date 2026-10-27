@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Up the Hill and Down",
+  "label": "ch:ja-up-the-hill-and-down",
+  "canDo": "I can describe steep roads and mountain crossings.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C394-koeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can describe steep roads and mountain crossings.",
+    "assesses": [
+      "JA-LEX-C394-SAKAMICHI394-03",
+      "JA-LEX-C394-SAKAMICHI394-04",
+      "JA-LEX-C394-SAKAMICHI394-05"
+    ]
+  }
+}

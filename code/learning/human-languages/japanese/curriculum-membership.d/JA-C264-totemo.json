@@ -1,0 +1,11 @@
+{
+  "id": "JA-C264-totemo",
+  "pathSegment": "JA-PATH-264-KOROBU264",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-264-KOROBU264",
+      "order": 3
+    }
+  ]
+}

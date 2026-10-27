@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:1d3a607a28dade24",
+  "lessonIds": [
+    "JA-C409-chiiki",
+    "JA-C409-shuto",
+    "JA-C409-kokkyou",
+    "JA-C409-sakai",
+    "JA-C409-hougen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch409.txt",
+  "json": "japanese/narration/ch409.json",
+  "textHash": "fnv1a64:9d4d8a14d5864baf",
+  "jsonHash": "fnv1a64:dd8bbed9b14d4a56",
+  "findings": []
+}

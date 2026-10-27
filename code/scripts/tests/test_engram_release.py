@@ -43,6 +43,118 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(workflow.count("subosito/flutter-action@"), workflow.count("flutter-version:"))
 
 
+def _step(workflow: str, name: str) -> str:
+    """The text of one workflow step, from its ``- name:`` to the next one.
+
+    Plain text rather than a YAML parse: the release lane's tests run on the
+    standard library alone, and what is pinned here is the shell a step runs,
+    which YAML would hand back as one opaque string anyway.
+    """
+
+    start = workflow.index(f"- name: {name}\n")
+    end = workflow.find("\n      - name: ", start + 1)
+    return workflow[start:] if end == -1 else workflow[start:end]
+
+
+class ComposeLinuxStateGateTests(unittest.TestCase):
+    """The Compose Linux leg runs the shared upgrade/corrupt-recovery gate.
+
+    mosaic-release-state-gate-v1.md, "How an app adopts the gate", step 3:
+    materialize the committed fixture into the backend's REAL state path,
+    launch the extracted payload, `verify`; then garbage, a probe, a relaunch,
+    `verify-quarantine`. Each assertion pins one way the step could go on
+    passing while checking nothing.
+    """
+
+    STEP = "Verify upgrade and corrupt-state recovery on the Linux payload"
+
+    def setUp(self) -> None:
+        self.workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.step = _step(self.workflow, self.STEP)
+
+    def test_runs_only_on_the_linux_leg_of_the_compose_job(self) -> None:
+        compose_job = self.workflow[
+            self.workflow.index("  build-compose:\n") : self.workflow.index("  build-swiftui:\n")
+        ]
+        self.assertIn(self.STEP, compose_job)
+        self.assertIn("if: matrix.platform == 'linux'", self.step)
+
+    def test_runs_after_archiving_and_before_upload(self) -> None:
+        # It launches the ARCHIVED payload, so it must follow the archive step,
+        # and a failure should stop an unverified payload being uploaded.
+        archive = self.workflow.index("- name: Archive the artifact for publication\n")
+        gate = self.workflow.index(f"- name: {self.STEP}\n")
+        upload = self.workflow.index("- name: Upload the Compose payload\n")
+        self.assertLess(archive, gate)
+        self.assertLess(gate, upload)
+
+    def test_launches_the_extracted_payload_not_the_build_tree(self) -> None:
+        self.assertIn("engram_release.py compose-name", self.step)
+        self.assertIn('unzip -q "$archive"', self.step)
+        self.assertIn("-path '*/bin/engram_app' -perm -111", self.step)
+        self.assertNotIn("build/compose/binaries", self.step)
+
+    def test_state_lives_where_the_shipped_host_looks(self) -> None:
+        # The generated Compose host resolves
+        # $XDG_DATA_HOME/<package name>/mosaic-state.v1.json on Linux. Handing
+        # it a path through MOSAIC_APP_STATE_PATH would test an override no
+        # user sets, so that variable is UNSET, not set.
+        self.assertIn('state="$state_root/engram-app/mosaic-state.v1.json"', self.step)
+        self.assertIn('XDG_DATA_HOME="$state_root"', self.step)
+        self.assertIn("env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH", self.step)
+        self.assertIn("(cd / &&", self.step)
+
+    def test_runs_every_half_of_the_gate_in_order(self) -> None:
+        materialize = self.step.index(
+            'python "$gate" materialize --fixture "$fixture" --output "$state"'
+        )
+        upgrade = self.step.index("launch upgrade")
+        verify = self.step.index('python "$gate" verify --fixture "$fixture" --state "$state"')
+        garbage = self.step.index("> \"$state\"")
+        probe = self.step.index('cp "$state" "$probe"')
+        recovery = self.step.index("launch recovery")
+        quarantine = self.step.index(
+            'python "$gate" verify-quarantine --app engram --state "$state" --probe "$probe"'
+        )
+        self.assertEqual(
+            [materialize, upgrade, verify, garbage, probe, recovery, quarantine],
+            sorted([materialize, upgrade, verify, garbage, probe, recovery, quarantine]),
+        )
+        self.assertIn('gate="code/scripts/mosaic_release_state_gate.py"', self.step)
+        self.assertIn(
+            'fixture="code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"',
+            self.step,
+        )
+
+    def test_a_launch_must_still_be_running_when_the_timeout_fires(self) -> None:
+        self.assertIn('run-under-xvfb.sh" timeout 15s "$launcher"', self.step)
+        self.assertIn('if [[ "$status" -ne 124 ]]; then', self.step)
+        self.assertIn('if grep -F "Mosaic Rust runtime unavailable" "$log"; then', self.step)
+        self.assertIn("set -euo pipefail", self.step)
+
+    def test_no_expression_is_interpolated_into_the_shell(self) -> None:
+        run = self.step[self.step.index("run: |") :]
+        self.assertNotIn("${{", run)
+
+    def test_the_runner_has_what_the_gate_launches_with(self) -> None:
+        compose_job = self.workflow[
+            self.workflow.index("  build-compose:\n") : self.workflow.index("  build-swiftui:\n")
+        ]
+        self.assertIn("apt-install.sh libcairo2-dev xvfb unzip", compose_job)
+
+    def test_a_change_to_what_the_gate_depends_on_runs_this_lane(self) -> None:
+        paths = self.workflow[
+            self.workflow.index("    paths:\n") : self.workflow.index("  workflow_dispatch:\n")
+        ]
+        for path in (
+            "code/scripts/mosaic_release_state_gate.py",
+            "code/scripts/run-under-xvfb.sh",
+            "code/packages/rust/mosaic-app-bindings/templates/compose/**",
+            "code/programs/mosaic/engram-app/**",
+        ):
+            self.assertIn(f"      - {path}\n", paths)
+
+
 class ValidateIdentifiersTests(unittest.TestCase):
     def test_accepts_a_matching_version_and_tag(self) -> None:
         engram_release.validate_identifiers("0.3.0", "engram-v0.3.0", COMMIT)

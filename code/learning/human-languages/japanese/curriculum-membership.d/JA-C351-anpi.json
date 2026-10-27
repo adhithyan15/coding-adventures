@@ -1,0 +1,11 @@
+{
+  "id": "JA-C351-anpi",
+  "pathSegment": "JA-PATH-351-MANICHI351",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-351-MANICHI351",
+      "order": 3
+    }
+  ]
+}

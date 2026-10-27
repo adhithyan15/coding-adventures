@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:8ad6443659f74534",
+  "lessonIds": [
+    "JA-C345-henkou-suru",
+    "JA-C345-enki-suru",
+    "JA-C345-torikesu",
+    "JA-C345-zurasu",
+    "JA-C345-hayameru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch345.txt",
+  "json": "japanese/narration/ch345.json",
+  "textHash": "fnv1a64:d2828c8220fd1d4b",
+  "jsonHash": "fnv1a64:e87f4e1f7e3b5ef4",
+  "findings": []
+}

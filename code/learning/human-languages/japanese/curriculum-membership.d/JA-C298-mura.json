@@ -1,0 +1,11 @@
+{
+  "id": "JA-C298-mura",
+  "pathSegment": "JA-PATH-298-MUKASHI298",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-298-MUKASHI298",
+      "order": 3
+    }
+  ]
+}

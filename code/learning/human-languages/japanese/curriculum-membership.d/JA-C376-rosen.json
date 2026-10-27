@@ -1,0 +1,11 @@
+{
+  "id": "JA-C376-rosen",
+  "pathSegment": "JA-PATH-376-SHINKANSEN376",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-376-SHINKANSEN376",
+      "order": 3
+    }
+  ]
+}

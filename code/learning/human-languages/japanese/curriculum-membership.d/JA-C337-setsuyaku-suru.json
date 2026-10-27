@@ -1,0 +1,11 @@
+{
+  "id": "JA-C337-setsuyaku-suru",
+  "pathSegment": "JA-PATH-337-SETSUYAKU337",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-337-SETSUYAKU337",
+      "order": 0
+    }
+  ]
+}

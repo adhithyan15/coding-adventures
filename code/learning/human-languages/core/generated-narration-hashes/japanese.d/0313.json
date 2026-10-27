@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:b211880b4f6c70c5",
+  "lessonIds": [
+    "JA-C313-kiroku",
+    "JA-C313-sakaeru",
+    "JA-C313-horobiru",
+    "JA-C313-senjitsu",
+    "JA-C313-iseki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch313.txt",
+  "json": "japanese/narration/ch313.json",
+  "textHash": "fnv1a64:98c812cff5c104c4",
+  "jsonHash": "fnv1a64:93ea41ba47cfd4c9",
+  "findings": []
+}

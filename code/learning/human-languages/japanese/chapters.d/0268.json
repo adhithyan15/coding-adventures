@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Keeping Calm",
+  "label": "ch:ja-keeping-calm",
+  "canDo": "I can say what to do in an emergency and who survived.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C268-anzen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can say what to do in an emergency and who survived.",
+    "assesses": [
+      "JA-LEX-C268-KYUUJO268-03",
+      "JA-LEX-C268-KYUUJO268-04",
+      "JA-LEX-C268-KYUUJO268-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C494-tamanegi",
+    "language": "japanese",
+    "chapter": 494,
+    "sequence": 28720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dac2b1813438ec24"
+  },
+  "findings": []
+}

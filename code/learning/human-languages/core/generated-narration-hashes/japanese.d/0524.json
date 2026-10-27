@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:5a4692708e0faf34",
+  "lessonIds": [
+    "JA-C524-katei",
+    "JA-C524-omoiegaku",
+    "JA-C524-souzou-suru",
+    "JA-C524-suiri",
+    "JA-C524-jitsugen-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch524.txt",
+  "json": "japanese/narration/ch524.json",
+  "textHash": "fnv1a64:30506ca7d933302e",
+  "jsonHash": "fnv1a64:d9b315af2d2133d7",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:39a67503ce87c26f",
+  "lessonIds": [
+    "JA-C509-takarakuji",
+    "JA-C509-kujibiki",
+    "JA-C509-chuusen-suru",
+    "JA-C509-kakuritsu",
+    "JA-C509-ateru",
+    "JA-R509-review-504-509"
+  ],
+  "tex": "japanese/book/chapters/ch509-lotteries-and-odds.tex"
+}

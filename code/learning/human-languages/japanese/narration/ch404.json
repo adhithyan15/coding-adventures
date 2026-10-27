@@ -1,0 +1,814 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 404,
+  "title": "The View from the Top",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:10a0e3e3b3527032",
+  "lessons": [
+    {
+      "id": "JA-C404-fuukei",
+      "sequence": 23650,
+      "title": "ふうけい (fūkei) — scenery; a landscape",
+      "headword": "ふうけい",
+      "romanization": "fūkei",
+      "gloss": "scenery; a landscape",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58025fa2324ab277",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a place visited on a trip, then the Japanese for to visit a place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふうけい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふうけい — fūkei — \"scenery; a landscape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いなかの ふうけいは うつくしいです。 — inaka no fūkei wa utsukushii desu — \"The countryside scenery is beautiful.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふうけい (fūkei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fū, \"style\" (Middle Chinese pjuwng) and kei, \"scenery\" (kjaengX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fūkei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fūkei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fūkei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fūkei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inaka no fūkei wa utsukushii desu — The countryside scenery is beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inaka no fūkei wa utsukushii desu* — The countryside scenery is beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a place visited on a trip, then the Japanese for to visit a place, then say fūkei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a place visited on a trip, then the Japanese for to visit a place, then say *fūkei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふうけい (fūkei) mean? (\"Scenery; a landscape\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C404-fuukei-type",
+              "prompt": "Say the Japanese for 'scenery'.",
+              "assesses": [
+                "JA-LEX-C404-FUUKEI404-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふうけい",
+                "fūkei",
+                "fuukei",
+                "fukei"
+              ],
+              "feedback": {
+                "correct": "Right: ふうけい (fūkei) is 'scenery; a landscape'.",
+                "incorrect": "'Scenery' is ふうけい (fūkei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C404-nagameru",
+      "sequence": 23660,
+      "title": "ながめる (nagameru) — to gaze at; to admire (a view)",
+      "headword": "ながめる",
+      "romanization": "nagameru",
+      "gloss": "to gaze at; to admire (a view)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3879b2a94c0f4457",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to visit a place, then the Japanese for scenery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ながめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ながめる — nagameru — \"to gaze at; to admire (a view)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まどから うみを ながめました。 — mado kara umi o nagamemashita — \"I gazed at the sea from the window.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ながめます, nagamemasu; an ichidan verb. Past (polite): ちちが うみを ながめました。, chichi ga umi o nagamemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ながめる (nagameru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagameru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagameru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagameru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagameru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mado kara umi o nagamemashita — I gazed at the sea from the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mado kara umi o nagamemashita* — I gazed at the sea from the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to visit a place, then the Japanese for scenery, then say nagameru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to visit a place, then the Japanese for scenery, then say *nagameru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ながめる (nagameru) mean? (\"To gaze at; to admire (a view)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C404-nagameru-type",
+              "prompt": "Say the Japanese for 'to gaze at'.",
+              "assesses": [
+                "JA-LEX-C404-FUUKEI404-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ながめる",
+                "nagameru"
+              ],
+              "feedback": {
+                "correct": "Right: ながめる (nagameru) is 'to gaze at; to admire (a view)'.",
+                "incorrect": "'To gaze at' is ながめる (nagameru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C404-miwatasu",
+      "sequence": 23670,
+      "title": "みわたす (miwatasu) — to look out over; to survey",
+      "headword": "みわたす",
+      "romanization": "miwatasu",
+      "gloss": "to look out over; to survey",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af6b4a5f1be44132",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for scenery, then the Japanese for to gaze at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みわたす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みわたす — miwatasu — \"to look out over; to survey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やまの うえから まちを みわたしました。 — yama no ue kara machi o miwatashimashita — \"From the top of the mountain I looked out over the town.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みわたします, miwatashimasu; a godan verb. Past (polite): あにが まちを みわたしました。, ani ga machi o miwatashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みわたす (miwatasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mi, \"seeing\" (from miru) and watasu, \"to carry across\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miwatasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miwatasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miwatasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miwatasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yama no ue kara machi o miwatashimashita — From the top of the mountain I looked out over the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yama no ue kara machi o miwatashimashita* — From the top of the mountain I looked out over the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for scenery, then the Japanese for to gaze at, then say miwatasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for scenery, then the Japanese for to gaze at, then say *miwatasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みわたす (miwatasu) mean? (\"To look out over; to survey\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C404-miwatasu-type",
+              "prompt": "Say the Japanese for 'to look out over'.",
+              "assesses": [
+                "JA-LEX-C404-FUUKEI404-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みわたす",
+                "miwatasu"
+              ],
+              "feedback": {
+                "correct": "Right: みわたす (miwatasu) is 'to look out over; to survey'.",
+                "incorrect": "'To look out over' is みわたす (miwatasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C404-subarashii",
+      "sequence": 23680,
+      "title": "すばらしい (subarashii) — wonderful; splendid",
+      "headword": "すばらしい",
+      "romanization": "subarashii",
+      "gloss": "wonderful; splendid",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b90fca1adba2f506",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to gaze at, then the Japanese for to look out over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すばらしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すばらしい — subarashii — \"wonderful; splendid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やまの うえの ふうけいは すばらしかったです。 — yama no ue no fūkei wa subarashikatta desu — \"The scenery from the mountaintop was wonderful.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すばらしい (subarashii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subarashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subarashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subarashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subarashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yama no ue no fūkei wa subarashikatta desu — The scenery from the mountaintop was wonderful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yama no ue no fūkei wa subarashikatta desu* — The scenery from the mountaintop was wonderful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to gaze at, then the Japanese for to look out over, then say subarashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to gaze at, then the Japanese for to look out over, then say *subarashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すばらしい (subarashii) mean? (\"Wonderful; splendid\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C404-subarashii-type",
+              "prompt": "Say the Japanese for 'wonderful'.",
+              "assesses": [
+                "JA-LEX-C404-FUUKEI404-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すばらしい",
+                "subarashii"
+              ],
+              "feedback": {
+                "correct": "Right: すばらしい (subarashii) is 'wonderful; splendid'.",
+                "incorrect": "'Wonderful' is すばらしい (subarashii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C404-miorosu",
+      "sequence": 23690,
+      "title": "みおろす (miorosu) — to look down on (from above)",
+      "headword": "みおろす",
+      "romanization": "miorosu",
+      "gloss": "to look down on (from above)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce1f5038a0182e0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to look out over, then the Japanese for wonderful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みおろす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みおろす — miorosu — \"to look down on (from above)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おかの うえから みなとを みおろしました。 — oka no ue kara minato o mioroshimashita — \"From the top of the hill we looked down on the harbour.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みおろします, mioroshimasu; a godan verb. Past (polite): こどもが おかから まちを みおろしました。, kodomo ga oka kara machi o mioroshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みおろす (miorosu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mi, \"seeing\" (from miru) and orosu, \"to lower\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miorosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miorosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miorosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miorosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oka no ue kara minato o mioroshimashita — From the top of the hill we looked down on the harbour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oka no ue kara minato o mioroshimashita* — From the top of the hill we looked down on the harbour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to look out over, then the Japanese for wonderful, then say miorosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to look out over, then the Japanese for wonderful, then say *miorosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みおろす (miorosu) mean? (\"To look down on (from above)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C404-miorosu-type",
+              "prompt": "Say the Japanese for 'to look down on'.",
+              "assesses": [
+                "JA-LEX-C404-FUUKEI404-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みおろす",
+                "miorosu"
+              ],
+              "feedback": {
+                "correct": "Right: みおろす (miorosu) is 'to look down on (from above)'.",
+                "incorrect": "'To look down on' is みおろす (miorosu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C406-torii",
+    "language": "japanese",
+    "chapter": 406,
+    "sequence": 23750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b089e8d61435e1e"
+  },
+  "findings": []
+}

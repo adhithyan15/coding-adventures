@@ -1,0 +1,11 @@
+{
+  "id": "JA-C462-kyousou",
+  "pathSegment": "JA-PATH-462-CONTEST462",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-462-CONTEST462",
+      "order": 2
+    }
+  ]
+}

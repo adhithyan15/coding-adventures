@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Fast Trains and Local Lines",
+  "label": "ch:ja-fast-trains-and-local-lines",
+  "canDo": "I can choose between fast trains and local lines.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C376-tobasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can choose between fast trains and local lines.",
+    "assesses": [
+      "JA-LEX-C376-SHINKANSEN376-03",
+      "JA-LEX-C376-SHINKANSEN376-04",
+      "JA-LEX-C376-SHINKANSEN376-05"
+    ]
+  }
+}

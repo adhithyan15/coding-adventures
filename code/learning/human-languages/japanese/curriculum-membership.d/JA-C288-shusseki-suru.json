@@ -1,0 +1,11 @@
+{
+  "id": "JA-C288-shusseki-suru",
+  "pathSegment": "JA-PATH-288-NYUUGAKU288",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-288-NYUUGAKU288",
+      "order": 2
+    }
+  ]
+}

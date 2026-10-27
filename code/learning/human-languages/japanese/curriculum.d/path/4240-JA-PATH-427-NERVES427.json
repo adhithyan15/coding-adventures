@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-427-NERVES427",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-427-NERVES427"
+  ],
+  "after": []
+}

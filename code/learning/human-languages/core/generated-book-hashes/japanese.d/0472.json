@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:ee278f9f4ad09070",
+  "lessonIds": [
+    "JA-C472-zairyou",
+    "JA-C472-choumiryou",
+    "JA-C472-negi",
+    "JA-C472-komugiko",
+    "JA-C472-daizu"
+  ],
+  "tex": "japanese/book/chapters/ch472-ingredients.tex"
+}

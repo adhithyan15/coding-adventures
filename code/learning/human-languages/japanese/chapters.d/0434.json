@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Thanks and Sympathy",
+  "label": "ch:ja-thanks-and-sympathy",
+  "canDo": "I can thank someone and show sympathy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C434-hagemasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can thank someone and show sympathy.",
+    "assesses": [
+      "JA-LEX-C434-THANK434-03",
+      "JA-LEX-C434-THANK434-04",
+      "JA-LEX-C434-THANK434-05"
+    ]
+  }
+}

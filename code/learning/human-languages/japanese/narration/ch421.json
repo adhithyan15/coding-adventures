@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 421,
+  "title": "Haggling at the Market",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:310f032d91f40e8d",
+  "lessons": [
+    {
+      "id": "JA-C421-negiru",
+      "sequence": 24530,
+      "title": "ねぎる (negiru) — to haggle",
+      "headword": "ねぎる",
+      "romanization": "negiru",
+      "gloss": "to haggle",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf59fd5a3600a2e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pay a bill, then the Japanese for to refund."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねぎる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねぎる — negiru — \"to haggle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いちばで ねぎって、やすく かいました。 — ichiba de negitte, yasuku kaimashita — \"I haggled at the market and bought it cheaply.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ねぎります, negirimasu; a godan verb. Past (polite): ははが いちばで ねぎりました。, haha ga ichiba de negirimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねぎる (negiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ne, \"price\" and giru, \"cutting\" (from kiru); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *negiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *negiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichiba de negitte, yasuku kaimashita — I haggled at the market and bought it cheaply.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichiba de negitte, yasuku kaimashita* — I haggled at the market and bought it cheaply.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pay a bill, then the Japanese for to refund, then say negiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pay a bill, then the Japanese for to refund, then say *negiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねぎる (negiru) mean? (\"To haggle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C421-negiru-type",
+              "prompt": "Say the Japanese for 'to haggle'.",
+              "assesses": [
+                "JA-LEX-C421-NEGIRU421-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねぎる",
+                "negiru"
+              ],
+              "feedback": {
+                "correct": "Right: ねぎる (negiru) is 'to haggle'.",
+                "incorrect": "'To haggle' is ねぎる (negiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C421-teika",
+      "sequence": 24540,
+      "title": "ていか (teika) — the list price",
+      "headword": "ていか",
+      "romanization": "teika",
+      "gloss": "the list price",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6817ae19c85a6b8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to refund, then the Japanese for to haggle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ていか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ていか — teika — \"the list price\"."
+            },
+            {
+              "kind": "speech",
+              "text": "わりびきで ていかより やすく かいました。 — waribiki de teika yori yasuku kaimashita — \"With the discount I bought it below the list price.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ていか (teika) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tei, \"fix\" (Middle Chinese dengH) and ka, \"value\" (kaeH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waribiki de teika yori yasuku kaimashita — With the discount I bought it below the list price.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waribiki de teika yori yasuku kaimashita* — With the discount I bought it below the list price.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to refund, then the Japanese for to haggle, then say teika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to refund, then the Japanese for to haggle, then say *teika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ていか (teika) mean? (\"The list price\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C421-teika-type",
+              "prompt": "Say the Japanese for 'the list price'.",
+              "assesses": [
+                "JA-LEX-C421-NEGIRU421-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ていか",
+                "teika"
+              ],
+              "feedback": {
+                "correct": "Right: ていか (teika) is 'the list price'.",
+                "incorrect": "'The list price' is ていか (teika)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C421-neage",
+      "sequence": 24550,
+      "title": "ねあげ (neage) — a price rise",
+      "headword": "ねあげ",
+      "romanization": "neage",
+      "gloss": "a price rise",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ad87f9d85f69dc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to haggle, then the Japanese for the list price."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねあげ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねあげ — neage — \"a price rise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいげつ うんちんの ねあげが あります。 — raigetsu unchin no neage ga arimasu — \"Fares are going up next month.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねあげ (neage) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ne, \"price\" and age, \"raising\" (from ageru); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neage*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neage, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neage*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raigetsu unchin no neage ga arimasu — Fares are going up next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raigetsu unchin no neage ga arimasu* — Fares are going up next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to haggle, then the Japanese for the list price, then say neage again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to haggle, then the Japanese for the list price, then say *neage* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねあげ (neage) mean? (\"A price rise\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C421-neage-type",
+              "prompt": "Say the Japanese for 'a price rise'.",
+              "assesses": [
+                "JA-LEX-C421-NEGIRU421-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねあげ",
+                "neage"
+              ],
+              "feedback": {
+                "correct": "Right: ねあげ (neage) is 'a price rise'.",
+                "incorrect": "'A price rise' is ねあげ (neage)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C421-nesage",
+      "sequence": 24560,
+      "title": "ねさげ (nesage) — a price cut",
+      "headword": "ねさげ",
+      "romanization": "nesage",
+      "gloss": "a price cut",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b4f5dbca0c51ce7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the list price, then the Japanese for a price rise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねさげ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねさげ — nesage — \"a price cut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みせは ゆうがた ねさげを します。 — kono mise wa yūgata nesage o shimasu — \"This shop cuts its prices in the evening.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねさげ (nesage) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ne, \"price\" and sage, \"lowering\" (from sageru); its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nesage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nesage*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nesage, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nesage*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono mise wa yūgata nesage o shimasu — This shop cuts its prices in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono mise wa yūgata nesage o shimasu* — This shop cuts its prices in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the list price, then the Japanese for a price rise, then say nesage again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the list price, then the Japanese for a price rise, then say *nesage* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねさげ (nesage) mean? (\"A price cut\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C421-nesage-type",
+              "prompt": "Say the Japanese for 'a price cut'.",
+              "assesses": [
+                "JA-LEX-C421-NEGIRU421-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねさげ",
+                "nesage"
+              ],
+              "feedback": {
+                "correct": "Right: ねさげ (nesage) is 'a price cut'.",
+                "incorrect": "'A price cut' is ねさげ (nesage)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C421-shouhin",
+      "sequence": 24570,
+      "title": "しょうひん (shōhin) — merchandise; a product",
+      "headword": "しょうひん",
+      "romanization": "shōhin",
+      "gloss": "merchandise; a product",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcfe4465a598aec1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a price rise, then the Japanese for a price cut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょうひん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうひん — shōhin — \"merchandise; a product\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みせの しょうひんは たかいです。 — kono mise no shōhin wa takai desu — \"The goods in this shop are expensive.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうひん (shōhin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shō, \"selling\" (Middle Chinese syang) and hin, \"goods\" (phimX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōhin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōhin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōhin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōhin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono mise no shōhin wa takai desu — The goods in this shop are expensive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono mise no shōhin wa takai desu* — The goods in this shop are expensive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a price rise, then the Japanese for a price cut, then say shōhin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a price rise, then the Japanese for a price cut, then say *shōhin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょうひん (shōhin) mean? (\"Merchandise; a product\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C421-shouhin-type",
+              "prompt": "Say the Japanese for 'merchandise'.",
+              "assesses": [
+                "JA-LEX-C421-NEGIRU421-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょうひん",
+                "shōhin",
+                "shouhin",
+                "shoohin",
+                "shohin"
+              ],
+              "feedback": {
+                "correct": "Right: しょうひん (shōhin) is 'merchandise; a product'.",
+                "incorrect": "'Merchandise' is しょうひん (shōhin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

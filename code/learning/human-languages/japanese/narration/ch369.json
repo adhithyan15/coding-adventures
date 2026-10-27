@@ -1,0 +1,817 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 369,
+  "title": "What Matters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e50d018a418b793b",
+  "lessons": [
+    {
+      "id": "JA-C369-juuyou",
+      "sequence": 21690,
+      "title": "じゅうよう (jūyō) — essential; important",
+      "headword": "じゅうよう",
+      "romanization": "jūyō",
+      "gloss": "essential; important",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6298b9611b9f3295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for one of a pair, then the Japanese for to be one-sided."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅうよう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうよう — jūyō — \"essential; important\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しけんが ちかく なったら、べんきょうが じゅうようでしょう。 — shiken ga chikaku nattara, benkyō ga jūyō deshō — \"When the exam gets close, studying will be what matters.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうよう (jūyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jū, \"important\" (Middle Chinese drjowngX) and yō, \"need\" ('jiewH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiken ga chikaku nattara, benkyō ga jūyō deshō — When the exam gets close, studying will be what matters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiken ga chikaku nattara, benkyō ga jūyō deshō* — When the exam gets close, studying will be what matters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for one of a pair, then the Japanese for to be one-sided, then say jūyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for one of a pair, then the Japanese for to be one-sided, then say *jūyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅうよう (jūyō) mean? (\"Essential; important\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C369-juuyou-type",
+              "prompt": "Say the Japanese for 'essential'.",
+              "assesses": [
+                "JA-LEX-C369-JUUYOU369-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅうよう",
+                "jūyō",
+                "juuyou",
+                "juuyoo",
+                "juyo"
+              ],
+              "feedback": {
+                "correct": "Right: じゅうよう (jūyō) is 'essential; important'.",
+                "incorrect": "'Essential' is じゅうよう (jūyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C369-daiji",
+      "sequence": 21700,
+      "title": "だいじ (daiji) — important; precious",
+      "headword": "だいじ",
+      "romanization": "daiji",
+      "gloss": "important; precious",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a20f7dc0d591f66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be one-sided, then the Japanese for essential."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だいじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいじ — daiji — \"important; precious\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けがを したら、やすむ ことが だいじでしょう。 — kega o shitara, yasumu koto ga daiji deshō — \"If you get hurt, resting will be the important thing.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいじ (daiji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dai, \"large\" (Middle Chinese dajH) and ji, \"matter\" (dzriH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daiji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daiji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daiji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daiji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kega o shitara, yasumu koto ga daiji deshō — If you get hurt, resting will be the important thing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kega o shitara, yasumu koto ga daiji deshō* — If you get hurt, resting will be the important thing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be one-sided, then the Japanese for essential, then say daiji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be one-sided, then the Japanese for essential, then say *daiji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だいじ (daiji) mean? (\"Important; precious\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C369-daiji-type",
+              "prompt": "Say the Japanese for 'important'.",
+              "assesses": [
+                "JA-LEX-C369-JUUYOU369-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だいじ",
+                "daiji"
+              ],
+              "feedback": {
+                "correct": "Right: だいじ (daiji) is 'important; precious'.",
+                "incorrect": "'Important' is だいじ (daiji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C369-tokubetsu",
+      "sequence": 21710,
+      "title": "とくべつ (tokubetsu) — special",
+      "headword": "とくべつ",
+      "romanization": "tokubetsu",
+      "gloss": "special",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e4f41affdf6fca8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for essential, then the Japanese for important."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とくべつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とくべつ — tokubetsu — \"special\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たんじょうびに なったら、しょくじは とくべつです。 — tanjōbi ni nattara, shokuji wa tokubetsu desu — \"On my birthday, the meal is special.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とくべつ (tokubetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are toku, \"special\" (Middle Chinese dok) and betsu, \"separate\" (bjet) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokubetsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokubetsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokubetsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokubetsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanjōbi ni nattara, shokuji wa tokubetsu desu — On my birthday, the meal is special.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanjōbi ni nattara, shokuji wa tokubetsu desu* — On my birthday, the meal is special.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for essential, then the Japanese for important, then say tokubetsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for essential, then the Japanese for important, then say *tokubetsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とくべつ (tokubetsu) mean? (\"Special\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C369-tokubetsu-type",
+              "prompt": "Say the Japanese for 'special'.",
+              "assesses": [
+                "JA-LEX-C369-JUUYOU369-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とくべつ",
+                "tokubetsu"
+              ],
+              "feedback": {
+                "correct": "Right: とくべつ (tokubetsu) is 'special'.",
+                "incorrect": "'Special' is とくべつ (tokubetsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C369-youkyuu",
+      "sequence": 21720,
+      "title": "ようきゅう (yōkyū) — a demand; a firm request",
+      "headword": "ようきゅう",
+      "romanization": "yōkyū",
+      "gloss": "a demand; a firm request",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2bde33f676db5d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for important, then the Japanese for special."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ようきゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようきゅう — yōkyū — \"a demand; a firm request\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ようきゅうが あったら、かいしゃに 言って ください。 — yōkyū ga attara, kaisha ni itte kudasai — \"If you have any demands, please tell the company.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようきゅう (yōkyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yō, \"need\" (Middle Chinese 'jiewH) and kyū, \"request\" (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōkyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōkyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōkyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōkyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōkyū ga attara, kaisha ni itte kudasai — If you have any demands, please tell the company.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōkyū ga attara, kaisha ni itte kudasai* — If you have any demands, please tell the company.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for important, then the Japanese for special, then say yōkyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for important, then the Japanese for special, then say *yōkyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ようきゅう (yōkyū) mean? (\"A demand; a firm request\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C369-youkyuu-type",
+              "prompt": "Say the Japanese for 'a demand'.",
+              "assesses": [
+                "JA-LEX-C369-JUUYOU369-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ようきゅう",
+                "yōkyū",
+                "youkyuu",
+                "yookyuu",
+                "yokyu"
+              ],
+              "feedback": {
+                "correct": "Right: ようきゅう (yōkyū) is 'a demand; a firm request'.",
+                "incorrect": "'A demand' is ようきゅう (yōkyū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C369-houshin",
+      "sequence": 21730,
+      "title": "ほうしん (hōshin) — a policy; a course of action",
+      "headword": "ほうしん",
+      "romanization": "hōshin",
+      "gloss": "a policy; a course of action",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9fd8b09daaba1d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for special, then the Japanese for a demand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほうしん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうしん — hōshin — \"a policy; a course of action\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ほうしんは、しゃちょうの いけんに よります。 — hōshin wa, shachō no iken ni yorimasu — \"The policy depends on what the company president thinks.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうしん (hōshin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hō, \"direction\" (Middle Chinese pjang) and shin, \"needle\" (tsyim) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōshin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōshin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōshin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōshin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōshin wa, shachō no iken ni yorimasu — The policy depends on what the company president thinks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōshin wa, shachō no iken ni yorimasu* — The policy depends on what the company president thinks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for special, then the Japanese for a demand, then say hōshin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for special, then the Japanese for a demand, then say *hōshin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほうしん (hōshin) mean? (\"A policy; a course of action\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C369-houshin-type",
+              "prompt": "Say the Japanese for 'a policy'.",
+              "assesses": [
+                "JA-LEX-C369-JUUYOU369-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうしん",
+                "hōshin",
+                "houshin",
+                "hooshin",
+                "hoshin"
+              ],
+              "feedback": {
+                "correct": "Right: ほうしん (hōshin) is 'a policy; a course of action'.",
+                "incorrect": "'A policy' is ほうしん (hōshin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

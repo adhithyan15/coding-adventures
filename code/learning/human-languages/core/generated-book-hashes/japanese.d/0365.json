@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:f29c32f03b7e402f",
+  "lessonIds": [
+    "JA-C365-keizai",
+    "JA-C365-keiki",
+    "JA-C365-toushi",
+    "JA-C365-nenkin",
+    "JA-C365-heikin"
+  ],
+  "tex": "japanese/book/chapters/ch365-the-economy.tex"
+}

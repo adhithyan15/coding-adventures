@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:2791b27ab8b7aab0",
+  "lessonIds": [
+    "JA-C376-shinkansen",
+    "JA-C376-kaisoku",
+    "JA-C376-shitetsu",
+    "JA-C376-rosen",
+    "JA-C376-tobasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch376.txt",
+  "json": "japanese/narration/ch376.json",
+  "textHash": "fnv1a64:6e156a24b5b90c21",
+  "jsonHash": "fnv1a64:3b0493b078a8aeb6",
+  "findings": []
+}

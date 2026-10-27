@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Making Things",
+  "label": "ch:ja-making-things",
+  "canDo": "I can say who makes things and how long it takes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C480-shiageru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say who makes things and how long it takes.",
+    "assesses": [
+      "JA-LEX-C480-MAKE480-03",
+      "JA-LEX-C480-MAKE480-04",
+      "JA-LEX-C480-MAKE480-05"
+    ]
+  }
+}

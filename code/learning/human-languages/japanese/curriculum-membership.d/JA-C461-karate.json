@@ -1,0 +1,11 @@
+{
+  "id": "JA-C461-karate",
+  "pathSegment": "JA-PATH-461-SUMO461",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-461-SUMO461",
+      "order": 2
+    }
+  ]
+}

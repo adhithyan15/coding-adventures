@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:aafce0acb6e61818",
+  "lessonIds": [
+    "JA-C357-keiyaku-suru",
+    "JA-C357-hoshou",
+    "JA-C357-naiyou",
+    "JA-C357-yutori",
+    "JA-C357-kettei-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch357.txt",
+  "json": "japanese/narration/ch357.json",
+  "textHash": "fnv1a64:9234c467841c66a4",
+  "jsonHash": "fnv1a64:3d94d4e9e3a161e9",
+  "findings": []
+}

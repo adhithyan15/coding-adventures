@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 394,
+  "title": "Up the Hill and Down",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:03717fa67f907581",
+  "lessons": [
+    {
+      "id": "JA-C394-sakamichi",
+      "sequence": 23130,
+      "title": "さかみち (sakamichi) — a hill road; a sloping street",
+      "headword": "さかみち",
+      "romanization": "sakamichi",
+      "gloss": "a hill road; a sloping street",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:096cd1adeac4947a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an arrow (on a sign), then the Japanese for to look back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さかみち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さかみち — sakamichi — \"a hill road; a sloping street\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さかみちを ゆっくり のぼりました。 — sakamichi o yukkuri noborimashita — \"I slowly climbed the hill road.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さかみち (sakamichi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from saka, \"slope\" and michi, \"road\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakamichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakamichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakamichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakamichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakamichi o yukkuri noborimashita — I slowly climbed the hill road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakamichi o yukkuri noborimashita* — I slowly climbed the hill road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an arrow (on a sign), then the Japanese for to look back, then say sakamichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an arrow (on a sign), then the Japanese for to look back, then say *sakamichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さかみち (sakamichi) mean? (\"A hill road; a sloping street\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C394-sakamichi-type",
+              "prompt": "Say the Japanese for 'a hill road'.",
+              "assesses": [
+                "JA-LEX-C394-SAKAMICHI394-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さかみち",
+                "sakamichi"
+              ],
+              "feedback": {
+                "correct": "Right: さかみち (sakamichi) is 'a hill road; a sloping street'.",
+                "incorrect": "'A hill road' is さかみち (sakamichi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C394-kewashii",
+      "sequence": 23140,
+      "title": "けわしい (kewashii) — steep; rugged",
+      "headword": "けわしい",
+      "romanization": "kewashii",
+      "gloss": "steep; rugged",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44ed748313834687",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to look back, then the Japanese for a hill road."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けわしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けわしい — kewashii — \"steep; rugged\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やまの みちは けわしいです。 — yama no michi wa kewashii desu — \"The mountain path is steep.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けわしい (kewashii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kewashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kewashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kewashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kewashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yama no michi wa kewashii desu — The mountain path is steep.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yama no michi wa kewashii desu* — The mountain path is steep.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to look back, then the Japanese for a hill road, then say kewashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to look back, then the Japanese for a hill road, then say *kewashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けわしい (kewashii) mean? (\"Steep; rugged\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C394-kewashii-type",
+              "prompt": "Say the Japanese for 'steep'.",
+              "assesses": [
+                "JA-LEX-C394-SAKAMICHI394-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けわしい",
+                "kewashii"
+              ],
+              "feedback": {
+                "correct": "Right: けわしい (kewashii) is 'steep; rugged'.",
+                "incorrect": "'Steep' is けわしい (kewashii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C394-haba",
+      "sequence": 23150,
+      "title": "はば (haba) — width",
+      "headword": "はば",
+      "romanization": "haba",
+      "gloss": "width",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05e2912dbcdd272b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a hill road, then the Japanese for steep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はば",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はば — haba — \"width\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みちは はばが せまいです。 — kono michi wa haba ga semai desu — \"This road is narrow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はば (haba) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono michi wa haba ga semai desu — This road is narrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono michi wa haba ga semai desu* — This road is narrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a hill road, then the Japanese for steep, then say haba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a hill road, then the Japanese for steep, then say *haba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はば (haba) mean? (\"Width\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C394-haba-type",
+              "prompt": "Say the Japanese for 'width'.",
+              "assesses": [
+                "JA-LEX-C394-SAKAMICHI394-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はば",
+                "haba"
+              ],
+              "feedback": {
+                "correct": "Right: はば (haba) is 'width'.",
+                "incorrect": "'Width' is はば (haba)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C394-kudaru",
+      "sequence": 23160,
+      "title": "くだる (kudaru) — to descend; to go down (a slope or river)",
+      "headword": "くだる",
+      "romanization": "kudaru",
+      "gloss": "to descend; to go down (a slope or river)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:daeb54e681e14f1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for steep, then the Japanese for width."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くだる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くだる — kudaru — \"to descend; to go down (a slope or river)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さかみちを くだって、かわまで いきました。 — sakamichi o kudatte, kawa made ikimashita — \"I went down the hill road as far as the river.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite くだります, kudarimasu; a godan verb. Past (polite): ふねが かわを くだりました。, fune ga kawa o kudarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くだる (kudaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kudaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kudaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kudaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kudaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakamichi o kudatte, kawa made ikimashita — I went down the hill road as far as the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakamichi o kudatte, kawa made ikimashita* — I went down the hill road as far as the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for steep, then the Japanese for width, then say kudaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for steep, then the Japanese for width, then say *kudaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くだる (kudaru) mean? (\"To descend; to go down (a slope or river)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C394-kudaru-type",
+              "prompt": "Say the Japanese for 'to descend'.",
+              "assesses": [
+                "JA-LEX-C394-SAKAMICHI394-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くだる",
+                "kudaru"
+              ],
+              "feedback": {
+                "correct": "Right: くだる (kudaru) is 'to descend; to go down (a slope or river)'.",
+                "incorrect": "'To descend' is くだる (kudaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C394-koeru",
+      "sequence": 23170,
+      "title": "こえる (koeru) — to cross over (a mountain or border)",
+      "headword": "こえる",
+      "romanization": "koeru",
+      "gloss": "to cross over (a mountain or border)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9742c66b880cd1de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for width, then the Japanese for to descend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こえる — koeru — \"to cross over (a mountain or border)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やまを こえて、となりの まちに いきました。 — yama o koete, tonari no machi ni ikimashita — \"I crossed the mountain and went to the next town.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こえます, koemasu; an ichidan verb. Past (polite): ちちが やまを こえました。, chichi ga yama o koemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こえる (koeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yama o koete, tonari no machi ni ikimashita — I crossed the mountain and went to the next town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yama o koete, tonari no machi ni ikimashita* — I crossed the mountain and went to the next town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for width, then the Japanese for to descend, then say koeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for width, then the Japanese for to descend, then say *koeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こえる (koeru) mean? (\"To cross over (a mountain or border)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C394-koeru-type",
+              "prompt": "Say the Japanese for 'to cross over'.",
+              "assesses": [
+                "JA-LEX-C394-SAKAMICHI394-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こえる",
+                "koeru"
+              ],
+              "feedback": {
+                "correct": "Right: こえる (koeru) is 'to cross over (a mountain or border)'.",
+                "incorrect": "'To cross over' is こえる (koeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

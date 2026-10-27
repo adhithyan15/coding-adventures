@@ -150,7 +150,7 @@ use crate::codegen::{
     encode_i32_const, encode_i64_const, encode_local_get, encode_local_set, BLOCK, BLOCK_EMPTY,
     DROP, END, F32_ADD, F32_DIV, F32_EQ, F32_GE, F32_GT, F32_LE, F32_LT, F32_MUL, F32_NEG,
     F32_NE, F32_SUB, F64_ADD, F64_CONVERT_I64_S, F64_DIV, F64_EQ, F64_FLOOR, F64_GE, F64_GT,
-    F64_LE, F64_LT, F64_MUL,
+    F64_LE, F64_LT, F64_MUL, F64_TRUNC,
     F64_NEG, F64_NE, F64_SQRT, F64_SUB, I32_ADD, I32_AND, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S,
     I64_REINTERPRET_F64, I64_TRUNC_F64_S,
     I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE,
@@ -2599,10 +2599,12 @@ fn emit_instr(
         // (real_to_int_*) by `infer_local_type_hints`, which reads each var's
         // type from the producing instruction's `type_hint`.
         //
-        // `real_to_int_*` uses the **non-saturating** `i64.trunc_f64_s`, which
-        // **traps** on NaN/±∞/out-of-`i64`-range — matching vm-core's
-        // `real_to_i64_checked` fail-closed trap exactly. (The saturating
-        // `trunc_sat` would clamp instead and silently diverge from the VM.)
+        // `real_to_int_*` first rounds (`f64.trunc` / `f64.floor`), then range-
+        // checks the rounded value and raises LANG83's typed `Trap.ConvRange`
+        // (id 4) through `env.__trap`, the mechanism `Trap.DivZero` uses — see
+        // `emit_real_to_int`. `i64.trunc_f64_s` alone would also stop on
+        // NaN/±∞/out-of-range, but with an untyped WASM trap that names no
+        // LANG83 kind.
         "int_to_real" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
@@ -2614,28 +2616,16 @@ fn emit_instr(
             code.push(F64_CONVERT_I64_S); // → f64
             code.extend(encode_local_set(rd));
         }
-        "real_to_int_trunc" => {
+        "real_to_int_trunc" | "real_to_int_floor" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
-                detail: "real_to_int_trunc must have a dest".to_string(),
+                detail: format!("{} must have a dest", instr.op),
             })?;
             let rd = get_reg(dest)?;
             let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
-            code.extend(encode_local_get(r)); // f64
-            code.push(I64_TRUNC_F64_S); // → i64 (toward zero; traps out-of-range)
-            code.extend(encode_local_set(rd));
-        }
-        "real_to_int_floor" => {
-            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
-                function: fn_name.to_string(),
-                detail: "real_to_int_floor must have a dest".to_string(),
-            })?;
-            let rd = get_reg(dest)?;
-            let r = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
-            code.extend(encode_local_get(r)); // f64
-            code.push(F64_FLOOR); // round toward −∞ (entier)
-            code.push(I64_TRUNC_F64_S); // trunc the integral result → i64 (traps out-of-range)
-            code.extend(encode_local_set(rd));
+            // `f64.trunc` rounds toward zero, `f64.floor` toward −∞ (entier).
+            let round = if instr.op == "real_to_int_trunc" { F64_TRUNC } else { F64_FLOOR };
+            emit_real_to_int(code, lang83, r, round, rd, fn_name)?;
         }
         // `f64_sqrt` — IEEE-754 hardware square root (WASM MVP opcode 0x9F).
         // WASM `f64.sqrt` propagates NaN and returns NaN for negative inputs,
@@ -4436,6 +4426,57 @@ fn emit_lang83_trap(
     Ok(())
 }
 
+/// A checked `real_to_int_*` narrowing of the `f64` local `src` into the `i64`
+/// local `dest`, rounding with `round` (`f64.trunc` or `f64.floor`):
+///
+/// ```text
+///   local.get src; <round>; f64.const -2^63; f64.ge     ; t >= -2^63
+///   local.get src; <round>; f64.const  2^63; f64.lt     ; t <  2^63
+///   i32.and; i32.eqz
+///   if                                                  ; out of range, or NaN
+///     i32.const 4; call env.__trap; unreachable         ; Trap.ConvRange
+///   end
+///   local.get src; <round>; i64.trunc_f64_s; local.set dest
+/// ```
+///
+/// Both comparisons are ordered, so each is false for NaN, and ±∞ fails one
+/// of them: the single range test covers every failing input. −2⁶³ is exact
+/// as a double and fits `i64`, so the lower bound is inclusive; 2⁶³ does not
+/// fit, so the upper bound is exclusive. The rounded value is recomputed
+/// rather than kept in a scratch local: rounding is pure, so recomputing it
+/// needs no extra local. `src` is read before `dest` is written, so
+/// `x = real_to_int_trunc x` is still correct.
+fn emit_real_to_int(
+    code: &mut Vec<u8>,
+    lang83: Lang83Imports,
+    src: u32,
+    round: u8,
+    dest: u32,
+    fn_name: &str,
+) -> Result<(), IIRWasmError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_CONV_RANGE};
+    const TWO_63: f64 = 9_223_372_036_854_775_808.0;
+    code.extend(encode_local_get(src));
+    code.push(round);
+    code.extend(encode_f64_const(-TWO_63));
+    code.push(F64_GE);
+    code.extend(encode_local_get(src));
+    code.push(round);
+    code.extend(encode_f64_const(TWO_63));
+    code.push(F64_LT);
+    code.push(I32_AND);
+    code.push(I32_EQZ);
+    code.push(IF);
+    code.push(BLOCK_EMPTY);
+    emit_lang83_trap(code, lang83, trap_kind_id(TRAP_CONV_RANGE).expect("built-in kind"), fn_name)?;
+    code.push(END);
+    code.extend(encode_local_get(src));
+    code.push(round);
+    code.push(I64_TRUNC_F64_S); // in range: exact, never traps
+    code.extend(encode_local_set(dest));
+    Ok(())
+}
+
 fn get_src_reg(
     srcs: &[Operand],
     idx: usize,
@@ -5958,6 +5999,8 @@ pub fn lower_iir_to_wasm(
                 "trap" | "i64_div_floor" | "i64_mod_floor"
                     // LANG83 PR4: the overflow-checked ops trap Trap.Overflow.
                     | "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf"
+                    // A failed narrowing traps Trap.ConvRange.
+                    | "real_to_int_trunc" | "real_to_int_floor"
             )
         });
     let mut lang83 = Lang83Imports::default();

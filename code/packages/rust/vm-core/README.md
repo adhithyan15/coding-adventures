@@ -89,11 +89,46 @@ that the ALGOL 60 `real` frontend now emits; integer programs are untouched.
 ### `VMFrame` — per-call state
 
 One frame per active function call.  Holds a flat `registers: Vec<Value>` and a
-`name_to_reg: HashMap<String, usize>` that maps variable names to register
-indices.  `assign()` grows the register file on demand, and `for_function()`
-sizes it to at least the parameter count (`max(register_count, params.len())`) so
-the dispatcher can place call arguments at indices `0..params.len()` even when a
-frontend under-reports `register_count` (e.g. a hoisted McCarthy `LAMBDA` body).
+private name map (variable name → register index, read through
+`frame.name_to_reg()`; new names go through `assign`/`register_index`, so a
+host cannot insert one that aliases the next slot).  `assign()` grows the register file on demand, and
+`for_function(&IIRFunction, return_dest)` pre-allocates the `register_count` hint
+bounded by `params + instructions` and the frame limit, and never below the
+parameter count, so the dispatcher can place call arguments at indices
+`0..params.len()` even when a frontend under-reports `register_count` (e.g. a
+hoisted McCarthy `LAMBDA` body). Parameters own those slots **by position**, even
+when two share a name; new registers are numbered from `params.len()`.
+
+**Register limit.** A frame holds at most `VMFrame::MAX_FRAME_REGISTERS`
+(2¹⁶ = 65,536) distinct registers — the same bound as the `load_reg`/`store_reg`
+index range and twig-vm's `MAX_REGISTERS_PER_FRAME`. A function's registers are
+`params.len()` positional parameter slots plus the distinct `dest` names that are
+not parameters, so the count is known before the program runs: `VMCore::execute` (and `execute_traced`) check every function
+in the module first and refuse the module with
+`VMError::RegisterLimitExceeded { function, registers, limit }` —
+`function "main" needs 65537 registers, more than the 65536 a vm-core frame can
+hold` — before any instruction executes. `assign()` returns the same error as a
+run-time backstop (for a register a custom opcode invents on the fly). Earlier
+versions dropped the 65,537th register silently and failed later with a
+misleading `undefined variable`. `register_count` is only a pre-allocation hint
+and is clamped (see above), so an absurd value cannot abort the process.
+
+**Register-slot budget.** The frame limit bounds one frame; all live frames of
+one call stack also share `VMCore::max_register_slots` (default 2²² slots), so
+the register files of an `execute` never hold more than
+`max_register_slots × size_of::<Value>()` bytes — **96 MiB** by default. The
+budget counts capacity, which doubling keeps under 2× the slots in use; the
+default leaves 8,192 slots a frame at the full 512-frame depth, so any function
+using up to 4,096 registers recurses exactly as deep as before. Every
+growth — a new name, `store_reg` past the end of the file
+(`frame.store_index(idx, v)?`), a callee frame's pre-allocation — is checked
+against it and fails with `VMError::RegisterBudgetExceeded { function, slots,
+budget }`. Each frame records what the frames beneath it hold when it is
+pushed; only the top frame grows, so the sum stays exact with no bookkeeping on
+return. Without it, the three-instruction recursion
+`store_reg 65535, 1; call r = f; ret r` grew all 512 frames to 65,536 slots
+(~768 MiB) before `FrameOverflow`; now it stops after 64 frames, at 96 MiB. A
+failed `execute` clears its frames, releasing that memory immediately.
 
 ### `VMCore` — the execution API
 
@@ -198,7 +233,11 @@ let handler: OpcodeHandler = Box::new(|ctx, _jit_handlers, instr| {
 vm.register_opcode("tetrad.move", handler);
 ```
 
-Custom opcodes shadow the standard table.
+Custom opcodes shadow the standard table. A handler that writes a register
+uses `frame.assign(name, value)?` (by name) or `frame.store_index(idx, value)?`
+(by index) — both return `Result` and fail with `RegisterLimitExceeded` or
+`RegisterBudgetExceeded` rather than dropping a register or outgrowing the
+VM's register budget. Growing `frame.registers` directly bypasses the budget.
 
 ---
 
@@ -209,6 +248,7 @@ Custom opcodes shadow the standard table.
 | `u8_wrap` | `false` | Mask all arithmetic `& 0xFF` (Tetrad mode) |
 | `profiler_enabled` | `true` | Collect type-feedback observations |
 | `max_frames` | 512 | Call-stack depth limit (raises `FrameOverflow`) |
+| `max_register_slots` | 2²² (4,194,304) | Register slots (capacity) all live frames may hold together — 96 MiB of `Value`s (raises `RegisterBudgetExceeded`) |
 
 ---
 
