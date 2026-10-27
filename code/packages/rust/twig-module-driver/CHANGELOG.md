@@ -1,5 +1,51 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18429 — duplicate exports are a link error
+
+### Changed
+
+- **Library modules no longer export their `main`.**  When Phase 4 clears a
+  library's `entry_point`, it now also drops the export whose public name
+  is that entry point.  `iir-linker` now rejects two modules exporting the
+  same name (`LinkError::ConflictingExport`), and the TW05 self-compile
+  tests link a root that exports `main` against `compiler/main.tw`, which
+  exports `main` too.  Nothing could call a library's `main` by that name
+  anyway (a bare `main` in the root means the root's own); the function is
+  kept as a private, renamed `<library>::main`, and the library's own
+  references to `main` now reach it instead of the root's.
+- **Same-stem files get distinct module names.**  Module names are file
+  stems, so `a/util.tw` and `b/util.tw` were both `util`.  The linker now
+  rejects duplicate module names (`LinkError::DuplicateModuleName`), so
+  Phase 1 runs each derived name through the new `unique_module_name`,
+  which suffixes repeats in discovery order (`util~2`, `util~3`, …).
+- The Phase 5 comment and the `ModuleDriverError::Link` doc now describe
+  what the linker actually rejects (the old comment claimed `link` already
+  failed on duplicate public names; it did not).
+
+### Added
+
+- `two_libraries_exporting_the_same_name_is_a_link_error` — two libraries
+  both export `foo`; previously the link succeeded.
+- `library_exporting_main_does_not_clash_with_the_root_main` — root and
+  library both export `main`; the link succeeds, exactly one function is
+  named `main`, and the root's runs (107).
+- `files_with_the_same_stem_get_distinct_module_names` — `a/util.tw` and
+  `b/util.tw` link and run (21), each calling its own private `helper`.
+- `unique_module_name_suffixes_repeats` — unit test for the suffixing.
+
+## Unreleased — #18421 regression tests for cross-module lambdas
+
+### Added
+
+- Two end-to-end tests that link several modules which each define a
+  `lambda` (so each emits its own `__lambda_0`) and run them on twig-vm:
+  `lambdas_from_different_modules_keep_their_own_bodies` (three libraries,
+  1- and 2-capture closures; previously failed with "arity mismatch on call
+  to `__lambda_0`: expected 2, got 3") and
+  `same_arity_lambdas_from_different_modules_do_not_alias` (previously
+  returned 1016 instead of 1006 because the second module's closure ran the
+  first module's body).  The fix itself is in `iir-linker`.
+
 ## 0.15.0 - Unreleased - LANG84: hand the IIR compiler the parse tree
 
 ### Changed

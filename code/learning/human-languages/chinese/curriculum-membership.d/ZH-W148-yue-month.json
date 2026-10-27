@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W148-yue-month",
+  "pathSegment": "ZH-PATH-148-NEXT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-148-NEXT",
+      "order": 1
+    }
+  ]
+}

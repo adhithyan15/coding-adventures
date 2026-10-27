@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:14309cc7cb000a91",
+  "lessonIds": [
+    "ZH-C148-xia-ge-yue",
+    "ZH-W148-yue-month",
+    "ZH-C148-yao-future",
+    "ZH-C148-xia-xingqi",
+    "ZH-C148-shang-ge-yue",
+    "ZH-C148-dasuan",
+    "ZH-C148-jianglai",
+    "ZH-C148-practice"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch148.txt",
+  "json": "chinese/narration/ch148.json",
+  "textHash": "fnv1a64:d59173300a970da9",
+  "jsonHash": "fnv1a64:0e31fa1fcc7663dd",
+  "findings": []
+}

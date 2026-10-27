@@ -1,5 +1,96 @@
 # Changelog — iir-linker
 
+## Unreleased — #18429 — one owner per name
+
+### Fixed
+
+- **Two modules exporting the same name linked silently.**  The export map
+  is keyed by `(module_name, public_name)`, so `left::foo` and `right::foo`
+  never collided there — but exported functions keep their *bare* name in
+  the merged module, so the result held two functions called `foo` and
+  every reference (including `right`'s calls to its own `foo`, and Twig's
+  bare-name cross-module calls) ran `left`'s.  `build_export_map` now
+  records the first module to claim each public name and reports the new
+  `LinkError::ConflictingExport { function_name, first_module,
+  second_module }` when a different module claims it again.  Aliases count
+  by their public name.  One module holding two same-named functions
+  (Twig's user `main` beside its synthesized `main`) is unaffected.
+- **Two input modules with the same name shared their imports.**  Import
+  rewrites are keyed by module name, so each same-named module picked up
+  the other's imports, and an import could override the other's own
+  function.  `link` now rejects this with the new
+  `LinkError::DuplicateModuleName` (one error per repeated name), checked
+  first by the new `resolve::check_module_names`.
+- **An unresolved entry point bound to another module's private function.**
+  If the entry module's `entry_point` named a function it neither defined
+  nor imported, the name stayed bare and bound to whatever owned it after
+  merging.  The new `resolve::check_entry_point` requires the effective
+  entry point (first module with one) to be a function that module defines
+  or the local name of one of its imports; otherwise
+  `LinkError::UnresolvedEntryPoint`.
+- `merge_modules` documents its preconditions as a table and re-asserts the
+  one-owner rule with a `debug_assert!` (it silently runs the wrong
+  function rather than crashing when violated).
+- **Docs:** `function_name_slot` now states the LANG28 contract that the
+  `fn` operand of `task_spawn` (`srcs[0]`) and `group_spawn` (`srcs[1]`) is
+  a function *name*, never a closure register — the rewrite matches by
+  operand text, so a register there would be renamed too.
+
+### Changed
+
+- `verify_imports` / `verify_imports_against` run the same export-map
+  check, so they now also report `ConflictingExport` when two provider
+  modules export the same public name.  Nothing outside the linker calls
+  them today.
+
+### Tests
+
+- Nine new integration tests in `tests/test_linker.rs`: cross-module
+  duplicate export (plain and via an alias), distinct aliases of same-named
+  functions, duplicate names inside one module, duplicate module names
+  (and reported once per name), unresolved entry point, entry point via an
+  import's local name, and only the effective entry point is checked.  The
+  five rejection tests fail on the previous linker.
+- Unit tests for the three new `Display` arms, `ConflictingExport` vs
+  `DuplicateExport` in `build_export_map`, `check_module_names`,
+  `check_entry_point`, and the debug-build `merge_modules` guard.
+
+## Unreleased — #18421 — renames reach every function reference
+
+### Fixed
+
+- **Closures from a second module ran the first module's lambda.**  Every
+  Twig module numbers its lambdas from `__lambda_0`, so linking two modules
+  that each use a `lambda` produced two `__lambda_0`s.  `merge_modules`
+  correctly renamed the second to `"<module>::__lambda_0"`, but it only ever
+  rewrote `call` callees — and only for *imported* names — so the second
+  module's `alloc_closure(Str("__lambda_0"), …)` still named the first
+  module's body.  The result was a silently wrong answer when the two
+  lambdas had the same arity, and an "arity mismatch" run error otherwise.
+  The same blind spot meant a module's own `call helper` was not redirected
+  when its private `helper` was renamed.
+- `merge_modules` now builds a per-module rename map (the module's own
+  renamed functions plus its imports; imports win on a clash, as before) and
+  applies it to every function-name operand listed in the new
+  `function_name_slot` table: `call` / `alloc_closure` / `task_spawn`
+  `srcs[0]` and `group_spawn` `srcs[1]`.  The operand's spelling
+  (`Var` vs `Str`) is preserved; data operands (`const(Str)`, global names,
+  `catch` kinds) are never touched.
+- The merged `entry_point` is mapped through the entry module's rename map,
+  so a renamed entry function is still the one that runs.
+- When a module holds two functions with the same name (Twig emits the
+  user's `(define (main) …)` beside its synthesized top-level `main`),
+  references bind to the first, matching `IIRModule::get_function`.
+
+### Tests
+
+- Eight new `merge` unit tests: `alloc_closure` body follows a rename, a
+  private intra-module call follows a rename, string constants and global
+  names are left alone, imports still win over a same-named private
+  function, the entry point follows a rename, duplicate names bind to the
+  first, and the `function_name_slot` / operand-spelling contracts.  The
+  first five fail on the previous linker.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)
