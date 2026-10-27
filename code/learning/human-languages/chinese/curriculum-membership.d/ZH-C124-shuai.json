@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C124-shuai",
+  "pathSegment": "ZH-PATH-124-BUILD124",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-124-BUILD124",
+      "order": 2
+    }
+  ]
+}

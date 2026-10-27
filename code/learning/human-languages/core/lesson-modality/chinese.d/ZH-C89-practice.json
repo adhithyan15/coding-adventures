@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C89-practice",
+    "language": "chinese",
+    "chapter": 89,
+    "sequence": 7340,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cf0dd5c78c841b81"
+  },
+  "findings": []
+}

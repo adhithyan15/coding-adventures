@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C31-women",
+  "pathSegment": "ZH-PATH-31-PEOPLE31",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-31-PEOPLE31",
+      "order": 5
+    }
+  ]
+}

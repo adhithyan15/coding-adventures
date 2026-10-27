@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:90abd5420289c825",
+  "lessonIds": [
+    "ZH-C131-chuntian",
+    "ZH-W131-chun-spring",
+    "ZH-C131-xiatian",
+    "ZH-C131-qiutian",
+    "ZH-C131-dongtian",
+    "ZH-C131-jijie"
+  ],
+  "tex": "chinese/book/chapters/ch131-four-seasons.tex"
+}

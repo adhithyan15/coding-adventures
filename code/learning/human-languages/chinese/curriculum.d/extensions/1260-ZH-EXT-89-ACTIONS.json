@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-89-ACTIONS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "lexis",
+  "canDo": "I can name everyday actions: give, do, put, bring, stand.",
+  "prerequisites": []
+}

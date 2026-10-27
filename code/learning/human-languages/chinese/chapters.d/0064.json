@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Asking for Help",
+  "label": "ch:zh-asking-for-help",
+  "canDo": "I can say sorry, ask for help, borrow something and give it back.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ZH-C64-huan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: I can say sorry, ask for help, borrow something and give it back.",
+    "assesses": [
+      "ZH-LEX-C64-HELP64-03",
+      "ZH-LEX-C64-HELP64-04",
+      "ZH-LEX-C64-HELP64-05"
+    ]
+  }
+}

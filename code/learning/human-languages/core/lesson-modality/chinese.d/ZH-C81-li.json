@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C81-li",
+    "language": "chinese",
+    "chapter": 81,
+    "sequence": 6190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89dfbf5bfb579ec4"
+  },
+  "findings": []
+}

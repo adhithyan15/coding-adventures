@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W48-dian",
+  "pathSegment": "ZH-PATH-48-CLOCK48",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-48-CLOCK48",
+      "order": 1
+    }
+  ]
+}

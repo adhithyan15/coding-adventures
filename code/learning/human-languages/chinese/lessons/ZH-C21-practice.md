@@ -6,7 +6,7 @@ sequence: 2140
 chapter: 21
 type: practice-mix
 headword: "十一 二十 九十九 一百"
-romanization: "shíyī èrshí jiúshíjiǔ yìbǎi"
+romanization: "shíyī èrshí jiǔshíjiǔ yìbǎi"
 gloss: "payoff — ninety-nine numbers from ten words, said and written and read off a price tag"
 concept_tag: ZH-C21-PRACTICE
 prerequisites: [ZH-C21-digits]
@@ -44,7 +44,8 @@ uses.
 
 1. **Build, do not recall.** Say twelve, seventeen, thirty, forty-five,
    sixty-eight and eighty-one, from the ten words alone.
-2. Say **jiúshíjiǔ**, ninety-nine, with the first dip lifted.
+2. Say **jiǔshíjiǔ**, ninety-nine. 十 between the two 九 is second tone, so
+   the first 九 keeps its low dip: the dip lifts only before another third tone.
 3. Say **yìbǎi**, and say what happens to 一 in front of it.
 4. [YOU READ: **8**, **15**, **30**, **99** and **100** off a page, then say each aloud]
 5. [YOU WRITE: **十一**, **二十** and **一百** in characters]
@@ -60,7 +61,7 @@ chapter of its own.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-PERFORMANCE-DECIMAL-HUNDRED] -->
-<!-- hl-activity: {"id":"ZH-C21-practice-build","kind":"text","assesses":["ZH-PERFORMANCE-DECIMAL-HUNDRED"],"prompt":"Say sixty-eight and ninety-nine in Mandarin.","answer":"liùshíbā jiúshíjiǔ","accepted":["liushiba jiushijiu","liùshíbā, jiúshíjiǔ","liushiba, jiushijiu"],"feedback":{"correct":"Ten words, and the order does the rest.","incorrect":"liùshíbā and jiúshíjiǔ — unit, ten, unit."},"response_seconds":18} -->
+<!-- hl-activity: {"id":"ZH-C21-practice-build","kind":"text","assesses":["ZH-PERFORMANCE-DECIMAL-HUNDRED"],"prompt":"Say sixty-eight and ninety-nine in Mandarin.","answer":"liùshíbā jiǔshíjiǔ","accepted":["liushiba jiushijiu","liùshíbā, jiǔshíjiǔ","liushiba, jiushijiu"],"feedback":{"correct":"Ten words, and the order does the rest.","incorrect":"liùshíbā and jiǔshíjiǔ — unit, ten, unit."},"response_seconds":18} -->
 
 Source: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)
 

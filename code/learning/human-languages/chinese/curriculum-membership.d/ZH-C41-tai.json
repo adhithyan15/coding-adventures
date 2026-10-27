@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C41-tai",
+  "pathSegment": "ZH-PATH-41-MONEY41",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-41-MONEY41",
+      "order": 5
+    }
+  ]
+}

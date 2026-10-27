@@ -69,6 +69,34 @@ fn the_composed_components_resolve() {
     }
 }
 
+/// The pane scrolls (JO-5, journal-mosaic-app.md "The pane scrolls"). A native
+/// window scrolls nothing unless the layout says so, and before this every
+/// entry past the first two was below the fold of the 1100x760 window with no
+/// way to reach it. The split's first child (its pane) must be a vertical
+/// `HostScroll [ timeline-scroll ]` wrapping exactly the `timeline` column, so
+/// the column's padding scrolls with it.
+#[test]
+fn the_pane_scrolls() {
+    let mil = mosmodel_compiler::compile(&read_source("JournalApp.mil")).unwrap();
+    let mll = moslayout_compiler::compile(&read_source("JournalApp.mll"), Some(&mil.descriptor_json))
+        .unwrap();
+    let split = &mll.def.root;
+    assert_eq!(split.tag, "HostNavigationSplit");
+    let pane = &split.children[0];
+    assert_eq!(pane.tag, "HostScroll", "the pane is a scroll container");
+    assert_eq!(pane.part_name.as_deref(), Some("timeline-scroll"));
+    assert!(
+        pane.props.iter().all(|p| p.name != "axis"),
+        "no axis: the default, vertical, scroll ({:?})",
+        pane.props
+    );
+    assert_eq!(pane.children.len(), 1, "the scroll wraps one column");
+    assert_eq!(pane.children[0].tag, "Column");
+    assert_eq!(pane.children[0].part_name.as_deref(), Some("timeline"));
+    // The detail (the editor) is bounded, and stays unwrapped.
+    assert_eq!(split.children[1].part_name.as_deref(), Some("editor"));
+}
+
 /// The Rust app and this interface are one contract: every slot is a prop the
 /// app provides, and the app provides nothing the interface does not declare.
 #[test]

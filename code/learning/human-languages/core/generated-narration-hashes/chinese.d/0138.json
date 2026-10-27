@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:2a41c92101fb4647",
+  "lessonIds": [
+    "ZH-C138-mei",
+    "ZH-W138-mei-every",
+    "ZH-C138-ziji",
+    "ZH-C138-bieren",
+    "ZH-C138-suoyou",
+    "ZH-C138-qita"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch138.txt",
+  "json": "chinese/narration/ch138.json",
+  "textHash": "fnv1a64:cffd3d42ca5dc931",
+  "jsonHash": "fnv1a64:2620d53e32489d7a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C123-guanxin",
+  "pathSegment": "ZH-PATH-123-PEOPLE123",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-123-PEOPLE123",
+      "order": 4
+    }
+  ]
+}

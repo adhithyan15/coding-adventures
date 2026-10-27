@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C96-practice",
+  "pathSegment": "ZH-PATH-96-BECAUSE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-96-BECAUSE",
+      "order": 4
+    }
+  ]
+}

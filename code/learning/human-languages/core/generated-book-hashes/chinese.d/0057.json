@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:4f468c40538cc15a",
+  "lessonIds": [
+    "ZH-C57-fangzi",
+    "ZH-C57-fangjian",
+    "ZH-C57-zhuozi",
+    "ZH-C57-yizi",
+    "ZH-C57-zher",
+    "ZH-R57-review-53-57",
+    "ZH-R57-review-final-57"
+  ],
+  "tex": "chinese/book/chapters/ch57-at-home.tex"
+}

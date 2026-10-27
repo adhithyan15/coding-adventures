@@ -423,6 +423,7 @@ The resolver surfaces precise, fixable errors:
 | `ComponentSourceMissing { package, component, file }` | `src/<C>.mil` (or `.mll`/`.msl`) is missing | Add the missing file to the package. |
 | `CircularPackageReference { cycle }` | `pkg::A::X → pkg::B::Y → pkg::A::X` | Refactor the cycle out; package graphs must be DAGs. |
 | `SlotBindingMissing { package, component, slot }` | Call site did not supply a required slot | Bind the slot at the call site, or give it a default in the component's `.mil` (`slot x : text = "" ;`). |
+| `UndeclaredPackageReference { consumer, package, component, call_site, manifest_path, found_version }` | `pkg::P::C` names a package that is neither the referencing package nor in its `mosaic-package.toml` `[dependencies]` | Add `P = "<version>"` to `[dependencies]` in the named manifest (mosaic-package-publishing-v1 §10 Phase 1b). |
 
 Each error carries the source span of the offending `pkg::` reference
 so editors and language-server clients can underline it.
@@ -523,6 +524,25 @@ Two departures from this section:
 
 Until this was built, a missing binding surfaced as the consumer's
 misleading `UnknownSlot`, or not at all.
+
+**Implementation note: `UndeclaredPackageReference` (2026-10-26,
+mosaic-package-publishing-v1 §10 Phase 1b).** §2.2 says versions live in
+`[dependencies]`, but nothing required a referenced package to be listed
+there. Any package on the search path could be inlined, with no version
+checked (publishing-v1 §7.4) and no build-graph edge. Now:
+
+- **The rule.** Every `pkg::P::C` call site must name the referencing
+  package itself or a dependency it declares.
+- **Which manifest.** Inside a package component's layout, the declared set
+  comes from that package's own manifest. For the layout being resolved, it
+  comes from the consumer manifest the caller supplies with
+  `LayoutPackageResolver::with_consumer`. Package builds and
+  `mosaic-compile` with a package manifest supply it. With no consumer
+  manifest, only nested references are checked.
+- **When it runs.** In the same pre-substitution walk as
+  `SlotBindingMissing`, so both kinds of error come back in one `Multiple`.
+- **How often.** Each undeclared package is reported once per referencing
+  manifest, at its first call site.
 
 ---
 

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:447821bc2b2bcd4e",
+  "lessonIds": [
+    "ZH-C52-shou",
+    "ZH-W52-shou",
+    "ZH-C52-tou",
+    "ZH-C52-jiao",
+    "ZH-C52-yanjing",
+    "ZH-C52-erduo",
+    "ZH-R52-review-48-52"
+  ],
+  "tex": "chinese/book/chapters/ch52-head-hands-and-feet.tex"
+}

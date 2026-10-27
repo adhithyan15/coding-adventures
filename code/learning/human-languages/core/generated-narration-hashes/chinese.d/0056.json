@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:105e1ede19da1963",
+  "lessonIds": [
+    "ZH-C56-wan",
+    "ZH-C56-daqiu",
+    "ZH-C56-yundong",
+    "ZH-C56-paobu",
+    "ZH-C56-xiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch56.txt",
+  "json": "chinese/narration/ch56.json",
+  "textHash": "fnv1a64:c6c8e065da2b425f",
+  "jsonHash": "fnv1a64:e349e7e7cdb11d3b",
+  "findings": []
+}

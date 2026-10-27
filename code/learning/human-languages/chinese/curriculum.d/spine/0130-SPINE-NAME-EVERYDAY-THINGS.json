@@ -1,6 +1,4 @@
 {
-  "omits": [
-    "LODGING-ROOM"
-  ],
+  "omits": [],
   "relocates": {}
 }

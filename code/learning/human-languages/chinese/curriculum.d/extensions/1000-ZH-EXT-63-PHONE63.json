@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-63-PHONE63",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer the phone, ask for a number and say what I am looking for.",
+  "prerequisites": []
+}

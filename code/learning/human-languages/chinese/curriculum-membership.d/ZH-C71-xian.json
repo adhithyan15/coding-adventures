@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C71-xian",
+  "pathSegment": "ZH-PATH-71-TASTE71",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-71-TASTE71",
+      "order": 3
+    }
+  ]
+}

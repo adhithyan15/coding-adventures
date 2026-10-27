@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C112-tui",
+  "pathSegment": "ZH-PATH-112-EXIT112",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-112-EXIT112",
+      "order": 3
+    }
+  ]
+}

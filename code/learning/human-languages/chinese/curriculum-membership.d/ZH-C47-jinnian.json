@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C47-jinnian",
+  "pathSegment": "ZH-PATH-47-DATE47",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-47-DATE47",
+      "order": 5
+    }
+  ]
+}

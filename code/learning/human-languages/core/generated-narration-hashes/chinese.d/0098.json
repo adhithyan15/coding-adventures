@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:c23f6b083228c584",
+  "lessonIds": [
+    "ZH-W98-with-a-clock",
+    "ZH-R98-review-final-98"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch98.txt",
+  "json": "chinese/narration/ch98.json",
+  "textHash": "fnv1a64:dac68ed0f0bea62a",
+  "jsonHash": "fnv1a64:33532ba2ee28c667",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-48-CLOCK48",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask the time and say it to the half hour and the minute.",
+  "prerequisites": []
+}
