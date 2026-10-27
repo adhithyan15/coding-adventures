@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Borrowing and Lending",
+  "label": "ch:ja-borrowing-and-lending",
+  "canDo": "I can talk about owing money and paying it back.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C359-kingaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about owing money and paying it back.",
+    "assesses": [
+      "JA-LEX-C359-SHAKKIN359-03",
+      "JA-LEX-C359-SHAKKIN359-04",
+      "JA-LEX-C359-SHAKKIN359-05"
+    ]
+  }
+}

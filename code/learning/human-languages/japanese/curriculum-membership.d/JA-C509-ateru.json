@@ -1,0 +1,11 @@
+{
+  "id": "JA-C509-ateru",
+  "pathSegment": "JA-PATH-509-LOTTERY509",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-509-LOTTERY509",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C328-hikaeru",
+    "language": "japanese",
+    "chapter": 328,
+    "sequence": 19590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c49edf7b134f688c"
+  },
+  "findings": []
+}

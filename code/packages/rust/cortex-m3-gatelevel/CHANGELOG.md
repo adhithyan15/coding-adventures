@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Derive APSR MSR mask validation and NZCVQ write enable through gate paths,
+  rejecting G-group and reserved aliases on non-DSP Cortex-M3 in exact
+  functional differential lockstep.
+- Reach 93.19% combined Rust line coverage (2,229 of 2,392 lines).
+
 ## 0.1.0 — 2026-10-25
 
 - Add an independent Armv7-M Cortex-M3 gate transition engine.

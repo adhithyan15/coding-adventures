@@ -1,0 +1,11 @@
+{
+  "id": "JA-C414-hikage",
+  "pathSegment": "JA-PATH-414-SHITSUDO414",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-414-SHITSUDO414",
+      "order": 3
+    }
+  ]
+}

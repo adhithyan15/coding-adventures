@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:9207a732fa14b6ca",
+  "lessonIds": [
+    "JA-C459-daigaku",
+    "JA-C459-ryuugaku-suru",
+    "JA-C459-kenkyuu-suru",
+    "JA-C459-senmon",
+    "JA-C459-shinro"
+  ],
+  "tex": "japanese/book/chapters/ch459-studying-further.tex"
+}

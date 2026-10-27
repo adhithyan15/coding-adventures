@@ -1,0 +1,11 @@
+{
+  "id": "JA-C262-higai",
+  "pathSegment": "JA-PATH-262-JIKO262",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-262-JIKO262",
+      "order": 4
+    }
+  ]
+}

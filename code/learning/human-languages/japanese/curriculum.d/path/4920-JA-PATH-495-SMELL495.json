@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-495-SMELL495",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-495-SMELL495"
+  ],
+  "after": []
+}

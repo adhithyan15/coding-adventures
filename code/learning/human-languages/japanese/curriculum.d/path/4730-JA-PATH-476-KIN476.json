@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-476-KIN476",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-476-KIN476"
+  ],
+  "after": []
+}

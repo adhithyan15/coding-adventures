@@ -1,0 +1,11 @@
+{
+  "id": "JA-C422-washoku",
+  "pathSegment": "JA-PATH-422-WASHOKU422",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-422-WASHOKU422",
+      "order": 0
+    }
+  ]
+}

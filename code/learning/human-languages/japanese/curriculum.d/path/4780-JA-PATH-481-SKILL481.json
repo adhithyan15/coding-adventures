@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-481-SKILL481",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-481-SKILL481"
+  ],
+  "after": []
+}

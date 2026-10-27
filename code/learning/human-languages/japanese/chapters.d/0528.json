@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "This or That",
+  "label": "ch:ja-this-or-that",
+  "canDo": "I can offer a choice between two things.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C528-izureka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can offer a choice between two things.",
+    "assesses": [
+      "JA-LEX-C528-OR528-03",
+      "JA-LEX-C528-OR528-04",
+      "JA-LEX-C528-OR528-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C427-tamerau",
+  "pathSegment": "JA-PATH-427-NERVES427",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-427-NERVES427",
+      "order": 4
+    }
+  ]
+}

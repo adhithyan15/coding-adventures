@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:297f74b6adf6629a",
+  "lessonIds": [
+    "JA-C341-settoku-suru",
+    "JA-C341-unagasu",
+    "JA-C341-hikitomeru",
+    "JA-C341-narubeku",
+    "JA-C341-tatoeba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch341.txt",
+  "json": "japanese/narration/ch341.json",
+  "textHash": "fnv1a64:62b0c05688eea197",
+  "jsonHash": "fnv1a64:8fc7227cb1b6a293",
+  "findings": []
+}

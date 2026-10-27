@@ -1,0 +1,11 @@
+{
+  "id": "JA-C275-uku",
+  "pathSegment": "JA-PATH-275-TSUNAMI275",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-275-TSUNAMI275",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C467-someru",
+  "pathSegment": "JA-PATH-467-CRAFT467",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-467-CRAFT467",
+      "order": 2
+    }
+  ]
+}

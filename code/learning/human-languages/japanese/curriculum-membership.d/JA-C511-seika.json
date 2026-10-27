@@ -1,0 +1,11 @@
+{
+  "id": "JA-C511-seika",
+  "pathSegment": "JA-PATH-511-CAUSE511",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-511-CAUSE511",
+      "order": 1
+    }
+  ]
+}

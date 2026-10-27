@@ -1,0 +1,11 @@
+{
+  "id": "JA-C394-koeru",
+  "pathSegment": "JA-PATH-394-SAKAMICHI394",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-394-SAKAMICHI394",
+      "order": 4
+    }
+  ]
+}

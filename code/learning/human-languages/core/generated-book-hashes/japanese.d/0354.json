@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:65c9978468040f5f",
+  "lessonIds": [
+    "JA-C354-doshaburi",
+    "JA-C354-kanpa",
+    "JA-C354-shikke",
+    "JA-C354-higasa",
+    "JA-C354-arakajime"
+  ],
+  "tex": "japanese/book/chapters/ch354-weather-plans.tex"
+}

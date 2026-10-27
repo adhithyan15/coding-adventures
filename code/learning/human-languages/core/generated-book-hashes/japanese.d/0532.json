@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:660441bf3421fb99",
+  "lessonIds": [
+    "JA-C532-kagiru",
+    "JA-C532-seigen",
+    "JA-C532-yobun",
+    "JA-C532-yuuri",
+    "JA-C532-igai"
+  ],
+  "tex": "japanese/book/chapters/ch532-limits-and-advantages.tex"
+}

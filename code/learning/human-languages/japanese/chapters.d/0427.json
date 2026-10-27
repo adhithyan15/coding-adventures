@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Nerves Before the Big Day",
+  "label": "ch:ja-nerves-before-the-big-day",
+  "canDo": "I can say I am nervous, restless or hesitant.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C427-tamerau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can say I am nervous, restless or hesitant.",
+    "assesses": [
+      "JA-LEX-C427-NERVES427-03",
+      "JA-LEX-C427-NERVES427-04",
+      "JA-LEX-C427-NERVES427-05"
+    ]
+  }
+}

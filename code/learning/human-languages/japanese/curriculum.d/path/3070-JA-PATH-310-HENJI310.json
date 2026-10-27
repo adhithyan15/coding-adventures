@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-310-HENJI310",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-310-HENJI310"
+  ],
+  "after": []
+}

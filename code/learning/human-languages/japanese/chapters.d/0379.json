@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Finding a Seat",
+  "label": "ch:ja-finding-a-seat",
+  "canDo": "I can find a seat and talk about the carriage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C379-unchin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can find a seat and talk about the carriage.",
+    "assesses": [
+      "JA-LEX-C379-SHARYOU379-03",
+      "JA-LEX-C379-SHARYOU379-04",
+      "JA-LEX-C379-SHARYOU379-05"
+    ]
+  }
+}

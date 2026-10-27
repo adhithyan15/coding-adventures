@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C303-medetai",
+    "language": "japanese",
+    "chapter": 303,
+    "sequence": 18160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:302686f0cfbbaf6b"
+  },
+  "findings": []
+}

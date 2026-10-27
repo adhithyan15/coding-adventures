@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:7792b7bc60710479",
+  "lessonIds": [
+    "JA-C365-keizai",
+    "JA-C365-keiki",
+    "JA-C365-toushi",
+    "JA-C365-nenkin",
+    "JA-C365-heikin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch365.txt",
+  "json": "japanese/narration/ch365.json",
+  "textHash": "fnv1a64:36f522138e6befe6",
+  "jsonHash": "fnv1a64:e82eb2333f386f08",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:6b2501706615cbfc",
+  "lessonIds": [
+    "JA-C310-zutto",
+    "JA-C310-jitsu-wa",
+    "JA-C310-toutou",
+    "JA-C310-kanau",
+    "JA-C310-mamonaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch310.txt",
+  "json": "japanese/narration/ch310.json",
+  "textHash": "fnv1a64:cbb696d4c50d0695",
+  "jsonHash": "fnv1a64:35d40a97985fdcc5",
+  "findings": []
+}

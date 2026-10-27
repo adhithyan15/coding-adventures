@@ -1,0 +1,11 @@
+{
+  "id": "JA-C425-hon-yaku",
+  "pathSegment": "JA-PATH-425-TSUUYAKU425",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-425-TSUUYAKU425",
+      "order": 1
+    }
+  ]
+}

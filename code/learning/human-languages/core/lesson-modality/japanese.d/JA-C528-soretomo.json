@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C528-soretomo",
+    "language": "japanese",
+    "chapter": 528,
+    "sequence": 30500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:464536d84e34d92b"
+  },
+  "findings": []
+}

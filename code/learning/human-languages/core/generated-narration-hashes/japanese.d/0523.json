@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:1ddc9f63ab06b3fe",
+  "lessonIds": [
+    "JA-C523-daredemo",
+    "JA-C523-doredemo",
+    "JA-C523-sazo",
+    "JA-C523-tamatama",
+    "JA-C523-nantoka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch523.txt",
+  "json": "japanese/narration/ch523.json",
+  "textHash": "fnv1a64:2deef6c347090ab0",
+  "jsonHash": "fnv1a64:cc461b67aa60c822",
+  "findings": []
+}

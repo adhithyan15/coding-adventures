@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:f11d0678d5dd67a5",
+  "lessonIds": [
+    "JA-C454-torikumu",
+    "JA-C454-hakadoru",
+    "JA-C454-hikiukeru",
+    "JA-C454-yarinaosu",
+    "JA-C454-shippai-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch454.txt",
+  "json": "japanese/narration/ch454.json",
+  "textHash": "fnv1a64:05d61d6f3fd74036",
+  "jsonHash": "fnv1a64:afa17142de861895",
+  "findings": []
+}

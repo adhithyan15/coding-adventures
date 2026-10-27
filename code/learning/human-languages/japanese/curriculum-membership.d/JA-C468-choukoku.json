@@ -1,0 +1,11 @@
+{
+  "id": "JA-C468-choukoku",
+  "pathSegment": "JA-PATH-468-WORKS468",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-468-WORKS468",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C494-takenoko",
+  "pathSegment": "JA-PATH-494-VEG494",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-494-VEG494",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C365-toushi",
+    "language": "japanese",
+    "chapter": 365,
+    "sequence": 21500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e70024a3f5e092a0"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:8c881db5ec83ca6e",
+  "lessonIds": [
+    "JA-C426-kibun",
+    "JA-C426-fuan",
+    "JA-C426-heiki",
+    "JA-C426-sukkiri",
+    "JA-C426-taeru"
+  ],
+  "tex": "japanese/book/chapters/ch426-how-i-feel-today.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Trouble in the River",
+  "label": "ch:ja-trouble-in-the-river",
+  "canDo": "I can say who fell in the water and who helped.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C266-buji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say who fell in the water and who helped.",
+    "assesses": [
+      "JA-LEX-C266-OBORE266-03",
+      "JA-LEX-C266-OBORE266-04",
+      "JA-LEX-C266-OBORE266-05"
+    ]
+  }
+}

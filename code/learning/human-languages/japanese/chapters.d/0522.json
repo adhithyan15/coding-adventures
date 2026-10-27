@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Something, Someone, Somewhere",
+  "label": "ch:ja-something-someone-somewhere",
+  "canDo": "I can ask for help if anything happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C522-nandemo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can ask for help if anything happens.",
+    "assesses": [
+      "JA-LEX-C522-SOME522-03",
+      "JA-LEX-C522-SOME522-04",
+      "JA-LEX-C522-SOME522-05"
+    ]
+  }
+}

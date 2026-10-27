@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 349,
+  "title": "Expecting the Unexpected",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:59cdb56fd384c0a3",
+  "lessons": [
+    {
+      "id": "JA-C349-yosou",
+      "sequence": 20650,
+      "title": "よそう (yosō) — an expectation; a forecast",
+      "headword": "よそう",
+      "romanization": "yosō",
+      "gloss": "an expectation; a forecast",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2a1a99e3d795aea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the hour, then the Japanese for consecutive holidays."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よそう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よそう — yosō — \"an expectation; a forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けっかが よそうと ちがったら、もう いちど しらべます。 — kekka ga yosō to chigattara, mō ichido shirabemasu — \"If the result is not what we expected, we will investigate again.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よそう (yosō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"beforehand\" (Middle Chinese yoH) and sō, \"idea\" (sjangX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yosō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yosō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yosō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yosō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kekka ga yosō to chigattara, mō ichido shirabemasu — If the result is not what we expected, we will investigate again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kekka ga yosō to chigattara, mō ichido shirabemasu* — If the result is not what we expected, we will investigate again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the hour, then the Japanese for consecutive holidays, then say yosō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the hour, then the Japanese for consecutive holidays, then say *yosō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よそう (yosō) mean? (\"An expectation; a forecast\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C349-yosou-type",
+              "prompt": "Say the Japanese for 'an expectation'.",
+              "assesses": [
+                "JA-LEX-C349-YOSOU349-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よそう",
+                "yosō",
+                "yosou",
+                "yosoo",
+                "yoso"
+              ],
+              "feedback": {
+                "correct": "Right: よそう (yosō) is 'an expectation; a forecast'.",
+                "incorrect": "'An expectation' is よそう (yosō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C349-joukyou",
+      "sequence": 20660,
+      "title": "じょうきょう (jōkyō) — the situation; the state of things",
+      "headword": "じょうきょう",
+      "romanization": "jōkyō",
+      "gloss": "the situation; the state of things",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ece7197ca020e863",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for consecutive holidays, then the Japanese for an expectation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じょうきょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょうきょう — jōkyō — \"the situation; the state of things\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じょうきょうが かわったら、れんらくします。 — jōkyō ga kawattara, renraku shimasu — \"If the situation changes, I will get in touch.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょうきょう (jōkyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jō, \"conditions\" (Middle Chinese dzrjangH) and kyō, \"condition\" (xjwangH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōkyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōkyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōkyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōkyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōkyō ga kawattara, renraku shimasu — If the situation changes, I will get in touch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōkyō ga kawattara, renraku shimasu* — If the situation changes, I will get in touch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for consecutive holidays, then the Japanese for an expectation, then say jōkyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for consecutive holidays, then the Japanese for an expectation, then say *jōkyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じょうきょう (jōkyō) mean? (\"The situation; the state of things\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C349-joukyou-type",
+              "prompt": "Say the Japanese for 'the situation'.",
+              "assesses": [
+                "JA-LEX-C349-YOSOU349-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じょうきょう",
+                "jōkyō",
+                "joukyou",
+                "jookyoo",
+                "jokyo"
+              ],
+              "feedback": {
+                "correct": "Right: じょうきょう (jōkyō) is 'the situation; the state of things'.",
+                "incorrect": "'The situation' is じょうきょう (jōkyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C349-kikai",
+      "sequence": 20670,
+      "title": "きかい (kikai) — an opportunity; a chance",
+      "headword": "きかい",
+      "romanization": "kikai",
+      "gloss": "an opportunity; a chance",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68982b8ba0634170",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an expectation, then the Japanese for the situation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きかい — kikai — \"an opportunity; a chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きかいが あったら、日本に いきたいです。 — kikai ga attara, nihon ni ikitai desu — \"If I get the chance, I want to go to Japan.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きかい (kikai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ki, \"opportunity\" (Middle Chinese kj+j) and kai, \"meeting\" (hwajH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kikai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kikai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kikai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kikai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kikai ga attara, nihon ni ikitai desu — If I get the chance, I want to go to Japan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kikai ga attara, nihon ni ikitai desu* — If I get the chance, I want to go to Japan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an expectation, then the Japanese for the situation, then say kikai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an expectation, then the Japanese for the situation, then say *kikai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きかい (kikai) mean? (\"An opportunity; a chance\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C349-kikai-type",
+              "prompt": "Say the Japanese for 'an opportunity'.",
+              "assesses": [
+                "JA-LEX-C349-YOSOU349-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きかい",
+                "kikai"
+              ],
+              "feedback": {
+                "correct": "Right: きかい (kikai) is 'an opportunity; a chance'.",
+                "incorrect": "'An opportunity' is きかい (kikai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C349-nogasu",
+      "sequence": 20680,
+      "title": "のがす (nogasu) — to miss a chance; to let slip",
+      "headword": "のがす",
+      "romanization": "nogasu",
+      "gloss": "to miss a chance; to let slip",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd183db54615ade1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the situation, then the Japanese for an opportunity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のがす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のがす — nogasu — \"to miss a chance; to let slip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この きかいを のがしたら、つぎは らいねんです。 — kono kikai o nogashitara, tsugi wa rainen desu — \"If we miss this chance, the next one is next year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite のがします, nogashimasu; a godan verb. Past (polite): あには きかいを のがしました。, ani wa kikai o nogashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のがす (nogasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nogasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nogasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nogasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nogasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono kikai o nogashitara, tsugi wa rainen desu — If we miss this chance, the next one is next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono kikai o nogashitara, tsugi wa rainen desu* — If we miss this chance, the next one is next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the situation, then the Japanese for an opportunity, then say nogasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the situation, then the Japanese for an opportunity, then say *nogasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のがす (nogasu) mean? (\"To miss a chance; to let slip\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C349-nogasu-type",
+              "prompt": "Say the Japanese for 'to miss a chance'.",
+              "assesses": [
+                "JA-LEX-C349-YOSOU349-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のがす",
+                "nogasu"
+              ],
+              "feedback": {
+                "correct": "Right: のがす (nogasu) is 'to miss a chance; to let slip'.",
+                "incorrect": "'To miss a chance' is のがす (nogasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C349-sekkaku",
+      "sequence": 20690,
+      "title": "せっかく (sekkaku) — at great pains; specially",
+      "headword": "せっかく",
+      "romanization": "sekkaku",
+      "gloss": "at great pains; specially",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf3474819fa7b580",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an opportunity, then the Japanese for to miss a chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せっかく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せっかく — sekkaku — \"at great pains; specially\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし あめが ふったら、せっかくの りょこうが ちゅうしに なります。 — moshi ame ga futtara, sekkaku no ryokō ga chūshi ni narimasu — \"If it rains, the trip we planned so carefully will be called off.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せっかく (sekkaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are setsu, \"fold\" (Middle Chinese tsyet) and kaku, \"angle\" (kaewk) (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as sek-kaku; JMdict notes that it is usually written in kana."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sekkaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sekkaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sekkaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sekkaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ame ga futtara, sekkaku no ryokō ga chūshi ni narimasu — If it rains, the trip we planned so carefully will be called off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ame ga futtara, sekkaku no ryokō ga chūshi ni narimasu* — If it rains, the trip we planned so carefully will be called off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an opportunity, then the Japanese for to miss a chance, then say sekkaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an opportunity, then the Japanese for to miss a chance, then say *sekkaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せっかく (sekkaku) mean? (\"At great pains; specially\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C349-sekkaku-type",
+              "prompt": "Say the Japanese for 'at great pains'.",
+              "assesses": [
+                "JA-LEX-C349-YOSOU349-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せっかく",
+                "sekkaku"
+              ],
+              "feedback": {
+                "correct": "Right: せっかく (sekkaku) is 'at great pains; specially'.",
+                "incorrect": "'At great pains' is せっかく (sekkaku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

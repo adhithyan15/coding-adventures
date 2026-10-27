@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added — the v0.4.0 release fixture survives the upgrade
+
+`the_v0_4_0_release_fixture_survives_the_upgrade` restores
+`code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json` -- state
+captured from the v0.4.0 adapter itself -- as a version-1 snapshot, checks its
+deck and card, re-snapshots at version 3, and evaluates every one of the
+fixture's JSON-pointer expectations against both payloads. That last step is
+what lets the shared release gate (`mosaic-release-state-gate-v1`) trust the
+fixture's pointers: they are checked against the bytes this adapter really
+writes, not against a guess at them.
+
 ### Added — the device UI tests' round trip, pinned (UI89 §4.4)
 
 `a_fresh_collection_exports_a_zip_whose_import_lists_the_default_deck` pins

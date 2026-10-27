@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:aa1bfe9762c33709",
+  "lessonIds": [
+    "JA-C450-naika",
+    "JA-C450-geka",
+    "JA-C450-eiyou",
+    "JA-C450-megusuri",
+    "JA-C450-kanbyou-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch450.txt",
+  "json": "japanese/narration/ch450.json",
+  "textHash": "fnv1a64:d7865fec70df95a2",
+  "jsonHash": "fnv1a64:2212167c15f75294",
+  "findings": []
+}

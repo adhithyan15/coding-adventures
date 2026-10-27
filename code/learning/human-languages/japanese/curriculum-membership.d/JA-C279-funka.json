@@ -1,0 +1,11 @@
+{
+  "id": "JA-C279-funka",
+  "pathSegment": "JA-PATH-279-KAZAN279",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-279-KAZAN279",
+      "order": 1
+    }
+  ]
+}

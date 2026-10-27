@@ -1,0 +1,11 @@
+{
+  "id": "JA-C290-miokuru",
+  "pathSegment": "JA-PATH-290-UTSURU290",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-290-UTSURU290",
+      "order": 3
+    }
+  ]
+}

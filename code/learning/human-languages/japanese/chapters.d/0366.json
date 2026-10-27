@@ -1,0 +1,21 @@
+{
+  "chapter": 366,
+  "title": "If the Worst Happens",
+  "label": "ch:ja-if-the-worst-happens",
+  "canDo": "I can say what I would do if the worst happened.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R366-review-362-366",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say what I would do if the worst happened.",
+    "assesses": [
+      "JA-LEX-C366-SAIAKU366-01",
+      "JA-LEX-C366-SAIAKU366-02",
+      "JA-LEX-C366-SAIAKU366-03",
+      "JA-LEX-C366-SAIAKU366-04",
+      "JA-LEX-C366-SAIAKU366-05"
+    ]
+  }
+}
