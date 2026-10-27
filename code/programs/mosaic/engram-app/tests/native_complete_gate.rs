@@ -168,11 +168,11 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     //
     // #15277 teaches Qt host controls to preserve state-layer font sizes.
     //
-    // #15247 -- longhand padding is still lost on the affected non-Text
-    // primitives. Generic padding no longer belongs here: #15276 gives
-    // painted Text parts a Rectangle surface that owns the inset.
-    (Backend::Qt, "padding-bottom"),
-    (Backend::Qt, "padding-top"),
+    // `padding-bottom` / `padding-top` left this list with UI21 §2.2 rule 6:
+    // every Engram occurrence is on a screen region (`Box [*-region]`),
+    // which now sizes itself from its content plus its per-edge padding and
+    // insets that content. (#15276 already gave painted Text parts a
+    // Rectangle surface that owns the inset.)
     //
     // a percentage width has no direct QML analogue; the emitter declines
     // rather than collapsing it.

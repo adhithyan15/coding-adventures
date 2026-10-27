@@ -67,8 +67,9 @@ const PANE_SCROLL_MARKERS: &[(Backend, &str, &str)] = &[
 ///
 ///   * `border-style: solid` on `card-root`: most native backends draw a
 ///     border from its width and colour and have no separate style to set.
-///   * `padding-bottom` on `card-title` / `card-body`: Qt and Flutter do not
-///     pad these `Box` regions.
+///   * `padding-bottom` on `card-title` / `card-body`: Flutter does not pad
+///     these `Box` regions. (Qt does since UI21 §2.2 rule 6: a styled `Box`
+///     sizes itself from its content plus its per-edge padding.)
 ///   * `font-size` / `font-weight` on the regions: Card styles its text through
 ///     the `Box` around each `Text`, and Flutter does not carry a container's
 ///     text style down to the `Text`, so there a card's title is neither
@@ -82,7 +83,6 @@ const CARD_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Qt, "border-style"),
     (Backend::Flutter, "border-style"),
     (Backend::Xaml, "border-style"),
-    (Backend::Qt, "padding-bottom"),
     (Backend::Flutter, "padding-bottom"),
     (Backend::Flutter, "font-size"),
     (Backend::Flutter, "font-weight"),
