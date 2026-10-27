@@ -1281,6 +1281,15 @@ impl LayoutPackageResolver {
         let mut bindings = resolved.default_bindings;
         bindings.extend(build_binding_map(&declared));
         let one_of = one_of_literals(&resolved.slots, &mut bindings);
+        // The bound values and the caller's children are the consumer's
+        // names. A callee `For` that binds one of them would capture it once
+        // substitution puts it in the loop body, so such a binding is renamed
+        // first (§ "Hygiene" below, UI29 §3.4).
+        let mut children_names = HashSet::new();
+        for child in &call_children {
+            names_in_tree(child, &mut children_names);
+        }
+        self.rename_capturing_binders(target, pkg, &bindings, &children_names)?;
         rewrite_bindings(target, &bindings, &one_of, &HashSet::new());
         fold_constant_expressions(target);
         fold_constant_conditionals(target);
@@ -1438,6 +1447,42 @@ impl LayoutPackageResolver {
             }
         }
         Ok(nested)
+    }
+
+    /// Rename every `For` binding in the callee tree `root` (package `pkg`)
+    /// that would capture a consumer name: one in a value of `bindings`
+    /// that lands in the loop body, or one of `children_names` when the
+    /// caller's children will be spliced into a mount inside the loop.
+    ///
+    /// Telling a loop variable from a literal at a nested call site needs the
+    /// mounted components' interfaces, so they are loaded only when there is
+    /// something to rename, which is almost never.
+    fn rename_capturing_binders(
+        &self,
+        root: &mut LayoutNode,
+        pkg: &str,
+        bindings: &HashMap<String, LayoutPropValue>,
+        children_names: &HashSet<String>,
+    ) -> Result<(), LayoutResolveError> {
+        let no_loops = HashSet::new();
+        if !any_capture(root, &no_loops, bindings, children_names) {
+            return Ok(());
+        }
+        let nested = self.nested_interfaces(pkg, root)?;
+        let mut taken = HashSet::new();
+        names_in_tree(root, &mut taken);
+        for value in bindings.values() {
+            names_in_value(value, &mut taken);
+        }
+        taken.extend(children_names.iter().cloned());
+        let mut hygiene = Hygiene {
+            bindings,
+            children_names,
+            nested: &nested,
+            taken,
+        };
+        hygiene.visit(root, &no_loops);
+        Ok(())
     }
 
     fn load_component(
@@ -2167,6 +2212,285 @@ fn for_scope(node: &LayoutNode, scope: &HashSet<String>) -> HashSet<String> {
 }
 
 // ---------------------------------------------------------------------------
+// Hygiene: a callee `For` never captures a consumer name
+// ---------------------------------------------------------------------------
+//
+// Inlining is substitution, and substitution into a scope can capture. The
+// consumer below loops over its own `items` as `row` and passes `row` to
+// Card. Card loops over *its* rows, also as `row`, and shows its `title`:
+//
+//   consumer                                    Card
+//   ───────────────────────────────────────     ──────────────────────────────
+//   For ( each: slot: items , as: row ) {       For ( each: slot: rows , as: row ) {
+//     pkg::lib::Card ( title: row , … )           Text ( content: title )
+//   }                                           }
+//
+// Substituting `title` naively gives `Text ( content: row )` inside Card's
+// loop, where `row` is Card's loop variable: every line shows Card's row,
+// not the consumer's. UI29 §3.4 says names resolve lexically, and the
+// consumer's `row` was written in the consumer's scope, so it must keep
+// meaning the consumer's `row` after inlining.
+//
+// The fix is the textbook one, renaming the inner binder. Before
+// substitution, each callee `For` is asked what substitution would bring
+// into its body:
+//
+// - the names in the bound values its body reads (`slot: title`, an own
+//   slot's bare name, which `check_callee_scope` has already turned into
+//   `slot: title`, or a bare or `slot:` name in an expression); and
+// - when the caller's children will be spliced into a mount inside the
+//   loop, every name in those children.
+//
+// If its `as:` or `index:` binding is one of them, the binding and all its
+// uses in the body become a fresh name, `row-in1`:
+//
+//   For ( each: slot: rows , as: row-in1 ) { Text ( content: row ) }
+//                                                            └ the consumer's
+//
+// Names are compared in camelCase, because that is the identifier every
+// emitter writes: `as: my-row` and a consumer `myRow` are the same variable
+// in React. The fresh name is new to the callee, the bound values and the
+// children alike. A binding that captures nothing keeps its authored name,
+// so only output that was wrong changes.
+
+/// Every name `value` would bring into the tree it is substituted into, in
+/// camelCase. Literals (`"text"`, `3`, `true`) bring none.
+fn names_in_value(value: &LayoutPropValue, out: &mut HashSet<String>) {
+    let mut insert = |name: &str| {
+        if name != "true" && name != "false" {
+            out.insert(to_camel_case_first_lower(name));
+        }
+    };
+    match value {
+        LayoutPropValue::Keyword(name)
+        | LayoutPropValue::SlotRef(name)
+        | LayoutPropValue::EmitRef(name) => insert(name),
+        LayoutPropValue::Expr(text) => {
+            for piece in expression_pieces(text) {
+                if let ExprPiece::Name(
+                    name,
+                    NameRole::Bare | NameRole::SlotRef | NameRole::EmitRef,
+                ) = piece
+                {
+                    insert(name)
+                }
+            }
+        }
+        LayoutPropValue::String(_) | LayoutPropValue::Number(_) => {}
+    }
+}
+
+/// Every name anywhere in `node`'s subtree, in camelCase. Deliberately
+/// generous (an enum value such as `axis: horizontal` counts too): it is
+/// used for the caller's children, where a few extra names can only cause
+/// an unneeded rename, and for choosing fresh names, where extra names only
+/// make a name less likely to be chosen.
+fn names_in_tree(node: &LayoutNode, out: &mut HashSet<String>) {
+    for prop in &node.props {
+        names_in_value(&prop.value, out);
+    }
+    for child in &node.children {
+        names_in_tree(child, out);
+    }
+}
+
+/// The names that substituting `bindings` brings into `node`'s subtree,
+/// where `scope` holds the `For` bindings in scope. This mirrors what
+/// `rewrite_bindings` rewrites: `slot:` and `emit:` props, and bare or
+/// `slot:` names in expressions, except a bare name a loop binds.
+fn substituted_names(
+    node: &LayoutNode,
+    bindings: &HashMap<String, LayoutPropValue>,
+    scope: &HashSet<String>,
+    out: &mut HashSet<String>,
+) {
+    let mut read = |name: &str| {
+        if let Some(value) = bindings.get(name) {
+            names_in_value(value, out);
+        }
+    };
+    for prop in &node.props {
+        match &prop.value {
+            LayoutPropValue::SlotRef(name) | LayoutPropValue::EmitRef(name) => read(name),
+            LayoutPropValue::Expr(text) => {
+                for piece in expression_pieces(text) {
+                    match piece {
+                        ExprPiece::Name(name, NameRole::Bare) if !scope.contains(name) => {
+                            read(name)
+                        }
+                        ExprPiece::Name(name, NameRole::SlotRef) => read(name),
+                        _ => {}
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    let inner = for_scope(node, scope);
+    for child in &node.children {
+        substituted_names(child, bindings, &inner, out);
+    }
+}
+
+/// Whether `node`'s subtree holds the child mount (`slot: children`), where
+/// the caller's children will be spliced.
+fn contains_child_mount(node: &LayoutNode) -> bool {
+    node.is_child_slot_mount() || node.children.iter().any(contains_child_mount)
+}
+
+/// The indices of `node`'s props that are `For` bindings capturing a
+/// consumer name, with `scope` the bindings of the loops around `node`.
+/// Empty unless `node` is a `For`.
+fn capturing_binders(
+    node: &LayoutNode,
+    scope: &HashSet<String>,
+    bindings: &HashMap<String, LayoutPropValue>,
+    children_names: &HashSet<String>,
+) -> Vec<usize> {
+    if node.tag != "For" {
+        return Vec::new();
+    }
+    // The body sees this loop's own bindings: a bare `row` in the body of
+    // `For ( as: row )` is the loop variable, never substituted.
+    let body_scope = for_scope(node, scope);
+    let mut brought = HashSet::new();
+    for child in &node.children {
+        substituted_names(child, bindings, &body_scope, &mut brought);
+    }
+    if node.children.iter().any(contains_child_mount) {
+        brought.extend(children_names.iter().cloned());
+    }
+    node.props
+        .iter()
+        .enumerate()
+        .filter_map(|(i, prop)| match (prop.name.as_str(), &prop.value) {
+            ("as" | "index", LayoutPropValue::Keyword(binder))
+                if brought.contains(&to_camel_case_first_lower(binder)) =>
+            {
+                Some(i)
+            }
+            _ => None,
+        })
+        .collect()
+}
+
+/// Whether any `For` in `node`'s subtree captures a consumer name.
+fn any_capture(
+    node: &LayoutNode,
+    scope: &HashSet<String>,
+    bindings: &HashMap<String, LayoutPropValue>,
+    children_names: &HashSet<String>,
+) -> bool {
+    if !capturing_binders(node, scope, bindings, children_names).is_empty() {
+        return true;
+    }
+    let inner = for_scope(node, scope);
+    node.children
+        .iter()
+        .any(|child| any_capture(child, &inner, bindings, children_names))
+}
+
+/// The renaming pass of `LayoutPackageResolver::rename_capturing_binders`.
+struct Hygiene<'a> {
+    bindings: &'a HashMap<String, LayoutPropValue>,
+    children_names: &'a HashSet<String>,
+    nested: &'a NestedInterfaces,
+    /// Every name in use, camelCase; a fresh name must not be one of them.
+    taken: HashSet<String>,
+}
+
+impl Hygiene<'_> {
+    /// Rename the capturing bindings of every `For` in `node`'s subtree.
+    /// Outer loops first, so an inner loop is judged against the names its
+    /// enclosing loops ended up with.
+    fn visit(&mut self, node: &mut LayoutNode, scope: &HashSet<String>) {
+        for i in capturing_binders(node, scope, self.bindings, self.children_names) {
+            let LayoutPropValue::Keyword(binder) = &node.props[i].value else {
+                continue;
+            };
+            let binder = binder.clone();
+            let fresh = self.fresh(&binder);
+            for child in &mut node.children {
+                rename_loop_variable(child, &binder, &fresh, self.nested);
+            }
+            node.props[i].value = LayoutPropValue::Keyword(fresh);
+        }
+        let inner = for_scope(node, scope);
+        for child in &mut node.children {
+            self.visit(child, &inner);
+        }
+    }
+
+    /// `<binder>-in<n>`, with the smallest `n` whose camelCase spelling is
+    /// not taken, and now taken. `-in1`, not `-1`: a Mosaic identifier
+    /// segment cannot start with a digit (the `-m2` of a second mount
+    /// follows the same rule).
+    fn fresh(&mut self, binder: &str) -> String {
+        let mut n = 1usize;
+        loop {
+            let candidate = format!("{binder}-in{n}");
+            if self.taken.insert(to_camel_case_first_lower(&candidate)) {
+                return candidate;
+            }
+            n += 1;
+        }
+    }
+}
+
+/// Rename loop variable `from` to `to` throughout `node`'s subtree, which
+/// lies in the body of the `For` binding it.
+///
+/// A use is a bare name in a name position, by the same table as
+/// `check_callee_scope` (`is_bare_literal`): a literal of the same spelling
+/// (`kind: line` beside `as: line`) is not a use. A `slot: from` is the
+/// slot, not the loop variable, and stays. A nested `For` that binds `from`
+/// again shadows it: its `each:` is still renamed, since it is evaluated
+/// outside that loop, but its body is not.
+fn rename_loop_variable(node: &mut LayoutNode, from: &str, to: &str, nested: &NestedInterfaces) {
+    let target = nested.target(node);
+    let mut rebinds = false;
+    for prop in &mut node.props {
+        match &prop.value {
+            LayoutPropValue::Keyword(word) if word == from => {
+                if node.tag == "For" && (prop.name == "as" || prop.name == "index") {
+                    rebinds = true;
+                } else if !is_bare_literal(&node.tag, target.as_ref(), &prop.name, word, nested) {
+                    prop.value = LayoutPropValue::Keyword(to.to_string());
+                }
+            }
+            LayoutPropValue::Expr(text) => {
+                let renamed = rename_expression_name(text, from, to);
+                if renamed != *text {
+                    prop.value = LayoutPropValue::Expr(renamed);
+                }
+            }
+            _ => {}
+        }
+    }
+    if rebinds {
+        return;
+    }
+    for child in &mut node.children {
+        rename_loop_variable(child, from, to, nested);
+    }
+}
+
+/// `expr` with every bare operand `from` replaced by `to`. Member names
+/// (`item.from`), `slot: from` and string contents are copied as written.
+fn rename_expression_name(expr: &str, from: &str, to: &str) -> String {
+    let mut out = String::with_capacity(expr.len());
+    for piece in expression_pieces(expr) {
+        match piece {
+            ExprPiece::Name(name, NameRole::Bare) if name == from => out.push_str(to),
+            ExprPiece::Str(text) | ExprPiece::Name(text, _) | ExprPiece::Other(text) => {
+                out.push_str(text)
+            }
+        }
+    }
+    out
+}
+
+// ---------------------------------------------------------------------------
 // Constant expressions
 // ---------------------------------------------------------------------------
 //
@@ -2891,6 +3215,28 @@ impl NestedInterfaces {
     }
 }
 
+/// Whether bare `word`, the value of `prop` on a node tagged `tag`, is a
+/// literal rather than a name: the table above. `target` is the component
+/// the node mounts when it is a call site. Shared by the scope check and the
+/// hygiene rename, so the two always agree on what is a name.
+fn is_bare_literal(
+    tag: &str,
+    target: Option<&(String, String)>,
+    prop: &str,
+    word: &str,
+    nested: &NestedInterfaces,
+) -> bool {
+    match target {
+        Some(target) => {
+            word == "true" || word == "false" || nested.is_one_of_value(target, prop, word)
+        }
+        None => {
+            (tag == "For" && (prop == "as" || prop == "index"))
+                || moslayout_compiler::is_keyword_literal(tag, prop, word)
+        }
+    }
+}
+
 /// Check package component `pkg::comp`'s layout `root`, and rewrite each
 /// bare NAME that names one of its slots to a `slot:` reference.
 ///
@@ -3010,14 +3356,8 @@ impl CalleeScope<'_> {
                     self.visit_expression(&text, loops)
                 }
                 LayoutPropValue::Keyword(word) => {
-                    let literal = if let Some(target) = &target {
-                        word == "true"
-                            || word == "false"
-                            || self.nested.is_one_of_value(target, &prop.name, word)
-                    } else {
-                        (tag == "For" && (prop.name == "as" || prop.name == "index"))
-                            || moslayout_compiler::is_keyword_literal(&tag, &prop.name, word)
-                    };
+                    let literal =
+                        is_bare_literal(&tag, target.as_ref(), &prop.name, word, self.nested);
                     if literal || loops.contains(word) {
                         continue;
                     }
@@ -5449,6 +5789,403 @@ version = "1"
         assert_eq!(
             prop_value(&layout.root, "badge-tone", "content"),
             Some(LayoutPropValue::Keyword("t".to_string()))
+        );
+    }
+
+    // ---- Bare names resolve lexically; inlining is hygienic (UI29 §3.4, 6f1m) ----
+    //
+    // A bare NAME means the nearest enclosing `For` binding, else the
+    // component's own slot. The consumer's names (bound values and spliced
+    // children) keep meaning the consumer's, even under a callee loop that
+    // binds the same name.
+
+    /// The `For` nodes of `node`'s subtree in document order, as their
+    /// `(as, index)` bindings. A `For` cannot carry a part name, so tests
+    /// find loops this way.
+    fn loop_binders(node: &LayoutNode, out: &mut Vec<(String, Option<String>)>) {
+        if node.tag == "For" {
+            let binding = |name: &str| {
+                node.props.iter().find_map(|p| match (&*p.name, &p.value) {
+                    (n, LayoutPropValue::Keyword(v)) if n == name => Some(v.clone()),
+                    _ => None,
+                })
+            };
+            out.push((binding("as").expect("as:"), binding("index")));
+        }
+        for child in &node.children {
+            loop_binders(child, out);
+        }
+    }
+
+    fn binders(layout: &LayoutDef) -> Vec<(String, Option<String>)> {
+        let mut out = Vec::new();
+        loop_binders(&layout.root, &mut out);
+        out
+    }
+
+    fn keyword(word: &str) -> Option<LayoutPropValue> {
+        Some(LayoutPropValue::Keyword(word.to_string()))
+    }
+
+    /// The headline of 6f1m: a bare NAME naming an own slot is that slot,
+    /// in either spelling and in any name position (here a primitive prop
+    /// and a nested call site), and takes the call site's value exactly as
+    /// `slot: NAME` would. Nothing named `display-name` survives inlining.
+    #[test]
+    fn an_own_slot_bare_name_takes_the_value_in_every_spelling_and_position() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let lib = make_pkg(&pkgs, "mosaic-pkg-lib", "mosaic-pkg-lib", &["Card", "Tag"]);
+        write_component(
+            &lib,
+            "Tag",
+            "component Tag { slot label : text ; }",
+            "layout Tag { Text [ tag ] ( content: label ) }",
+        );
+        write_component(
+            &lib,
+            "Card",
+            "component Card { slot display-name : text ; }",
+            r#"layout Card { Column [ card ] {
+  Text [ card-kebab ] ( content: display-name )
+  HostButton [ card-camel ] ( label: displayName )
+  Tag ( label: display-name )
+} }"#,
+        );
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( display-name: "Ada" ) }"#,
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        let ada = Some(LayoutPropValue::String("Ada".to_string()));
+        assert_eq!(prop_value(&layout.root, "card-kebab", "content"), ada);
+        assert_eq!(prop_value(&layout.root, "card-camel", "label"), ada);
+        assert_eq!(prop_value(&layout.root, "tag", "content"), ada);
+    }
+
+    /// Innermost wins: inside `For ( as: title )` the bare `title` is the
+    /// loop variable; outside it, Card's own slot. The binding captures no
+    /// consumer name, so it keeps its authored spelling.
+    #[test]
+    fn a_loop_binding_shadows_an_own_slot_bare_name_only_inside_its_body() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  Text [ card-title ] ( content: title )
+  For ( each: slot: rows , as: title ) { Text [ card-row ] ( content: title ) }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( title: "Inbox" , rows: slot: items ) }"#,
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            prop_value(&layout.root, "card-title", "content"),
+            Some(LayoutPropValue::String("Inbox".to_string()))
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-row", "content"),
+            keyword("title")
+        );
+        assert_eq!(binders(&layout), vec![("title".to_string(), None)]);
+    }
+
+    /// Hygiene: the consumer binds its loop variable `row` to Card's
+    /// `title`, and Card reads `title` (bare, and in an expression) inside
+    /// its own `For ( as: row )`. Card's binding is renamed, with its uses;
+    /// the consumer's `row` reaches the body intact. The same holds when the
+    /// value is the consumer's slot (`slot: row`), which every emitter
+    /// writes as the identifier `row` too.
+    #[test]
+    fn a_callee_loop_never_captures_a_consumer_value() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: rows , as: row ) {
+    Text [ card-title ] ( content: title )
+    Text [ card-row ] ( content: row )
+    HostButton [ card-match ] ( label: "m" , selected: ( row == title ) )
+  }
+} }"#,
+        );
+        for (value, landed) in [
+            ("row", LayoutPropValue::Keyword("row".to_string())),
+            ("slot: row", LayoutPropValue::SlotRef("row".to_string())),
+        ] {
+            let mut layout = consumer_layout(&format!(
+                "layout ProbeApp {{ Column {{ For ( each: slot: items , as: row ) {{
+  pkg::mosaic-pkg-lib::Card ( title: {value} , rows: slot: items )
+}} }} }}"
+            ));
+
+            resolver.resolve(&mut layout).expect("resolves");
+            assert_eq!(
+                binders(&layout),
+                vec![("row".to_string(), None), ("row-in1".to_string(), None)],
+                "{value}"
+            );
+            assert_eq!(
+                prop_value(&layout.root, "card-title", "content"),
+                Some(landed),
+                "{value}"
+            );
+            assert_eq!(
+                prop_value(&layout.root, "card-row", "content"),
+                keyword("row-in1")
+            );
+            assert_eq!(
+                prop_value(&layout.root, "card-match", "selected"),
+                Some(LayoutPropValue::Expr("( row-in1 == row )".to_string()))
+            );
+        }
+    }
+
+    /// The `index:` binding is renamed the same way, and on its own: `as:`
+    /// captures nothing here, so it keeps its name.
+    #[test]
+    fn a_capturing_index_binding_is_renamed_alone() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: rows , as: row , index: i ) {
+    Text [ card-title ] ( content: title )
+    Text [ card-index ] ( content: i )
+  }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column { For ( each: slot: items , as: item , index: i ) {
+  pkg::mosaic-pkg-lib::Card ( title: i , rows: slot: items )
+} } }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            binders(&layout),
+            vec![
+                ("item".to_string(), Some("i".to_string())),
+                ("row".to_string(), Some("i-in1".to_string())),
+            ]
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-title", "content"),
+            keyword("i")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-index", "content"),
+            keyword("i-in1")
+        );
+    }
+
+    /// Children the caller splices into a mount inside a callee loop are the
+    /// caller's, so they are not captured either. A mount outside every
+    /// loop needs no rename, and gets none.
+    #[test]
+    fn spliced_children_are_never_captured_by_a_callee_loop() {
+        let consumer = r#"layout ProbeApp { Column { For ( each: slot: items , as: row ) {
+  pkg::mosaic-pkg-lib::Card ( rows: slot: items ) { Text [ app-row ] ( content: row ) }
+} } }"#;
+        for (mount_in_loop, card_binder) in [(true, "row-in1"), (false, "row")] {
+            let body = if mount_in_loop {
+                "For ( each: slot: rows , as: row ) { Text [ card-row ] ( content: row ) Box { slot: children } }"
+            } else {
+                "For ( each: slot: rows , as: row ) { Text [ card-row ] ( content: row ) } Box { slot: children }"
+            };
+            let (_tmp, resolver) = card_package(
+                "component Card { slot rows : list<text> ; slot children : list<node> ; }",
+                &format!("layout Card {{ Column [ card ] {{ {body} }} }}"),
+            );
+            let mut layout = consumer_layout(consumer);
+
+            resolver.resolve(&mut layout).expect("resolves");
+            assert_eq!(
+                binders(&layout),
+                vec![("row".to_string(), None), (card_binder.to_string(), None)]
+            );
+            assert_eq!(
+                prop_value(&layout.root, "app-row", "content"),
+                keyword("row")
+            );
+            assert_eq!(
+                prop_value(&layout.root, "card-row", "content"),
+                keyword(card_binder)
+            );
+        }
+    }
+
+    /// What a rename leaves alone: a literal of the same spelling (`kind:
+    /// line`), a `slot:` reference, and the body of a nested `For` that binds
+    /// the name again. The nested loop's `each:` is evaluated outside it, so
+    /// it reads the renamed outer variable.
+    #[test]
+    fn a_rename_stops_at_literals_slot_refs_and_a_rebinding_loop() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot line : text = \"l\" ; slot grid : list<list<text>> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: grid , as: line ) {
+    Path [ card-path ] ( kind: line , x1: 0 , y1: 0 , x2: 1 , y2: 1 )
+    Text [ card-title ] ( content: title )
+    Text [ card-slot ] ( content: slot: line )
+    For ( each: line , as: line ) { Text [ card-inner ] ( content: line ) }
+  }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column { For ( each: slot: items , as: line ) {
+  pkg::mosaic-pkg-lib::Card ( title: line , grid: slot: cells )
+} } }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            binders(&layout),
+            vec![
+                ("line".to_string(), None),
+                ("line-in1".to_string(), None),
+                ("line".to_string(), None),
+            ]
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-path", "kind"),
+            keyword("line")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-title", "content"),
+            keyword("line")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-slot", "content"),
+            Some(LayoutPropValue::String("l".to_string()))
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-inner", "content"),
+            keyword("line")
+        );
+        let mut inner_each = None;
+        visit_nodes(&layout.root, &mut |node: &LayoutNode| {
+            if node.tag == "For"
+                && node
+                    .children
+                    .iter()
+                    .any(|c| c.part_name.as_deref() == Some("card-inner"))
+            {
+                inner_each = node
+                    .props
+                    .iter()
+                    .find(|p| p.name == "each")
+                    .map(|p| p.value.clone());
+            }
+        });
+        assert_eq!(inner_each, keyword("line-in1"));
+    }
+
+    /// Names match in camelCase, the identifier every emitter writes, so
+    /// `as: my-row` captures a consumer `myRow`. The fresh name skips one the
+    /// callee already uses (`my-row-in1`), and a loop that captures nothing
+    /// keeps its name.
+    #[test]
+    fn capture_is_judged_in_camel_case_and_fresh_names_are_unused() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: rows , as: my-row ) {
+    Text [ card-a ] ( content: title )
+    Text [ card-b ] ( content: my-row )
+  }
+  For ( each: slot: rows , as: my-row-in1 ) { Text [ card-c ] ( content: my-row-in1 ) }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column { For ( each: slot: items , as: myRow ) {
+  pkg::mosaic-pkg-lib::Card ( title: myRow , rows: slot: items )
+} } }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            binders(&layout),
+            vec![
+                ("myRow".to_string(), None),
+                ("my-row-in2".to_string(), None),
+                ("my-row-in1".to_string(), None),
+            ]
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-a", "content"),
+            keyword("myRow")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-b", "content"),
+            keyword("my-row-in2")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-c", "content"),
+            keyword("my-row-in1")
+        );
+    }
+
+    /// Nested inlining: Panel's loop `calm` would capture the consumer's
+    /// `calm` that Panel passes on to Badge, so it is renamed. At Badge's
+    /// call site, `tone: calm` is a declared `one-of` value, a literal and
+    /// not a use of the loop variable, so it stays `calm` and reaches Badge
+    /// as the string.
+    #[test]
+    fn hygiene_holds_through_nested_inlining_and_skips_one_of_values() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let lib = make_pkg(
+            &pkgs,
+            "mosaic-pkg-lib",
+            "mosaic-pkg-lib",
+            &["Panel", "Badge"],
+        );
+        write_component(
+            &lib,
+            "Badge",
+            "component Badge { slot label : text ; slot tone : one-of calm loud ; }",
+            r#"layout Badge { Column [ badge ] {
+  Text [ badge-label ] ( content: label )
+  Text [ badge-tone ] ( content: tone )
+} }"#,
+        );
+        write_component(
+            &lib,
+            "Panel",
+            "component Panel { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Panel { Column [ panel ] {
+  For ( each: slot: rows , as: calm ) {
+    Text [ panel-row ] ( content: calm )
+    Badge ( label: title , tone: calm )
+  }
+} }"#,
+        );
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column { For ( each: slot: items , as: calm ) {
+  pkg::mosaic-pkg-lib::Panel ( title: calm , rows: slot: items )
+} } }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            binders(&layout),
+            vec![("calm".to_string(), None), ("calm-in1".to_string(), None)]
+        );
+        assert_eq!(
+            prop_value(&layout.root, "panel-row", "content"),
+            keyword("calm-in1")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "badge-label", "content"),
+            keyword("calm")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "badge-tone", "content"),
+            Some(LayoutPropValue::String("calm".to_string()))
         );
     }
 
