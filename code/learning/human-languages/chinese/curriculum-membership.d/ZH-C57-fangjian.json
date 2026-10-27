@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C57-fangjian",
+  "pathSegment": "ZH-PATH-57-HOME57",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-57-HOME57",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:49c54253c4a9bfe7",
+  "lessonIds": [
+    "ZH-C127-zhexie",
+    "ZH-W127-xie-few",
+    "ZH-C127-naxie",
+    "ZH-C127-naxie-which",
+    "ZH-C127-yixie",
+    "ZH-C127-zheyang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch127.txt",
+  "json": "chinese/narration/ch127.json",
+  "textHash": "fnv1a64:fcd8bf4dcb1f0e44",
+  "jsonHash": "fnv1a64:69f1cee388efbccc",
+  "findings": []
+}

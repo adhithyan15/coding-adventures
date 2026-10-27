@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C78-xiaoshihou",
+  "pathSegment": "ZH-PATH-78-AGE78",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-78-AGE78",
+      "order": 5
+    }
+  ]
+}

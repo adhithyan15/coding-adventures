@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:a2e07e18a439f447",
+  "lessonIds": [
+    "ZH-C83-shijian",
+    "ZH-C83-zao",
+    "ZH-C83-mashang",
+    "ZH-C83-laibuji",
+    "ZH-C83-chidao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch83.txt",
+  "json": "chinese/narration/ch83.json",
+  "textHash": "fnv1a64:185bb2d5e0173207",
+  "jsonHash": "fnv1a64:e32b4471f6342dbc",
+  "findings": []
+}

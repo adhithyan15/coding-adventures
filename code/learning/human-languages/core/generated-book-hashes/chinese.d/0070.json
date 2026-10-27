@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:1c1e4794a700db73",
+  "lessonIds": [
+    "ZH-C70-rou",
+    "ZH-C70-baozi",
+    "ZH-C70-miantiao",
+    "ZH-C70-jiaozi",
+    "ZH-C70-tang"
+  ],
+  "tex": "chinese/book/chapters/ch70-more-to-eat.tex"
+}

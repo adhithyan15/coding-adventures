@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:a8e85aaf1a2a35d9",
+  "lessonIds": [
+    "ZH-C125-shengqi",
+    "ZH-C125-danxin",
+    "ZH-C125-fangxin",
+    "ZH-C125-zhaoji",
+    "ZH-C125-nanguo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch125.txt",
+  "json": "chinese/narration/ch125.json",
+  "textHash": "fnv1a64:a686f084f808e1a8",
+  "jsonHash": "fnv1a64:4b463b62911e49b3",
+  "findings": []
+}

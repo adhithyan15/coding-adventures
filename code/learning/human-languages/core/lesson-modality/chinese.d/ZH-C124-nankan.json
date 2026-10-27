@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C124-nankan",
+    "language": "chinese",
+    "chapter": 124,
+    "sequence": 10080,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0217c2f1a5224807"
+  },
+  "findings": []
+}

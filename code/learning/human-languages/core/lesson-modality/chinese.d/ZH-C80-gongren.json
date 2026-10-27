@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C80-gongren",
+    "language": "chinese",
+    "chapter": 80,
+    "sequence": 6150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:859e538d6e07a53d"
+  },
+  "findings": []
+}

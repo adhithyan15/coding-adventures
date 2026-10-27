@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:4d24dd6a7ed554d1",
+  "lessonIds": [
+    "ZH-C113-qie",
+    "ZH-C113-zhu-boil",
+    "ZH-C113-chao",
+    "ZH-C113-kao",
+    "ZH-C113-jian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch113.txt",
+  "json": "chinese/narration/ch113.json",
+  "textHash": "fnv1a64:919e34cfb4d9de9e",
+  "jsonHash": "fnv1a64:fd937ae4448ac982",
+  "findings": []
+}

@@ -94,7 +94,11 @@ have an IIR profile (3.3.5–3.3.7) and never calls the legacy entry points.
 
 Today the pairs cover LANG84 slice R0 (numbers, names, variables, keywords,
 operators, comments, separators) and the `rb-int-puts` grammar subset (`puts` of `+ - * / %` integer
-arithmetic) for releases 0.49, 0.50 and 3.3.5–3.3.7. See `code/grammars/ruby/README.md`.
+arithmetic) for releases 0.49, 0.50 and 3.3.5–3.3.7. Slice R1b adds, on 3.3.5–3.3.7:
+- `=begin`/`=end` embedded documents and the `__END__` line, both only at a line start;
+- a lexer error for every regexp, `%`-literal or heredoc opener Ruby might read, so that a
+  skipped line can never be one Ruby reads as literal text.
+See `code/grammars/ruby/README.md`.
 
 ## Generated tables
 
@@ -121,3 +125,8 @@ is gone.)
   `tests/fixtures/ripper_oracle.rb`) and against the hand-written `ruby-lexer`.
 - `tests/r0_releases.rs` — the 1994 lexers, the `&.`/`->`/`@@`/`0b` gates on
   both sides, and every documented R0 divergence.
+- `tests/r1b_line_start.rs` — R1b covers:
+  - embedded documents and `__END__`, each case checked against host ruby 3.3.6;
+  - the literal-opener refusals, including the `def` head;
+  - exploits that would hide code behind a skipped document;
+  - a proof that only `)` leaves the `defparams` mode.

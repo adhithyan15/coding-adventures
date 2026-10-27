@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:c29157b335bcfb71",
+  "lessonIds": [
+    "ZH-C88-liang",
+    "ZH-W88-liang",
+    "ZH-C88-yi-sandhi",
+    "ZH-C88-bei",
+    "ZH-C88-ben",
+    "ZH-C88-zhang",
+    "ZH-C88-zhi",
+    "ZH-C88-practice"
+  ],
+  "tex": "chinese/book/chapters/ch88-two-cups-of-tea.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:8d843234a9468ef5",
+  "lessonIds": [
+    "ZH-C134-zhong",
+    "ZH-W134-zhong-heavy",
+    "ZH-C134-ruan",
+    "ZH-C134-ying",
+    "ZH-C134-kong",
+    "ZH-C134-man",
+    "ZH-R134-review-129-134"
+  ],
+  "tex": "chinese/book/chapters/ch134-heavy-and-soft.tex"
+}

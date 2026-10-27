@@ -250,6 +250,7 @@ layout JournalApp {
         title-placeholder : "Untitled" ,
         body-label : "Entry" ,
         body-value : slot: draft-body ,
+        body-placeholder : "" ,
         save-label : "Save" ,
         delete-label : slot: delete-label ,
         cancel-label : "Cancel" ,

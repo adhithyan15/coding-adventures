@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:af1b389838d5ebb2",
+  "lessonIds": [
+    "ZH-C141-luyou",
+    "ZH-C141-youxi",
+    "ZH-C141-guangjie",
+    "ZH-C141-sanbu",
+    "ZH-C141-diaoyu"
+  ],
+  "tex": "chinese/book/chapters/ch141-travel-and-fun.tex"
+}

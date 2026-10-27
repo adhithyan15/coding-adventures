@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:045e5d881d3bd012",
+  "lessonIds": [
+    "ZH-C120-waimai",
+    "ZH-C120-ding",
+    "ZH-C120-dizhi",
+    "ZH-C120-dabao",
+    "ZH-C120-dianxin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch120.txt",
+  "json": "chinese/narration/ch120.json",
+  "textHash": "fnv1a64:4d9545a4692394a8",
+  "jsonHash": "fnv1a64:0a3782d0769e5c3c",
+  "findings": []
+}

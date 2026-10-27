@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C146-banye",
+    "language": "chinese",
+    "chapter": 146,
+    "sequence": 11200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7244843d42d93a9a"
+  },
+  "findings": []
+}

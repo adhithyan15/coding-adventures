@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W76-hui",
+    "language": "chinese",
+    "chapter": 76,
+    "sequence": 5935,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:03e1a9c9a16bdc9b",
+    "detachableSegments": [
+      "Script — 人 over two bars and a bend"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

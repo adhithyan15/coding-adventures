@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C99-shuaya",
+  "pathSegment": "ZH-PATH-99-WASH99",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-99-WASH99",
+      "order": 2
+    }
+  ]
+}

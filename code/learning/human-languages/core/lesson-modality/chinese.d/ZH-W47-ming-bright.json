@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W47-ming-bright",
+    "language": "chinese",
+    "chapter": 47,
+    "sequence": 3845,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cade3ecd39fbaf57",
+    "detachableSegments": [
+      "Script — the sun beside the moon"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

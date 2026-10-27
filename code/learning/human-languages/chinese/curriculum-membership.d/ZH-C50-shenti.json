@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C50-shenti",
+  "pathSegment": "ZH-PATH-50-SLEEP50",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-50-SLEEP50",
+      "order": 3
+    }
+  ]
+}

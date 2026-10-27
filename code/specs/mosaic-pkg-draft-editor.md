@@ -2,7 +2,8 @@
 
 Issue: [#14416](https://github.com/adhithyan15/coding-adventures/issues/14416) (J3b) ·
 Program: [#14415](https://github.com/adhithyan15/coding-adventures/issues/14415) ·
-Evidence: [`journal-component-demand-audit-v1.md`](journal-component-demand-audit-v1.md) finding 3
+Evidence: [`journal-component-demand-audit-v1.md`](journal-component-demand-audit-v1.md) finding 3 ·
+Convergence: [`mosaic-editor-convergence-audit-v1.md`](mosaic-editor-convergence-audit-v1.md) (E1 = 0.2.0)
 
 ## Why
 
@@ -31,6 +32,9 @@ matches a sibling export to that sibling (`qualify_local_component_references`),
 so a bare `Input` in a toolkit component becomes the toolkit's *single-line*
 `Input` component and `multiline` is silently lost. A package with no
 dependencies reaches the primitive directly, as `Notes` and `SpiceWorkbench` do.
+Now that the body is the kernel `HostInput`, that reason no longer holds; the
+package stays separate because moving it into the toolkit is churn with no
+consumer benefit while packages are unpublished (convergence audit R7).
 
 J3b-pre (#15931) made that primitive a real, named text area on every backend:
 Flutter drew one line, Qt named it twice, React and SwiftUI dropped its name.
@@ -44,6 +48,7 @@ component DraftEditor {
   slot title-placeholder : text ;
   slot body-label        : text ;  // required; the body's visible label and accessible name
   slot body-value        : text ;
+  slot body-placeholder  : text ;  // hint in an empty body; "" = none (0.2.0)
   slot save-label        : text ;  // each action is drawn only when labelled
   slot delete-label      : text ;
   slot cancel-label      : text ;
@@ -65,9 +70,19 @@ component DraftEditor {
 - **Label-gated parts.** An empty `title-label` removes the title field (Engram's
   focused field has none); an empty action label removes that button, so the
   component can never draw an unnamed button.
-- **No body placeholder.** The legacy primitive's `placeholder` is literal-only
-  on React, WebComponent and SwiftUI (UI25), so a slot-bound one would vanish
-  there. The visible label does the job.
+- **The body placeholder is a slot (0.2.0).** It is a hint shown only while
+  the body is empty, such as Trestle's "Write something…" or Engram's field
+  name, and `""` shows none (Journal passes `""`: its label suffices). It is
+  never the field's name: `body-label` stays visible and is the accessible
+  name. 0.1.0 had no body placeholder because a slot-bound `placeholder` was
+  then literal-only on React, WebComponent and SwiftUI. EM-13 (2026-10-19)
+  made it lower on every backend, and the native gate shows it costs no
+  capability and no new style drop (convergence audit probe A).
+- **Adding a slot is a breaking change.** Like every slot here,
+  `body-placeholder` has no default, and a consumer that does not bind a
+  package component's slot fails to build with `UnknownSlot`
+  (convergence audit R1, E6). So 0.2.0 is a breaking minor version, and
+  Journal binds the slot in the same change.
 - **No preview.** Rendered markdown is a `node` slot mounted with `HostSurface`,
   which is not styled by `.msl`, needs a surface per native host, and on the
   HTML backend is an unescaped triple-mustache. Keeping it out of this component
@@ -81,7 +96,9 @@ Column [ draft-editor ]
                       Text      [ draft-editor-title-label ]
                       HostInput [ draft-editor-title ]      (a11y-label: title-label)
   Text  [ draft-editor-body-label ]
-  Input [ draft-editor-body ] (multiline: true, a11y-label: body-label)
+  HostInput [ draft-editor-body ] (multiline: true, a11y-label: body-label,
+                                  placeholder: body-placeholder,
+                                  onCommit: onSave)
   Row   [ draft-editor-actions ]
     If (save-label)   HostButton [ draft-editor-save ]
     If (delete-label) HostButton [ draft-editor-delete ]
@@ -96,7 +113,8 @@ and size only (#15276).
 
 ## Adoption
 
-- **Journal (J3c)** uses it for new-entry and edit, with its own preview beside it.
+- **Journal (J3c)** uses it for new-entry and edit, and is its only consumer
+  today. It binds `body-placeholder : ""`.
 - **Trestle `Notes`** swaps its editing column for it (follow-up PR).
 - **Engram `NoteEditor`** could use it for the focused field (no title, no
   actions), but that changes Engram's field from single-line to multi-line and

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C103-huai",
+    "language": "chinese",
+    "chapter": 103,
+    "sequence": 8240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:030a94e67ed84ebd"
+  },
+  "findings": []
+}

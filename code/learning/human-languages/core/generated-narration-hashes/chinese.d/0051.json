@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:622c48f36ad23e44",
+  "lessonIds": [
+    "ZH-C51-gaoxing",
+    "ZH-C51-pa",
+    "ZH-C51-leng",
+    "ZH-C51-re",
+    "ZH-C51-ku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch51.txt",
+  "json": "chinese/narration/ch51.json",
+  "textHash": "fnv1a64:d45bbfecf8943675",
+  "jsonHash": "fnv1a64:813114971728a069",
+  "findings": []
+}

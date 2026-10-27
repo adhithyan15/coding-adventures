@@ -1,6 +1,18 @@
 # Changelog
 
-## Unreleased
+## Unreleased — the Noto Sans JP oracle follows the re-subset font
+
+- `tests/fixtures/oracle.txt` regenerated with `code/scripts/generate_glyph_oracle.py`
+  (fontTools 4.67.0). #18338 re-subset
+  `code/learning/human-languages/_fonts/NotoSansJP-Subset.ttf` from 647 to
+  1,551 glyphs for six new kanji chapters but did not regenerate this oracle,
+  so `oracle::every_glyph_matches_fonttools` failed (`noto-jp: numGlyphs`
+  1551 vs 647) on every full build. Only the `noto-jp` section changed; the
+  Inter, Noto Sans Tamil and synthetic sections are byte-identical. The
+  regenerated `synthetic.ttf` was not kept: fontBuilder stamps the build time
+  into `head`, and the committed font is the one the oracle describes.
+
+## Unreleased (initial)
 
 - Initial implementation of FNT02: glyph outlines from `glyf` and `loca`.
   - `loca` in both short and long formats.

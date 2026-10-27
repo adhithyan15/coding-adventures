@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C141-luyou",
+    "language": "chinese",
+    "chapter": 141,
+    "sequence": 10930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe92b7a15145e059"
+  },
+  "findings": []
+}

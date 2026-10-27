@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Sleeping and Waking",
+  "label": "ch:zh-sleeping-and-waking",
+  "canDo": "I can say when I sleep, get up and rest, and ask about health.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ZH-C50-bing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: I can say when I sleep, get up and rest, and ask about health.",
+    "assesses": [
+      "ZH-LEX-C50-SLEEP50-03",
+      "ZH-LEX-C50-SLEEP50-04",
+      "ZH-LEX-C50-SLEEP50-05"
+    ]
+  }
+}

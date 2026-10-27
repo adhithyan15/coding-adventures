@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:d969a8d70e270eb2",
+  "lessonIds": [
+    "ZH-C31-ta-she",
+    "ZH-C31-ta-he",
+    "ZH-W31-ta",
+    "ZH-C31-tamen",
+    "ZH-W31-men",
+    "ZH-C31-women",
+    "ZH-C31-nimen"
+  ],
+  "tex": "chinese/book/chapters/ch31-he-she-and-we.tex"
+}

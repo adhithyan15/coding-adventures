@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C70-baozi",
+    "language": "chinese",
+    "chapter": 70,
+    "sequence": 5630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b6327db26d8e25b"
+  },
+  "findings": []
+}

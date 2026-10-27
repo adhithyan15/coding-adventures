@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W119-bao-wrap",
+    "language": "chinese",
+    "chapter": 119,
+    "sequence": 9035,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:59dedb6d2ed4e9a3",
+    "detachableSegments": [
+      "Script — a wrapping stroke, and three strokes inside"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
