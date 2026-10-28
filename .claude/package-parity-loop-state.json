@@ -16,17 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": 18517,
+  "active_pr": 18516,
   "active_prs": [
     18511,
-    18516,
-    18517
+    18516
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T11:08:57Z",
-    "pr_number": 18508,
-    "head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
-    "action": "Verified scripting Bezier PR #18508 completed every exact-head check acceptably and merged through guarded squash auto-merge as fe057f18c6e8b62cae9921fee2538c091fae1bbb. The exact receipt is current origin/main and the clean completed worktree and local branch were removed. The two remaining published parity PRs were selected for normal current-main reconciliation and fresh hosted checks; the newly open slot was reprioritized to the dependency-ready Swift hash-map preparation.",
+    "observed_at": "2026-10-28T12:21:19Z",
+    "pr_number": 18517,
+    "head_revision": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+    "action": "Verified Swift hash-map PR #18517 completed every exact-head check acceptably and merged through guarded squash auto-merge as 031553c39dda7b68b9aa43d4abb4ab688ceff3a0. The exact receipt is current origin/main and the clean completed worktree and local branch were removed. The two remaining parity PRs were reconciled normally and the newly opened slot was reprioritized to the now-unblocked Swift hash-set owner.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15167,7 +15166,7 @@
     {
       "id": "swift-hash-map-lane-parity",
       "title": "Implement DT18 hash-map in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
@@ -15175,8 +15174,12 @@
       "pr_number": 18517,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18517",
       "pr_opened_at": "2026-10-28T11:17:09Z",
-      "publication_head": "e8fed125d8e611f657bd358b2dc69bf5dffc4808",
-      "publication_notes": "PR #18517 is open and non-draft from exact current-main reconciliation and lifecycle head e8fed125d8e611f657bd358b2dc69bf5dffc4808. The three-slot publication ceiling is full with #18511, #18516, and #18517. Guarded auto-merge remains disabled until every exact-head hosted check is terminal and acceptable.",
+      "publication_head": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+      "publication_notes": "PR #18517 completed every exact-head hosted check acceptably and merged through guarded squash auto-merge from exact lifecycle head 6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc.",
+      "merged_head_revision": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+      "merged_at": "2026-10-28T12:21:19Z",
+      "merge_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "started_at": "2026-10-28T11:16:04Z",
       "selected_main_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
       "reconciliation_revision": "e8d5e1897756bb0e012a3f01769ba5df03cf85dc",
@@ -15199,13 +15202,16 @@
     {
       "id": "swift-hash-set-lane-parity",
       "title": "Implement DT19 hash-set in Swift",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "swift-hash-functions-lane-parity",
         "swift-hash-map-lane-parity"
       ],
-      "branch": null,
+      "branch": "codex/parity-swift-hash-set-20261028",
       "pr_number": null,
+      "started_at": "2026-10-28T12:20:55Z",
+      "selected_main_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
+      "selection_notes": "Reprioritized immediately after Swift hash-map PR #18517 merged. Hash-set is now dependency-ready on exact current main, directly advances another non-Rust DT lane, reuses the reviewed DT18 persistent map and DT17 hash contracts, and has no implementation overlap with the active Haskell/Swift Bezier or Swift fenced-block PRs. It ranks ahead of Swift HyperLogLog because it consumes both freshly merged prerequisites and closes the direct recorded successor edge; keep scope to DT19 membership, deterministic set algebra, persistent value semantics, native build fronts, docs, empty capabilities, and lifecycle receipts.",
       "notes": "Preserve set algebra and membership semantics using the reviewed DT18 and DT17 dependency chain, with empty capabilities.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-hash-set-lane-parity"

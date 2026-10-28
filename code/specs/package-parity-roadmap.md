@@ -18780,3 +18780,23 @@ Open PR #18517 from exact current-main reconciliation and lifecycle head
 {#18511, #18516, #18517}; do not open a fourth parity PR. Guarded auto-merge
 remains disabled until every hosted check for this exact head is terminal and
 acceptable, including the Windows BUILD front.
+
+## October 28, 2026: Swift hash-map merge and hash-set selection
+
+Swift hash-map PR #18517 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact lifecycle head
+`6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc` as
+`031553c39dda7b68b9aa43d4abb4ab688ceff3a0` at
+`2026-10-28T12:21:19Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+Reprioritization selects `swift-hash-set-lane-parity` on a dedicated sparse
+worktree from that exact main. Its DT17 hash-functions and DT18 persistent-map
+prerequisites are both merged, it advances another non-Rust lane, and its new
+package root does not overlap either live parity PR. It ranks ahead of Swift
+HyperLogLog because it consumes both freshly merged prerequisites and closes
+the direct successor edge. Keep scope to DT19 membership, deterministic set
+algebra, persistent value semantics, native build fronts, docs, empty
+capabilities, and lifecycle receipts. The live publication set remains
+{#18511, #18516}; do not publish hash-set until implementation, validation,
+and exact-head review are complete.
