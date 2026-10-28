@@ -19459,3 +19459,24 @@ main `729e0b761e339bcc8d5863550da644e5b3ccec24`. Keep it draft only while this
 durable PR-number receipt receives independent delta review, then mark it ready
 and require a completely fresh exact-head hosted matrix before guarded
 auto-merge.
+
+### PR #18537 merge and Swift protocol reconciliation
+
+Every exact-head check for Dart and Swift binary-tree PR #18537 completed
+terminal acceptable, including Ubuntu, macOS, Windows, Swift CodeQL, metadata,
+human-language books, and both aggregate gates. GitHub reported reviewed head
+`3d147429f868c416b2f0f18e70d4ec2c4ffe39f6` clean and mergeable; guarded
+squash auto-merge landed `4a32928e2f0e6ef12b9665def9602039d32364af`
+at `2026-10-28T22:09:42Z`. The completed worktree, its ignored Dart/Swift build
+artifacts, and local branch were removed.
+
+Normal merge head `8f7c055b98c7e95e4ca312e6b12f43970d91d76d`
+preserves the reviewed protocol receipt and exact new main as its two parents.
+All ten protocol tests, release build, strict formatting, Unix BUILD, JSON/diff
+checks, and empty capabilities pass with unchanged 100% production coverage
+across 249 lines. The fresh bounded build-tool plan discovers 173 Swift
+packages and selects only `swift/in-memory-data-store-protocol`. Post-merge
+prioritization keeps this three-direct/five-total-descendant item ahead of RESP
+and radix tree at two/four each. Require independent exact merge-head review
+before publication, then fresh hosted Windows and repository-wide qualification
+before guarded auto-merge.
