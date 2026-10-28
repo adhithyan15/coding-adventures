@@ -19162,3 +19162,20 @@ level-progress owner sharding. Preserve both histories through a normal merge;
 the Haskell package trees and metadata repair are unchanged. Re-run the focused
 registry and Windows-front checks, then independently review the exact merge
 head before push.
+
+## October 28, 2026: Swift Bloom filter parallel selection
+
+After Haskell ITF Windows-front PR #18527 merged and while the isolated Swift
+HyperLogLog PR #18531 runs fresh CI, fresh prioritization selects
+`swift-bloom-filter-lane-parity` for local-only parallel implementation. Its
+sole DT17 hash-functions prerequisite is merged, it adds one bounded missing
+non-Rust package, and its package root does not overlap HyperLogLog. It ranks
+ahead of the Swift store-engine chain because that chain still depends on the
+active HyperLogLog publication.
+
+Keep scope to DT22 size and hash-count calculation, deterministic double
+hashing, bounded bit addressing and allocation, membership and false-positive
+fixtures, stable validation errors, persistent value semantics, native build
+fronts, documentation, and empty capabilities. Keep this branch local until
+the active lifecycle state is reconciled from main and exact-head review
+passes.
