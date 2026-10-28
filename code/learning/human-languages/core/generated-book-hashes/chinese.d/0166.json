@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:230d023e978d1701",
+  "lessonIds": [
+    "ZH-C166-kaishui",
+    "ZH-C166-xiawucha",
+    "ZH-W166-cha-tea",
+    "ZH-C166-hongcha",
+    "ZH-C166-chaye",
+    "ZH-C166-paocha"
+  ],
+  "tex": "chinese/book/chapters/ch166-tea-time.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:ac9d0a9d834897b0",
+  "lessonIds": [
+    "ZH-C224-kaihua",
+    "ZH-W224-hua-flower",
+    "ZH-C224-huadian",
+    "ZH-C224-huayuan",
+    "ZH-C224-hudie",
+    "ZH-C224-mifeng"
+  ],
+  "tex": "chinese/book/chapters/ch224-spring-flowers.tex"
+}

@@ -77,9 +77,9 @@ The emitter is **thin**; the semantics live in an inlined C runtime
   variadic functions, not compound-literal arrays that older MSVC rejects).
 - **Closures** — a `MakeClosure` becomes `_sir_make_closure(thunk, ncap, …)`;
   a per-function thunk adapts the body's fixed C signature to the uniform
-  closure calling convention; an indirect call is `_sir_apply(...)`.  A
-  thunk is emitted for every `MakeClosure` anywhere in the module (a
-  `semantic_ir::Visitor` finds them — including one inside a callee).
+  closure calling convention; an indirect call is `_sir_apply(...)`. The
+  set of functions needing a thunk comes from the shared `semantic_ir::Visitor`
+  walk, so a closure anywhere (an `IndirectCall` target, a loop body) gets one.
 - **Strict closures** — SIR10's `lambda` marker becomes
   `_sir_strict_arity(<closure>, N)`; `_sir_apply` then raises
   `ArgumentError: arity mismatch: …` for any other argument count, where a

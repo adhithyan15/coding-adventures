@@ -361,21 +361,25 @@ fn thunk_name(name: &str) -> String {
 /// The set of function names referenced by a `MakeClosure` anywhere in the
 /// module — exactly the functions that need a thunk.  Sorted for determinism.
 ///
-/// A [`semantic_ir::Visitor`] finds them, so a `MakeClosure` is found wherever
-/// it sits.  The hand-written walk this replaces visited only some positions:
-/// it skipped an `IndirectCall`'s *target*, so in
+/// This uses the shared [`semantic_ir::Visitor`] walk, so it reaches a
+/// `MakeClosure` wherever the emitter can meet one.  An earlier hand-written
+/// walk skipped some places: the *target* of an `IndirectCall`, loop bodies,
+/// and most other expression kinds.  A closure built there was emitted as
+/// `_sir_make_closure(_sir_thunk_f, ...)` with no `_sir_thunk_f` defined, so
+/// the C did not compile.  The Python frontend builds exactly such a closure
+/// for a recursive call to a capturing nested `def`:
 ///
 /// ```text
-/// (define (mk k) (lambda (a) (k a)))
-/// (print ((mk (lambda (a) 77)) 5))      ; the lambda is inside the callee
+///   go(x - 1)   ⇒   IndirectCall(MakeClosure(go, [n]), [x - 1])
 /// ```
 ///
-/// the inner lambda got no `_sir_thunk___lambda_1`, and gcc rejected the
-/// output (issue #18461).  It also skipped loops, conversions and every
-/// SIR16+ node that can hold a closure.
+/// Every `MakeClosure` the walk finds is one the emitter writes out, so each
+/// thunk collected here is used.
 fn collect_closure_targets(m: &Module) -> Vec<String> {
+    use semantic_ir::Visitor;
+
     struct Targets(std::collections::BTreeSet<String>);
-    impl semantic_ir::Visitor for Targets {
+    impl Visitor for Targets {
         fn visit_expr(&mut self, e: &Expr, depth: usize) {
             if let Expr::MakeClosure { fn_name, .. } = e {
                 self.0.insert(fn_name.clone());
@@ -383,9 +387,9 @@ fn collect_closure_targets(m: &Module) -> Vec<String> {
             semantic_ir::walker::walk_expr_default(self, e, depth);
         }
     }
-    let mut v = Targets(std::collections::BTreeSet::new());
-    semantic_ir::Visitor::visit_module(&mut v, m);
-    v.0.into_iter().collect()
+    let mut targets = Targets(std::collections::BTreeSet::new());
+    targets.visit_module(m);
+    targets.0.into_iter().collect()
 }
 
 // ---------------------------------------------------------------------------

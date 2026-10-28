@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C251-shengzi",
+    "language": "chinese",
+    "chapter": 251,
+    "sequence": 19180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7a03b7f7adaf66d"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:78ba3cbe02a76252",
+  "lessonIds": [
+    "ZH-C178-zhengchang",
+    "ZH-W178-chang-often",
+    "ZH-C178-rizi",
+    "ZH-C178-congqian",
+    "ZH-C178-zuijin",
+    "ZH-C178-lingchen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch178.txt",
+  "json": "chinese/narration/ch178.json",
+  "textHash": "fnv1a64:c6de83c66f644160",
+  "jsonHash": "fnv1a64:69bb8eef08df047b",
+  "findings": []
+}

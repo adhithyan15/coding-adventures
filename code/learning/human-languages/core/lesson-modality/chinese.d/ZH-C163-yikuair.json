@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C163-yikuair",
+    "language": "chinese",
+    "chapter": 163,
+    "sequence": 13290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4105945a21271f37"
+  },
+  "findings": []
+}

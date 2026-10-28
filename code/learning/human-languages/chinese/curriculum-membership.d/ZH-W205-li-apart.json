@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W205-li-apart",
+  "pathSegment": "ZH-PATH-205-FAR205",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-205-FAR205",
+      "order": 1
+    }
+  ]
+}

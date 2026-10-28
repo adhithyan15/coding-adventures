@@ -186,6 +186,64 @@ pub fn check_entry_point(modules: &[IIRModule]) -> Option<LinkError> {
     }
 }
 
+/// Check that every function reference names something its module may use.
+///
+/// A *function reference* is the operand in a function-name slot — `call`
+/// callee, `alloc_closure` body, `task_spawn` / `group_spawn` target; the
+/// one table of slots lives in `merge::function_name_slot`, which the
+/// rename pass uses too.  Inside module `m` such a name may be:
+///
+/// | Name | Example | After merging it means |
+/// |------|---------|------------------------|
+/// | a function `m` defines | `helper`, `__lambda_0` | `m`'s own function (renamed if needed) |
+/// | the local name of one of `m`'s imports | `sqrt`, or an alias | the exported function it resolves to |
+/// | anything else | `helper` defined only in *another* module | **error** — `UndeclaredCall` |
+///
+/// # Why the third row is an error (issue #18432)
+///
+/// The merge pass rewrites the first two kinds and leaves every other name
+/// bare.  A bare name binds to whichever function owns it in the merged
+/// module — and that can be another module's *private* function:
+///
+/// ```text
+///   lib_a: private helper  ─┐   merged: helper        (lib_a's — first)
+///   lib_b: private helper  ─┤           lib_b::helper
+///   app:   call helper     ─┘   app's call runs lib_a's private helper
+/// ```
+///
+/// Privacy is the point of a module system, and an IIR producer that
+/// forgot an `IIRImport` should fail at link time, not run whichever
+/// function happened to come first.  Builtins are not affected: no IIR
+/// producer reaches them through these slots (Twig emits `call_builtin`),
+/// and neither VM resolves an unknown `call` target to anything but an
+/// "unknown function" error.
+///
+/// Each `(module, function, name)` is reported once, however many times
+/// the function repeats the reference.
+pub fn check_function_references(modules: &[IIRModule]) -> Vec<LinkError> {
+    let mut errors = Vec::new();
+    for module in modules {
+        let mut visible: HashSet<&str> = module.functions.iter().map(|f| f.name.as_str()).collect();
+        visible.extend(module.imports.iter().map(|i| i.local_name()));
+        for function in &module.functions {
+            let mut reported: HashSet<&str> = HashSet::new();
+            for instr in &function.instructions {
+                let Some(callee) = crate::merge::function_name_operand(instr) else {
+                    continue;
+                };
+                if !visible.contains(callee) && reported.insert(callee) {
+                    errors.push(LinkError::UndeclaredCall {
+                        in_module: module.name.clone(),
+                        in_function: function.name.clone(),
+                        callee: callee.to_string(),
+                    });
+                }
+            }
+        }
+    }
+    errors
+}
+
 /// Resolve all imports in `modules` against the export map.
 ///
 /// Returns a list of `LinkError`s (empty = all imports satisfied).
@@ -425,6 +483,80 @@ mod tests {
                 entry_point: "main".into(),
             })
         );
+    }
+
+    // ── check_function_references (#18432) ──────────────────────────────
+
+    fn fn_with(name: &str, instrs: Vec<IIRInstr>) -> IIRFunction {
+        IIRFunction::new(name, vec![], "any", instrs)
+    }
+
+    fn call(callee: &str) -> IIRInstr {
+        use interpreter_ir::instr::Operand;
+        IIRInstr::new("call", Some("r".into()), vec![Operand::Var(callee.into())], "any")
+    }
+
+    #[test]
+    fn references_to_own_functions_and_imports_are_accepted() {
+        let mut m = IIRModule::new("app", "twig");
+        m.add_or_replace(fn_with("own", vec![]));
+        m.add_or_replace(fn_with("main", vec![call("own"), call("add"), call("plus")]));
+        m.imports.push(IIRImport::new("math", "add", "any"));
+        m.imports.push(IIRImport::new("math", "add", "any").with_local_alias("plus"));
+        assert!(check_function_references(&[m]).is_empty());
+    }
+
+    #[test]
+    fn a_reference_to_an_unknown_name_is_undeclared() {
+        let mut m = IIRModule::new("app", "twig");
+        m.add_or_replace(fn_with("main", vec![call("ghost")]));
+        assert_eq!(
+            check_function_references(&[m]),
+            vec![LinkError::UndeclaredCall {
+                in_module: "app".into(),
+                in_function: "main".into(),
+                callee: "ghost".into(),
+            }]
+        );
+    }
+
+    #[test]
+    fn imports_of_one_module_do_not_cover_another() {
+        // `lib` imports `add`; `app` does not — so `app`'s call is undeclared
+        // even though some module in the link imports that name.
+        let mut lib = IIRModule::new("lib", "twig");
+        lib.entry_point = None;
+        lib.imports.push(IIRImport::new("math", "add", "any"));
+        let mut app = IIRModule::new("app", "twig");
+        app.add_or_replace(fn_with("main", vec![call("add")]));
+        let errs = check_function_references(&[lib, app]);
+        assert_eq!(errs.len(), 1);
+        assert!(matches!(&errs[0], LinkError::UndeclaredCall { in_module, .. } if in_module == "app"));
+    }
+
+    #[test]
+    fn data_operands_and_builtins_are_not_function_references() {
+        // `call_builtin`, string constants and global names live in other
+        // namespaces; only function-name slots are checked.  A malformed
+        // slot (an integer callee) names no function and is left to the VM.
+        use interpreter_ir::instr::Operand;
+        let mut m = IIRModule::new("app", "twig");
+        m.add_or_replace(fn_with(
+            "main",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("a".into()),
+                    vec![Operand::Var("host/read_file".into())],
+                    "any",
+                ),
+                IIRInstr::new("const", Some("s".into()), vec![Operand::Str("ghost".into())], "str"),
+                IIRInstr::new("global_load", Some("g".into()), vec![Operand::Str("ghost".into())], "any"),
+                IIRInstr::new("call", Some("x".into()), vec![Operand::Int(7)], "any"),
+                IIRInstr::new("call", Some("y".into()), vec![], "any"),
+            ],
+        ));
+        assert!(check_function_references(&[m]).is_empty());
     }
 
     #[test]

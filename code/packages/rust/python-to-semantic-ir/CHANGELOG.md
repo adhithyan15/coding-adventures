@@ -7,6 +7,163 @@ All notable changes to `python-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to semantic versioning.
 
+## 0.12.0 — A closure that names itself or a sibling keeps its captures (#18468)
+
+**The bug.** A nested `def` that captures a variable got a zero-capture
+closure wherever its own body named it:
+
+```python
+def outer(n):
+    def go(x):
+        h = go          # MakeClosure(go, [])  — but go declares 1 capture
+        return x + n
+    return go(1)
+```
+
+`fn_captures` (the capture list a bare reference re-threads) was written
+by `push_function`, which runs only *after* the body is lowered.  On the C
+backend the short closure read a NULL `caps[0]`.  With the validator's
+capture-count check (#18469) the program would be refused instead: still
+wrong, since it is valid Python.
+
+**A second, wider bug** showed up while testing the fix end to end.  A
+*call* by name to any function with captures (`go(1)`, a recursive
+`go(x - 1)`, a sibling's `od(x - 1)`, or a call to a top-level def that
+reads a `main` local) lowered to a `DirectCall`.  A `DirectCall` passes the
+arguments but not the captures.  Every backend gives a closure body its
+captures as leading parameters, so all six failed: C, Rust and Go did not
+compile, Python and Ruby raised an arity error, and JavaScript printed
+`NaN`.  This included the issue's own example, apart from the `h = go`
+line.
+
+**The fix.**
+
+- `lower_callable` now decides the capture list *before* lowering the
+  body and records it in `fn_captures` at once.  A self-reference sees
+  the full list.
+- New `plan_captures` works out the list.  A closure for `f` captures
+  (1) the free names of `f` that are enclosing values, plus (2) the
+  captures of every capturing function `f` names, since `f` must build
+  those closures.  Rule 2 runs to a fixpoint over the *group*: `f` plus
+  every not-yet-lowered sibling `def` the group names.  This covers
+  `go` naming itself, `ev`/`od` calling each other with `od` defined
+  later, and `inner` calling its uncle `go` (`inner` and `mid` then both
+  capture `go`'s `n`).
+- A sibling planned early has its list fixed then.  When its own `def`
+  is reached, it adopts that list.  If it reads a name bound only after
+  the sibling that used it, the program gets a positioned
+  `unsupported … (deferred)` error, since that sibling could not thread
+  the name.
+- Pass 1 (`collect_function_names`) now also records `DefFacts` for every
+  `def`: its parent body, free names, arity and whether its params are
+  plain.  It needs these because a sibling can be named before its
+  `def` is lowered.
+- A call by name to a function with captures lowers to
+  `IndirectCall(MakeClosure(f, [captures re-threaded]), args)`, not
+  `DirectCall`.  Through a closure, backends neither fill defaults nor
+  match keywords, and they treat a missing argument as nil.  So
+  `lower_closure_call` accepts only plain positional parameters called
+  with exactly that many positional arguments.  It refuses defaults,
+  keyword-only params, keyword args and a wrong count with a positioned
+  error.  A function with no captures still gets a `DirectCall`.
+- A module-level safety net in `lower_file` refuses any `DirectCall` left
+  targeting a capturing function.  One appears only when a call was
+  lowered before its callee's list existed, for example from a method
+  body (which plans nothing) to a later top-level `def` that captures a
+  `main` local.
+- A second `def` with an already-lowered name (two functions that each
+  nest an `inner`) is now a positioned error.  Every `def` is lifted into
+  one namespace, so the two would share one `fn_captures` entry, and the
+  SIR validator rejects duplicate function names anyway.
+- `FunctionCtx` gains an `owner` key (the `def` whose body it lowers;
+  `<module>` for `main`; `<detached>` for a method body or a method's
+  default values).  `plan_captures` plans only siblings whose
+  `DefFacts::parent` matches.
+
+**Security review follow-up.**  The review of the first version found
+four more ways to build a closure that is short, or threads the wrong
+variable.  All four are now closed:
+
+- **Short closures the planner cannot see (HIGH).**  Some contexts plan
+  nothing: a method body, a method's default values, or `main` naming a
+  `def` before it.  A bare reference there to a function whose capture
+  list is not decided yet built `MakeClosure(g, [])`.  If `g` then
+  captured something, the C backend read a NULL `caps[0]`.
+  - The old safety net only checked `DirectCall`s.  It is replaced by
+    `check_closure_invariant`, which walks the finished module with the
+    SIR `Visitor` (parameter defaults included).  Every `MakeClosure`
+    must thread exactly its target's captures, by name and order, and no
+    `DirectCall` may target a capturing function.  A violation is a
+    positioned error at the offending node.
+  - The gensym'd `__lambda_<N>` names are no longer in `function_names`.
+    Source could name a lambda and get a zero-capture closure for it.
+    The gensym also skips names a `def` or class already uses.
+- **A capture threading the wrong variable (MEDIUM).**  Rule 2 could give
+  `f` a capture `n` that `f` also binds itself (a param or a local).
+  `f` would then pass its own `n` where `g` expects the outer one:
+  Python, Ruby and Rust printed the wrong value, and C, Go and JS failed
+  on a duplicate binding.
+  - `plan_captures` now refuses a member that binds a name it would
+    inherit.  `DefFacts` records each `def`'s bound names for this.
+  - `named_closure` accepts a capture value only from the function's own
+    defining body, or as a `Scope::Capture` anywhere else.  So a
+    method's param `x` is never passed as a `main` local `x`.
+- **Unbounded planning cost (MEDIUM/LOW, DoS).**  The fixpoint used
+  repeated full passes with linear lookups.  A chain of M functions
+  naming each other, the last reading V outer names, produced M·V
+  capture slots.  Now:
+  - a name→index map;
+  - a delta worklist, so each name crosses each edge once;
+  - a hash set for the planned-list check;
+  - a deliberate budget of `MAX_CAPTURES` (256) captures per function,
+    with a positioned error.  It bounds the planner's work to
+    (edges × 256) and the emitted closure slots.  It applies to every
+    function: a top-level `def` that reads more than 256 module-level
+    variables is now refused even if it is only used as a value.  That
+    worked on `main`; it is the price of the bound.
+  - No cap on the size of a planning group.  An interim version capped
+    it at 256.  That refused ordinary capture-free programs that
+    compile on `main`, such as a 300-def call chain or a dispatcher
+    calling 300 helpers defined below it.  Such a group costs only its
+    edges, so the cap was dropped.  Tests now require both programs to
+    compile and run, the latter on every conformance backend.
+
+  The review's V=2000/M=400 generator took over two minutes in a debug
+  build.  It is now refused in about two seconds, most of which is
+  parsing.
+- **Gaps in the refusals (LOW).**
+  - A duplicate `def` name, including a nested `def f` inside `def f`,
+    is refused in pass 1, before its `DefFacts` can be overwritten.
+  - `lower_closure_call` refuses a call when no parameter facts exist,
+    rather than skipping the arity check.
+- **Known limitation.**  `def f(): r = g(); n = 1; return r + n`, where
+  `g` captures an enclosing `n`, is valid Python but refused: `f` binds
+  its own `n`.  Accepting it needs a rename, so `f`'s own local and the
+  inherited capture can both exist.  On `main` this was a broken
+  `DirectCall`, so it is not a regression.
+
+13 more unit tests cover each repro from the review.  All 13 fail on the
+first version of this change.  Three more tests must compile and run:
+the 300-def chain, the 300-helper dispatcher, and a 150-sibling chain
+that carries one capture back along every link.
+
+**Tests:** 16 new unit tests in `src/lib.rs`.  Before the fix 15 of them
+fail.  The one that passes, `plain_recursion_still_lowers_to_a_direct_call`, guards
+against the fix over-reaching.  They cover:
+
+- self-reference as a value and as a recursive call, checking the
+  `MakeClosure` capture count directly;
+- sibling mutual recursion, including a sibling that only passes on a
+  capture;
+- the uncle chain and a top-level def reading a `main` local;
+- the rejection paths, including a duplicate lifted name;
+- three Python round-trip e2e tests.
+
+A shared `assert_closures_consistent` helper checks two things across a
+module.  Every `MakeClosure` threads exactly its target's
+`captures.len()`, and no `DirectCall` targets a capturing function.  The
+validator on `main` does not check the former yet; #18469 adds it.
+
 ## 0.11.0 — SIR21 T3b-2 Slice 5a: `/` lowers to `div_true`
 
 Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into

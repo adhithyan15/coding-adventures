@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:b25274e822f2dbdf",
+  "lessonIds": [
+    "ZH-C185-haojiu",
+    "ZH-C185-zhiqian",
+    "ZH-C185-zhihou",
+    "ZH-C185-zaowan",
+    "ZH-C185-wangwang"
+  ],
+  "tex": "chinese/book/chapters/ch185-long-ago-and-soon.tex"
+}

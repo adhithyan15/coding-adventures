@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "In and Out",
+  "label": "ch:zh-in-and-out",
+  "canDo": "I can talk about going out, coming in, finishing work, locking up and lying down.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C183-tang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can talk about going out, coming in, finishing work, locking up and lying down.",
+    "assesses": [
+      "ZH-LEX-C183-INOUT183-03",
+      "ZH-LEX-C183-INOUT183-04",
+      "ZH-LEX-C183-INOUT183-05"
+    ]
+  }
+}

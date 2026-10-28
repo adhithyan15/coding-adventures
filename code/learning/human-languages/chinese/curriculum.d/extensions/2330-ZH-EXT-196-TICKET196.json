@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-196-TICKET196",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy a train ticket and a plane ticket, and say when a flight takes off and when a train arrives.",
+  "prerequisites": []
+}

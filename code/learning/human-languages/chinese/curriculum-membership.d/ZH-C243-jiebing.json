@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C243-jiebing",
+  "pathSegment": "ZH-PATH-243-SEASON243",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-243-SEASON243",
+      "order": 3
+    }
+  ]
+}

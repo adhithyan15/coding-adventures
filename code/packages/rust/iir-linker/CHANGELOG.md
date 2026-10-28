@@ -1,5 +1,51 @@
 # Changelog — iir-linker
 
+## Unreleased — #18432 — private means private; renaming never panics
+
+### Fixed
+
+- **A call could reach another module's private function.**  Nothing ever
+  raised `LinkError::UndeclaredCall`, so a function reference to a name the
+  module neither defined nor imported stayed bare and bound to whichever
+  function owned that name after merging.  With two libraries each holding
+  a private `helper`, an app's un-imported `call helper` ran the first
+  library's.  The new `resolve::check_function_references` (step 2c of
+  `link`) checks every operand the merge pass renames — `call` callee,
+  `alloc_closure` body, `task_spawn` / `group_spawn` target — against the
+  module's own functions and its imports' local names, and reports
+  `UndeclaredCall { in_module, in_function, callee }` once per
+  `(module, function, name)`.  `call_builtin` and data operands are not
+  function references and are never checked.
+- **The rename counter could panic on crafted export aliases.**  When a
+  private function's prefixed name `<module>::<fn>` was already taken, the
+  `$N` search `assert!`ed a bound of *total functions + 1*.  Export aliases
+  claim names without adding functions, so exporting one function as `c`,
+  `b::c`, `b::c$0` … `b::c$3` next to a module `b` with a private `c`
+  panicked `link()` — in release builds too.  The new `first_free_suffix`
+  keeps counting until a name is free (always within `taken + 1` tries, by
+  pigeonhole) and remembers where each base left off, so many same-named
+  functions do not rescan from `$0` (no quadratic blow-up).
+
+### Changed
+
+- `merge::function_name_slot` is now `pub(crate)` and joined by
+  `function_name_operand`, so the new check and the rename pass share one
+  definition of "function reference".
+- Docs: `link`, `LinkError::UndeclaredCall`, the `merge_modules`
+  precondition table, the crate docs and the README describe the check and
+  the counter.
+
+### Tests
+
+- Integration: a call and a closure naming another module's private
+  function, `task_spawn` / `group_spawn` targets, one report per function,
+  every legitimate reference kind (own, import, aliased import) still
+  linking, and crafted aliases (`b::c$0` … `b::c$9`) linking instead of
+  panicking.  All but the last-but-one fail on the previous linker.
+- Unit: `check_function_references` (accepted, undeclared, imports are per
+  module, builtins and data operands ignored), `first_free_suffix`
+  resumption, many same-named functions, `function_name_operand`.
+
 ## Unreleased — #18429 — one owner per name
 
 ### Fixed

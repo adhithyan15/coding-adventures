@@ -213,6 +213,7 @@ fn the_emitted_flutter_host_answers_effects() {
         "the deferred answer's value reached the app",
         "snapshot works again once the deferred effect is answered",
         "an earlier quarantine is never replaced",
+        "a directory at a quarantine name is skipped",
         "a rejected file moves to the first free name",
         "a file moved aside leaves saving on",
         "fresh state is saved once the rejected file is aside",

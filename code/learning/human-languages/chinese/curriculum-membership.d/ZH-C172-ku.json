@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C172-ku",
+  "pathSegment": "ZH-PATH-172-TASTE172",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-172-TASTE172",
+      "order": 2
+    }
+  ]
+}

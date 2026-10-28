@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W267-xiao-laugh",
+    "language": "chinese",
+    "chapter": 267,
+    "sequence": 20015,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:974ff76448c4a45c",
+    "detachableSegments": [
+      "Script — two small pieces over a short fall and 大"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
