@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:6528e85493aa4653",
+  "lessonIds": [
+    "ZH-C219-yun",
+    "ZH-W219-yun-cloud",
+    "ZH-C219-duoyun",
+    "ZH-C219-jiangwen",
+    "ZH-C219-qiwen",
+    "ZH-C219-fangqing"
+  ],
+  "tex": "chinese/book/chapters/ch219-cloudy-tomorrow.tex"
+}

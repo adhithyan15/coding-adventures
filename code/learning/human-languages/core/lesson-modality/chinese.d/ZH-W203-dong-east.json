@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W203-dong-east",
+    "language": "chinese",
+    "chapter": 203,
+    "sequence": 15785,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9962e0aff60230bc",
+    "detachableSegments": [
+      "Script — a bar, a turn, a hook and two short strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

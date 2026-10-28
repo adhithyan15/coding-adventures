@@ -37,8 +37,12 @@
 //! constant the McCarthy frontend emitted (`TAG_INT`/`TAG_NIL`/`TAG_SYMBOL`
 //! immediates). The frontend never fabricates a heap pointer (it performs no
 //! arithmetic on lisp values), so `car`/`cdr` only ever see a real cons cell or a
-//! non-heap value — for which `dynval_runtime::builtins::{car,cdr}` return `Err`,
-//! which we map to `nil` rather than panicking. The input is McCarthy *source*, run
+//! non-heap value — for which `dynval_runtime::builtins::{car,cdr}` return `Err`.
+//! That `Err` fails the run, as on every other column (#18417): the interpreter
+//! tier returns a `VMError::TypeError`, and the compiled tier records the same
+//! message in the JIT's error slot, which stops the run (see [`pair_reader`]).
+//! It used to be mapped to `nil`, so `(CAR 5)` quietly returned nil here while
+//! the VM, LLVM and native columns failed. The input is McCarthy *source*, run
 //! through the trusted frontend, so untrusted bytes cannot reach `from_raw_bits`
 //! with a forged heap tag. The JIT's default step-cap (fuel) bounds execution — and
 //! hence the number of `cons` allocations — so an adversarial loop cannot exhaust
@@ -50,6 +54,7 @@ use jit_core::GenericCirJit;
 use dynval_runtime::builtins;
 use dynval_runtime::value::LispyValue;
 use vm_core::core::VMCore;
+use vm_core::errors::VMError;
 use vm_core::value::Value;
 
 /// Reinterpret a JIT `Value` as a tagged `LispyValue`.
@@ -66,8 +71,9 @@ fn from_lv(lv: LispyValue) -> Value {
     Value::Int(lv.bits() as i64)
 }
 
-/// `nil` as a JIT value — the graceful result when a lisp builtin traps (e.g.
-/// `car` of a non-pair) so a malformed program yields a value rather than a panic.
+/// `nil` as a JIT value — the placeholder a callback returns when it cannot
+/// produce a value: a malformed call (a missing argument), or a `car` of a
+/// non-pair, which also records an error so the run stops (#18417).
 fn nil() -> Value {
     from_lv(LispyValue::NIL)
 }
@@ -81,11 +87,20 @@ fn b_cons(a: &[Value]) -> Value {
         _ => nil(),
     }
 }
-fn b_car(a: &[Value]) -> Value {
-    a.first().map(|x| builtins::car(&[to_lv(x)]).map(from_lv).unwrap_or_else(|_| nil())).unwrap_or_else(nil)
-}
-fn b_cdr(a: &[Value]) -> Value {
-    a.first().map(|x| builtins::cdr(&[to_lv(x)]).map(from_lv).unwrap_or_else(|_| nil())).unwrap_or_else(nil)
+/// `dyn_pair_first` / `dyn_pair_rest` of `a[0]`, or the refusal's text when
+/// it is not a pair (or missing).
+///
+/// | argument            | result                                                        |
+/// |---------------------|---------------------------------------------------------------|
+/// | a cons cell         | `Ok(its car / cdr)`                                           |
+/// | anything else       | `Err("dyn_pair_first: argument with tag 0 (int) is not a pair")` |
+///
+/// The text is `dynval-runtime`'s (`abi::not_a_pair_message`), the words the
+/// C runtime prints on LLVM and native: the tag and its kind, never the word.
+fn pair_read(op: &'static str, a: &[Value]) -> Result<Value, String> {
+    let read = if op == "dyn_pair_first" { builtins::car } else { builtins::cdr };
+    let word = a.first().map(to_lv).ok_or_else(|| format!("{op}: missing argument"))?;
+    read(&[word]).map(from_lv).map_err(|_| dynval_runtime::abi::not_a_pair_message(op, word.bits()))
 }
 fn b_pair_p(a: &[Value]) -> Value {
     a.first().map(|x| builtins::pair_p(&[to_lv(x)]).map(from_lv).unwrap_or_else(|_| nil())).unwrap_or_else(nil)
@@ -111,11 +126,39 @@ fn b_is_nil(a: &[Value]) -> Value {
 /// shared `dynval_runtime` crate. Each is registered on both the VM (the
 /// interpreter fallback for cold/untyped frames) and the `GenericCirJit` (the
 /// compiled path) so the two agree.
+///
+/// `dyn_pair_first` / `dyn_pair_rest` are the two that can fail, and they fail
+/// the run on both tiers (#18417):
+///
+/// | tier                          | how a non-pair fails                                          |
+/// |-------------------------------|---------------------------------------------------------------|
+/// | VM (interpreter fallback)     | the builtin returns `Err(VMError::TypeError { … })`            |
+/// | `GenericCirJit` (compiled)    | the callback records the message in the JIT's error slot (it cannot return an `Err`); the JIT stops after that call and `JITCore` reports it |
 fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
+    for op in ["dyn_pair_first", "dyn_pair_rest"] {
+        vm.builtins_mut().register(op, move |args: &[Value]| {
+            pair_read(op, args).map_err(|context| VMError::TypeError {
+                expected: "a pair".into(),
+                actual: args.first().map_or_else(|| "no argument".into(), |x| {
+                    format!("a value with tag {}", to_lv(x).bits() & dynval_runtime::TAG_BITS)
+                }),
+                context,
+            })
+        });
+        let error_slot = backend.error_handle();
+        backend.register_builtin(op, move |args: &[Value]| {
+            pair_read(op, args).unwrap_or_else(|message| {
+                // First error wins, as in the JIT's own `set_error`.
+                error_slot
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner())
+                    .get_or_insert_with(|| format!("TypeError: {message}"));
+                nil() // never read: the JIT stops right after this call
+            })
+        });
+    }
     for (name, f) in [
         ("dyn_pair_new", b_cons as fn(&[Value]) -> Value),
-        ("dyn_pair_first", b_car),
-        ("dyn_pair_rest", b_cdr),
         ("dyn_is_pair", b_pair_p),
         ("dyn_is_nil", b_is_nil),
         ("dyn_tag", b_tag),
@@ -139,7 +182,7 @@ fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
 /// `LAMBDA` / `LABEL` / recursion) — the JIT is the eighth and final backend.
 pub fn run_mccarthy_on_jit(source: &str) -> Result<Option<i64>, LangAotError> {
     let mut module = compile_source_to_iir(Language::McCarthyLisp, source, "jit")?;
-    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
+    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module).map_err(|e| LangAotError::JitBackendError(e.to_string()))?;
     iir_builtin_lowering::intern_symbols(&mut module);
     iir_builtin_lowering::lower_dyn_repr(&mut module).map_err(|e| LangAotError::JitBackendError(e.to_string()))?;
 

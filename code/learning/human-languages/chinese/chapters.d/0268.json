@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "Exams",
+  "label": "ch:zh-exams",
+  "canDo": "I can sign up for an exam, talk about an oral exam, passing and the answers, and ask for an explanation.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C268-jieshi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can sign up for an exam, talk about an oral exam, passing and the answers, and ask for an explanation.",
+    "assesses": [
+      "ZH-LEX-C268-EXAM268-03",
+      "ZH-LEX-C268-EXAM268-04",
+      "ZH-LEX-C268-EXAM268-05"
+    ]
+  }
+}

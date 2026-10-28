@@ -9,6 +9,7 @@ resolver = "2"
 exclude = ["os-kernel"]
 members = [
     "avr-classic-simulator",
+    "superh2-simulator",
     "cortex-m4-gatelevel",
     "v8-test262",
     "browser-bookmarks",
@@ -58,6 +59,7 @@ members = [
     "cdp1802-simulator",
     "cdp1802-gatelevel",
     "zpu-simulator",
+    "latticemico32-simulator",
     "armv7a-gatelevel",
     "armv7a-simulator",
     "armv7-gatelevel",
@@ -76,6 +78,7 @@ members = [
     "xls-writer",
     "doc-writer",
     "ppt-writer",
+    "pdp10-simulator",
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",
@@ -1339,6 +1342,7 @@ members = [
   "openrisc1000-simulator",
   "openrisc1000-gatelevel",
   "pa-risc11-gatelevel",
+  "xtensa-lx6-simulator",
   "pa-risc11-simulator",
   "x509-rsa-public-key",
   "rsa-pkcs1-v1-5-sha256",

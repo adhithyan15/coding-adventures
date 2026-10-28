@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:3cfe704b95a4372e",
+  "lessonIds": [
+    "ZH-C236-chuxian",
+    "ZH-W236-xian-appear",
+    "ZH-C236-faxian",
+    "ZH-C236-haipa",
+    "ZH-C236-xinghao",
+    "ZH-C236-chadianr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch236.txt",
+  "json": "chinese/narration/ch236.json",
+  "textHash": "fnv1a64:f7e4c5e546b3295f",
+  "jsonHash": "fnv1a64:c08a08f8b644dcff",
+  "findings": []
+}

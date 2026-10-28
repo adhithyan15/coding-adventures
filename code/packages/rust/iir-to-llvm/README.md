@@ -84,6 +84,16 @@ rather than a host-derived value.  This keeps test output byte-identical
 across CI runners.  Override via `.with_target("riscv32-unknown-elf")` when
 you actually intend to run `llc` for a non-default architecture.
 
+## Linkage
+
+A module with an `entry_point` is a whole program. The entry is emitted with
+default (external) linkage, because the C start-up code calls `main`. Every
+other function is `define internal`, visible only inside the module (#18416).
+Without that, a program function named `abort`, `malloc` or `calloc` was the
+executable's definition of that symbol, so the linked C runtime and the
+collector called the program instead of libc. A module with no entry point
+is a library and keeps every function external.
+
 ## Roadmap
 
 | Version | Scope                                                       |

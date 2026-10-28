@@ -254,6 +254,13 @@ An integer-only multiplication chain may temporarily exceed `2^53` up to
 into binary64's contiguous exact-integer range before widening. Checked
 overflow still fails closed, and real `/` may not consume an over-wide
 intermediate because its integer operand would widen before division.
+The same checked intermediate budget applies to integer-only additive
+subexpressions nested inside such a reduction, while a top-level additive
+result still has to fit the contiguous exact-integer range.
+Variable-free and tracked integer terms in that reduction are read directly as
+checked `i64` values, so odd integers above `2^53` do not round through
+binary64 before a later `div` or `mod`. Real-valued terms retain the narrower
+exact-binary64 boundary, and unreduced wide terms remain conservative.
 Independently bounded dynamic sign-rooted transforms may multiply under the
 same checked magnitude limit because every factor remains an exact integer.
 They may also add or subtract under a checked complete-sum magnitude limit,
@@ -304,6 +311,10 @@ Built-in `abs`, `sign`, and `entier` may normalize those checked variable-free
 integer reductions before they become a static offset, factor, or exponent.
 User-declared procedures with the same names retain runtime call semantics;
 dynamic inputs, zero divisors, and results beyond `2^53` remain conservative.
+Call-free integer arguments above `2^53` also stay in checked `i64` through
+those three normalizers when a following `div` or `mod` reduces the result
+before widening. Procedure-calling arguments, overflow, and unreduced wide
+results remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.

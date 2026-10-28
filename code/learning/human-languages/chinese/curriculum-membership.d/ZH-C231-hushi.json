@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C231-hushi",
+  "pathSegment": "ZH-PATH-231-DOCTOR231",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-231-DOCTOR231",
+      "order": 5
+    }
+  ]
+}

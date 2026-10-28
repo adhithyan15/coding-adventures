@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:be7d17a6db502a4e",
+  "lessonIds": [
+    "ZH-C212-dayin",
+    "ZH-C212-fuyin",
+    "ZH-C212-chongzhi",
+    "ZH-C212-yuyue",
+    "ZH-C212-lifa"
+  ],
+  "tex": "chinese/book/chapters/ch212-services-in-town.tex"
+}

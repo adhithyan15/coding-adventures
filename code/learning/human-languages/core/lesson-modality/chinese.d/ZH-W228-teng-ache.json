@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W228-teng-ache",
+    "language": "chinese",
+    "chapter": 228,
+    "sequence": 17517,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a63726da49d974a7",
+    "detachableSegments": [
+      "Script — the frame of 病, and a shape of five inside"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

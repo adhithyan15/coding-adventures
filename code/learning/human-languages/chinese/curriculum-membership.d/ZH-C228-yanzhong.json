@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C228-yanzhong",
+  "pathSegment": "ZH-PATH-228-ACHE228",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-228-ACHE228",
+      "order": 5
+    }
+  ]
+}

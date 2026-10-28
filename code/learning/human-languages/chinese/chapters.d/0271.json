@@ -1,0 +1,21 @@
+{
+  "chapter": 271,
+  "title": "Moods",
+  "label": "ch:zh-moods",
+  "canDo": "I can say I am worked up, moved, taken aback or bored, or that something is on my mind.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-R271-review-266-271",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say I am worked up, moved, taken aback or bored, or that something is on my mind.",
+    "assesses": [
+      "ZH-LEX-C271-MOOD271-01",
+      "ZH-LEX-C271-MOOD271-02",
+      "ZH-LEX-C271-MOOD271-03",
+      "ZH-LEX-C271-MOOD271-04",
+      "ZH-LEX-C271-MOOD271-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:feaf34ae53a1d11e",
+  "lessonIds": [
+    "ZH-C211-bendi",
+    "ZH-C211-waidi",
+    "ZH-C211-shizhongxin",
+    "ZH-C211-ditu",
+    "ZH-C211-daochu",
+    "ZH-R211-review-206-211"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch211.txt",
+  "json": "chinese/narration/ch211.json",
+  "textHash": "fnv1a64:57707fa6bc4ed454",
+  "jsonHash": "fnv1a64:e8aeadc7bd6c01b0",
+  "findings": []
+}

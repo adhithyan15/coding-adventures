@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-216-WRONG216",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "ZH-EXT-216-WRONG216"
+  ],
+  "after": []
+}

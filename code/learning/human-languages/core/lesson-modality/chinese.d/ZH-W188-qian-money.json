@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W188-qian-money",
+    "language": "chinese",
+    "chapter": 188,
+    "sequence": 15005,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4adcf8f1424c026b",
+    "detachableSegments": [
+      "Script — the metal piece, then two bars and a hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
