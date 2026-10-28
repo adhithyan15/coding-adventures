@@ -171,8 +171,10 @@ C4 accessibility titles and single-line or block descriptions are grammar-first
 and survive semantic IR plus structural layout into backend-neutral PaintScene
 metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
 bidirectional and backward relationships also preserve their authored endpoint
-arrows through structural layout and backend-neutral PaintInstructions. C4 remains
-partial while its remaining macro semantics and visual corpus are incomplete.
+arrows through structural layout and backend-neutral PaintInstructions. Core
+`UpdateElementStyle` background, font, and border colors flow through the same
+pipeline for C4 elements. C4 remains partial while its remaining macro semantics
+and visual corpus are incomplete.
 
 ## Required New Semantic Families
 

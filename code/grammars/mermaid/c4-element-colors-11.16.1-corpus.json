@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 UpdateElementStyle color vertical slice",
+  "fixtures": [
+    {
+      "name": "keyed-element-colors",
+      "source": "C4Context\nPerson(customer, \"Customer\", \"Uses online banking\")\nUpdateElementStyle(customer, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"#b91c1c\")"
+    },
+    {
+      "name": "positional-element-colors",
+      "source": "C4Container\nContainer(app, \"Banking App\", \"Rust\")\nUpdateElementStyle(app, \"#dcfce7\", \"#14532d\", \"#166534\")"
+    }
+  ]
+}
