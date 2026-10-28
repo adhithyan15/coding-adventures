@@ -573,7 +573,10 @@ shape.
 ### 6.2 `If (when: <expr>) { <then> } [Else { <else> }]`
 
 Lowers to two `<ContentControl>`s whose `Visibility` is bound to the
-`when:` expression and its negation. Each outer wrapper remains in the visual tree. A named inner Border uses
+`when:` expression and its negation. Default output retains both bodies eagerly,
+preserving control-local state while hidden. Only the explicit experimental
+`EmitOptions.experimental_deferred_conditionals` option adds deferred bodies:
+each outer wrapper remains in the visual tree, and a named inner Border uses
 x:Load with the same predicate to realize only the selected subtree. Inactive
 controls are unloaded; application values remain in the owner model, while
 control-local state is recreated when the branch becomes active. This changes
@@ -589,7 +592,7 @@ Else {
 }
 ```
 
-…lowers to:
+…with the experimental option enabled lowers to:
 
 ```xml
 <ContentControl Visibility="{x:Bind IsEditableAndEditing, Converter={StaticResource BoolToVis}}">

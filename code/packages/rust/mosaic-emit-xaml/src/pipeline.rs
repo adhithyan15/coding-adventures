@@ -276,6 +276,10 @@ impl ComponentRegistry {
 /// `events`); no project artifacts.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EmitOptions {
+    /// Opt in to experimental conditional subtree unloading. Default false
+    /// preserves retained-control lifetime; native compatibility is unproven.
+    pub experimental_deferred_conditionals: bool,
+
     /// Also emit `.csproj` + `App.xaml(.cs)` + `MainWindow.xaml(.cs)` +
     /// `Package.appxmanifest`. Default `false`. PR-1 ignores this flag —
     /// the project triple lands in PR-5.
@@ -357,6 +361,7 @@ pub struct LayoutChoice {
 impl Default for EmitOptions {
     fn default() -> Self {
         Self {
+            experimental_deferred_conditionals: false,
             emit_project: false,
             require_runtime: false,
             namespace: "Mosaic.Generated".to_string(),
@@ -551,6 +556,7 @@ fn emit_component(
     //    walker so `For`/`If` can register helpers, RowVms, and the
     //    converter requirement (PR-2).
     let mut ctx = EmitContext::new(name, &interface.slots, &interface.emits);
+    ctx.experimental_deferred_conditionals = options.experimental_deferred_conditionals;
     ctx.reserve_conditional_names(&layout.root);
     ctx.interface_name = &interface.component;
     ctx.registry = registry;
@@ -1124,6 +1130,7 @@ struct EmitContext<'a> {
     /// Tracks whether any `If` has been emitted. When `true`, the
     /// emitter writes a `BoolToVisibilityConverter` resource into the
     /// `<UserControl.Resources>` block.
+    experimental_deferred_conditionals: bool,
     needs_bool_to_vis: bool,
     /// Tracks whether a focus-capable Host control consumes UI15's built-in
     /// `state focused`. The emitter writes a `FocusStateToBoolConverter`
@@ -1250,6 +1257,7 @@ impl<'a> EmitContext<'a> {
             for_scope: Vec::new(),
             for_alias_counts: std::collections::HashMap::new(),
             helpers: Vec::new(),
+            experimental_deferred_conditionals: false,
             needs_bool_to_vis: false,
             needs_focus_state_converter: false,
             needs_string_equals_converter: false,
@@ -8535,9 +8543,11 @@ fn emit_if(
     //    inside a single `<ContentControl>` with bound Visibility. --
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
-    let branch_id = ctx.next_conditional_id();
+    let deferred = ctx.experimental_deferred_conditionals;
+    let branch_id = if deferred { ctx.next_conditional_id() } else { 0 };
+    let body_indent = indent + if deferred { 8 } else { 4 };
     let then_body =
-        emit_xaml_single_content_children(&if_node.children, indent + 8, part_styles, ctx)?;
+        emit_xaml_single_content_children(&if_node.children, body_indent, part_styles, ctx)?;
 
     let mut out = String::new();
     writeln!(
@@ -8548,9 +8558,13 @@ fn emit_if(
     // Keep the outer wrapper eager: x:Load cannot be a template root.
     // The inner subtree is created only while its branch is selected, so
     // inactive editors do not receive every owner text update.
+    if deferred {
     writeln!(out, "{pad2}<Border x:Name=\"MosaicConditional{branch_id}Then\" x:Load=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, Mode=OneWay}}\">").unwrap();
+    }
     out.push_str(&then_body);
+    if deferred {
     writeln!(out, "{pad2}</Border>").unwrap();
+    }
     writeln!(out, "{pad}</ContentControl>").unwrap();
 
     // -- 4. Emit the else-branch wrapper, when paired. Visibility is
@@ -8558,15 +8572,19 @@ fn emit_if(
     //    so the converter inverts the boolean. --
     if let Some(else_node) = else_node {
         let else_body =
-            emit_xaml_single_content_children(&else_node.children, indent + 8, part_styles, ctx)?;
+            emit_xaml_single_content_children(&else_node.children, body_indent, part_styles, ctx)?;
         writeln!(
             out,
             "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert, Mode=OneWay}}\"{extra}>"
         )
         .unwrap();
+    if deferred {
         writeln!(out, "{pad2}<Border x:Name=\"MosaicConditional{branch_id}Else\" x:Load=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert, Mode=OneWay}}\">").unwrap();
+    }
         out.push_str(&else_body);
+    if deferred {
         writeln!(out, "{pad2}</Border>").unwrap();
+    }
         writeln!(out, "{pad}</ContentControl>").unwrap();
         let _ = pad2; // silence unused if no Else
     } else {
@@ -8574,6 +8592,7 @@ fn emit_if(
     }
     Ok(out)
 }
+
 
 /// The generated converter resources required by this component. Added
 /// exactly once beneath the root resources tag.
@@ -20847,8 +20866,12 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
-        // A deferred child is below the eager wrapper, never the template root.
-        assert!(r.xaml.contains("<Border x:Name=\"MosaicConditional1Then\" x:Load=\"{x:Bind Editable, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">"));
+        assert!(!r.xaml.contains("x:Load="));
+        assert!(!r.xaml.contains("MosaicConditional"));
+        let deferred = from_pipeline(&c, &l, &empty_style("Foo"), None,
+            &EmitOptions { experimental_deferred_conditionals: true, ..opts() }).unwrap();
+        assert!(deferred.xaml.contains("x:Load="));
+        assert!(deferred.xaml.contains("MosaicConditional1Then"));
         // Then-branch content lives inside.
         assert!(r.xaml.contains("Text=\"editable!\""));
     }
@@ -20863,7 +20886,8 @@ mod tests {
             tag: "Column".to_string(), part_name: None, props: vec![],
             children: vec![if_node(LayoutPropValue::Keyword("true".to_string()), vec![]), later],
         });
-        let result = compile(&c, &l, &empty_style("MosaicConditional1Then"));
+        let result = from_pipeline(&c, &l, &empty_style("MosaicConditional1Then"), None,
+            &EmitOptions { experimental_deferred_conditionals: true, ..opts() }).unwrap();
         assert!(result.xaml.contains("x:Name=\"MosaicConditional4Then\""));
         assert!(result.xaml.contains("x:Name=\"MosaicConditional5Then\""));
         for id in 1..=3 {

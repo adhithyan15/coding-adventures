@@ -3,7 +3,7 @@
 
 ## [Unreleased]
 
-- Experimental conditional XAML realization keeps outer layout wrappers eager and defers inactive bodies with named x:Load Borders. Generated names reserve component, slot and authored-part names. Inactive control-local state is recreated; model values persist. Native lifecycle compatibility and broader performance acceptance remain pending in draft PR #18512.
+- Explicit opt-in `EmitOptions.experimental_deferred_conditionals` (default false) keeps outer layout wrappers eager and defers inactive bodies with named x:Load Borders. Generated names reserve component, slot and authored-part names. Inactive control-local state is recreated; model values persist. Native lifecycle compatibility and broader performance acceptance remain pending in draft PR #18512.
 
 - Compound visual-state predicates inside repeated templates now use row-VM helper properties and invalidate row projections when referenced component slots change, preserving nested selection/editing backgrounds (#14274).
 

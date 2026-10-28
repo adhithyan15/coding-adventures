@@ -19,7 +19,12 @@ resources. Values are case-insensitive. Preference lists, `normal`, cascade
 keywords and resource expressions are unsupported; they do not emit enum values.
 WinUI retains control of high-contrast behavior.
 
-## Conditional subtree lifecycle
+## Experimental conditional subtree lifecycle
+
+Default output retains eager conditional bodies and their control-local state.
+Only `EmitOptions.experimental_deferred_conditionals = true` opts in to the
+following experiment; production hosts do not enable it. The opt-in path has an
+unresolved TaskApp Board lifecycle crash and must not be promoted yet.
 
 `If`/`Else` retain their outer layout wrappers and use a named `x:Load` Border
 for each branch body. Only the selected body is instantiated. Owner-model values
