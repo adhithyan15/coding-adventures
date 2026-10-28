@@ -2347,6 +2347,68 @@ fn exec_call_closure(
 // need a flush boundary (e.g. after printing a prompt) can call
 // `host/flush_stdout` (a future addition).  The OS flushes all open
 // stdio streams on normal process exit.
+//
+// ## The stdin seam (`with_host_stdin`)
+//
+// `host/read_byte` and `host/read_line` never name `std::io::stdin()`
+// directly.  They ask `with_host_stdin` for "the byte source", and
+// `with_host_stdin` decides what that is:
+//
+//   build        | byte source handed to the host call
+//   -------------+------------------------------------------------------
+//   normal       | the process's real stdin, locked (`StdinLock`)
+//   `cfg(test)`  | an in-memory reader a test installed with
+//                | `with_fake_stdin`, else the real stdin as above
+//
+// Why bother?  Two reasons, both about testing the *VM*, not the OS:
+//
+// 1. **Determinism.**  A test that reads the real stdin gets whatever the
+//    test harness happens to have on fd 0: `/dev/null` in CI (so it only
+//    ever sees EOF), a terminal when a developer runs `cargo test` by hand
+//    (so it *blocks* waiting for a keypress).  An in-memory reader lets a
+//    test say "the input is `b"A"`" and assert the VM returns `65`.
+//
+// 2. **Miri.**  Miri runs tests with host isolation on, and a `read` from
+//    the real stdin is an *unsupported operation* there — it does not
+//    fail with an `io::Error` the VM could map to EOF, it aborts the whole
+//    test binary.  One stdin-reading test used to take every later twig-vm
+//    test down with it under `code/scripts/miri-twig-vm.sh`.  An in-memory
+//    reader is plain Rust, so Miri runs it like any other code.
+//
+// The override exists only in test builds, so a release build of the VM
+// has exactly one stdin path and no thread-local lookup on it.  The
+// override is thread-local because libtest runs tests on parallel
+// threads: one test's fake input must never leak into another test.
+
+#[cfg(test)]
+thread_local! {
+    /// The in-memory stdin installed by `tests::with_fake_stdin`, if any.
+    ///
+    /// `Box<dyn BufRead>` rather than a concrete `Cursor` so a test can
+    /// also install a reader that *fails*, to exercise the `HostIo` path.
+    static FAKE_STDIN: std::cell::RefCell<Option<Box<dyn std::io::BufRead>>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// Run `f` against the VM's stdin byte source (see "The stdin seam"
+/// above): a test-installed fake when there is one, the real, locked
+/// process stdin otherwise.
+fn with_host_stdin<T>(f: impl FnOnce(&mut dyn std::io::BufRead) -> T) -> T {
+    #[cfg(test)]
+    {
+        // Take the fake out of the cell for the duration of the call (so
+        // no `RefCell` borrow is held while `f` runs), then put it back
+        // so the next read continues where this one stopped — exactly
+        // like consecutive reads from a real stream.
+        let mut fake = FAKE_STDIN.with(|cell| cell.borrow_mut().take());
+        if let Some(reader) = fake.as_mut() {
+            let out = f(reader.as_mut());
+            FAKE_STDIN.with(|cell| *cell.borrow_mut() = fake);
+            return out;
+        }
+    }
+    f(&mut std::io::stdin().lock())
+}
 
 /// Dispatch a `call_builtin "host/<capability>"` instruction.
 ///
@@ -2395,10 +2457,12 @@ fn exec_host_call(
         // CLR:  call int32 [System.Console]System.Console::Read()
         // BEAM: apply twig_host:read_byte/0
         "read_byte" => {
-            use std::io::Read as _;
             let mut buf = [0u8; 1];
-            let n = std::io::stdin()
-                .read(&mut buf)
+            // `with_host_stdin` hands us the real stdin (or a test's
+            // in-memory stand-in — see "The stdin seam" above).  A read
+            // of 0 bytes is end-of-file; a genuine I/O error is *not*
+            // folded into EOF but surfaces as `HostIo`.
+            let n = with_host_stdin(|stdin| stdin.read(&mut buf))
                 .map_err(|e| RunError::HostIo(e.to_string()))?;
             let result = if n == 0 {
                 LispyValue::int(-1) // EOF sentinel
@@ -2479,11 +2543,12 @@ fn exec_host_call(
             /// Maximum bytes we will read for a single line.
             const MAX_LINE_BYTES: u64 = 1024 * 1024; // 1 MiB
             let mut line = String::new();
-            let stdin = std::io::stdin();
-            let mut limited = stdin.lock().take(MAX_LINE_BYTES + 1);
-            limited
-                .read_line(&mut line)
-                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            // `&mut dyn BufRead` is itself `BufRead`, so `take()` wraps the
+            // borrowed byte source without consuming it.
+            with_host_stdin(|stdin| {
+                stdin.take(MAX_LINE_BYTES + 1).read_line(&mut line)
+            })
+            .map_err(|e| RunError::HostIo(e.to_string()))?;
             // Reject lines that hit or exceed the cap.
             if line.len() as u64 > MAX_LINE_BYTES {
                 return Err(RunError::HostIo(
@@ -3760,7 +3825,14 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore = "2^25 safe-Rust counter ticks; hours under Miri, no unsafe or heap-seam code reached")]
     fn execution_budget_enforces_cap() {
+        // Not run under Miri: this loop ticks a plain `u64` counter
+        // MAX_INSTRUCTIONS_PER_RUN (2^25) times.  It is ordinary safe Rust
+        // with no pointers, no `unsafe` and no dynval-runtime calls, so
+        // Miri has nothing to check here — but it interprets every tick,
+        // which took ~75 min alone and pushed miri-twig-vm.sh past the
+        // 120-min CI timeout.  Native `cargo test` still runs it.
         let mut b = ExecutionBudget::new();
         // Burn through the budget — increment to one past the limit.
         for _ in 0..MAX_INSTRUCTIONS_PER_RUN {
@@ -4282,7 +4354,7 @@ mod tests {
             IIRInstr::new(
                 "call_builtin",
                 Some("nil_v".into()),
-                vec![Operand::Var("make_nil".into())],
+                vec![Operand::Var("dyn_nil".into())],
                 "any",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("nil_v".into())], "any"),
@@ -4469,7 +4541,12 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore = "2^16 format!+HashMap inserts; very slow under Miri, safe Rust only")]
     fn ic_table_rejects_too_many_functions() {
+        // Not run under Miri: 2^16 `format!` + `HashMap` inserts of
+        // safe Rust (no `unsafe`, no dynval-runtime seam) — interpreting
+        // them costs tens of minutes and checks nothing new.  Native
+        // `cargo test` still runs it.
         // PR 7 security review (MEDIUM #2): adding the
         // MAX_IC_FUNCTIONS+1th distinct function name fails.
         // We don't actually allocate 65k entries (slow); just
@@ -4746,7 +4823,10 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore = "2^16 format!+HashMap inserts; very slow under Miri, safe Rust only")]
     fn profile_table_rejects_too_many_functions() {
+        // Not run under Miri: same shape and reason as
+        // `ic_table_rejects_too_many_functions` (2^16 safe-Rust inserts).
         let mut p = ProfileTable::new();
         for i in 0..MAX_PROFILED_FUNCTIONS {
             p.note_call(&format!("f{i}")).unwrap();
@@ -4762,7 +4842,10 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(miri, ignore = "2^20 safe-Rust HashMap inserts; hours under Miri, no unsafe reached")]
     fn profile_table_rejects_too_many_instruction_slots() {
+        // Not run under Miri: 2^20 safe-Rust `HashMap` inserts — hours of
+        // interpretation, no `unsafe` or dynval-runtime seam involved.
         // PR 8 security review (Medium #3): cap on the per-instr
         // slot map.  This prevents long-lived ProfileTables
         // reused across many runs from growing without bound.
@@ -5033,30 +5116,159 @@ mod tests {
         }
     }
 
-    #[test]
-    fn host_read_byte_returns_value_in_dest() {
-        // On most CI environments stdin is /dev/null so read_byte returns
-        // the EOF sentinel (-1).  Either way the call must succeed and
-        // store an integer in the dest register.
-        use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-        let func = IIRFunction::new("main", vec![], "i32", vec![
+    // ── host/ stdin tests — fed from an in-memory reader ──────────────
+    //
+    // None of these touch the process's real stdin.  `with_fake_stdin`
+    // installs an in-memory reader behind the `with_host_stdin` seam (see
+    // "The stdin seam" next to `exec_host_call`), so each test states its
+    // input and asserts the exact value the VM returns.  That keeps them:
+    //
+    //   - deterministic: no dependence on what the harness put on fd 0,
+    //     and no hang when a developer runs `cargo test` at a terminal;
+    //   - Miri-clean: a real stdin `read` is an unsupported operation
+    //     under Miri's isolation and aborts the whole test binary, which
+    //     used to silence every later twig-vm test in miri-twig-vm.sh.
+
+    /// Restores "no fake stdin" when dropped — even if the test body
+    /// panics — so a failing test cannot leave its input behind for the
+    /// next test libtest schedules on this thread.
+    struct FakeStdinGuard;
+
+    impl Drop for FakeStdinGuard {
+        fn drop(&mut self) {
+            FAKE_STDIN.with(|cell| *cell.borrow_mut() = None);
+        }
+    }
+
+    /// Run `body` with `host/read_byte` and `host/read_line` reading from
+    /// `input` instead of the real stdin.  The reader persists across
+    /// every `run` inside `body`, like one real stream would.
+    fn with_fake_stdin<T>(
+        input: impl std::io::BufRead + 'static,
+        body: impl FnOnce() -> T,
+    ) -> T {
+        FAKE_STDIN.with(|cell| *cell.borrow_mut() = Some(Box::new(input)));
+        let _guard = FakeStdinGuard;
+        body()
+    }
+
+    /// A byte source whose every read fails, to drive the `HostIo` path.
+    struct FailingStdin;
+
+    impl std::io::Read for FailingStdin {
+        fn read(&mut self, _buf: &mut [u8]) -> std::io::Result<usize> {
+            Err(std::io::Error::other("simulated stdin failure"))
+        }
+    }
+
+    impl std::io::BufRead for FailingStdin {
+        fn fill_buf(&mut self) -> std::io::Result<&[u8]> {
+            Err(std::io::Error::other("simulated stdin failure"))
+        }
+        fn consume(&mut self, _amt: usize) {}
+    }
+
+    /// `main` = `v = call_builtin <builtin>; ret v` — one host read whose
+    /// result is the program's result.
+    fn make_host_read_module(builtin: &str) -> IIRModule {
+        use interpreter_ir::{IIRFunction, IIRInstr, Operand};
+        let func = IIRFunction::new("main", vec![], "any", vec![
             IIRInstr::new(
                 "call_builtin",
-                Some("ch".into()),
-                vec![Operand::Var("host/read_byte".into())],
-                "i32",
+                Some("v".into()),
+                vec![Operand::Var(builtin.into())],
+                "any",
             ),
-            IIRInstr::new("ret", None, vec![Operand::Var("ch".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "any"),
         ]);
         let mut module = IIRModule::new("test_module", "twig");
         module.entry_point = Some("main".into());
         module.functions.push(func);
-        let result = run(&module);
-        assert!(result.is_ok(), "host/read_byte should not fail: {result:?}");
-        assert!(
-            result.unwrap().as_int().is_some(),
-            "host/read_byte must store an integer in dest"
-        );
+        module
+    }
+
+    /// The bytes of a heap string returned by `host/read_line`.
+    fn heap_string(v: LispyValue) -> Vec<u8> {
+        // SAFETY: `v` came straight out of the VM's dispatch loop, whose
+        // heap tags always describe real, live (`Box::leak`ed) objects.
+        unsafe { dynval_runtime::heap::string_bytes(v) }
+            .expect("host/read_line must return a heap string")
+            .to_vec()
+    }
+
+    #[test]
+    fn host_read_byte_returns_value_in_dest() {
+        // The byte read lands in the dest register as a plain integer.
+        let module = make_host_read_module("host/read_byte");
+        let v = with_fake_stdin(&b"A"[..], || run(&module))
+            .expect("host/read_byte should not fail");
+        assert_eq!(v.as_int(), Some(65), "'A' is byte 65");
+    }
+
+    #[test]
+    fn host_read_byte_returns_eof_sentinel_on_empty_input() {
+        // Empty input is EOF, which `getchar` convention spells −1.
+        let module = make_host_read_module("host/read_byte");
+        let v = with_fake_stdin(&b""[..], || run(&module))
+            .expect("EOF is a value, not an error");
+        assert_eq!(v.as_int(), Some(-1));
+    }
+
+    #[test]
+    fn host_read_byte_reads_consecutive_bytes_then_eof() {
+        // Three reads from one stream.  Pins down the two edge bytes:
+        //   0x00 must come back as 0 — a real byte, NOT confused with EOF;
+        //   0xFF must come back as 255 — zero-extended, NOT sign-extended
+        //        to −1 (which would also be confused with EOF).
+        // and that the third read, past the end, is the EOF sentinel.
+        let module = make_host_read_module("host/read_byte");
+        let got: Vec<Option<i64>> = with_fake_stdin(&b"\x00\xFF"[..], || {
+            (0..3).map(|_| run(&module).expect("read ok").as_int()).collect()
+        });
+        assert_eq!(got, vec![Some(0), Some(255), Some(-1)]);
+    }
+
+    #[test]
+    fn host_read_byte_surfaces_read_error_as_host_io() {
+        // A genuine I/O failure is reported, not silently folded into EOF.
+        let module = make_host_read_module("host/read_byte");
+        let err = with_fake_stdin(FailingStdin, || run(&module)).unwrap_err();
+        match err {
+            RunError::HostIo(msg) => assert!(msg.contains("simulated stdin failure")),
+            other => panic!("expected HostIo, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn host_read_line_strips_lf_and_crlf_then_returns_empty_on_eof() {
+        // "unix\n"  → "unix"   (LF stripped)
+        // "dos\r\n" → "dos"    (CRLF stripped)
+        // "tail"    → "tail"   (last line with no terminator)
+        // <EOF>     → ""       (documented EOF result)
+        let module = make_host_read_module("host/read_line");
+        let lines: Vec<Vec<u8>> = with_fake_stdin(&b"unix\ndos\r\ntail"[..], || {
+            (0..4)
+                .map(|_| heap_string(run(&module).expect("read_line ok")))
+                .collect()
+        });
+        let expected: Vec<&[u8]> = vec![b"unix", b"dos", b"tail", b""];
+        assert_eq!(lines, expected);
+    }
+
+    #[test]
+    fn host_read_line_rejects_invalid_utf8_as_host_io() {
+        // `read_line` builds a Rust `String`, so non-UTF-8 input is an
+        // `InvalidData` I/O error — surfaced as HostIo, not a panic.
+        let module = make_host_read_module("host/read_line");
+        let err = with_fake_stdin(&b"\xFF\xFE\n"[..], || run(&module)).unwrap_err();
+        assert!(matches!(err, RunError::HostIo(_)), "got {err:?}");
+    }
+
+    #[test]
+    fn host_read_line_surfaces_read_error_as_host_io() {
+        let module = make_host_read_module("host/read_line");
+        let err = with_fake_stdin(FailingStdin, || run(&module)).unwrap_err();
+        assert!(matches!(err, RunError::HostIo(_)), "got {err:?}");
     }
 
     #[test]

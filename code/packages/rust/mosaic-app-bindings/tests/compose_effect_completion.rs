@@ -375,6 +375,7 @@ fn the_emitted_compose_host_answers_effects() {
         "unconvertible",
         "runaway",
         "deferred",
+        "quarantine",
     ] {
         let stdout = run(
             Command::new("java")
@@ -428,6 +429,15 @@ fn the_emitted_compose_host_answers_effects() {
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",
         "snapshot works again once the deferred effect is answered",
+        "an earlier quarantine is never replaced",
+        "a directory at a quarantine name is skipped",
+        "a rejected file moves to the first free name",
+        "a file moved aside leaves saving on",
+        "fresh state is saved once the rejected file is aside",
+        "with every name taken, the warning says nothing is saved",
+        "a file that could not move aside is not written over",
+        "the warning stays showing after an event",
+        "no quarantine was replaced",
     ] {
         assert!(
             transcript.contains(expected),

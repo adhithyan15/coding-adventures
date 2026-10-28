@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Takeaway",
+  "label": "ch:zh-takeaway",
+  "canDo": "I can order a takeaway, give my address, ask to take food home, and ask for dim sum.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C120-dianxin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: I can order a takeaway, give my address, ask to take food home, and ask for dim sum.",
+    "assesses": [
+      "ZH-LEX-C120-TAKEAWAY120-03",
+      "ZH-LEX-C120-TAKEAWAY120-04",
+      "ZH-LEX-C120-TAKEAWAY120-05"
+    ]
+  }
+}

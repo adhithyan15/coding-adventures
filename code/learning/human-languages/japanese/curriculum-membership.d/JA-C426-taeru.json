@@ -1,0 +1,11 @@
+{
+  "id": "JA-C426-taeru",
+  "pathSegment": "JA-PATH-426-FEEL426",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-426-FEEL426",
+      "order": 4
+    }
+  ]
+}

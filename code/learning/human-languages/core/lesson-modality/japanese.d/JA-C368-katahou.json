@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C368-katahou",
+    "language": "japanese",
+    "chapter": 368,
+    "sequence": 21670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a97a8bf4a712818f"
+  },
+  "findings": []
+}

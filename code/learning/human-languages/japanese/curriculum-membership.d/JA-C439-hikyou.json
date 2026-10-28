@@ -1,0 +1,11 @@
+{
+  "id": "JA-C439-hikyou",
+  "pathSegment": "JA-PATH-439-BRAVE439",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-439-BRAVE439",
+      "order": 2
+    }
+  ]
+}

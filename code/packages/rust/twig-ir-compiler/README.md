@@ -126,6 +126,42 @@ print
 
 Builtin references in non-call positions wrap into a `make_builtin_closure` so they can be passed as values to higher-order functions.
 
+## Reserved names
+
+Every name beginning with two underscores (ignoring ASCII case, in any
+`/`-separated segment) is reserved for the implementation, as in C. The
+known owners are `__lisp_`, `__dyn_`, `__lambda_`, `__twig_`, `__gc_`,
+`__aot_` and `__clo_` (`RESERVED_PREFIXES`), and an error names the one a
+refused name uses; any other `__` name is refused as `"__"`. They belong to
+the functions later lowering passes add to the module, to the native
+runtime's symbols, to the functions this compiler lifts each `(lambda …)`
+into (`__lambda_0`, …), and to **registers**: a parameter or `let` name
+becomes an IIR register verbatim, in the same function as the registers the
+compiler and later passes invent (`__aot_str0_len`, `__clo_argnil1`,
+`iir-to-llvm`'s `__tobool4` …). This compiler's own temporaries are
+`__t{n}_{what}` and its labels `__l{n}_{what}`, so no program name can
+reach them. (They were `_n1`, `_else1`, …, which a program could spell:
+`(let ((_n2 40)) (+ _n2 2))` computed 4.) A program may not define, bind or
+reference a reserved name:
+
+```text
+(define (__lisp_equal a b) 42)      → TwigCompileError at 1:10: the name "__lisp_equal" is reserved
+(define (__twig_print_i64 n) 0)     → refused: native `print` would have called it
+(define (__lambda_0 y) …)           → refused: a lifted lambda would have shared its name
+(let ((__aot_str0_len 9)) …)        → refused: twig-aot's string length register
+(let ((_n2 40)) (+ _n2 2))          → 42: one underscore is the program's
+'__lisp_equal                       → fine: a quoted symbol is data, not a name
+```
+
+The generated lambda names stay `__lambda_N` rather than using a character
+Twig cannot spell. A generated name reaches every backend's symbol table,
+and no character is legal unquoted in all of them: the JVM forbids `.` in a
+method name, and LLVM quotes anything outside `[-a-zA-Z$._0-9]`. Reserving
+the prefix changes no symbol.
+
+`RESERVED_PREFIXES`, `RESERVED_NAMESPACE` and `reserved_prefix` are exported
+for tools that want the same rule.
+
 ## Usage
 
 ```rust

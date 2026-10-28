@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Around Town",
+  "label": "ch:zh-around-town",
+  "canDo": "I can name the bank, the supermarket, the park, the library and the post office.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C100-youju",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: I can name the bank, the supermarket, the park, the library and the post office.",
+    "assesses": [
+      "ZH-LEX-C100-TOWN100-03",
+      "ZH-LEX-C100-TOWN100-04",
+      "ZH-LEX-C100-TOWN100-05"
+    ]
+  }
+}

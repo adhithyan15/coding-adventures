@@ -52,11 +52,11 @@ BLOB_COLUMNS = [
     ("prism_config", "prism/config.yml"),
 ]
 KINDS = {
-    ".tokens": "tokens: LANG84 R0 lexical slice",
+    ".tokens": "tokens: LANG84 R0 and R1b lexical slices",
     ".grammar": "grammar: rb-int-puts subset over the R0 tokens",
 }
 PARTIAL = {
-    ".tokens": "# PARTIAL: lexes only the R0 constructs listed below; see code/grammars/ruby/README.md.",
+    ".tokens": "# PARTIAL: lexes only the R0 and R1b constructs listed below; see code/grammars/ruby/README.md.",
     ".grammar": "# PARTIAL: parses only the rb-int-puts subset below; everything else is a parse error.",
 }
 

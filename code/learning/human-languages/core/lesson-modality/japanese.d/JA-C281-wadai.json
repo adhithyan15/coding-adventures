@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C281-wadai",
+    "language": "japanese",
+    "chapter": 281,
+    "sequence": 17010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc71a7d1a9645fe0"
+  },
+  "findings": []
+}

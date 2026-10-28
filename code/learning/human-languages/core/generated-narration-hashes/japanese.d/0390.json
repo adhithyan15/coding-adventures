@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:f6aacf5d83e42fff",
+  "lessonIds": [
+    "JA-C390-kousokudouro",
+    "JA-C390-shasen",
+    "JA-C390-sokudo",
+    "JA-C390-menkyo",
+    "JA-C390-oikosu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch390.txt",
+  "json": "japanese/narration/ch390.json",
+  "textHash": "fnv1a64:b5972a1e5abc0f76",
+  "jsonHash": "fnv1a64:a634b824b165d30d",
+  "findings": []
+}

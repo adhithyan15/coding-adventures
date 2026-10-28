@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:1c9d7377222ca85c",
+  "lessonIds": [
+    "JA-C398-onsen",
+    "JA-C398-yuge",
+    "JA-C398-noboseru",
+    "JA-C398-tsukaru",
+    "JA-C398-kutsurogu"
+  ],
+  "tex": "japanese/book/chapters/ch398-the-hot-spring.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C181-beizi",
+    "language": "chinese",
+    "chapter": 181,
+    "sequence": 14180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fd918b09e8cd7a5"
+  },
+  "findings": []
+}

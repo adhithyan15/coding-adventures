@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "At the Shrine Gate",
+  "label": "ch:ja-at-the-shrine-gate",
+  "canDo": "I can visit a shrine and follow its customs.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C406-sasageru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can visit a shrine and follow its customs.",
+    "assesses": [
+      "JA-LEX-C406-TORII406-03",
+      "JA-LEX-C406-TORII406-04",
+      "JA-LEX-C406-TORII406-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:319a52dae8dfccb7",
+  "lessonIds": [
+    "ZH-C177-tuijian",
+    "ZH-C177-doufu",
+    "ZH-C177-bao",
+    "ZH-C177-xinxian",
+    "ZH-C177-nanchi"
+  ],
+  "tex": "chinese/book/chapters/ch177-full-already.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C243-xuehua",
+    "language": "chinese",
+    "chapter": 243,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb594b0e4361c9de"
+  },
+  "findings": []
+}

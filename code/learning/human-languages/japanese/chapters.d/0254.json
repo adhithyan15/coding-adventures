@@ -1,0 +1,23 @@
+{
+  "chapter": 254,
+  "title": "What I Think, and Why",
+  "label": "ch:ja-what-i-think-and-why",
+  "canDo": "I can say what I think with a plain clause and to omoimasu, ask dō omoimasu ka, give a reason with kara or node, and say who suggested something (iidashimashita).",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-R254-what-i-think-and-why",
+    "kind": "production",
+    "summary": "Complete JA-R254-what-i-think-and-why: say what you think and why, and ask someone else's opinion.",
+    "assesses": [
+      "JA-GRAMMAR-C254-OPINION-01",
+      "JA-GRAMMAR-C254-REASON-01",
+      "JA-GRAMMAR-C254-OPINION-02",
+      "JA-GRAMMAR-C254-REASON-02",
+      "JA-LEX-C254-IIDASU-01",
+      "JA-LEX-C254-IKEN-01",
+      "JA-SCRIPT-KANJI-DASU-01"
+    ]
+  }
+}

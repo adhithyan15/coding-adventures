@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "And Then",
+  "label": "ch:ja-and-then",
+  "canDo": "I can link the steps of a story with then, but and however.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C315-miharu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can link the steps of a story with then, but and however.",
+    "assesses": [
+      "JA-LEX-C315-SURUTO315-03",
+      "JA-LEX-C315-SURUTO315-04",
+      "JA-LEX-C315-SURUTO315-05"
+    ]
+  }
+}

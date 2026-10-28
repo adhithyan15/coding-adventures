@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W38-fan",
+    "language": "chinese",
+    "chapter": 38,
+    "sequence": 3375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d017746928e01c45",
+    "detachableSegments": [
+      "Script — the food piece, then four strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

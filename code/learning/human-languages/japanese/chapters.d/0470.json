@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Songs and Tunes",
+  "label": "ch:ja-songs-and-tunes",
+  "canDo": "I can talk about songs I like.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C470-kuchibue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about songs I like.",
+    "assesses": [
+      "JA-LEX-C470-SONG470-03",
+      "JA-LEX-C470-SONG470-04",
+      "JA-LEX-C470-SONG470-05"
+    ]
+  }
+}

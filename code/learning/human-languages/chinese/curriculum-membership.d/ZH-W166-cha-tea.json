@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W166-cha-tea",
+  "pathSegment": "ZH-PATH-166-TEA166",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-166-TEA166",
+      "order": 2
+    }
+  ]
+}

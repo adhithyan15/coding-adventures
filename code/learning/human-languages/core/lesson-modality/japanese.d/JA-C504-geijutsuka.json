@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C504-geijutsuka",
+    "language": "japanese",
+    "chapter": 504,
+    "sequence": 29270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2244a7e3fa01189d"
+  },
+  "findings": []
+}

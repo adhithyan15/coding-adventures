@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:e1f7258f7df3b3b1",
+  "lessonIds": [
+    "ZH-C37-zhe",
+    "ZH-W37-zhe",
+    "ZH-C37-zhege",
+    "ZH-C37-na",
+    "ZH-W37-na",
+    "ZH-C37-nage-which",
+    "ZH-C37-nage"
+  ],
+  "tex": "chinese/book/chapters/ch37-this-one-and-that-one.tex"
+}

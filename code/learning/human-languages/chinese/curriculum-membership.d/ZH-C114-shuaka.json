@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C114-shuaka",
+  "pathSegment": "ZH-PATH-114-PAY114",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-114-PAY114",
+      "order": 3
+    }
+  ]
+}

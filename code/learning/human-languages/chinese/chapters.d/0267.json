@@ -1,0 +1,20 @@
+{
+  "chapter": 267,
+  "title": "Actors and Jokes",
+  "label": "ch:zh-actors-and-jokes",
+  "canDo": "I can talk about actors, TV shows and stars, and jokes that are funny.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C267-haoxiao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can talk about actors, TV shows and stars, and jokes that are funny.",
+    "assesses": [
+      "ZH-LEX-C267-FILM267-03",
+      "ZH-LEX-C267-FILM267-04",
+      "ZH-LEX-C267-FILM267-05",
+      "ZH-SCRIPT-XIAO-LAUGH-01"
+    ]
+  }
+}

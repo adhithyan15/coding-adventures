@@ -1,0 +1,11 @@
+{
+  "id": "JA-C416-hinode",
+  "pathSegment": "JA-PATH-416-YOAKE416",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-416-YOAKE416",
+      "order": 1
+    }
+  ]
+}

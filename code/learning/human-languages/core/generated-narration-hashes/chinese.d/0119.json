@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:4f37cb1fb7374821",
+  "lessonIds": [
+    "ZH-C119-shubao",
+    "ZH-W119-bao-wrap",
+    "ZH-C119-xiangzi",
+    "ZH-C119-hezi",
+    "ZH-C119-daizi",
+    "ZH-C119-xingli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch119.txt",
+  "json": "chinese/narration/ch119.json",
+  "textHash": "fnv1a64:881ff859c57e52a9",
+  "jsonHash": "fnv1a64:95261230c28dfbc5",
+  "findings": []
+}

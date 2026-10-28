@@ -18053,6 +18053,37 @@ of scope.
 
 PR #18174 actually merged as `bd533925647b7fbac74eba35e611a8ba3930757f`; PR #18147 previously merged its frozen16 adoption. The unpublished67 draft remains separate. Earlier three-slot and draft-publication statements above are historical. Existing PR #18183 is now the sole active implementation. Its original `231de32b` head is preserved locally while its net change is carefully rebased onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. Actual CI fails before compilation in Cabal3.10.3.0 coverage planning for vector0.13.2; preserve coverage and inert metadata APIs while validating a package-local repair. Local native13tests/all359records, productionHPC100percent expressions/alternatives, Go15packages/84.6percentcoverage, vet/build, realplanner14-packageclosure and metadata/parity checks pass. Runtime source80a01 passed independent review; final documentation delta and fresh hosted CI remain required. See [the exact recovery evidence](../packages/haskell/starlark-compiler/VALIDATION.md).
 
+## October 25, 2026: bounded .NET Bezier flattening preparation
+
+With two independent .NET build-quality repairs prepared behind the occupied
+publication ceiling, the next ready two-language tranche is
+`geometry-bezier2d-flattening-csharp-fsharp`. Its sole dependency, the G2D02
+safe-flattening contract and nine-case neutral corpus, merged in PR #17097.
+
+Both existing .NET implementations use midpoint-only flatness and unbounded
+recursive list concatenation. That accepts the symmetric S curve whose
+midpoint lies on its chord, collapses collinear overshoot against an infinite
+line, permits zero tolerance, and has no deterministic work failure. Preserve
+the public `ToPolyline` return signatures while adopting the reviewed
+finite-segment control-point bound and a per-call maximum depth of 32 plus
+65,535 total splits. Invalid tolerance, nonfinite controls, nonfinite derived
+geometry, or an exhausted budget must throw before any partial polyline can be
+returned.
+
+The native tests must load all nine JSON cases dynamically and independently
+verify chord/subdivision disposition, endpoint ordering, finite output, and
+the proved budget-error case. Both package fronts must enforce at least 95%
+production line coverage, and both dependent Arc2D suites must stay green.
+Evaluation, derivatives, splitting, bounding boxes, Arc2D behavior, and other
+language lanes remain outside this implementation repair.
+
+Independent review then found that direct squaring in the chord-distance norm
+could underflow for finite subnormal geometry and incorrectly accept a chord.
+Both lanes now scale their norm and projection arithmetic before squaring; a
+shared-shape `Double.Epsilon` regression reaches the bounded failure instead
+of failing open. The same review reconciled release metadata by keeping the
+existing public package version and labeling these changes Unreleased.
+
 ## October 25, 2026: Python gradient-descent front preparation
 
 After the local Swift hash-functions tranche reached an exact-head independent
@@ -18189,6 +18220,20 @@ the previously reviewed `e60a15a73ed7ed2d090b996b0b184454e811b947` lease.
 Fresh hosted checks must then finish acceptably on the new head before guarded
 auto-merge is enabled. PR #18293 remains a separate owner and is not modified
 by this rebase.
+
+## October 26, 2026: post-main-advance .NET Bezier reconciliation
+
+PR #18293's exact `7ef39656d921c1def6b34c152c7cab7e7ca3bd7c` head
+remained failure-free with guarded auto-merge enabled, but became conflicting
+again when main advanced to `0be03745d775ffa9ee8c66ffda1700baa76ba58f`.
+Preserve the published branch history by merging that exact main parent rather
+than rebasing. The only textual conflicts are this append-only roadmap and the
+shared lifecycle object; retain both owners' receipts. Re-run both native
+Bezier2D and dependent Arc2D pairs, the exact G2D02 selector and atomic-plan
+tests, state and lesson validation, JSON and diff hygiene, and independent
+exact-head review before publishing the merge commit. Existing auto-merge may
+remain enabled, but only replacement checks for the final exact head may allow
+GitHub to merge it.
 ## October 26, 2026: Swift hash merge and Python conflict reconciliation
 
 Swift hash-functions PR #18312 completed every exact-head check at
@@ -18284,3 +18329,40 @@ are #18293 at exact head `c7b1e98687d3c762a98a9beed61ad71f586ca484`
 and #18355 at exact head `f27058ffa18abe1fb7a7167237eb0b761414162f`;
 GitHub reports both open, non-draft, and mergeable. The live parity set is now
 exactly {18293, 18355, 18367}.
+## October 26, 2026: Python merge and .NET Bezier conflict reconciliation
+
+Python gradient-descent PR #18324 completed its guarded lifecycle and merged as
+`1bb58a0d7ed8d818d622e69890234d96b6e26b3a`. That exact receipt is present on
+current origin/main. PR #18293's published
+`038a3cea63d20e86bcc96bca367466dd653470f4` head then became conflicting.
+Preserve both tranches and the published .NET history by merging exact current
+main normally, retaining the Python merge receipt and the bounded .NET owner.
+Kotlin micro-qr PR #18355 is the other live parity owner at exact published head
+`2687144fb38e534dc6d308864ef0eb6b1fb97a63`; its lifecycle exists only on its
+published branch, so retain its active slot and URL while this branch reconciles
+main. The live publication set is therefore {#18293, #18355}.
+Re-run the native Bezier2D and dependent Arc2D suites, exact G2D02 selector and
+atomic-plan checks, state/lesson/JSON/diff hygiene, and independent exact-head
+review. Existing guarded auto-merge may remain enabled, but only replacement
+checks on the final exact head may permit the merge.
+
+## October 26, 2026: .NET Bezier merge and Swift conflict reconciliation
+
+.NET Bezier PR #18293 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact independently reviewed head
+`c7b1e98687d3c762a98a9beed61ad71f586ca484` as
+`960397b253474e002be8805103f1f0bca6d82e6c` at
+`2026-10-26T23:13:55Z`. The merge receipt is an ancestor of exact current
+origin/main `cee485ce0a48464b35619f156ff7674b7c72ad58`.
+
+That base advance conflicts only with the Swift branch's append-only state and
+roadmap records. Preserve the published Swift history by merging exact current
+main normally, retaining the complete Python and .NET merge receipts and the
+PaintVmAscii preparation, selection, publication, and exact-review records.
+Kotlin micro-qr PR #18355 has independently reconciled the same base and was
+pushed normally at exact replacement head
+`dac7bcee4255e286754d39a1e5bc33cb51430b19`. The live publication set is now
+{#18355, #18367}. The resulting Swift merge head must pass focused package and
+downstream validation plus independent exact-head review before a normal push;
+all replacement hosted checks must then finish acceptably before guarded
+auto-merge can be enabled.

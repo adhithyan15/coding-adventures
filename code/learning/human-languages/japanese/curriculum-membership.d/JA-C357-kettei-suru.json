@@ -1,0 +1,11 @@
+{
+  "id": "JA-C357-kettei-suru",
+  "pathSegment": "JA-PATH-357-KEIYAKU357",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-357-KEIYAKU357",
+      "order": 4
+    }
+  ]
+}

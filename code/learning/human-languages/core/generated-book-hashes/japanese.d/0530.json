@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:445a87b7a04b15a2",
+  "lessonIds": [
+    "JA-C530-kanari",
+    "JA-C530-sukunakutomo",
+    "JA-C530-hobo",
+    "JA-C530-oyoso",
+    "JA-C530-mattaku"
+  ],
+  "tex": "japanese/book/chapters/ch530-at-least-about-almost.tex"
+}

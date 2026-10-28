@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C287-haeru",
+    "language": "japanese",
+    "chapter": 287,
+    "sequence": 17300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54a7f48d44036dac"
+  },
+  "findings": []
+}

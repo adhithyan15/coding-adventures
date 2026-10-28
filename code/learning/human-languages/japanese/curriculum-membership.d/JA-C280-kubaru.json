@@ -1,0 +1,11 @@
+{
+  "id": "JA-C280-kubaru",
+  "pathSegment": "JA-PATH-280-KIJI280",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-280-KIJI280",
+      "order": 4
+    }
+  ]
+}

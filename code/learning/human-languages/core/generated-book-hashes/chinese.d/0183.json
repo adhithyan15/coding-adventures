@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:7f4a209d74622831",
+  "lessonIds": [
+    "ZH-C183-chuqu",
+    "ZH-C183-jinlai",
+    "ZH-C183-xiaban",
+    "ZH-C183-suomen",
+    "ZH-C183-tang"
+  ],
+  "tex": "chinese/book/chapters/ch183-in-and-out.tex"
+}

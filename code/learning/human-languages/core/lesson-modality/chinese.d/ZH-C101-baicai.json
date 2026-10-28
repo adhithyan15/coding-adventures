@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C101-baicai",
+    "language": "chinese",
+    "chapter": 101,
+    "sequence": 8110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcfbe0c39895df8b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:e58fae5c2afb66f1",
+  "lessonIds": [
+    "JA-C406-torii",
+    "JA-C406-kuguru",
+    "JA-C406-keidai",
+    "JA-C406-kannushi",
+    "JA-C406-sasageru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch406.txt",
+  "json": "japanese/narration/ch406.json",
+  "textHash": "fnv1a64:1656ce10ab9f074d",
+  "jsonHash": "fnv1a64:ce8e944df67e28a1",
+  "findings": []
+}

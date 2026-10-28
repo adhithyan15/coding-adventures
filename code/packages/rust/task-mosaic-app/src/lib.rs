@@ -29,6 +29,32 @@ const PROJECT_START: Date = Date(20_458); // 2026-01-05, a Monday.
 /// state file without bound (task-app-checklists-view-v1.md, "Bounds").
 const MAX_CHECKLIST_TEXT_CHARS: usize = 512;
 
+// ── Note draft caps (E5) ────────────────────────────────────────────────────
+//
+// The Notes editor's title and body are capped as they are typed, with the
+// same limits Journal applies to an entry (journal-core's `MAX_TITLE_CHARS`
+// and `MAX_BODY_BYTES`; task-app-notes-ui-v1.md, addendum v1.2). The values
+// are repeated rather than imported: this adapter does not depend on
+// journal-core, and one shared number is not worth a dependency.
+//
+//   field  cap        measured in              why that unit
+//   title  512        characters (scalars)     a title is read as text
+//   body   1 MiB      UTF-8 bytes              the cap bounds the state file
+//
+// An edit past its cap is REFUSED, not truncated, as Journal refuses it:
+// the event fails, the draft keeps its last value, and the field shows that
+// value again. Truncating would silently lose the end of a paste.
+
+/// The longest a note's title draft may grow, in characters.
+const MAX_NOTE_TITLE_CHARS: usize = 512;
+
+/// The largest a note's body draft may grow, in UTF-8 bytes (1 MiB).
+const MAX_NOTE_BODY_BYTES: usize = 1024 * 1024;
+
+/// What `note-error` says when Save names no task in the active project.
+const NOTE_TASK_NOT_FOUND: &str =
+    "No task in this project has that name. Fix it, or clear the field to save the note without one.";
+
 /// The deepest indent a checklist row draws. Depth is unbounded in a restored
 /// snapshot (a chain of N items would make N² bytes of indent per render);
 /// past this, rows keep the deepest indent rather than growing without bound.
@@ -137,6 +163,11 @@ struct TaskAppState {
     note_title: String,
     note_body: String,
     note_task_name: String,
+    /// Why the last note Save was refused, or `""` (E5). Like the composer
+    /// errors above, it describes the last attempt rather than the data, so
+    /// it never reaches the snapshot.
+    #[serde(skip)]
+    note_error: String,
     // Checklists (C3). Defaulted, so every earlier snapshot still restores.
     #[serde(default)]
     selected_checklist: Option<ChecklistId>,
@@ -193,6 +224,7 @@ impl Default for TaskAppState {
             note_title: String::new(),
             note_body: String::new(),
             note_task_name: String::new(),
+            note_error: String::new(),
             selected_checklist: None,
             new_checklist_name: String::new(),
             new_checklist_item: String::new(),
@@ -520,22 +552,44 @@ impl TaskMosaicApp {
         let sheet_rows = self.sheet_rows(&ids);
         let mut notes: Vec<_> = project.notes.values().collect();
         notes.sort_by_key(|note| note.title.to_lowercase());
+        // One row per note in the toolkit RecordList's shape, which Notes
+        // 0.3.0 mounts for its list (task-app-notes-ui-v1.md v1.3):
+        //
+        //   [0] key       the note id (selection compares it; never shown)
+        //   [1] heading   ""  notes are not grouped
+        //   [2] title     the title, or "Untitled" — an empty title would
+        //                     be an unnamed button
+        //   [3] subtitle  ""  ┐ RecordList leaves an empty field out, so
+        //   [4] meta      ""  │ each row stays one line, as it was when
+        //   [5] badge     ""  ┘ rows were [id, title]
         let note_rows = if self.state.view == ViewMode::Notes {
             notes
                 .iter()
                 .map(|note| {
                     vec![
                         note.id.to_string(),
+                        String::new(),
                         if note.title.trim().is_empty() {
                             "Untitled".to_string()
                         } else {
                             note.title.clone()
                         },
+                        String::new(),
+                        String::new(),
+                        String::new(),
                     ]
                 })
                 .collect::<Vec<_>>()
         } else {
             Vec::new()
+        };
+        // Delete is offered only for a note the project has saved. A new
+        // note's id is minted on "+ New note" (`new_note`), before the
+        // engine has heard of it, so "is an id selected" is not enough:
+        // ask the project. "" makes DraftEditor draw no Delete button.
+        let note_delete_label = match &self.state.selected_note_id {
+            Some(id) if project.notes.contains_key(id) => "Delete",
+            _ => "",
         };
 
         let checklists = self.checklist_props();
@@ -625,6 +679,8 @@ impl TaskMosaicApp {
             "note-title-value": self.state.note_title,
             "note-body-value": self.state.note_body,
             "note-task-value": self.state.note_task_name,
+            "note-error": self.state.note_error,
+            "note-delete-label": note_delete_label,
             "checklists-mode": if self.state.view == ViewMode::Checklists { "checklists" } else { "" },
             "checklists-title": "Checklists",
             "checklist-library-rows": checklists.library_rows,
@@ -1539,6 +1595,12 @@ impl TaskMosaicApp {
 
     fn dispatch_inner(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
         let normalized_name = normalize_event_name(&event.name);
+        // A note error describes the last Save; anything else the person
+        // does moves on from it, and the next Save sets or clears it again.
+        // (Journal's `draft-error` follows the same rule.)
+        if normalized_name != "saveNote" {
+            self.state.note_error.clear();
+        }
         match normalized_name.as_str() {
             "newTaskNameChange" => {
                 self.state.new_task_name = text_payload(event, "value")?;
@@ -1574,8 +1636,22 @@ impl TaskMosaicApp {
             }
             "newProjectNameChange" => self.state.new_project_name = text_payload(event, "value")?,
             "newLabelNameChange" => self.state.new_label_name = text_payload(event, "value")?,
-            "noteTitleChange" => self.state.note_title = text_payload(event, "value")?,
-            "noteBodyChange" => self.state.note_body = text_payload(event, "value")?,
+            "noteTitleChange" => {
+                self.state.note_title = capped_draft_payload(
+                    event,
+                    &self.state.note_title,
+                    |text: &str| text.chars().count(),
+                    MAX_NOTE_TITLE_CHARS,
+                )?
+            }
+            "noteBodyChange" => {
+                self.state.note_body = capped_draft_payload(
+                    event,
+                    &self.state.note_body,
+                    str::len,
+                    MAX_NOTE_BODY_BYTES,
+                )?
+            }
             "noteTaskNameChange" => self.state.note_task_name = text_payload(event, "value")?,
             "sheetFilterChange" => self.state.sheet_filter_text = text_payload(event, "value")?,
             "sheetSortFieldChange" => {
@@ -2043,6 +2119,21 @@ impl TaskMosaicApp {
         self.state.note_task_name = task_name;
     }
 
+    /// Commit the note draft, or refuse it and say why.
+    ///
+    /// The typed task name resolves against the active project's tasks
+    /// (case-insensitive, exact). The outcomes:
+    ///
+    ///   task field        match?   result
+    ///   blank             —        saved, unattached
+    ///   a task's name     yes      saved, attached to that task
+    ///   anything else     no       REFUSED: nothing written, draft kept,
+    ///                              `note-error` set and announced
+    ///
+    /// A refusal is an `Ok` update, not an error: an `Err` would roll the
+    /// app back and leave the person with nothing on screen to explain it
+    /// (the bug E5 fixed). The draft stays exactly as typed so the name can
+    /// be corrected rather than retyped.
     fn save_note(&mut self) -> Result<AppUpdate, TaskAppError> {
         let Some(id) = self.state.selected_note_id.clone() else {
             return Ok(self.update());
@@ -2060,8 +2151,10 @@ impl TaskMosaicApp {
                 .map(|task| task.id.clone())
         };
         if !self.state.note_task_name.trim().is_empty() && attached.is_none() {
-            return Ok(self.update());
+            self.state.note_error = NOTE_TASK_NOT_FOUND.to_string();
+            return Ok(self.announced_update(NOTE_TASK_NOT_FOUND));
         }
+        self.state.note_error.clear();
         let title = self.state.note_title.clone();
         let body = self.state.note_body.clone();
         self.active_project_mut().upsert_note(Note {
@@ -2166,6 +2259,37 @@ fn bounded_text_payload(event: &Event, field: &'static str) -> Result<String, Ta
         return Err(TaskAppError::InvalidPayload {
             event: event.name.clone(),
             field,
+        });
+    }
+    Ok(value)
+}
+
+/// A note-draft edit, refused when it would leave the draft past `max`.
+///
+/// `measure` is the cap's unit (characters for a title, bytes for a body).
+/// The rule, with `new` the edited text and `old` the draft it replaces:
+///
+///   measure(new) <= max              kept (the normal case)
+///   measure(new) >  max, new <= old  kept: a note saved before the caps
+///                                    existed may be over them, and must
+///                                    stay editable DOWN towards the cap
+///   measure(new) >  max, new >  old  refused: nothing ever grows past it
+///
+/// Refused means `InvalidPayload`, which `dispatch` turns into a rollback,
+/// so the draft keeps its last value and the field shows it again — what
+/// Journal does with an over-long entry (task-app-notes-ui-v1.md, v1.2).
+fn capped_draft_payload(
+    event: &Event,
+    current: &str,
+    measure: fn(&str) -> usize,
+    max: usize,
+) -> Result<String, TaskAppError> {
+    let value = text_payload(event, "value")?;
+    let size = measure(&value);
+    if size > max && size > measure(current) {
+        return Err(TaskAppError::InvalidPayload {
+            event: event.name.clone(),
+            field: "value",
         });
     }
     Ok(value)
@@ -2446,6 +2570,8 @@ mod tests {
         "note-title-value",
         "note-body-value",
         "note-task-value",
+        "note-error",
+        "note-delete-label",
         "checklists-mode",
         "checklists-title",
         "checklist-library-rows",
@@ -3711,5 +3837,264 @@ mod tests {
             .unwrap()
             .props;
         assert_eq!(props["selected-outline-key"], "");
+    }
+
+    // ── Note drafts: refused Saves and caps (E5) ───────────────────────────
+
+    /// A started app with one task, "Groceries", showing a new note's editor.
+    fn notes_app() -> TaskMosaicApp {
+        let mut app = TaskMosaicApp::with_clock(fixed_clock);
+        app.start(context()).unwrap();
+        send(
+            &mut app,
+            "newTaskNameChange",
+            json!({ "value": "Groceries" }),
+        );
+        send(&mut app, "addTask", json!({}));
+        send(&mut app, "showNotes", json!({}));
+        send(&mut app, "newNote", json!({}));
+        app
+    }
+
+    #[test]
+    fn saving_a_note_for_an_unknown_task_says_why_and_keeps_the_draft() {
+        let mut app = notes_app();
+        send(&mut app, "noteTitleChange", json!({ "value": "Shopping" }));
+        send(&mut app, "noteBodyChange", json!({ "value": "milk, eggs" }));
+        send(
+            &mut app,
+            "noteTaskNameChange",
+            json!({ "value": "Grocerys" }),
+        );
+        let update = app.dispatch(event(1, "saveNote", json!({}))).unwrap();
+
+        // Visible, and announced: the bug was that neither happened.
+        assert_eq!(update.props["note-error"], NOTE_TASK_NOT_FOUND);
+        assert_eq!(update.announcements.len(), 1);
+        assert_eq!(update.announcements[0].message, NOTE_TASK_NOT_FOUND);
+        assert_eq!(update.announcements[0].politeness, Politeness::Polite);
+        // Nothing written, and every field of the draft is as it was typed.
+        assert!(app.active_project().notes.is_empty());
+        assert_eq!(update.props["note-rows"], json!([]));
+        assert_ne!(update.props["selected-note-id"], "");
+        assert_eq!(update.props["note-title-value"], "Shopping");
+        assert_eq!(update.props["note-body-value"], "milk, eggs");
+        assert_eq!(update.props["note-task-value"], "Grocerys");
+
+        // Saving again with the same name refuses again.
+        let again = send(&mut app, "saveNote", json!({}));
+        assert_eq!(again["note-error"], NOTE_TASK_NOT_FOUND);
+
+        // Correcting the name clears the message; the save then lands.
+        let typed = send(
+            &mut app,
+            "noteTaskNameChange",
+            json!({ "value": "groceries" }),
+        );
+        assert_eq!(typed["note-error"], "");
+        let saved = app.dispatch(event(1, "saveNote", json!({}))).unwrap();
+        assert_eq!(saved.props["note-error"], "");
+        assert_eq!(saved.announcements[0].message, "Note saved");
+        let notes = &app.active_project().notes;
+        assert_eq!(notes.len(), 1);
+        let note = notes.values().next().unwrap();
+        assert_eq!(note.body, "milk, eggs");
+        assert!(note.attached_task.is_some());
+    }
+
+    #[test]
+    fn a_note_error_is_cleared_by_any_other_event_and_never_persisted() {
+        let mut app = notes_app();
+        send(&mut app, "noteTaskNameChange", json!({ "value": "nobody" }));
+        assert_eq!(
+            send(&mut app, "saveNote", json!({}))["note-error"],
+            NOTE_TASK_NOT_FOUND
+        );
+        // The error is presentation state: a snapshot taken now restores
+        // without it, although the draft itself does restore.
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = TaskMosaicApp::with_clock(fixed_clock);
+        let props = restored.restore(snapshot).unwrap().props;
+        assert_eq!(props["note-error"], "");
+        assert_eq!(props["note-task-value"], "nobody");
+        // Any other event moves on from it — here, one unrelated to notes.
+        let props = send(&mut app, "toggleTheme", json!({}));
+        assert_eq!(props["note-error"], "");
+        assert_eq!(props["note-task-value"], "nobody");
+    }
+
+    #[test]
+    fn a_blank_task_name_saves_the_note_unattached() {
+        let mut app = notes_app();
+        send(&mut app, "noteTaskNameChange", json!({ "value": "   " }));
+        let props = send(&mut app, "saveNote", json!({}));
+        assert_eq!(props["note-error"], "");
+        let notes = &app.active_project().notes;
+        assert_eq!(notes.len(), 1);
+        assert!(notes.values().next().unwrap().attached_task.is_none());
+    }
+
+    // ── Notes 0.3.0 on RecordList and DraftEditor (E3) ────────────────────
+
+    #[test]
+    fn note_rows_have_record_list_s_six_fields() {
+        let mut app = notes_app();
+        send(&mut app, "noteTaskNameChange", json!({ "value": "" }));
+        send(&mut app, "saveNote", json!({}));
+        send(&mut app, "newNote", json!({}));
+        send(&mut app, "noteTitleChange", json!({ "value": "Agenda" }));
+        let props = send(&mut app, "saveNote", json!({}));
+
+        // [key, heading, title, subtitle, meta, badge], sorted by the stored
+        // title as before (so the untitled note, whose title is "", comes
+        // first); its displayed title is still "Untitled".
+        let rows = props["note-rows"].as_array().unwrap();
+        assert_eq!(rows.len(), 2);
+        for row in rows {
+            let row = row.as_array().unwrap();
+            assert_eq!(row.len(), 6, "{row:?}");
+            assert!(row[0].as_str().unwrap().starts_with("note-"));
+            for empty in [1, 3, 4, 5] {
+                assert_eq!(row[empty], "", "{row:?}");
+            }
+        }
+        assert_eq!(rows[0][2], "Untitled");
+        assert_eq!(rows[1][2], "Agenda");
+        // The selection key is the row's key, as RecordList compares it.
+        assert_eq!(props["selected-note-id"], rows[1][0]);
+    }
+
+    #[test]
+    fn delete_is_offered_only_for_a_saved_note() {
+        let mut app = notes_app();
+        // A new note: its id is minted, but the project has never seen it.
+        assert_eq!(app.update().props["note-delete-label"], "");
+        assert_ne!(app.update().props["selected-note-id"], "");
+
+        let saved = send(&mut app, "saveNote", json!({}));
+        assert_eq!(saved["note-delete-label"], "Delete");
+
+        // Closed, then reopened from the list: still a saved note.
+        assert_eq!(
+            send(&mut app, "cancelNote", json!({}))["note-delete-label"],
+            ""
+        );
+        let reopened = send(&mut app, "selectNote", json!({ "index": 0 }));
+        assert_eq!(reopened["note-delete-label"], "Delete");
+
+        // A second new note is unsaved again, and deleting the saved one
+        // closes the editor, which offers nothing.
+        assert_eq!(
+            send(&mut app, "newNote", json!({}))["note-delete-label"],
+            ""
+        );
+        send(&mut app, "selectNote", json!({ "index": 0 }));
+        let deleted = send(&mut app, "deleteNote", json!({}));
+        assert_eq!(deleted["note-delete-label"], "");
+        assert!(app.active_project().notes.is_empty());
+    }
+
+    #[test]
+    fn note_titles_are_capped_in_characters_as_typed() {
+        let mut app = notes_app();
+        // 512 two-byte characters: over 512 BYTES, but at the cap in
+        // characters, which is the title's unit.
+        let at_cap = "é".repeat(MAX_NOTE_TITLE_CHARS);
+        let props = send(&mut app, "noteTitleChange", json!({ "value": at_cap }));
+        assert_eq!(props["note-title-value"], at_cap);
+        // One more is refused, not truncated: the draft keeps its value.
+        let over = format!("{at_cap}x");
+        let refused = app.dispatch(event(1, "noteTitleChange", json!({ "value": over })));
+        assert_eq!(
+            refused.unwrap_err(),
+            TaskAppError::InvalidPayload {
+                event: "onNoteTitleChange".to_string(),
+                field: "value",
+            }
+        );
+        assert_eq!(app.update().props["note-title-value"], at_cap);
+    }
+
+    #[test]
+    fn note_bodies_are_capped_in_bytes_as_typed() {
+        let mut app = notes_app();
+        let at_cap = "b".repeat(MAX_NOTE_BODY_BYTES);
+        let props = send(&mut app, "noteBodyChange", json!({ "value": at_cap }));
+        assert_eq!(
+            props["note-body-value"].as_str().unwrap().len(),
+            MAX_NOTE_BODY_BYTES
+        );
+        let over = "b".repeat(MAX_NOTE_BODY_BYTES + 1);
+        assert!(app
+            .dispatch(event(1, "noteBodyChange", json!({ "value": over })))
+            .is_err());
+        assert_eq!(app.state.note_body.len(), MAX_NOTE_BODY_BYTES);
+
+        // Bytes, not characters: half as many two-byte characters fill it,
+        // and one more of them is refused.
+        send(&mut app, "noteBodyChange", json!({ "value": "" }));
+        let wide = "é".repeat(MAX_NOTE_BODY_BYTES / 2);
+        send(&mut app, "noteBodyChange", json!({ "value": wide }));
+        let wider = format!("{wide}é");
+        assert!(app
+            .dispatch(event(1, "noteBodyChange", json!({ "value": wider })))
+            .is_err());
+        assert_eq!(app.state.note_body, wide);
+    }
+
+    #[test]
+    fn a_note_stored_over_the_caps_still_loads_whole_and_can_only_shrink() {
+        // A note saved before the caps existed, and its open draft, are
+        // both larger than the caps allow.
+        let big_body = "b".repeat(MAX_NOTE_BODY_BYTES + 10);
+        let big_title = "t".repeat(MAX_NOTE_TITLE_CHARS + 10);
+        let mut app = notes_app();
+        let id = NoteId::from_raw("legacy");
+        app.active_project_mut().upsert_note(Note {
+            id: id.clone(),
+            title: big_title.clone(),
+            body: big_body.clone(),
+            attached_task: None,
+        });
+        app.state.selected_note_id = Some(id.clone());
+        app.state.note_title = big_title.clone();
+        app.state.note_body = big_body.clone();
+
+        // Restoring cuts nothing: not the stored note, not the draft.
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = TaskMosaicApp::with_clock(fixed_clock);
+        let props = restored.restore(snapshot).unwrap().props;
+        assert_eq!(props["note-body-value"].as_str().unwrap(), big_body);
+        assert_eq!(props["note-title-value"].as_str().unwrap(), big_title);
+        assert_eq!(restored.active_project().notes[&id].body, big_body);
+
+        // Selecting it from the list loads it whole too.
+        send(&mut restored, "cancelNote", json!({}));
+        let props = send(&mut restored, "selectNote", json!({ "index": 0 }));
+        assert_eq!(props["note-body-value"].as_str().unwrap(), big_body);
+
+        // It may be edited down, though still over the cap...
+        let shorter = &big_body[..big_body.len() - 1];
+        let props = send(&mut restored, "noteBodyChange", json!({ "value": shorter }));
+        assert_eq!(props["note-body-value"].as_str().unwrap(), shorter);
+        let shorter_title = &big_title[..big_title.len() - 1];
+        send(
+            &mut restored,
+            "noteTitleChange",
+            json!({ "value": shorter_title }),
+        );
+        // ...but never grown, even back to the size it was loaded at.
+        assert!(restored
+            .dispatch(event(1, "noteBodyChange", json!({ "value": big_body })))
+            .is_err());
+        assert!(restored
+            .dispatch(event(1, "noteTitleChange", json!({ "value": big_title })))
+            .is_err());
+        assert_eq!(restored.state.note_body, shorter);
+        assert_eq!(restored.state.note_title, shorter_title);
+
+        // And it still saves: the cap bounds typing, not what Save accepts.
+        send(&mut restored, "saveNote", json!({}));
+        assert_eq!(restored.active_project().notes[&id].body, shorter);
     }
 }

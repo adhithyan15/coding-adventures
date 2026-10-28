@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:c1f4a8bd4d2dd0e3",
+  "lessonIds": [
+    "ZH-C87-meiyou",
+    "ZH-W87-mei",
+    "ZH-C87-bu-mei",
+    "ZH-C87-chuang",
+    "ZH-C87-deng",
+    "ZH-C87-yaoshi",
+    "ZH-C87-bingxiang",
+    "ZH-C87-practice"
+  ],
+  "tex": "chinese/book/chapters/ch87-is-there-any.tex"
+}

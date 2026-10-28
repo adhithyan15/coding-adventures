@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C333-kaigo-suru",
+    "language": "japanese",
+    "chapter": 333,
+    "sequence": 19850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64581c9fe6644ba6"
+  },
+  "findings": []
+}

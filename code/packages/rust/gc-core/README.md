@@ -18,6 +18,19 @@ against — native or interpreted alike — instead of each carrying its own.
 | `GcAlgorithm` | Enum of GC algorithms `AdaptivePolicy` can recommend |
 | `StackMapBuilder` | Producer side of the precise-root stack-map format for native code generators |
 
+### Looking up an object from an address
+
+`FlatHeap::kind_of(addr)` and `FlatHeap::payload_size(addr)` resolve any
+address *inside* a live block, or exactly one past its end, to that block —
+the same rule the collector uses to keep an object alive through any pointer
+into it. That makes `payload_size` the wrong tool for bounds-checking an
+access at `addr + offset` unless `addr` is already known to be the block's
+start: for an interior `addr` it returns the whole block's size, measured from
+somewhere else. `FlatHeap::payload_size_at_base(addr)` returns
+`Some(size)` only when `addr` is exactly a live block's base, and `None` for
+everything else (null, garbage, freed, interior, one-past-the-end). `vm-core`'s
+field ops use it for exactly this reason.
+
 ## Who links against it
 
 - **Native-AOT / LLVM / WASM** backends link through the C ABI

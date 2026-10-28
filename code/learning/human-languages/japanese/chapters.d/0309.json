@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Presents in the Post",
+  "label": "ch:ja-presents-in-the-post",
+  "canDo": "I can say who gave what to whom.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C309-uchiakeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can say who gave what to whom.",
+    "assesses": [
+      "JA-LEX-C309-OKURU309-03",
+      "JA-LEX-C309-OKURU309-04",
+      "JA-LEX-C309-OKURU309-05"
+    ]
+  }
+}

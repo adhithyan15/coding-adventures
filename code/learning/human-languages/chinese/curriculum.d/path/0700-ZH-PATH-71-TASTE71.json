@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-71-TASTE71",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ZH-EXT-71-TASTE71"
+  ],
+  "after": []
+}

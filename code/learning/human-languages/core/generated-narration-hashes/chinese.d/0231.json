@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:2fd8337c1e2f98a1",
+  "lessonIds": [
+    "ZH-C231-zhongyi",
+    "ZH-W231-yi-medicine",
+    "ZH-C231-xiyi",
+    "ZH-W231-xi-west",
+    "ZH-C231-guahao",
+    "ZH-C231-hushi",
+    "ZH-C231-kaiyao"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch231.txt",
+  "json": "chinese/narration/ch231.json",
+  "textHash": "fnv1a64:aba6c46c8c5c30e3",
+  "jsonHash": "fnv1a64:d56f4d6b7cb1841d",
+  "findings": []
+}

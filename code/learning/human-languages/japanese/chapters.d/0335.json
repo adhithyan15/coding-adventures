@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Groups and Members",
+  "label": "ch:ja-groups-and-members",
+  "canDo": "I can say why I join a group or leave it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C335-tanin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can say why I join a group or leave it.",
+    "assesses": [
+      "JA-LEX-C335-DANTAI335-03",
+      "JA-LEX-C335-DANTAI335-04",
+      "JA-LEX-C335-DANTAI335-05"
+    ]
+  }
+}

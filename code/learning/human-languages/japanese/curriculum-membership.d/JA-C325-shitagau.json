@@ -1,0 +1,11 @@
+{
+  "id": "JA-C325-shitagau",
+  "pathSegment": "JA-PATH-325-SHITAGAU325",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-325-SHITAGAU325",
+      "order": 0
+    }
+  ]
+}

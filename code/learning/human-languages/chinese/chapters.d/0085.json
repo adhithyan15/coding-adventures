@@ -1,0 +1,22 @@
+{
+  "chapter": 85,
+  "title": "Where Things Are",
+  "label": "ch:zh-where-things-are",
+  "canDo": "I can say where people and things are, and write 在.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C85-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying where people and things are with 在, here and there, inside and outside, built on one new written character: 在.",
+    "assesses": [
+      "ZH-LEX-C85-ZAI-01",
+      "ZH-SCRIPT-ZAI-AT-01",
+      "ZH-LEX-C85-NAR-01",
+      "ZH-LEX-C85-LIBIAN-01",
+      "ZH-LEX-C85-WAIBIAN-01",
+      "ZH-PERFORMANCE-LOCATION-01"
+    ]
+  }
+}

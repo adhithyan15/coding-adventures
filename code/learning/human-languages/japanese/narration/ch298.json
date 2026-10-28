@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 298,
+  "title": "Long, Long Ago",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0b24f72ba731a06d",
+  "lessons": [
+    {
+      "id": "JA-C298-mukashi",
+      "sequence": 17860,
+      "title": "むかし (mukashi) — long ago; the old days",
+      "headword": "むかし",
+      "romanization": "mukashi",
+      "gloss": "long ago; the old days",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c91ce3ccf5e7882",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to drive out, then the Japanese for rare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むかし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むかし — mukashi — \"long ago; the old days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "むかし、やまに おじいさんが すんでいました。 — mukashi, yama ni ojiisan ga sunde imashita — \"Long ago an old man lived in the mountains.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むかし (mukashi) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukashi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukashi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukashi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukashi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukashi, yama ni ojiisan ga sunde imashita — Long ago an old man lived in the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukashi, yama ni ojiisan ga sunde imashita* — Long ago an old man lived in the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to drive out, then the Japanese for rare, then say mukashi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to drive out, then the Japanese for rare, then say *mukashi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むかし (mukashi) mean? (\"Long ago; the old days\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C298-mukashi-type",
+              "prompt": "Say the Japanese for 'long ago'.",
+              "assesses": [
+                "JA-LEX-C298-MUKASHI298-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むかし",
+                "mukashi"
+              ],
+              "feedback": {
+                "correct": "Right: むかし (mukashi) is 'long ago; the old days'.",
+                "incorrect": "'Long ago' is むかし (mukashi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C298-mukashibanashi",
+      "sequence": 17870,
+      "title": "むかしばなし (mukashibanashi) — a folk tale; an old story",
+      "headword": "むかしばなし",
+      "romanization": "mukashibanashi",
+      "gloss": "a folk tale; an old story",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8998539ba51a9a3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for rare, then the Japanese for long ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むかしばなし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むかしばなし — mukashibanashi — \"a folk tale; an old story\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そぼは いつも むかしばなしを しました。 — sobo wa itsumo mukashibanashi o shimashita — \"Grandmother was always telling old stories.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むかしばなし (mukashibanashi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mukashi, \"long ago\", and banashi, \"talk\" (from hanasu) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukashibanashi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukashibanashi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukashibanashi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukashibanashi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobo wa itsumo mukashibanashi o shimashita — Grandmother was always telling old stories.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobo wa itsumo mukashibanashi o shimashita* — Grandmother was always telling old stories.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for rare, then the Japanese for long ago, then say mukashibanashi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for rare, then the Japanese for long ago, then say *mukashibanashi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むかしばなし (mukashibanashi) mean? (\"A folk tale; an old story\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C298-mukashibanashi-type",
+              "prompt": "Say the Japanese for 'a folk tale'.",
+              "assesses": [
+                "JA-LEX-C298-MUKASHI298-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むかしばなし",
+                "mukashibanashi"
+              ],
+              "feedback": {
+                "correct": "Right: むかしばなし (mukashibanashi) is 'a folk tale; an old story'.",
+                "incorrect": "'A folk tale' is むかしばなし (mukashibanashi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C298-kataru",
+      "sequence": 17880,
+      "title": "かたる (kataru) — to tell (a story); to relate",
+      "headword": "かたる",
+      "romanization": "kataru",
+      "gloss": "to tell (a story); to relate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b61ed706d413bf35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for long ago, then the Japanese for a folk tale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かたる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かたる — kataru — \"to tell (a story); to relate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふは ときどき むかしばなしを かたります。 — sofu wa tokidoki mukashibanashi o katarimasu — \"Grandfather sometimes tells old stories.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かたります, katarimasu; a godan verb. Past (polite): そぼが ゆめを かたりました。, sobo ga yume o katarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かたる (kataru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu wa tokidoki mukashibanashi o katarimasu — Grandfather sometimes tells old stories.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu wa tokidoki mukashibanashi o katarimasu* — Grandfather sometimes tells old stories.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for long ago, then the Japanese for a folk tale, then say kataru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for long ago, then the Japanese for a folk tale, then say *kataru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かたる (kataru) mean? (\"To tell (a story); to relate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C298-kataru-type",
+              "prompt": "Say the Japanese for 'to tell (a story)'.",
+              "assesses": [
+                "JA-LEX-C298-MUKASHI298-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かたる",
+                "kataru"
+              ],
+              "feedback": {
+                "correct": "Right: かたる (kataru) is 'to tell (a story); to relate'.",
+                "incorrect": "'To tell (a story)' is かたる (kataru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C298-mura",
+      "sequence": 17890,
+      "title": "むら (mura) — a village",
+      "headword": "むら",
+      "romanization": "mura",
+      "gloss": "a village",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab7c6b1592500992",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a folk tale, then the Japanese for to tell (a story)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むら — mura — \"a village\"."
+            },
+            {
+              "kind": "speech",
+              "text": "その むらは やまの なかに あります。 — sono mura wa yama no naka ni arimasu — \"The village lies in the mountains.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むら (mura) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sono mura wa yama no naka ni arimasu — The village lies in the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sono mura wa yama no naka ni arimasu* — The village lies in the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a folk tale, then the Japanese for to tell (a story), then say mura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a folk tale, then the Japanese for to tell (a story), then say *mura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むら (mura) mean? (\"A village\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C298-mura-type",
+              "prompt": "Say the Japanese for 'a village'.",
+              "assesses": [
+                "JA-LEX-C298-MUKASHI298-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むら",
+                "mura"
+              ],
+              "feedback": {
+                "correct": "Right: むら (mura) is 'a village'.",
+                "incorrect": "'A village' is むら (mura)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C298-hatarakimono",
+      "sequence": 17900,
+      "title": "はたらきもの (hatarakimono) — a hard worker",
+      "headword": "はたらきもの",
+      "romanization": "hatarakimono",
+      "gloss": "a hard worker",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b54aebf82ddcf16d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to tell (a story), then the Japanese for a village."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はたらきもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はたらきもの — hatarakimono — \"a hard worker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "むらの わかい おとこは はたらきものでした。 — mura no wakai otoko wa hatarakimono deshita — \"The young man of the village was a hard worker.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はたらきもの (hatarakimono) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from hataraki, \"working\" (from hataraku), and mono, \"person\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatarakimono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hatarakimono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatarakimono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hatarakimono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mura no wakai otoko wa hatarakimono deshita — The young man of the village was a hard worker.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mura no wakai otoko wa hatarakimono deshita* — The young man of the village was a hard worker.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to tell (a story), then the Japanese for a village, then say hatarakimono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to tell (a story), then the Japanese for a village, then say *hatarakimono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はたらきもの (hatarakimono) mean? (\"A hard worker\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C298-hatarakimono-type",
+              "prompt": "Say the Japanese for 'a hard worker'.",
+              "assesses": [
+                "JA-LEX-C298-MUKASHI298-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はたらきもの",
+                "hatarakimono"
+              ],
+              "feedback": {
+                "correct": "Right: はたらきもの (hatarakimono) is 'a hard worker'.",
+                "incorrect": "'A hard worker' is はたらきもの (hatarakimono)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

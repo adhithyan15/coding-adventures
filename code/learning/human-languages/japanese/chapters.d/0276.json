@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "The River Rose",
+  "label": "ch:ja-the-river-rose",
+  "canDo": "I can say what heavy rain did to the river and the hills.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C276-taihen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say what heavy rain did to the river and the hills.",
+    "assesses": [
+      "JA-LEX-C276-OOAME276-03",
+      "JA-LEX-C276-OOAME276-04",
+      "JA-LEX-C276-OOAME276-05"
+    ]
+  }
+}

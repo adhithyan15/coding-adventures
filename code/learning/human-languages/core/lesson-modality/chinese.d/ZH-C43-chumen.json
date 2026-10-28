@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C43-chumen",
+    "language": "chinese",
+    "chapter": 43,
+    "sequence": 3650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:979a64e4061ef4ad"
+  },
+  "findings": []
+}

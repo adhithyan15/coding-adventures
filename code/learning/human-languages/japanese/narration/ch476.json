@@ -1,0 +1,802 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 476,
+  "title": "Only Children and Twins",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d7cc2cdc09d8bd47",
+  "lessons": [
+    {
+      "id": "JA-C476-itoko",
+      "sequence": 27580,
+      "title": "いとこ (itoko) — a cousin",
+      "headword": "いとこ",
+      "romanization": "itoko",
+      "gloss": "a cousin",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3f4f01917dbf05c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a small plate, then the Japanese for flavouring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いとこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いとこ — itoko — \"a cousin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつやすみに いとこと あそびました。 — natsuyasumi ni itoko to asobimashita — \"I played with my cousin in the summer holidays.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いとこ (itoko) is a native Japanese word (wago), inherited rather than borrowed from Chinese; JMdict writes it in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itoko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itoko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itoko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itoko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsuyasumi ni itoko to asobimashita — I played with my cousin in the summer holidays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsuyasumi ni itoko to asobimashita* — I played with my cousin in the summer holidays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a small plate, then the Japanese for flavouring, then say itoko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a small plate, then the Japanese for flavouring, then say *itoko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いとこ (itoko) mean? (\"A cousin\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C476-itoko-type",
+              "prompt": "Say the Japanese for 'a cousin'.",
+              "assesses": [
+                "JA-LEX-C476-KIN476-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いとこ",
+                "itoko"
+              ],
+              "feedback": {
+                "correct": "Right: いとこ (itoko) is 'a cousin'.",
+                "incorrect": "'A cousin' is いとこ (itoko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C476-futago",
+      "sequence": 27590,
+      "title": "ふたご (futago) — twins; a twin",
+      "headword": "ふたご",
+      "romanization": "futago",
+      "gloss": "twins; a twin",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe9b4b1c81d17f84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for flavouring, then the Japanese for a cousin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふたご",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふたご — futago — \"twins; a twin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "となりの こどもは ふたごです。 — tonari no kodomo wa futago desu — \"The children next door are twins.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふたご (futago) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: futa, \"two\" and go, \"child (ko)\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futago*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futago, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futago*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tonari no kodomo wa futago desu — The children next door are twins.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tonari no kodomo wa futago desu* — The children next door are twins.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for flavouring, then the Japanese for a cousin, then say futago again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for flavouring, then the Japanese for a cousin, then say *futago* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふたご (futago) mean? (\"Twins; a twin\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C476-futago-type",
+              "prompt": "Say the Japanese for 'twins'.",
+              "assesses": [
+                "JA-LEX-C476-KIN476-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふたご",
+                "futago"
+              ],
+              "feedback": {
+                "correct": "Right: ふたご (futago) is 'twins; a twin'.",
+                "incorrect": "'Twins' is ふたご (futago)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C476-hitorikko",
+      "sequence": 27600,
+      "title": "ひとりっこ (hitorikko) — an only child",
+      "headword": "ひとりっこ",
+      "romanization": "hitorikko",
+      "gloss": "an only child",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:017dd8ec0e40d4d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cousin, then the Japanese for twins."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひとりっこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとりっこ — hitorikko — \"an only child\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは ひとりっこです。 — kare wa hitorikko desu — \"He is an only child.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとりっこ (hitorikko) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: hitori, \"one person\" (hito, \"one\", and ri, the count of people), and ko, \"child\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitorikko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitorikko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitorikko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitorikko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa hitorikko desu — He is an only child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa hitorikko desu* — He is an only child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cousin, then the Japanese for twins, then say hitorikko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cousin, then the Japanese for twins, then say *hitorikko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひとりっこ (hitorikko) mean? (\"An only child\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C476-hitorikko-type",
+              "prompt": "Say the Japanese for 'an only child'.",
+              "assesses": [
+                "JA-LEX-C476-KIN476-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひとりっこ",
+                "hitorikko"
+              ],
+              "feedback": {
+                "correct": "Right: ひとりっこ (hitorikko) is 'an only child'.",
+                "incorrect": "'An only child' is ひとりっこ (hitorikko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C476-chounan",
+      "sequence": 27610,
+      "title": "ちょうなん (chōnan) — the eldest son",
+      "headword": "ちょうなん",
+      "romanization": "chōnan",
+      "gloss": "the eldest son",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:438edefdfc03c525",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for twins, then the Japanese for an only child."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちょうなん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうなん — chōnan — \"the eldest son\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちょうなんは らいねん けっこんします。 — chōnan wa rainen kekkon shimasu — \"Our eldest son is getting married next year.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうなん (chōnan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chō, \"senior\" (Middle Chinese trjangX) and nan, \"male\" (nom) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōnan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōnan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōnan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōnan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōnan wa rainen kekkon shimasu — Our eldest son is getting married next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōnan wa rainen kekkon shimasu* — Our eldest son is getting married next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for twins, then the Japanese for an only child, then say chōnan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for twins, then the Japanese for an only child, then say *chōnan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちょうなん (chōnan) mean? (\"The eldest son\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C476-chounan-type",
+              "prompt": "Say the Japanese for 'the eldest son'.",
+              "assesses": [
+                "JA-LEX-C476-KIN476-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちょうなん",
+                "chōnan",
+                "chounan",
+                "choonan",
+                "chonan"
+              ],
+              "feedback": {
+                "correct": "Right: ちょうなん (chōnan) is 'the eldest son'.",
+                "incorrect": "'The eldest son' is ちょうなん (chōnan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C476-choujo",
+      "sequence": 27620,
+      "title": "ちょうじょ (chōjo) — the eldest daughter",
+      "headword": "ちょうじょ",
+      "romanization": "chōjo",
+      "gloss": "the eldest daughter",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2c4fb9f12ee34ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an only child, then the Japanese for the eldest son."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちょうじょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうじょ — chōjo — \"the eldest daughter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちょうじょは いしゃに なりました。 — chōjo wa isha ni narimashita — \"Our eldest daughter became a doctor.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうじょ (chōjo) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chō, \"senior\" (Middle Chinese trjangX) and jo, \"woman\" (nrjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōjo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōjo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōjo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōjo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōjo wa isha ni narimashita — Our eldest daughter became a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōjo wa isha ni narimashita* — Our eldest daughter became a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an only child, then the Japanese for the eldest son, then say chōjo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an only child, then the Japanese for the eldest son, then say *chōjo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちょうじょ (chōjo) mean? (\"The eldest daughter\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C476-choujo-type",
+              "prompt": "Say the Japanese for 'the eldest daughter'.",
+              "assesses": [
+                "JA-LEX-C476-KIN476-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちょうじょ",
+                "chōjo",
+                "choujo",
+                "choojo",
+                "chojo"
+              ],
+              "feedback": {
+                "correct": "Right: ちょうじょ (chōjo) is 'the eldest daughter'.",
+                "incorrect": "'The eldest daughter' is ちょうじょ (chōjo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

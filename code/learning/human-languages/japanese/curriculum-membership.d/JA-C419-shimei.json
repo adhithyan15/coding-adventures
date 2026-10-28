@@ -1,0 +1,11 @@
+{
+  "id": "JA-C419-shimei",
+  "pathSegment": "JA-PATH-419-KOKUSEKI419",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-419-KOKUSEKI419",
+      "order": 3
+    }
+  ]
+}

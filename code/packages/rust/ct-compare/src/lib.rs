@@ -1,4 +1,4 @@
-//! # coding_adventures_ct_compare — constant-time byte-slice equality
+//! # coding_adventures_ct_compare — compiler-preserved full-scan equality
 //!
 //! ## Why a special equality primitive
 //!
@@ -31,10 +31,10 @@
 //! acc == 0
 //! ```
 //!
-//! Now the loop runs the **same number of iterations regardless of how
-//! many bytes match**, and it does the **same work per iteration
-//! regardless of whether this byte matches**. The attacker's timing
-//! signal disappears into the noise.
+//! Now the source-level loop runs the **same number of iterations regardless
+//! of how many bytes match**, and the compiler boundary below preserves every
+//! input read. This closes the early-exit prefix leak at the compiler level;
+//! it is not a claim about hardware side channels.
 //!
 //! ## What this crate guarantees
 //!
@@ -48,12 +48,14 @@
 //!   have a fixed, publicly known length, and leaking length alone
 //!   doesn't help an attacker.
 //!
-//! We deliberately use `core::hint::black_box` on the final accumulator
-//! before the comparison. `black_box` is an optimiser barrier that
-//! prevents LLVM from reasoning about the value — without it, an
-//! aggressive pass could in principle notice that the loop body is
-//! equivalent to short-circuiting and rewrite it. `black_box` is the
-//! standard-library primitive Rust ships for exactly this purpose.
+//! A barrier only after the loop is insufficient: once an accumulator reaches
+//! `0xff`, an optimizer may prove that later ordinary reads cannot change the
+//! result and skip them. Each equality-loop iteration therefore performs
+//! volatile reads of both input bytes and the accumulator followed by a
+//! volatile accumulator write. Rust requires volatile operations to remain
+//! observable and ordered with respect to one another, so later input reads
+//! cannot be removed based on an earlier difference. An optimized LLVM-IR
+//! integration test rejects builds where those operations disappear.
 //!
 //! ## What this crate does NOT do
 //!
@@ -69,16 +71,53 @@
 //!
 //! * Comparing Poly1305 AEAD tags during decryption
 //!   (`coding_adventures_chacha20_poly1305`).
-//! * Comparing HMAC tags (`coding_adventures_hmac`).
+//! * HMAC tag verification (`coding_adventures_hmac`).
 //! * Argon2id verify: `ct_eq(computed_tag, stored_tag)`.
 //! * Vault unlock: `ct_eq(derived_unlock_key, stored_kek)`.
 //! * Any MAC / auth-tag / session-key / password-hash comparison.
 
 #![deny(unsafe_code)]
+#![deny(unsafe_op_in_unsafe_fn)]
 
 use core::hint::black_box;
 
-/// Compare two byte slices for equality in constant time.
+/// Audited compiler-observability boundary for equality scans.
+///
+/// Crate-wide `unsafe_code` denial remains active everywhere else. Keeping the
+/// narrowly allowed operations in this private module makes any expansion of
+/// the unsafe boundary explicit in review.
+#[allow(unsafe_code)]
+mod volatile_barrier {
+    use core::ptr::{read_volatile, write_volatile};
+
+    /// Fold one byte difference into an accumulator using observable operations.
+    ///
+    /// Both byte references are valid for reads and the accumulator reference is
+    /// valid and exclusive for the write for the duration of the call. Volatile
+    /// access does not extend either lifetime or escape any pointer.
+    #[inline(always)]
+    pub(super) fn accumulate(accumulator: &mut u8, left: &u8, right: &u8) {
+        // SAFETY: `left` and `right` are valid shared references to initialized
+        // bytes. `accumulator` is a valid exclusive reference to an initialized
+        // byte. The volatile operations remain within those one-byte objects.
+        unsafe {
+            let current = read_volatile(accumulator);
+            let left_byte = read_volatile(left);
+            let right_byte = read_volatile(right);
+            write_volatile(accumulator, current | (left_byte ^ right_byte));
+        }
+    }
+
+    /// Read the completed volatile accumulator without weakening its boundary.
+    #[inline(always)]
+    pub(super) fn read(accumulator: &u8) -> u8 {
+        // SAFETY: `accumulator` is a valid shared reference to one initialized
+        // byte, and the volatile read remains within that object.
+        unsafe { read_volatile(accumulator) }
+    }
+}
+
+/// Compare two byte slices with a compiler-preserved full scan.
 ///
 /// Returns `true` iff `a` and `b` have the same length and the same
 /// bytes. The loop iterates `len` times regardless of how early a
@@ -92,34 +131,38 @@ pub fn ct_eq(a: &[u8], b: &[u8]) -> bool {
     if a.len() != b.len() {
         return false;
     }
-    // Fold every byte into the accumulator. A single `|=` per iteration
-    // has no data-dependent branch: every byte, equal or not, takes the
-    // same path.
-    let mut acc: u8 = 0;
-    for i in 0..a.len() {
-        acc |= a[i] ^ b[i];
-    }
-    // `black_box` tells the optimiser "treat this value as opaque". That
-    // stops passes that might otherwise fold the loop back into an
-    // early-exit equivalent.
-    black_box(acc) == 0
+    ct_eq_equal_length(a, b)
 }
 
-/// Compare two fixed-size byte arrays for equality in constant time.
+/// Compare slices whose equal length has already been established.
+///
+/// Keeping the volatile scan in one non-inlined function gives both public
+/// equality entry points the same audited compiler boundary and gives the
+/// optimized-codegen test one exact body to inspect.
+#[inline(never)]
+fn ct_eq_equal_length(a: &[u8], b: &[u8]) -> bool {
+    debug_assert_eq!(a.len(), b.len());
+    // Fold every byte through volatile input and accumulator operations. Even
+    // if the accumulator reaches 0xff, later reads and writes remain observable
+    // and therefore cannot be elided as semantically irrelevant.
+    let mut acc: u8 = 0;
+    for i in 0..a.len() {
+        volatile_barrier::accumulate(&mut acc, &a[i], &b[i]);
+    }
+    volatile_barrier::read(&acc) == 0
+}
+
+/// Compare two fixed-size byte arrays with a compiler-preserved full scan.
 ///
 /// This is the type-safe version of `ct_eq` for the common case where
 /// both inputs are the same compile-time size (tag lengths, key lengths,
 /// etc.). It elides the length check.
 #[inline(never)]
 pub fn ct_eq_fixed<const N: usize>(a: &[u8; N], b: &[u8; N]) -> bool {
-    let mut acc: u8 = 0;
-    for i in 0..N {
-        acc |= a[i] ^ b[i];
-    }
-    black_box(acc) == 0
+    ct_eq_equal_length(a, b)
 }
 
-/// Select between two same-length byte slices in constant time.
+/// Select between two same-length byte slices without a source-level branch.
 ///
 /// If `choice` is `true`, returns a copy of `a`; if `false`, returns a
 /// copy of `b`. The selection is branchless — no instruction in the
@@ -149,7 +192,7 @@ pub fn ct_select_bytes(a: &[u8], b: &[u8], choice: bool) -> Vec<u8> {
     out
 }
 
-/// Constant-time equality on two `u64` values.
+/// Source-level branchless equality on two `u64` values.
 ///
 /// Exposes the same primitive one level up from byte slices, for
 /// counters and lease IDs where the comparison must not leak ordering.

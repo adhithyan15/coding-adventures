@@ -1,0 +1,19 @@
+{
+  "chapter": 269,
+  "title": "When I Was Little",
+  "label": "ch:zh-when-i-was-little",
+  "canDo": "I can say what I have done since childhood, what comes first, what my childhood was like, what I meant to do, and talk about toys.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C269-wanju",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 269: I can say what I have done since childhood, what comes first, what my childhood was like, what I meant to do, and talk about toys.",
+    "assesses": [
+      "ZH-LEX-C269-YOUNG269-03",
+      "ZH-LEX-C269-YOUNG269-04",
+      "ZH-LEX-C269-YOUNG269-05"
+    ]
+  }
+}

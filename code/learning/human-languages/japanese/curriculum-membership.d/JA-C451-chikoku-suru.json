@@ -1,0 +1,11 @@
+{
+  "id": "JA-C451-chikoku-suru",
+  "pathSegment": "JA-PATH-451-COMMUTE451",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-451-COMMUTE451",
+      "order": 2
+    }
+  ]
+}

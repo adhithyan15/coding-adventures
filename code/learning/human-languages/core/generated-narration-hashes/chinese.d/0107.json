@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:d03852d41f9d9185",
+  "lessonIds": [
+    "ZH-C107-tiao",
+    "ZH-C107-pa-climb",
+    "ZH-C107-ban",
+    "ZH-C107-ting-stop",
+    "ZH-C107-likai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch107.txt",
+  "json": "chinese/narration/ch107.json",
+  "textHash": "fnv1a64:b417bbede9d280d1",
+  "jsonHash": "fnv1a64:714a7b28b04c1829",
+  "findings": []
+}

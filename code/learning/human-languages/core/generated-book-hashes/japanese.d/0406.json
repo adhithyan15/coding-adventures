@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:8d70ce51f77e53b6",
+  "lessonIds": [
+    "JA-C406-torii",
+    "JA-C406-kuguru",
+    "JA-C406-keidai",
+    "JA-C406-kannushi",
+    "JA-C406-sasageru"
+  ],
+  "tex": "japanese/book/chapters/ch406-at-the-shrine-gate.tex"
+}

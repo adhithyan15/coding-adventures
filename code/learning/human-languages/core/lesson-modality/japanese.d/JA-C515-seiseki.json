@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C515-seiseki",
+    "language": "japanese",
+    "chapter": 515,
+    "sequence": 29830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2acefd73cbca4c9"
+  },
+  "findings": []
+}

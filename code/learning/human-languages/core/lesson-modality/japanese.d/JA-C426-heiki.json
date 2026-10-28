@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C426-heiki",
+    "language": "japanese",
+    "chapter": 426,
+    "sequence": 25020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91fcf1b4501f89bc"
+  },
+  "findings": []
+}

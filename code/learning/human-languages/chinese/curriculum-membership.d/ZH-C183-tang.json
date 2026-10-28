@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C183-tang",
+  "pathSegment": "ZH-PATH-183-INOUT183",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-183-INOUT183",
+      "order": 4
+    }
+  ]
+}

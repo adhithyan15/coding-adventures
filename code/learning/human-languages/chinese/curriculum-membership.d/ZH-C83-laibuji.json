@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C83-laibuji",
+  "pathSegment": "ZH-PATH-83-WAIT83",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-83-WAIT83",
+      "order": 3
+    }
+  ]
+}

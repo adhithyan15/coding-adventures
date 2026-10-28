@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-232-HURT232",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell what happened in an accident: who got hurt, who was bleeding, what crashed and the ambulance.",
+  "prerequisites": []
+}

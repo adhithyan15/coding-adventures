@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-219-CLOUD219",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say there will be cloud, a cloudy day, a cold snap, what the temperature is and when it will clear.",
+  "prerequisites": []
+}

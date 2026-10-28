@@ -2,6 +2,35 @@
 
 ## [Unreleased]
 
+### Added — version requirements mean something (mosaic-package-publishing-v1 §7.4, Phase 1)
+
+A `[dependencies]` value used to be shape-checked and then ignored, and five
+of the repository's requirement strings had drifted out of date unnoticed.
+
+- **New `version` module**, hand-written with no new dependency:
+  - `Version`: strict SemVer 2.0.0 parsing (no leading zeros, ASCII digits
+    only, non-empty pre-release identifiers, no build metadata, each
+    component a `u64`) and SemVer §11 precedence (`Ord`).
+  - `VersionReq`: `Caret` for a bare `X.Y.Z` (bump the left-most non-zero
+    component for the upper bound: `0.16.0` is `>=0.16.0, <0.17.0`) and
+    `Exact` for `=X.Y.Z`. `matches` follows Cargo's pre-release rule: a
+    pre-release matches only a requirement naming a pre-release of the same
+    `major.minor.patch`. `range()` renders the bounds for diagnostics.
+- **`[dependencies]` values are parsed as requirements.** `~`, `^`, `>=`,
+  `<`, `*`, `1.x`, partial versions and ranges fail with the new
+  `ManifestError::UnsupportedVersionRequirement { dependency, requirement }`,
+  whose message shows the two supported forms. A malformed version is still
+  `InvalidSemverString`. The map keeps the requirement text as written.
+
+### Changed — `[package].version` is strict SemVer
+
+The shape regex (`^\d+\.\d+\.\d+(-[A-Za-z0-9.-]+)?$`) is replaced by
+`Version::parse`, the same parser requirements are compared with. It refuses
+what the regex let through: leading zeros (`01.0.0`, `1.0.0-01`), empty
+pre-release identifiers (`1.0.0-a..b`) and non-ASCII digits (Rust's `\d` is
+Unicode-aware). Every `mosaic-package.toml` in the repository already
+complies; `mosaic-package-resolver`'s repository-wide test checks that.
+
 ### Added — `[styles] version` (UI90 §4 step 1)
 
 - `StylesSection` gains `version: u8`. It defaults to `1`, and `2` opts

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C339-hogo-suru",
+  "pathSegment": "JA-PATH-339-BUNBETSU339",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-339-BUNBETSU339",
+      "order": 2
+    }
+  ]
+}

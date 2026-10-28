@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C134-ying",
+  "pathSegment": "ZH-PATH-134-THING134",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-134-THING134",
+      "order": 3
+    }
+  ]
+}

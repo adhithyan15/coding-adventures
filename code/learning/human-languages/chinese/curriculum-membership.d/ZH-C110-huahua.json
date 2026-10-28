@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C110-huahua",
+  "pathSegment": "ZH-PATH-110-SKILL110",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-110-SKILL110",
+      "order": 4
+    }
+  ]
+}

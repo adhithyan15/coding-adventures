@@ -48,7 +48,9 @@ workspace record (`web`). If IndexedDB cannot open, it explicitly says the sessi
 is temporary and that closing or reloading loses changes. A rejected engine
 snapshot is copied to the first free recovery record (`workspace/web-corrupt`,
 then `workspace/web-corrupt.1` … `workspace/web-corrupt.9`) before the app starts
-fresh, and the warning names that record. A recovery record is never replaced,
+fresh, and the warning names that record. This is the same ten-name sequence
+the native hosts use for `.corrupt` files (see the quarantine section below).
+A recovery record is never replaced,
 because an earlier one may hold the real workspace; a record already kept under
 one of those keys is not copied again. If the copy cannot be written, or all ten
 keys are taken, or the live record cannot be read at all, the host saves nothing
@@ -57,7 +59,7 @@ over, and the warning says so.
 Background write failures also become persistent warnings rather than unhandled
 promises or console-only evidence.
 
-Native bindings continue to quarantine invalid bytes at the exact `.corrupt` path
+Native bindings quarantine invalid bytes at the first free `.corrupt` name
 described below. When the app declares the shared `storage-warning` slot, the host
 also injects that existing warning into the app's prop envelope so Qt, Flutter,
 Compose, SwiftUI, and WinUI all render it in the same focus-safe panel.
@@ -114,8 +116,9 @@ Linux/Windows application directory or `Trestle.app`. Reinstalling the same
 backend later reuses its live-state path.
 
 To purge local data, first make any wanted backup, then remove the application
-and that backend's live `mosaic-state.v1.json`, `mosaic-state.v1.json.tmp`, and
-`mosaic-state.v1.json.corrupt`. On Linux, also remove the explicitly selected
+and that backend's live `mosaic-state.v1.json`, `mosaic-state.v1.json.tmp`,
+`mosaic-state.v1.json.corrupt`, and any `mosaic-state.v1.json.corrupt.1` to
+`mosaic-state.v1.json.corrupt.9`. On Linux, also remove the explicitly selected
 `task-app/backups` directory if its pre-upgrade copies are no longer wanted.
 Delete only the exact backend paths from the table; do not recursively remove a
 broad platform data root.
@@ -123,14 +126,63 @@ broad platform data root.
 ## Corrupt-state quarantine and manual recovery
 
 Every generated host parses the JSON envelope and asks the Rust runtime to
-restore it. If either step rejects the file, the host preserves the rejected
-bytes as `mosaic-state.v1.json.corrupt`, reports a persistence warning, and
-starts a fresh workspace. A newer failure replaces an older `.corrupt` sibling,
-so copy a damaged file elsewhere before retrying repairs.
+restore it. If either step rejects the file, the host moves the rejected bytes
+to the first free quarantine name, reports a persistence warning, and starts a
+fresh workspace:
+
+| Rejection | Quarantined as                    |
+|-----------|-----------------------------------|
+| first     | `mosaic-state.v1.json.corrupt`    |
+| second    | `mosaic-state.v1.json.corrupt.1`  |
+| ...       | ...                               |
+| tenth     | `mosaic-state.v1.json.corrupt.9`  |
+
+A newer failure never replaces or deletes an older quarantine, because that one
+may hold the user's real data: startup can reject the real state, and a later
+rejection must not destroy it.
+
+A name is **taken** when any file-system object is there: a regular file, a
+directory, or a symbolic link (even a dangling one), on every platform. A
+host never overwrites a taken name. Three rules follow:
+
+1. A pre-check that skips taken names is only advisory, because something can
+   appear between the check and the move. The operation that takes the name
+   must itself be exclusive: it fails rather than replace anything already
+   there.
+2. When that exclusive operation fails *and* something now occupies the name,
+   the name is skipped like any other taken one. Any other failure switches
+   saving off (below).
+3. "Taken" is never decided from an error code alone. An exclusive create or
+   copy onto a directory reports `EEXIST` on POSIX but `EPERM`, `EACCES` or
+   `EISDIR` on Windows, so a host that skipped only on `EEXIST` would switch
+   saving off on Windows where POSIX moves on. The host looks at the name
+   again (without following a link) instead.
+
+The exclusive step per host:
+
+| Host | Exclusive step |
+|------|----------------|
+| WinUI | `File.Move(..., overwrite: false)`: `MoveFileEx` without `MOVEFILE_REPLACE_EXISTING` on Windows, where it ships |
+| Flutter, Qt, Compose, SwiftUI | claim the name with an exclusive create (`O_CREAT \| O_EXCL`, Windows `CREATE_NEW`), then rename onto that empty placeholder, an atomic replace whose only victim is the placeholder the host just made |
+
+The four claim-first hosts cannot use a plain move. `dart:io`'s rename
+replaces its target. `QFile::rename` falls back to a truncating copy. The
+JDK's `Files.move` without `REPLACE_EXISTING`, and Foundation's
+`FileManager.moveItem`, check and then call `rename(2)` on POSIX, which
+replaces whatever appeared in between. A state file the Qt host cannot open
+at all is quarantined the same way. On a fresh state directory the first
+quarantine is still exactly `mosaic-state.v1.json.corrupt`.
+
+If the move fails, or all ten names are taken, the rejected file stays at the
+live path. The host then saves nothing for the rest of that session, since a
+save would write over it, and its persistence warning ends "This session will
+not be saved." Move the quarantined files somewhere safe to let the next launch
+save again.
 
 Recovery is deliberately explicit:
 
-1. Close Trestle and copy the `.corrupt` file somewhere safe.
+1. Close Trestle and copy the `.corrupt` files somewhere safe. Unless some
+   were removed, the highest-numbered one is the most recent rejection.
 2. Prefer restoring the most recent known-good manual or Linux pre-upgrade
    backup to the exact live path.
 3. Keep the rejected file for forensic/manual extraction; never overwrite the
@@ -154,3 +206,10 @@ task remains. The same matrix seeds invalid bytes, launches the real bundle
 again, and requires byte-preserving `.corrupt` quarantine. Windows retains its
 separate UI Automation lifecycle; macOS retains replacement-runtime conformance;
 Linux retains its one-time pre-upgrade backup comparison.
+
+The app-agnostic half of this gate — the persistence envelope, the `.corrupt`
+checks, and the schema, version and byte validation — now lives in the shared
+[Mosaic release state gate](mosaic-release-state-gate-v1.md), which Engram and
+the other Mosaic apps adopt with their own fixtures. TaskApp's v0.1.0 fixture
+keeps its original schema and is read through an adapter in
+`taskapp_release.py`; the `expectedTask` check remains TaskApp's own.

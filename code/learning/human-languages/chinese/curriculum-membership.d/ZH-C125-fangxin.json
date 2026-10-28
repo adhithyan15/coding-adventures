@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C125-fangxin",
+  "pathSegment": "ZH-PATH-125-FEEL125",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-125-FEEL125",
+      "order": 2
+    }
+  ]
+}

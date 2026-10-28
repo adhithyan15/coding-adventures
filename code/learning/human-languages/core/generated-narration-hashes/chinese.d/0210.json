@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:65b4de5b2575c338",
+  "lessonIds": [
+    "ZH-C210-zise",
+    "ZH-C210-zongse",
+    "ZH-C210-kuanshi",
+    "ZH-C210-shiyijian",
+    "ZH-C210-xuan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch210.txt",
+  "json": "chinese/narration/ch210.json",
+  "textHash": "fnv1a64:f55bab0793e90e55",
+  "jsonHash": "fnv1a64:71b8b80ac4bb0cb9",
+  "findings": []
+}

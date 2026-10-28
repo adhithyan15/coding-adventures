@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:ec4ee67a87e68c97",
+  "lessonIds": [
+    "ZH-C80-shangban",
+    "ZH-C80-gongren",
+    "ZH-C80-siji",
+    "ZH-C80-yisheng",
+    "ZH-C80-gongsi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch80.txt",
+  "json": "chinese/narration/ch80.json",
+  "textHash": "fnv1a64:98a424be883f705f",
+  "jsonHash": "fnv1a64:f947325cdbe25de4",
+  "findings": []
+}

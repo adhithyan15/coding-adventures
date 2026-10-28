@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:a8f6df994cf5b2a2",
+  "lessonIds": [
+    "ZH-C170-guo",
+    "ZH-C170-chabei",
+    "ZH-W170-bei-cup",
+    "ZH-C170-shaozi",
+    "ZH-C170-chazi",
+    "ZH-C170-weibolu"
+  ],
+  "tex": "chinese/book/chapters/ch170-pots-and-pans.tex"
+}

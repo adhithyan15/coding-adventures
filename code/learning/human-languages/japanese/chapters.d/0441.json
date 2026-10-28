@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Proud, Cheeky or Lazy",
+  "label": "ch:ja-proud-cheeky-or-lazy",
+  "canDo": "I can describe someone who boasts, slacks or fools around.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C441-fuzakeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can describe someone who boasts, slacks or fools around.",
+    "assesses": [
+      "JA-LEX-C441-PROUD441-03",
+      "JA-LEX-C441-PROUD441-04",
+      "JA-LEX-C441-PROUD441-05"
+    ]
+  }
+}

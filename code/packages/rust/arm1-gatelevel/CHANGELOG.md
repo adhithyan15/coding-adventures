@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.3.0] - 2026-10-26
+
+### Fixed
+
+- Made the packed HALT DFF Q output the sole architectural halt authority for
+  observation, reset/load/restore, interrupts, instruction execution, checked
+  and legacy step/run, and transactional rollback.
+- Retained the private host Boolean only as a synchronized observation mirror
+  and added deliberate divergence regressions in both directions.
+- Added a concrete physical-storage inventory plus exact transition-chain and
+  hostile source-mutation tests that reject direct-Q writes, host-observer
+  authority, helper indirection, dead anchors, and post-clock overwrites. Every
+  hostile full-source rewrite is independently type-checked as a crate before
+  the structural validator is required to reject it.
+- Preserved the 599-case full-state differential and raised measured package
+  line coverage to 93.27% (1,189/1,269).
+
 ## [0.2.0] - 2026-08-28
 
 ### Changed

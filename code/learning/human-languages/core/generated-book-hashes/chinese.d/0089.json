@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:c46235160b7abe76",
+  "lessonIds": [
+    "ZH-C89-gei",
+    "ZH-W89-gei",
+    "ZH-C89-zuo",
+    "ZH-C89-fang",
+    "ZH-C89-dai",
+    "ZH-C89-zhan",
+    "ZH-C89-practice"
+  ],
+  "tex": "chinese/book/chapters/ch89-give-me-that.tex"
+}

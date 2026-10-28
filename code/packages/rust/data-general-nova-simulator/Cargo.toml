@@ -1,0 +1,10 @@
+[package]
+name = "data-general-nova-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked Data General Nova functional simulator"
+license = "MIT"
+
+[lib]
+name = "data_general_nova_simulator"
+path = "src/lib.rs"

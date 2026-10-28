@@ -178,7 +178,10 @@ pub enum Language {
     /// registry ops: `+ - *` and unary `-` are the PR4 checked ops (a result
     /// outside `i64` traps `Trap.Overflow`), `//`/`%` are `i64_div_floor`/
     /// `i64_mod_floor` (a zero divisor traps `Trap.DivZero`), `print` is
-    /// `print_i64`. No backend has Python code.
+    /// `print_i64`, and a float `print` is a `call` of the module's own
+    /// `repr(float)` helper, `__py_write_float` (LANG83 PR7c-py:
+    /// `f64_class`/`f64_signbit`/`f64_digits`/`f64_exp10` and integer
+    /// code), then `putchar 10`. No backend has Python code.
     Python,
     /// JavaScript — the `es-number-log` subset (`console.log` of IEEE number
     /// arithmetic over top-level `let`/`const`) via `javascript-iir-compiler`,
@@ -189,10 +192,12 @@ pub enum Language {
     /// compiler walks the CST that the generic `GrammarLexer`/`GrammarParser`
     /// build from that edition's `es<edition>.tokens`/`.grammar` and emits
     /// only LANG83 registry ops: `+ - * /` and unary `-` are the PR6c IEEE
-    /// `f64_*` ops (BEAM refuses them at compile time), `console.log` is
-    /// `write_f64_js` and `putchar` (the `-` of `-0` behind an
-    /// `f64_signbit` test), and a ReferenceError is
-    /// `trap "Trap.ReferenceError"`. No backend has JavaScript code.
+    /// `f64_*` ops (BEAM refuses them at compile time), `console.log` is a
+    /// `call` of the module's own `String(x)` helper, `__js_write_number`
+    /// (LANG83 PR7c-js: `f64_class`/`f64_digits`/`f64_exp10` and integer
+    /// code), and `putchar` (the `-` of `-0` behind an `f64_signbit` >
+    /// `f64_class` test), and a ReferenceError is `trap "Trap.Unbound"`
+    /// (the neutral kind, LANG83 PR7d). No backend has JavaScript code.
     JavaScript,
 }
 
@@ -1012,13 +1017,15 @@ fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` (its `not` is inline word tests) and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
-        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
-        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
-        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
+        "cons", "car", "cdr", "pair?", "not", "equal?", "null?",
+        // LANG83 PR7f's registered dynamic-value primitives (Lisp's truthiness,
+        // `not`, `equal?` and exit code are module IIR over them since PR7f-2).
+        "dyn_pair_new", "dyn_pair_first", "dyn_pair_rest", "dyn_is_pair", "dyn_is_nil",
+        "dyn_box_int", "dyn_unbox_int", "dyn_tag", "dyn_nil", "dyn_symbol",
     ];
     let module_uses_lisp = module.functions.iter().any(|func| {
         func.params.iter().any(|(_, t)| is_tagged_boundary_param(t))
@@ -1092,6 +1099,19 @@ pub fn compile_iir_to_llvm(
     target_triple: &str,
 ) -> Result<String, LangAotError> {
     check_module_for(Backend::Llvm, &module)?;
+    // The program's own functions may not take a runtime symbol's name
+    // (`__twig_*`, `__gc_*`, any `__dyn_*` but the pass helpers) or share a
+    // name. The executable links the same C runtime and gc-core-capi as the
+    // native column, and a program `define i64 @__gc_alloc_kind(…)` would
+    // stand in for the collector's allocator for every caller in the runtime.
+    // It is twig-aot's link-step check, shared so the two columns refuse the
+    // same names (security review).
+    twig_aot::check_program_function_names(&module).map_err(|e| {
+        LangAotError::LlvmBackendError(match e {
+            twig_aot::AotError::Linker { stderr, .. } => stderr,
+            other => other.to_string(),
+        })
+    })?;
     // E6d-8: lower dynamic `global_get`/`global_set` → `global_load`/`global_store`
     // before the value-model passes (as the native twig-aot path does).
     iir_builtin_lowering::lower_global_io(&mut module);
@@ -1107,11 +1127,14 @@ pub fn compile_iir_to_llvm(
     // `cmp_eq` no longer emits `icmp i1` on an i64); with that landed, LLVM joins
     // NativeAot + WASM. Runs before the runtime heap lowering (which lowers the
     // `cons`/`car`/`cdr` this pass emits).
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::LlvmBackendError(e.to_string()))?;
+    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module).map_err(|e| LangAotError::LlvmBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols(&mut module);
-    iir_builtin_lowering::lower_dyn_repr(&mut module);
+    // Refuses a module that defines or calls a compiler-reserved `__lisp_*`
+    // name (LANG83 PR7f-2 security review): the pass marks its Lisp rules with
+    // those names, so a program function carrying one could stand in for them.
+    iir_builtin_lowering::lower_dyn_repr(&mut module).map_err(|e| LangAotError::LlvmBackendError(e.to_string()))?;
     // E6d-2b: rewrite the generic `box`/`unbox` ops that `lower_dynamic_arith`
     // emitted into `dyn_box_int`/`dyn_unbox_int` runtime calls — the tagged-i64
     // (LLVM) representation, which `iir-to-llvm`'s `DYN_BUILTINS` table lowers to
@@ -1243,10 +1266,10 @@ pub fn compile_iir_to_wasm(mut module: IIRModule) -> Result<Vec<u8>, LangAotErro
     // BEFORE `lower_heap_builtins`, so the `cons`/`car`/`cdr` this pass emits are
     // then lowered by it. WASM has no native closure model (JVM/CLR/native/LLVM
     // do), so this is the WASM-only path; a no-op for a closure-free module.
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::WasmBackendError(e.to_string()))?;
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::WasmBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     // Intern symbol literals to distinct integers in a reserved range, so each
     // distinct symbol is a unique value (boxed as `i31ref`) and `EQ` compares
@@ -1294,13 +1317,15 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` (its `not` is inline word tests) and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
-        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
-        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
-        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
+        "cons", "car", "cdr", "pair?", "not", "equal?", "null?",
+        // LANG83 PR7f's registered dynamic-value primitives (Lisp's truthiness,
+        // `not`, `equal?` and exit code are module IIR over them since PR7f-2).
+        "dyn_pair_new", "dyn_pair_first", "dyn_pair_rest", "dyn_is_pair", "dyn_is_nil",
+        "dyn_box_int", "dyn_unbox_int", "dyn_tag", "dyn_nil", "dyn_symbol",
     ];
     // Concretization is a **whole-module** decision, not a per-function one,
     // because a `call` couples a caller and callee's value models: the caller
@@ -1335,10 +1360,17 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // whose trap fires at the i64 bounds. Rather than extend a hand-kept list
     // (which is how a new i64 op gets forgotten), the op side is *derived*:
     // every registry Op with an `i64` operand type is wide-model evidence.
+    //
+    // LANG83 PR7b: an Op that reads an `f64` (`f64_digits`, whose integer
+    // result reaches 10^17) is evidence too. Such a module computes with
+    // reals, and real modules keep their declared widths (see
+    // `module_uses_real_values` below) — but that check reads type hints,
+    // and an `f64` literal propagated straight into the op leaves none.
     const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "write_i64", "input_i64", "input_more"];
     let is_wide_i64_op = |op: &str| {
         interpreter_ir::op_registry::lookup(op).is_some_and(|spec| {
-            spec.kind == interpreter_ir::op_registry::OpKind::Op && spec.operand_types.contains(&"i64")
+            spec.kind == interpreter_ir::op_registry::OpKind::Op
+                && (spec.operand_types.contains(&"i64") || spec.operand_types.contains(&"f64"))
         })
     };
     let module_prints = module.functions.iter().any(|f| {
@@ -1524,8 +1556,8 @@ pub fn compile_iir_to_jvm_class(
     // `lower_heap_builtins` then makes structural. Running it here gives the
     // managed backends the same closure model wasm already had, instead of the
     // `UnsupportedOp alloc_closure` refusal.
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::JvmBackendError(e.to_string()))?;
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::JvmBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
@@ -1577,13 +1609,15 @@ fn concretize_scalar_any_for_cil(module: &mut IIRModule, narrow_i64: bool) {
     // representation passes rename them to. Whichever form survives to this
     // point is unfakeable evidence that the function is on the tagged value
     // model — unlike a `ref<any>` type hint, which only says the value is
-    // dynamic. `(ATOM 7)` reaches here as `dyn_pair_p`/`dyn_not` and has no
+    // dynamic. `(ATOM 7)` reaches here as `dyn_is_pair` (its `not` is inline word tests) and has no
     // other evidence, so omitting these names silently narrowed a tagged
     // program to machine ints.
     const LISP_BUILTINS: &[&str] = &[
-        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
-        "dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "dyn_not", "dyn_equal",
-        "dyn_box_int", "dyn_unbox_int", "dyn_truthy", "dyn_to_exit_code",
+        "cons", "car", "cdr", "pair?", "not", "equal?", "null?",
+        // LANG83 PR7f's registered dynamic-value primitives (Lisp's truthiness,
+        // `not`, `equal?` and exit code are module IIR over them since PR7f-2).
+        "dyn_pair_new", "dyn_pair_first", "dyn_pair_rest", "dyn_is_pair", "dyn_is_nil",
+        "dyn_box_int", "dyn_unbox_int", "dyn_tag", "dyn_nil", "dyn_symbol",
     ];
     // Whole-module, not per-function: a `call` couples a caller's and callee's
     // value models. Narrowing `main` while its callee `lambda_0` keeps a tagged
@@ -1674,8 +1708,8 @@ pub fn compile_iir_to_cil_artifact(
     // `lower_heap_builtins` then makes structural. Running it here gives the
     // managed backends the same closure model wasm already had, instead of the
     // `UnsupportedOp alloc_closure` refusal.
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::ClrBackendError(e.to_string()))?;
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::ClrBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
@@ -1741,8 +1775,8 @@ pub fn compile_iir_to_cil_text(mut module: IIRModule, name: &str) -> Result<Stri
     // `lower_heap_builtins` then makes structural. Running it here gives the
     // managed backends the same closure model wasm already had, instead of the
     // `UnsupportedOp alloc_closure` refusal.
-    iir_builtin_lowering::lower_closures_to_heap(&mut module);
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_closures_to_heap(&mut module).map_err(|e| LangAotError::ClrBackendError(e.to_string()))?;
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::ClrBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     iir_builtin_lowering::intern_symbols_structural(&mut module);
     iir_builtin_lowering::lower_dyn_repr_structural(&mut module);
@@ -1837,7 +1871,7 @@ pub fn compile_iir_to_beam(mut module: IIRModule, module_name: &str) -> Result<V
     // maps directly to BEAM list ops — `put_list` (a cons cell `[H|T]`) and
     // `get_hd`/`get_tl` (`hd`/`tl`). Integers stay native Erlang integers; there
     // is NO boxing (unlike wasm/JVM/CLR). A no-op for a scalar-only module.
-    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::lower_heap_builtins(&mut module).map_err(|e| LangAotError::BeamBackendError(e.to_string()))?;
     iir_builtin_lowering::lower_dynamic_arith(&mut module);
     // McCarthy symbols (F6): intern each distinct symbol to a stable `i32` id
     // (`SYMBOL_ID_BASE = 1<<29`). The BEAM carries it as a native Erlang integer,
@@ -3856,6 +3890,22 @@ mod tests {
         let mut m = module_with("add");
         concretize_scalar_any_for_jvm(&mut m);
         assert_eq!(m.get_function("main").unwrap().return_type, "i32", "plain add still narrows");
+        // LANG83 PR7b: `f64_digits` of a float LITERAL leaves no `f64` type
+        // hint behind, yet its result (up to 10^17) needs the wide model.
+        let mut m = IIRModule::new("m", "test");
+        m.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("f64_digits", Some("d".into()), vec![Operand::Float(0.1 + 0.2)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("d".into())], "i64"),
+            ],
+        ));
+        concretize_scalar_any_for_jvm(&mut m);
+        let main = m.get_function("main").unwrap();
+        assert_eq!(main.return_type, "i64", "f64_digits keeps the module wide");
+        assert!(main.instructions.iter().all(|i| i.type_hint == "i64"), "{:?}", main.instructions);
     }
 
     #[test]

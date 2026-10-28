@@ -1,0 +1,11 @@
+{
+  "id": "JA-C395-fusagaru",
+  "pathSegment": "JA-PATH-395-KOSHOU395",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-395-KOSHOU395",
+      "order": 2
+    }
+  ]
+}

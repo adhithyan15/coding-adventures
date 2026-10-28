@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-511-CAUSE511",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-511-CAUSE511"
+  ],
+  "after": []
+}

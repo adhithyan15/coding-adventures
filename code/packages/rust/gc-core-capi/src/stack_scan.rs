@@ -193,42 +193,161 @@ unsafe fn spill_and_sp(buf: *mut usize) -> usize {
     sp
 }
 
-// ── 2b. Current frame pointer (for the precise walk) ────────────────────────
+// ── 2b. The walk's anchor: a frame record built by a trampoline ────────────
 //
-// `current_fp()` returns this frame's **frame pointer** (`x29` on AArch64, `rbp`
-// on x86-64) — the anchor the precise stack walk unwinds from. It MUST be
-// `#[inline(always)]`: inlined into the `#[inline(never)]` collect entry, it reads
-// that entry's own frame pointer; as a separate call it would read its *own* frame
-// and mislead the walk.
+// The precise walk (`precise_walk::build_precise_roots`) unwinds a frame-pointer
+// chain, so it needs one trustworthy **frame record** to start from: an address
+// `fp` where
 //
-// **Frame-pointer dependency.** This reads whatever the register holds; it is a
-// valid chain anchor only if the compiler maintains a frame pointer for the collect
-// entry. That is guaranteed on `aarch64-apple-darwin` (the Apple ABI mandates the
-// `x29` chain) and holds under Rust's current x86-64-host defaults, but is *not*
-// enforced by this crate's build. While **no stack maps are registered** a bogus
-// anchor is still safe: `build_precise_roots` then classifies every frame
-// conservatively and its regions tile all of `[sp, base)`, so precise collection
-// degrades to exactly `__gc_collect`. Once maps ARE registered, a valid frame
-// pointer becomes load-bearing for safety (a garbage anchor whose `[fp+8]` aliased a
-// stale return address into a mapped function could exclude a live span) — so the
-// backend-record-emission rung must build this crate with `-Cforce-frame-pointers`
-// (or rely on the aarch64 ABI guarantee). Tracked as a prerequisite of that rung.
+// ```text
+//   [fp]      = the caller's frame pointer
+//   [fp + 8]  = the return address into the caller's code
+// ```
+//
+// The first version read that anchor straight out of the frame-pointer register
+// (`rbp` / `x29`) inside each Rust collect entry. That only works if the compiler
+// built a classic frame record for the entry, and it does not always:
+//
+// | target                  | compiler-maintained frame record?                    |
+// |-------------------------|------------------------------------------------------|
+// | aarch64 (Apple)         | yes — the ABI mandates the `x29` chain               |
+// | x86-64 SysV, `--release`| no — `rbp` still holds the *caller's* frame pointer  |
+// | x86-64 SysV + `-Cforce-frame-pointers=yes` | yes (`push rbp; mov rbp, rsp`)    |
+// | x86-64 Win64, any flags | no — LLVM sets `rbp` with `lea rbp, [rsp+N]`, so      |
+// |                         | `[rbp]` is a local, not a saved frame pointer         |
+//
+// A wrong anchor is harmless while no stack maps are registered (every frame then
+// becomes a conservative region tiling `[sp, base)`), but once maps exist it is
+// load-bearing: a garbage `[fp + 8]` that happens to alias a mapped return address
+// could make the walk treat a span precisely and miss a live reference.
+//
+// So every precise entry point is now a **naked trampoline** that builds the
+// record itself, in a handful of instructions whose layout no compiler flag can
+// change, and passes its address to the Rust body as an ordinary argument:
+//
+// ```text
+//   x86-64 SysV            x86-64 Win64             AArch64
+//   push rbp               push rbp                 stp  x29, x30, [sp, #-16]!
+//   mov  rbp, rsp          mov  rbp, rsp            mov  x29, sp
+//   mov  rdi, rbp          sub  rsp, 32  (shadow)   mov  x0, x29
+//   call body              mov  rcx, rbp            bl   body
+//   pop  rbp               call body                ldp  x29, x30, [sp], #16
+//   ret                    add  rsp, 32             ret
+//                          pop  rbp
+//                          ret
+// ```
+//
+// After `push rbp` (or `stp x29, x30`) the stack holds exactly `[saved fp, return
+// address]`, the record the walk expects, with the return address pointing into
+// whichever code called the entry point. The body (`*_from(anchor)`) runs below
+// that record, so its own frame, the spilled callee-saved registers and
+// everything it calls lie inside the walk's collector region `[sp, anchor)`.
+//
+// Stack alignment is preserved on every ABI: on x86-64 the `call` that entered
+// the trampoline left `rsp ≡ 8 (mod 16)`, `push rbp` restores 16-byte alignment,
+// and Win64's 32-byte shadow space keeps it; AArch64's `sp` stays 16-aligned
+// throughout. The `-Cforce-frame-pointers=yes` flag `twig-aot/build.rs` passes is
+// kept: the anchor no longer depends on it, but it keeps the rest of the chain
+// (frames *between* the trampoline's caller and the Twig code, if any) walkable.
+//
+// A naked function gets no unwind info from the compiler, so each variant writes its
+// own: `.cfi_*` directives (DWARF CFI, which Mach-O folds into compact unwind) on
+// SysV x86-64 and AArch64, `.seh_*` directives (`.pdata`/`.xdata`) on Win64. The
+// collector never needs them (its walk follows the frame records), but debuggers,
+// profilers, crash dumps and SEH do, and without them a backtrace stops at the
+// trampoline.
 
+/// The naked trampoline body shared by every precise entry point: build a classic
+/// frame record and call `$body(anchor)` with the record's address (see the
+/// section comment above for the per-ABI instruction sequences and why).
+/// `$entry` names the naked function itself; only the Win64 variant uses it, to
+/// open its unwind-info procedure.
+#[cfg(all(target_arch = "x86_64", not(windows)))]
+macro_rules! anchor_trampoline {
+    ($entry:path, $body:path) => {
+        core::arch::naked_asm!(
+            ".cfi_startproc",
+            "push rbp",
+            ".cfi_def_cfa_offset 16",
+            ".cfi_offset rbp, -16",
+            "mov rbp, rsp",
+            ".cfi_def_cfa_register rbp",
+            "mov rdi, rbp",
+            "call {body}",
+            "pop rbp",
+            ".cfi_def_cfa rsp, 8",
+            "ret",
+            ".cfi_endproc",
+            body = sym $body,
+        )
+    };
+}
+
+/// Win64 variant: the first argument travels in `rcx`, and the caller must
+/// reserve 32 bytes of shadow space below the return address.
+///
+/// Win64 also wants every function that touches `rsp` to carry unwind info
+/// (`.pdata`/`.xdata`): debuggers, crash dumps and SEH walk the stack with it,
+/// not with `rbp`. A naked function gets none from the compiler, so the
+/// `.seh_*` directives describe the prologue by hand, one directive after each
+/// instruction it explains:
+///
+/// ```text
+///   push rbp        .seh_pushreg rbp      UWOP_PUSH_NONVOL   rbp
+///   mov  rbp, rsp   .seh_setframe rbp, 0  UWOP_SET_FPREG     (rbp = rsp + 0)
+///   sub  rsp, 32    .seh_stackalloc 32    UWOP_ALLOC_SMALL   32
+/// ```
+///
+/// Unwinding replays them backwards: `rsp = rbp`, then pop `rbp`, then `ret`.
+#[cfg(all(target_arch = "x86_64", windows))]
+macro_rules! anchor_trampoline {
+    ($entry:path, $body:path) => {
+        core::arch::naked_asm!(
+            ".seh_proc {entry}",
+            "push rbp",
+            ".seh_pushreg rbp",
+            "mov rbp, rsp",
+            ".seh_setframe rbp, 0",
+            "sub rsp, 32",
+            ".seh_stackalloc 32",
+            ".seh_endprologue",
+            "mov rcx, rbp",
+            "call {body}",
+            "add rsp, 32",
+            "pop rbp",
+            "ret",
+            ".seh_endproc",
+            entry = sym $entry,
+            body = sym $body,
+        )
+    };
+}
+
+/// AArch64 variant (AAPCS64 and Apple): `x29`/`x30` form the record.
 #[cfg(target_arch = "aarch64")]
-#[inline(always)]
-unsafe fn current_fp() -> usize {
-    let fp: usize;
-    core::arch::asm!("mov {}, x29", out(reg) fp, options(nomem, nostack, preserves_flags));
-    fp
+macro_rules! anchor_trampoline {
+    ($entry:path, $body:path) => {
+        core::arch::naked_asm!(
+            ".cfi_startproc",
+            "stp x29, x30, [sp, #-16]!",
+            ".cfi_def_cfa_offset 16",
+            ".cfi_offset x30, -8",
+            ".cfi_offset x29, -16",
+            "mov x29, sp",
+            ".cfi_def_cfa w29, 16",
+            "mov x0, x29",
+            "bl {body}",
+            "ldp x29, x30, [sp], #16",
+            ".cfi_def_cfa sp, 0",
+            ".cfi_restore x30",
+            ".cfi_restore x29",
+            "ret",
+            ".cfi_endproc",
+            body = sym $body,
+        )
+    };
 }
-
-#[cfg(target_arch = "x86_64")]
-#[inline(always)]
-unsafe fn current_fp() -> usize {
-    let fp: usize;
-    core::arch::asm!("mov {}, rbp", out(reg) fp, options(nomem, nostack, preserves_flags));
-    fp
-}
+pub(crate) use anchor_trampoline;
 
 // ── 3. Thread stack base (the high end of the down-growing stack) ───────────
 
@@ -434,21 +553,28 @@ pub unsafe extern "C" fn __gc_collect_minor() -> i64 {
 ///
 /// Same contract as [`__gc_collect`]: the calling thread must own its stack.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __gc_safepoint() -> i64 {
+    anchor_trampoline!(__gc_safepoint, safepoint_from)
+}
+
+/// The body of [`__gc_safepoint`]: runs below the frame record its trampoline built
+/// at `fp`, which is the precise walk's anchor (see section 2b).
+#[inline(never)]
+pub(crate) unsafe extern "C" fn safepoint_from(fp: usize) -> i64 {
     if !with_heap(|h| h.should_collect()) {
         return 0;
     }
     if with_heap(|h| h.should_collect_minor()) {
         if with_heap(|h| h.should_compact_minor()) {
-            __gc_collect_minor_compacting()
+            collect_minor_compacting_from(fp)
         } else {
-            __gc_collect_minor_precise()
+            collect_minor_precise_from(fp)
         }
     } else if with_heap(|h| h.should_compact()) {
-        __gc_collect_compacting()
+        collect_compacting_from(fp)
     } else {
-        __gc_collect_precise()
+        collect_precise_from(fp)
     }
 }
 
@@ -456,7 +582,7 @@ pub unsafe extern "C" fn __gc_safepoint() -> i64 {
 /// entry that gives the precise-root machinery a real machine stack to walk.
 ///
 /// Where [`__gc_collect`] scans the whole `[sp, base)` span *conservatively*, this
-/// captures the current frame pointer and hands it, plus `sp`/`base`, to
+/// hands the frame record its trampoline built (the anchor), plus `sp`/`base`, to
 /// [`crate::precise_walk::build_precise_roots`], which unwinds the frame-pointer
 /// chain into **precise slots** for stack-mapped frames (registered via
 /// [`__gc_register_stackmap`](crate::__gc_register_stackmap)) and **conservative
@@ -468,16 +594,14 @@ pub unsafe extern "C" fn __gc_safepoint() -> i64 {
 /// by no stack map yet (that needs a per-safepoint `callee_saved_mask`, a later
 /// rung), so it must be scanned, exactly as `__gc_collect` scans the spill. The
 /// buffer also lives in this frame — inside the walk's `[sp, fp)` collector region —
-/// so the explicit region is belt-and-suspenders against an absent/garbage frame
-/// pointer.
+/// so the explicit region is belt-and-suspenders.
 ///
 /// **Precision is opportunistic and safe:** with no stack maps registered, every
 /// frame resolves to a conservative region whose spans tile all of `[sp, base)`, so
-/// this degrades exactly to `__gc_collect` — safe even if the captured frame pointer
-/// is garbage. As backends register maps, matching frames shed their floating
-/// garbage; at that point a *valid* frame pointer becomes load-bearing for safety
-/// (see [`current_fp`]), so the map-emitting rung must build this crate with frame
-/// pointers (guaranteed by ABI on the aarch64 primary target). An unwalkable stack
+/// this degrades exactly to `__gc_collect`. As backends register maps, matching
+/// frames shed their floating garbage; at that point a *valid* anchor becomes
+/// load-bearing for safety, which is why the trampoline builds it itself instead of
+/// trusting the frame-pointer register (see section 2b, "The walk's anchor"). An unwalkable stack
 /// still degrades to a conservative scan; if the stack base cannot be established,
 /// it collects **nothing** this cycle rather than risk freeing a live object — the
 /// same bias-to-leak as `__gc_collect`.
@@ -488,14 +612,18 @@ pub unsafe extern "C" fn __gc_safepoint() -> i64 {
 /// stack (the single-threaded native runtime always does); it must not run while
 /// another thread mutates the same heap.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __gc_collect_precise() -> i64 {
+    anchor_trampoline!(__gc_collect_precise, collect_precise_from)
+}
+
+/// The body of [`__gc_collect_precise`]: runs below the frame record its trampoline built
+/// at `fp`, which is the precise walk's anchor (see section 2b).
+#[inline(never)]
+pub(crate) unsafe extern "C" fn collect_precise_from(fp: usize) -> i64 {
     // Spill callee-saved registers into a stack buffer (in this frame), then SP.
     let mut regs = [0usize; SPILL_SLOTS];
     let sp = spill_and_sp(regs.as_mut_ptr());
-    // Capture this frame's frame pointer — the walk's unwind anchor. `current_fp`
-    // is `#[inline(always)]`, so this reads *this* frame's fp, not a callee's.
-    let fp = current_fp();
     let base = stack_base();
 
     // Only collect when the stack range is trustworthy. As in `__gc_collect`, a
@@ -560,16 +688,21 @@ pub unsafe extern "C" fn __gc_collect_precise() -> i64 {
 /// Same contract as [`__gc_collect_precise`]: sound to call from any thread that owns
 /// its stack; it must not run while another thread mutates the same heap.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __gc_collect_minor_precise() -> i64 {
+    anchor_trampoline!(__gc_collect_minor_precise, collect_minor_precise_from)
+}
+
+/// The body of [`__gc_collect_minor_precise`]: runs below the frame record its trampoline built
+/// at `fp`, which is the precise walk's anchor (see section 2b).
+#[inline(never)]
+pub(crate) unsafe extern "C" fn collect_minor_precise_from(fp: usize) -> i64 {
     if !with_heap(|h| h.auto_minor()) {
         return 0;
     }
     // Spill callee-saved registers into a stack buffer (in this frame), then SP.
     let mut regs = [0usize; SPILL_SLOTS];
     let sp = spill_and_sp(regs.as_mut_ptr());
-    // Capture this frame's frame pointer — the walk's unwind anchor.
-    let fp = current_fp();
     let base = stack_base();
 
     // Same trustworthy-range gate as every other precise entry (bias-to-leak).
@@ -617,12 +750,21 @@ pub unsafe extern "C" fn __gc_collect_minor_precise() -> i64 {
 /// mutator; **no other collection runs between `start` and `finish`** (enforced by gc-core's
 /// mixing guard). The driver loops `step` to "done" before calling `finish`.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __gc_collect_incremental_start() {
+    anchor_trampoline!(
+        __gc_collect_incremental_start,
+        collect_incremental_start_from
+    )
+}
+
+/// The body of [`__gc_collect_incremental_start`]: runs below the frame record its trampoline built
+/// at `fp`, which is the precise walk's anchor (see section 2b).
+#[inline(never)]
+pub(crate) unsafe extern "C" fn collect_incremental_start_from(fp: usize) {
     // Spill callee-saved registers into a stack buffer (in this frame), then SP.
     let mut regs = [0usize; SPILL_SLOTS];
     let sp = spill_and_sp(regs.as_mut_ptr());
-    let fp = current_fp();
     let base = stack_base();
 
     if base != 0 && sp < base && base - sp <= MAX_STACK_SCAN {
@@ -707,8 +849,8 @@ pub unsafe extern "C" fn __gc_collect_incremental_finish() -> i64 {
 /// holder's pointer cannot be found-and-rewritten. With **no** stack maps registered every
 /// frame becomes a conservative region tiling all of `[sp, base)`, so nothing is movable and
 /// this degrades to exactly [`__gc_collect_precise`] / `__gc_collect` — no relocation, no
-/// risk, even if the captured frame pointer is garbage. As backends register maps a *valid*
-/// frame pointer becomes load-bearing (see [`current_fp`]), identical to `__gc_collect_precise`.
+/// risk. As backends register maps a *valid* anchor becomes load-bearing; the trampoline
+/// builds it on every ABI (see section 2b, "The walk's anchor"), identical to `__gc_collect_precise`.
 /// A failed stack-base detection collects nothing this cycle (bias-to-leak), never freeing
 /// or moving a live object.
 ///
@@ -719,16 +861,21 @@ pub unsafe extern "C" fn __gc_collect_incremental_finish() -> i64 {
 ///
 /// Same contract as [`__gc_collect_precise`]: sound to call from any thread that owns its
 /// stack (the single-threaded native runtime always does); it must not run while another
-/// thread mutates the same heap. The captured frame pointer must be valid once any stack map
-/// is registered (guaranteed by ABI on the aarch64 primary target / frame-pointer builds).
+/// thread mutates the same heap. The walk's anchor is the record the trampoline builds, so it
+/// is valid on every supported ABI regardless of frame-pointer flags.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __gc_collect_compacting() -> i64 {
+    anchor_trampoline!(__gc_collect_compacting, collect_compacting_from)
+}
+
+/// The body of [`__gc_collect_compacting`]: runs below the frame record its trampoline built
+/// at `fp`, which is the precise walk's anchor (see section 2b).
+#[inline(never)]
+pub(crate) unsafe extern "C" fn collect_compacting_from(fp: usize) -> i64 {
     // Spill callee-saved registers into a stack buffer (in this frame), then SP.
     let mut regs = [0usize; SPILL_SLOTS];
     let sp = spill_and_sp(regs.as_mut_ptr());
-    // Capture this frame's frame pointer — the walk's unwind anchor (see current_fp).
-    let fp = current_fp();
     let base = stack_base();
 
     // Only collect when the stack range is trustworthy (identical gate to
@@ -797,16 +944,21 @@ pub unsafe extern "C" fn __gc_collect_compacting() -> i64 {
 /// have called [`__gc_write_barrier`] — the strengthened obligation this function's own doc
 /// above describes.
 #[no_mangle]
-#[inline(never)]
+#[unsafe(naked)]
 pub unsafe extern "C" fn __gc_collect_minor_compacting() -> i64 {
+    anchor_trampoline!(__gc_collect_minor_compacting, collect_minor_compacting_from)
+}
+
+/// The body of [`__gc_collect_minor_compacting`]: runs below the frame record its trampoline built
+/// at `fp`, which is the precise walk's anchor (see section 2b).
+#[inline(never)]
+pub(crate) unsafe extern "C" fn collect_minor_compacting_from(fp: usize) -> i64 {
     if !with_heap(|h| h.auto_minor()) {
         return 0;
     }
     // Spill callee-saved registers into a stack buffer (in this frame), then SP.
     let mut regs = [0usize; SPILL_SLOTS];
     let sp = spill_and_sp(regs.as_mut_ptr());
-    // Capture this frame's frame pointer — the walk's unwind anchor.
-    let fp = current_fp();
     let base = stack_base();
 
     // Same trustworthy-range gate as every other precise entry (bias-to-leak).

@@ -1,0 +1,17 @@
+{
+  "glyph": "月",
+  "sound": "getsu / gatsu / tsuki",
+  "role": "logograph",
+  "components": [
+    "a tall frame, open at the bottom",
+    "two short bars inside"
+  ],
+  "strokeOrder": [
+    "draw the left side from the top down, sweeping a little to the left at the foot",
+    "lift, draw the top from left to right, then without lifting turn down the right side and hook left at its foot",
+    "lift, draw the upper inside bar from left to right",
+    "lift, draw the lower inside bar from left to right"
+  ],
+  "strokeOrderNote": "KanjiVG, kanji/06708.svg (https://github.com/KanjiVG/kanjivg/blob/master/kanji/06708.svg), records 月 (U+6708) as four stroke paths, kvg:06708-s1 to s4, in this order and direction (Ulrich Apel and contributors, CC BY-SA 3.0). KanjiVG stores each stroke as one directed path in writing order: s1 is the left side drawn from the top down, sweeping left at its foot (kvg:type ㇓); s2 is the top drawn left to right, turning down the right side without lifting and hooking left at the foot (㇆a); s3 is the upper inside bar, drawn left to right (㇐a); s4 is the lower inside bar, drawn left to right (㇐a). Only the order and direction are taken from that file. No ductus geometry has been fitted to the Noto Sans JP outline for this kanji yet, so the row carries no verified pen-lift count or structured source (script-ductus holds every such claim to a ductus): the lessons teach it copy-only, from this order.",
+  "notes": "Moon, month. Read tsuki in 月日 tsukihi, the passing of time; getsu and gatsu are its readings in other words."
+}

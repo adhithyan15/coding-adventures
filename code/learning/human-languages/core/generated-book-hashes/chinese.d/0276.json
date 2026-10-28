@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:d2e0e75ddd290bf8",
+  "lessonIds": [
+    "ZH-C276-mianshi",
+    "ZH-C276-cizhi",
+    "ZH-C276-jihui",
+    "ZH-C276-tuixiu",
+    "ZH-C276-dashi"
+  ],
+  "tex": "chinese/book/chapters/ch276-a-new-job.tex"
+}

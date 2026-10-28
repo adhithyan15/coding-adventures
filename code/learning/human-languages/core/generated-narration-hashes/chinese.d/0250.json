@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:98f31a705341adce",
+  "lessonIds": [
+    "ZH-C250-aihao",
+    "ZH-C250-xingqu",
+    "ZH-C250-xiaoshuo",
+    "ZH-C250-gushi",
+    "ZH-C250-xiaqi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch250.txt",
+  "json": "chinese/narration/ch250.json",
+  "textHash": "fnv1a64:3a4c96d073e103b8",
+  "jsonHash": "fnv1a64:6c71686c16b44a51",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:f204943b1d802ca1",
+  "lessonIds": [
+    "ZH-C147-houtian",
+    "ZH-W147-hou-after",
+    "ZH-C147-hui-future",
+    "ZH-C147-keneng",
+    "ZH-C147-yiding",
+    "ZH-C147-tianqi-yubao",
+    "ZH-C147-practice"
+  ],
+  "tex": "chinese/book/chapters/ch147-it-might-rain.tex"
+}

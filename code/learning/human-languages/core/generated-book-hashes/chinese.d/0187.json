@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:f8a95ca0130a0c95",
+  "lessonIds": [
+    "ZH-C187-dapo",
+    "ZH-C187-shuai",
+    "ZH-C187-houhui",
+    "ZH-C187-dangshi",
+    "ZH-C187-jieguo",
+    "ZH-R187-review-182-187",
+    "ZH-R187-review-final-187"
+  ],
+  "tex": "chinese/book/chapters/ch187-what-a-day.tex"
+}

@@ -297,24 +297,31 @@ describe("corpus level summary", () => {
     // future first), so the list is 6. Urdu leaves it with chapters 266-275,
     // the same five nodes (264-265 bridge the A2 past and future first), so
     // the list is 5. Sanskrit leaves it with chapters 276-285, the same five
-    // nodes (275 bridges the A2 future first), so the list is 4.
+    // nodes (275 bridges the A2 future first), so the list is 4. Japanese
+    // leaves it with chapters 252-261, the same five nodes (250-251 bridge the
+    // A2 past and future first: the plain past and the plain negative), so the
+    // list is 3.
     expect(
       summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
     ).toEqual([
       // Chinese joins the list with the 了 and 呢/对 chapters: an aspect particle
       // realizing SPINE-TALK-ABOUT-PAST and a follow-up particle on
       // SPINE-NEGATE-AND-ASK, which are the two A2 grammar nodes this track had
-      // never reached. Both are one character each.
+      // never reached. Both are one character each. Its A2 core, chapters
+      // 147-157, realized all five A2 nodes, and its A2 vocabulary, chapters
+      // 158-277, took attained to A2; it stays on this list until a B1 core
+      // takes `reach` past A2.
       "chinese",
-      // Japanese joins with chapters 138-142: what I do, negation and
+      // Japanese joined with chapters 138-142 (what I do, negation and
       // questions, the past, the future and practical texts, the five A2 spine
-      // nodes. `reach` only TOUCHES A2; attained stays A1 until the A2
-      // vocabulary and verb counts are met.
-      "japanese",
+      // nodes), and its A2 vocabulary, chapters 146-249, took attained to A2.
+      // Its B1 core, chapters 250-261, now takes `reach` past A2, so it has
+      // left this list, and its B1 vocabulary, chapters 262-533, took attained
+      // to B1.
       "marwadi",
       "punjabi",
     ]);
-    // Nineteen tracks now exceed A2, and naming them is stronger than a blanket
+    // Twenty tracks now exceed A2, and naming them is stronger than a blanket
     // "nothing does" -- it says which rung was climbed and by whom. Italian joins
     // Spanish with its B1 core, chapters 263-272, Portuguese with its B1
     // core, chapters 259-268, French with its B1 core, chapters 258-267,
@@ -326,12 +333,13 @@ describe("corpus level summary", () => {
     // 309-318, Tamil with its B1 core, chapters 284-293, Marathi with its
     // B1 core, chapters 276-287, Bengali with its B1 core, chapters 264-275,
     // Hindi with its B1 core, chapters 276-287, Gujarati with its B1 core,
-    // chapters 273-284, Urdu with its B1 core, chapters 264-275, and Sanskrit
-    // with its B1 core, chapters 275-285.
+    // chapters 273-284, Urdu with its B1 core, chapters 264-275, Sanskrit
+    // with its B1 core, chapters 275-285, and Japanese with its B1 core,
+    // chapters 250-261.
     expect(
       summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
         .map((track) => track.language),
-    ).toEqual(["arabic", "bengali", "french", "german", "gujarati", "hindi", "italian", "kannada", "latin", "malayalam", "marathi", "persian", "portuguese", "russian", "sanskrit", "spanish", "tamil", "telugu", "urdu"]);
+    ).toEqual(["arabic", "bengali", "french", "german", "gujarati", "hindi", "italian", "japanese", "kannada", "latin", "malayalam", "marathi", "persian", "portuguese", "russian", "sanskrit", "spanish", "tamil", "telugu", "urdu"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
       // HL-C230: chinese leaves this list. Its numerals chapter realizes

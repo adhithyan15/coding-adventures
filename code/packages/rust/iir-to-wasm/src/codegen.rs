@@ -410,14 +410,19 @@ pub const F64_NEG: u8 = 0x9A;
 
 // ── numeric conversions integer↔real (LANG-FULL E8) ───────────────────────
 //
-// All three are wasm MVP opcodes (no feature gate). The **non-saturating**
-// `i64.trunc_f64_s` is deliberate: it **traps** on NaN / ±∞ / out-of-`i64`-range,
-// which matches vm-core's `real_to_i64_checked` fail-closed contract exactly —
-// no explicit range guard needed (unlike the saturating `i64.trunc_sat_f64_s`,
-// which would clamp and silently diverge from the VM).
+// All of these are wasm MVP opcodes (no feature gate). The lowering guards
+// every narrowing with an explicit range check that raises LANG83's typed
+// `Trap.ConvRange` through `env.__trap`, so the **non-saturating**
+// `i64.trunc_f64_s` after it never sees NaN / ±∞ / an out-of-`i64`-range
+// value. It stays non-saturating anyway (unlike `i64.trunc_sat_f64_s`, which
+// would clamp): if the guard were ever wrong, the program still fails closed.
 
 /// `f64.floor` (0x9C) — round a double toward −∞ (for `real_to_int_floor`).
 pub const F64_FLOOR: u8 = 0x9C;
+
+/// `f64.trunc` (0x9D) — round a double toward zero, staying a double (the
+/// rounding half of `real_to_int_trunc`, before its `Trap.ConvRange` check).
+pub const F64_TRUNC: u8 = 0x9D;
 
 /// `f64.sqrt` (0x9F) — IEEE-754 square root (hardware; no libm call).
 /// Adjacent ops in the spec: abs=0x99, neg=0x9A, ceil=0x9B, floor=0x9C,
@@ -427,6 +432,10 @@ pub const F64_SQRT: u8 = 0x9F;
 /// `i64.reinterpret_f64` (0xBD) — the bit pattern of a double as an i64, no
 /// conversion (LANG83 PR6c `f64_signbit`).
 pub const I64_REINTERPRET_F64: u8 = 0xBD;
+
+/// `i64.extend_i32_u` (0xAD) — zero-extend an i32 to an i64 (LANG83 PR7b
+/// `f64_class`, whose three 0/1 compares are summed as an i32).
+pub const I64_EXTEND_I32_U: u8 = 0xAD;
 
 /// `i64.trunc_f64_s` (0xB0) — truncate a double toward zero to a signed i64,
 /// **trapping** on NaN/±∞/out-of-range.

@@ -1,0 +1,20 @@
+{
+  "chapter": 38,
+  "title": "Eating",
+  "label": "ch:zh-eating",
+  "canDo": "I can say what I eat and ask what somebody likes to eat.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C38-cai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 38: I can say what I eat and ask what somebody likes to eat.",
+    "assesses": [
+      "ZH-LEX-C38-EAT38-01",
+      "ZH-LEX-C38-EAT38-03",
+      "ZH-LEX-C38-EAT38-04",
+      "ZH-LEX-C38-EAT38-05"
+    ]
+  }
+}

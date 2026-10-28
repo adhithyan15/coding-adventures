@@ -1,0 +1,11 @@
+{
+  "id": "JA-C444-ketsuatsu",
+  "pathSegment": "JA-PATH-444-PULSE444",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-444-PULSE444",
+      "order": 2
+    }
+  ]
+}

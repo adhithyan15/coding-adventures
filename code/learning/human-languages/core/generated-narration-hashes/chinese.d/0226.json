@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:cb16ff835ec00755",
+  "lessonIds": [
+    "ZH-C226-caodi",
+    "ZH-W226-cao-grass",
+    "ZH-C226-hu",
+    "ZH-C226-senlin",
+    "ZH-C226-caoyuan",
+    "ZH-C226-fengjing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch226.txt",
+  "json": "chinese/narration/ch226.json",
+  "textHash": "fnv1a64:7c17893cfbb88a9f",
+  "jsonHash": "fnv1a64:db0e07a55179ef2a",
+  "findings": []
+}

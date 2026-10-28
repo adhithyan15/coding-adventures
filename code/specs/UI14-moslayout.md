@@ -503,6 +503,13 @@ component_binding = KW_SLOT KEBAB_IDENT COLON KW_SLOT COLON KEBAB_IDENT
    `Grid` is a self-contained leaf.
 6. **Known primitives** — only the primitives listed in §2 are valid at node
    positions. An unknown identifier at a node position is a compile error.
+7. **Bound bare names** — a bare NAME prop value in a name-reference
+   position (`Text ( content: hello )`) must name an enclosing `For`'s
+   `as:`/`index:` binding or one of the component's slots (kebab-case or
+   camelCase). Literal positions (`true`/`false`, the
+   `KEYWORD_LITERAL_PROPS` enum props), the props of `For`/`If`/`Else`, and
+   the props of component call sites are exempt. Skipped when no interface
+   descriptor is given. Full rule: UI29 §3.4 "A bare name must be bound".
 
 ### Outputs
 
@@ -550,6 +557,7 @@ Each backend translates the layout IR to its native layout primitives:
 | Error | Condition | Example message |
 |---|---|---|
 | `UnknownSlot` | `slot: foo` where `foo` not in interface | `Unknown slot 'foo' at line 8 — Grid declares no slot named 'foo'` |
+| `UnboundName` | bare NAME `hello` in a name-reference position, bound by no enclosing `For` and declared as no slot | ``UnboundName: `Greeting` layout: bare name `hello` in `Text ( content: hello )` at Column[root] > Text#1 is not bound — no enclosing `For` binds it and Greeting.mil declares no slot `hello`. Declare `slot hello : …` in Greeting.mil, bind it with `For ( …, as: hello )`, or quote it as a string literal "hello"`` |
 | `UnknownEmit` | `connects: bar` where `bar` not in interface | `Unknown emit 'bar' at line 12 — Button declares no emit named 'bar'` |
 | `SlotTypeMismatch` | Slot type incompatible with primitive | `Text node at line 6 requires a text slot, but 'total-rows' is number` |
 | `DuplicatePart` | Two nodes share a part name | `Duplicate part name 'label' at line 15` |

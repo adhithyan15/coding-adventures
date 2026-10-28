@@ -1,0 +1,17 @@
+{
+  "glyph": "中",
+  "sound": "chū / naka / uchi",
+  "role": "logograph",
+  "components": [
+    "口 (box)",
+    "a long centre stem through it"
+  ],
+  "strokeOrder": [
+    "draw the left side of the box from the top down",
+    "lift, draw the top from left to right, then without lifting turn down the right side",
+    "lift, close the base of the box from left to right",
+    "lift, draw the long centre stem from above the box straight down through it"
+  ],
+  "strokeOrderNote": "KanjiVG, kanji/04e2d.svg (https://github.com/KanjiVG/kanjivg/blob/master/kanji/04e2d.svg), records 中 (U+4E2D) as four stroke paths, kvg:04e2d-s1 to s4, in this order and direction (Ulrich Apel and contributors, CC BY-SA 3.0). KanjiVG stores each stroke as one directed path in writing order: s1 is the left side of the box, drawn from the top down (kvg:type ㇑); s2 is the top drawn left to right, turning down the right side without lifting (㇕b); s3 is the base of the box, drawn left to right (㇐b); s4 is the long centre stem, drawn from above the box down through it (㇑). Only the order and direction are taken from that file. No ductus geometry has been fitted to the Noto Sans JP outline for this kanji yet, so the row carries no verified pen-lift count or structured source (script-ductus holds every such claim to a ductus): the lessons teach it copy-only, from this order.",
+  "notes": "Middle, inside. Read jū in 日本中 nihonjū, all over Japan; chū and naka are its readings in other words."
+}

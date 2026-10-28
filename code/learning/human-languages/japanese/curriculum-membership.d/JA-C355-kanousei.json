@@ -1,0 +1,11 @@
+{
+  "id": "JA-C355-kanousei",
+  "pathSegment": "JA-PATH-355-TABUN355",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-355-TABUN355",
+      "order": 3
+    }
+  ]
+}

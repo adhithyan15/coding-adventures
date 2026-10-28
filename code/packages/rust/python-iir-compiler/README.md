@@ -55,6 +55,25 @@ Everything else is a typed `FrontendError` (`Lex`, `Parse`, `Unsupported`,
 a 1-based position. Refused examples: `/` (true division gives a float),
 names, another callee, two arguments, and a literal outside `i64`.
 
+`main` must also fit one vm-core frame: at most
+`MAX_REGISTERS_PER_FUNCTION` registers, which is vm-core's
+`VMFrame::MAX_FRAME_REGISTERS` (65,536) re-exported, counted as vm-core counts
+them (parameters plus distinct `dest`s). The default budgets cannot reach it;
+the trusted ones (1 MiB, 256 Ki tokens) can. A program over it is refused
+when it is compiled, not when the VM loads it, as a `Budget` that names `main`
+and the statement that went over:
+
+```text
+Python 3.13.16: registers per function exceeds the limit of 65536 in function `main` at 258:1
+```
+
+The compiler reserves the register of `main`'s closing `return 0` while it
+lowers the statements, so the error points at a statement in the source, not
+at the epilogue. Then every function of the module, the float helpers
+included, goes through vm-core's own `VMFrame::check_register_limit` as a
+backstop (`tests/register_limit.rs` tests both sides of the boundary on the
+VM).
+
 Python 3 releases: 3.0a1 (profile `py30`), and 3.5.10, 3.6.0, 3.11.17,
 3.12.3, 3.13.16 and 3.16.0a1 (profile `py3`), which also compile
 `py-float-print` (LANG84 phase 7c slice 3, below). Python 2 releases (LANG84 phase 7c):
@@ -76,6 +95,7 @@ readers of the inventory and corpus that the release tests share live in
 | `tests/release_lowering.rs` | which op each construct becomes, the `-1` fold, `main: i64`, located refusals, forged trees |
 | `tests/cst_contract.rs` | LANG84 C8: every dispatched rule and token exists in each release |
 | `tests/hostile_release.rs` | LANG84 C5 hostile probes, in a child process |
+| `tests/register_limit.rs` | #18419: `main` at exactly 65,536 registers (vm-core's frame limit) compiles and runs on vm-core under the trusted budgets; one more is a `Budget` error naming `main` and the statement |
 | `tests/iir_path.rs` | the release path never touches a legacy grammar or compares release IDs |
 
 ### Floats: `py-float-print` (LANG84 phase 7c slice 3)
@@ -111,14 +131,42 @@ assert_eq!((ran.stdout.as_str(), ran.trap.as_deref()), ("1.5
 | `+ - *` with a float, `/` always | `f64_add`, `f64_sub`, `f64_mul`, `f64_div` (LANG83 PR6c, IEEE, never trap) |
 | `/` by a known `±0` | `trap "Trap.DivZero"` first (CPython's ZeroDivisionError) |
 | `-a`, `+a` (float) | `f64_neg`, nothing |
-| `print(a)` (float) | `write_f64_py` (Python `repr`), `putchar 10` |
+| `print(a)` (float) | `call __py_write_float, a` (Python `repr`, written by this compiler), `putchar 10` |
 
 Refused (`Unsupported`): `//` and `%` on a float, `int / int` with an operand
 above 2^53 (CPython rounds the exact quotient once), and a literal that
 overflows to `inf` (`1e400`). 3.0a1 has no floats: its `str(float)` is
-`%.12g`, which no LANG83 writer produces. BEAM refuses the `f64_*`
-arithmetic at compile time (its floats have no `inf`/`nan`); a literal-only
-program runs there too.
+`%.12g`, which this compiler does not write (LANG83 plans `f64_digits_prec`
+for it). BEAM refuses the `f64_*` arithmetic at compile time (its floats
+have no `inf`/`nan`); a literal-only program runs there too.
+
+#### Printing a float: the module writes `repr` (LANG83 PR7c-py)
+
+No backend knows Python's float layout. Since 0.4.0 a module that prints a
+float carries four functions this compiler writes (`src/float_repr.rs`),
+and every float `print` is one `call` of the first:
+
+```text
+main ──call──▶ __py_write_float(x)        repr(x)
+                  ├─call─▶ __py_digit_count(D)
+                  ├─call─▶ __py_write_digits(D, n, from, to)
+                  └─call─▶ __py_write_uint(u)
+```
+
+`__py_write_float` reads `x` only through the neutral LANG83 primitives
+`f64_class` (zero, finite, infinite, NaN), `f64_signbit`, `f64_digits` (the
+shortest round-trip digits `D`) and `f64_exp10` (the exponent `e` of `D`'s
+leading digit). The rest is integer code and `putchar`: `nan`, `inf`,
+`-0.0`, fixed notation when `-4 <= e < 16` (`1000000000000000.0`,
+`0.0001`), otherwise `1e+16`, `1.5e-07`, `5e-324`. A module that prints no
+float carries none of them. Up to 0.3.0 the `write_f64_py` builtin did this,
+so each of the nine backends carried a copy of Python's layout.
+
+A print now costs the VM up to 700 steps instead of one, so `run_module`
+derives each module's step budget from the module: `main`'s length plus
+1,024 (the measured per-print bound, with headroom) per
+`call __py_write_float`, capped at `MAX_IIR_INSTRUCTIONS × (1 + 1,024 / 4)`.
+A hand-built module that loops is stopped after its own size's worth.
 
 ## LANG79's float pilot
 

@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-100-TOWN100",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-100-TOWN100"
+  ],
+  "after": []
+}

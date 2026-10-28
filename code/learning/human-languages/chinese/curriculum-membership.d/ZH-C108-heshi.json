@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C108-heshi",
+  "pathSegment": "ZH-PATH-108-SHOP108",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-108-SHOP108",
+      "order": 5
+    }
+  ]
+}

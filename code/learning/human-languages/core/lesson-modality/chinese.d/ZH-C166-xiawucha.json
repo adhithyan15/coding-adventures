@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C166-xiawucha",
+    "language": "chinese",
+    "chapter": 166,
+    "sequence": 13420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93a2910ac6513b20"
+  },
+  "findings": []
+}

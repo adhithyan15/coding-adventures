@@ -54,14 +54,15 @@ twenty-one; **九十九**, ninety-nine.
 before its own pattern begins, and *twenty*, *thirty* and *fifty* are three more
 shapes again. Mandarin needs none of them.
 
-## Sounds you'll need — two dips in a row
+## Sounds you'll need — two dips, held apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-SANDHI-THIRD, ZH-LEX-NUM-JIU] -->
 
-**九十九**, ninety-nine, is the drill this book has been waiting for. *jiǔ* is
-third tone and so is the *jiǔ* at the end, and the rule you met with *nǐ hǎo*
-applies: a third tone before another third tone lifts and becomes a rise.
+**九十九**, ninety-nine, looks like a drill for the rule you met with *nǐ hǎo*,
+and it is a drill for when that rule does not fire. *jiǔ* is third tone and so is
+the *jiǔ* at the end, but 十 *shí* stands between them, and it is second tone. A
+third tone lifts into a rise only before another third tone.
 
-Say it: **jiú-shí-jiǔ**. The first nine rises, the last one dips.
+Say it: **jiǔ-shí-jiǔ**. Both nines dip.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -76,7 +77,7 @@ transcription).
 - [YOU SAY: **èrshí** — twenty]
 - [YOU BUILD: **sān** + **shí** → **sānshí**, thirty]
 - [YOU BUILD: **wǔ** + **shí** + **liù** → **wǔshíliù**, fifty-six]
-- [YOU SAY: **jiúshíjiǔ** — ninety-nine, with the first dip lifted]
+- [YOU SAY: **jiǔshíjiǔ** — ninety-nine, both nines dipping]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-DECIMAL-TENS, ZH-TONE-SANDHI-THIRD] -->

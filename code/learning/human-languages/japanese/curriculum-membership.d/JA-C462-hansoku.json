@@ -1,0 +1,11 @@
+{
+  "id": "JA-C462-hansoku",
+  "pathSegment": "JA-PATH-462-CONTEST462",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-462-CONTEST462",
+      "order": 4
+    }
+  ]
+}

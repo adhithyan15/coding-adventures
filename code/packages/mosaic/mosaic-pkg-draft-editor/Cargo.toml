@@ -8,7 +8,7 @@
 
 [package]
 name        = "mosaic-pkg-draft-editor-smoke"
-version     = "0.1.0"
+version     = "0.2.0"
 edition     = "2021"
 description = "Smoke-test harness for the DraftEditor Mosaic component package"
 publish     = false
@@ -18,6 +18,9 @@ mosmodel-compiler   = { path = "../../rust/mosmodel-compiler" }
 moslayout-compiler  = { path = "../../rust/moslayout-compiler" }
 mosstyle-compiler   = { path = "../../rust/mosstyle-compiler" }
 mosaic-package-artifact-builder = { path = "../../rust/mosaic-package-artifact-builder" }
+# Zero-dependency in-house JSON parser, for reading DraftEditor.stories.json
+# in the tests (as mosaic-pkg-toolkit does, in preference to serde_json).
+coding_adventures_bounded_json = { path = "../../rust/bounded-json" }
 tempfile            = "3"
 toml                = "0.8"
 

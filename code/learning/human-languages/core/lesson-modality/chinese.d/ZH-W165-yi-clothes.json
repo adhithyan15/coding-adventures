@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W165-yi-clothes",
+    "language": "chinese",
+    "chapter": 165,
+    "sequence": 13365,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:836a0074fb2c0e79",
+    "detachableSegments": [
+      "Script — a dot and a bar, then the body"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

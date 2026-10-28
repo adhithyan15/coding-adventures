@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:9fbdba82ea47f180",
+  "lessonIds": [
+    "ZH-C52-shou",
+    "ZH-W52-shou",
+    "ZH-C52-tou",
+    "ZH-C52-jiao",
+    "ZH-C52-yanjing",
+    "ZH-C52-erduo",
+    "ZH-R52-review-48-52"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch52.txt",
+  "json": "chinese/narration/ch52.json",
+  "textHash": "fnv1a64:d6fddc4d04ce6487",
+  "jsonHash": "fnv1a64:2d50a113c13a3537",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C104-qianbi",
+  "pathSegment": "ZH-PATH-104-DESK104",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-104-DESK104",
+      "order": 3
+    }
+  ]
+}

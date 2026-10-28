@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:91bebf8d6e9aa844",
+  "lessonIds": [
+    "ZH-C178-zhengchang",
+    "ZH-W178-chang-often",
+    "ZH-C178-rizi",
+    "ZH-C178-congqian",
+    "ZH-C178-zuijin",
+    "ZH-C178-lingchen"
+  ],
+  "tex": "chinese/book/chapters/ch178-an-ordinary-day.tex"
+}
