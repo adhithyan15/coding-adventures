@@ -16,10 +16,11 @@
       "external-approval"
     ]
   },
-  "active_pr": 18516,
+  "active_pr": 18517,
   "active_prs": [
     18511,
-    18516
+    18516,
+    18517
   ],
   "last_ci_action": {
     "observed_at": "2026-10-28T11:08:57Z",
@@ -15166,12 +15167,16 @@
     {
       "id": "swift-hash-map-lane-parity",
       "title": "Implement DT18 hash-map in Swift",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
       "branch": "codex/parity-swift-hash-map-20261026",
-      "pr_number": null,
+      "pr_number": 18517,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18517",
+      "pr_opened_at": "2026-10-28T11:17:09Z",
+      "publication_head": "e8fed125d8e611f657bd358b2dc69bf5dffc4808",
+      "publication_notes": "PR #18517 is open and non-draft from exact current-main reconciliation and lifecycle head e8fed125d8e611f657bd358b2dc69bf5dffc4808. The three-slot publication ceiling is full with #18511, #18516, and #18517. Guarded auto-merge remains disabled until every exact-head hosted check is terminal and acceptable.",
       "started_at": "2026-10-28T11:16:04Z",
       "selected_main_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
       "reconciliation_revision": "e8d5e1897756bb0e012a3f01769ba5df03cf85dc",

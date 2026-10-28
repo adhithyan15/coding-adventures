@@ -18772,3 +18772,11 @@ then completes a production release build. Keep scope to the prepared DT18
 package, exact DT17 hashing, persistent semantics, native build fronts, docs,
 capability declaration, and lifecycle receipts. Exact merge-head review and
 hosted Windows qualification remain before publication.
+
+## October 28, 2026: Swift hash-map draft publication
+
+Open PR #18517 from exact current-main reconciliation and lifecycle head
+`e8fed125d8e611f657bd358b2dc69bf5dffc4808`. The live publication set is now
+{#18511, #18516, #18517}; do not open a fourth parity PR. Guarded auto-merge
+remains disabled until every hosted check for this exact head is terminal and
+acceptable, including the Windows BUILD front.
