@@ -19368,6 +19368,57 @@ this durable PR-number lifecycle receipt is committed and independently
 reviewed. Then push the receipt, mark the PR ready, and require a completely
 fresh exact-head hosted matrix before guarded auto-merge.
 
+Every exact-head check for PR #18535 completed acceptably and guarded squash
+auto-merge landed `729e0b761e339bcc8d5863550da644e5b3ccec24` at
+`2026-10-28T20:46:16Z`. The clean Swift skip-list worktree and local branch
+were removed. Dart and Swift binary-tree PR #18537 is now the sole active
+parity PR at independently reviewed head
+`3d147429f868c416b2f0f18e70d4ec2c4ffe39f6`; fresh hosted CI remains its
+merge gate.
+
+## October 28, 2026: Swift data-store protocol IR selection
+
+Without waiting on #18537, reprioritization selects the independent
+`swift-in-memory-data-store-protocol-lane-parity` owner locally. It has three
+direct and five total unfinished descendants versus two/four for RESP and
+radix tree, while remaining a bounded dependency-free value-model package.
+Keep it RESP-independent: normalize only ASCII command letters, preserve owned
+binary arguments, model the complete nullable ordered response algebra, and
+validate nested responses iteratively under checked depth/element/byte budgets.
+
+Register `in-memory-data-store-protocol-existing-lanes-contract-reconciliation`
+for established binary/text, normalization, RESP-coupling, ownership, nullable
+response, integer-width, error, and budget drift. Also register
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` before selecting
+another RESP codec lane. Correct `swift-radix-tree-lane-parity` to depend on
+`radix-tree-dt14-neutral-conformance`; its Unicode and structural contract is
+not ready. Keep the selected Swift IR branch local until #18537's terminal
+lifecycle is reconciled from main.
+
+### Swift protocol IR local implementation
+
+Implementation revision `988ac240fc06960a7b0fc21455bfaa275fca1d8e`
+adds the dependency-free Swift package and an additive DT25 boundary. Commands
+use visible ASCII identity with bytewise lowercase folding and preserve ordered
+binary arguments. Responses retain exact UTF-8 identity, the complete nullable
+algebra, and deterministic order. Tighten-only command, argument, frame, depth,
+element, and payload budgets remain below fixed package ceilings; command text
+scanning stops one byte beyond its ceiling, and both response validation and
+equality use cursor stacks bounded by nesting depth.
+
+All ten native tests, the release build, strict Swift Format, the Unix BUILD,
+JSON/diff hygiene, and the empty capability profile pass; the reviewed Windows
+front awaits hosted execution. LLVM reports
+100% production line, function, and region coverage across 249 lines. A real
+bounded Go build-tool dry plan discovers 172 Swift packages, marks exactly the
+new protocol package changed and affected, and selects only
+`swift/in-memory-data-store-protocol`. Independent exact-head review approved
+the bounded command scan, iterative response operations, exact identities,
+authority boundary, tests, coverage, and artifact cleanup. Keep this validated
+work local until #18537's terminal lifecycle reconciliation; then merge current
+main, rerun the gates, and require fresh hosted qualification before guarded
+auto-merge.
+
 Every exact-head check for PR #18535 completed acceptably, including Ubuntu,
 macOS, Windows, Swift CodeQL, metadata, and the aggregate CI gate. GitHub
 reported reviewed head `9a02ab99d53e474410e3da7e3795a4739efab532`
@@ -19407,4 +19458,45 @@ artifact hygiene all pass. Publish that receipt as draft PR #18537 over exact
 main `729e0b761e339bcc8d5863550da644e5b3ccec24`. Keep it draft only while this
 durable PR-number receipt receives independent delta review, then mark it ready
 and require a completely fresh exact-head hosted matrix before guarded
+auto-merge.
+
+### PR #18537 merge and Swift protocol reconciliation
+
+Every exact-head check for Dart and Swift binary-tree PR #18537 completed
+terminal acceptable, including Ubuntu, macOS, Windows, Swift CodeQL, metadata,
+human-language books, and both aggregate gates. GitHub reported reviewed head
+`3d147429f868c416b2f0f18e70d4ec2c4ffe39f6` clean and mergeable; guarded
+squash auto-merge landed `4a32928e2f0e6ef12b9665def9602039d32364af`
+at `2026-10-28T22:09:42Z`. The completed worktree, its ignored Dart/Swift build
+artifacts, and local branch were removed.
+
+Normal merge head `8f7c055b98c7e95e4ca312e6b12f43970d91d76d`
+preserves the reviewed protocol receipt and exact new main as its two parents.
+All ten protocol tests, release build, strict formatting, Unix BUILD, JSON/diff
+checks, and empty capabilities pass with unchanged 100% production coverage
+across 249 lines. The fresh bounded build-tool plan discovers 173 Swift
+packages and selects only `swift/in-memory-data-store-protocol`. Post-merge
+prioritization keeps this three-direct/five-total-descendant item ahead of RESP
+and radix tree at two/four each. Require independent exact merge-head review
+before publication, then fresh hosted Windows and repository-wide qualification
+before guarded auto-merge.
+
+### Draft PR #18540 and live-main refresh
+
+Publish independently reviewed head
+`b9cb795db6b14b85fbe52292b3a6a68e67e74cc9` as draft PR #18540 to record its
+durable identity. At creation, GitHub records live base
+`e2119773be5b8881191bcb5b8657946d2b51ed5f`, which had advanced moments
+earlier through one path-disjoint Rust HKDF change while the draft head still
+contained prior main. Normal merge head
+`1d23920b2584877943a283eaf03770611c3fe680` preserves both reviewed
+publication history and exact live main.
+
+The protocol implementation, DT25 amendment, and changelog remain unchanged.
+All ten tests, release build, strict formatting, JSON/diff checks, and empty
+capabilities pass with 100% coverage across 249 production lines. The bounded
+build-tool plan still discovers 173 Swift packages and selects exactly
+`swift/in-memory-data-store-protocol`. Keep the PR draft until this lifecycle
+and current-main delta is independently reviewed; then push the receipt, mark
+ready, and require a completely fresh exact-head hosted matrix before guarded
 auto-merge.
