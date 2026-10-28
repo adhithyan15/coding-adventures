@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C244-wanyi",
+    "language": "chinese",
+    "chapter": 244,
+    "sequence": 18370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b50b0bdbac1b9e10"
+  },
+  "findings": []
+}

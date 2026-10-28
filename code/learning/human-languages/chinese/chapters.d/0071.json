@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Tastes",
+  "label": "ch:zh-tastes",
+  "canDo": "I can say a drink is nice, food is sweet, hot or salty, and order a meal.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C71-diancai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: I can say a drink is nice, food is sweet, hot or salty, and order a meal.",
+    "assesses": [
+      "ZH-LEX-C71-TASTE71-03",
+      "ZH-LEX-C71-TASTE71-04",
+      "ZH-LEX-C71-TASTE71-05"
+    ]
+  }
+}

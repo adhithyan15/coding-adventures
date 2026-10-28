@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:12b3a5bf21232acf",
+  "lessonIds": [
+    "ZH-C129-anjing",
+    "ZH-C129-chao",
+    "ZH-W129-chao-noisy",
+    "ZH-C129-renao",
+    "ZH-C129-fangbian",
+    "ZH-C129-youyisi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch129.txt",
+  "json": "chinese/narration/ch129.json",
+  "textHash": "fnv1a64:6587389a6428012a",
+  "jsonHash": "fnv1a64:c81ac293c0be2737",
+  "findings": []
+}

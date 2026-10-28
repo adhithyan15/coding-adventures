@@ -290,5 +290,68 @@ if let host = makeHost("MOSAIC_PROBE_STATE_G") {
         "a macOS app starts with a fine, hovering pointer")
 }
 
+// A state file the runtime rejects moves to the first FREE quarantine name,
+// never over an earlier quarantine, which may be someone's real data. A
+// directory takes a name as surely as a file does. With all ten names taken the
+// file stays where it is, and nothing is saved over it.
+//
+//   launch | before                                  | afterwards
+//   -------+-----------------------------------------+------------------------------
+//   first  | `{}`, `.corrupt` file, `.corrupt.1` dir | `{}` in `.corrupt.2`, saving
+//   second | `{}`, `.corrupt` to `.9` held           | `{}` still live, not saving
+if let path = ProcessInfo.processInfo.environment["MOSAIC_PROBE_STATE_H"] {
+  func read(_ file: String) -> String? {
+    FileManager.default.contents(atPath: file).flatMap { String(data: $0, encoding: .utf8) }
+  }
+  func write(_ file: String, _ text: String) {
+    FileManager.default.createFile(atPath: file, contents: Data(text.utf8))
+  }
+  func warning(_ update: NSDictionary?) -> String? {
+    (update as? [String: Any])?["persistenceWarning"] as? String
+  }
+  // `{}` parses, so it reaches the runtime, which refuses it: no schema.
+  let rejected = "{}"
+  let increment: NSDictionary = ["payload": ["amount": 1] as NSDictionary]
+  func isEmptyDirectory(_ file: String) -> Bool {
+    var directory: ObjCBool = false
+    return FileManager.default.fileExists(atPath: file, isDirectory: &directory)
+      && directory.boolValue
+      && (try? FileManager.default.contentsOfDirectory(atPath: file))?.isEmpty == true
+  }
+  write(path + ".corrupt", "earlier")
+  try? FileManager.default.createDirectory(
+    atPath: path + ".corrupt.1", withIntermediateDirectories: false)
+  write(path, rejected)
+  if let first = makeHost("MOSAIC_PROBE_STATE_H") {
+    check(read(path + ".corrupt") == "earlier", "an earlier quarantine is never replaced")
+    check(isEmptyDirectory(path + ".corrupt.1"), "a directory at a quarantine name is skipped")
+    check(read(path + ".corrupt.2") == rejected, "a rejected file moves to the first free name")
+    check(!(warning(first.applyProps()) ?? "unset").contains("will not be saved"),
+          "a file moved aside leaves saving on")
+    _ = first.handleEvent(increment, name: "increment")
+    check(read(path).map { $0 != rejected } ?? false,
+          "fresh state is saved once the rejected file is aside")
+  } else {
+    check(false, "the first quarantine host loads")
+  }
+  for index in 3..<10 { write(path + ".corrupt.\(index)", "taken \(index)") }
+  write(path, rejected)
+  if let second = makeHost("MOSAIC_PROBE_STATE_H") {
+    let blocked = warning(second.applyProps())
+    check(blocked?.contains("This session will not be saved.") ?? false,
+          "with every name taken, the warning says nothing is saved")
+    let answer = second.handleEvent(increment, name: "increment")
+    check(read(path) == rejected, "a file that could not move aside is not written over")
+    check(blocked != nil && warning(answer) == blocked, "the warning stays showing after an event")
+    check(read(path + ".corrupt") == "earlier" && isEmptyDirectory(path + ".corrupt.1")
+            && read(path + ".corrupt.2") == rejected && read(path + ".corrupt.9") == "taken 9",
+          "no quarantine was replaced")
+  } else {
+    check(false, "the second quarantine host loads")
+  }
+} else {
+  check(false, "MOSAIC_PROBE_STATE_H names the quarantine host's state file")
+}
+
 print(failures == 0 ? "\nall checks passed" : "\n\(failures) check(s) failed")
 exit(failures == 0 ? 0 : 1)

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R79-review-75-79",
+    "language": "chinese",
+    "chapter": 79,
+    "sequence": 6130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27ce4566d849f61f"
+  },
+  "findings": []
+}

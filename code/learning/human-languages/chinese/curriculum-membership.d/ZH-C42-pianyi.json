@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C42-pianyi",
+  "pathSegment": "ZH-PATH-42-SHOP42",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-42-SHOP42",
+      "order": 3
+    }
+  ]
+}

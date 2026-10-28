@@ -1,0 +1,11 @@
+{
+  "id": "JA-C395-ikisugiru",
+  "pathSegment": "JA-PATH-395-KOSHOU395",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-395-KOSHOU395",
+      "order": 4
+    }
+  ]
+}

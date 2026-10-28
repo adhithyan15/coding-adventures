@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C303-ryuu",
+    "language": "japanese",
+    "chapter": 303,
+    "sequence": 18120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:795075a62ac8845c"
+  },
+  "findings": []
+}

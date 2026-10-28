@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C402-meisho",
+    "language": "japanese",
+    "chapter": 402,
+    "sequence": 23570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:375bbe5fcb05cfda"
+  },
+  "findings": []
+}

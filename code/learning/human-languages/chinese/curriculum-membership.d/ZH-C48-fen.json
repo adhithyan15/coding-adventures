@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C48-fen",
+  "pathSegment": "ZH-PATH-48-CLOCK48",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-48-CLOCK48",
+      "order": 2
+    }
+  ]
+}

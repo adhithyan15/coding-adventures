@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C370-tagaini",
+    "language": "japanese",
+    "chapter": 370,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f26d8b76ea02860"
+  },
+  "findings": []
+}

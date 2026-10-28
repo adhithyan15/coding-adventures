@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:ee03ee1bb4cb4ce7",
+  "lessonIds": [
+    "ZH-C89-gei",
+    "ZH-W89-gei",
+    "ZH-C89-zuo",
+    "ZH-C89-fang",
+    "ZH-C89-dai",
+    "ZH-C89-zhan",
+    "ZH-C89-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch89.txt",
+  "json": "chinese/narration/ch89.json",
+  "textHash": "fnv1a64:0d79ab372a15bae5",
+  "jsonHash": "fnv1a64:474651c702a39eea",
+  "findings": []
+}

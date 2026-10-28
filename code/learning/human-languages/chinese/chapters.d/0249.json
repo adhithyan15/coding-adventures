@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Hitting the Books",
+  "label": "ch:zh-hitting-the-books",
+  "canDo": "I can talk about preparing a lesson, when school finishes, how a character is said, marks and working hard.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C249-nuli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can talk about preparing a lesson, when school finishes, how a character is said, marks and working hard.",
+    "assesses": [
+      "ZH-LEX-C249-STUDY249-03",
+      "ZH-LEX-C249-STUDY249-04",
+      "ZH-LEX-C249-STUDY249-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-300-KITSUNE300",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-300-KITSUNE300"
+  ],
+  "after": []
+}

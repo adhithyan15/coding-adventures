@@ -1,0 +1,11 @@
+{
+  "id": "JA-C429-tsurai",
+  "pathSegment": "JA-PATH-429-DOWN429",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-429-DOWN429",
+      "order": 3
+    }
+  ]
+}

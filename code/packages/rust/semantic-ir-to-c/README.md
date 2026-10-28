@@ -77,7 +77,9 @@ The emitter is **thin**; the semantics live in an inlined C runtime
   variadic functions, not compound-literal arrays that older MSVC rejects).
 - **Closures** — a `MakeClosure` becomes `_sir_make_closure(thunk, ncap, …)`;
   a per-function thunk adapts the body's fixed C signature to the uniform
-  closure calling convention; an indirect call is `_sir_apply(...)`.
+  closure calling convention; an indirect call is `_sir_apply(...)`.  The
+  set of functions needing a thunk comes from the shared `semantic_ir::Visitor`
+  walk, so a closure anywhere (an `IndirectCall` target, a loop body) gets one.
 - **Display convention** — a single `__SIR_DISPLAY_RUBY__` placeholder is
   substituted with a boolean-selected literal (`1` = Ruby `true`/`false`,
   `0` = Lisp `#t`/`#f`) — never source-derived text.

@@ -1,5 +1,26 @@
 # Changelog — coding-adventures-mos6502-gatelevel
 
+## [0.1.2] — 2026-10-26
+
+### Fixed
+
+- Make the one-bit HALT `StateRegister` Q output the sole architectural halt
+  authority for observation, reset/load/restore, step/run, BRK, IRQ/NMI, and
+  transactional rollback. The private host Boolean is now observer-only and
+  is repaired from Q by simulator-owned transitions.
+- Derive the independently inspectable 528,184-DFF inventory from the owned
+  memory, register, flag, HALT, and port storage containers.
+
+### Verified
+
+- Add two-way observer divergence plus lifecycle, interrupt, BRK, and rollback
+  regressions, exact transition-chain locks, and five compiler-checked hostile
+  observer/direct-Q/helper/dead-anchor/post-commit bypass variants.
+- Preserve full-state agreement for all 151 official opcodes and atomic typed
+  rejection of all 105 undefined bytes. Eighty-three unit, seven integration,
+  and seven documentation tests pass with 98.75% package-source line coverage
+  (1,834/1,857), strict Clippy, and strict rustdoc.
+
 ## [0.1.1] — 2026-08-28
 
 ### Changed

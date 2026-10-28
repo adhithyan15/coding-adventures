@@ -1,0 +1,11 @@
+{
+  "id": "JA-C511-shoujiru",
+  "pathSegment": "JA-PATH-511-CAUSE511",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-511-CAUSE511",
+      "order": 2
+    }
+  ]
+}

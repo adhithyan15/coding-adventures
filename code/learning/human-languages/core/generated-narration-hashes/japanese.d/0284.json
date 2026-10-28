@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:0e19f2d6016cafa0",
+  "lessonIds": [
+    "JA-C284-senkyo",
+    "JA-C284-kokumin",
+    "JA-C284-shushou",
+    "JA-C284-arasou",
+    "JA-C284-warui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch284.txt",
+  "json": "japanese/narration/ch284.json",
+  "textHash": "fnv1a64:6d158baeaaacf311",
+  "jsonHash": "fnv1a64:f9768b59dc8859f9",
+  "findings": []
+}

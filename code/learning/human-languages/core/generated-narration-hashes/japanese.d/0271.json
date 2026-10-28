@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:9b37be03f09957ea",
+  "lessonIds": [
+    "JA-C271-tsukamaru",
+    "JA-C271-oikakeru",
+    "JA-C271-tsuini",
+    "JA-C271-kakureru",
+    "JA-C271-tsukamaeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch271.txt",
+  "json": "japanese/narration/ch271.json",
+  "textHash": "fnv1a64:e6107dea2b7d9095",
+  "jsonHash": "fnv1a64:4f46e162a004a5dc",
+  "findings": []
+}

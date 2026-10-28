@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:1ff3d11568a51cd6",
+  "lessonIds": [
+    "JA-C415-yuudachi",
+    "JA-C415-kosame",
+    "JA-C415-bisshori",
+    "JA-C415-nurasu",
+    "JA-C415-amayadori"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch415.txt",
+  "json": "japanese/narration/ch415.json",
+  "textHash": "fnv1a64:d277d01f6e852db4",
+  "jsonHash": "fnv1a64:be093f1fd6fffd37",
+  "findings": []
+}

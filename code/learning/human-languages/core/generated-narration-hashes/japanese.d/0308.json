@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:b22aa24c9cfbf11b",
+  "lessonIds": [
+    "JA-C308-machigai",
+    "JA-C308-kikoeru",
+    "JA-C308-juwaki",
+    "JA-C308-hanashikakeru",
+    "JA-C308-isogashii"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch308.txt",
+  "json": "japanese/narration/ch308.json",
+  "textHash": "fnv1a64:f1f8045c9150e681",
+  "jsonHash": "fnv1a64:78375e309c49a697",
+  "findings": []
+}

@@ -1,13 +1,14 @@
-//! LANG83 PR6a on the BEAM backend: `write_f64_py` / `write_f64_js`.
+//! LANG83 floats on the BEAM backend: the PR7b digit ops `f64_class`,
+//! `f64_digits` and `f64_exp10`.
 //!
-//! Both lower to `call 2, '__iir_write_f64'/2`, a local function the module
-//! carries (see `lower.rs`, `mod lang83_f64`). It takes the shortest digits
-//! from `erlang:float_to_list(F, [short])` and lays them out like Python or
-//! JavaScript.
+//! `f64_digits` / `f64_exp10` call local functions the module carries
+//! (`'__iir_f64_digits'/1`, `'__iir_f64_exp10'/1`), which share one parse,
+//! `'__iir_f64_shortest'/1` (see `lower.rs`, `mod lang83_f64`). It takes the
+//! shortest digits from `erlang:float_to_list(F, [short])`.
 //!
 //! There is no `erl` here (CI's BEAM column runs the real emulator), so these
-//! tests EXECUTE the emitted function on a model of the BEAM opcodes and
-//! library functions it uses. The model is strict where real BEAM is
+//! tests EXECUTE the emitted functions on a model of the BEAM opcodes and
+//! library functions they use. The model is strict where real BEAM is
 //! unforgiving:
 //!
 //! * every `call`/`call_ext` clobbers every X register except the result;
@@ -17,8 +18,14 @@
 //!
 //! The model's `float_to_list(F, [short])` is fed the same shortest digits in
 //! several Erlang-plausible layouts (`1.0e16`, `1.0e+16`, `1e16`,
-//! `10000000000000000.0`). For every finite value in the table the output
-//! must be what host `python3` and `node` print.
+//! `10000000000000000.0`). For every finite value in the table the answer
+//! must be host `python3`'s `repr`, split at the digits.
+//!
+//! This file began as PR6a's `write_f64_py` / `write_f64_js` tests (the
+//! local `'__iir_write_f64'/2`). LANG83 PR7e removed both writers: a compiler
+//! lays a float out itself, and `lang-aot`'s `op_conformance` lowers the
+//! PR6a table's finite values through the compilers' helpers (CI executes
+//! the BEAM column).
 
 use std::collections::HashMap;
 
@@ -40,35 +47,13 @@ const OP_IS_NIL: u8 = 52;
 const OP_JUMP: u8 = 61;
 const OP_MOVE: u8 = 64;
 const OP_GET_LIST: u8 = 65;
+const OP_TEST_HEAP: u8 = 16;
+const OP_PUT_LIST: u8 = 69;
 const OP_GC_BIF1: u8 = 124;
 const OP_GC_BIF2: u8 = 125;
 
 fn v(n: &str) -> Operand {
     Operand::Var(n.into())
-}
-
-/// `main(x: f64) -> i64 { builtin(x); return 0 }`.
-fn writer(builtin: &str) -> BEAMModule {
-    let module = IIRModule {
-        name: "floats".into(),
-        functions: vec![IIRFunction::new(
-            "main",
-            vec![("x".into(), "f64".into())],
-            "i64",
-            vec![
-                IIRInstr::new("call_builtin", None, vec![v(builtin), v("x")], "void"),
-                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
-                IIRInstr::new("ret", None, vec![v("z")], "i64"),
-            ],
-        )],
-        entry_point: Some("main".into()),
-        language: "test".into(),
-        exports: vec![],
-        imports: vec![],
-        release: None,
-    };
-    assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
-    lower_iir_to_beam(&module, &IIRBeamConfig::new("floats")).expect("lowers")
 }
 
 fn atom(m: &BEAMModule, idx: u64) -> &str {
@@ -202,21 +187,29 @@ fn digits_of(py: &str) -> (String, i32) {
     (d1.trim_end_matches('0').to_string(), ilen - 1 - lz + exp)
 }
 
-/// Run `'__iir_write_f64'(F, Js)` on the model; returns what `io:put_chars`
-/// printed. `short` is the model's `float_to_list(F, [short])`.
-fn run_helper(m: &BEAMModule, f: f64, js: i64, short: &dyn Fn(f64) -> String) -> String {
+/// Run the module function `name` with `args` in x0.. on the model; output
+/// is appended to `out` and the return value (x0 at `return`) is returned.
+/// A local `call` runs its callee the same way, with a frame of its own, and
+/// clobbers every X register but the result.
+fn run_fn(m: &BEAMModule, name: &str, args: &[Val], out: &mut String, short: &dyn Fn(f64) -> String) -> Val {
+    let code: &[BEAMInstruction] = &m.instructions;
+    let fi = code
+        .iter()
+        .position(|i| i.opcode == OP_FUNC_INFO && atom(m, i.operands[1].value) == name)
+        .unwrap_or_else(|| panic!("{name}'s func_info"));
+    assert_eq!(code[fi].operands[2].value, args.len() as u64, "{name}'s arity");
+    run_at(m, fi + 2, args, out, short)
+}
+
+/// Run from `pc` (a function's entry) with `args` in x0..; see [`run_fn`].
+fn run_at(m: &BEAMModule, entry: usize, args: &[Val], out: &mut String, short: &dyn Fn(f64) -> String) -> Val {
     let code: &[BEAMInstruction] = &m.instructions;
     let labels: HashMap<u64, usize> =
         code.iter().enumerate().filter(|(_, i)| i.opcode == OP_LABEL).map(|(pc, i)| (i.operands[0].value, pc)).collect();
-    let fi = code
-        .iter()
-        .position(|i| i.opcode == OP_FUNC_INFO && atom(m, i.operands[1].value) == "__iir_write_f64")
-        .expect("the helper's func_info");
-    assert_eq!(code[fi].operands[2].value, 2, "arity 2");
-    let mut pc = fi + 2;
-    let mut x: HashMap<u64, Val> = HashMap::from([(0, Val::Float(f)), (1, Val::Int(js))]);
+    let mut pc = entry;
+    let mut x: HashMap<u64, Val> = args.iter().cloned().enumerate().map(|(i, v)| (i as u64, v)).collect();
     let mut y: Vec<Val> = Vec::new();
-    let mut out = String::new();
+    let mut allocated = false;
     let lit = |idx: u64| decode_literal(&m.literals[idx as usize]);
     for _ in 0..100_000 {
         let ins = &code[pc];
@@ -253,10 +246,29 @@ fn run_helper(m: &BEAMModule, f: f64, js: i64, short: &dyn Fn(f64) -> String) ->
         };
         match ins.opcode {
             OP_LABEL => {}
-            OP_ALLOCATE => y = vec![Val::Garbage; ops[0].value as usize],
+            OP_ALLOCATE => {
+                y = vec![Val::Garbage; ops[0].value as usize];
+                allocated = true;
+            }
             OP_DEALLOCATE => {
+                assert!(allocated, "deallocate without a frame");
                 assert_eq!(y.len() as u64, ops[0].value, "deallocate matches allocate");
                 y.clear();
+                allocated = false;
+            }
+            // LANG83 PR7b: the shared parse returns `[Neg, E | D]`.
+            OP_TEST_HEAP => {
+                let live = ops[1].value;
+                for (reg, val) in x.iter_mut() {
+                    if *reg >= live {
+                        *val = Val::Garbage;
+                    }
+                }
+            }
+            OP_PUT_LIST => {
+                let (h, at) = read(&x, &y, 0);
+                let (t, at) = read(&x, &y, at);
+                write(&mut x, &mut y, &ops[at], Val::Cons(Box::new(h), Box::new(t)));
             }
             OP_MOVE => {
                 let (val, at) = read(&x, &y, 0);
@@ -299,6 +311,8 @@ fn run_helper(m: &BEAMModule, f: f64, js: i64, short: &dyn Fn(f64) -> String) ->
                     let r = match name.as_str() {
                         "erlang:-/2" => int(a) - int(b),
                         "erlang:+/2" => int(a) + int(b),
+                        // LANG83 PR7c-py: the call-argument tests' callee.
+                        "erlang:*/2" => int(a) * int(b),
                         other => panic!("bif {other} not modelled"),
                     };
                     (Val::Int(r), &ops[at])
@@ -365,10 +379,24 @@ fn run_helper(m: &BEAMModule, f: f64, js: i64, short: &dyn Fn(f64) -> String) ->
                 x.insert(0, result);
             }
             OP_RETURN => {
-                assert!(y.is_empty(), "return with a live frame");
-                return out;
+                assert!(!allocated, "return with a live frame");
+                let result = x.get(&0).cloned().unwrap_or(Val::Garbage);
+                assert_ne!(result, Val::Garbage, "return of a clobbered x0");
+                return result;
             }
-            OP_CALL => panic!("the helper makes no local calls"),
+            OP_CALL => {
+                // Since OTP 24 `call` keeps the return address on the stack
+                // itself, so a frameless caller is fine (user functions with
+                // nothing live across a call have no frame, as for PR6a's
+                // writer call); the helpers allocate one anyway, like erlc.
+                let arity = ops[0].value;
+                let callee = labels[&ops[1].value];
+                let args: Vec<Val> = (0..arity).map(|i| x.get(&i).cloned().unwrap_or(Val::Garbage)).collect();
+                assert!(args.iter().all(|a| *a != Val::Garbage), "call with a clobbered argument: {args:?}");
+                let result = run_at(m, callee, &args, out, short);
+                x.clear();
+                x.insert(0, result);
+            }
             other => panic!("opcode {other} not modelled (pc {})", pc - 1),
         }
     }
@@ -469,48 +497,32 @@ const FLOAT_TABLE: &[(u64, &str, &str)] = &[
     (0x40B99E157689CA19, "6558.08384", "6558.08384"),
 ];
 
+/// LANG83 PR7e: `write_f64_py` / `write_f64_js` (the local
+/// `'__iir_write_f64'/2`) are gone, so the validator and the lowering both
+/// refuse a module that still calls one.
 #[test]
-fn helper_lays_out_every_short_style_like_python_and_javascript() {
-    let m = writer("write_f64_py");
-    let by_bits: HashMap<u64, &str> = FLOAT_TABLE.iter().map(|(b, py, _)| (*b, *py)).collect();
-    for style in [Short::Sci, Short::SciPlus, Short::Bare, Short::Fixed] {
-        let short = |f: f64| {
-            let (d, e) = if f == 0.0 { (String::new(), 0) } else { digits_of(by_bits[&f.to_bits()]) };
-            short_string(&d, e, f.is_sign_negative(), style)
+fn retired_float_writers_are_refused() {
+    for name in ["write_f64_py", "write_f64_js"] {
+        let module = IIRModule {
+            name: "floats".into(),
+            functions: vec![IIRFunction::new("main", vec![("x".into(), "f64".into())], "i64", vec![
+                IIRInstr::new("call_builtin", None, vec![v(name), v("x")], "void"),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![v("z")], "i64"),
+            ])],
+            entry_point: Some("main".into()),
+            language: "test".into(),
+            exports: vec![],
+            imports: vec![],
+            release: None,
         };
-        // BEAM has no inf or nan floats: those rows cannot reach the helper.
-        for &(bits, py, js) in FLOAT_TABLE.iter().filter(|(b, _, _)| f64::from_bits(*b).is_finite()) {
-            let f = f64::from_bits(bits);
-            assert_eq!(run_helper(&m, f, 0, &short), py, "{style:?} python {f:e}");
-            assert_eq!(run_helper(&m, f, 1, &short), js, "{style:?} javascript {f:e}");
-        }
+        assert!(!validate_for_beam(&module).is_empty(), "{name}");
+        assert!(lower_iir_to_beam(&module, &IIRBeamConfig::new("floats")).is_err(), "{name}");
     }
 }
 
 #[test]
-fn call_site_passes_the_float_and_layout_then_calls_the_local_helper() {
-    for (builtin, layout) in [("write_f64_py", 0), ("write_f64_js", 1)] {
-        let m = writer(builtin);
-        let entry = m
-            .instructions
-            .iter()
-            .position(|i| i.opcode == OP_FUNC_INFO && atom(&m, i.operands[1].value) == "__iir_write_f64")
-            .map(|fi| m.instructions[fi + 1].operands[0].value)
-            .unwrap();
-        let call = m.instructions.iter().position(|i| i.opcode == OP_CALL && i.operands[1].value == entry).expect("local call");
-        assert_eq!(m.instructions[call].operands[0].value, 2, "arity 2");
-        let set_layout = &m.instructions[call - 1];
-        assert_eq!((set_layout.opcode, set_layout.operands[0].value, set_layout.operands[1].value), (OP_MOVE, layout, 1));
-        // Exported, so the Code chunk's function count (= exports) covers it.
-        let helper = m.exports.iter().find(|e| atom(&m, u64::from(e.function_atom_index)) == "__iir_write_f64");
-        assert!(matches!(helper, Some(e) if e.arity == 2 && u64::from(e.label) == entry));
-        assert_eq!(m.exports.len(), m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count());
-        assert_eq!(m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).count(), 2, "main + one helper");
-    }
-}
-
-#[test]
-fn a_module_without_float_output_is_unchanged() {
+fn a_module_without_digit_ops_is_unchanged() {
     let module = IIRModule {
         name: "plain".into(),
         functions: vec![IIRFunction::new("main", vec![], "i64", vec![
@@ -524,28 +536,235 @@ fn a_module_without_float_output_is_unchanged() {
         release: None,
     };
     let m = lower_iir_to_beam(&module, &IIRBeamConfig::new("plain")).unwrap();
-    assert!(!m.atoms.iter().any(|a| a == "__iir_write_f64" || a == "float_to_list" || a == "nthtail"));
+    assert!(!m.atoms.iter().any(|a| a == "__iir_f64_shortest" || a == "float_to_list"));
     assert!(m.literals.is_empty());
 }
 
+// ── LANG83 PR7b: f64_class / f64_digits / f64_exp10 ─────────────────────────
+
+/// `(class, D, e10)` read off host python3's `repr` (finite values only:
+/// BEAM has no infinities or NaN).
+fn repr_digits(py: &str) -> (i64, i64, i64) {
+    if py.trim_start_matches('-') == "0.0" {
+        return (0, 0, 0);
+    }
+    let (d, e) = digits_of(py);
+    (1, d.parse().unwrap(), i64::from(e))
+}
+
+/// `q_class(x)`, `q_digits(x)`, `q_exp10(x)` each return their op of the
+/// `f64` parameter; `q_sum(x)` returns `class + exp10 + digits`, so the class
+/// must survive BOTH helper calls (the live-across-call spill).
+fn digit_module() -> BEAMModule {
+    let one = |name: &str, op: &str| {
+        IIRFunction::new(name, vec![("x".into(), "f64".into())], "i64", vec![
+            IIRInstr::new(op, Some("r".into()), vec![v("x")], "i64"),
+            IIRInstr::new("ret", None, vec![v("r")], "i64"),
+        ])
+    };
+    let sum = IIRFunction::new("q_sum", vec![("x".into(), "f64".into())], "i64", vec![
+        IIRInstr::new("f64_class", Some("c".into()), vec![v("x")], "i64"),
+        IIRInstr::new("f64_digits", Some("d".into()), vec![v("x")], "i64"),
+        IIRInstr::new("f64_exp10", Some("e".into()), vec![v("x")], "i64"),
+        IIRInstr::new("add", Some("s".into()), vec![v("c"), v("e")], "i64"),
+        IIRInstr::new("add", Some("t".into()), vec![v("s"), v("d")], "i64"),
+        IIRInstr::new("ret", None, vec![v("t")], "i64"),
+    ]);
+    let module = IIRModule {
+        name: "digits".into(),
+        functions: vec![one("q_class", "f64_class"), one("q_digits", "f64_digits"), one("q_exp10", "f64_exp10"), sum],
+        entry_point: Some("q_sum".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+        release: None,
+    };
+    assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
+    lower_iir_to_beam(&module, &IIRBeamConfig::new("digits")).expect("lowers")
+}
+
+/// The helpers are emitted once each, exported, and share one parse; there is
+/// no writer (removed in PR7e), and only the parse's imports are interned.
 #[test]
-fn a_function_named_like_the_helper_is_refused() {
-    let mut module = IIRModule {
+fn pr7b_digit_helpers_share_the_parse_and_are_exported() {
+    let m = digit_module();
+    let fis: Vec<&str> =
+        m.instructions.iter().filter(|i| i.opcode == OP_FUNC_INFO).map(|i| atom(&m, i.operands[1].value)).collect();
+    for helper in ["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"] {
+        assert_eq!(fis.iter().filter(|n| **n == helper).count(), 1, "{helper} in {fis:?}");
+    }
+    assert!(!fis.contains(&"__iir_write_f64"), "no writer (removed in PR7e)");
+    for writer_only in ["duplicate", "nthtail", "integer_to_list"] {
+        assert!(!m.atoms.iter().any(|a| a == writer_only), "{writer_only} was the writer's import");
+    }
+    // A module function may not take a helper's name.
+    let clash = IIRModule {
         name: "clash".into(),
-        functions: vec![IIRFunction::new("main", vec![("x".into(), "f64".into())], "i64", vec![
-            IIRInstr::new("call_builtin", None, vec![v("write_f64_js"), v("x")], "void"),
-            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
-            IIRInstr::new("ret", None, vec![v("z")], "i64"),
-        ])],
+        functions: vec![
+            IIRFunction::new("main", vec![("x".into(), "f64".into())], "i64", vec![
+                IIRInstr::new("f64_digits", Some("d".into()), vec![v("x")], "i64"),
+                IIRInstr::new("ret", None, vec![v("d")], "i64"),
+            ]),
+            IIRFunction::new("__iir_f64_shortest", vec![], "i64", vec![
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![v("z")], "i64"),
+            ]),
+        ],
         entry_point: Some("main".into()),
         language: "test".into(),
         exports: vec![],
         imports: vec![],
         release: None,
     };
-    module.functions.push(IIRFunction::new("__iir_write_f64", vec![], "i64", vec![
-        IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
-        IIRInstr::new("ret", None, vec![v("z")], "i64"),
-    ]));
-    assert!(lower_iir_to_beam(&module, &IIRBeamConfig::new("clash")).is_err());
+    assert!(lower_iir_to_beam(&clash, &IIRBeamConfig::new("clash")).is_err());
+    assert_eq!(m.exports.len(), fis.len(), "every func_info is exported");
+    // f64_class is inline: no call in q_class.
+    let start = m.instructions.iter().position(|i| i.opcode == OP_FUNC_INFO && atom(&m, i.operands[1].value) == "q_class").unwrap();
+    let end = start + 1 + m.instructions[start + 1..].iter().position(|i| i.opcode == OP_FUNC_INFO).unwrap();
+    assert!(m.instructions[start..end].iter().all(|i| i.opcode != OP_CALL && i.opcode != OP_CALL_EXT));
+}
+
+/// On the model, over every finite table value and every Erlang-plausible
+/// `float_to_list` layout: the three ops give host python3's digits, alone
+/// and together.
+#[test]
+fn pr7b_digit_queries_match_python_repr_on_the_model() {
+    let m = digit_module();
+    let by_bits: HashMap<u64, &str> = FLOAT_TABLE.iter().map(|(b, py, _)| (*b, *py)).collect();
+    for style in [Short::Sci, Short::SciPlus, Short::Bare, Short::Fixed] {
+        let short = |f: f64| {
+            let (d, e) = if f == 0.0 { (String::new(), 0) } else { digits_of(by_bits[&f.to_bits()]) };
+            short_string(&d, e, f.is_sign_negative(), style)
+        };
+        for &(bits, py, _) in FLOAT_TABLE.iter().filter(|(b, _, _)| f64::from_bits(*b).is_finite()) {
+            let f = f64::from_bits(bits);
+            let mut out = String::new();
+            let mut q = |name: &str| match run_fn(&m, name, &[Val::Float(f)], &mut out, &short) {
+                Val::Int(n) => n,
+                other => panic!("{name}({f:e}) returned {other:?}"),
+            };
+            let (c, d, e) = repr_digits(py);
+            assert_eq!((q("q_class"), q("q_digits"), q("q_exp10")), (c, d, e), "{style:?} {f:e} ({py})");
+            assert_eq!(q("q_sum"), c + e + d, "{style:?} {f:e}: the class survives both calls");
+            assert!(out.is_empty(), "the queries print nothing");
+        }
+    }
+}
+
+// ── LANG83 PR7c-py: a call's arguments are one parallel move ────────────────
+//
+// `__py_write_float` calls `__py_write_digits(d, n, zero, e1)` with `zero` in
+// x1, so moving the arguments in order (`n → x1` first, then `x1 → x2`) handed
+// the callee `n` where it expected `0`. On real OTP every digit run that
+// starts at the leading digit printed nothing (`print(1.5)` wrote `.5`; CI on
+// PR #18400). The model executes moves one at a time, exactly like BEAM, so
+// it catches the clobber as soon as something runs such a call.
+
+/// `main() { v0 = 1; v1 = 2; …; r = f(v[srcs[0]], v[srcs[1]], …); return r }`
+/// where `f(a, b, c, …)` returns the decimal number `abc…`.
+///
+/// `main` has no parameters, so `v0, v1, …` take x0, x1, … in order (the
+/// lowering numbers registers by first appearance) — every `srcs` choice
+/// sends some argument from one argument slot to another.
+fn call_module(pool: usize, srcs: &[usize]) -> BEAMModule {
+    let mut main = Vec::new();
+    for k in 0..pool {
+        main.push(IIRInstr::new("const", Some(format!("v{k}")), vec![Operand::Int(k as i64 + 1)], "i64"));
+    }
+    let mut call = vec![v("f")];
+    call.extend(srcs.iter().map(|k| v(&format!("v{k}"))));
+    main.push(IIRInstr::new("call", Some("r".into()), call, "i64"));
+    main.push(IIRInstr::new("ret", None, vec![v("r")], "i64"));
+
+    let params: Vec<(String, String)> = (0..srcs.len()).map(|i| (format!("a{i}"), "i64".into())).collect();
+    let mut f = vec![
+        IIRInstr::new("const", Some("ten".into()), vec![Operand::Int(10)], "i64"),
+        IIRInstr::new("const", Some("acc".into()), vec![Operand::Int(0)], "i64"),
+    ];
+    for (name, _) in &params {
+        f.push(IIRInstr::new("mul", Some("acc".into()), vec![v("acc"), v("ten")], "i64"));
+        f.push(IIRInstr::new("add", Some("acc".into()), vec![v("acc"), v(name)], "i64"));
+    }
+    f.push(IIRInstr::new("ret", None, vec![v("acc")], "i64"));
+
+    let module = IIRModule {
+        name: "args".into(),
+        functions: vec![IIRFunction::new("main", vec![], "i64", main), IIRFunction::new("f", params, "i64", f)],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+        release: None,
+    };
+    assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
+    lower_iir_to_beam(&module, &IIRBeamConfig::new("args")).expect("lowers")
+}
+
+/// The `x → x` moves `main` emits right before its `call`: the argument
+/// shuffle, as `(from, to)` register pairs.
+fn argument_moves(m: &BEAMModule) -> Vec<(u64, u64)> {
+    let code = &m.instructions;
+    let call = code.iter().position(|i| i.opcode == OP_CALL).expect("main's call");
+    code[..call]
+        .iter()
+        .rev()
+        .take_while(|i| i.opcode == OP_MOVE && i.operands[0].tag == BEAMTag::X)
+        .map(|i| (i.operands[0].value, i.operands[1].value))
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect()
+}
+
+fn run_call(m: &BEAMModule) -> i64 {
+    let no_floats = |f: f64| -> String { panic!("no float is printed here ({f})") };
+    match run_fn(m, "main", &[], &mut String::new(), &no_floats) {
+        Val::Int(n) => n,
+        other => panic!("main returned {other:?}"),
+    }
+}
+
+/// The exact shape that broke `print(1.5)` on BEAM: the third argument lives
+/// in x1, which the second argument's move overwrites.
+#[test]
+fn pr7c_py_write_digits_call_shape_keeps_its_zero_argument() {
+    // v3 → x0, v4 → x1, v1 (x1!) → x2, v2 (x2!) → x3:
+    // write_digits(d, n, zero, one) in `__py_write_float`'s scientific branch.
+    let m = call_module(5, &[3, 4, 1, 2]);
+    assert_eq!(run_call(&m), 4523, "f(d, n, zero, one) must receive zero and one, not n twice");
+}
+
+/// Every way of passing four arguments drawn (with repetition) from five
+/// registers x0..x4 — 625 calls: shifts, swaps, rotations, duplicates, the
+/// identity. Each one hands `f` exactly the values named.
+#[test]
+fn every_arrangement_of_call_arguments_reaches_the_callee_intact() {
+    let mut cycles = 0;
+    for code in 0..5usize.pow(4) {
+        let srcs: Vec<usize> = (0..4).map(|i| code / 5usize.pow(3 - i) % 5).collect();
+        let m = call_module(5, &srcs);
+        let expected = srcs.iter().fold(0, |acc, k| acc * 10 + (*k as i64 + 1));
+        assert_eq!(run_call(&m), expected, "f({srcs:?})");
+
+        // A call whose in-order moves were already safe (no move writes a
+        // register a LATER move reads) keeps exactly those moves, so every
+        // module that worked before this fix lowers byte-for-byte the same.
+        let naive: Vec<(u64, u64)> = srcs
+            .iter()
+            .enumerate()
+            .map(|(i, k)| (*k as u64, i as u64))
+            .filter(|(from, to)| from != to)
+            .collect();
+        let safe = naive.iter().enumerate().all(|(i, (_, to))| naive[i + 1..].iter().all(|(from, _)| from != to));
+        let moves = argument_moves(&m);
+        if safe {
+            assert_eq!(moves, naive, "f({srcs:?}): a safe order is left alone");
+        } else {
+            // Otherwise the only extra moves are the parks that break
+            // cycles, one per cycle: four slots hold at most two (2 swaps).
+            assert!(moves.len() <= naive.len() + 2, "f({srcs:?}): {moves:?}");
+            cycles += usize::from(moves.len() > naive.len());
+        }
+    }
+    assert!(cycles > 0, "some arrangement is a pure register cycle (a swap)");
 }

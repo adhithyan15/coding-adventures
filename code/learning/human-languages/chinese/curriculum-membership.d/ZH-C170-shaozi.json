@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C170-shaozi",
+  "pathSegment": "ZH-PATH-170-POT170",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-170-POT170",
+      "order": 3
+    }
+  ]
+}

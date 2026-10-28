@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Sending Things",
+  "label": "ch:zh-sending-things",
+  "canDo": "I can post a parcel, talk about letters and text messages, and say receive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C118-shou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: I can post a parcel, talk about letters and text messages, and say receive.",
+    "assesses": [
+      "ZH-LEX-C118-SEND118-03",
+      "ZH-LEX-C118-SEND118-04",
+      "ZH-LEX-C118-SEND118-05"
+    ]
+  }
+}

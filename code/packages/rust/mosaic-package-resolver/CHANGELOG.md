@@ -2,6 +2,280 @@
 
 ## Unreleased
 
+### Changed — the layout validator now rejects unbound bare names first (6f1p)
+
+`moslayout_compiler::validate` now rejects a bare NAME that no enclosing
+`For` binds and no slot declares (`UnboundName`, UI29 §3.4). A package
+component with one outside a call site therefore fails to load as
+`NestedCompileError` carrying that error, before `check_callee_scope` runs;
+`a_bare_name_naming_nothing_is_rejected` now asserts that. Call-site values
+are still the callee-scope check's, since only it sees the mounted
+component's `one-of` values.
+
+### Added — `UndeclaredPackageReference`: a `pkg::` reference must be declared (publishing-v1 §10 Phase 1b)
+
+`LayoutPackageResolver` finds `pkg::P::C`'s package by manifest name
+anywhere on the search path, and it never asked whether the referencing
+package declares `P`. So an undeclared dependency compiled, but:
+
+- no version requirement was checked for it (§7.4), because none existed;
+- the build tool, which takes its CI edges from `[dependencies]`, never
+  rebuilt or retested the consumer when `P` changed.
+
+What changed:
+
+- **The rule.** Every `pkg::P::C` call site must name the referencing
+  package itself or a declared dependency.
+  - `pkg::<self>::C` is allowed, because the artifact builder qualifies bare
+    sibling references to that form.
+  - Bare sibling references inside a package component are local, so they
+    are never checked.
+- **Where the declared set comes from.**
+  - For a package component's own layout, it is that package's
+    `mosaic-package.toml`. This is always checked.
+  - For the layout being resolved, it is the manifest passed to the new
+    `LayoutPackageResolver::with_consumer(&manifest, &manifest_path)`.
+    Without that call, the consumer's own references are accepted as
+    before, which keeps every existing `new(..)` caller working.
+- **New variant `LayoutResolveError::UndeclaredPackageReference(Box<..>)`.**
+  It holds a new public struct `UndeclaredPackageReference { consumer,
+  package, component, call_site, manifest_path, found_version }`. It is
+  boxed, like `VersionMismatch`, so `Result`s stay small (clippy
+  `result_large_err`).
+  - The message names the manifest to fix and the line to add. It suggests
+    the version found on the search path, or `<version>` when the package
+    is not there.
+  - Each undeclared package is reported once per manifest, at its first
+    call site.
+- **One walk, one report.** The check runs in the pre-substitution walk
+  that `SlotBindingMissing` uses. So undeclared packages, unbound slots and
+  load failures come back together in one `Multiple`, under the same cap
+  of 100.
+- **Repository guard.** `every_repository_layout_binds_every_required_slot`
+  now resolves each layout with its own package's manifest as the
+  consumer.
+  - Every `pkg::` reference in the repository is already declared.
+  - Treating every dependency as undeclared makes the guard report 45
+    references across 8 manifests, which shows it reaches them.
+- Tests cover:
+  - an undeclared reference, with its exact error and message;
+  - a declared reference;
+  - `pkg::<self>::` and bare sibling references;
+  - a resolver with no consumer manifest;
+  - a nested package's undeclared reference, which names that package's
+    manifest with or without a consumer manifest;
+  - three undeclared packages reported once each, beside a missing
+    binding and a `PackageNotFound`.
+
+### Fixed — a callee `For` no longer captures a consumer name (UI29 §3.4, 6f1m)
+
+Backlog 6f1m reported that a bare NAME naming a package component's own
+slot (`Text ( content: title )`) survived inlining as `title`, an unbound
+identifier in every backend. That half was already fixed by F1 (#18393):
+`check_callee_scope` rewrites such a name to `slot: title` when the
+component loads. This entry pins it with tests and fixes the half that
+was still wrong, which UI34 §5 listed as a known follow-up.
+
+Inlining could capture. The consumer loops `For ( …, as: row )` and binds
+`title: row`; Card reads `title` inside its own `For ( …, as: row )`.
+Substitution produced `Text ( content: row )` inside Card's loop, which
+reads Card's `row`. Every backend compiled it and showed the wrong value.
+The same happened to caller children spliced into a mount inside a callee
+loop.
+
+- **The fix.** Before substitution, `substitute` asks each callee `For`
+  which names the bound values (and, if the mount is inside it, the
+  caller's children) would bring into its body. A binding (`as:` or
+  `index:`) that is one of them is renamed to `<name>-in<n>`, the smallest
+  `n` unused by the callee, the values and the children. Its uses are
+  renamed with it: bare prop values in name positions, a nested `For`'s
+  `each:`, and bare names in expressions. A nested `For` that binds the
+  name again ends the rename for its body.
+- **What counts as a name.** Names are compared in camelCase, the
+  identifier every emitter writes. A literal is never a use: the same
+  table as the scope check, now shared as `is_bare_literal` (`true` /
+  `false`, `KEYWORD_LITERAL_PROPS`, a callee `one-of` value at a call
+  site).
+- **No churn.** A binding that captures nothing keeps its authored name,
+  and the mounted components' interfaces are loaded only when something
+  must be renamed. No layout in the repository is affected.
+
+Tests: the own-slot bare name in both spellings at a primitive and at a
+nested call site; a loop shadowing an own slot only inside its body;
+capture of a bare value and of a `slot:` value, in a prop and in an
+expression; an `index:` binding renamed alone; spliced children with the
+mount inside and outside the loop; literals, `slot:` references and a
+rebinding loop left alone; camelCase matching and a fresh name skipping
+one in use; hygiene through nested inlining with a `one-of` value of the
+same spelling.
+
+### Added — `SlotBindingMissing`: a required slot must be bound (UI34 §7, E6 F1)
+
+UI13 §1 says a slot without a default is required, and that the compiler
+rejects a call site that omits one. Nothing checked that. An unbound
+`slot: x` was left in the inlined tree, where it named a slot of the
+*consumer*. Depending on the consumer, that was:
+
+- a misleading `UnknownSlot` naming the consumer (probe P1);
+- a silent capture of an unrelated consumer slot with the same name (P3);
+- an undeclared identifier in the generated Swift and TypeScript, when the
+  slot was read only inside an expression (P12).
+
+See `mosaic-unbound-slot-semantics-v1.md` §1.3 for the probes.
+
+What changed:
+
+- **The check.** `resolve` and `resolve_with_renames` now check every
+  `pkg::P::C` call site before substituting anything, against the callee's
+  interface (its `.mil`), not against what its layout reads.
+  - Every slot with no default must be bound under its declared name.
+  - Only the slot named by the layout's child mount is exempt, because the
+    caller's children fill it. Every other `node` or `list<node>` slot is
+    read as a prop, so it is required (security review, finding 1).
+  - Defaulted slots keep their default, as before.
+  - The walk covers the consumer's tree and, once each, every package
+    component layout it reaches, including sibling references written
+    without `pkg::`. A miss in a package's own layout is reported against
+    that component.
+- **New variant `LayoutResolveError::SlotBindingMissing`**, with fields
+  `consumer`, `package`, `component`, `slot`, `call_site` and
+  `defaultable`.
+  - The layout IR has no source spans, so `call_site` is a path such as
+    `Column[app-root] > Row#2 > pkg::mosaic-pkg-lib::Card`.
+  - The message names the package and component and gives the fix. It
+    offers "give it a default" only for `text`, `number` and `bool`.
+- **New variant `LayoutResolveError::Multiple`.** Every miss, plus any
+  package that failed to load along the way, is reported in one error.
+  A single error is still reported bare.
+- **Callee scope check (security review, findings 1 and 2).** When a
+  package component is loaded, every free name in its expressions must be a
+  declared slot, a `For` `as:`/`index:` binding in scope, or
+  `true`/`false`. The child-mount slot may be read only at the mount. The
+  new variants are `UndeclaredExpressionIdentifier` and
+  `ChildMountSlotReferenced`.
+  - The layout validator treats expressions as opaque text, so a package
+    could otherwise name a consumer value it was never given, by accident
+    or on purpose.
+  - The binding rewrite and this check now share one expression tokenizer,
+    `expression_pieces`. It reads a kebab-case NAME as one name, where the
+    old rewrite split it at the `-`; the grammar has no minus operator.
+- **Bindings come only from declared slots and emits (finding 3).** A
+  call-site prop that names neither is no longer substituted into the
+  callee. Before, `row: slot: x` turned a loop's `row.title` into
+  `x.title`. Inside a `For`, a bare name that matches the loop's binding is
+  never rewritten. Reporting such props is left to F2
+  (`UnknownSlotBinding`).
+- **Bounded error list (finding 4).** At most `MAX_REPORTED_ERRORS` (100)
+  errors are kept, and `Multiple { errors, omitted }` counts the rest:
+  "… and N more". Load errors are deduplicated through a set keyed by
+  (variant, package, component), not a linear scan of every error.
+- **Bare NAME prop values (security review round 2, MEDIUM).** A bare NAME
+  value is a `Keyword` in the IR, and neither the scope check nor
+  substitution looked at it. But React and HTML lower it to a variable in
+  most positions (`Text ( content: x )` becomes `{x}` / `{{x}}`). Three
+  results:
+  - a package could read any consumer variable on purpose
+    (`content: authToken`);
+  - a component's own `content: title` showed the consumer's `title` even
+    when the call site bound `title`;
+  - `content: children` read the mount slot.
+
+  It is now checked like a bare expression name, except when it is a
+  literal: `true`/`false`, a `moslayout_compiler::KEYWORD_LITERAL_PROPS`
+  position, a `For`'s `as:`/`index:`, or a call-site value bound to a
+  `one-of` slot. The `one-of` case uses the mounted component's `.mil`,
+  through the new `interface_slots`, which compiles only the interface, so
+  a cycle cannot recurse. A bare NAME naming the component's own slot is
+  rewritten to `slot: <name>` when the component loads, so substitution
+  binds it.
+- **`one-of` values (round 4, MEDIUM; also fixes P14).**
+  - **The check.** At a call site inside a package, a bare NAME bound to a
+    `one-of` slot is a literal only if it is one of that slot's declared
+    values. Anything else gets the identifier rule:
+    - `tone: authToken` is rejected. Before, the exemption let it through,
+      and the callee read React `{authToken}`.
+    - `tone: tone` forwards the caller's own slot. Before, it stayed
+      `Keyword("tone")` and captured the consumer's `tone`.
+    - A declared value that also names a caller slot is the value.
+  - **Substitution.** A declared `one-of` value becomes the string it
+    spells (`one_of_literals`). It is a bare `Keyword` again only in a
+    `KEYWORD_LITERAL_PROPS` position. So `content: slot: tone` renders
+    "loud", and `( tone == "calm" )` becomes `( "loud" == "calm" )`,
+    never `( loud == "calm" )`.
+  - **Constant folding.** `fold_constant_expressions` then evaluates
+    expressions that have become constant, because TypeScript rejects
+    `"loud" == "calm"` (TS2367). It folds:
+    - `==`/`!=` on two literals of one kind;
+    - numeric comparisons;
+    - `!` of a boolean;
+    - `&&`/`||` with a boolean literal on the left.
+
+    Nothing else is folded, and an expression with nothing to fold keeps
+    its exact text.
+  - A bare NAME bound to a `one-of` slot at the consumer's own call site
+    that is not a declared value (a loop variable, say) is the consumer's
+    variable, and is unchanged.
+- **Callee-scope limits (round 2, LOW).**
+  - Callee-scope errors are capped at `MAX_REPORTED_ERRORS`, and the rest
+    are counted as omitted.
+  - An error quotes at most 200 characters of an expression.
+  - Slot lookups use a map built once per component.
+  - A failed load is cached per (package, component).
+- **Known follow-up.** A callee's `For` binding can still capture names
+  from outside the callee: consumer values bound into it, and
+  caller-authored children spliced under the loop.
+- **A binding counts only under the slot's kebab-case name.** A
+  `bodyValue:` binding never filled a `slot: body-value` prop, so it does
+  not satisfy the check either.
+
+**Tests:**
+
+- One test per probe: P1, P3, P5b and P12 now fail, while P2, P8, P9b and
+  P11 still pass.
+- Several misses reported together; the exact message; a required slot
+  the layout never reads; nested and caller-authored call sites; a
+  component mounted twice; load errors reported beside misses.
+- `every_repository_layout_binds_every_required_slot` runs the binding
+  check on every exported layout in `code/` (93 layouts, 57 call sites),
+  and the callee scope check on all 89 exports. It found no consumer
+  relying on an unbound slot, and no export with a scope error.
+  - Removing JournalApp's `selected-key` binding from its `RecordList`
+    makes it fail. Before this check, that omission would have built:
+    JournalApp declares its own `selected-key`, which would have been
+    captured.
+  - Renaming `selectedKey` to a free name in `RecordList.mll` makes it
+    fail too.
+- Security-review tests:
+  - a `node` slot read as a prop, and an unmounted `list<node>` slot, must
+    be bound;
+  - the mount slot read as a prop, and in an expression, is rejected;
+  - a free name is rejected, with an exact-message test;
+  - the names an expression may use;
+  - `slot:` to an undeclared slot inside an expression is rejected;
+  - an undeclared call-site prop is not substituted;
+  - `For` shadowing;
+  - the kebab-aware tokenizer;
+  - the cap on the error list.
+- Round-2 tests:
+  - a bare NAME naming nothing is rejected (deliberate read);
+  - a bare NAME naming an own slot takes the binding or the default
+    (accidental capture);
+  - a bare NAME naming the mount slot is rejected;
+  - enum values, booleans and loop bindings are left alone, even where a
+    slot or loop variable has the same name;
+  - bare NAMEs at a nested call site follow the mounted slot's type;
+  - callee-scope errors are capped and expressions quoted in part;
+  - a failed load is cached.
+- Round-4 tests:
+  - a non-value `one-of` binding is an identifier (`authToken` rejected);
+  - a `one-of` value is a string and never a variable. That covers text,
+    folded comparisons, a value under a `For` that binds the same name,
+    and a `Keyword` again in `HostTable ( dir: … )`;
+  - forwarding binds through;
+  - a declared value wins over a caller slot of the same name;
+  - a consumer loop variable stays a variable;
+  - a table of constant-folding cases.
+
 ### Added — dependency versions are checked (mosaic-package-publishing-v1 §7.4, Phase 1)
 
 A `[dependencies]` version used to be read into `(dep_name, _ver)` and

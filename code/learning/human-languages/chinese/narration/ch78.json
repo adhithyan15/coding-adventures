@@ -1,0 +1,864 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 78,
+  "title": "Age and Growing Up",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:c07caf07a5bb802a",
+  "lessons": [
+    {
+      "id": "ZH-C78-duoda",
+      "sequence": 6030,
+      "title": "多大 (duō dà) — how old (asking a person's age)",
+      "headword": "多大",
+      "romanization": "duō dà",
+      "gloss": "how old (asking a person's age)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1990eacb2245628",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for extremely, then the Mandarin for really."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 多大",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多大 — duō dà — \"how old (asking a person's age)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "生日快乐你今年多大 shēngrì kuàilè nǐ jīnnián duō dà — Happy birthday! How old are you now?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多大 (duō dà) is built from 多 'much' and 大 'big': how big, said of a person's years."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duō dà",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duō dà*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duō dà, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duō dà*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēngrì kuàilè nǐ jīnnián duō dà — Happy birthday! How old are you now?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēngrì kuàilè nǐ jīnnián duō dà* — Happy birthday! How old are you now?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for extremely, then the Mandarin for really, then say duō dà again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for extremely, then the Mandarin for really, then say *duō dà* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 多大 (duō dà) mean? (\"How old (asking a person's age)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C78-zhangda",
+      "sequence": 6040,
+      "title": "长大 (zhǎngdà) — to grow up",
+      "headword": "长大",
+      "romanization": "zhǎngdà",
+      "gloss": "to grow up",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bb2098b51087f7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for really, then the Mandarin for how old."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 长大",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "长大 — zhǎngdà — \"to grow up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他们长大了 tāmen zhǎngdà le — They've grown up."
+            },
+            {
+              "kind": "speech",
+              "text": "The character you wrote for cháng, long, is read zhǎng here, to grow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "长大 (zhǎngdà) is built from zhǎng 'to grow' and 大 'big', both inherited from Middle Chinese, trjangX and dajH (Guangyun, in Baxter's transcription). The dictionary glosses the first as 'big' and 'elder'; growing is not given there, so how it got that sense is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǎngdà",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǎngdà*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǎngdà, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǎngdà*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāmen zhǎngdà le — They've grown up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāmen zhǎngdà le* — They've grown up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for really, then the Mandarin for how old, then say zhǎngdà again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for really, then the Mandarin for how old, then say *zhǎngdà* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 长大 (zhǎngdà) mean? (\"To grow up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C78-qian",
+      "sequence": 6050,
+      "title": "前 (qián) — before; ago; front",
+      "headword": "前",
+      "romanization": "qián",
+      "gloss": "before; ago; front",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1891cd9e0dd7ef97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for how old, then the Mandarin for to grow up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 前",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "前 — qián — \"before; ago; front\"."
+            },
+            {
+              "kind": "speech",
+              "text": "三年前我八岁 sān nián qián wǒ bā suì — Three years ago I was eight."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 前 (qián) — two horns over a bar, the moon piece read yuè on the left, and a blade of two verticals on the right. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "前 (qián) is inherited from Middle Chinese dzen (Guangyun, in Baxter's transcription), glossed 'before, first'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sān nián qián wǒ bā suì — Three years ago I was eight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sān nián qián wǒ bā suì* — Three years ago I was eight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for how old, then the Mandarin for to grow up, then say qián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for how old, then the Mandarin for to grow up, then say *qián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 前 (qián) mean? (\"Before; ago; front\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W78-qian-before",
+      "sequence": 6055,
+      "title": "前 (qián) — horns, a bar, the moon and a blade",
+      "headword": "前",
+      "romanization": "qián",
+      "gloss": "前 — horns, a bar, the moon piece and a blade",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:de38076364ce1565",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — horns, a bar, the moon and a blade",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — horns, a bar, the moon and a blade and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say qián — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *qián* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "三 年."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — sān, nián",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *sān*, *nián*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — horns, a bar, the moon and a blade",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "前 (qián)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two horns, two strokes: a dot on the left, a short left-falling stroke on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "A long horizontal under them."
+            },
+            {
+              "kind": "speech",
+              "text": "The moon piece, four strokes, read yuè as in the word for month: a left side that falls down, a top that turns down the right side and hooks, and two short bars inside."
+            },
+            {
+              "kind": "speech",
+              "text": "The blade, two strokes: a short vertical, then a long vertical that hooks to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 1 + 4 + 2 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "前 (qián), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 前, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 前 (qián)? (Nine.) What comes after the horns? (The long bar.) Which stroke hooks last? (The long vertical on the right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 前 (qián), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C78-nianji",
+      "sequence": 6060,
+      "title": "niánjì — age (of a person)",
+      "headword": "niánjì",
+      "romanization": "niánjì",
+      "gloss": "age (of a person)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:769b2a619f749525",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to grow up, then the Mandarin for ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: niánjì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "niánjì — \"age (of a person)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ bàba duō dà niánjì — How old is your father?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "niánjì is built from 年 'year' and jì, both inherited from Middle Chinese, nen and kiX (Guangyun, in Baxter's transcription); the dictionary glosses the second as a span of twelve years."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niánjì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niánjì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niánjì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niánjì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ bàba duō dà niánjì — How old is your father?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ bàba duō dà niánjì* — How old is your father?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to grow up, then the Mandarin for ago, then say niánjì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to grow up, then the Mandarin for ago, then say *niánjì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does niánjì mean? (\"Age (of a person)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C78-xiaoshihou",
+      "sequence": 6070,
+      "title": "xiǎoshíhou — in childhood; when one was little",
+      "headword": "xiǎoshíhou",
+      "romanization": "xiǎoshíhou",
+      "gloss": "in childhood; when one was little",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05b237e6486ccb99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for ago, then the Mandarin for age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xiǎoshíhou",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎoshíhou — \"in childhood; when one was little\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ xiǎoshíhou hěn xǐhuan xiào — As a child I laughed a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiǎoshíhou is built from 小 'small' and shíhou 'time', all inherited from Middle Chinese, sjewX, dzyi and huwH (Guangyun, in Baxter's transcription): the time when you were small."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎoshíhou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎoshíhou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎoshíhou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎoshíhou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎoshíhou hěn xǐhuan xiào — As a child I laughed a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎoshíhou hěn xǐhuan xiào* — As a child I laughed a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for ago, then the Mandarin for age, then say xiǎoshíhou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for ago, then the Mandarin for age, then say *xiǎoshíhou* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xiǎoshíhou mean? (\"In childhood; when one was little\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

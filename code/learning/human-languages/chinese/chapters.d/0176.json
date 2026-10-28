@@ -1,0 +1,20 @@
+{
+  "chapter": 176,
+  "title": "A Knock at the Door",
+  "label": "ch:zh-a-knock-at-the-door",
+  "canDo": "I can tell what happened at home: a knock at the door, the neighbours quarrelling, something toppling over, a fire.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C176-zhaohuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can tell what happened at home: a knock at the door, the neighbours quarrelling, something toppling over, a fire.",
+    "assesses": [
+      "ZH-LEX-C176-KNOCK176-02",
+      "ZH-LEX-C176-KNOCK176-03",
+      "ZH-LEX-C176-KNOCK176-04",
+      "ZH-LEX-C176-KNOCK176-05"
+    ]
+  }
+}

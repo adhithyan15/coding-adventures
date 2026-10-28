@@ -1,0 +1,11 @@
+{
+  "id": "JA-C454-shippai-suru",
+  "pathSegment": "JA-PATH-454-TASK454",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-454-TASK454",
+      "order": 4
+    }
+  ]
+}

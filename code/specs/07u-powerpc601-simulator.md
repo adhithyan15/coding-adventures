@@ -62,11 +62,15 @@ Comparison with prior simulators:
 
 #### XER (Fixed-Point Exception Register)
 - 32 bits
-- Bit 0 (MSB): **SO** — Summary Overflow (sticky; set by overflow, never cleared by
-  instructions in this simulator)
-- Bit 1: **OV** — Overflow (set by arithmetic overflow)
+- Bit 0 (MSB): **SO** — Summary Overflow. The architecture defines it as sticky
+  after an enabled arithmetic overflow; this bounded profile does not admit
+  overflow-enabled arithmetic, so modeled arithmetic preserves it.
+- Bit 1: **OV** — Overflow. This bounded profile preserves it because
+  overflow-enabled arithmetic is outside scope.
 - Bit 2: **CA** — Carry (set by carry out of bit 31 in add/subtract variants)
-- Bits 3–31: not simulated
+- Bits 3–31: opaque state. They are not interpreted by the modeled instruction
+  subset, but snapshots, restore, ordinary flag updates, and `mtspr` preserve or
+  replace them exactly as specified below.
 - Read/written via `mfspr` / `mtspr` with SPR=1
 
 #### Condition Register (CR)
@@ -78,9 +82,10 @@ Comparison with prior simulators:
   - **GT** (Greater Than, bit 1 of field): 1 if result > 0 (signed)
   - **EQ** (Equal, bit 2 of field): 1 if result == 0
   - **SO** (Summary Overflow, bit 3 of field): copy of XER[SO] at compare time
-- **CR0** is updated automatically by `andi.`, `andis.`, and any instruction with
-  the `Rc=1` bit set (e.g., `add.`, `and.`).  This simulator implements `Rc=0`
-  for all arithmetic/logical instructions unless explicitly noted.
+- **CR0** is updated automatically by `andi.`, `andis.`, and admitted X-form
+  logical/shift instructions whose `Rc` bit is one. XO-form arithmetic is
+  admitted only with `Rc=0`; an arithmetic `Rc=1` encoding is unsupported rather
+  than an alias for its non-recording form.
 - **Any CRn** field is updated by `cmpw`, `cmplw`, `cmpwi`, `cmplwi`.
 - Read/written via `mfcr` / `mtcrf`; individual bits via `mcrxr` (not simulated).
 
@@ -182,7 +187,8 @@ Full decoding (BO[0] is the MSB of the 5-bit field = bit 4 of the integer value)
 ```
 
 - Primary **OPCD** = 31
-- **OE** (bit 21): overflow enable (this simulator always treats OE=0)
+- **OE** (bit 21): overflow enable. Only `OE=0` belongs to this profile; `OE=1`
+  is an unsupported encoding, not an alias that silently ignores overflow.
 - **XO** (bits 22–30): 9-bit secondary opcode
 
 ### XFX-Form (Move to/from Special Registers)
@@ -265,7 +271,11 @@ Full decoding (BO[0] is the MSB of the 5-bit field = bit 4 of the integer value)
 | `srawi rA,rS,SH`    | 824 | rA = signed(rS) >> SH; sets CA (SH in rB field) |
 
 For `sraw`/`srawi`, XER[CA] is set if the operand is negative and any 1-bits are
-shifted out; otherwise CA is cleared.
+shifted out; otherwise CA is cleared. `sraw` uses all six low bits of `rB`: a
+count of zero clears CA, counts 1 through 31 inspect the discarded low bits,
+and counts 32 through 63 produce sign fill and set CA exactly when the source is
+negative. `srawi` has a five-bit immediate count and therefore covers 0 through
+31.
 
 ### Compare (X-form, OPCD=31)
 
@@ -431,12 +441,17 @@ The simulator implements `Simulator[PowerPC601State]`:
 
 1. **No floating-point** — FPR0–FPR31 are not simulated; the FPU is outside scope.
 2. **No MMU / address translation** — all addresses are physical.
-3. **No hardware exceptions** — undefined instructions halt the simulator; no
-   interrupt vectors, no SRESET.
+3. **No hardware exception dispatch** — there are no interrupt vectors or
+   SRESET. The normative Rust boundary reports illegal encodings as typed atomic
+   failures rather than entering an architectural exception handler.
 4. **No OE (overflow enable)** — XER[SO/OV] are never set by arithmetic in this
-   simulator (simulating OE=0 for all ops).
-5. **No Rc (record condition)** — arithmetic instructions don't set CR0 (simulating
-   Rc=0); only compare instructions and `andi.`/`andis.` set CR fields.
+   simulator. Every modeled XO-form arithmetic instruction requires `OE=0`;
+   `OE=1` returns the normative Rust `UnknownInstruction { raw, cia }` failure
+   before any state changes.
+5. **No arithmetic Rc (record condition)** — modeled XO-form arithmetic requires
+   `Rc=0`; `Rc=1` returns the same typed atomic unknown-instruction failure.
+   Compare instructions, `andi.`/`andis.`, and admitted X-form logical/shift
+   record forms still update CR fields. Their SO bit copies the current XER[SO].
 6. **No memory-mapped I/O** — no peripheral simulation.
 7. **No POWER legacy instructions** — only the clean PowerPC ISA subset.
 8. **Alignment is relaxed** — misaligned loads/stores succeed (address masked to
@@ -461,6 +476,13 @@ strengthening the legacy SIM00 lifecycle:
   than silently rounded down as in the Python implementation;
 - illegal instructions, truncated fetches, out-of-range or misaligned memory,
   and signed/unsigned zero divisors fail atomically;
+- the XO-form arithmetic set `addc`, `subf`, `neg`, `adde`, `mullw`, `add`,
+  `divwu`, and `divw` accepts only `OE=0,Rc=0`; any other modifier pair is an
+  atomic `UnknownInstruction` and must not change GPRs, XER, CR, CIA, memory,
+  halt, or installed-program metadata;
+- CA-writing instructions replace only XER[CA]; compare and record-form updates
+  do not alter XER; all preserve XER[SO], XER[OV], and opaque XER bits. `mtspr`
+  to XER is the sole modeled instruction that replaces the complete XER word;
 - public structured I/B/D/X/XO/XFX/XL encoders are part of the conformance API;
 - the reproducible Python full-state corpus must exercise every defined decode
   family, while lifecycle tests pin Rust's stricter fault boundary;

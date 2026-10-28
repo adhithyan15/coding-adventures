@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W128-yin-sound",
+    "language": "chinese",
+    "chapter": 128,
+    "sequence": 10255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3fdd8ba688d80a37",
+    "detachableSegments": [
+      "Script — five strokes over 日"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C306-yoroshiku",
+  "pathSegment": "JA-PATH-306-AISATSU306",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-306-AISATSU306",
+      "order": 1
+    }
+  ]
+}

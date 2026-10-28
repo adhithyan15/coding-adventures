@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Caught in a Shower",
+  "label": "ch:ja-caught-in-a-shower",
+  "canDo": "I can talk about being caught in the rain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C415-amayadori",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can talk about being caught in the rain.",
+    "assesses": [
+      "JA-LEX-C415-YUUDACHI415-03",
+      "JA-LEX-C415-YUUDACHI415-04",
+      "JA-LEX-C415-YUUDACHI415-05"
+    ]
+  }
+}

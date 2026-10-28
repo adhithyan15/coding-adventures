@@ -138,3 +138,136 @@ whole save with a console error, mirroring the Sheet Labels column's
 (`row[13]`, appended after the dependency list's `row[12]`) then reads
 `Note.attached_task` for the open task — the read side this addendum
 was blocked on.
+
+## Addendum (v1.2): a refused Save says why, and drafts are bounded
+
+Mosaic backlog item E5, from the editor convergence audit
+(`mosaic-editor-convergence-audit-v1.md`, risks R4 and R5). Both hosts
+had two gaps, and both are closed the way Journal already closes them.
+
+**A refused Save is visible.** v1.1's "a miss aborts the whole save with a
+console error" left the person typing with nothing to see: Save did
+nothing, and only a developer console knew why (the native adapter,
+`task-mosaic-app`, did not even log). Now a Save that names no task in the
+active project:
+
+- writes nothing, and keeps the whole draft — title, body and the typed
+  task name — exactly as it was, so the person can correct the name;
+- sets the new `note-error` slot to a one-line reason. The native adapter
+  also announces it politely, as it announces "Note saved"; the web host
+  has no announcement channel for either yet, so there the visible text is
+  the whole signal;
+- is cleared by **any other event** (typing, switching notes, changing
+  view), and by the next Save that succeeds. A new Save sets or clears it
+  again. Like Journal's `draft-error`, it describes the last attempt, not
+  the data, so it is not part of the snapshot.
+
+`note-error` is a TaskApp slot, not a `Notes` one. TaskApp renders it as
+a `Text [ note-error ]` directly above the `Notes` mount, exactly as
+Journal composes `draft-error` above `DraftEditor`. That keeps the change
+additive: `Notes` gains no slot, so no other consumer of it has to bind
+one (the unbound-package-slot question is the audit's E6), and E3's move
+of `Notes` onto `DraftEditor` is unaffected. The audit records that
+composing the error outside the editor "costs nothing".
+
+**Drafts are capped as typed**, with Journal's limits and Journal's
+semantics:
+
+| Field | Cap | Measured in |
+| --- | --- | --- |
+| title | 512 | characters (Unicode scalar values) |
+| body | 1 MiB (1,048,576) | UTF-8 bytes |
+
+An edit past the cap is **refused, not truncated**: the event fails, the
+draft keeps its previous value, and the field shows that value again.
+Truncating would silently drop the end of a paste; refusing it shows the
+person that the paste did not land. Bytes for the body, because the cap
+exists to bound the state file, not to count prose.
+
+**Stored notes are never cut down.** A note saved before this change may
+be larger than the cap. It still restores, still opens in the editor
+whole, and still saves. Journal can refuse such a snapshot outright,
+because its caps have always existed; Trestle's have not. The one
+difference from Journal follows from that: an edit to an over-cap draft is
+refused only if it would make the draft *longer*. A legacy note can be
+edited down towards the cap, but never grown past it.
+
+The task-name field is not capped by this addendum. Task names themselves
+have no limit anywhere in TaskApp yet, so a cap on the name typed to find
+one would be arbitrary.
+
+## Addendum (v1.3): `Notes` 0.3.0 is a composition of `RecordList` and `DraftEditor`
+
+Mosaic backlog item E3, from the editor convergence audit
+(`mosaic-editor-convergence-audit-v1.md` §4.2, probe C). `Notes` stops
+drawing its own list rows, fields and buttons. It keeps only what is
+Trestle's: the "+ New note" button, the attach-to-task field and the
+empty-state hint.
+
+**What `Notes` mounts.**
+
+```
+Column [ notes-root ]
+  Text [ notes-heading ]
+  Row [ notes-body ]
+    Column [ notes-list ]
+      HostButton [ notes-new ]                       new-note-label
+      pkg::mosaic-pkg-toolkit::RecordList            rows: note-rows,
+                                                     selected-key: selected-note-id
+    If ( selected-note-id )
+      Column [ notes-editor ]
+        Text      [ notes-task-label ]               task-label
+        HostInput [ notes-task-input ]               a11y-label: task-label
+        pkg::mosaic-pkg-draft-editor::DraftEditor    title, body, actions
+    Else
+      Column [ notes-empty ]
+        Text [ notes-empty-hint ]                    empty-hint
+```
+
+- **The list is `RecordList`.** `note-rows` widens from `[id, title]` to
+  RecordList's row, `[key, heading, title, subtitle, meta, badge]`, which
+  `Notes` passes through unchanged. Both hosts fill `key` and `title` as
+  before (the id, and the title or "Untitled") and leave the other four
+  empty, so a row is still one line. Selection stays by key
+  (`selected-key: selected-note-id`); a click still reports the row's index,
+  which the host resolves through the list it built, exactly as before.
+- **Title, body and actions are `DraftEditor`** (0.2.0). Its fields gain
+  visible labels, and each label is also the field's accessible name. The
+  body keeps Ctrl/Cmd+Enter to save. Every `DraftEditor` slot is bound at
+  `Notes`' call site, because an unbound slot of a mounted package component
+  is a compile error (E6 F1).
+- **The attach-to-task field stays `Notes`' own** `HostInput`, composed
+  above the editor as Journal composes its tags and journal fields above
+  its `DraftEditor`. It gains a visible label, `task-label`, which is also
+  its `a11y-label`, so it no longer relies on its placeholder for a name.
+  Above rather than below, because `DraftEditor` ends with its actions: a
+  field after Save would be filled in after the button that commits it.
+- **`Notes` draws no English.** Every literal becomes a slot of `Notes`,
+  bound at TaskApp's call site, as Journal binds `DraftEditor`'s:
+  `new-note-label`, `empty-hint`, `title-label`, `title-placeholder`,
+  `body-label`, `body-placeholder`, `task-label`, `task-placeholder`,
+  `save-label`, `delete-label` and `cancel-label`. None has a default:
+  a default would put the English back in the package.
+- **Delete is offered only for a saved note.** `delete-label` is the one
+  label TaskApp does not write as a literal. It binds a new TaskApp slot,
+  `note-delete-label`, which both hosts fill with "Delete" when the open
+  note exists in the project and with `""` for a new note that has never
+  been saved. `DraftEditor` draws no Delete button for `""`. Before this,
+  Delete on an unsaved note only discarded the draft, as Cancel does,
+  while the native host announced "Note deleted" for a note that never
+  existed. The `onDelete` handlers stay as they are: a Delete that
+  arrives anyway is still harmless.
+
+**What does not change.** The eight events and their payloads; the host
+logic for New, Select, Save, Delete and Cancel; the caps and the refused-Save
+message (v1.2); `note-error` above the mount. `Notes` is 0.3.0 because its
+slot set changes, and a consumer that does not bind the new slots no longer
+compiles.
+
+**Native drops.** The package gate (E2) pinned 12 style drops per theme,
+named by backend, property and part. The row buttons' two Qt `text-align`
+drops go with the rows. The body's `min-height` drops move from
+`notes-body-input` to `DraftEditor`'s own `draft-editor-body`, which its own
+gate already pins. `Notes`' list/editor flex split (`flex-grow` on
+`notes-editor` and `notes-empty`, `flex-shrink` on `notes-list`) is
+untouched; PR-6 (`HostNavigationSplit`) removes it.

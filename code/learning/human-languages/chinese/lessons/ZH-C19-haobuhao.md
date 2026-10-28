@@ -5,7 +5,7 @@ spine_node: SPINE-EXCHANGE-NAMES
 sequence: 1930
 chapter: 19
 type: word
-concept_tag: ZH-QUESTION-VERB-NOT-VERB
+concept_tag: ZH-QUESTION-A-NOT-A
 headword: 好不好
 romanization: hǎo bu hǎo
 gloss: is it good, written from three characters already yours and no new shape at all

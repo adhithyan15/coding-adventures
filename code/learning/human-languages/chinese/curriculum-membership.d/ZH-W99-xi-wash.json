@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W99-xi-wash",
+  "pathSegment": "ZH-PATH-99-WASH99",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-99-WASH99",
+      "order": 1
+    }
+  ]
+}

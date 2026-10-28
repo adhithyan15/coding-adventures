@@ -1,0 +1,21 @@
+{
+  "chapter": 247,
+  "title": "Back From a Trip",
+  "label": "ch:zh-back-from-a-trip",
+  "canDo": "I can talk about a trip: what I went through, how pleasant it was, local specialities, souvenirs and memories.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-R247-review-final-247",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can talk about a trip: what I went through, how pleasant it was, local specialities, souvenirs and memories.",
+    "assesses": [
+      "ZH-LEX-C247-TRIP247-01",
+      "ZH-LEX-C247-TRIP247-02",
+      "ZH-LEX-C247-TRIP247-03",
+      "ZH-LEX-C247-TRIP247-04",
+      "ZH-LEX-C247-TRIP247-05"
+    ]
+  }
+}

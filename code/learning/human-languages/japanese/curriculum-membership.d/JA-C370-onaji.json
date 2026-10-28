@@ -1,0 +1,11 @@
+{
+  "id": "JA-C370-onaji",
+  "pathSegment": "JA-PATH-370-MATOMARU370",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-370-MATOMARU370",
+      "order": 2
+    }
+  ]
+}

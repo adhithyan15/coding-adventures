@@ -1,0 +1,10 @@
+[package]
+name = "superh2-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked bounded Renesas SuperH-2 functional simulator"
+license = "MIT"
+
+[lib]
+name = "superh2_simulator"
+path = "src/lib.rs"

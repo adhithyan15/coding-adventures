@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:9fdaea60e76d0ee0",
+  "lessonIds": [
+    "ZH-C96-yinwei",
+    "ZH-W96-yin",
+    "ZH-C96-suoyi",
+    "ZH-C96-shufu",
+    "ZH-C96-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch96.txt",
+  "json": "chinese/narration/ch96.json",
+  "textHash": "fnv1a64:02ee6b049bb91805",
+  "jsonHash": "fnv1a64:a6a716e3011ffc94",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:83965d414a5711da",
+  "lessonIds": [
+    "ZH-C36-lai",
+    "ZH-W36-lai",
+    "ZH-C36-meiguo",
+    "ZH-C36-yingguo",
+    "ZH-C36-beijing",
+    "ZH-C36-na",
+    "ZH-R36-review-31-36"
+  ],
+  "tex": "chinese/book/chapters/ch36-where-people-come-from.tex"
+}

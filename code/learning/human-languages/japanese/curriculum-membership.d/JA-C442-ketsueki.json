@@ -1,0 +1,11 @@
+{
+  "id": "JA-C442-ketsueki",
+  "pathSegment": "JA-PATH-442-INSIDE442",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-442-INSIDE442",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C404-nagameru",
+  "pathSegment": "JA-PATH-404-FUUKEI404",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-404-FUUKEI404",
+      "order": 1
+    }
+  ]
+}

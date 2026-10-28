@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "The Traditional Arts",
+  "label": "ch:ja-the-traditional-arts",
+  "canDo": "I can name some traditional Japanese arts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C466-geijutsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can name some traditional Japanese arts.",
+    "assesses": [
+      "JA-LEX-C466-ARTS466-03",
+      "JA-LEX-C466-ARTS466-04",
+      "JA-LEX-C466-ARTS466-05"
+    ]
+  }
+}

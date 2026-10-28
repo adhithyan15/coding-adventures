@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C43-xuexiao",
+  "pathSegment": "ZH-PATH-43-GO43",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-43-GO43",
+      "order": 5
+    }
+  ]
+}

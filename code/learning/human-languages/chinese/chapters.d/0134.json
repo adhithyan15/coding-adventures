@@ -1,0 +1,22 @@
+{
+  "chapter": 134,
+  "title": "Heavy and Soft",
+  "label": "ch:zh-heavy-and-soft",
+  "canDo": "I can say a thing is heavy, soft, hard, empty or full.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-R134-review-129-134",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: I can say a thing is heavy, soft, hard, empty or full.",
+    "assesses": [
+      "ZH-LEX-C134-THING134-01",
+      "ZH-LEX-C134-THING134-02",
+      "ZH-LEX-C134-THING134-03",
+      "ZH-LEX-C134-THING134-04",
+      "ZH-LEX-C134-THING134-05",
+      "ZH-SCRIPT-ZHONG-HEAVY-01"
+    ]
+  }
+}

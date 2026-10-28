@@ -307,13 +307,17 @@ describe("corpus level summary", () => {
       // Chinese joins the list with the 了 and 呢/对 chapters: an aspect particle
       // realizing SPINE-TALK-ABOUT-PAST and a follow-up particle on
       // SPINE-NEGATE-AND-ASK, which are the two A2 grammar nodes this track had
-      // never reached. Both are one character each.
+      // never reached. Both are one character each. Its A2 core, chapters
+      // 147-157, realized all five A2 nodes, and its A2 vocabulary, chapters
+      // 158-277, took attained to A2; it stays on this list until a B1 core
+      // takes `reach` past A2.
       "chinese",
       // Japanese joined with chapters 138-142 (what I do, negation and
       // questions, the past, the future and practical texts, the five A2 spine
       // nodes), and its A2 vocabulary, chapters 146-249, took attained to A2.
       // Its B1 core, chapters 250-261, now takes `reach` past A2, so it has
-      // left this list; attained stays A2 until the B1 vocabulary lands.
+      // left this list, and its B1 vocabulary, chapters 262-533, took attained
+      // to B1.
       "marwadi",
       "punjabi",
     ]);

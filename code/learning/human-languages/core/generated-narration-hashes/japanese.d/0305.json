@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:98cab6e30fa555ee",
+  "lessonIds": [
+    "JA-C305-yuubin",
+    "JA-C305-atesaki",
+    "JA-C305-sokutatsu",
+    "JA-C305-haitatsu",
+    "JA-C305-hisashiburi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch305.txt",
+  "json": "japanese/narration/ch305.json",
+  "textHash": "fnv1a64:bcdc1f650d769b8b",
+  "jsonHash": "fnv1a64:ca285d7aca6a07bd",
+  "findings": []
+}

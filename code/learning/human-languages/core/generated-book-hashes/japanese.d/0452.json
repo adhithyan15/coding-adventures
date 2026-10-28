@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:3770a5414a854b0e",
+  "lessonIds": [
+    "JA-C452-buchou",
+    "JA-C452-kachou",
+    "JA-C452-buka",
+    "JA-C452-shain",
+    "JA-C452-meishi"
+  ],
+  "tex": "japanese/book/chapters/ch452-people-at-work.tex"
+}

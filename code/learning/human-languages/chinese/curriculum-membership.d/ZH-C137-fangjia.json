@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C137-fangjia",
+  "pathSegment": "ZH-PATH-137-HOLIDAY137",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-137-HOLIDAY137",
+      "order": 4
+    }
+  ]
+}

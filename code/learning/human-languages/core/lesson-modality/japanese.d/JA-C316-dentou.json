@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C316-dentou",
+    "language": "japanese",
+    "chapter": 316,
+    "sequence": 18800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2cdd6ba48f1ae87"
+  },
+  "findings": []
+}

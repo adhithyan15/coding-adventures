@@ -615,6 +615,14 @@ struct StyleCompositionOptions<'a> {
     theme: Option<&'a str>,
     tokens: &'a mosstyle_compiler::TokenOverrides,
     backend: Option<Backend>,
+    /// The manifest of the package whose layout is being composed, and where
+    /// it was read from. When present, the layout's own `pkg::P::C`
+    /// references must name that package or one of its `[dependencies]`
+    /// (mosaic-package-publishing-v1 §10 Phase 1b,
+    /// `LayoutPackageResolver::with_consumer`). `None` for a loose triple
+    /// with no manifest, whose nested package references are still checked
+    /// against their own packages' manifests.
+    consumer: Option<(&'a MosaicPackage, &'a Path)>,
 }
 
 /// Compile MIL, MLL, and MSL sources into one package-composed component.
@@ -662,6 +670,7 @@ pub fn compose_component_with_tokens(
             theme,
             tokens,
             backend: None,
+            consumer: None,
         },
     )
 }
@@ -730,6 +739,7 @@ pub fn compose_component_with_model_and_tokens(
             theme,
             tokens,
             backend: None,
+            consumer: None,
         },
         None,
     )
@@ -756,6 +766,7 @@ pub fn compose_component_with_model_in_package(
     manifest: &MosaicPackage,
     backend: Backend,
 ) -> Result<ComposedComponent, BuildError> {
+    let manifest_path = package_root.join("mosaic-package.toml");
     let package_tokens = load_package_tokens(
         package_root,
         manifest,
@@ -772,6 +783,7 @@ pub fn compose_component_with_model_in_package(
             theme,
             tokens: &package_tokens,
             backend: Some(backend),
+            consumer: Some((manifest, &manifest_path)),
         },
         Some((&manifest.package.name, &manifest.components.exports)),
     )
@@ -809,6 +821,7 @@ fn compose_component_with_model_and_style_options(
         &mut layout,
         &model.descriptor_json,
         package_search_paths,
+        style_options.consumer,
     )?;
     let slot_states = slot_state_axes(&model.component);
     let own_style = mosstyle_compiler::compile_with_tokens_and_slot_states(
@@ -2721,6 +2734,7 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 theme: opts.theme.as_deref(),
                 tokens: &package_tokens,
                 backend: Some(opts.backend),
+                consumer: Some((&manifest, &manifest_path)),
             };
             let composed = compose_component_with_backend_tokens(
                 component,
@@ -3543,6 +3557,7 @@ fn build_package_inner(
         theme: opts.theme.as_deref(),
         tokens: &package_tokens,
         backend: Some(opts.backend),
+        consumer: Some((&manifest, &manifest_path)),
     };
     let mut artifacts = Vec::new();
     let mut components_built = Vec::new();
@@ -5569,10 +5584,14 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         format!("style {component} {{ }}")
     };
 
+    // No consumer manifest: shell emission never sees the manifest (see
+    // `host_effects` above), and every layout it recompiles here was
+    // already composed, with the manifest, by the per-component loop.
     let shell_style_options = StyleCompositionOptions {
         theme,
         tokens,
         backend: Some(backend),
+        consumer: None,
     };
     let composed = compose_component_with_backend_tokens(
         component,
@@ -10082,9 +10101,17 @@ fn resolve_layout_package_references(
     layout_out: &mut moslayout_compiler::CompileOutput,
     descriptor_json: &str,
     package_search_paths: &[PathBuf],
+    consumer: Option<(&MosaicPackage, &Path)>,
 ) -> Result<Vec<mosaic_package_resolver::PartRename>, BuildError> {
-    let resolver =
+    // With the consumer's manifest, the layout's own `pkg::` references must
+    // be declared in it (publishing-v1 §10 Phase 1b); the resolver checks
+    // every package component it inlines against that package's manifest
+    // either way.
+    let mut resolver =
         mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec());
+    if let Some((manifest, manifest_path)) = consumer {
+        resolver = resolver.with_consumer(manifest, manifest_path);
+    }
     let renames = resolver
         .resolve_with_renames(&mut layout_out.def)
         .map_err(|e| BuildError::PackageReferenceError {
@@ -10099,8 +10126,13 @@ fn resolve_layout_package_references(
         });
     }
 
+    // Every error, not the first: an inlined tree can fail validation at
+    // several call sites at once. One error keeps its old, unwrapped form.
     let resolved_parts = moslayout_compiler::validate(&layout_out.def, Some(descriptor_json))
-        .map_err(|errs| pipeline_err(component, &errs[0]))?;
+        .map_err(|errs| match errs.as_slice() {
+            [only] => pipeline_err(component, only),
+            all => pipeline_err(component, &all),
+        })?;
     layout_out.parts = resolved_parts;
     layout_out.part_map_json =
         moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
@@ -10254,10 +10286,13 @@ fn collect_dependency_component_style_parts(
         style_options.backend,
         style_options.tokens,
     )?;
+    // The dependency's layout is resolved below as a consumer in its own
+    // right, so its references are checked against its own manifest.
     let dependency_style_options = StyleCompositionOptions {
         theme: style_options.theme,
         tokens: &dependency_tokens,
         backend: style_options.backend,
+        consumer: Some((&manifest, &manifest_path)),
     };
 
     let src_dir = package_root.join("src");
@@ -10302,6 +10337,7 @@ fn collect_dependency_component_style_parts(
         &mut layout_out,
         &mosmodel_out.descriptor_json,
         package_search_paths,
+        dependency_style_options.consumer,
     )?;
 
     let slot_states = slot_state_axes(&mosmodel_out.component);
@@ -11876,6 +11912,129 @@ version = "1"
                 }
             }
         }
+    }
+
+    /// A package build refuses a `pkg::P::C` reference to a package its
+    /// manifest does not declare (mosaic-package-publishing-v1 §10 Phase
+    /// 1b), at both levels:
+    ///
+    /// ```text
+    ///   mosaic-pkg-shell ──pkg::──▶ mosaic-pkg-accent ──pkg::──▶ mosaic-pkg-dot
+    ///   └ declares accent? ┘        └ declares dot? ┘
+    /// ```
+    ///
+    /// A loose triple composed with no manifest has no declared set, so it
+    /// is not checked at the top level, as before.
+    #[test]
+    fn a_package_build_refuses_an_undeclared_package_reference() {
+        let build = |shell_deps: &[(&str, &str)], accent_deps: &[(&str, &str)]| {
+            let workspace = TempDir::new().unwrap();
+            let dot = workspace.path().join("mosaic-pkg-dot");
+            write_package_manifest(&dot, "mosaic-pkg-dot", &["Dot"], &[]);
+            write_component_sources(
+                &dot,
+                "Dot",
+                "component Dot { }",
+                "layout Dot { Box [ dot-root ] { } }",
+                "style Dot { }",
+            );
+            let accent = workspace.path().join("mosaic-pkg-accent");
+            write_package_manifest(&accent, "mosaic-pkg-accent", &["Accent"], accent_deps);
+            write_component_sources(
+                &accent,
+                "Accent",
+                "component Accent { }",
+                "layout Accent { Column [ accent-root ] { pkg::mosaic-pkg-dot::Dot } }",
+                "style Accent { }",
+            );
+            let shell = workspace.path().join("mosaic-pkg-shell");
+            write_package_manifest(&shell, "mosaic-pkg-shell", &["Shell"], shell_deps);
+            write_component_sources(
+                &shell,
+                "Shell",
+                "component Shell { }",
+                "layout Shell { Column [ shell-root ] { pkg::mosaic-pkg-accent::Accent } }",
+                "style Shell { }",
+            );
+            let out = TempDir::new().unwrap();
+            let result = build_package(&BuildOptions {
+                package_root: shell.clone(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Html,
+                emit_project: false,
+                theme: None,
+            });
+            (workspace, result)
+        };
+        let refused = |result: Result<BuildResult, BuildError>, package: &str, manifest: &Path| {
+            match result {
+                Err(BuildError::PackageReferenceError { error, .. }) => assert!(
+                    error.contains(&format!(
+                        "but `{package}` is not a declared dependency; add `{package} = \"0.1.0\"` \
+                         to [dependencies] in {}",
+                        manifest.display()
+                    )),
+                    "{error}"
+                ),
+                other => panic!("expected an undeclared `{package}`, got {other:?}"),
+            }
+        };
+
+        let accent = [("mosaic-pkg-accent", "0.1.0")];
+        let dot = [("mosaic-pkg-dot", "0.1.0")];
+        let (_ws, result) = build(&accent, &dot);
+        result.expect("every reference is declared");
+
+        let (ws, result) = build(&[], &dot);
+        refused(
+            result,
+            "mosaic-pkg-accent",
+            &ws.path().join("mosaic-pkg-shell").join("mosaic-package.toml"),
+        );
+
+        let (ws, result) = build(&accent, &[]);
+        refused(
+            result,
+            "mosaic-pkg-dot",
+            &ws.path().join("mosaic-pkg-accent").join("mosaic-package.toml"),
+        );
+
+        // The same consumer as a loose triple: no manifest, so only the
+        // nested reference (declared here) is checked.
+        let (ws, _) = build(&[], &dot);
+        let model = mosmodel_compiler::compile("component Shell { }").unwrap();
+        compose_component_with_model(
+            "Shell",
+            model,
+            "layout Shell { Column [ shell-root ] { pkg::mosaic-pkg-accent::Accent } }",
+            "style Shell { }",
+            &[ws.path().to_path_buf()],
+            None,
+        )
+        .expect("a loose triple has no [dependencies] to check");
+
+        // With its manifest, `compose_component_with_model_in_package`
+        // (what `mosaic-compile --package-manifest` calls) checks it.
+        let shell_root = ws.path().join("mosaic-pkg-shell");
+        let manifest = parse_manifest(&shell_root.join("mosaic-package.toml")).unwrap();
+        let model = mosmodel_compiler::compile("component Shell { }").unwrap();
+        let error = compose_component_with_model_in_package(
+            "Shell",
+            model,
+            "layout Shell { Column [ shell-root ] { pkg::mosaic-pkg-accent::Accent } }",
+            "style Shell { }",
+            &[ws.path().to_path_buf()],
+            None,
+            &shell_root,
+            &manifest,
+            Backend::Html,
+        )
+        .expect_err("the shell does not declare accent");
+        refused(
+            Err(error),
+            "mosaic-pkg-accent",
+            &shell_root.join("mosaic-package.toml"),
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -18880,6 +19039,286 @@ style FocusField {
         assert!(
             html.contains("#abcdef"),
             "dependency text style should be present in emitted HTML:\n{html}"
+        );
+    }
+
+    /// A two-package workspace for the binding tests below: `mosaic-pkg-accent`
+    /// exporting `Accent` (`slot label : text ;`, required) and
+    /// `mosaic-pkg-shell` exporting `Shell` with the given layout.
+    fn accent_shell_workspace(shell_mil: &str, shell_mll: &str) -> (TempDir, PathBuf) {
+        let workspace = TempDir::new().unwrap();
+        let child = workspace.path().join("mosaic-pkg-accent");
+        let parent = workspace.path().join("mosaic-pkg-shell");
+        write_package_manifest(&child, "mosaic-pkg-accent", &["Accent"], &[]);
+        write_component_sources(
+            &child,
+            "Accent",
+            r#"component Accent { slot label : text ; }"#,
+            r#"layout Accent {
+  Box [ accent-panel ] {
+    Text [ accent-label ] ( content : slot: label )
+  }
+}"#,
+            "style Accent { }",
+        );
+        write_package_manifest(
+            &parent,
+            "mosaic-pkg-shell",
+            &["Shell"],
+            &[("mosaic-pkg-accent", "0.1.0")],
+        );
+        write_component_sources(&parent, "Shell", shell_mil, shell_mll, "style Shell { }");
+        (workspace, parent)
+    }
+
+    fn build_html(package_root: PathBuf) -> Result<BuildResult, BuildError> {
+        let out = TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root,
+            output_root: out.path().to_path_buf(),
+            backend: Backend::Html,
+            emit_project: false,
+            theme: None,
+        })
+    }
+
+    /// E6 F1, probe P3 through a real build. `Shell` has a `label` of its
+    /// own and mounts `Accent` without binding `Accent`'s required `label`.
+    /// This used to build, with `Shell`'s label silently rendered inside
+    /// `Accent`. It now fails naming the dependency, not `Shell`.
+    #[test]
+    fn an_unbound_dependency_slot_fails_naming_the_dependency() {
+        let (_workspace, parent) = accent_shell_workspace(
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    Text [ shell-label ] ( content : slot: label )
+    pkg::mosaic-pkg-accent::Accent
+  }
+}"#,
+        );
+
+        let error = build_html(parent).expect_err("Accent's label is unbound");
+        let BuildError::PackageReferenceError { component, error } = &error else {
+            panic!("expected PackageReferenceError, got {error:?}");
+        };
+        assert_eq!(component, "Shell");
+        assert_eq!(
+            error,
+            "`Shell` mounts `pkg::mosaic-pkg-accent::Accent` at \
+             Column[shell-root] > pkg::mosaic-pkg-accent::Accent#2 without binding its \
+             required slot `label`; bind `label` at the call site, or give it a default \
+             in Accent.mil (`slot label : <type> = <value> ;`)"
+        );
+    }
+
+    /// Validation of the inlined tree reports every error, not `errs[0]`.
+    /// Here both of `Accent`'s parts clash with parts `Shell` already has.
+    #[test]
+    fn every_validation_error_after_inlining_is_reported() {
+        let (_workspace, parent) = accent_shell_workspace(
+            r#"component Shell { slot label : text ; }"#,
+            r#"layout Shell {
+  Column [ shell-root ] {
+    Box [ accent-panel ] { }
+    Text [ accent-label ] ( content : slot: label )
+    pkg::mosaic-pkg-accent::Accent ( label : slot: label )
+  }
+}"#,
+        );
+
+        let error = build_html(parent).expect_err("two duplicate parts");
+        let BuildError::PipelineError { error, .. } = &error else {
+            panic!("expected PipelineError, got {error:?}");
+        };
+        assert!(
+            error.starts_with('[') && error.matches("DuplicatePart").count() == 2,
+            "both clashes should be reported: {error}"
+        );
+        assert!(error.contains("accent-panel") && error.contains("accent-label"));
+    }
+
+    /// The layout each `KEYWORD_LITERAL_PROPS` entry is proven in: its enum
+    /// value, and a node using it at that position. A new table entry with
+    /// no fixture here fails the test below.
+    fn keyword_literal_fixture(tag: &str, prop: &str) -> Option<(&'static str, &'static str)> {
+        Some(match (tag, prop) {
+            ("Text", "a11y-role") => (
+                "heading",
+                r#"Text [ p ] ( content: "x" , a11y-role: heading )"#,
+            ),
+            ("Box", "table-cell-role") => (
+                "data",
+                r#"HostTable [ t ] { HostTableBody { Row [ r ] { Box [ p ] ( table-cell-role: data ) { Text ( content: "x" ) } } } }"#,
+            ),
+            ("Text", "table-cell-role") => (
+                "data",
+                r#"HostTable [ t ] { HostTableBody { Row [ r ] { Text [ p ] ( content: "x" , table-cell-role: data ) } } }"#,
+            ),
+            ("HostScroll", "axis") => (
+                "horizontal",
+                r#"HostScroll [ p ] ( axis: horizontal ) { Text ( content: "s" ) }"#,
+            ),
+            ("HostNavigationSplit", "collapse") => (
+                "auto",
+                r#"HostNavigationSplit [ p ] ( pane-title: "P" , collapse: auto ) { Column [ a ] { } Column [ b ] { } }"#,
+            ),
+            ("Path", "kind") => (
+                "line",
+                "Path [ p ] ( kind: line , x1: 0 , y1: 0 , x2: 1 , y2: 1 )",
+            ),
+            ("HostTable", "dir") => (
+                "rtl",
+                r#"HostTable [ p ] ( dir: rtl ) { HostTableBody { Row [ r ] { Box ( table-cell-role: data ) { Text ( content: "x" ) } } } }"#,
+            ),
+            ("HostLink", "target") => (
+                "new-tab",
+                r#"HostLink [ p ] ( label: "x" , target: new-tab )"#,
+            ),
+            _ => return None,
+        })
+    }
+
+    /// The lines of emitted `source` that use `name` (or its camelCase form)
+    /// as a variable. Not a use: the `For` header that binds it (React
+    /// `.map((name, …`, SwiftUI `{ name in`, HTML `as="name"`), a member or
+    /// enum case after `.`, an element name after `<` or `</`, and anything
+    /// inside a double-quoted string or on a comment line.
+    fn variable_uses(source: &str, name: &str) -> Vec<String> {
+        let camel = moslayout_style_camel(name);
+        let mut uses = Vec::new();
+        for line in source.lines() {
+            let trimmed = line.trim_start();
+            if trimmed.starts_with("//") || trimmed.starts_with("<!--") {
+                continue;
+            }
+            let words: &[&str] = if camel == name {
+                &[name]
+            } else {
+                &[name, camel.as_str()]
+            };
+            for &word in words {
+                let mut from = 0;
+                while let Some(found) = line[from..].find(word) {
+                    let at = from + found;
+                    from = at + word.len();
+                    let before = line[..at].chars().next_back();
+                    let after = line[from..].chars().next();
+                    let is_word = |c: Option<char>| {
+                        c.is_some_and(|c| c.is_alphanumeric() || c == '_' || c == '-')
+                    };
+                    if is_word(before) || is_word(after) {
+                        continue;
+                    }
+                    let quoted = line[..at].matches('"').count() % 2 == 1;
+                    let header = line[from..].starts_with(", _idx)")
+                        || line[from..].trim_start().starts_with("in")
+                            && line[..at].trim_end().ends_with('{');
+                    if quoted || header || matches!(before, Some('.' | '<' | '/')) {
+                        continue;
+                    }
+                    uses.push(line.trim().to_string());
+                }
+            }
+        }
+        uses
+    }
+
+    fn moslayout_style_camel(name: &str) -> String {
+        let mut out = String::new();
+        let mut upper = false;
+        for ch in name.chars() {
+            if ch == '-' {
+                upper = true;
+            } else if upper {
+                out.extend(ch.to_uppercase());
+                upper = false;
+            } else {
+                out.push(ch);
+            }
+        }
+        out
+    }
+
+    /// `moslayout_compiler::KEYWORD_LITERAL_PROPS` is the resolver's list of
+    /// positions where a bare NAME is an enum value and never a variable
+    /// (E6 F1, security review round 2). Prove it on React, SwiftUI and
+    /// HTML: each entry is built inside a `For` that binds a variable with
+    /// the entry's own value as its name, so a backend that read the value
+    /// as a variable would reference the loop variable. None may.
+    ///
+    /// The control is a position every one of the three reads as a
+    /// variable (`HostButton ( label: zqprobe )`), so the detector is shown
+    /// to work on each backend. A backend that does not support a primitive
+    /// at all (SwiftUI has no `Path`) cannot misread it, and is skipped.
+    #[test]
+    fn keyword_literal_props_are_literal_on_react_swiftui_and_html() {
+        let backends = [
+            (Backend::React, "react", "tsx"),
+            (Backend::SwiftUI, "swiftui", "swift"),
+            (Backend::Html, "html", "html"),
+        ];
+        let build = |value: &str, node: &str, backend: Backend, dir: &str, ext: &str| {
+            let workspace = TempDir::new().unwrap();
+            let root = workspace.path().join("kwlit");
+            write_package_manifest(&root, "kwlit", &["Probe"], &[]);
+            write_component_sources(
+                &root,
+                "Probe",
+                "component Probe { slot items : list<text> ; }",
+                &format!(
+                    "layout Probe {{ Column [ root ] {{\n  For ( each: slot: items , as: {value} ) {{\n    {node}\n  }}\n}} }}"
+                ),
+                "style Probe { }",
+            );
+            let out = TempDir::new().unwrap();
+            build_package(&BuildOptions {
+                package_root: root,
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            })
+            .map(|_| fs::read_to_string(out.path().join(dir).join(format!("Probe.{ext}"))).unwrap())
+        };
+
+        for &(backend, dir, ext) in &backends {
+            let control = build(
+                "zqprobe",
+                "HostButton [ p ] ( label: zqprobe )",
+                backend,
+                dir,
+                ext,
+            )
+            .unwrap_or_else(|e| panic!("{dir} control build: {e}"));
+            assert!(
+                !variable_uses(&control, "zqprobe").is_empty(),
+                "{dir}: the detector must see `label: zqprobe` read as a variable:\n{control}"
+            );
+        }
+
+        let mut proven = 0;
+        for &(tag, prop) in moslayout_compiler::KEYWORD_LITERAL_PROPS {
+            let (value, node) = keyword_literal_fixture(tag, prop).unwrap_or_else(|| {
+                panic!("no fixture for KEYWORD_LITERAL_PROPS entry ({tag}, {prop})")
+            });
+            for &(backend, dir, ext) in &backends {
+                let source = match build(value, node, backend, dir, ext) {
+                    Ok(source) => source,
+                    Err(e) if e.to_string().contains("not yet supported") => continue,
+                    Err(e) => panic!("({tag}, {prop}) on {dir}: {e}"),
+                };
+                let uses = variable_uses(&source, value);
+                assert!(
+                    uses.is_empty(),
+                    "({tag}, {prop}): {dir} reads `{value}` as a variable: {uses:?}"
+                );
+                proven += 1;
+            }
+        }
+        assert!(
+            proven >= moslayout_compiler::KEYWORD_LITERAL_PROPS.len() * 2,
+            "too few entries were built to prove anything ({proven})"
         );
     }
 

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C266-nanhai",
+  "pathSegment": "ZH-PATH-266-AGE266",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-266-AGE266",
+      "order": 2
+    }
+  ]
+}

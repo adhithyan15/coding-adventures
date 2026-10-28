@@ -1,0 +1,11 @@
+{
+  "id": "JA-C532-yuuri",
+  "pathSegment": "JA-PATH-532-LIMIT532",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-532-LIMIT532",
+      "order": 3
+    }
+  ]
+}

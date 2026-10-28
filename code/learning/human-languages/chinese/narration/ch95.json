@@ -1,0 +1,1076 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 95,
+  "title": "Why?",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:14157652fab7ad32",
+  "lessons": [
+    {
+      "id": "ZH-C95-weishenme",
+      "sequence": 7660,
+      "title": "为什么 (wèishénme) — why?",
+      "headword": "为什么",
+      "romanization": "wèishénme",
+      "gloss": "why?",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5747bbace28a233a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens with the question that wants a reason."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我们都是学生 — wǒmen dōu shì xuésheng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我们都是学生 — *wǒmen dōu shì xuésheng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tā hěn shòu, he's thin — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tā hěn shòu*, he's thin — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chídào, to be late — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chídào*, to be late — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 为什么",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "为什么 — wèishénme — \"why?\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你为什么不去 nǐ wèishénme bú qù — Why aren't you going?"
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the new character in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "为什么 (wèishénme) is built from 为 (wèi) 'for' and 什么 'what': for what? 为 (wèi) is inherited from Middle Chinese hjweH (Guangyun, in Baxter's transcription), glossed 'to help'; 'for' is the sense of acting on somebody's behalf, which the gloss does not spell out. Where 什么 comes from is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "为什么 (wèishénme) sits after the person and before the verb: 你, 为什么 (wèishénme), 不去. 不 before the fall of 去 rises: bú qù."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wèishénme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wèishénme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wèishénme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wèishénme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你为什么不去 — nǐ wèishénme bú qù — Why aren't you going?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你为什么不去 — *nǐ wèishénme bú qù* — Why aren't you going?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ wèishénme chídào — Why are you late?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ wèishénme chídào* — Why are you late?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chídào, then ask why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chídào*, then ask why]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 为什么 (wèishénme) ask? (\"Why?\".) Where does it go? (After the person, before the verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W95-wei",
+      "sequence": 7670,
+      "title": "为 (wèi) — a dot, a long fall, the hook of 男, a dot",
+      "headword": "为",
+      "romanization": "wèi",
+      "gloss": "为 — a dot, a long fall, the hook of 男, a dot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:18641f6145662c6c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a dot, a long fall, the hook of 男, a dot",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a dot, a long fall, the hook of 男, a dot and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wèishénme — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wèishénme* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "男 点."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — nán, diǎn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *nán*, *diǎn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a dot, a long fall, the hook of 男, a dot",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "为 (wèi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes, and the long one in the middle is a stroke your hand knows from the foot of 男."
+            },
+            {
+              "kind": "speech",
+              "text": "A dot at the upper left."
+            },
+            {
+              "kind": "speech",
+              "text": "A long left-falling stroke from the top, down to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "The hooked turn: across, down the right side, hooking to the left, as at the foot of 男."
+            },
+            {
+              "kind": "speech",
+              "text": "A dot inside, last."
+            },
+            {
+              "kind": "speech",
+              "text": "Four strokes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "为 (wèi), all four, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 为, all four, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 为 (wèi)? (Four.) Where have you made the hooked turn before? (At the foot of 男.) Which stroke is last? (The dot inside.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 为 (wèi), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C95-youshi",
+      "sequence": 7680,
+      "title": "yǒushì — to have something on",
+      "headword": "yǒushì",
+      "romanization": "yǒushì",
+      "gloss": "to have something on; to be busy",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2401be6f47e1d85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read the last lesson's character, then two words for a full day."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "为什么, aloud — wèishénme",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 为什么, aloud — *wèishénme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say máng, busy — R4, recognition at distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *máng*, busy — **R4**, recognition at distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 今天 — jīntiān, today",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 今天 — *jīntiān*, today]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yǒushì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǒushì — \"to have something on; to be busy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ jīntiān yǒushì — I've got something on today."
+            },
+            {
+              "kind": "speech",
+              "text": "Its second character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǒushì is built from yǒu 'to have', the 有 you write, and shì 'a matter'. Both are inherited from Middle Chinese, hjuwX and dzriH (Guangyun, in Baxter's transcription). The Guangyun glosses dzriH 'to employ; to set up', and 'a matter' is the everyday sense, not the gloss."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǒushì is the polite reason that gives nothing away: something has come up. máng says you are busy; yǒushì says there is a particular thing."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒushì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒushì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǒushì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǒushì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ jīntiān yǒushì — I've got something on today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ jīntiān yǒushì* — I've got something on today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say máng, then yǒushì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *máng*, then *yǒushì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yǒushì mean? (\"To have something on\".) Which written character does it open with? (有.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C95-duche",
+      "sequence": 7690,
+      "title": "dǔchē — a traffic jam",
+      "headword": "dǔchē",
+      "romanization": "dǔchē",
+      "gloss": "traffic jam; to be stuck in traffic",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:636d166e0969a0f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then two words for the road."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yǒushì, to have something on — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yǒushì*, to have something on — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 车 — chē, a car",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 车 — *chē*, a car]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lù, a road — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lù*, a road — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dǔchē",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǔchē — \"traffic jam; to be stuck in traffic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zǎoshang dǔchē — There's a jam in the mornings."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǔchē is built from dǔ 'to block' and chē 'a vehicle', the 车 you write. Both are inherited from Middle Chinese, tuX and tsyhae (Guangyun, in Baxter's transcription); the Guangyun glosses tuX as 'a wall', and 'to block' is assumed from that, not quoted."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǔchē is a verb as well as a noun: zǎoshang dǔchē, the traffic jams in the morning. No 有 needed."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǔchē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǔchē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǔchē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǔchē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎoshang dǔchē — There's a jam in the mornings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǎoshang dǔchē* — There's a jam in the mornings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lù, then dǔchē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lù*, then *dǔchē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dǔchē mean? (\"A traffic jam\".) Which written character does it end with? (车.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C95-wang",
+      "sequence": 7700,
+      "title": "wàng — to forget",
+      "headword": "wàng",
+      "romanization": "wàng",
+      "gloss": "to forget",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f67558a440f58dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then two words you might forget."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dǔchē, a traffic jam — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dǔchē*, a traffic jam — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuòyè, homework — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuòyè*, homework — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 马上 — mǎshàng, right away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 马上 — *mǎshàng*, right away]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wàng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wàng — \"to forget\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ wàng le — I forgot."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ wàng le wǒ de yàoshi — I forgot my key."
+            },
+            {
+              "kind": "speech",
+              "text": "Its character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wàng is inherited from Middle Chinese mjangH (Guangyun, in Baxter's transcription), glossed 'to leave behind; to forget'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wàng le: with 了 after it, the forgetting has already happened, which is how it is almost always said."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wàng le",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wàng le*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ wàng le — I forgot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ wàng le* — I forgot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ wàng le wǒ de yàoshi — I forgot my key.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ wàng le wǒ de yàoshi* — I forgot my key.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuòyè, then say you forgot it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuòyè*, then say you forgot it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wàng mean? (\"To forget\".) Say you forgot. (wǒ wàng le.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C95-practice",
+      "sequence": 7710,
+      "title": "你为什么不去 (nǐ wèishénme bú qù)",
+      "headword": "你为什么不去",
+      "romanization": "nǐ wèishénme bú qù",
+      "gloss": "late, not going, no homework: why, three times",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7da3913facd8ee0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with one person asking why three times."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wàng, to forget — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wàng*, to forget — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say láibují, to run out of time — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *láibují*, to run out of time — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuòyè, homework — R1",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuòyè*, homework — **R1**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: nǐ wèishénme chídào — Why are you late? B: zǎoshang dǔchē — The traffic this morning. A: 你明天去吗 nǐ míngtiān qù ma — Are you going tomorrow? B: 我不去 wǒ bú qù — I'm not going. A: 为什么 wèishénme — Why? B: wǒ yǒushì — I've got something on. A: nǐ de zuòyè ne — And your homework? B: wǒ wàng le — I forgot."
+            },
+            {
+              "kind": "speech",
+              "text": "为什么 (wèishénme) can stand alone as a whole question, as A's fifth line does. Each answer here is a reason with nothing in front of it; the next chapter gives the word that introduces one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C95-practice-tomorrow",
+              "prompt": "Why isn't B going tomorrow?",
+              "assesses": [
+                "ZH-PERFORMANCE-WHY-01",
+                "ZH-LEX-C95-YOUSHI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "something on",
+                "yǒushì",
+                "youshi",
+                "busy",
+                "has something on"
+              ],
+              "feedback": {
+                "correct": "B has something on: wǒ yǒushì.",
+                "incorrect": "B says wǒ yǒushì: something has come up."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — asking why",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "你为什么不去 nǐ wèishénme bú qù — why aren't you going?"
+            },
+            {
+              "kind": "speech",
+              "text": "为什么 wèishénme — why?"
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ yǒushì — something has come up."
+            },
+            {
+              "kind": "speech",
+              "text": "zǎoshang dǔchē — the traffic this morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Nǐ wèishénme bù chī fàn?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Answer it with any reason you have, then ask somebody why."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "为 (wèi) — the dot, the long fall, the hooked turn, the dot inside",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 为 — the dot, the long fall, the hooked turn, the dot inside]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你为什么不去 — nǐ wèishénme bú qù — Why aren't you going?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你为什么不去 — *nǐ wèishénme bú qù* — Why aren't you going?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ wàng le — I forgot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ wàng le* — I forgot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "为什么 (wèishénme)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 为什么]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask why somebody is not going. (你为什么不去 (nǐ wèishénme bú qù).) Say something has come up. (wǒ yǒushì.) Blame the traffic. (zǎoshang dǔchē.) Say you forgot. (wǒ wàng le.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

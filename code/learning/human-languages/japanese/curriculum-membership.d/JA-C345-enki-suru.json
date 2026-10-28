@@ -1,0 +1,11 @@
+{
+  "id": "JA-C345-enki-suru",
+  "pathSegment": "JA-PATH-345-HENKOU345",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-345-HENKOU345",
+      "order": 1
+    }
+  ]
+}

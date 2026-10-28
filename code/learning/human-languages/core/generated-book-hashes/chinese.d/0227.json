@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:0086c22b34dfe491",
+  "lessonIds": [
+    "ZH-C227-haibian",
+    "ZH-C227-chuan",
+    "ZH-C227-yunchuan",
+    "ZH-C227-shatan",
+    "ZH-C227-yudao"
+  ],
+  "tex": "chinese/book/chapters/ch227-a-day-at-the-sea.tex"
+}

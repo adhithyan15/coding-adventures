@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W53-shuo",
+    "language": "chinese",
+    "chapter": 53,
+    "sequence": 4145,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2a849f8d67bed513",
+    "detachableSegments": [
+      "Script — the speech piece, then a mouth with legs"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

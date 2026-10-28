@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C163-xiaci",
+  "pathSegment": "ZH-PATH-163-WEEKEND163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-163-WEEKEND163",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C102-pijiu",
+  "pathSegment": "ZH-PATH-102-DRINK102",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-102-DRINK102",
+      "order": 3
+    }
+  ]
+}

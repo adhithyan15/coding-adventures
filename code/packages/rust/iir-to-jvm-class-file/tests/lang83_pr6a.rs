@@ -1,15 +1,19 @@
-//! LANG83 PR6a on the JVM backend: `write_f64_py` / `write_f64_js` — and,
-//! at the end, the PR6c IEEE ops whose results they print.
+//! LANG83 floats on the JVM backend: the PR6c IEEE ops and the PR7b digit
+//! ops (`f64_class`, `f64_digits`, `f64_exp10`) that identify their results.
 //!
-//! Both lower to `dload x; iconst_<layout>; invokestatic __iir_write_f64(DI)V`,
-//! the class's own synthetic method, which searches `BigDecimal` roundings of
-//! the double's exact value for the shortest round-trip digits (Java 5 APIs
-//! only — NOT `Double.toString`, which is shortest only on JDK 19+) and lays
-//! them out like Python or JavaScript. The structural tests pin that shape;
-//! when `java` is installed, the execution tests run the class on a real JVM
+//! `f64_digits` / `f64_exp10` call the class's own synthetic methods, which
+//! search `BigDecimal` roundings of the double's exact value for the shortest
+//! round-trip digits (Java 5 APIs only — NOT `Double.toString`, which is
+//! shortest only on JDK 19+). The structural tests pin that shape; when
+//! `java` is installed, the execution tests run the class on a real JVM
 //! (whichever `java` is first on PATH — CI's Windows job uses a pre-19 one)
-//! with the verifier on and compare against strings printed by host `python3`
-//! and `node`.
+//! with the verifier on and compare against host `python3`'s `repr`, split at
+//! the digits.
+//!
+//! This file began as PR6a's `write_f64_py` / `write_f64_js` tests (the
+//! synthetic `__iir_write_f64(DI)V`). LANG83 PR7e removed both writers: a
+//! compiler lays a float out itself, and `lang-aot`'s `op_conformance` runs
+//! the PR6a table through the compilers' helpers on this column.
 
 use std::process::Command;
 
@@ -21,6 +25,11 @@ use jvm_class_file::{
 
 fn v(n: &str) -> Operand {
     Operand::Var(n.into())
+}
+
+/// The module every test builds on: `main() -> i64` returning 0.
+fn base() -> IIRModule {
+    writes("write_i64", &[])
 }
 
 /// `main() -> i64`: `builtin(x); print_str("\n")` for every value. (`print_str`
@@ -75,69 +84,15 @@ fn methodrefs(class: &JvmClassFile) -> Vec<String> {
         .collect()
 }
 
+/// LANG83 PR7e: `write_f64_py` / `write_f64_js` (the synthetic
+/// `__iir_write_f64(DI)V`) are gone, so a module that still calls one is
+/// refused at lowering, never compiled into a call nothing defines.
 #[test]
-fn the_class_gets_one_private_static_float_writer() {
-    let class = lower(&writes("write_f64_py", &[1.5, 2.5]));
-    let helpers: Vec<&JvmMethodInfo> = class.methods.iter().filter(|m| m.name == "__iir_write_f64").collect();
-    assert_eq!(helpers.len(), 1, "one helper however many call sites");
-    assert_eq!(helpers[0].descriptor, "(DI)V");
-    assert_eq!(helpers[0].access_flags, 0x0002 | ACC_STATIC, "private static");
-    let refs = methodrefs(&class);
-    for needed in [
-        "java/math/BigDecimal.<init>:(D)V",
-        "java/math/MathContext.<init>:(ILjava/math/RoundingMode;)V",
-        "java/math/BigDecimal.round:(Ljava/math/MathContext;)Ljava/math/BigDecimal;",
-        "java/math/BigDecimal.doubleValue:()D",
-        "java/math/BigDecimal.stripTrailingZeros:()Ljava/math/BigDecimal;",
-        "java/math/BigDecimal.toPlainString:()Ljava/lang/String;",
-        "java/io/PrintStream.print:(Ljava/lang/String;)V",
-        "Main.__iir_write_f64:(DI)V",
-    ] {
-        assert!(refs.iter().any(|r| r == needed), "missing {needed} in {refs:?}");
+fn retired_float_writers_are_refused() {
+    for name in ["write_f64_py", "write_f64_js"] {
+        let err = lower_iir_to_jvm(&writes(name, &[1.5]), &IIRJvmConfig::new("Main")).expect_err(name);
+        assert!(format!("{err:?}").contains(name), "{name}: {err:?}");
     }
-    // The digits must not come from `Double.toString`: before JDK 19 it is
-    // not the shortest round-trip decimal (it prints 1.9999999999999998E23).
-    assert!(
-        !refs.iter().any(|r| r.starts_with("java/lang/Double.toString:")),
-        "Double.toString is JDK-version dependent: {refs:?}"
-    );
-    // A module that prints no float carries no helper.
-    let plain = IIRModule { functions: vec![IIRFunction::new("main", vec![], "i64", vec![
-        IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
-        IIRInstr::new("ret", None, vec![v("z")], "i64"),
-    ])], ..writes("write_f64_py", &[]) };
-    assert!(lower(&plain).methods.iter().all(|m| m.name != "__iir_write_f64"));
-}
-
-#[test]
-fn call_site_loads_the_double_then_the_layout_flag() {
-    for (builtin, flag) in [("write_f64_py", 0x03u8), ("write_f64_js", 0x04u8)] {
-        let class = lower(&writes(builtin, &[1.5]));
-        let main = class.methods.iter().find(|m| m.name == "main").unwrap();
-        let JvmMethodAttribute::Code(code) = &main.attributes[0] else { panic!("no Code") };
-        let call = code.code.windows(2).position(|w| w == [flag, 0xB8]).expect("iconst_<layout>; invokestatic");
-        assert!(call > 0, "{builtin}");
-    }
-}
-
-#[test]
-fn an_integer_operand_is_rejected() {
-    let m = IIRModule {
-        functions: vec![IIRFunction::new("main", vec![], "i64", vec![
-            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i64"),
-            IIRInstr::new("call_builtin", None, vec![v("write_f64_py"), v("n")], "void"),
-            IIRInstr::new("ret", None, vec![v("n")], "i64"),
-        ])],
-        ..writes("write_f64_py", &[])
-    };
-    assert!(lower_iir_to_jvm(&m, &IIRJvmConfig::new("Main")).is_err());
-}
-
-#[test]
-fn a_function_named_like_the_helper_is_refused() {
-    let mut m = writes("write_f64_js", &[1.0]);
-    m.functions.push(IIRFunction::new("__iir_write_f64", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
-    assert!(lower_iir_to_jvm(&m, &IIRJvmConfig::new("Main")).is_err());
 }
 
 fn java_ok() -> bool {
@@ -279,26 +234,12 @@ const FLOAT_TABLE: &[(u64, &str, &str)] = &[
     (0x40B99E157689CA19, "6558.08384", "6558.08384"),
 ];
 
-#[test]
-fn python_layout_on_a_real_jvm_matches_host_python3() {
-    let values: Vec<f64> = FLOAT_TABLE.iter().map(|(b, _, _)| f64::from_bits(*b)).collect();
-    let Some(out) = run_on_java(lower(&writes("write_f64_py", &values)), "py") else { return };
-    let want: String = FLOAT_TABLE.iter().map(|(_, py, _)| format!("{py}\n")).collect();
-    assert_eq!(out, want);
-}
-
-#[test]
-fn javascript_layout_on_a_real_jvm_matches_host_node() {
-    let values: Vec<f64> = FLOAT_TABLE.iter().map(|(b, _, _)| f64::from_bits(*b)).collect();
-    let Some(out) = run_on_java(lower(&writes("write_f64_js", &values)), "js") else { return };
-    let want: String = FLOAT_TABLE.iter().map(|(_, _, js)| format!("{js}\n")).collect();
-    assert_eq!(out, want);
-}
-
 // ── LANG83 PR6c: IEEE arithmetic and the sign bit ──────────────────────────
 
-/// For each `(op, operands)`: compute on float constants, `write_f64_js` the
-/// result, then `write_i64` its `f64_signbit`, one pair per line.
+/// For each `(op, operands)`: compute on float constants, then `write_i64`
+/// the result's `f64_class`, `f64_digits`, `f64_exp10` and `f64_signbit`,
+/// space-separated, one row per line. (PR6a printed the result with
+/// `write_f64_js`, gone since PR7e; the four integers identify it.)
 fn ieee(cases: &[(&str, &[f64])]) -> IIRModule {
     let mut body = vec![
         IIRInstr::new("str_const", Some("nl".into()), vec![Operand::Str("\n".into())], "str"),
@@ -313,15 +254,19 @@ fn ieee(cases: &[(&str, &[f64])]) -> IIRModule {
         }
         let (r, s) = (format!("r{i}"), format!("s{i}"));
         body.push(IIRInstr::new(*op, Some(r.clone()), srcs, "f64"));
-        body.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_js"), v(&r)], "void"));
-        body.push(IIRInstr::new("print_str", None, vec![v("sp")], "void"));
+        for query in ["f64_class", "f64_digits", "f64_exp10"] {
+            let q = format!("{query}{i}");
+            body.push(IIRInstr::new(query, Some(q.clone()), vec![v(&r)], "i64"));
+            body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&q)], "void"));
+            body.push(IIRInstr::new("print_str", None, vec![v("sp")], "void"));
+        }
         body.push(IIRInstr::new("f64_signbit", Some(s.clone()), vec![v(&r)], "i64"));
         body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&s)], "void"));
         body.push(IIRInstr::new("print_str", None, vec![v("nl")], "void"));
     }
     body.push(IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"));
     body.push(IIRInstr::new("ret", None, vec![v("z")], "i64"));
-    IIRModule { functions: vec![IIRFunction::new("main", vec![], "i64", body)], ..writes("write_f64_js", &[]) }
+    IIRModule { functions: vec![IIRFunction::new("main", vec![], "i64", body)], ..base() }
 }
 
 /// The emitted shape: `dadd`/`dsub`/`dmul`/`ddiv`/`dneg`, and the sign bit as
@@ -356,7 +301,7 @@ fn pr6c_an_integer_operand_is_rejected() {
                 IIRInstr::new(op, Some("r".into()), srcs, ty),
                 IIRInstr::new("ret", None, vec![v("n")], "i64"),
             ])],
-            ..writes("write_f64_js", &[])
+            ..base()
         };
         assert!(lower_iir_to_jvm(&m, &IIRJvmConfig::new("Main")).is_err(), "{op}");
     }
@@ -380,11 +325,130 @@ fn pr6c_ieee_ops_follow_the_edge_table_on_java() {
     let Some(out) = run_on_java(class, "pr6c") else { return };
     let lines: Vec<&str> = out.lines().collect();
     assert_eq!(lines.len(), 9, "{out}");
-    assert!(lines[2] == "NaN 0" || lines[2] == "NaN 1", "{out}");
+    // `class digits exp10 sign`; a NaN's sign bit is unspecified.
+    assert!(lines[2] == "3 0 0 0" || lines[2] == "3 0 0 1", "{out}");
     let rest: Vec<&str> = lines.iter().enumerate().filter(|(i, _)| *i != 2).map(|(_, l)| *l).collect();
     assert_eq!(
         rest,
-        ["Infinity 0", "-Infinity 1", "0 1", "Infinity 0", "0.30000000000000004 0", "0 1", "0 1", "Infinity 0"],
+        ["2 0 0 0", "2 0 0 1", "0 0 0 1", "2 0 0 0", "1 30000000000000004 -1 0", "0 0 0 1", "0 0 0 1", "2 0 0 0"],
         "{out}"
     );
+}
+
+// ── LANG83 PR7b: f64_class / f64_digits / f64_exp10 ─────────────────────────
+
+/// `(class, D, e10)` read off host python3's `repr` string: the digits with
+/// the point and leading/trailing zeros removed, and the exponent of the
+/// first significant digit. `inf`/`nan`/zeros have no digits.
+fn repr_digits(py: &str) -> (i64, i64, i64) {
+    let r = py.trim_start_matches('-');
+    match r {
+        "inf" => return (2, 0, 0),
+        "nan" => return (3, 0, 0),
+        "0.0" => return (0, 0, 0),
+        _ => {}
+    }
+    let (mantissa, exp) = r.split_once('e').map_or((r, 0), |(m, e)| (m, e.parse::<i64>().unwrap()));
+    let (int_part, frac) = mantissa.split_once('.').unwrap_or((mantissa, ""));
+    let all = format!("{int_part}{frac}");
+    let lead_zeros = all.len() - all.trim_start_matches('0').len();
+    let digits = all.trim_matches('0');
+    let e10 = int_part.len() as i64 - 1 + exp - lead_zeros as i64;
+    (1, digits.parse().unwrap(), e10)
+}
+
+/// For each value: `write_i64` of `f64_class`, `f64_digits` and `f64_exp10`,
+/// space-separated, one line per value.
+fn digit_queries(values: &[f64]) -> IIRModule {
+    let mut body = vec![
+        IIRInstr::new("str_const", Some("nl".into()), vec![Operand::Str("\n".into())], "str"),
+        IIRInstr::new("str_const", Some("sp".into()), vec![Operand::Str(" ".into())], "str"),
+    ];
+    for (i, x) in values.iter().enumerate() {
+        let c = format!("c{i}");
+        body.push(IIRInstr::new("const", Some(c.clone()), vec![Operand::Float(*x)], "f64"));
+        for (k, op) in ["f64_class", "f64_digits", "f64_exp10"].iter().enumerate() {
+            let r = format!("{op}{i}");
+            body.push(IIRInstr::new(*op, Some(r.clone()), vec![v(&c)], "i64"));
+            body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&r)], "void"));
+            body.push(IIRInstr::new("print_str", None, vec![v(if k == 2 { "nl" } else { "sp" })], "void"));
+        }
+    }
+    body.push(IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![v("z")], "i64"));
+    IIRModule { functions: vec![IIRFunction::new("main", vec![], "i64", body)], ..base() }
+}
+
+/// `f64_class` is inline (two `lcmp`s, no call); the two queries call the
+/// class's own `__iir_f64_digits(D)J` / `__iir_f64_exp10(D)J`, which share
+/// ONE `__iir_f64_shortest` — and only what is used is there.
+#[test]
+fn pr7b_digit_queries_share_one_search() {
+    let class = lower(&digit_queries(&[1.5]));
+    let names: Vec<&str> = class.methods.iter().map(|m| m.name.as_str()).collect();
+    for needed in ["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"] {
+        assert_eq!(names.iter().filter(|n| **n == needed).count(), 1, "{needed} in {names:?}");
+    }
+    assert!(!names.contains(&"__iir_write_f64"), "no writer (removed in PR7e)");
+    let refs = methodrefs(&class);
+    for needed in [
+        "Main.__iir_f64_digits:(D)J",
+        "Main.__iir_f64_exp10:(D)J",
+        "Main.__iir_f64_shortest:(D)Ljava/math/BigDecimal;",
+        "java/math/BigDecimal.<init>:(D)V",
+        "java/math/MathContext.<init>:(ILjava/math/RoundingMode;)V",
+        "java/math/BigDecimal.round:(Ljava/math/MathContext;)Ljava/math/BigDecimal;",
+        "java/math/BigDecimal.doubleValue:()D",
+        "java/math/BigDecimal.stripTrailingZeros:()Ljava/math/BigDecimal;",
+    ] {
+        assert!(refs.iter().any(|r| r == needed), "missing {needed} in {refs:?}");
+    }
+    // The digits must not come from `Double.toString`: before JDK 19 it is
+    // not the shortest round-trip decimal (it prints 1.9999999999999998E23).
+    assert!(
+        !refs.iter().any(|r| r.starts_with("java/lang/Double.toString:")),
+        "Double.toString is JDK-version dependent: {refs:?}"
+    );
+    // A module that asks for no digits carries no synthetic method.
+    let plain = IIRModule { functions: vec![IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("ret", None, vec![v("z")], "i64"),
+    ])], ..base() };
+    assert!(lower(&plain).methods.iter().all(|m| !m.name.starts_with("__iir_f64")));
+    let main = class.methods.iter().find(|m| m.name == "main").unwrap();
+    let JvmMethodAttribute::Code(code) = &main.attributes[0] else { panic!("no Code") };
+    assert_eq!(code.code.iter().filter(|b| **b == 0x94).count(), 2, "f64_class: two lcmp");
+    // A module function may not take a synthetic method's name.
+    let mut clash = digit_queries(&[1.0]);
+    clash.functions.push(IIRFunction::new("__iir_f64_shortest", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
+    assert!(lower_iir_to_jvm(&clash, &IIRJvmConfig::new("Main")).is_err());
+    // An integer operand is a compile error.
+    let bad = IIRModule {
+        functions: vec![IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("f64_digits", Some("r".into()), vec![v("n")], "i64"),
+            IIRInstr::new("ret", None, vec![v("n")], "i64"),
+        ])],
+        ..base()
+    };
+    assert!(lower_iir_to_jvm(&bad, &IIRJvmConfig::new("Main")).is_err());
+}
+
+/// The three ops over the PR6a table on a real JVM (verifier on), against
+/// host python3's `repr` split at the digits.
+#[test]
+fn pr7b_digit_queries_on_a_real_jvm_match_host_python3() {
+    let values: Vec<f64> = FLOAT_TABLE.iter().map(|(b, _, _)| f64::from_bits(*b)).collect();
+    assert_eq!(repr_digits("1.5e-07"), (1, 15, -7));
+    assert_eq!(repr_digits("-0.0001"), (1, 1, -4));
+    assert_eq!(repr_digits("1072012167405248.2"), (1, 10720121674052482, 15));
+    let Some(out) = run_on_java(lower(&digit_queries(&values)), "digits") else { return };
+    let want: String = FLOAT_TABLE
+        .iter()
+        .map(|(_, py, _)| {
+            let (c, d, e) = repr_digits(py);
+            format!("{c} {d} {e}\n")
+        })
+        .collect();
+    assert_eq!(out, want);
 }

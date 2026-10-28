@@ -1,5 +1,52 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: the JVM holds dynamic values as objects (through `lang-aot`'s structural lowering) and links no tagged-word runtime.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `OP_SUPPORT` and the validator's
+  builtin list, and the class no longer carries the synthetic
+  `__iir_write_f64(DI)V`: a module that calls either is refused. The
+  `BigDecimal` digit search `__iir_f64_shortest` and the two PR7b queries are
+  unchanged (its Java-5-only rationale moved to the PR7b section).
+- Tests: `retired_float_writers_are_refused` replaces the writer tests; the
+  PR7b test also pins the `BigDecimal` method refs and that
+  `Double.toString` is never used; the PR6c edge table on a real JVM prints
+  `class digits exp10 sign`.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- `trap` validates its kind with `exception_kind::is_trap_kind` (LANG83 PR7d
+  removed `is_registered_trap_kind` with the empty `LANGUAGE_TRAP_KINDS`
+  table); the accepted set is unchanged. Kind 7 is now `Trap.Unbound`, so its
+  `RuntimeException` message is `Trap.Unbound` (was `Trap.ReferenceError`).
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The PR6a BigDecimal digit search is its own synthetic method,
+  `private static BigDecimal __iir_f64_shortest(double)`, called by
+  `__iir_write_f64` (output unchanged) and by the new
+  `__iir_f64_digits(D)J` (`unscaledValue().longValue()`) and
+  `__iir_f64_exp10(D)J` (`len(D) - 1 - scale()`), each emitted only when
+  used. Both return 0 for ±0, ±Infinity and NaN.
+- `f64_class` is inline and branch-free: `lcmp(m, 0) + lcmp(m, 0x7FF0…0) + 1`
+  on the masked raw bits. `f64_exp10` / `f64_class` narrow exactly into an
+  `int` dest; `f64_digits` (up to 10^17) refuses one.
+- The reserved-name check covers all four synthetic methods.
+- Tests: shapes, and the three ops over the PR6a table on real `java`
+  (verifier on) against host `python3`.
+
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- The `real_to_int_*` range check's failing path is the shared LANG83 trap
+  sequence (flush `System.out`, `throw new RuntimeException("Trap.ConvRange")`)
+  instead of `new ArithmeticException("real_to_int: …")` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). The upper
+  bound's `iflt` now skips the 17-byte trap.
+- Test: `lang83_pr1b.rs` pins the trap sequence after the upper-bound check
+  for both ops.
+
 ## Unreleased — LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

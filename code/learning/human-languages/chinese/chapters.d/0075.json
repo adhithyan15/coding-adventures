@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Celebrating",
+  "label": "ch:zh-celebrating",
+  "canDo": "I can wish somebody a happy birthday and give a present.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ZH-C75-song",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: I can wish somebody a happy birthday and give a present.",
+    "assesses": [
+      "ZH-LEX-C75-PARTY75-03",
+      "ZH-LEX-C75-PARTY75-04",
+      "ZH-LEX-C75-PARTY75-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C398-tsukaru",
+  "pathSegment": "JA-PATH-398-ONSEN398",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-398-ONSEN398",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-421-NEGIRU421",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-421-NEGIRU421"
+  ],
+  "after": []
+}

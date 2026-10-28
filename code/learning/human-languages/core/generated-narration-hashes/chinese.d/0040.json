@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:c7a672d5eb6c74b7",
+  "lessonIds": [
+    "ZH-C40-mai",
+    "ZH-W40-mai",
+    "ZH-C40-pingguo",
+    "ZH-C40-shuiguo",
+    "ZH-C40-mianbao",
+    "ZH-C40-jidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch40.txt",
+  "json": "chinese/narration/ch40.json",
+  "textHash": "fnv1a64:77c3fa9b2d953f40",
+  "jsonHash": "fnv1a64:66a130de9e980c63",
+  "findings": []
+}

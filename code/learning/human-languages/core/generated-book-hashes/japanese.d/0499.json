@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:c1850e124a94053d",
+  "lessonIds": [
+    "JA-C499-yuuenchi",
+    "JA-C499-doubutsuen",
+    "JA-C499-suizokukan",
+    "JA-C499-ensoku",
+    "JA-C499-kouraku"
+  ],
+  "tex": "japanese/book/chapters/ch499-days-out.tex"
+}

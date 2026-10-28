@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W93-tai",
+    "language": "chinese",
+    "chapter": 93,
+    "sequence": 7540,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3c9d71cfb4eb5900",
+    "detachableSegments": [
+      "Script — 大, then a dot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

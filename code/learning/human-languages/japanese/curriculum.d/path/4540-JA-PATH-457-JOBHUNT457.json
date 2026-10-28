@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-457-JOBHUNT457",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-457-JOBHUNT457"
+  ],
+  "after": []
+}

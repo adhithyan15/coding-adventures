@@ -1,0 +1,11 @@
+{
+  "id": "JA-C481-kufuu-suru",
+  "pathSegment": "JA-PATH-481-SKILL481",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-481-SKILL481",
+      "order": 4
+    }
+  ]
+}

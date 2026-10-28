@@ -1,0 +1,11 @@
+{
+  "id": "JA-C437-kenkyo",
+  "pathSegment": "JA-PATH-437-HONEST437",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-437-HONEST437",
+      "order": 3
+    }
+  ]
+}

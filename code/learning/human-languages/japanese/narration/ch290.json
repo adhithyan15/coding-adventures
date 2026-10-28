@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 290,
+  "title": "A New Home",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2cc0d217a4118f7a",
+  "lessons": [
+    {
+      "id": "JA-C290-utsuru",
+      "sequence": 17440,
+      "title": "うつる (utsuru) — to move (house); to move over",
+      "headword": "うつる",
+      "romanization": "utsuru",
+      "gloss": "to move (house); to move over",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:058421fda9b99cb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to invite formally, then the Japanese for a married couple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うつる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うつる — utsuru — \"to move (house); to move over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かぞくで いなかに うつりました。 — kazoku de inaka ni utsurimashita — \"Our family moved to the country.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うつります, utsurimasu; a godan verb. Past (polite): あにが となりの まちに うつりました。, ani ga tonari no machi ni utsurimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うつる (utsuru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsuru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsuru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsuru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kazoku de inaka ni utsurimashita — Our family moved to the country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kazoku de inaka ni utsurimashita* — Our family moved to the country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to invite formally, then the Japanese for a married couple, then say utsuru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to invite formally, then the Japanese for a married couple, then say *utsuru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うつる (utsuru) mean? (\"To move (house); to move over\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C290-utsuru-type",
+              "prompt": "Say the Japanese for 'to move (house)'.",
+              "assesses": [
+                "JA-LEX-C290-UTSURU290-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うつる",
+                "utsuru"
+              ],
+              "feedback": {
+                "correct": "Right: うつる (utsuru) is 'to move (house); to move over'.",
+                "incorrect": "'To move (house)' is うつる (utsuru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C290-shinkon",
+      "sequence": 17450,
+      "title": "しんこん (shinkon) — newly married",
+      "headword": "しんこん",
+      "romanization": "shinkon",
+      "gloss": "newly married",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f46af6fde1a33150",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a married couple, then the Japanese for to move (house)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しんこん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんこん — shinkon — \"newly married\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふたりは しんこんです。 — futari wa shinkon desu — \"The two are newly married.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんこん (shinkon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"new\" (Middle Chinese sin) and kon, \"marriage\" (xwon) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinkon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinkon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinkon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinkon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futari wa shinkon desu — The two are newly married.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futari wa shinkon desu* — The two are newly married.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a married couple, then the Japanese for to move (house), then say shinkon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a married couple, then the Japanese for to move (house), then say *shinkon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しんこん (shinkon) mean? (\"Newly married\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C290-shinkon-type",
+              "prompt": "Say the Japanese for 'newly married'.",
+              "assesses": [
+                "JA-LEX-C290-UTSURU290-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しんこん",
+                "shinkon"
+              ],
+              "feedback": {
+                "correct": "Right: しんこん (shinkon) is 'newly married'.",
+                "incorrect": "'Newly married' is しんこん (shinkon)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C290-furusato",
+      "sequence": 17460,
+      "title": "ふるさと (furusato) — one's home town; one's birthplace",
+      "headword": "ふるさと",
+      "romanization": "furusato",
+      "gloss": "one's home town; one's birthplace",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:352b4679c90012e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to move (house), then the Japanese for newly married."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふるさと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふるさと — furusato — \"one's home town; one's birthplace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つまが ふるさとに かえる ことを 言い出しました。 — tsuma ga furusato ni kaeru koto o iidashimashita — \"My wife suggested going back to her home town.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふるさと (furusato) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from furu, \"old\" (from furui), and sato, \"village\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furusato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furusato*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furusato, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furusato*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsuma ga furusato ni kaeru koto o iidashimashita — My wife suggested going back to her home town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsuma ga furusato ni kaeru koto o iidashimashita* — My wife suggested going back to her home town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to move (house), then the Japanese for newly married, then say furusato again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to move (house), then the Japanese for newly married, then say *furusato* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふるさと (furusato) mean? (\"One's home town; one's birthplace\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C290-furusato-type",
+              "prompt": "Say the Japanese for 'one's home town'.",
+              "assesses": [
+                "JA-LEX-C290-UTSURU290-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふるさと",
+                "furusato"
+              ],
+              "feedback": {
+                "correct": "Right: ふるさと (furusato) is 'one's home town; one's birthplace'.",
+                "incorrect": "'One's home town' is ふるさと (furusato)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C290-miokuru",
+      "sequence": 17470,
+      "title": "みおくる (miokuru) — to see (someone) off",
+      "headword": "みおくる",
+      "romanization": "miokuru",
+      "gloss": "to see (someone) off",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0dbe45af1118edc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for newly married, then the Japanese for one's home town."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みおくる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みおくる — miokuru — \"to see (someone) off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきで ともだちを みおくりました。 — eki de tomodachi o miokurimashita — \"I saw my friend off at the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みおくります, miokurimasu; a godan verb. Past (polite): かぞくが あにを みおくりました。, kazoku ga ani o miokurimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みおくる (miokuru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mi, \"seeing\" (from miru), and okuru, \"to send\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miokuru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miokuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miokuru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miokuru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eki de tomodachi o miokurimashita — I saw my friend off at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eki de tomodachi o miokurimashita* — I saw my friend off at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for newly married, then the Japanese for one's home town, then say miokuru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for newly married, then the Japanese for one's home town, then say *miokuru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みおくる (miokuru) mean? (\"To see (someone) off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C290-miokuru-type",
+              "prompt": "Say the Japanese for 'to see (someone) off'.",
+              "assesses": [
+                "JA-LEX-C290-UTSURU290-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みおくる",
+                "miokuru"
+              ],
+              "feedback": {
+                "correct": "Right: みおくる (miokuru) is 'to see (someone) off'.",
+                "incorrect": "'To see (someone) off' is みおくる (miokuru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C290-atarashii",
+      "sequence": 17480,
+      "title": "あたらしい (atarashii) — new",
+      "headword": "あたらしい",
+      "romanization": "atarashii",
+      "gloss": "new",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf236c95dd532e4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for one's home town, then the Japanese for to see (someone) off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あたらしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あたらしい — atarashii — \"new\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あたらしい うちは えきに ちかいです。 — atarashii uchi wa eki ni chikai desu — \"The new house is close to the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あたらしい (atarashii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atarashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atarashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atarashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atarashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atarashii uchi wa eki ni chikai desu — The new house is close to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atarashii uchi wa eki ni chikai desu* — The new house is close to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for one's home town, then the Japanese for to see (someone) off, then say atarashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for one's home town, then the Japanese for to see (someone) off, then say *atarashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あたらしい (atarashii) mean? (\"New\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C290-atarashii-type",
+              "prompt": "Say the Japanese for 'new'.",
+              "assesses": [
+                "JA-LEX-C290-UTSURU290-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あたらしい",
+                "atarashii"
+              ],
+              "feedback": {
+                "correct": "Right: あたらしい (atarashii) is 'new'.",
+                "incorrect": "'New' is あたらしい (atarashii)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

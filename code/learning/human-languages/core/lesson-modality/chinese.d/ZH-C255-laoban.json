@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C255-laoban",
+    "language": "chinese",
+    "chapter": 255,
+    "sequence": 19400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ae7ec8815a34b22"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:0dd9393908b074a7",
+  "lessonIds": [
+    "ZH-C267-yanyuan",
+    "ZH-C267-jiemu",
+    "ZH-C267-mingxing",
+    "ZH-C267-xiaohua",
+    "ZH-W267-xiao-laugh",
+    "ZH-C267-haoxiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "chinese/narration/ch267.txt",
+  "json": "chinese/narration/ch267.json",
+  "textHash": "fnv1a64:f99ac6f44d92805e",
+  "jsonHash": "fnv1a64:903ad4b64b888ce0",
+  "findings": []
+}

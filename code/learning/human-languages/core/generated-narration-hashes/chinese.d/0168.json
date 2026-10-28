@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:9dfcb352435885f7",
+  "lessonIds": [
+    "ZH-C168-zheng",
+    "ZH-C168-zha",
+    "ZH-C168-dun",
+    "ZH-C168-shaoshui",
+    "ZH-C168-tang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch168.txt",
+  "json": "chinese/narration/ch168.json",
+  "textHash": "fnv1a64:719be61eef96af7c",
+  "jsonHash": "fnv1a64:656c38b800febc1e",
+  "findings": []
+}

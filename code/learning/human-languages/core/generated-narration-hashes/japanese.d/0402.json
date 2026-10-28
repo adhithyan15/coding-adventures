@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:4d80503ad9e41b39",
+  "lessonIds": [
+    "JA-C402-kankou",
+    "JA-C402-kankoukyaku",
+    "JA-C402-meisho",
+    "JA-C402-meibutsu",
+    "JA-C402-meguru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch402.txt",
+  "json": "japanese/narration/ch402.json",
+  "textHash": "fnv1a64:e839faba2db04f48",
+  "jsonHash": "fnv1a64:27f7a0a7d3d0ff19",
+  "findings": []
+}

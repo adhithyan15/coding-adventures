@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W72-kai",
+  "pathSegment": "ZH-PATH-72-TRAVEL72",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-72-TRAVEL72",
+      "order": 3
+    }
+  ]
+}

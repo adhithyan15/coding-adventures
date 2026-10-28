@@ -209,7 +209,10 @@ component TaskApp {
   // `pkg::mosaic-pkg-notes::Notes` — see Notes.mil for the full contract
   // and code/specs/task-app-notes-ui-v1.md for the scope. The host builds
   // note-rows from task-core's Note entities (via `workspace()`) and owns
-  // the in-progress edit buffer.
+  // the in-progress edit buffer. Notes 0.3.0 lists them with the toolkit
+  // RecordList, so each note-rows row is RecordList's
+  // [key, heading, title, subtitle, meta, badge]: the note id, "", the
+  // title (or "Untitled"), "", "", "".
   slot notes-mode          : text ;
   slot notes-title         : text ;
   slot note-rows           : list<list<text>> ;
@@ -217,6 +220,16 @@ component TaskApp {
   slot note-title-value    : text ;
   slot note-body-value     : text ;
   slot note-task-value     : text ;
+  // Why the last note Save was refused, or empty (E5): today only "no task
+  // has that name". It is TaskApp's, not a Notes slot, and is drawn above
+  // the Notes mount the way Journal draws `draft-error` above DraftEditor,
+  // so Notes' own contract is unchanged (task-app-notes-ui-v1.md, v1.2).
+  slot note-error          : text ;
+  // The open note's Delete label (Notes 0.3.0): "Delete" for a note the
+  // project has saved, "" for a new one it has never seen, so no Delete
+  // button is drawn where there is nothing to delete. The one Notes label
+  // the host decides; the others are literals at the Notes mount.
+  slot note-delete-label   : text ;
 
   // Checklists (C3a). `checklists-mode` is non-empty when the view is showing.
   // The library is RecordList rows over the project's templates then runs; the

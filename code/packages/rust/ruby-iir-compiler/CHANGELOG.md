@@ -1,5 +1,47 @@
 # Changelog
 
+## Unreleased - `main` is sized to vm-core's frame limit (#18419)
+
+### Fixed
+
+- **A program whose `main` needs more registers than a vm-core frame holds
+  is refused by the compiler**, not by vm-core at load time
+  (`VMError::RegisterLimitExceeded`, more than 65,536 registers). Only the
+  trusted budgets (1 MiB, 256 Ki tokens) reach it: 257 lines of
+  `puts(1+…+1)` with 128 ones and one `puts(1)` compiled, then failed at VM
+  load. It is now `FrontendError::Budget { which: "registers per function",
+  limit: 65536, function: Some("main"), start: Some((258, 1)) }`. The same
+  gap and the same fix as `python-iir-compiler`, whose release path this
+  crate's mirrors.
+- The walker counts `main`'s distinct `dest`s as it emits them, reserving
+  the register of its closing `ret 0`, so the error names a statement; the
+  check is exact (65,536 compile and run, 65,537 do not). `finish` then puts
+  the module through vm-core's own `VMFrame::check_register_limit`.
+
+### Added
+
+- `MAX_REGISTERS_PER_FUNCTION`, re-exported from vm-core's
+  `VMFrame::MAX_FRAME_REGISTERS`.
+- `FrontendError::Budget` gains `function: Option<String>` and
+  `start: Option<(usize, usize)>`, `None` for every budget but this one.
+- `tests/register_limit.rs`: the boundary on the VM column.
+
+## Unreleased — LANG84 R1b
+
+### Added
+- The `rb-int-puts` corpus gains one positive case and two `.reject` cases,
+  each with a host ruby 3.3.6 `.cite`:
+  - `embedded_document_and_end` (positive): an `=begin`/`=end` document and
+    a `__END__` line leave `1` and `3`.
+  - `reject_heredoc` (`Lex`): its heredoc bodies hold `=begin`/`=end`, and
+    the opener is refused.
+  - `reject_unspaced_slash` (`Lex`): `puts 6 /2`, an over-refusal Ruby
+    accepts.
+- The release sweep now has 15 positive cases. `release_classes.csv` is
+  regenerated: the class digest changes because a case was added, and the
+  partition is still the single class {3.3.5, 3.3.6, 3.3.7}. The compiler
+  itself is unchanged, since comments and data emit no IIR.
+
 ## Unreleased — grammar-tools adjacency predicates (E6)
 
 ### Changed

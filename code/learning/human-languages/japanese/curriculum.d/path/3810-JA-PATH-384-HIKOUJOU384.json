@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-384-HIKOUJOU384",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-384-HIKOUJOU384"
+  ],
+  "after": []
+}

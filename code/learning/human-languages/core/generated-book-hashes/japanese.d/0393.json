@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:53b9e1b749029754",
+  "lessonIds": [
+    "JA-C393-mejirushi",
+    "JA-C393-kanban",
+    "JA-C393-hyoushiki",
+    "JA-C393-yajirushi",
+    "JA-C393-furimuku"
+  ],
+  "tex": "japanese/book/chapters/ch393-signs-and-landmarks.tex"
+}

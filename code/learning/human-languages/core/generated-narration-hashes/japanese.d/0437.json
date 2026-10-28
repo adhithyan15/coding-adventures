@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:b7ee17f0cf81d9e9",
+  "lessonIds": [
+    "JA-C437-kibishii",
+    "JA-C437-reisei",
+    "JA-C437-seijitsu",
+    "JA-C437-kenkyo",
+    "JA-C437-ijiwaru",
+    "JA-R437-review-432-437"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch437.txt",
+  "json": "japanese/narration/ch437.json",
+  "textHash": "fnv1a64:697daf96a1ac5735",
+  "jsonHash": "fnv1a64:1af7fdc9ff310661",
+  "findings": []
+}

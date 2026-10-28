@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C110-tiaowu",
+  "pathSegment": "ZH-PATH-110-SKILL110",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-110-SKILL110",
+      "order": 5
+    }
+  ]
+}

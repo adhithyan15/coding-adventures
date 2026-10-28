@@ -1,0 +1,24 @@
+{
+  "chapter": 88,
+  "title": "Two Cups of Tea",
+  "label": "ch:zh-two-cups-of-tea",
+  "canDo": "I can count things with 两 and the right measure word.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C88-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Counting things with 两 and four measure words beyond 个, and the tone 一 takes before each, built on one new written character: 两.",
+    "assesses": [
+      "ZH-LEX-C88-LIANG-01",
+      "ZH-SCRIPT-LIANG-01",
+      "ZH-RULE-TONE-SANDHI-YI-01",
+      "ZH-LEX-C88-BEI-01",
+      "ZH-LEX-C88-BEN-01",
+      "ZH-LEX-C88-ZHANG-01",
+      "ZH-LEX-C88-ZHI-01",
+      "ZH-PERFORMANCE-MEASURE-01"
+    ]
+  }
+}

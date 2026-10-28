@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C361-moukaru",
+    "language": "japanese",
+    "chapter": 361,
+    "sequence": 21280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:383d3982a3a1fa6b"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W67-ma-horse",
+    "language": "chinese",
+    "chapter": 67,
+    "sequence": 5465,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b54ef7d66774afd1",
+    "detachableSegments": [
+      "Script — a turn, a zigzag, a base"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

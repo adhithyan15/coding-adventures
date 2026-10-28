@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:fdc5f1b37fb29314",
+  "lessonIds": [
+    "ZH-C146-baitian",
+    "ZH-C146-yeli",
+    "ZH-C146-banye",
+    "ZH-C146-xing-wake",
+    "ZH-C146-pingshi",
+    "ZH-R146-review-141-146",
+    "ZH-R146-review-final-146"
+  ],
+  "tex": "chinese/book/chapters/ch146-day-and-night.tex"
+}

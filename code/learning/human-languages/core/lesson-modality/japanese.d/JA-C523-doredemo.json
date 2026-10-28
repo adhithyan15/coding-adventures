@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C523-doredemo",
+    "language": "japanese",
+    "chapter": 523,
+    "sequence": 30230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1938f9af07d4102a"
+  },
+  "findings": []
+}

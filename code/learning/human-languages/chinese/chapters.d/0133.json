@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Housework",
+  "label": "ch:zh-housework",
+  "canDo": "I can say I clean, tidy up, wipe and throw things away.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C133-die",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: I can say I clean, tidy up, wipe and throw things away.",
+    "assesses": [
+      "ZH-LEX-C133-HOUSE133-03",
+      "ZH-LEX-C133-HOUSE133-04",
+      "ZH-LEX-C133-HOUSE133-05"
+    ]
+  }
+}

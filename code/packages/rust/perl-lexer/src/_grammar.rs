@@ -134,11 +134,11 @@ pub const SUPPORTED_RELEASES: &[&str] = &[
 /// nearest-release fallback (LANG84 C4).
 pub fn token_grammar(release: &str) -> Option<TokenGrammar> {
     match release {
-        "1.000" | "2.000" | "2.001" | "3.000" | "3.044" | "4.000" | "4.036" | "5.000" | "5.001" | "5.001n" | "5.002" | "5.002_01" | "5.003" | "5.003_01" | "5.003_02" | "5.003_03" | "5.003_04" | "5.003_05" | "5.003_06" | "5.003_07" | "5.003_08" | "5.003_09" | "5.003_10" | "5.003_11" | "5.003_12" | "5.003_13" | "5.003_14" | "5.003_15" | "5.003_16" | "5.003_17" | "5.003_18" | "5.003_19" | "5.003_20" | "5.003_21" | "5.003_22" | "5.003_23" | "5.003_24" | "5.003_25" | "1.0.15" | "1.0_16" => Some(g_5a960085add9::token_grammar()),
-        "5.003_26" | "5.003_27" | "5.003_28" | "5.003_90" | "5.003_91" | "5.003_92" | "5.003_93" | "5.003_94" | "5.003_95" | "5.003_96" | "5.003_97" | "5.003_97a" | "5.003_97b" | "5.003_97c" | "5.003_97d" | "5.003_97e" | "5.003_97f" | "5.003_97g" | "5.003_97h" => Some(g_c4f61ac43123::token_grammar()),
-        "5.003_97i" | "5.003_97j" | "5.003_98" | "5.003_99" | "5.003_99a" | "p54rc1" | "p54rc2" | "5.004" | "5.004_01-t2" | "5.004_01" | "5.004_01_01" | "5.004_01_02" | "5.004_01_03" | "5.004_02" | "5.004_02_01" | "5.004_03-t2" | "5.004_03" | "5.004_50" | "5.004_04-t1" | "5.004_04-t2" | "5.004_51" | "5.004_04-t3" | "5.004_04-t4" | "5.004_04" | "5.004_52" | "5.004_53" | "5.004_54" | "5.004_55" | "5.004_56" | "5.004_57" | "5.004_58" | "5.004_59" | "5.004_60" | "5.004_61" | "5.004_04-m1" | "5.004_62" | "5.004_63" | "5.004_64" | "5.004_04-m2" | "5.004_04-m3" | "5.004_65" | "5.004_04-m4" | "5.004_66" | "5.004_67" | "5.004_68" | "5.004_69" | "5.004_70" | "5.004_71" | "5.004_05-MT5" | "5.004_05-MT6" | "5.004_05-MT7" | "5.004_05-MT8" | "5.004_05-MT9" | "5.004_05" => Some(g_e27cead68fd9::token_grammar()),
-        "5.004_72" | "5.38.0" | "5.38.2" => Some(g_c8dae440f6c9::token_grammar()),
-        "5.44.0" | "5.45.3" => Some(g_175a6d7f46ee::token_grammar()),
+        "1.000" | "2.000" | "2.001" | "3.000" | "3.044" | "4.000" | "4.036" | "5.000" | "5.001" | "5.001n" | "5.002" | "5.002_01" | "5.003" | "5.003_01" | "5.003_02" | "5.003_03" | "5.003_04" | "5.003_05" | "5.003_06" | "5.003_07" | "5.003_08" | "5.003_09" | "5.003_10" | "5.003_11" | "5.003_12" | "5.003_13" | "5.003_14" | "5.003_15" | "5.003_16" | "5.003_17" | "5.003_18" | "5.003_19" | "5.003_20" | "5.003_21" | "5.003_22" | "5.003_23" | "5.003_24" | "5.003_25" | "1.0.15" | "1.0_16" => Some(g_25a150b79345::token_grammar()),
+        "5.003_26" | "5.003_27" | "5.003_28" | "5.003_90" | "5.003_91" | "5.003_92" | "5.003_93" | "5.003_94" | "5.003_95" | "5.003_96" | "5.003_97" | "5.003_97a" | "5.003_97b" | "5.003_97c" | "5.003_97d" | "5.003_97e" | "5.003_97f" | "5.003_97g" | "5.003_97h" => Some(g_7bcac624aa77::token_grammar()),
+        "5.003_97i" | "5.003_97j" | "5.003_98" | "5.003_99" | "5.003_99a" | "p54rc1" | "p54rc2" | "5.004" | "5.004_01-t2" | "5.004_01" | "5.004_01_01" | "5.004_01_02" | "5.004_01_03" | "5.004_02" | "5.004_02_01" | "5.004_03-t2" | "5.004_03" | "5.004_50" | "5.004_04-t1" | "5.004_04-t2" | "5.004_51" | "5.004_04-t3" | "5.004_04-t4" | "5.004_04" | "5.004_52" | "5.004_53" | "5.004_54" | "5.004_55" | "5.004_56" | "5.004_57" | "5.004_58" | "5.004_59" | "5.004_60" | "5.004_61" | "5.004_04-m1" | "5.004_62" | "5.004_63" | "5.004_64" | "5.004_04-m2" | "5.004_04-m3" | "5.004_65" | "5.004_04-m4" | "5.004_66" | "5.004_67" | "5.004_68" | "5.004_69" | "5.004_70" | "5.004_71" | "5.004_05-MT5" | "5.004_05-MT6" | "5.004_05-MT7" | "5.004_05-MT8" | "5.004_05-MT9" | "5.004_05" => Some(g_84dbc1a58d5e::token_grammar()),
+        "5.004_72" | "5.38.0" | "5.38.2" => Some(g_acbd3d9d6444::token_grammar()),
+        "5.44.0" | "5.45.3" => Some(g_dab5e6ada1b0::token_grammar()),
         _ => None,
     }
 }
@@ -146,11 +146,11 @@ pub fn token_grammar(release: &str) -> Option<TokenGrammar> {
 /// The class (module name) of each release, for tests and tooling.
 pub fn grammar_class(release: &str) -> Option<&'static str> {
     match release {
-        "1.000" | "2.000" | "2.001" | "3.000" | "3.044" | "4.000" | "4.036" | "5.000" | "5.001" | "5.001n" | "5.002" | "5.002_01" | "5.003" | "5.003_01" | "5.003_02" | "5.003_03" | "5.003_04" | "5.003_05" | "5.003_06" | "5.003_07" | "5.003_08" | "5.003_09" | "5.003_10" | "5.003_11" | "5.003_12" | "5.003_13" | "5.003_14" | "5.003_15" | "5.003_16" | "5.003_17" | "5.003_18" | "5.003_19" | "5.003_20" | "5.003_21" | "5.003_22" | "5.003_23" | "5.003_24" | "5.003_25" | "1.0.15" | "1.0_16" => Some("g_5a960085add9"),
-        "5.003_26" | "5.003_27" | "5.003_28" | "5.003_90" | "5.003_91" | "5.003_92" | "5.003_93" | "5.003_94" | "5.003_95" | "5.003_96" | "5.003_97" | "5.003_97a" | "5.003_97b" | "5.003_97c" | "5.003_97d" | "5.003_97e" | "5.003_97f" | "5.003_97g" | "5.003_97h" => Some("g_c4f61ac43123"),
-        "5.003_97i" | "5.003_97j" | "5.003_98" | "5.003_99" | "5.003_99a" | "p54rc1" | "p54rc2" | "5.004" | "5.004_01-t2" | "5.004_01" | "5.004_01_01" | "5.004_01_02" | "5.004_01_03" | "5.004_02" | "5.004_02_01" | "5.004_03-t2" | "5.004_03" | "5.004_50" | "5.004_04-t1" | "5.004_04-t2" | "5.004_51" | "5.004_04-t3" | "5.004_04-t4" | "5.004_04" | "5.004_52" | "5.004_53" | "5.004_54" | "5.004_55" | "5.004_56" | "5.004_57" | "5.004_58" | "5.004_59" | "5.004_60" | "5.004_61" | "5.004_04-m1" | "5.004_62" | "5.004_63" | "5.004_64" | "5.004_04-m2" | "5.004_04-m3" | "5.004_65" | "5.004_04-m4" | "5.004_66" | "5.004_67" | "5.004_68" | "5.004_69" | "5.004_70" | "5.004_71" | "5.004_05-MT5" | "5.004_05-MT6" | "5.004_05-MT7" | "5.004_05-MT8" | "5.004_05-MT9" | "5.004_05" => Some("g_e27cead68fd9"),
-        "5.004_72" | "5.38.0" | "5.38.2" => Some("g_c8dae440f6c9"),
-        "5.44.0" | "5.45.3" => Some("g_175a6d7f46ee"),
+        "1.000" | "2.000" | "2.001" | "3.000" | "3.044" | "4.000" | "4.036" | "5.000" | "5.001" | "5.001n" | "5.002" | "5.002_01" | "5.003" | "5.003_01" | "5.003_02" | "5.003_03" | "5.003_04" | "5.003_05" | "5.003_06" | "5.003_07" | "5.003_08" | "5.003_09" | "5.003_10" | "5.003_11" | "5.003_12" | "5.003_13" | "5.003_14" | "5.003_15" | "5.003_16" | "5.003_17" | "5.003_18" | "5.003_19" | "5.003_20" | "5.003_21" | "5.003_22" | "5.003_23" | "5.003_24" | "5.003_25" | "1.0.15" | "1.0_16" => Some("g_25a150b79345"),
+        "5.003_26" | "5.003_27" | "5.003_28" | "5.003_90" | "5.003_91" | "5.003_92" | "5.003_93" | "5.003_94" | "5.003_95" | "5.003_96" | "5.003_97" | "5.003_97a" | "5.003_97b" | "5.003_97c" | "5.003_97d" | "5.003_97e" | "5.003_97f" | "5.003_97g" | "5.003_97h" => Some("g_7bcac624aa77"),
+        "5.003_97i" | "5.003_97j" | "5.003_98" | "5.003_99" | "5.003_99a" | "p54rc1" | "p54rc2" | "5.004" | "5.004_01-t2" | "5.004_01" | "5.004_01_01" | "5.004_01_02" | "5.004_01_03" | "5.004_02" | "5.004_02_01" | "5.004_03-t2" | "5.004_03" | "5.004_50" | "5.004_04-t1" | "5.004_04-t2" | "5.004_51" | "5.004_04-t3" | "5.004_04-t4" | "5.004_04" | "5.004_52" | "5.004_53" | "5.004_54" | "5.004_55" | "5.004_56" | "5.004_57" | "5.004_58" | "5.004_59" | "5.004_60" | "5.004_61" | "5.004_04-m1" | "5.004_62" | "5.004_63" | "5.004_64" | "5.004_04-m2" | "5.004_04-m3" | "5.004_65" | "5.004_04-m4" | "5.004_66" | "5.004_67" | "5.004_68" | "5.004_69" | "5.004_70" | "5.004_71" | "5.004_05-MT5" | "5.004_05-MT6" | "5.004_05-MT7" | "5.004_05-MT8" | "5.004_05-MT9" | "5.004_05" => Some("g_84dbc1a58d5e"),
+        "5.004_72" | "5.38.0" | "5.38.2" => Some("g_acbd3d9d6444"),
+        "5.44.0" | "5.45.3" => Some("g_dab5e6ada1b0"),
         _ => None,
     }
 }
@@ -183,6 +183,7 @@ mod legacy {
                     is_regex: true,
                     line_number: 5,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -190,6 +191,7 @@ mod legacy {
                     is_regex: true,
                     line_number: 6,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -197,6 +199,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 7,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -204,6 +207,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 8,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -211,6 +215,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 9,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -218,6 +223,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 10,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -225,6 +231,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 11,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -232,6 +239,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 12,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -239,6 +247,7 @@ mod legacy {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -250,6 +259,7 @@ mod legacy {
                     is_regex: true,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -268,7 +278,7 @@ mod legacy {
     }
 }
 
-mod g_5a960085add9 {
+mod g_25a150b79345 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl1.000.tokens
     // Regenerate with: grammar-tools compile-tokens perl1.000.tokens
@@ -290,6 +300,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 10,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
@@ -297,6 +308,7 @@ mod g_5a960085add9 {
                     is_regex: true,
                     line_number: 11,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -304,6 +316,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 12,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -311,6 +324,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -318,6 +332,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 14,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -325,6 +340,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -332,6 +348,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -339,6 +356,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 17,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -346,6 +364,7 @@ mod g_5a960085add9 {
                     is_regex: false,
                     line_number: 18,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -357,6 +376,7 @@ mod g_5a960085add9 {
                     is_regex: true,
                     line_number: 21,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -375,7 +395,7 @@ mod g_5a960085add9 {
     }
 }
 
-mod g_c4f61ac43123 {
+mod g_7bcac624aa77 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl5.003_26.tokens
     // Regenerate with: grammar-tools compile-tokens perl5.003_26.tokens
@@ -397,6 +417,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 8,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
@@ -404,6 +425,7 @@ mod g_c4f61ac43123 {
                     is_regex: true,
                     line_number: 9,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -411,6 +433,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 10,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -418,6 +441,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 11,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -425,6 +449,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 12,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -432,6 +457,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -439,6 +465,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 14,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -446,6 +473,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -453,6 +481,7 @@ mod g_c4f61ac43123 {
                     is_regex: false,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -464,6 +493,7 @@ mod g_c4f61ac43123 {
                     is_regex: true,
                     line_number: 19,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -482,7 +512,7 @@ mod g_c4f61ac43123 {
     }
 }
 
-mod g_e27cead68fd9 {
+mod g_84dbc1a58d5e {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl5.003_97i.tokens
     // Regenerate with: grammar-tools compile-tokens perl5.003_97i.tokens
@@ -504,6 +534,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 9,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
@@ -511,6 +542,7 @@ mod g_e27cead68fd9 {
                     is_regex: true,
                     line_number: 10,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -518,6 +550,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 11,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -525,6 +558,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 12,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -532,6 +566,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -539,6 +574,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 14,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -546,6 +582,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -553,6 +590,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -560,6 +598,7 @@ mod g_e27cead68fd9 {
                     is_regex: false,
                     line_number: 17,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -571,6 +610,7 @@ mod g_e27cead68fd9 {
                     is_regex: true,
                     line_number: 20,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -589,7 +629,7 @@ mod g_e27cead68fd9 {
     }
 }
 
-mod g_c8dae440f6c9 {
+mod g_acbd3d9d6444 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl5.004_72.tokens
     // Regenerate with: grammar-tools compile-tokens perl5.004_72.tokens
@@ -611,6 +651,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 13,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"INT"#.to_string(),
@@ -618,6 +659,7 @@ mod g_c8dae440f6c9 {
                     is_regex: true,
                     line_number: 14,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -625,6 +667,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -632,6 +675,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -639,6 +683,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 17,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -646,6 +691,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 18,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -653,6 +699,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 19,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -660,6 +707,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 20,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -667,6 +715,7 @@ mod g_c8dae440f6c9 {
                     is_regex: false,
                     line_number: 21,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -678,6 +727,7 @@ mod g_c8dae440f6c9 {
                     is_regex: true,
                     line_number: 24,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],
@@ -696,7 +746,7 @@ mod g_c8dae440f6c9 {
     }
 }
 
-mod g_175a6d7f46ee {
+mod g_dab5e6ada1b0 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: perl5.44.0.tokens
     // Regenerate with: grammar-tools compile-tokens perl5.44.0.tokens
@@ -718,6 +768,7 @@ mod g_175a6d7f46ee {
                     is_regex: true,
                     line_number: 15,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"NAME"#.to_string(),
@@ -725,6 +776,7 @@ mod g_175a6d7f46ee {
                     is_regex: true,
                     line_number: 16,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"PLUS"#.to_string(),
@@ -732,6 +784,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 17,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"DECREMENT"#.to_string(),
@@ -739,6 +792,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 18,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"MINUS"#.to_string(),
@@ -746,6 +800,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 19,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"STAR"#.to_string(),
@@ -753,6 +808,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 20,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"LPAREN"#.to_string(),
@@ -760,6 +816,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 21,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"RPAREN"#.to_string(),
@@ -767,6 +824,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 22,
                     alias: None,
+                    guard: Default::default(),
                 },
                 TokenDefinition {
                     name: r#"SEMICOLON"#.to_string(),
@@ -774,6 +832,7 @@ mod g_175a6d7f46ee {
                     is_regex: false,
                     line_number: 23,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             keywords: vec![],
@@ -785,6 +844,7 @@ mod g_175a6d7f46ee {
                     is_regex: true,
                     line_number: 26,
                     alias: None,
+                    guard: Default::default(),
                 },
             ],
             reserved_keywords: vec![],

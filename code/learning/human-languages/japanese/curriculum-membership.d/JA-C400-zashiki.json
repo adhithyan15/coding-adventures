@@ -1,0 +1,11 @@
+{
+  "id": "JA-C400-zashiki",
+  "pathSegment": "JA-PATH-400-TOKONOMA400",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-400-TOKONOMA400",
+      "order": 1
+    }
+  ]
+}

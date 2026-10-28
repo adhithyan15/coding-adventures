@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W133-sao-sweep",
+    "language": "chinese",
+    "chapter": 133,
+    "sequence": 10515,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b41d1b474c3d47d0",
+    "detachableSegments": [
+      "Script — the hand piece, then three bars"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

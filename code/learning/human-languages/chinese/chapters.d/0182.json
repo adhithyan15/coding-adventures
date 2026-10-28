@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "Eating Out",
+  "label": "ch:zh-eating-out",
+  "canDo": "I can talk about restaurants, cold starters, snacks, home cooking and boxed meals.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C182-hefan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can talk about restaurants, cold starters, snacks, home cooking and boxed meals.",
+    "assesses": [
+      "ZH-LEX-C182-EATOUT182-03",
+      "ZH-LEX-C182-EATOUT182-04",
+      "ZH-LEX-C182-EATOUT182-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C182-jiachangcai",
+    "language": "chinese",
+    "chapter": 182,
+    "sequence": 14270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3725e974a26686b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C117-beibian",
+  "pathSegment": "ZH-PATH-117-COMPASS117",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-117-COMPASS117",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C80-yisheng",
+  "pathSegment": "ZH-PATH-80-JOB80",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-80-JOB80",
+      "order": 3
+    }
+  ]
+}

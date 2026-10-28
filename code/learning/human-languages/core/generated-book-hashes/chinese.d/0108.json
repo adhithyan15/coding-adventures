@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:8ceec18370424ca9",
+  "lessonIds": [
+    "ZH-C108-shi",
+    "ZH-W108-shi-try",
+    "ZH-C108-huan-change",
+    "ZH-C108-shuang",
+    "ZH-C108-daxiao",
+    "ZH-C108-heshi"
+  ],
+  "tex": "chinese/book/chapters/ch108-trying-it-on.tex"
+}

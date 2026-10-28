@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 286,
+  "title": "A Baby Is Born",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cebd30e2115a832d",
+  "lessons": [
+    {
+      "id": "JA-C286-akachan",
+      "sequence": 17240,
+      "title": "あかちゃん (akachan) — a baby",
+      "headword": "あかちゃん",
+      "romanization": "akachan",
+      "gloss": "a baby",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ee5c4ed0cc2fe48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a commemoration, then the Japanese for a public holiday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あかちゃん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あかちゃん — akachan — \"a baby\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あかちゃんが ないています。 — akachan ga naite imasu — \"The baby is crying.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あかちゃん (akachan) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from aka, \"red\" (from akai), and -chan, \"the affectionate suffix\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akachan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akachan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akachan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akachan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akachan ga naite imasu — The baby is crying.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akachan ga naite imasu* — The baby is crying.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a commemoration, then the Japanese for a public holiday, then say akachan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a commemoration, then the Japanese for a public holiday, then say *akachan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あかちゃん (akachan) mean? (\"A baby\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C286-akachan-type",
+              "prompt": "Say the Japanese for 'a baby'.",
+              "assesses": [
+                "JA-LEX-C286-AKACHAN286-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あかちゃん",
+                "akachan"
+              ],
+              "feedback": {
+                "correct": "Right: あかちゃん (akachan) is 'a baby'.",
+                "incorrect": "'A baby' is あかちゃん (akachan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C286-umareru",
+      "sequence": 17250,
+      "title": "うまれる (umareru) — to be born",
+      "headword": "うまれる",
+      "romanization": "umareru",
+      "gloss": "to be born",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81cfb5b2218763d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a public holiday, then the Japanese for a baby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うまれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うまれる — umareru — \"to be born\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いもうとが うまれた とき、月が きれいでした。 — imōto ga umareta toki, tsuki ga kirei deshita — \"When my little sister was born, the moon was beautiful.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うまれます, umaremasu; an ichidan verb. Past (polite): あかちゃんが うまれました。, akachan ga umaremashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うまれる (umareru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umareru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umareru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "umareru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *umareru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imōto ga umareta toki, tsuki ga kirei deshita — When my little sister was born, the moon was beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imōto ga umareta toki, tsuki ga kirei deshita* — When my little sister was born, the moon was beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a public holiday, then the Japanese for a baby, then say umareru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a public holiday, then the Japanese for a baby, then say *umareru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うまれる (umareru) mean? (\"To be born\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C286-umareru-type",
+              "prompt": "Say the Japanese for 'to be born'.",
+              "assesses": [
+                "JA-LEX-C286-AKACHAN286-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うまれる",
+                "umareru"
+              ],
+              "feedback": {
+                "correct": "Right: うまれる (umareru) is 'to be born'.",
+                "incorrect": "'To be born' is うまれる (umareru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C286-shussan",
+      "sequence": 17260,
+      "title": "しゅっさん (shussan) — childbirth; giving birth",
+      "headword": "しゅっさん",
+      "romanization": "shussan",
+      "gloss": "childbirth; giving birth",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d156ad9d5a3bed0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a baby, then the Japanese for to be born."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅっさん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっさん — shussan — \"childbirth; giving birth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あねは らいげつ しゅっさんの よていです。 — ane wa raigetsu shussan no yotei desu — \"My elder sister is due to give birth next month.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっさん (shussan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shutsu, \"exit\" (Middle Chinese tsyhwit) and san, \"give birth\" (sreanX) (KANJIDIC2; Middle Chinese in Baxter's transcription). The first is shortened from shutsu to shus- before san."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shussan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shussan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shussan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shussan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ane wa raigetsu shussan no yotei desu — My elder sister is due to give birth next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ane wa raigetsu shussan no yotei desu* — My elder sister is due to give birth next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a baby, then the Japanese for to be born, then say shussan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a baby, then the Japanese for to be born, then say *shussan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅっさん (shussan) mean? (\"Childbirth; giving birth\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C286-shussan-type",
+              "prompt": "Say the Japanese for 'childbirth'.",
+              "assesses": [
+                "JA-LEX-C286-AKACHAN286-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅっさん",
+                "shussan"
+              ],
+              "feedback": {
+                "correct": "Right: しゅっさん (shussan) is 'childbirth; giving birth'.",
+                "incorrect": "'Childbirth' is しゅっさん (shussan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C286-omedetou",
+      "sequence": 17270,
+      "title": "おめでとう (omedetō) — congratulations",
+      "headword": "おめでとう",
+      "romanization": "omedetō",
+      "gloss": "congratulations",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49fb1f108c1ebf2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be born, then the Japanese for childbirth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おめでとう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おめでとう — omedetō — \"congratulations\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たんじょうび、おめでとう。 — tanjōbi, omedetō — \"Happy birthday!\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おめでとう (omedetō) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omedetō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omedetō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omedetō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omedetō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanjōbi, omedetō — Happy birthday!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanjōbi, omedetō* — Happy birthday!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be born, then the Japanese for childbirth, then say omedetō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be born, then the Japanese for childbirth, then say *omedetō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おめでとう (omedetō) mean? (\"Congratulations\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C286-omedetou-type",
+              "prompt": "Say the Japanese for 'congratulations'.",
+              "assesses": [
+                "JA-LEX-C286-AKACHAN286-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おめでとう",
+                "omedetō",
+                "omedetou",
+                "omedetoo",
+                "omedeto"
+              ],
+              "feedback": {
+                "correct": "Right: おめでとう (omedetō) is 'congratulations'.",
+                "incorrect": "'Congratulations' is おめでとう (omedetō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C286-mago",
+      "sequence": 17280,
+      "title": "まご (mago) — a grandchild",
+      "headword": "まご",
+      "romanization": "mago",
+      "gloss": "a grandchild",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2201bf98ee2fe20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for childbirth, then the Japanese for congratulations."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まご",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まご — mago — \"a grandchild\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふと そぼに まごが うまれました。 — sofu to sobo ni mago ga umaremashita — \"My grandparents have a new grandchild.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まご (mago) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mago*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mago, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mago*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu to sobo ni mago ga umaremashita — My grandparents have a new grandchild.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu to sobo ni mago ga umaremashita* — My grandparents have a new grandchild.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for childbirth, then the Japanese for congratulations, then say mago again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for childbirth, then the Japanese for congratulations, then say *mago* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まご (mago) mean? (\"A grandchild\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C286-mago-type",
+              "prompt": "Say the Japanese for 'a grandchild'.",
+              "assesses": [
+                "JA-LEX-C286-AKACHAN286-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まご",
+                "mago"
+              ],
+              "feedback": {
+                "correct": "Right: まご (mago) is 'a grandchild'.",
+                "incorrect": "'A grandchild' is まご (mago)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

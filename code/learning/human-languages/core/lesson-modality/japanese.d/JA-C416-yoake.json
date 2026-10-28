@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C416-yoake",
+    "language": "japanese",
+    "chapter": 416,
+    "sequence": 24270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6145b08bdea53b6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C341-hikitomeru",
+  "pathSegment": "JA-PATH-341-SETTOKU341",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-341-SETTOKU341",
+      "order": 2
+    }
+  ]
+}
