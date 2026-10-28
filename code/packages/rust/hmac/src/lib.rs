@@ -227,6 +227,28 @@ pub fn hmac_sha1(key: &[u8], message: &[u8]) -> Result<[u8; 20], HmacError> {
 /// [`HmacError::InputTooLong`] if key normalization or either SHA-256 pass
 /// would exceed the standard's encoded message-length bound.
 pub fn hmac_sha256(key: &[u8], message: &[u8]) -> Result<[u8; 32], HmacError> {
+    hmac_sha256_segments(key, &[message])
+}
+
+/// Fixed-memory HMAC-SHA256 over borrowed message segments.
+///
+/// Segment boundaries do not affect the authentication tag: the segments are
+/// hashed in order as one logical message. The implementation does not
+/// allocate or assemble a concatenated whole-message buffer, so the HMAC core
+/// remains heap-allocation-free. The repository hash state may retain one
+/// bounded partial block, which is wiped on drop. An empty segment list and any
+/// number of empty segments represent an empty message.
+///
+/// Normalized key bytes, keyed pads, the inner digest, and both hash states are
+/// wiped at their ownership boundaries. The returned tag belongs to the
+/// caller.
+///
+/// # Errors
+///
+/// Returns [`HmacError::EmptyKey`] if `key` is empty or
+/// [`HmacError::InputTooLong`] if key normalization or either SHA-256 pass
+/// would exceed the standard's encoded message-length bound.
+pub fn hmac_sha256_segments(key: &[u8], segments: &[&[u8]]) -> Result<[u8; 32], HmacError> {
     if key.is_empty() {
         return Err(HmacError::EmptyKey);
     }
@@ -246,7 +268,9 @@ pub fn hmac_sha256(key: &[u8], message: &[u8]) -> Result<[u8; 32], HmacError> {
     }
     let mut inner_hasher = Sha256Hasher::new();
     inner_hasher.try_update(&key_block[..])?;
-    inner_hasher.try_update(message)?;
+    for segment in segments {
+        inner_hasher.try_update(segment)?;
+    }
     let inner_digest = Zeroizing::new(inner_hasher.digest());
 
     // Transform K' XOR ipad into K' XOR opad in place, avoiding a second
@@ -275,6 +299,28 @@ pub fn hmac_sha256(key: &[u8], message: &[u8]) -> Result<[u8; 32], HmacError> {
 /// [`HmacError::InputTooLong`] if key normalization or either SHA-384 pass
 /// would exceed the standard's encoded message-length bound.
 pub fn hmac_sha384(key: &[u8], message: &[u8]) -> Result<[u8; 48], HmacError> {
+    hmac_sha384_segments(key, &[message])
+}
+
+/// Fixed-memory HMAC-SHA384 over borrowed message segments.
+///
+/// Segment boundaries do not affect the authentication tag: the segments are
+/// hashed in order as one logical message. The implementation does not
+/// allocate or assemble a concatenated whole-message buffer, so the HMAC core
+/// remains heap-allocation-free. The repository hash state may retain one
+/// bounded partial block, which is wiped on drop. An empty segment list and any
+/// number of empty segments represent an empty message.
+///
+/// Normalized key bytes, keyed pads, the inner digest, and both hash states are
+/// wiped at their ownership boundaries. The returned tag belongs to the
+/// caller.
+///
+/// # Errors
+///
+/// Returns [`HmacError::EmptyKey`] if `key` is empty or
+/// [`HmacError::InputTooLong`] if key normalization or either SHA-384 pass
+/// would exceed the standard's encoded message-length bound.
+pub fn hmac_sha384_segments(key: &[u8], segments: &[&[u8]]) -> Result<[u8; 48], HmacError> {
     if key.is_empty() {
         return Err(HmacError::EmptyKey);
     }
@@ -294,7 +340,9 @@ pub fn hmac_sha384(key: &[u8], message: &[u8]) -> Result<[u8; 48], HmacError> {
     }
     let mut inner_hasher = Sha384::new();
     inner_hasher.update(&key_block[..])?;
-    inner_hasher.update(message)?;
+    for segment in segments {
+        inner_hasher.update(segment)?;
+    }
     let inner_digest = Zeroizing::new(inner_hasher.digest());
 
     // Transform K' XOR ipad into K' XOR opad in place, avoiding a second
@@ -498,6 +546,38 @@ mod tests {
     }
 
     #[test]
+    fn segmented_sha256_matches_one_shot_across_boundaries() {
+        for message_length in [0, 1, 55, 56, 63, 64, 65, 127, 128, 129] {
+            let message: Vec<u8> = (0..message_length)
+                .map(|index| (index % 251) as u8)
+                .collect();
+            let expected = hmac_sha256(b"segmented-key", &message).unwrap();
+            for first_split in 0..=message_length {
+                let second_split = first_split + (message_length - first_split) / 2;
+                let segments = [
+                    &message[..first_split],
+                    &[][..],
+                    &message[first_split..second_split],
+                    &message[second_split..],
+                ];
+                assert_eq!(
+                    hmac_sha256_segments(b"segmented-key", &segments).unwrap(),
+                    expected,
+                    "message length {message_length}, first split {first_split}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn segmented_sha256_empty_list_is_empty_message() {
+        assert_eq!(
+            hmac_sha256_segments(b"key", &[]).unwrap(),
+            hmac_sha256(b"key", b"").unwrap()
+        );
+    }
+
+    #[test]
     fn hmac_error_categories_are_payload_free() {
         assert_eq!(
             HmacError::EmptyKey.to_string(),
@@ -576,6 +656,38 @@ mod tests {
                 assert_eq!(fixed.as_slice(), reference.as_slice());
             }
         }
+    }
+
+    #[test]
+    fn segmented_sha384_matches_one_shot_across_boundaries() {
+        for message_length in [0, 1, 111, 112, 127, 128, 129, 255, 256, 257] {
+            let message: Vec<u8> = (0..message_length)
+                .map(|index| (index % 251) as u8)
+                .collect();
+            let expected = hmac_sha384(b"segmented-key", &message).unwrap();
+            for first_split in 0..=message_length {
+                let second_split = first_split + (message_length - first_split) / 2;
+                let segments = [
+                    &message[..first_split],
+                    &[][..],
+                    &message[first_split..second_split],
+                    &message[second_split..],
+                ];
+                assert_eq!(
+                    hmac_sha384_segments(b"segmented-key", &segments).unwrap(),
+                    expected,
+                    "message length {message_length}, first split {first_split}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn segmented_sha384_empty_list_is_empty_message() {
+        assert_eq!(
+            hmac_sha384_segments(b"key", &[]).unwrap(),
+            hmac_sha384(b"key", b"").unwrap()
+        );
     }
 
     // RFC 4231 — HMAC-SHA512

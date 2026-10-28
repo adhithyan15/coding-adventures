@@ -1767,6 +1767,25 @@ or certificates, establish trust, check revocation, authorize HTTP or OAuth
 transport, or open a network connection. Reviewed fixed-memory Expand remains
 a prerequisite, and concrete HTTPS remains unavailable.
 
+The fixed-output HMAC-SHA-256 and HMAC-SHA-384 primitives now also accept
+borrowed message segments. They stream each segment into the repository hash
+state in order without allocating or assembling a concatenated whole-message
+buffer. A bounded partial block may be retained inside the wiped hash state.
+The APIs preserve the existing fixed-memory key normalization, wipe-on-drop
+key-derived state, caller-owned fixed tag, and payload-free length failure.
+Segment boundaries do not change the tag, and an empty segment list is the
+empty message. This is the bounded input primitive needed to represent
+`T(i-1) || info || counter` without constructing an allocation-backed aggregate
+buffer.
+
+This HMAC slice performs no HKDF expansion, secret derivation, credential
+access, credential edit, signing operation, provider action, trace emission,
+I/O, or external effect. It does not implement `HKDF-Expand`,
+`HKDF-Expand-Label`, a TLS key schedule, handshake or record protection,
+certificate processing, trust or revocation policy, HTTP, an OAuth transport,
+or a network connection. Reviewed fixed-memory Expand remains a prerequisite,
+and concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
