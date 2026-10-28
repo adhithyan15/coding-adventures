@@ -6783,6 +6783,39 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - an integer addition may exceed binary64's contiguous exact
+    // range while staying in i64 when an enclosing mod reduces it before widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740992 * sign(pick()) + 9007199254740992) mod 5); output(result) end",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Integer-only reductions retain exact i64 static terms above 2^53 rather
+    // than rounding them through binary64 before the enclosing mod.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740993 * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Call-free built-in integer normalizers retain the exact i64 argument
+    // until the enclosing integer reduction has brought it below 2^53.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-9007199254740993) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -13352,8 +13385,8 @@ fn assert_harness_builtins_name_no_language<'a>(column: &str, names: impl IntoIt
 /// every language.
 fn lower_dynamic_for_generic_engine(module: &mut interpreter_ir::IIRModule) {
     iir_builtin_lowering::lower_global_io(module);
-    iir_builtin_lowering::lower_closures_to_heap(module);
-    iir_builtin_lowering::lower_heap_builtins(module);
+    iir_builtin_lowering::lower_closures_to_heap(module).expect("closure lowering");
+    iir_builtin_lowering::lower_heap_builtins(module).expect("heap lowering");
     // A symbol literal is still encoded as `const Var(name) : symbol` after the
     // structural heap pass. The code-generation pipelines intern that form before
     // execution; do the same here so VM/JIT receive stable integer identities rather
@@ -14193,6 +14226,108 @@ fn twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column() {
     }
 }
 
+/// #18416: on the LLVM column a program function is `internal` (only `main`
+/// is exported), so a program cannot replace a libc function the linked C
+/// runtime or the collector calls.
+///
+/// | program                                     | before (external linkage)                              | now        |
+/// |---------------------------------------------|--------------------------------------------------------|------------|
+/// | `(define (abort) 0) (car 5)`                | the runtime's `abort()` returned; only the pair guard's `__builtin_trap` stopped it (SIGILL) | SIGABRT, the refusal on stderr |
+/// | `(define (malloc n) 0) (car (cons 3 4))`    | gc-core-capi's allocations failed: "memory allocation of 32 bytes failed", SIGABRT | exit 3 |
+/// | `(define (calloc a b) 0) (car (cons 3 4))`  | the cons cell came back null; `car` refused it          | exit 3     |
+/// | `(define (exit n) 7) (car (cons 3 4))`      | exit 3 (glibc's start-up code does not call `exit` through the program's symbol) | exit 3 |
+///
+/// Each runs on the native column too (where program functions were never
+/// exported) and on the VM, which never links C.
+#[test]
+fn twig_programs_cannot_interpose_libc_on_the_llvm_column() {
+    let mut ran = Vec::new();
+    for src in [
+        "(define (malloc n) 0) (car (cons 3 4))",
+        "(define (calloc a b) 0) (car (cons 3 4))",
+        "(define (exit n) 7) (car (cons 3 4))",
+        "(define (fflush x) 0) (define (printf x) 0) (car (cons 3 4))",
+    ] {
+        let p = Prog {
+            lang: Language::Twig,
+            ext: "twig",
+            src,
+            expect: Expect::Exit(3),
+            backends: &[Llvm, NativeAot, Vm],
+            release: None,
+            case: None,
+        };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+        // Every non-entry function of the LLVM module is internal.
+        let iir = lang_aot::compile_source_to_iir(Language::Twig, "(define (abort) 0) (car 5)", "m").expect("iir");
+        let ll = lang_aot::compile_iir_to_llvm(iir, "m", "x86_64-unknown-linux-gnu").expect("llvm");
+        assert!(ll.contains("define internal i64 @abort("), "{ll}");
+        assert!(ll.lines().any(|l| l.starts_with("define i64 @main(")), "{ll}");
+    }
+
+    // A program `abort` does not stop the pair guard's real abort: the process
+    // dies of SIGABRT (not the SIGILL of the guard's backstop trap, which is
+    // what happened while `abort` was the program's) with the refusal on stderr.
+    let p = Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (abort) 0) (car 5)",
+        expect: Expect::Trap,
+        backends: &[Llvm, NativeAot, Vm],
+        release: None,
+        case: None,
+    };
+    for &backend in p.backends {
+        if let Some(result) = run(backend, &p) {
+            assert_cell(backend, &p, result);
+        }
+    }
+    #[cfg(unix)]
+    if clang_ok() {
+        use std::os::unix::process::ExitStatusExt;
+        let (status, stderr) = llvm_status_and_stderr(&p);
+        assert_eq!(status.signal(), Some(6), "SIGABRT expected, got {status:?}; stderr {stderr:?}");
+        assert!(stderr.contains("is not a pair"), "{stderr:?}");
+    }
+}
+
+/// Build `p` on the LLVM column (clang, linking the C runtime and the
+/// collector as `run_llvm` does) and run it, returning its status and stderr.
+#[cfg(unix)]
+fn llvm_status_and_stderr(p: &Prog) -> (std::process::ExitStatus, String) {
+    let dir = tempfile::tempdir().expect("llvm probe: temp dir");
+    let triple = String::from_utf8(Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine").stdout)
+        .expect("clang -dumpmachine emitted valid UTF-8")
+        .trim()
+        .to_string();
+    let ll = prog_iir(p, "lm")
+        .and_then(|m| lang_aot::compile_iir_to_llvm(m, "lm", &triple))
+        .unwrap_or_else(|e| cell_failed("Llvm", p, "source → LLVM IR", format!("{e:?}")));
+    let ll_path = dir.path().join("probe.ll");
+    std::fs::write(&ll_path, &ll).expect("llvm probe: write .ll");
+    let exe = dir.path().join("probe_llvm");
+    let rt = |name: &str| std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name);
+    let built = Command::new("clang")
+        .arg("-x").arg("ir").arg(&ll_path)
+        .arg("-x").arg("none").arg(rt("dynval_runtime.c"))
+        .args(common::gc_link_args())
+        .arg(rt("twig_runtime.c"))
+        .arg("-o").arg(&exe)
+        .output()
+        .expect("llvm probe: spawn clang");
+    assert!(built.status.success(), "llvm probe: clang: {}", String::from_utf8_lossy(&built.stderr));
+    let run = Command::new(&exe).output().expect("llvm probe: run");
+    (run.status, String::from_utf8_lossy(&run.stderr).into_owned())
+}
+
 /// Run a Twig program that calls only `__dyn_*` runtime functions on the
 /// tagged-word columns available here (LLVM via `clang`, native x86-64 via the
 /// system linker) and return each column's stderr — what `run_llvm` /
@@ -14299,6 +14434,177 @@ fn compiler_reserved_lisp_names_are_refused_at_the_source_and_in_the_pipeline() 
     lang_aot::compile_iir_to_llvm(module.clone(), "m", "x86_64-unknown-linux-gnu")
         .expect("an unreserved __lisp_ name compiles on LLVM");
     twig_aot::compile_module_linux_x86_64_object(&module).expect("an unreserved __lisp_ name compiles natively");
+}
+
+/// Rename every function `from` in `module` to `to`, at its definition and at
+/// each direct `call` / closure reference: what a frontend without Twig's
+/// reserved prefixes would hand the pipeline.
+fn rename_function(module: &mut interpreter_ir::IIRModule, from: &str, to: &str) {
+    for f in &mut module.functions {
+        if f.name == from {
+            f.name = to.into();
+        }
+        for i in &mut f.instructions {
+            for src in &mut i.srcs {
+                match src {
+                    interpreter_ir::Operand::Var(v) | interpreter_ir::Operand::Str(v) if v == from => {
+                        *v = to.into();
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+}
+
+/// Security review of the LANG83 PR7f-2 stack: three ways a Twig program's
+/// own function could take the place of code the toolchain owns.
+///
+/// | repro | before the fix |
+/// |-------|----------------|
+/// | `(define (__twig_print_i64 n) 0) (begin (print 5) 0)` | native x86-64 linked `print`'s runtime call to the program's function: nothing printed |
+/// | `(define (__lambda_0 y) (+ y 50)) …` | the lifted lambda was a second `__lambda_0`; the closure called the program's (native exit 120) |
+/// | a program `__dyn_list_length` / `__dyn_call_closure` (IIR from any frontend) | `length` / every closure call silently called it |
+///
+/// Twig refuses all three spellings in source. Below that, the pipelines
+/// refuse the renamed IIR themselves: the native linker step refuses a
+/// function named like a runtime symbol or defined twice, and the list and
+/// closure passes refuse a function that carries their helper's name without
+/// being their helper (on LLVM and native alike, since both run them).
+#[test]
+fn program_names_cannot_shadow_runtime_symbols_or_compiler_functions() {
+    const LAMBDA_REPRO: &str =
+        "(define (__lambda_0 y) (+ y 50)) (define (g f) (+ 0 (f 5))) (+ (__lambda_0 1) (g (lambda (y) (+ y 1))))";
+    // 1. The source spellings are reserved.
+    for (src, prefix) in [
+        ("(define (__twig_print_i64 n) 0) (begin (print 5) 0)", "__twig_"),
+        (LAMBDA_REPRO, "__lambda_"),
+        ("(define (__dyn_call_closure c a) 0) ((lambda (x) x) 1)", "__dyn_"),
+    ] {
+        let err = lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect_err(src);
+        let msg = format!("{err:?}");
+        assert!(msg.contains("is reserved") && msg.contains(prefix), "{src}: {msg}");
+    }
+
+    // 2. The same shapes under innocent names behave. (A program function next
+    // to a lambda that the closure must reach; `print` beside a program
+    // function. LLVM has no Twig `print` — it refuses `io_out` — so that row
+    // is native only. The rows avoid arithmetic over a call's result, which
+    // the tagged-word columns get wrong for an unrelated, pre-existing
+    // boxing reason: `(define (h y) (+ y 1)) (h 1)` exits 9 there.)
+    let mut ran = Vec::new();
+    for (src, expect, backends) in [
+        (
+            "(define (h y) y) (define (g f) (f 5)) (begin (h 1) (g (lambda (y) (+ y 1))))",
+            Expect::Exit(6),
+            &[Llvm, NativeAot][..],
+        ),
+        ("(define (my_print n) 0) (begin (print 5) 0)", Expect::Stdout("5"), &[NativeAot][..]),
+    ] {
+        let p = Prog { lang: Language::Twig, ext: "twig", src, expect, backends, release: None, case: None };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        assert!(ran.contains(&NativeAot), "the native column must run on an x86-64 Linux host");
+    }
+
+    // 3. Renamed in the IIR, below the source check.
+    let iir = |src: &str| lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect(src);
+    let native_refuses = |module: &interpreter_ir::IIRModule, want: &str| {
+        let err = twig_aot::compile_module_linux_x86_64_object(module).expect_err(want);
+        assert!(err.to_string().contains(want), "native: {err} lacks {want:?}");
+    };
+    let llvm_refuses = |module: &interpreter_ir::IIRModule, want: &str| {
+        let err = lang_aot::compile_iir_to_llvm(module.clone(), "m", "x86_64-unknown-linux-gnu").expect_err(want);
+        assert!(err.to_string().contains(want), "LLVM: {err} lacks {want:?}");
+    };
+
+    // (i) a runtime symbol: refused by the native link step.
+    let mut m = iir("(define (my_print n) 0) (begin (print 5) (my_print 1))");
+    rename_function(&mut m, "my_print", "__twig_print_i64");
+    native_refuses(&m, "reserved for the compiler");
+
+    // The LLVM column links the same C runtime and collector, and runs the
+    // same check (twig-aot's, shared) before any pass: a program
+    // `@__gc_alloc_kind` would replace the collector's allocator for every
+    // caller in the runtime, and any `__dyn_*` name but a pass helper's is
+    // the runtime's.
+    for runtime_name in ["__twig_print_i64", "__gc_alloc_kind", "__gc_register_kind", "__dyn_pair_first", "__dyn_not_yet_defined"] {
+        let mut m = iir("(define (my_print n) 0) (begin (print 5) (my_print 1))");
+        rename_function(&mut m, "my_print", runtime_name);
+        native_refuses(&m, "reserved for the compiler");
+        llvm_refuses(&m, "reserved for the compiler");
+    }
+
+    // (ii) a second function named like the lifted lambda: refused on both
+    // columns as a duplicate (the native link step's offset table would keep
+    // only one; LLVM would emit two definitions).
+    let mut m = iir("(define (h y) y) (define (g f) (f 5)) (begin (h 1) (g (lambda (y) (+ y 1))))");
+    rename_function(&mut m, "h", "__lambda_0");
+    native_refuses(&m, "more than one function named \"__lambda_0\"");
+    llvm_refuses(&m, "more than one function named \"__lambda_0\"");
+
+    // (iii) a pass helper's name, refused by the pass on both columns.
+    let mut m = iir("(define (len2 l) 99) (+ (len2 0) (length (list 1 2)))");
+    rename_function(&mut m, "len2", "__dyn_list_length");
+    native_refuses(&m, "lower_list_ops");
+    llvm_refuses(&m, "lower_list_ops");
+    let mut m = iir("(define (disp c a) 0) (+ (disp 0 0) ((lambda (x) x) 1))");
+    rename_function(&mut m, "disp", "__dyn_call_closure");
+    native_refuses(&m, "lower_closures_to_heap");
+    llvm_refuses(&m, "lower_closures_to_heap");
+}
+
+/// Security review, third round: a Twig parameter or `let` name is an IIR
+/// register, in the same function as the compiler's own temporaries. Those
+/// were `_n1`, `_n2`, … and labels `_else1`, … — all spellable:
+///
+/// | program                                        | old IIR                                        | old result |
+/// |------------------------------------------------|------------------------------------------------|------------|
+/// | `(let ((_n2 40)) (+ _n2 2))`                   | `const _n2 = 2` over the binding, `add _n2, _n2` | 4        |
+/// | `(define (f _n1) (+ _n1 2)) (f 40)`            | `const _n1 = 2` over the parameter             | 4          |
+/// | `(define (g _else1) (if (= _else1 5) 42 0)) (g 5)` | a parameter and a label both `_else1`: one `%` namespace in LLVM | clang: "'%_else1' is not a basic block" |
+///
+/// The temporaries are `__t{n}_{what}` and the labels `__l{n}_{what}` now,
+/// and Twig refuses every `__` name, so a program's names are its own on
+/// every column.
+#[test]
+fn twig_names_shaped_like_compiler_temporaries_keep_their_values() {
+    let mut ran = Vec::new();
+    for (src, want, backends) in [
+        ("(let ((_n2 40)) (+ _n2 2))", 42, &[Vm, Jit, Llvm, NativeAot, Wasm, Jvm][..]),
+        // A call's arithmetic result: not on the tagged-word columns, which
+        // mis-box a call result for an unrelated, pre-existing reason (see
+        // `program_names_cannot_shadow_runtime_symbols_or_compiler_functions`).
+        ("(define (f _n1) (+ _n1 2)) (f 40)", 42, &[Vm, Jit, Wasm, Jvm][..]),
+        ("(define (g _else1) (if (= _else1 5) 42 0)) (g 5)", 42, &[Vm, Jit, Llvm, NativeAot, Wasm, Jvm][..]),
+    ] {
+        let p = Prog { lang: Language::Twig, ext: "twig", src, expect: Expect::Exit(want), backends, release: None, case: None };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    assert!(ran.contains(&Vm), "the VM always runs");
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+
+    // And the generated shapes themselves are refused at the source.
+    for src in ["(let ((__t1_n 40)) __t1_n)", "(let ((__aot_str0_len 9)) 0)", "((lambda (__clo_argnil1) 0) 1)"] {
+        let err = lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect_err(src);
+        assert!(format!("{err:?}").contains("is reserved"), "{src}: {err:?}");
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -17181,6 +17487,81 @@ fn algol_reduced_wide_integer_intermediates_run_on_every_available_standard_back
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but reduced wide-integer intermediates did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_reduced_wide_integer_sums_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "9007199254740992 * sign(pick()) + 9007199254740992) mod 5",
+                )
+        })
+        .expect("the reduced wide-integer-sum ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but reduced wide-integer sums did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_exact_wide_static_integer_terms_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("9007199254740993 * sign(pick())) mod 5")
+        })
+        .expect("the exact wide-static-integer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but exact wide static integer terms did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_exact_wide_static_integer_normalizers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("abs(-9007199254740993) * sign(pick())) mod 5")
+        })
+        .expect("the exact wide-static-normalizer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but exact wide static integer normalizers did not complete"
             );
             continue;
         };

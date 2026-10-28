@@ -233,6 +233,7 @@ validated at generation time. Every frontend MUST enforce a
 | Compiler traversal depth | ≤ parser depth cap; iterative where unbounded by the grammar | IIR compiler |
 | Flat operator spine | 512 | before any allocation that folds a repetition (lesson: *check flat operator spines…*) |
 | IIR instructions | 1,000,000 | IIR compiler |
+| Registers per lowered function | the target VM's frame limit: vm-core's `VMFrame::MAX_FRAME_REGISTERS` (65,536), referenced, not restated; counted as the VM counts them (parameters + distinct non-parameter `dest`s) | IIR compiler, as it emits (Python and Ruby release paths since #18419) |
 | Lexer group/pair stack (E2) | 256 frames | lexer |
 | Captured slot length (E4) | 256 bytes | lexer |
 | Pending deferred bodies (E5) | 64 per line, 4,096 total | lexer |
@@ -240,7 +241,22 @@ validated at generation time. Every frontend MUST enforce a
 | Binding log (E7) | ≤ token count; scope depth ≤ parser depth cap | parser |
 
 A budget breach is a typed `Budget { which, limit }` error. It MUST NOT be a
-panic, an abort or a stack overflow. Every frontend MUST carry hostile-input
+panic, an abort or a stack overflow.
+
+The register budget exists because the source and token budgets do not bound
+it: Python's and Ruby's trusted budgets (1 MiB, 256 Ki tokens) admit a `main`
+of well over 65,536 registers, which used to compile and then fail at VM load
+(#18419). A frontend whose other budgets can reach the target VM's frame limit
+MUST refuse such a function itself (the JavaScript pilot's fixed 16,384-node
+budget keeps it at about 36,900 registers, measured with
+`console.log(x,x,x);` repeated, and Perl's 16,384-item budget at most one
+register per item), and its
+`Budget` names the function and the 1-based start of the statement
+that went over. Registers the compiler emits after the last statement (the
+`ret 0` epilogue) are reserved while statements are lowered, so the refusal
+always points at source, and the check is exact: a function of exactly the
+limit compiles and runs. The finished module is then put through the VM's own
+load-time check (`VMFrame::check_register_limit`) as a backstop. Every frontend MUST carry hostile-input
 probes run in a child process, so that an abort is distinguishable from an
 error. The probes cover deep nesting, long flat operator chains, unterminated
 constructs, and every new lexer extension's stack or queue.

@@ -6,6 +6,42 @@
 - `tests/cst_contract.rs`'s exhaustive `referenced_tokens` match covers the
   new `GrammarElement::AutoInsert`, whose inserted token and closers are
   token names.
+## Unreleased - `main` is sized to vm-core's frame limit (#18419)
+
+### Fixed
+
+- **A program whose `main` needs more registers than a vm-core frame holds
+  is refused by the compiler.** vm-core refuses such a function at load time
+  (`VMError::RegisterLimitExceeded`, more than 65,536 registers). The
+  default budgets cannot reach that, but the trusted ones (1 MiB, 256 Ki
+  tokens, as PR7c-py, #18391, allows) can: 257 lines of
+  `print(1+…+1)` with 128 ones and one `print(1)` compiled, then failed at
+  VM load. It is now `FrontendError::Budget { which: "registers per
+  function", limit: 65536, function: Some("main"), start: Some((258, 1)) }`.
+- The walker counts `main`'s registers as vm-core does (parameters, none for
+  `main`, plus distinct `dest`s) as it emits them, and reserves the one its
+  closing `return 0` needs, so the refusal names the statement that left no
+  room, not the epilogue. The check is exact: 65,536 registers compile and
+  run on vm-core, 65,537 do not.
+- `finish` then puts every function of the module (the float helpers too)
+  through vm-core's own `VMFrame::check_register_limit`, so a module the
+  compiler returns is one vm-core will load.
+
+### Added
+
+- `MAX_REGISTERS_PER_FUNCTION`, re-exported from vm-core's
+  `VMFrame::MAX_FRAME_REGISTERS` rather than restated.
+- `FrontendError::Budget` gains `function: Option<String>` and
+  `start: Option<(usize, usize)>`, set for the register budget and `None`
+  for every other budget. `Display` appends `` in function `main` at 258:1 ``
+  when they are present; the other budgets read as before. A caller that
+  builds a `Budget` must set both (no caller outside this crate does).
+- `tests/register_limit.rs`: the boundary on the VM column (65,536 compile
+  and run, 65,537 refused with the position, a statement mid-line), and every
+  function of a float module fits a frame. The trusted-budget step test in
+  `release_api` now also requires one more float line than fits to be
+  refused, and no longer says the VM drops the 65,537th register (it has
+  refused it since #18402).
 
 ## Unreleased - the crate owns its `repr` oracle (LANG83 PR7e)
 

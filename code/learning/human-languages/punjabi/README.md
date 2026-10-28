@@ -43,6 +43,12 @@ attempt and do not count as either full mock or human validation.
 
 ## Progress
 
+- **Chapter 208 — I Had to Go**
+  ([`lessons/PA-C208-*`](./lessons/)): a voice-first return to familiar
+  **ਮੈਨੂੰ** and **ਜਾਣਾ**, followed by auxiliary base **ਪੈਣਾ**, exact masculine
+  singular perfective **ਪਿਆ**, delayed retrieval, and the one bounded frame
+  **ਮੈਨੂੰ ਜਾਣਾ ਪਿਆ**. This is one A2 mock-draft prerequisite, not mock
+  readiness, attainment, or a broader obligation paradigm. In the book.
 - **Chapter 1 — Greetings and the first written answer**
   ([`lessons/PA-C01-*`](./lessons/), [`lessons/PA-W01-*`](./lessons/)):
   sat srī akāl, namaste, sound-first hā̃/nahī̃, one Gurmukhi sign per short

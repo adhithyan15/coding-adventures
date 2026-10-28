@@ -20,11 +20,11 @@ use std::sync::{Arc, Mutex};
 use coding_adventures_python_parser::{parse_python_at, resolve_release, FrontendBudgets};
 use interpreter_ir::{IIRFunction, IIRModule, Operand};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
-use vm_core::{errors::VMError, value::Value, VMCore};
+use vm_core::{errors::VMError, frame::VMFrame, value::Value, VMCore};
 
 use crate::float_repr::{self, MAX_STEPS_PER_FLOAT_PRINT};
 use crate::frontend_error::FrontendError;
-use crate::int_lower::{shown_rule, Lowering, MAX_IIR_INSTRUCTIONS};
+use crate::int_lower::{shown_rule, Lowering, MAX_IIR_INSTRUCTIONS, MAX_REGISTERS_PER_FUNCTION};
 use crate::profiles::{profile_for, ReleaseProfile};
 
 /// The integer subset every Python 3 release lowers, the default release
@@ -155,6 +155,8 @@ fn check_module_name(release: &str, module_name: &str) -> Result<(), FrontendErr
             release: release.to_string(),
             which: "module name bytes",
             limit: MAX_AST_FIELD_BYTES,
+            function: None,
+            start: None,
         });
     }
     Ok(())
@@ -200,7 +202,38 @@ fn finish(
             message: format!("the lowered module is not valid IIR: {}", errors.join("; ")),
         });
     }
+    check_frames(release, &module)?;
     Ok(module)
+}
+
+/// Put every function of the finished module through vm-core's own
+/// load-time check, `VMFrame::check_register_limit` (#18419).
+///
+/// The walker already refused a `main` that does not fit, at the statement
+/// that went over (`int_lower`'s module docs, "Registers"); this is the
+/// backstop that makes "compiles" imply "vm-core will load it" by
+/// construction rather than by two counts agreeing. It also covers the
+/// float helpers, which have parameters and are written by
+/// `float_repr`, not counted by the walker. vm-core's check is linear, and
+/// allocation-free for a function well below the limit, which every
+/// helper is.
+///
+/// Unreachable for any tree the walker accepted; a refusal still names the
+/// function, as a `Budget` with no position (the code is the compiler's).
+fn check_frames(release: &str, module: &IIRModule) -> Result<(), FrontendError> {
+    for function in &module.functions {
+        if let Err(error) = VMFrame::check_register_limit(function) {
+            debug_assert!(matches!(error, VMError::RegisterLimitExceeded { .. }), "{error:?}");
+            return Err(FrontendError::Budget {
+                release: release.to_string(),
+                which: "registers per function",
+                limit: MAX_REGISTERS_PER_FUNCTION,
+                function: Some(function.name.clone()),
+                start: None,
+            });
+        }
+    }
+    Ok(())
 }
 
 /// Walk a caller-supplied tree once, iteratively, and refuse it if it is too
@@ -212,6 +245,8 @@ fn check_ast_budget(release: &str, root: &GrammarASTNode) -> Result<(), Frontend
         release: release.to_string(),
         which,
         limit,
+        function: None,
+        start: None,
     };
     let mut pending = vec![(root, 1_usize)];
     let mut visited = 1_usize;
@@ -577,10 +612,12 @@ mod tests {
 
         // The trusted maximum a caller may ask for: 1 MiB of source and
         // 256 Ki tokens, run through `run_module`. Here the binding limit is
-        // vm-core's frame, which holds at most 65,536 registers (more
-        // are dropped, and the program fails on an "undefined variable"
-        // whatever its prints); each such line uses three, as it did before
-        // PR7c-py, because every print's unused result shares `py_repr`.
+        // vm-core's frame, which holds at most 65,536 registers
+        // (`MAX_REGISTERS_PER_FUNCTION`); each such line uses three, as it
+        // did before PR7c-py, because every print's unused result shares
+        // `py_repr`. `main` also holds `py_repr` and its exit register, so
+        // `count` lines need 3 × count + 2 ≤ 65,536, and one line more is
+        // refused by the compiler (#18419), not by the VM at load time.
         let trusted = FrontendBudgets {
             max_source_bytes: MAX_TRUSTED_SOURCE_BYTES,
             max_tokens: MAX_TRUSTED_TOKENS,
@@ -592,9 +629,16 @@ mod tests {
         };
         let per_line = registers(&compile(&lines(2))) - registers(&compile(&lines(1)));
         assert_eq!(per_line, 3);
-        let count = (vm_core::frame::VMFrame::MAX_FRAME_REGISTERS - 2) / per_line;
+        let count = (MAX_REGISTERS_PER_FUNCTION - 2) / per_line;
         let module = compile_source_at(&lines(count), None, "t", &trusted).unwrap();
-        assert!(registers(&module) <= vm_core::frame::VMFrame::MAX_FRAME_REGISTERS);
+        assert_eq!(registers(&module), per_line * count + 2);
+        assert!(registers(&module) <= MAX_REGISTERS_PER_FUNCTION);
+        let over = compile_source_at(&lines(count + 1), None, "t", &trusted).unwrap_err();
+        assert!(
+            matches!(&over, FrontendError::Budget { which: "registers per function", function: Some(f), start: Some((line, 1)), .. }
+                if f == "main" && *line == count + 1),
+            "{over:?}"
+        );
         assert!(step_budget(&module) < MAX_VM_STEPS);
         let ran = run_module(module).unwrap_or_else(|e| panic!("{count} lines: {e}"));
         assert_eq!(ran.stdout.lines().count(), count);

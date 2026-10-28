@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:6b4d51f3d6d212e6",
+  "lessonIds": [
+    "PA-C207-hona-return",
+    "PA-C207-hundaa",
+    "PA-C207-hundaa-review",
+    "PA-C207-daily-frame",
+    "PA-C207-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch207-this-happens-every-day.tex"
+}

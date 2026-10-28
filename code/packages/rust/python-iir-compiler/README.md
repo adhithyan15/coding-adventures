@@ -55,6 +55,25 @@ Everything else is a typed `FrontendError` (`Lex`, `Parse`, `Unsupported`,
 a 1-based position. Refused examples: `/` (true division gives a float),
 names, another callee, two arguments, and a literal outside `i64`.
 
+`main` must also fit one vm-core frame: at most
+`MAX_REGISTERS_PER_FUNCTION` registers, which is vm-core's
+`VMFrame::MAX_FRAME_REGISTERS` (65,536) re-exported, counted as vm-core counts
+them (parameters plus distinct `dest`s). The default budgets cannot reach it;
+the trusted ones (1 MiB, 256 Ki tokens) can. A program over it is refused
+when it is compiled, not when the VM loads it, as a `Budget` that names `main`
+and the statement that went over:
+
+```text
+Python 3.13.16: registers per function exceeds the limit of 65536 in function `main` at 258:1
+```
+
+The compiler reserves the register of `main`'s closing `return 0` while it
+lowers the statements, so the error points at a statement in the source, not
+at the epilogue. Then every function of the module, the float helpers
+included, goes through vm-core's own `VMFrame::check_register_limit` as a
+backstop (`tests/register_limit.rs` tests both sides of the boundary on the
+VM).
+
 Python 3 releases: 3.0a1 (profile `py30`), and 3.5.10, 3.6.0, 3.11.17,
 3.12.3, 3.13.16 and 3.16.0a1 (profile `py3`), which also compile
 `py-float-print` (LANG84 phase 7c slice 3, below). Python 2 releases (LANG84 phase 7c):
@@ -76,6 +95,7 @@ readers of the inventory and corpus that the release tests share live in
 | `tests/release_lowering.rs` | which op each construct becomes, the `-1` fold, `main: i64`, located refusals, forged trees |
 | `tests/cst_contract.rs` | LANG84 C8: every dispatched rule and token exists in each release |
 | `tests/hostile_release.rs` | LANG84 C5 hostile probes, in a child process |
+| `tests/register_limit.rs` | #18419: `main` at exactly 65,536 registers (vm-core's frame limit) compiles and runs on vm-core under the trusted budgets; one more is a `Budget` error naming `main` and the statement |
 | `tests/iir_path.rs` | the release path never touches a legacy grammar or compares release IDs |
 
 ### Floats: `py-float-print` (LANG84 phase 7c slice 3)

@@ -9,6 +9,7 @@ resolver = "2"
 exclude = ["os-kernel"]
 members = [
     "avr-classic-simulator",
+    "superh2-simulator",
     "cortex-m4-gatelevel",
     "v8-test262",
     "browser-bookmarks",
@@ -57,6 +58,7 @@ members = [
     "cortex-m7-simulator",
     "cdp1802-simulator",
     "cdp1802-gatelevel",
+    "latticemico32-simulator",
     "armv7a-gatelevel",
     "armv7a-simulator",
     "armv7-gatelevel",
@@ -75,6 +77,7 @@ members = [
     "xls-writer",
     "doc-writer",
     "ppt-writer",
+    "pdp10-simulator",
     "binary-search-tree",
     "avl-tree",
     "red-black-tree",
