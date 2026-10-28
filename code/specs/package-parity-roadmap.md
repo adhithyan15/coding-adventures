@@ -19163,6 +19163,38 @@ the Haskell package trees and metadata repair are unchanged. Re-run the focused
 registry and Windows-front checks, then independently review the exact merge
 head before push.
 
+## October 28, 2026: Swift Bloom filter parallel selection
+
+After Haskell ITF Windows-front PR #18527 merged and while the isolated Swift
+HyperLogLog PR #18531 runs fresh CI, fresh prioritization selects
+`swift-bloom-filter-lane-parity` for local-only parallel implementation. Its
+sole DT17 hash-functions prerequisite is merged, it adds one bounded missing
+non-Rust package, and its package root does not overlap HyperLogLog. It ranks
+ahead of the Swift store-engine chain because that chain still depends on the
+active HyperLogLog publication.
+
+Keep scope to DT22 size and hash-count calculation, deterministic double
+hashing, bounded bit addressing and allocation, membership and false-positive
+fixtures, stable validation errors, persistent value semantics, native build
+fronts, documentation, and empty capabilities. Keep this branch local until
+the active lifecycle state is reconciled from main and exact-head review
+passes.
+
+The bounded implementation is now committed at
+`dc7ac4b6db0b3eea11de45b34d7c26ab549b5e93`. Five native tests and the release
+build pass; strict Swift Format lint passes; production coverage is 95.22% of
+lines, 96.55% of functions, and 92.11% of regions. The real Go build tool's
+bounded sparse inventory selects the new package together with its DT17
+hash-functions prerequisite and records the intended dependency edge. Keep the
+branch local while exact-head review and active-main reconciliation complete.
+
+Independent review of exact head
+`233185c373fda90720db60c17c5ba188ec3edf6c` passes with no remaining code,
+security, test, authority, or local publication finding. Review required the
+closed capability schema and a stable capacity-overflow boundary; both fixes
+and their regressions pass. Keep the approved branch local pending PR #18531
+and current-main lifecycle reconciliation.
+
 ## October 28, 2026: Swift HyperLogLog local selection
 
 While Haskell ITF Windows-front PR #18527 runs replacement CI, fresh backlog
@@ -19223,3 +19255,33 @@ is intentionally absent from fresh-clone ancestry after PR #18527's squash
 merge. Repoint the unchanged package tree and its lifecycle implementation
 receipt to reachable exact merge revision
 `3fd9485da978aa6276aba825336f0962897fd456`; require a fresh exact-head matrix.
+
+The repaired exact head `1246545183a7d34bc6c1e3b43f83cb49df058890`
+completed every hosted check acceptably after one no-step infrastructure
+cancellation of Swift CodeQL reran successfully. Guarded squash auto-merge
+landed it as `ae197369af5c6bfe8ab2768465f67e0119baac97` at
+`2026-10-28T18:58:48Z`; verify that receipt and remove the clean completed
+worktree and local branch. Preserve the independently reviewed Bloom filter
+preparation through a normal merge of that exact current main, then re-run its
+bounded validation before publication.
+
+Exact merge head `3ba0e748758cccf1e9a53ccf503f2fdc967e430e`
+preserves both histories. All five Bloom filter tests, the release build,
+strict formatting, closed capability schema, JSON and diff checks, and the
+bounded build-tool dependency plan pass again; generated SwiftPM artifacts are
+removed and no open PR overlaps the package root. Require final exact-head
+review before publication.
+
+Independent exact-head review approved merge head
+`3ba0e748758cccf1e9a53ccf503f2fdc967e430e` with no findings. The Bloom
+implementation and root changelog remain byte-identical to the approved
+implementation receipt, both histories and the merged HyperLogLog receipt are
+intact, lifecycle and graph invariants pass, and the validated worktree is
+artifact-free. Seal this review receipt before publishing the draft PR.
+
+Publish independently reviewed receipt
+`f8b5143724247eea549e60d27446f96f7887bf6d` as draft PR #18533 over exact
+main `ae197369af5c6bfe8ab2768465f67e0119baac97`. Keep it draft only while
+this durable PR-number lifecycle receipt is committed and independently
+reviewed. Then push the receipt, mark the PR ready, and require a completely
+fresh exact-head hosted matrix before guarded auto-merge.

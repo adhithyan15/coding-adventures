@@ -16,15 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18531,
+  "active_pr": 18533,
   "active_prs": [
-    18531
+    18533
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T16:58:51Z",
-    "pr_number": 18531,
-    "head_revision": "d34b45f4d89a8b4777e64328ce5a1cf1fad6f75d",
-    "action": "Exact PR #18531 head d34b45f4d89a8b4777e64328ce5a1cf1fad6f75d passes Linux and macOS package builds but fails the repository metadata gate because Haskell barcode-layout-1d still records pre-squash implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9, which is not an ancestor of the fresh clone after PR #18527 squash-merged. Repoint unchanged package-tree evidence and its lifecycle owner to reachable exact merge revision 3fd9485da978aa6276aba825336f0962897fd456, then require a fresh exact-head matrix.",
+    "observed_at": "2026-10-28T19:04:15Z",
+    "pr_number": 18533,
+    "head_revision": "f8b5143724247eea549e60d27446f96f7887bf6d",
+    "action": "Published independently reviewed Swift Bloom filter receipt f8b5143724247eea549e60d27446f96f7887bf6d as draft PR #18533 over exact current main ae197369af5c6bfe8ab2768465f67e0119baac97. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15233,7 +15233,7 @@
     {
       "id": "swift-hyperloglog-lane-parity",
       "title": "Implement DT21 HyperLogLog in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
@@ -15241,8 +15241,12 @@
       "pr_number": 18531,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18531",
       "pr_opened_at": "2026-10-28T16:42:35Z",
-      "publication_head": "60198587d0363966d3ed0ab16d278efa5a3beffc",
-      "publication_notes": "Draft PR #18531 is open from independently reviewed exact current-main candidate 60198587d0363966d3ed0ab16d278efa5a3beffc. Keep it draft only while this durable lifecycle receipt is committed and reviewed; after the reviewed receipt is published, mark ready and require a completely fresh hosted matrix before guarded auto-merge.",
+      "publication_head": "1246545183a7d34bc6c1e3b43f83cb49df058890",
+      "publication_notes": "PR #18531 completed every exact-head hosted check acceptably after repairing the post-squash Haskell barcode evidence and rerunning one infrastructure-cancelled Swift CodeQL job. It merged through guarded squash auto-merge from independently reviewed head 1246545183a7d34bc6c1e3b43f83cb49df058890.",
+      "merged_head_revision": "1246545183a7d34bc6c1e3b43f83cb49df058890",
+      "merged_at": "2026-10-28T18:58:48Z",
+      "merge_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures after the cancelled no-step Swift analysis reran successfully. GitHub reported the reviewed head cleanly mergeable, guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "selected_at": "2026-10-28T16:25:00Z",
       "selection_revision": "d70b1afc3de8ae83b641d8ca8fe9565d901798f6",
       "base_revision": "d70b1afc3de8ae83b641d8ca8fe9565d901798f6",
@@ -15265,12 +15269,29 @@
     {
       "id": "swift-bloom-filter-lane-parity",
       "title": "Implement DT22 Bloom filter in Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/swift-bloom-filter-lane-parity",
+      "pr_number": 18533,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18533",
+      "opened_at": "2026-10-28T19:04:15Z",
+      "publication_head": "f8b5143724247eea549e60d27446f96f7887bf6d",
+      "publication_notes": "Draft PR #18533 opened from independently reviewed exact receipt head f8b5143724247eea549e60d27446f96f7887bf6d over exact main ae197369af5c6bfe8ab2768465f67e0119baac97. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for that new exact head, and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
+      "selected_at": "2026-10-28T16:44:23Z",
+      "selection_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "base_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "reconciled_main_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
+      "reconciliation_notes": "Preserved the complete independently reviewed Swift Bloom filter preparation through a normal merge of exact current main after Swift HyperLogLog PR #18531 merged. Main supplies the terminal HyperLogLog lifecycle and barcode-evidence repair plus unrelated Algol exact-wide normalization work; this branch retains the isolated DT22 package, validation/review evidence, and root changelog shard.",
+      "selection_notes": "Fresh prioritization after Haskell ITF Windows-front PR #18527 merged and while the isolated Swift HyperLogLog PR #18531 runs fresh CI selects the dependency-ready Swift DT22 Bloom filter for local-only parallel implementation. Its sole DT17 hash-functions prerequisite is merged, it adds one bounded missing non-Rust package, and it has no package-path overlap with HyperLogLog. It ranks ahead of the Swift store-engine chain because that chain still depends on the active HyperLogLog publication. Keep this branch local until the active lifecycle state is reconciled from main and exact-head review passes.",
+      "implementation_revision": "dc7ac4b6db0b3eea11de45b34d7c26ab549b5e93",
+      "validation_notes": "The package-native suite passes five focused tests covering defaults and explicit parameters, persistent updates, exact UTF-8/byte identity, duplicates, zero false negatives across 10,000 inserted values, a bounded deterministic false-positive fixture, sizing and capacity helpers, over-capacity status, stable errors including NaN and capacity overflow, and finite allocation/hash-work limits; the production release build passes. Swift Format 6.3 strict lint and diff checks pass. LLVM coverage reports 95.22% lines, 96.55% functions, and 92.11% regions for the 209-line production source. The real Go build tool discovers the bounded sparse Swift inventory, selects exactly bloom-filter and prerequisite hash-functions, and records the intended dependency edge. The capability manifest validates against the repository schema and the root changelog contract passes locally. Exact-head independent review, active-main lifecycle reconciliation, and fresh hosted macOS, Linux, and Windows checks remain mandatory before merge.",
+      "security_review_revision": "233185c373fda90720db60c17c5ba188ec3edf6c",
+      "security_review_notes": "Independent exact-head review found no remaining code, security, test, authority, or local publication defect after requiring the capability manifest to adopt the closed repository schema and the capacity helper to reject out-of-Int results with a stable error. Review confirms persistent exact identity, deterministic bounded double hashing, allocation limits, zero-false-negative and false-positive fixtures, reflexive errors, native build fronts, validation receipts, and artifact-free hygiene. Active PR #18531/current-main lifecycle reconciliation and hosted qualification remain deferred publication gates.",
+      "current_main_validation_notes": "After normally merging exact current main ae197369af5c6bfe8ab2768465f67e0119baac97, strict Swift Format, all five package tests, the release build, closed capability schema, JSON and diff checks pass. The real Go build tool again selects exactly swift/bloom-filter plus prerequisite swift/hash-functions in the bounded sparse inventory. Swift package reset removes the generated .build tree, no open PR overlaps Bloom filter, and the approved package/root changelog delta remains unchanged from reviewed implementation dc7ac4b6db0b3eea11de45b34d7c26ab549b5e93.",
+      "final_review_revision": "3ba0e748758cccf1e9a53ccf503f2fdc967e430e",
+      "final_review_notes": "Independent exact current-main merge review approved head 3ba0e748758cccf1e9a53ccf503f2fdc967e430e with no findings. The reviewed Bloom implementation and root changelog remain byte-identical to approved head 233185c373fda90720db60c17c5ba188ec3edf6c, both merge histories are preserved, PR #18531's merge receipt matches GitHub, lifecycle and graph invariants pass, and tests, release build, strict formatting, authority validation, and artifact-free hygiene all pass.",
       "notes": "Preserve size and hash-count calculation, bit addressing, membership behavior, false-positive fixture bounds, stable validation errors, and deterministic hashing.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-bloom-filter-lane-parity"
