@@ -16,15 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18535,
+  "active_pr": 18537,
   "active_prs": [
-    18535
+    18537
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T19:59:38Z",
-    "pr_number": 18535,
-    "head_revision": "a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d",
-    "action": "Published independently reviewed Swift skip-list receipt a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d as draft PR #18535 over exact current main c85baee9a4b57105b7d1c57f71f8536b5379b164. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
+    "observed_at": "2026-10-28T20:52:00Z",
+    "pr_number": 18537,
+    "head_revision": "375212df3a2b40234660f6c8892fcd2f8981fade",
+    "action": "Published independently reviewed Dart and Swift binary-tree head 375212df3a2b40234660f6c8892fcd2f8981fade as draft PR #18537 over exact current main 729e0b761e339bcc8d5863550da644e5b3ccec24. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15106,16 +15106,41 @@
     {
       "id": "binary-tree-dart-swift-lane-parity",
       "title": "Complete DT03 binary-tree parity in Dart and Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/binary-tree-dart-swift-lane-parity",
+      "pr_number": 18537,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18537",
+      "opened_at": "2026-10-28T20:49:37Z",
+      "publication_head": "375212df3a2b40234660f6c8892fcd2f8981fade",
+      "publication_notes": "Draft PR #18537 opened from independently reviewed exact current-main head 375212df3a2b40234660f6c8892fcd2f8981fade. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for the new exact head and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
       "notes": "Implement the existing DT03 node, traversal, shape-predicate, height and depth, array conversion, boundary and error, ownership, and empty-capability contract with package-native tests. These are the exact two canonical gaps; DT03 already provides the governing neutral contract.",
+      "selected_at": "2026-10-28T20:37:00Z",
+      "selected_revision": "c85baee9a4b57105b7d1c57f71f8536b5379b164",
+      "selection_notes": "Selected after the independently reviewed post-Bloom reprioritization while Swift skip-list PR #18535 runs exact-head CI. This bounded Dart+Swift tranche has three direct and seven total unfinished descendants, exceeding Swift data-store IR (3/5), Swift RESP (2/4), and Swift radix tree (2/4). Implement immutable identity nodes, tagged missing-versus-null slots, iterative traversals and shape queries, canonical sparse arrays, orphan/shared/cycle rejection, checked indexing, the 1,048,575-slot ceiling, stable errors, shallow payload ownership, empty height -1, native package validation, and empty capabilities. No implementation paths overlap the open skip-list PR.",
+      "implementation_revision": "9b9f4246b6339d0c9f3288fdadfceefac91cbf51",
+      "current_main_validation_revision": "126e961f11466780ada6d6a39e39b6f12bdfc998",
+      "security_review_revision": "9b9f4246b6339d0c9f3288fdadfceefac91cbf51",
+      "security_review_notes": "Independent exact implementation-head review found no code, authority, resource-bound, identity, nullable-slot, failure-atomicity, ARC-depth, cross-platform build, coverage, secret, artifact, or dependency defect. It reproduced 11 Dart tests with 100% production-line coverage and 9 Swift tests with 98.13% lines, 96.26% regions, and 100% functions. Publication was blocked only because the pre-current-main state still described Bloom and skip-list lifecycles inconsistently; the normal merge of current main plus this terminal receipt resolves both owner records and roadmap receipts. Require a focused exact-head review of that lifecycle delta before publication.",
+      "validation_notes": "The Dart and Swift packages implement immutable identity-bearing nodes, tagged missing/value slots that preserve nullable payloads, iterative traversals and shape queries, canonical sparse positional arrays, stable orphan/shared/cycle/resource/foreign-node errors, checked 1,048,575-slot ceilings, failure-atomic admission, shallow payload ownership, native cross-platform build fronts, and empty capability profiles. Eleven Dart tests pass format, fatal-info analysis, and the native BUILD with 170/170 production lines covered (100%). Nine Swift Testing cases pass debug coverage and release builds plus strict Swift Format, with 98.13% production lines, 96.26% regions, and 100% functions covered. The real Go build tool detects exactly dart/binary-tree and swift/binary-tree in its bounded sparse dry plan; full orphan validation is intentionally deferred to hosted CI because sparse roots make the repository-wide exemption census incomplete. Normal merge head 126e961f11466780ada6d6a39e39b6f12bdfc998 incorporates exact current main 729e0b761e339bcc8d5863550da644e5b3ccec24 after skip-list PR #18535 merged. Exact-head security review and fresh hosted qualification remain publication gates.",
       "bounded_decomposition_preparation": "dart-bst-prerequisite-validation-preparation.md: current ready owner includes two lanes, no registered per-lane leaves. Optional binary-tree-dart-lane-parity / binary-tree-swift-lane-parity IDs have zero exact/canonical collisions but intentionally partition existing parent scope. Any later materialization must preserve parent completion across both lanes; reviewed Dart-specific BST edge can target exact Dart child without erasing other obligations. DT03 existing governing contract is not a committed behavior corpus. Add independent structural/traversal/array/empty/error/ownership fixtures within existing scope, normal pure native validation permitted. No selection/decomposition/new owner in this audit.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/binary-tree-dart-swift-lane-parity"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+    },
+    {
+      "id": "binary-tree-existing-lanes-dt03-contract-reconciliation",
+      "title": "Reconcile DT03 identity, sparse-array, and resource contracts across existing lanes",
+      "status": "pending",
+      "selection_blocked": false,
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "discovered_at": "2026-10-28T20:37:00Z",
+      "discovered_revision": "c85baee9a4b57105b7d1c57f71f8536b5379b164",
+      "notes": "Reconcile DT03 prose and established lanes around node identity versus payload equality, nullable payloads versus missing positions, sparse-array orphan rejection and canonical trailing gaps, supplied shared/cyclic graphs, checked index arithmetic, recursion safety, output ceilings, and empty-height semantics. Sampled established lanes silently discard orphan positions, use value equality for child lookup, permit unbounded recursive projections, or disagree on empty height. Ratify and remediate those lanes without blocking the separately truthful Dart and Swift delivery.",
+      "selection_notes": "Discovered during exact-main prioritization and contract audit for the selected Dart+Swift tranche. Keep pending until the two actual canonical package gaps are delivered; do not claim whole-family DT03 conformance from their completion."
     },
     {
       "id": "avl-tree-language-neutral-conformance",
@@ -16910,7 +16935,7 @@
     {
       "id": "swift-skip-list-lane-parity",
       "title": "Implement DT20 skip-list in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/swift-skip-list-lane-parity",
       "pr_number": 18535,
@@ -16918,6 +16943,10 @@
       "opened_at": "2026-10-28T19:59:38Z",
       "publication_head": "a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d",
       "publication_notes": "Draft PR #18535 opened from independently reviewed exact receipt head a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d over exact main c85baee9a4b57105b7d1c57f71f8536b5379b164. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for that new exact head, and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
+      "merged_head_revision": "9a02ab99d53e474410e3da7e3795a4739efab532",
+      "merged_at": "2026-10-28T20:46:16Z",
+      "merge_revision": "729e0b761e339bcc8d5863550da644e5b3ccec24",
+      "merge_notes": "Every exact-head check completed terminal acceptable, including Ubuntu, macOS, Windows, Swift CodeQL, metadata, and the aggregate CI gate. GitHub reported the reviewed head cleanly mergeable; guarded squash auto-merge completed and the clean worktree and local branch were removed.",
       "selection_blocked": false,
       "selected_at": "2026-10-28T19:06:53Z",
       "selection_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",

@@ -19367,3 +19367,44 @@ main `c85baee9a4b57105b7d1c57f71f8536b5379b164`. Keep it draft only while
 this durable PR-number lifecycle receipt is committed and independently
 reviewed. Then push the receipt, mark the PR ready, and require a completely
 fresh exact-head hosted matrix before guarded auto-merge.
+
+Every exact-head check for PR #18535 completed acceptably, including Ubuntu,
+macOS, Windows, Swift CodeQL, metadata, and the aggregate CI gate. GitHub
+reported reviewed head `9a02ab99d53e474410e3da7e3795a4739efab532`
+cleanly mergeable; guarded squash auto-merge landed
+`729e0b761e339bcc8d5863550da644e5b3ccec24` at
+`2026-10-28T20:46:16Z`. The clean completed worktree and local branch were
+removed.
+
+## October 28, 2026: Dart and Swift binary-tree selection
+
+Post-merge reprioritization selects `binary-tree-dart-swift-lane-parity`. Its
+three direct and seven total unfinished descendants exceed Swift data-store IR
+(3/5), Swift RESP (2/4), and Swift radix tree (2/4). The two package paths do
+not overlap the merged skip-list implementation. Register the distinct pending
+`binary-tree-existing-lanes-dt03-contract-reconciliation` owner for established
+identity/equality, nullable/missing, orphan, shared/cycle, recursion, resource,
+and empty-height drift without blocking the two real canonical gaps.
+
+Exact current-main merge head
+`126e961f11466780ada6d6a39e39b6f12bdfc998` contains the bounded Dart and Swift
+packages. Eleven Dart tests pass format and fatal-info analysis with 100%
+production-line coverage. Nine Swift tests pass debug coverage, release build,
+and strict formatting with 98.13% production lines, 96.26% regions, and 100%
+functions covered. Both lanes use immutable identity nodes, tagged nullable-safe
+slots, iterative algorithms, canonical sparse projections, stable errors,
+checked 1,048,575-slot limits, failure-atomic admission, shallow ownership,
+cross-platform build fronts, and empty capability profiles. A bounded real
+build-tool plan selects exactly `dart/binary-tree` and `swift/binary-tree`.
+Require exact-head security review and fresh hosted qualification before merge.
+
+Independent exact current-main review approves publication head
+`375212df3a2b40234660f6c8892fcd2f8981fade` with no findings. The Dart, Swift,
+and DT03 trees are byte-identical to the approved implementation; Bloom and
+skip-list lifecycle receipts match GitHub; the 1,555-owner graph is valid; the
+canonical root changelog shard, lessons, JSON, ancestry, merge-tree, diff, and
+artifact hygiene all pass. Publish that receipt as draft PR #18537 over exact
+main `729e0b761e339bcc8d5863550da644e5b3ccec24`. Keep it draft only while this
+durable PR-number receipt receives independent delta review, then mark it ready
+and require a completely fresh exact-head hosted matrix before guarded
+auto-merge.
