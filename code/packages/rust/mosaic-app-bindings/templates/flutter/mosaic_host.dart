@@ -428,6 +428,16 @@ final class _MosaicRuntime {
   Map<String, String>? _lastRefusedEnvironment;
   String? _persistenceWarning;
 
+  /// Set when a state file the runtime rejected could not be moved aside (see
+  /// [_quarantinePersistedState]), so it still sits at the live path. Every
+  /// save is skipped from then on, because the next one would write over it.
+  /// Sticky, unlike [_persistenceWarning], which a successful write clears:
+  /// here no write is attempted, so the warning saying why stays showing.
+  bool _persistenceDisabled = false;
+
+  /// How many names a rejected state file can be moved to.
+  static const int _maxQuarantinedStates = 10;
+
   /// The revision the state file was last saved at by an answer, so an answer
   /// at that same revision skips the write. Null until the first save: the
   /// first answer after launch always writes, so a fresh install has its
@@ -1001,23 +1011,99 @@ final class _MosaicRuntime {
     }
   }
 
+  /// Move a state file the runtime rejected out of the way, without ever
+  /// replacing an earlier one.
+  ///
+  /// A rejected file may be the user's only copy of their data, and so may the
+  /// file an earlier rejection moved aside: startup rejects the real state,
+  /// then a later rejection (the next launch, say) must not destroy it. Each
+  /// rejection takes the first free name ([_moveStateAside]), and nothing is
+  /// deleted first, so a move that fails halfway loses nothing either.
+  ///
+  /// If the move fails, or all ten names are taken, the rejected file is still
+  /// at the live path, and the next save would write over it. So saving is
+  /// switched off for the rest of this host, and the warning says so: an
+  /// unsaved session is recoverable, an overwritten file is not.
   String _quarantinePersistedState(String reason) {
     final path = _statePath();
     if (path == null) return reason;
-    final file = File(path);
-    final corrupt = File('$path.corrupt');
-    try {
-      if (corrupt.existsSync()) corrupt.deleteSync();
-      if (file.existsSync()) file.renameSync(corrupt.path);
-    } on Object catch (moveError) {
-      stderr.writeln('Could not quarantine invalid Mosaic state: $moveError');
+    var warning = '$reason ($path)';
+    if (File(path).existsSync()) {
+      final failure = _moveStateAside(path);
+      if (failure != null) {
+        _persistenceDisabled = true;
+        warning += '. $failure. This session will not be saved.';
+      }
     }
-    final warning = '$reason ($path)';
     stderr.writeln(warning);
     return warning;
   }
 
+  /// Move [path] to its first free quarantine name: null when it moved,
+  /// otherwise why it did not.
+  ///
+  /// | rejection | moved to                                                  |
+  /// |-----------|-----------------------------------------------------------|
+  /// | first     | `mosaic-state.v1.json.corrupt` (the name release gates compare) |
+  /// | second    | `mosaic-state.v1.json.corrupt.1`                          |
+  /// | ...       | ...                                                       |
+  /// | tenth     | `mosaic-state.v1.json.corrupt.9`                          |
+  ///
+  /// `dart:io` has no move that refuses an existing target: `renameSync`
+  /// REPLACES one, on POSIX (`rename(2)`) and on Windows alike, so checking a
+  /// name and then renaming onto it races with anything that appears in
+  /// between. Copying instead (`copySync`) also replaces its target. So the
+  /// name is claimed first, then the file is moved onto the claim:
+  ///
+  ///   1. skip a name if anything is there -- a file, a directory, or a link,
+  ///      even a dangling one (`followLinks: false`);
+  ///   2. `createSync(exclusive: true)` makes an empty file there, and fails if
+  ///      anything got there first (`O_CREAT | O_EXCL`, Windows `CREATE_NEW`).
+  ///      The name is now ours: no other quarantine can be at it. If it fails
+  ///      and the name is now taken, move on; that is decided by looking
+  ///      again, because the error cannot say so: onto a directory, POSIX
+  ///      reports "file exists" but Windows "access denied". Any other failure
+  ///      stops here;
+  ///   3. [_replaceAtomically] moves the rejected file onto that empty
+  ///      placeholder, the same atomic replace a save uses. It replaces only
+  ///      the placeholder, and the rejected bytes are never copied, so they
+  ///      cannot arrive truncated.
+  ///
+  /// If step 3 fails the rejected file has not moved; the placeholder, still
+  /// empty, is removed so it does not use up a name.
+  String? _moveStateAside(String path) {
+    bool taken(File candidate) =>
+        FileSystemEntity.typeSync(candidate.path, followLinks: false) !=
+        FileSystemEntityType.notFound;
+    for (var index = 0; index < _maxQuarantinedStates; index++) {
+      final candidate = File(index == 0 ? '$path.corrupt' : '$path.corrupt.$index');
+      if (taken(candidate)) continue;
+      try {
+        candidate.createSync(exclusive: true);
+      } on Object catch (error) {
+        if (taken(candidate)) continue;
+        return 'Could not move it aside to ${candidate.path}: $error';
+      }
+      try {
+        _replaceAtomically(File(path), candidate);
+        return null;
+      } on Object catch (error) {
+        try {
+          if (candidate.lengthSync() == 0) candidate.deleteSync();
+        } on Object {
+          // Left behind: an empty file holds no one's data.
+        }
+        return 'Could not move it aside to ${candidate.path}: $error';
+      }
+    }
+    return 'All $_maxQuarantinedStates quarantine names beside it are taken; '
+        'move them away to save again';
+  }
+
   void _persistSnapshot() {
+    // The rejected file is still at the live path: writing, or deleting it for
+    // a null snapshot, would destroy it.
+    if (_persistenceDisabled) return;
     final path = _statePath();
     if (path == null) {
       // A phone build whose app-support directory could not be found

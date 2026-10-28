@@ -1,0 +1,19 @@
+{
+  "chapter": 33,
+  "title": "The Rest of the Family",
+  "label": "ch:zh-the-rest-of-the-family",
+  "canDo": "I can talk about men, women, sisters and children.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C33-haizi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 33: I can talk about men, women, sisters and children.",
+    "assesses": [
+      "ZH-LEX-C33-FAMILY33-03",
+      "ZH-LEX-C33-FAMILY33-04",
+      "ZH-LEX-C33-FAMILY33-05"
+    ]
+  }
+}

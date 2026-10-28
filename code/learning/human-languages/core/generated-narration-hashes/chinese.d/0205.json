@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:0bab2bd176a6decf",
+  "lessonIds": [
+    "ZH-C205-li",
+    "ZH-W205-li-apart",
+    "ZH-C205-gongli",
+    "ZH-W205-gong-public",
+    "ZH-C205-zuoyou",
+    "ZH-C205-chabuduo",
+    "ZH-C205-juli",
+    "ZH-R205-review-200-205"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch205.txt",
+  "json": "chinese/narration/ch205.json",
+  "textHash": "fnv1a64:1f99efc1c74db153",
+  "jsonHash": "fnv1a64:e8bad1de298f0af8",
+  "findings": []
+}

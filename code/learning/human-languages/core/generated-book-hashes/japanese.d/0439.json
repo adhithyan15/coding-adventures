@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:5b006a2af250f023",
+  "lessonIds": [
+    "JA-C439-okubyou",
+    "JA-C439-yowamushi",
+    "JA-C439-hikyou",
+    "JA-C439-ranbou",
+    "JA-C439-yuukan"
+  ],
+  "tex": "japanese/book/chapters/ch439-brave-and-timid.tex"
+}

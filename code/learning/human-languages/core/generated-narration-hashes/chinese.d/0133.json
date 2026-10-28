@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:9c3f0455b3d12867",
+  "lessonIds": [
+    "ZH-C133-dasao",
+    "ZH-W133-sao-sweep",
+    "ZH-C133-jiawu",
+    "ZH-C133-shoushi",
+    "ZH-C133-ca",
+    "ZH-C133-die"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch133.txt",
+  "json": "chinese/narration/ch133.json",
+  "textHash": "fnv1a64:3325f7a2440e4cfd",
+  "jsonHash": "fnv1a64:2264cad8f318aac3",
+  "findings": []
+}

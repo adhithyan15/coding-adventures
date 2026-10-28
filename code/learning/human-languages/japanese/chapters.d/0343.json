@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Trust and Doubt",
+  "label": "ch:ja-trust-and-doubt",
+  "canDo": "I can say whom I trust and why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C343-kimetsukeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say whom I trust and why.",
+    "assesses": [
+      "JA-LEX-C343-SHINYOU343-03",
+      "JA-LEX-C343-SHINYOU343-04",
+      "JA-LEX-C343-SHINYOU343-05"
+    ]
+  }
+}

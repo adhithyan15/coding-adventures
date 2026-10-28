@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C91-xiangyao",
+    "language": "chinese",
+    "chapter": 91,
+    "sequence": 7410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcf78fda9cf6ec2e"
+  },
+  "findings": []
+}

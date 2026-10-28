@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:c56a970efd5965ed",
+  "lessonIds": [
+    "JA-C387-demukaeru",
+    "JA-C387-mikakeru",
+    "JA-C387-toujou",
+    "JA-C387-koukuuken",
+    "JA-C387-shutchou"
+  ],
+  "tex": "japanese/book/chapters/ch387-meeting-the-plane.tex"
+}

@@ -264,7 +264,16 @@ describe("the gate that would have caught the A2 claim", () => {
     // after its two over-budget lessons were split.
     // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
     // only with glyphs the script lessons have taught).
-    // The count stays 22 when a track climbs a second rung: Hindi was the first to
+    // 22 -> 23: Chinese, with chapter 30 (the wellbeing node, the last pre-A1
+    // spine node it lacked) and chapters 31-84 (324 headwords, 71 verbs; a word
+    // whose characters the reader has not written yet is taught by ear with a
+    // pinyin headword; 55 characters written, 很 and the 54 of chapters 31-84).
+    // Chinese then climbed its second rung with chapters 85-98 (the A1 core: all
+    // twelve A1 spine nodes and both A1 writing stages) and chapters 99-146 (the
+    // A1 vocabulary), 641 headwords and 172 verbs at or below A1, and 37 more
+    // characters written (13 in the core, 24 in the vocabulary), which moved it
+    // from the pre-A1 row of HELD to A1.
+    // The count stays put when a track climbs a second rung: Hindi was the first to
     // attain A2, with chapters 166-275 (the practical-reading node, 540 headwords,
     // sixty verbs), which moved it from the A1 row of HELD to the A2 row.
     // German followed as the second, with
@@ -327,6 +336,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // past, future and practical-reading nodes, plus the letters ઓ ડ ઊ) and
     // chapters 153-272 (600 headwords, 234 verbs), which moved it from the A1
     // row of HELD to the A2 row.
+    // Chinese followed, with chapters 147-157 (the A2 core: the future with 要 and
+    // 会, practical texts and the A2 grammar, realizing all five A2 nodes, plus
+    // ten written characters) and chapters 158-277 (600 headwords, 48 more
+    // characters written; 1,290 headwords and 403 verbs at or below A2), which
+    // moved it from the A1 row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
@@ -429,6 +443,13 @@ describe("the gate that would have caught the A2 claim", () => {
     // the conditional, realizing all five B1 nodes, plus letter lessons for
     // घ ढ औ ई) and chapters 286-555 (1,350 headwords, 394 verbs), which moved
     // it from the A2 row of HELD to B1.
+    // Japanese followed as the twentieth, with chapters 250-261 (the B1 core:
+    // the plain past -た and its sound changes, the plain negative -ない, -て and
+    // -てから, -ています, と おもいます, から / ので after a plain clause, -た
+    // ほうが いい, travel, -かった, -た ことが ある, より / いちばん, and もし …
+    // -たら / に よります / -たら … でしょう, realizing all five B1 nodes, plus
+    // six copy-only kanji 月 年 出 人 中 今) and chapters 262-533 (1,360
+    // headwords, 439 verbs), which moved it from the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

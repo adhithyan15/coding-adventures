@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Culture and Places to Visit",
+  "label": "ch:ja-culture-and-places-to-visit",
+  "canDo": "I can talk about the culture and highlights of a place.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C403-otozureru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about the culture and highlights of a place.",
+    "assesses": [
+      "JA-LEX-C403-BUNKA403-03",
+      "JA-LEX-C403-BUNKA403-04",
+      "JA-LEX-C403-BUNKA403-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C318-naze",
+  "pathSegment": "JA-PATH-318-SETSUMEI318",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-318-SETSUMEI318",
+      "order": 4
+    }
+  ]
+}

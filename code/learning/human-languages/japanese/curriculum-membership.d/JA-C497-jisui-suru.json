@@ -1,0 +1,11 @@
+{
+  "id": "JA-C497-jisui-suru",
+  "pathSegment": "JA-PATH-497-MEAL497",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-497-MEAL497",
+      "order": 2
+    }
+  ]
+}

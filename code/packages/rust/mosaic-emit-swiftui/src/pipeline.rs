@@ -4636,7 +4636,7 @@ fn emit_view_tree(
         // Leaf primitives — emit a single line, no children.
         // -----------------------------------------------------------------
         "Text" => {
-            let mut expr = swift_text_expression(node, for_payload);
+            let mut expr = swift_text_expression(node, for_payload)?;
             if let Some(label) = swift_accessibility_label(node) {
                 expr.push_str(&format!(".accessibilityLabel({label})"));
             }
@@ -5732,34 +5732,70 @@ fn emit_children(
 
 /// Build the SwiftUI expression for a `Text` node's content.
 ///
-/// Three cases (mirrors React backend `jsx_text_content`):
+/// Four cases (mirrors React backend `jsx_text_content`):
 ///
 /// 1. `Text { content: "literal"; }` → `Text("literal")` with quotes
 ///    escaped per Swift string-literal rules.
 /// 2. `Text { content: @slot; }` → `_mosaicText(slotName)` referencing the
 ///    let property through one concrete, verbatim-text helper.
-/// 3. `Text { }` → `Text("")` placeholder.
-fn swift_text_expression(node: &LayoutNode, for_payload: Option<ForPayloadScope<'_>>) -> String {
+/// 3. `Text ( content: row )` — a bare NAME → `_mosaicText(row)`, the
+///    variable's *value*, never the text `"row"` (see the arm below).
+/// 4. `Text { }` → `Text("")` placeholder.
+///
+/// A bare NAME whose camelCased spelling is not a plain Swift identifier
+/// is refused with [`PipelineEmitError::UnsafeSlotName`], as every other
+/// SwiftUI prop that reads a bare NAME already does.
+fn swift_text_expression(
+    node: &LayoutNode,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
     for prop in &node.props {
         if prop.name == "content" {
             match &prop.value {
                 LayoutPropValue::String(s) => {
-                    return format!("Text(\"{}\")", escape_swift_string(s));
+                    return Ok(format!("Text(\"{}\")", escape_swift_string(s)));
                 }
                 LayoutPropValue::SlotRef(slot) => {
-                    return format!("_mosaicText({})", to_camel_case_first_lower(slot));
+                    return Ok(format!("_mosaicText({})", to_camel_case_first_lower(slot)));
                 }
-                LayoutPropValue::Keyword(k) => {
-                    // Keyword values (e.g. enum members) are rare for Text
-                    // content but pass through as a quoted literal so the
-                    // file still compiles.
-                    return format!("Text(\"{}\")", escape_swift_string(k));
+                LayoutPropValue::Keyword(name) => {
+                    // A bare NAME is a variable, not a string. UI29 §3.3's
+                    // `name_ref ::= NAME` is the For-bound name, so in
+                    //
+                    //     For ( each: slot: rows, as: row ) {
+                    //       Text ( content: row )
+                    //     }
+                    //
+                    // each label must show the row's value. This arm used to
+                    // quote the NAME, so every row read the literal word
+                    // `row` on SwiftUI while React (`{row}`), HTML
+                    // (`{{row}}`) and XAML (`{x:Bind Row}`) showed the value.
+                    //
+                    // Swift's own lexical scoping then gives UI29 §3.4's
+                    // "For wins": the ForEach closure parameter `row`
+                    // shadows a component property of the same name, and
+                    // outside any loop the NAME reads the component's own
+                    // slot property, exactly as React's destructured prop
+                    // does. A NAME bound by neither fails to compile, as it
+                    // does on React, rather than shipping its own spelling
+                    // as a label. `_mosaicText` takes `Any`, so a loop
+                    // element of any type still renders.
+                    //
+                    //   authored                 emitted
+                    //   ------------------------ ------------------------
+                    //   content: row             _mosaicText(row)
+                    //   content: row-item        _mosaicText(rowItem)
+                    //   content: display-name    _mosaicText(displayName)
+                    let binding = to_camel_case_first_lower(name);
+                    validate_slot_or_field_name(&binding)
+                        .map_err(PipelineEmitError::UnsafeSlotName)?;
+                    return Ok(format!("_mosaicText({binding})"));
                 }
                 LayoutPropValue::Number(n) => {
                     // Stringified numbers — SwiftUI's `Text(_:)` accepts
                     // numerics but only via specific initialisers, so wrap
                     // as a string literal for the broadest match.
-                    return format!("Text(\"{n}\")");
+                    return Ok(format!("Text(\"{n}\")"));
                 }
                 LayoutPropValue::EmitRef(_) => {
                     // Emit refs are not valid for Text content; fall through
@@ -5775,15 +5811,15 @@ fn swift_text_expression(node: &LayoutNode, for_payload: Option<ForPayloadScope<
                     // gets the live cell text inside every body cell
                     // instead of the empty placeholder this branch used
                     // to emit before §3.4 made the scope rules explicit.
-                    return format!(
+                    return Ok(format!(
                         "_mosaicText({})",
                         swift_collection_index_expr(text, for_payload)
-                    );
+                    ));
                 }
             }
         }
     }
-    "Text(\"\")".to_string()
+    Ok("Text(\"\")".to_string())
 }
 
 /// Lower the portable Text accessible-name subset. String labels stay
@@ -9923,6 +9959,31 @@ mod tests {
             "collection access must use Swift's Int index shadow:\n{out}"
         );
         assert!(!out.contains("[ i ]"));
+    }
+
+    /// A bare-NAME `content:` becomes a Swift identifier, so a spelling that
+    /// cannot be one is refused, the same gate the button-label and
+    /// placeholder arms apply. The moslayout lexer cannot produce such a NAME
+    /// today; this pins the defence if it ever loosens.
+    #[test]
+    fn text_bare_name_content_refuses_an_unsafe_identifier() {
+        let layout = layout_with(
+            "Hostile",
+            container_node(
+                "Column",
+                vec![leaf("Text", vec![prop_keyword("content", "x\"); evil(\"")])],
+            ),
+        );
+        let err = from_pipeline(
+            &component("Hostile", vec![], vec![]),
+            &layout,
+            &empty_style("Hostile"),
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "unexpected error: {err:?}"
+        );
     }
 
     // ---------------------------------------------------------------------

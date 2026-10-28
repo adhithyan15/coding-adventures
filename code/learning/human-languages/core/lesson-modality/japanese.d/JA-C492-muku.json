@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C492-muku",
+    "language": "japanese",
+    "chapter": 492,
+    "sequence": 28660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b77804ce497c157"
+  },
+  "findings": []
+}

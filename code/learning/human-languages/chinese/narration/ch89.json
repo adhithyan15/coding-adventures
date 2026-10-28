@@ -1,0 +1,1300 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 89,
+  "title": "Give Me That",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:ee03ee1bb4cb4ce7",
+  "lessons": [
+    {
+      "id": "ZH-C89-gei",
+      "sequence": 7280,
+      "title": "给 (gěi) — to give; to, for",
+      "headword": "给",
+      "romanization": "gěi",
+      "gloss": "to give; to, for",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce1f4a87831dbe06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens with the verb that hands things over."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 两个人 — liǎng ge rén, two people",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 两个人 — *liǎng ge rén*, two people]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say liǎng zhī māo, two cats — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *liǎng zhī māo*, two cats — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sòng, to give as a present — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sòng*, to give as a present — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 给",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "给 — gěi — \"to give; to, for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "妈妈给我一个手机 māma gěi wǒ yí ge shǒujī — Mum gives me a phone."
+            },
+            {
+              "kind": "speech",
+              "text": "给我 gěi wǒ — Give it to me."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the new character in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "给 (gěi) is in the Guangyun as kip (Guangyun, in Baxter's transcription), glossed 'to supply'. That reading regularly gives jǐ, still heard in a few written words; how the everyday gěi came about is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The person comes first, then the thing: 给, 我, 一个手机. On its own, 给我 (gěi wǒ) is a request: give me. sòng gives a present; 给 gives anything at all."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gěi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gěi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gěi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gěi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "妈妈给我一个手机 — māma gěi wǒ yí ge shǒujī — Mum gives me a phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 妈妈给我一个手机 — *māma gěi wǒ yí ge shǒujī* — Mum gives me a phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "给我 — gěi wǒ — Give it to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 给我 — *gěi wǒ* — Give it to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sòng, then gěi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sòng*, then *gěi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 给 (gěi) mean? (\"To give; to, for\".) Which comes first after 给 (gěi), the person or the thing? (The person.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W89-gei",
+      "sequence": 7290,
+      "title": "给 (gěi) — the silk piece, then 合",
+      "headword": "给",
+      "romanization": "gěi",
+      "gloss": "给 — the silk piece, then 合",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:df5d81c176f228d3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the silk piece, then 合",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the silk piece, then 合 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gěi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gěi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "人 一 口."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — rén, yī, kǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *rén*, *yī*, *kǒu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the silk piece, then 合",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "给 (gěi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right. The left piece is the one new shape."
+            },
+            {
+              "kind": "speech",
+              "text": "The silk piece 纟, three strokes: a stroke that falls to the left and turns right, a second, longer one the same way, then a stroke rising to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "合, six strokes: a roof like 人, a left-falling stroke and a right-falling one; a short horizontal under it; then 口."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 6 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "给 (gěi), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 给, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 给 (gěi)? (Nine.) Which piece is new? (The silk piece, on the left.) What sits at the foot of the right piece? (口.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 给 (gěi), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C89-zuo",
+      "sequence": 7300,
+      "title": "做 (zuò) — to do; to make",
+      "headword": "做",
+      "romanization": "zuò",
+      "gloss": "to do; to make",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3839ce4ce0b043cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read the last lesson's character, then a word you already write."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "给你, aloud — gěi nǐ, here you are",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 给你, aloud — *gěi nǐ*, here you are]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 做饭 — zuòfàn, to cook",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 做饭 — *zuòfàn*, to cook]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǒmen zuò chē qù, we're going by car",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǒmen zuò chē qù*, we're going by car]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 做",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "做 — zuò — \"to do; to make\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你做什么 nǐ zuò shénme — What are you doing?"
+            },
+            {
+              "kind": "speech",
+              "text": "妈妈做饭 māma zuò fàn — Mum cooks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "做 (zuò) has no reading in the Guangyun: no dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have written 做 since 做饭. zuò 'to sit', as in zuò chē, sounds the same and is a different word with a different character."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuò",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuò*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuò, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuò*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你做什么 — nǐ zuò shénme — What are you doing?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你做什么 — *nǐ zuò shénme* — What are you doing?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "妈妈做饭 — māma zuò fàn — Mum cooks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 妈妈做饭 — *māma zuò fàn* — Mum cooks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuò chē, then 做饭, and hear the same sound twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuò chē*, then 做饭, and hear the same sound twice]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 做 mean? (\"To do; to make\".) Is it the zuò of zuò chē? (No: same sound, another word.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C89-fang",
+      "sequence": 7310,
+      "title": "fàng — to put; to place",
+      "headword": "fàng",
+      "romanization": "fàng",
+      "gloss": "to put; to place",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a1c6f5ca542be99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then a bag and a table."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 你做什么 — nǐ zuò shénme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 你做什么 — *nǐ zuò shénme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bāo, a bag — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bāo*, a bag — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhuōzi shàngbian, on the table — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhuōzi shàngbian*, on the table — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fàng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fàng — \"to put; to place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "fàng zài zhèr — Put it here."
+            },
+            {
+              "kind": "speech",
+              "text": "fàng zài zhuōzi shàngbian — Put it on the table."
+            },
+            {
+              "kind": "speech",
+              "text": "Its character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fàng is inherited from Middle Chinese pjangH (Guangyun, in Baxter's transcription), glossed 'to drive out; to send away'. 'To put down' is a later sense the Guangyun does not give."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fàng, then 在, then the place: the place words of the last two chapters all fit after it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fàng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fàng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fàng zài zhèr — Put it here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fàng zài zhèr* — Put it here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fàng zài bāo lǐbian — Put it in the bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fàng zài bāo lǐbian* — Put it in the bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuò, then fàng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuò*, then *fàng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fàng mean? (\"To put; to place\".) Put it here. (fàng zài zhèr.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C89-dai",
+      "sequence": 7320,
+      "title": "dài — to bring; to take along",
+      "headword": "dài",
+      "romanization": "dài",
+      "gloss": "to bring; to take along",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:526604758b961d6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then two things you take out with you."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say fàng zài zhèr, put it here — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *fàng zài zhèr*, put it here — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 手机 — shǒujī, a phone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 手机 — *shǒujī*, a phone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yàoshi, a key",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yàoshi*, a key]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dài — \"to bring; to take along\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ dài shǒujī le ma — Have you brought your phone?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dài is inherited from Middle Chinese tajH (Guangyun, in Baxter's transcription), glossed 'a belt; a sash'. How a belt became 'to carry along' is not given there, so the step is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nǐ dài shǒujī le ma: 了 after the verb says it is done, and 吗 makes the question. The answer is dài le, or méi dài."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ dài shǒujī le ma — Have you brought your phone?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ dài shǒujī le ma* — Have you brought your phone?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "méi dài — No, I haven't.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *méi dài* — No, I haven't.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yàoshi, then dài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yàoshi*, then *dài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dài mean? (\"To bring; to take along\".) Say you didn't bring it. (méi dài.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C89-zhan",
+      "sequence": 7330,
+      "title": "zhàn — to stand",
+      "headword": "zhàn",
+      "romanization": "zhàn",
+      "gloss": "to stand",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cd90f1e9950177a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then two places."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dài, to bring — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dài*, to bring — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huǒchēzhàn, a railway station — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huǒchēzhàn*, a railway station — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 门口 — ménkǒu, the doorway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 门口 — *ménkǒu*, the doorway]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhàn — \"to stand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "qǐng zhàn zài zhèr — Please stand here."
+            },
+            {
+              "kind": "speech",
+              "text": "tā zhàn zài ménkǒu — He's standing in the doorway."
+            },
+            {
+              "kind": "speech",
+              "text": "Its character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhàn is inherited from Middle Chinese treamH (Guangyun, in Baxter's transcription), glossed 'in common speech, to stand alone'. The same word and character end huǒchēzhàn, a railway station."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhàn takes 在 and a place, as fàng does: zhàn zài ménkǒu, standing in the doorway."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐng zhàn zài zhèr — Please stand here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐng zhàn zài zhèr* — Please stand here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā zhàn zài ménkǒu — He's standing in the doorway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā zhàn zài ménkǒu* — He's standing in the doorway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huǒchēzhàn, then zhàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huǒchēzhàn*, then *zhàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhàn mean? (\"To stand\".) Where else have you heard it? (At the end of huǒchēzhàn.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C89-practice",
+      "sequence": 7340,
+      "title": "给我 (gěi wǒ)",
+      "headword": "给我",
+      "romanization": "gěi wǒ",
+      "gloss": "getting out of the door: give, do, bring, put and stand",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:cf0dd5c78c841b81",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Reading — the exchange at once",
+          "What you've built — five actions",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Reading — the exchange at once, What you've built — five actions and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with somebody getting out of the door."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhàn, to stand — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhàn*, to stand — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhǔnbèi, to get ready — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhǔnbèi*, to get ready — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chūmén, to go out — R4, recognition at distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chūmén*, to go out — **R4**, recognition at distance]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 你做什么 nǐ zuò shénme — What are you doing? B: wǒ zhǔnbèi chūmén — I'm getting ready to go out. A: nǐ dài yàoshi le ma — Have you got your key? B: dài le. shǒujī ne — Yes. Where's my phone? A: zài zhuōzi shàngbian. gěi nǐ — On the table. Here you are. B: xièxie. fàng zài bāo lǐbian — Thanks. In the bag it goes. A: qǐng zhàn zài ménkǒu, wǒ kànkan — Stand in the doorway, let me look at you."
+            },
+            {
+              "kind": "speech",
+              "text": "Five actions in one doorway: do, bring, give, put and stand. 给你, here you are, is 给 (gěi) handing something over as it is said."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C89-practice-phone",
+              "prompt": "Where does the phone go in the end?",
+              "assesses": [
+                "ZH-PERFORMANCE-ACTIONS-01",
+                "ZH-LEX-C89-FANG-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "in the bag",
+                "bāo lǐbian",
+                "bao libian",
+                "the bag",
+                "into the bag"
+              ],
+              "feedback": {
+                "correct": "Into the bag: fàng zài bāo lǐbian.",
+                "incorrect": "B says fàng zài bāo lǐbian: in the bag."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — five actions",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five verbs, and the three that take a place take it with 在:"
+            },
+            {
+              "kind": "speech",
+              "text": "给我 gěi wǒ — give it to me."
+            },
+            {
+              "kind": "speech",
+              "text": "你做什么 nǐ zuò shénme — what are you doing?"
+            },
+            {
+              "kind": "speech",
+              "text": "fàng zài zhèr — put it here."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ dài shǒujī le ma — have you brought your phone?"
+            },
+            {
+              "kind": "speech",
+              "text": "qǐng zhàn zài zhèr — please stand here."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Gěi wǒ nǐ de shǒujī."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Hand it over with 给你, then say where you put it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "给 (gěi) — the silk piece first, then the roof, the bar and 口",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 给 — the silk piece first, then the roof, the bar and 口]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "给我 — gěi wǒ — Give it to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 给我 — *gěi wǒ* — Give it to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "给你 — gěi nǐ — Here you are.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 给你 — *gěi nǐ* — Here you are.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ dài yàoshi le ma — Have you got your key?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ dài yàoshi le ma* — Have you got your key?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "给你",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 给你]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hand something over. (给你.) Ask what somebody is doing. (你做什么.) Tell somebody to put it here. (fàng zài zhèr.) Ask whether they brought their key. (nǐ dài yàoshi le ma.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

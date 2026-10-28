@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C135-duanlian",
+    "language": "chinese",
+    "chapter": 135,
+    "sequence": 10660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d375cf0d3f0f908"
+  },
+  "findings": []
+}

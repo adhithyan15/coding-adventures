@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C128-jita",
+    "language": "chinese",
+    "chapter": 128,
+    "sequence": 10290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebe624855b81989b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:b0e8e54195c36426",
+  "lessonIds": [
+    "JA-C319-honne",
+    "JA-C319-tatemae",
+    "JA-C319-mitomeru",
+    "JA-C319-gokai-suru",
+    "JA-C319-honki"
+  ],
+  "tex": "japanese/book/chapters/ch319-what-people-really-think.tex"
+}

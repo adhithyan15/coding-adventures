@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "The City",
+  "label": "ch:zh-the-city",
+  "canDo": "I can talk about cities and places, say inside and beside, and talk about abroad.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ZH-C81-pangbian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: I can talk about cities and places, say inside and beside, and talk about abroad.",
+    "assesses": [
+      "ZH-LEX-C81-CITY81-03",
+      "ZH-LEX-C81-CITY81-04",
+      "ZH-LEX-C81-CITY81-05"
+    ]
+  }
+}

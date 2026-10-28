@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C55-xiang",
+    "language": "chinese",
+    "chapter": 55,
+    "sequence": 4240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f18e45a6aea012b8"
+  },
+  "findings": []
+}

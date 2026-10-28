@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:f5d3c603c8afb797",
+  "lessonIds": [
+    "JA-C497-shokuryou",
+    "JA-C497-shokuhi",
+    "JA-C497-jisui-suru",
+    "JA-C497-marumeru",
+    "JA-C497-okazu",
+    "JA-R497-review-492-497"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch497.txt",
+  "json": "japanese/narration/ch497.json",
+  "textHash": "fnv1a64:d6cd2869f7a2163b",
+  "jsonHash": "fnv1a64:ce535ed9ebc18132",
+  "findings": []
+}

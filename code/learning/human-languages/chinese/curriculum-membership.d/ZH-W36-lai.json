@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W36-lai",
+  "pathSegment": "ZH-PATH-36-WHERE36",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-36-WHERE36",
+      "order": 1
+    }
+  ]
+}

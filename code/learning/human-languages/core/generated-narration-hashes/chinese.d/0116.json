@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:281e88fb9fc8a499",
+  "lessonIds": [
+    "ZH-C116-qianbao",
+    "ZH-C116-huzhao",
+    "ZH-C116-shoubiao",
+    "ZH-C116-yusan",
+    "ZH-C116-diu",
+    "ZH-R116-review-111-116"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch116.txt",
+  "json": "chinese/narration/ch116.json",
+  "textHash": "fnv1a64:83a9e360663fb93d",
+  "jsonHash": "fnv1a64:0a54a84fbcfb11c1",
+  "findings": []
+}

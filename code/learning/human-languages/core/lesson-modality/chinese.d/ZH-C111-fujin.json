@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C111-fujin",
+    "language": "chinese",
+    "chapter": 111,
+    "sequence": 8640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07e4e3a610bef84e"
+  },
+  "findings": []
+}

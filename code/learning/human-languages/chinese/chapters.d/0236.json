@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Something Odd",
+  "label": "ch:zh-something-odd",
+  "canDo": "I can say something turned up, someone found out, how scared I was, what luckily happened and what nearly did.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C236-chadianr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say something turned up, someone found out, how scared I was, what luckily happened and what nearly did.",
+    "assesses": [
+      "ZH-LEX-C236-ODD236-03",
+      "ZH-LEX-C236-ODD236-04",
+      "ZH-LEX-C236-ODD236-05"
+    ]
+  }
+}

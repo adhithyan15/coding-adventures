@@ -1,0 +1,22 @@
+{
+  "chapter": 90,
+  "title": "What I Can Do",
+  "label": "ch:zh-what-i-can-do",
+  "canDo": "I can say what I can do and ask whether I may.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C90-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Three ways to say can: 会 for what you have learned, 能 for what you are able or allowed to do, kěyǐ for asking permission, built on one new written character: 能.",
+    "assesses": [
+      "ZH-LEX-C90-HUI-01",
+      "ZH-LEX-C90-NENG-01",
+      "ZH-SCRIPT-NENG-01",
+      "ZH-LEX-C90-KEYI-01",
+      "ZH-LEX-C90-YOUYONG-01",
+      "ZH-PERFORMANCE-CAN-01"
+    ]
+  }
+}

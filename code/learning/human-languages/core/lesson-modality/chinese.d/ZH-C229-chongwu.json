@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C229-chongwu",
+    "language": "chinese",
+    "chapter": 229,
+    "sequence": 17560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a008b9fdb9cb6a6"
+  },
+  "findings": []
+}

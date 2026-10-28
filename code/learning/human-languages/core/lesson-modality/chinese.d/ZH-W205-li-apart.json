@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W205-li-apart",
+    "language": "chinese",
+    "chapter": 205,
+    "sequence": 15875,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:845fc22bba52da26",
+    "detachableSegments": [
+      "Script — a cap, a box and a hooked frame"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

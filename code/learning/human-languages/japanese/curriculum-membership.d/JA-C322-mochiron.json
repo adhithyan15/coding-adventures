@@ -1,0 +1,11 @@
+{
+  "id": "JA-C322-mochiron",
+  "pathSegment": "JA-PATH-322-SHOUCHI322",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-322-SHOUCHI322",
+      "order": 2
+    }
+  ]
+}

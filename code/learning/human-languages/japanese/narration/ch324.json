@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 324,
+  "title": "Complaints",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a3ed428c36ac01ad",
+  "lessons": [
+    {
+      "id": "JA-C324-monku",
+      "sequence": 19360,
+      "title": "もんく (monku) — a complaint; a grumble",
+      "headword": "もんく",
+      "romanization": "monku",
+      "gloss": "a complaint; a grumble",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:873f092f5483b1ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for no thank you, then the Japanese for not particularly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もんく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もんく — monku — \"a complaint; a grumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねだんが たかいから、きゃくが もんくを 言いました。 — nedan ga takai kara, kyaku ga monku o iimashita — \"The price was high, so the customer complained.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もんく (monku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mon, \"sentence\" (Middle Chinese mjun) and ku, \"phrase\" (kjuH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "monku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *monku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "monku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *monku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedan ga takai kara, kyaku ga monku o iimashita — The price was high, so the customer complained.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedan ga takai kara, kyaku ga monku o iimashita* — The price was high, so the customer complained.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for no thank you, then the Japanese for not particularly, then say monku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for no thank you, then the Japanese for not particularly, then say *monku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もんく (monku) mean? (\"A complaint; a grumble\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C324-monku-type",
+              "prompt": "Say the Japanese for 'a grumble'.",
+              "assesses": [
+                "JA-LEX-C324-MONKU324-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もんく",
+                "monku"
+              ],
+              "feedback": {
+                "correct": "Right: もんく (monku) is 'a complaint; a grumble'.",
+                "incorrect": "'A grumble' is もんく (monku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C324-kujou",
+      "sequence": 19370,
+      "title": "くじょう (kujō) — a formal complaint",
+      "headword": "くじょう",
+      "romanization": "kujō",
+      "gloss": "a formal complaint",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5df229e2cd686daa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for not particularly, then the Japanese for a grumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くじょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くじょう — kujō — \"a formal complaint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "となりの おとが やかましいので、くじょうを 言いました。 — tonari no oto ga yakamashii node, kujō o iimashita — \"The noise next door was loud, so I made a complaint.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くじょう (kujō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ku, \"suffering\" (Middle Chinese khuX) and jō, \"circumstances\" (dzjeng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kujō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kujō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kujō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kujō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tonari no oto ga yakamashii node, kujō o iimashita — The noise next door was loud, so I made a complaint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tonari no oto ga yakamashii node, kujō o iimashita* — The noise next door was loud, so I made a complaint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for not particularly, then the Japanese for a grumble, then say kujō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for not particularly, then the Japanese for a grumble, then say *kujō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くじょう (kujō) mean? (\"A formal complaint\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C324-kujou-type",
+              "prompt": "Say the Japanese for 'a formal complaint'.",
+              "assesses": [
+                "JA-LEX-C324-MONKU324-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くじょう",
+                "kujō",
+                "kujou",
+                "kujoo",
+                "kujo"
+              ],
+              "feedback": {
+                "correct": "Right: くじょう (kujō) is 'a formal complaint'.",
+                "incorrect": "'A formal complaint' is くじょう (kujō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C324-fuhei",
+      "sequence": 19380,
+      "title": "ふへい (fuhei) — discontent; grumbling",
+      "headword": "ふへい",
+      "romanization": "fuhei",
+      "gloss": "discontent; grumbling",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4fa586a69059755",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a grumble, then the Japanese for a formal complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふへい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふへい — fuhei — \"discontent; grumbling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しごとが おおいので、みんな ふへいを 言っています。 — shigoto ga ōi node, minna fuhei o itte imasu — \"There is a lot of work, so everyone is grumbling.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふへい (fuhei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are fu, \"negative\" (Middle Chinese pjut) and hei, \"even\" (bjaeng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuhei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuhei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuhei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuhei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shigoto ga ōi node, minna fuhei o itte imasu — There is a lot of work, so everyone is grumbling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shigoto ga ōi node, minna fuhei o itte imasu* — There is a lot of work, so everyone is grumbling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a grumble, then the Japanese for a formal complaint, then say fuhei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a grumble, then the Japanese for a formal complaint, then say *fuhei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふへい (fuhei) mean? (\"Discontent; grumbling\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C324-fuhei-type",
+              "prompt": "Say the Japanese for 'discontent'.",
+              "assesses": [
+                "JA-LEX-C324-MONKU324-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふへい",
+                "fuhei"
+              ],
+              "feedback": {
+                "correct": "Right: ふへい (fuhei) is 'discontent; grumbling'.",
+                "incorrect": "'Discontent' is ふへい (fuhei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C324-hihan-suru",
+      "sequence": 19390,
+      "title": "ひはんする (hihan suru) — to criticize",
+      "headword": "ひはんする",
+      "romanization": "hihan suru",
+      "gloss": "to criticize",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fd01ec121c204d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a formal complaint, then the Japanese for discontent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひはんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひはんする — hihan suru — \"to criticize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねだんが あがったので、みんな かいしゃを ひはんしました。 — nedan ga agatta node, minna kaisha o hihan shimashita — \"Prices went up, so everyone criticized the company.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひはんします, hihanshimasu; a する verb. Past (polite): しんぶんが ひはんしました。, shinbun ga hihan shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひはんする (hihan suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, hihan, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: hi, \"criticism\" (Middle Chinese phej) and han, \"judgment\" (phanH) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hihan suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hihan suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hihan suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hihan suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedan ga agatta node, minna kaisha o hihan shimashita — Prices went up, so everyone criticized the company.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedan ga agatta node, minna kaisha o hihan shimashita* — Prices went up, so everyone criticized the company.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a formal complaint, then the Japanese for discontent, then say hihan suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a formal complaint, then the Japanese for discontent, then say *hihan suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひはんする (hihan suru) mean? (\"To criticize\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C324-hihan-suru-type",
+              "prompt": "Say the Japanese for 'to criticize'.",
+              "assesses": [
+                "JA-LEX-C324-MONKU324-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひはんする",
+                "hihan suru"
+              ],
+              "feedback": {
+                "correct": "Right: ひはんする (hihan suru) is 'to criticize'.",
+                "incorrect": "'To criticize' is ひはんする (hihan suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C324-iiwake",
+      "sequence": 19400,
+      "title": "いいわけ (iiwake) — an excuse",
+      "headword": "いいわけ",
+      "romanization": "iiwake",
+      "gloss": "an excuse",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4f9b72288ab0830",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for discontent, then the Japanese for to criticize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いいわけ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いいわけ — iiwake — \"an excuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとうとは おくれたので、いいわけを しました。 — otōto wa okureta node, iiwake o shimashita — \"My younger brother was late, so he made an excuse.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いいわけ (iiwake) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from ii, \"saying (iu)\" and wake, \"reason\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iiwake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iiwake*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iiwake, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iiwake*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otōto wa okureta node, iiwake o shimashita — My younger brother was late, so he made an excuse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otōto wa okureta node, iiwake o shimashita* — My younger brother was late, so he made an excuse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for discontent, then the Japanese for to criticize, then say iiwake again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for discontent, then the Japanese for to criticize, then say *iiwake* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いいわけ (iiwake) mean? (\"An excuse\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C324-iiwake-type",
+              "prompt": "Say the Japanese for 'an excuse'.",
+              "assesses": [
+                "JA-LEX-C324-MONKU324-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いいわけ",
+                "iiwake"
+              ],
+              "feedback": {
+                "correct": "Right: いいわけ (iiwake) is 'an excuse'.",
+                "incorrect": "'An excuse' is いいわけ (iiwake)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:018d0826b712077b",
+  "lessonIds": [
+    "ZH-C81-li",
+    "ZH-W81-li-inside",
+    "ZH-C81-chengshi",
+    "ZH-C81-difang",
+    "ZH-C81-waiguo",
+    "ZH-C81-pangbian"
+  ],
+  "tex": "chinese/book/chapters/ch81-the-city.tex"
+}

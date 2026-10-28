@@ -1,0 +1,11 @@
+{
+  "id": "JA-C386-toridasu",
+  "pathSegment": "JA-PATH-386-ZEIKAN386",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-386-ZEIKAN386",
+      "order": 4
+    }
+  ]
+}

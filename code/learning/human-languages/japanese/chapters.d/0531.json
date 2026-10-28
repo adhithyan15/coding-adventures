@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "On Purpose or Not",
+  "label": "ch:ja-on-purpose-or-not",
+  "canDo": "I can talk about doing things on purpose or by habit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C531-nantonaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about doing things on purpose or by habit.",
+    "assesses": [
+      "JA-LEX-C531-PURPOSE531-03",
+      "JA-LEX-C531-PURPOSE531-04",
+      "JA-LEX-C531-PURPOSE531-05"
+    ]
+  }
+}

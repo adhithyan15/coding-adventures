@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C334-kifu-suru",
+    "language": "japanese",
+    "chapter": 334,
+    "sequence": 19880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ec33e4b60138e99"
+  },
+  "findings": []
+}

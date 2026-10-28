@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Colours",
+  "label": "ch:zh-colours",
+  "canDo": "I can name white, red, black and blue, and ask about colours.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C60-lan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: I can name white, red, black and blue, and ask about colours.",
+    "assesses": [
+      "ZH-LEX-C60-COLOR60-03",
+      "ZH-LEX-C60-COLOR60-04",
+      "ZH-LEX-C60-COLOR60-05"
+    ]
+  }
+}

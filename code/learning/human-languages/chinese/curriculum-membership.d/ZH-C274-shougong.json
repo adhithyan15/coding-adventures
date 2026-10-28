@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C274-shougong",
+  "pathSegment": "ZH-PATH-274-FREE274",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-274-FREE274",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:6a4ffcf6fba857f7",
+  "lessonIds": [
+    "JA-C512-henka-suru",
+    "JA-C512-kirikaeru",
+    "JA-C512-hayamaru",
+    "JA-C512-kasanaru",
+    "JA-C512-higawari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch512.txt",
+  "json": "japanese/narration/ch512.json",
+  "textHash": "fnv1a64:d7b0d4799b7d5add",
+  "jsonHash": "fnv1a64:a31d1a795ce2ceda",
+  "findings": []
+}

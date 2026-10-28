@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:9a7be1ba8694bbe0",
+  "lessonIds": [
+    "JA-C468-sakuhin",
+    "JA-C468-tenrankai",
+    "JA-C468-choukoku",
+    "JA-C468-kessaku",
+    "JA-C468-kumitateru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch468.txt",
+  "json": "japanese/narration/ch468.json",
+  "textHash": "fnv1a64:634e49fa794e867b",
+  "jsonHash": "fnv1a64:d9b905e9e82942a4",
+  "findings": []
+}

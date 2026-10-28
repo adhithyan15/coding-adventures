@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C213-menpiao",
+  "pathSegment": "ZH-PATH-213-TRIP213",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-213-TRIP213",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C470-min-you",
+  "pathSegment": "JA-PATH-470-SONG470",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-470-SONG470",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:4c1ec8eae820dbf5",
+  "lessonIds": [
+    "ZH-C106-chezhan",
+    "ZH-W106-zhan",
+    "ZH-C106-ditie",
+    "ZH-C106-gongjiaoche",
+    "ZH-C106-zixingche",
+    "ZH-C106-qi"
+  ],
+  "tex": "chinese/book/chapters/ch106-stops-and-stations.tex"
+}

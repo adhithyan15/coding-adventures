@@ -1,0 +1,11 @@
+{
+  "id": "JA-C370-tagaini",
+  "pathSegment": "JA-PATH-370-MATOMARU370",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-370-MATOMARU370",
+      "order": 1
+    }
+  ]
+}

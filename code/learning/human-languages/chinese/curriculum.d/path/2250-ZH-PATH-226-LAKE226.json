@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-226-LAKE226",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "ZH-EXT-226-LAKE226"
+  ],
+  "after": []
+}

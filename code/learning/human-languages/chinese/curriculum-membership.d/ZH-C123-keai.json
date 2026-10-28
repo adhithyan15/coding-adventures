@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C123-keai",
+  "pathSegment": "ZH-PATH-123-PEOPLE123",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-123-PEOPLE123",
+      "order": 2
+    }
+  ]
+}

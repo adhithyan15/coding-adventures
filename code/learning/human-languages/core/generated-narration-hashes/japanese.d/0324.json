@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:a3ed428c36ac01ad",
+  "lessonIds": [
+    "JA-C324-monku",
+    "JA-C324-kujou",
+    "JA-C324-fuhei",
+    "JA-C324-hihan-suru",
+    "JA-C324-iiwake"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch324.txt",
+  "json": "japanese/narration/ch324.json",
+  "textHash": "fnv1a64:a5a9fdf364ead8aa",
+  "jsonHash": "fnv1a64:28b177c81084ffeb",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C463-kitaeru",
+  "pathSegment": "JA-PATH-463-TRAIN463",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-463-TRAIN463",
+      "order": 0
+    }
+  ]
+}

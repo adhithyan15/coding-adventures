@@ -1,0 +1,11 @@
+{
+  "id": "JA-C326-ihan",
+  "pathSegment": "JA-PATH-326-KISOKU326",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-326-KISOKU326",
+      "order": 3
+    }
+  ]
+}

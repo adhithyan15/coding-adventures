@@ -66,6 +66,11 @@ impl StateRegister {
     pub(crate) fn reset(&mut self) {
         self.write(0);
     }
+
+    /// Return the number of physical D flip-flops owned by this register.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
+    }
 }
 
 /// 16 x 4-bit register file built from D flip-flops.
@@ -139,6 +144,11 @@ impl RegisterFile {
         }
     }
 
+    /// Return the number of D flip-flops in all sixteen registers.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.states.iter().map(Vec::len).sum()
+    }
+
     /// Gate count for the register file.
     ///
     /// 16 registers x 4 bits x ~6 gates per D flip-flop = 384 gates.
@@ -192,6 +202,11 @@ impl Accumulator {
         self.write(0);
     }
 
+    /// Return the accumulator's physical DFF count.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
+    }
+
     /// 4 D flip-flops x ~6 gates = 24 gates.
     pub fn gate_count(&self) -> usize {
         24
@@ -238,6 +253,11 @@ impl CarryFlag {
     /// Reset to false.
     pub fn reset(&mut self) {
         self.write(false);
+    }
+
+    /// Return the carry flag's physical DFF count.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.len()
     }
 
     /// 1 D flip-flop x ~6 gates = 6 gates.

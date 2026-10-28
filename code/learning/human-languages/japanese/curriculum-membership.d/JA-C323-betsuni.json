@@ -1,0 +1,11 @@
+{
+  "id": "JA-C323-betsuni",
+  "pathSegment": "JA-PATH-323-ENRYO323",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-323-ENRYO323",
+      "order": 4
+    }
+  ]
+}

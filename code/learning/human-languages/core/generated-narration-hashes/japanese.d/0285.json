@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:0ebb95e4cbdd4aac",
+  "lessonIds": [
+    "JA-C285-okonau",
+    "JA-C285-hiraku",
+    "JA-C285-kuwawaru",
+    "JA-C285-kinen",
+    "JA-C285-shukujitsu",
+    "JA-R285-review-280-285"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch285.txt",
+  "json": "japanese/narration/ch285.json",
+  "textHash": "fnv1a64:6830e16423dd072c",
+  "jsonHash": "fnv1a64:9f4a8cacaea340b2",
+  "findings": []
+}

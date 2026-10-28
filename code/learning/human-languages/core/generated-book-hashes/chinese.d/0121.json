@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:260a0b3f6aa74bd8",
+  "lessonIds": [
+    "ZH-C121-jiao-teach",
+    "ZH-C121-lianxi",
+    "ZH-C121-huida",
+    "ZH-C121-fuxi",
+    "ZH-C121-cuo"
+  ],
+  "tex": "chinese/book/chapters/ch121-teaching-and-practising.tex"
+}

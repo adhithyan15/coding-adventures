@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C55-kafei",
+    "language": "chinese",
+    "chapter": 55,
+    "sequence": 4280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfeaf866821d22c3"
+  },
+  "findings": []
+}

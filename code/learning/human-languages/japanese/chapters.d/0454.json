@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Getting the Job Done",
+  "label": "ch:ja-getting-the-job-done",
+  "canDo": "I can say how a job is going.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C454-shippai-suru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can say how a job is going.",
+    "assesses": [
+      "JA-LEX-C454-TASK454-03",
+      "JA-LEX-C454-TASK454-04",
+      "JA-LEX-C454-TASK454-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:8625b12f71c3f757",
+  "lessonIds": [
+    "ZH-C204-wangzhan",
+    "ZH-C204-denglu",
+    "ZH-C204-dianji",
+    "ZH-C204-shipin",
+    "ZH-C204-dazi"
+  ],
+  "tex": "chinese/book/chapters/ch204-online.tex"
+}

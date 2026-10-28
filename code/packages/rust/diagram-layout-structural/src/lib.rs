@@ -11,7 +11,8 @@ use diagram_ir::{
     LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
-    StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRouting,
+    StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRelationship,
+    StructuralRouting,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -147,6 +148,30 @@ fn structural_style(
             font_italic: false,
             font_family: "Helvetica".into(),
             corner_radius: 4.0,
+        },
+    )
+}
+
+fn structural_relationship_style(
+    relationship: &StructuralRelationship,
+) -> diagram_ir::ResolvedDiagramStyle {
+    resolve_style_with_base(
+        relationship.style.as_ref(),
+        diagram_ir::ResolvedDiagramStyle {
+            fill: if matches!(relationship.kind, diagram_ir::RelKind::Composition) {
+                "#374151".into()
+            } else {
+                "#6b7280".into()
+            },
+            stroke: "#6b7280".into(),
+            stroke_width: 1.5,
+            stroke_dash: None,
+            text_color: "#374151".into(),
+            font_size: 14.0,
+            font_weight: 400,
+            font_italic: false,
+            font_family: "Helvetica".into(),
+            corner_radius: 0.0,
         },
     )
 }
@@ -1409,6 +1434,7 @@ fn layout_relationships(
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
                 label,
+                style: structural_relationship_style(rel),
             })
         })
         .collect()
@@ -1498,6 +1524,7 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: None,
+                style: None,
             }],
         }
     }

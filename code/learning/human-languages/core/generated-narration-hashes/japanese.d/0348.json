@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:f8bd64a91118a3e2",
+  "lessonIds": [
+    "JA-C348-kesseki-suru",
+    "JA-C348-osoi",
+    "JA-C348-girigiri",
+    "JA-C348-jikoku",
+    "JA-C348-renkyuu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch348.txt",
+  "json": "japanese/narration/ch348.json",
+  "textHash": "fnv1a64:fafc095d7968742a",
+  "jsonHash": "fnv1a64:1b74966ddfe2e6b9",
+  "findings": []
+}

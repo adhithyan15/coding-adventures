@@ -40,7 +40,7 @@ reviews_of: [ZH-C22-wuguanci, ZH-C21-practice, ZH-C18-haokan, ZH-C18-hear-shu, Z
 [PAUSE 2s] The fourth lesson of a chapter that has added no character at all.
 
 - [YOU RECALL: say *shū* — **R1**, one lesson back, before it decays]
-- [YOU RECALL: say *shíyī èrshí jiúshíjiǔ yìbǎi* — **R2**, the first real retrieval, five to fifteen lessons back]
+- [YOU RECALL: say *shíyī èrshí jiǔshíjiǔ yìbǎi* — **R2**, the first real retrieval, five to fifteen lessons back]
 - [YOU RECALL: say *hǎokàn* — **R3**, durable, twenty to sixty lessons back]
 - [YOU RECALL: say *shū* — **R3**, durable again, a second word from that distance]
 - [YOU RECALL: say *hànyǔ* — **R4**, recognition at distance, eighty lessons back or more]

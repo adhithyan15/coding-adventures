@@ -1502,13 +1502,13 @@ fn errors_display_without_panic() {
     let _ = format!("{}", IIRLlvmError::UndefinedVariable { function: "f".into(), name: "nope".into() });
 }
 
-/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "dyn_cons"`) lowers
-/// to a `call i64 @__dyn_cons(i64, i64)` and emits exactly one matching
+/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "dyn_pair_new"`) lowers
+/// to a `call i64 @__dyn_pair_new(i64, i64)` and emits exactly one matching
 /// `declare`. A lisp heap reference type (`ref<LispyPair>`) is accepted (carried
 /// as a tagged `i64`); a non-lisp `ref<Foo>` is still rejected (see
 /// `validate_rejects_unsupported_type`).
 #[test]
-fn dyn_cons_lowers_to_runtime_call() {
+fn dyn_pair_new_lowers_to_runtime_call() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1520,7 +1520,7 @@ fn dyn_cons_lowers_to_runtime_call() {
                 "call_builtin",
                 Some("p".into()),
                 vec![
-                    Operand::Var("dyn_cons".into()),
+                    Operand::Var("dyn_pair_new".into()),
                     Operand::Var("a".into()),
                     Operand::Var("b".into()),
                 ],
@@ -1529,19 +1529,19 @@ fn dyn_cons_lowers_to_runtime_call() {
             IIRInstr::new(
                 "call_builtin",
                 Some("h".into()),
-                vec![Operand::Var("dyn_car".into()), Operand::Var("p".into())],
+                vec![Operand::Var("dyn_pair_first".into()), Operand::Var("p".into())],
                 "any",
             ),
             IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "any"),
         ],
     );
     let ll = lower(&module_with(f));
-    assert!(ll.contains("declare i64 @__dyn_cons(i64, i64)"), "cons declare; got:\n{ll}");
-    assert!(ll.contains("declare i64 @__dyn_car(i64)"), "car declare; got:\n{ll}");
-    assert!(ll.contains("= call i64 @__dyn_cons(i64 "), "cons call site; got:\n{ll}");
-    assert!(ll.contains("= call i64 @__dyn_car(i64 "), "car call site; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__dyn_pair_new(i64, i64)"), "cons declare; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__dyn_pair_first(i64)"), "car declare; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__dyn_pair_new(i64 "), "cons call site; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__dyn_pair_first(i64 "), "car call site; got:\n{ll}");
     // Exactly one declare per used builtin (no duplicates from two call sites).
-    assert_eq!(ll.matches("declare i64 @__dyn_cons").count(), 1, "one cons declare");
+    assert_eq!(ll.matches("declare i64 @__dyn_pair_new").count(), 1, "one cons declare");
 }
 
 /// An unknown `dyn_*`-shaped builtin that is NOT in `DYN_BUILTINS` is rejected.
@@ -2535,7 +2535,9 @@ fn real_to_int_emits_round_check_and_fptosi() {
     assert!(ll.contains("call double @llvm.floor.f64(double %x)"), "expected floor intrinsic:\n{ll}");
     assert!(ll.contains("fcmp oge double") && ll.contains("fcmp olt double"),
         "expected ordered range comparisons:\n{ll}");
-    assert!(ll.contains("call void @llvm.trap()"), "expected trap on out-of-range:\n{ll}");
+    // LANG83: out of range is the typed `Trap.ConvRange` (id 4) through the
+    // shared `@__iir_trap`, which flushes stdout and names the kind.
+    assert!(ll.contains("call void @__iir_trap(ptr @__iir_trap_msg.4,"), "expected Trap.ConvRange on out-of-range:\n{ll}");
     assert!(ll.contains("fptosi double") && ll.contains("to i64"), "expected fptosi to i64:\n{ll}");
     assert!(ll.contains("declare double @llvm.floor.f64(double)"), "expected floor declare:\n{ll}");
 
@@ -2725,8 +2727,9 @@ fn e4dyn_string_procedure_return_and_call_result_print() {
     let ll = lower(&module);
 
     // `str` return type + call result map to i64 (the handle).
-    assert!(ll.contains("define i64 @pick(i64 %n)"),
-        "string procedure must lower to `define i64 @pick(i64 %n)`:\n{ll}");
+    // (`internal`: a non-entry function of a module with an entry point, #18416.)
+    assert!(ll.contains("define internal i64 @pick(i64 %n)"),
+        "string procedure must lower to `define internal i64 @pick(i64 %n)`:\n{ll}");
     assert!(ll.contains("= call i64 @pick(i64"),
         "the call result must be typed i64 (a runtime handle):\n{ll}");
     assert!(ll.contains("ret i64 "),
@@ -3198,7 +3201,7 @@ fn special_char_function_names_are_quoted_at_define_and_call() {
         release: None,
     };
     let ll = lower(&module);
-    assert!(ll.contains(r#"define i64 @"Some?"("#), "define not quoted:\n{ll}");
+    assert!(ll.contains(r#"define internal i64 @"Some?"("#), "define not quoted:\n{ll}");
     assert!(ll.contains(r#"call i64 @"Some?"("#), "call not quoted:\n{ll}");
     // A hyphenated name (Twig record accessor `point-x`) also needs quoting; a
     // plain identifier must stay UNQUOTED (quoting is conservative but the common
@@ -3696,7 +3699,7 @@ fn checked_ops_on_real_clang_flush_then_trap_overflow() {
 }
 
 // ===========================================================================
-// LANG83 PR6a — write_f64_py / write_f64_js
+// LANG83 PR6a / PR7e — float output is the compiler's, not the backend's
 // ===========================================================================
 
 /// `main` writes each value with `builtin`, a space after each, and also uses
@@ -3723,61 +3726,116 @@ fn float_program(builtin: &str, values: &[f64]) -> IIRModule {
     }
 }
 
+/// LANG83 PR7e: PR6a's `write_f64_py` / `write_f64_js` (the module-local
+/// `@__iir_write_f64`) are gone. A module that still calls one is refused
+/// at lowering, never compiled into a call nothing defines. (The layout
+/// moved into the compilers' own helpers; `lang-aot`'s `op_conformance`
+/// runs them over the PR6a table on this column.)
 #[test]
-fn float_writers_call_one_module_local_routine_with_a_layout_flag() {
-    let ll = lower(&float_program("write_f64_py", &[1.5]));
-    assert!(ll.contains("call void @__iir_write_f64(double "), "{ll}");
-    assert!(ll.contains(", i32 0)"), "Python layout is 0");
-    assert_eq!(ll.matches("define linkonce_odr void @__iir_write_f64(").count(), 1);
-    assert_eq!(ll.matches("define linkonce_odr i32 @__iir_f64_digits(").count(), 1);
-    assert_eq!(ll.matches("declare i32 @putchar(i32)").count(), 1, "putchar declared once");
+fn retired_float_writers_are_refused() {
+    for name in ["write_f64_py", "write_f64_js"] {
+        let err = lower_iir_to_llvm(&float_program(name, &[1.5]), &IIRLlvmConfig::default())
+            .expect_err(name);
+        assert!(format!("{err:?}").contains(name), "{name}: {err:?}");
+    }
+}
+
+// ===========================================================================
+// LANG83 PR7b — f64_class / f64_digits / f64_exp10
+// ===========================================================================
+
+/// `main` writes `f64_class`, `f64_digits` and `f64_exp10` of each value with
+/// `write_i64`, a space after each (and, when `with_putchar` is false, no
+/// separator at all, so the module uses no `putchar`).
+fn digit_program(values: &[f64], with_putchar: bool) -> IIRModule {
+    let mut m = float_program("write_i64", &[]);
+    let ret = m.functions[0].instructions.split_off(1);
+    let body = &mut m.functions[0].instructions;
+    for (i, x) in values.iter().enumerate() {
+        let c = format!("c{i}");
+        body.push(IIRInstr::new("const", Some(c.clone()), vec![Operand::Float(*x)], "f64"));
+        for op in ["f64_class", "f64_digits", "f64_exp10"] {
+            let r = format!("{op}{i}");
+            body.push(IIRInstr::new(op, Some(r.clone()), vec![v(&c)], "i64"));
+            body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&r)], "void"));
+            if with_putchar {
+                body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+            }
+        }
+    }
+    body.extend(ret);
+    m
+}
+
+#[test]
+fn digit_ops_emit_the_core_and_wrappers_but_not_the_writer() {
+    let ll = lower(&digit_program(&[1.5], false));
+    // f64_class: reinterpret, mask the sign, three unsigned compares summed.
+    assert!(ll.contains("bitcast double 0x3FF8000000000000 to i64"), "{ll}");
+    assert!(ll.contains("and i64 %__clsbits"), "{ll}");
+    for cmp in ["icmp ne i64 %__clsmag", "icmp uge i64 %__clsmag", "icmp ugt i64 %__clsmag"] {
+        assert!(ll.contains(cmp), "missing `{cmp}`:\n{ll}");
+    }
+    assert!(ll.contains("= call i64 @__iir_f64_shortest_digits(double 0x3FF8000000000000)"), "{ll}");
+    assert!(ll.contains("= call i64 @__iir_f64_shortest_exp10(double 0x3FF8000000000000)"), "{ll}");
+    assert_eq!(ll.matches("define internal i32 @__iir_f64_digits(").count(), 1);
+    assert_eq!(ll.matches("define internal i64 @__iir_f64_shortest_digits(").count(), 1);
+    // No layout code, and nothing that writes a byte: the digits are pure.
+    assert!(!ll.contains("@__iir_write_f64") && !ll.contains("@putchar"), "{ll}");
     // Self-contained: no harness runtime and no libc formatter.
-    assert!(!ll.contains("@printf") && !ll.contains("@__twig_") && !ll.contains("@snprintf"));
-    let js = lower(&float_program("write_f64_js", &[1.5]));
-    assert!(js.contains(", i32 1)"), "JavaScript layout is 1");
-    // A module that prints no float carries none of it.
+    assert!(!ll.contains("@__twig_") && !ll.contains("@snprintf"), "{ll}");
+    // With separators, `putchar` is declared once, and there is still one core.
+    let ll = lower(&digit_program(&[1.5, 2.5], true));
+    assert_eq!(ll.matches("define internal i32 @__iir_f64_digits(").count(), 1, "{ll}");
+    assert_eq!(ll.matches("declare i32 @putchar(i32)").count(), 1);
+    assert!(validate_for_llvm(&digit_program(&[1.5], true)).is_empty());
+    // A module that asks for no digits carries none of it.
     assert!(!lower(&floor_program("i64_div_floor", &[(7, 2)])).contains("__iir_f64_digits"));
+    // The reserved namespace is refused for the digit ops too.
+    let mut clash = digit_program(&[1.0], false);
+    clash.functions.push(IIRFunction::new("__iir_f64_shortest_digits", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
+    assert!(lower_iir_to_llvm(&clash, &IIRLlvmConfig::default()).is_err());
 }
 
 #[test]
-fn float_writers_match_python_and_javascript_on_real_clang() {
-    let values = [
-        0.0, -0.0, 1.0, 100.0, 0.1, 123.456, 1e15, 1e16, 1e21, 1e-4, 1e-5, 1e-7, 1.5e-7, 5e-324,
-        1.7976931348623157e308, 2.9802322387695312e-08, f64::INFINITY, f64::NEG_INFINITY, f64::NAN,
+fn digit_ops_match_python_repr_on_real_clang() {
+    // (value, class, digits, exp10) — the digits are host python3's repr.
+    let rows: &[(f64, &str)] = &[
+        (1.5, "1 15 0"),
+        (-1.5, "1 15 0"),
+        (100.0, "1 1 2"),
+        (0.1, "1 1 -1"),
+        (123.456, "1 123456 2"),
+        (1e21, "1 1 21"),
+        (1e-7, "1 1 -7"),
+        (5e-324, "1 5 -324"),
+        (2.2250738585072014e-308, "1 22250738585072014 -308"),
+        (1.7976931348623157e308, "1 17976931348623157 308"),
+        (2.9802322387695312e-08, "1 29802322387695312 -8"),
+        (1072012167405248.2, "1 10720121674052482 15"),
+        (0.0, "0 0 0"),
+        (-0.0, "0 0 0"),
+        (f64::INFINITY, "2 0 0"),
+        (f64::NEG_INFINITY, "2 0 0"),
+        (f64::NAN, "3 0 0"),
     ];
-    let Some(out) = run_on_clang(&float_program("write_f64_py", &values), "f64_py") else { return };
-    assert!(out.status.success());
-    // Every expected string is what host python3 / node print.
-    assert_eq!(
-        String::from_utf8_lossy(&out.stdout),
-        "0.0 -0.0 1.0 100.0 0.1 123.456 1000000000000000.0 1e+16 1e+21 0.0001 1e-05 1e-07 1.5e-07 \
-         5e-324 1.7976931348623157e+308 2.9802322387695312e-08 inf -inf nan "
-    );
-    let out = run_on_clang(&float_program("write_f64_js", &values), "f64_js").expect("clang present");
-    assert!(out.status.success());
-    assert_eq!(
-        String::from_utf8_lossy(&out.stdout),
-        "0 0 1 100 0.1 123.456 1000000000000000 10000000000000000 1e+21 0.0001 0.00001 1e-7 1.5e-7 \
-         5e-324 1.7976931348623157e+308 2.9802322387695312e-8 Infinity -Infinity NaN "
-    );
-}
-
-#[test]
-fn a_module_function_in_the_reserved_iir_namespace_is_refused_when_floats_are_printed() {
-    let mut m = float_program("write_f64_js", &[1.0]);
-    m.functions.push(IIRFunction::new("__iir_f64_digits", vec![], "void", vec![IIRInstr::new("ret_void", None, vec![], "void")]));
-    assert!(lower_iir_to_llvm(&m, &IIRLlvmConfig::default()).is_err());
+    let values: Vec<f64> = rows.iter().map(|(x, _)| *x).collect();
+    let Some(out) = run_on_clang(&digit_program(&values, true), "f64_digits") else { return };
+    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
+    let want: String = rows.iter().map(|(_, w)| format!("{w} ")).collect();
+    assert_eq!(String::from_utf8_lossy(&out.stdout), want);
 }
 
 // ===========================================================================
 // LANG83 PR6c — non-trapping IEEE f64 arithmetic and f64_signbit
 // ===========================================================================
 
-/// `main` runs each `(op, operands)` on float constants, writes the result
-/// with `write_f64_js`, then writes its `f64_signbit` with `write_i64`, a
-/// space after each.
+/// `main` runs each `(op, operands)` on float constants and writes the
+/// result's `f64_class`, `f64_digits`, `f64_exp10` and `f64_signbit` with
+/// `write_i64`, a space after each. Those four identify every value (PR6a
+/// observed it through `write_f64_js`, removed in PR7e).
 fn ieee_program(cases: &[(&str, &[f64])]) -> IIRModule {
-    let mut m = float_program("write_f64_js", &[]);
+    let mut m = float_program("write_i64", &[]);
     let ret = m.functions[0].instructions.split_off(1);
     let body = &mut m.functions[0].instructions;
     for (i, (op, xs)) in cases.iter().enumerate() {
@@ -3789,8 +3847,12 @@ fn ieee_program(cases: &[(&str, &[f64])]) -> IIRModule {
         }
         let (r, s) = (format!("r{i}"), format!("s{i}"));
         body.push(IIRInstr::new(*op, Some(r.clone()), srcs, "f64"));
-        body.push(IIRInstr::new("call_builtin", None, vec![v("write_f64_js"), v(&r)], "void"));
-        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+        for query in ["f64_class", "f64_digits", "f64_exp10"] {
+            let q = format!("{query}{i}");
+            body.push(IIRInstr::new(query, Some(q.clone()), vec![v(&r)], "i64"));
+            body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&q)], "void"));
+            body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+        }
         body.push(IIRInstr::new("f64_signbit", Some(s.clone()), vec![v(&r)], "i64"));
         body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&s)], "void"));
         body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
@@ -3846,13 +3908,22 @@ fn ieee_ops_follow_the_edge_table_on_real_clang() {
     ]);
     let Some(out) = run_on_clang(&program, "ieee") else { return };
     assert!(out.status.success(), "nothing traps: {}", String::from_utf8_lossy(&out.stderr));
-    // A NaN's sign bit is unspecified, so its signbit (after each "NaN") is
-    // checked only for being 0 or 1.
+    // Each row is `class digits exp10 signbit`: class 2 is ±Infinity, 3 NaN,
+    // 0 a zero (whose sign the signbit tells). A NaN's sign bit is
+    // unspecified, so it is checked only for being 0 or 1.
     let text = String::from_utf8_lossy(&out.stdout).into_owned();
     let words: Vec<&str> = text.split_whitespace().collect();
     let want = [
-        "Infinity", "0", "-Infinity", "1", "NaN", "?", "0", "1", "Infinity", "0",
-        "0.30000000000000004", "0", "0", "1", "NaN", "?", "0", "1", "Infinity", "0",
+        "2", "0", "0", "0", // 1/0 = Infinity
+        "2", "0", "0", "1", // -1/0 = -Infinity
+        "3", "0", "0", "?", // 0/0 = NaN
+        "0", "0", "0", "1", // -1 × 0 = -0
+        "2", "0", "0", "0", // 1e308 × 10 = Infinity
+        "1", "30000000000000004", "-1", "0", // 0.1 + 0.2
+        "0", "0", "0", "1", // -0 - 0 = -0
+        "3", "0", "0", "?", // Infinity - Infinity = NaN
+        "0", "0", "0", "1", // -(0) = -0
+        "2", "0", "0", "0", // -(-Infinity) = Infinity
     ];
     assert_eq!(words.len(), want.len(), "{text}");
     for (got, want) in words.iter().zip(want) {
@@ -3862,4 +3933,51 @@ fn ieee_ops_follow_the_edge_table_on_real_clang() {
             assert_eq!(*got, want, "{text}");
         }
     }
+}
+
+/// #18416: in a module with an entry point, only the entry keeps external
+/// linkage; every other function is `internal`, so a program function named
+/// `abort` / `malloc` / … cannot replace the libc function the linked C
+/// runtime calls. A module without an entry point is a library and keeps
+/// every function external.
+#[test]
+fn only_the_entry_point_has_external_linkage() {
+    let ret_param = |name: &str| {
+        IIRFunction::new(
+            name,
+            vec![("x".into(), "i64".into())],
+            "i64",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64")],
+        )
+    };
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("call", Some("r".into()), vec![Operand::Var("abort".into()), Operand::Var("k".into())], "i64"),
+            IIRInstr::new("call", Some("s".into()), vec![Operand::Var("malloc".into()), Operand::Var("r".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "i64"),
+        ],
+    );
+    let module = |entry: Option<&str>| IIRModule {
+        name: "t".into(),
+        functions: vec![ret_param("abort"), ret_param("malloc"), main.clone()],
+        entry_point: entry.map(str::to_string),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+        release: None,
+    };
+
+    let ll = lower(&module(Some("main")));
+    assert!(ll.contains("define i64 @main()"), "the entry stays external:\n{ll}");
+    assert!(ll.contains("define internal i64 @abort(i64 %x)"), "abort must be internal:\n{ll}");
+    assert!(ll.contains("define internal i64 @malloc(i64 %x)"), "malloc must be internal:\n{ll}");
+    // Calls inside the module still reach the program's own functions.
+    assert!(ll.contains("call i64 @abort(i64"), "{ll}");
+
+    let lib = lower(&module(None));
+    assert!(!lib.contains("define internal"), "a library module keeps external linkage:\n{lib}");
 }

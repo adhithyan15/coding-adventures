@@ -1,0 +1,11 @@
+{
+  "id": "JA-C331-juumin",
+  "pathSegment": "JA-PATH-331-SHAKAI331",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-331-SHAKAI331",
+      "order": 2
+    }
+  ]
+}

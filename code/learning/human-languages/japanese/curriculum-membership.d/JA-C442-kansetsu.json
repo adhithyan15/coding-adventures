@@ -1,0 +1,11 @@
+{
+  "id": "JA-C442-kansetsu",
+  "pathSegment": "JA-PATH-442-INSIDE442",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-442-INSIDE442",
+      "order": 4
+    }
+  ]
+}

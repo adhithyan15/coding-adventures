@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-107-MOVE107",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-107-MOVE107"
+  ],
+  "after": []
+}

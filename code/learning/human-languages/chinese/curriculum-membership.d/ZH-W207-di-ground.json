@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W207-di-ground",
+  "pathSegment": "ZH-PATH-207-PLACE207",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-207-PLACE207",
+      "order": 1
+    }
+  ]
+}

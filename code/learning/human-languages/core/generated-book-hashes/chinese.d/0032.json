@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:295c44dc858a33d3",
+  "lessonIds": [
+    "ZH-C32-mama",
+    "ZH-W32-ma-mum",
+    "ZH-C32-baba",
+    "ZH-C32-gege",
+    "ZH-C32-jiejie",
+    "ZH-C32-didi"
+  ],
+  "tex": "chinese/book/chapters/ch32-mum-and-dad.tex"
+}

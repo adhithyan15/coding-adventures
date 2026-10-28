@@ -1,0 +1,11 @@
+{
+  "id": "JA-C522-nandemo",
+  "pathSegment": "JA-PATH-522-SOME522",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-522-SOME522",
+      "order": 4
+    }
+  ]
+}

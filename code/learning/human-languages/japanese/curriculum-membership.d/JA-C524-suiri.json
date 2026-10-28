@@ -1,0 +1,11 @@
+{
+  "id": "JA-C524-suiri",
+  "pathSegment": "JA-PATH-524-IMAGINE524",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-524-IMAGINE524",
+      "order": 3
+    }
+  ]
+}

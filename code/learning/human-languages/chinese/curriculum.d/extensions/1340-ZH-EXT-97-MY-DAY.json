@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-97-MY-DAY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can read a short day in characters and write one line of my own.",
+  "prerequisites": []
+}

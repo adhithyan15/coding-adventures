@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C393-furimuku",
+    "language": "japanese",
+    "chapter": 393,
+    "sequence": 23120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55d73c773fe76dae"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 32,
+  "title": "Mum and Dad",
+  "label": "ch:zh-mum-and-dad",
+  "canDo": "I can name my parents, brothers and sisters.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C32-didi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 32: I can name my parents, brothers and sisters.",
+    "assesses": [
+      "ZH-LEX-C32-FAMILY32-03",
+      "ZH-LEX-C32-FAMILY32-04",
+      "ZH-LEX-C32-FAMILY32-05"
+    ]
+  }
+}

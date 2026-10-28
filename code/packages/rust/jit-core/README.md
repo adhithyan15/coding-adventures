@@ -132,7 +132,9 @@ registers with vm-core and in `JITCore::execute` — so the failure surfaces as
 of a failing compiled function stops at the `call`.  `GenericCirJit` maps its
 error slot to `VMError::Trap { kind }` (`trap: <kind>`),
 `VMError::DivisionByZero`, or `VMError::Custom`, and the slot is empty again
-when `JITCore` returns.
+when `JITCore` returns. An embedder's builtin callback can fail the run the
+same way: it captures `error_handle()`, stores a message, and returns any
+placeholder. The interpreter stops right after that `CALL_BUILTIN`.
 
 ### Compiling functions with parameters
 
@@ -150,6 +152,15 @@ pre-binds the parameters to registers `0..n` in declaration order, and its
 `double(21)`, correctly returns `42` — the same register-VM/JIT contract any
 future frontend reuses with zero per-language code. (Before v0.4.0 `run`
 ignored its `args`, so such a function read its parameter as `0`.)
+
+### Functions too big for a frame
+
+vm-core refuses a module containing a function with more than 65,536 frame
+registers (`VMError::RegisterLimitExceeded`, checked before anything runs).
+`GenericCirJit` encodes register numbers in one byte, so a function that still
+needs more than 256 registers after optimisation is declined and stays
+interpreted — and `execute_with_jit` then returns the interpreter's typed error.
+Neither tier drops a register silently (`tests/register_limit.rs`).
 
 ## CIRInstr mnemonic conventions
 
@@ -199,11 +210,27 @@ module that uses a refused op at compile time, with a typed error. Since LANG83 
 `trap: Trap.Overflow` to the error slot, which `JITCore` drains into
 `VMError::Trap` so an interpreted caller stops too. `CIRInstr::is_pure` treats all
 four as impure, so dead-code elimination keeps an unused checked op.
-LANG83 PR6a adds `write_f64_py` / `write_f64_js` (`CALL_BUILTIN_F64`, which
-hands the embedder a `Value::Float`). To support them, `const_f64` compiles to
-the float's bits. Every other use of a float register still refuses the whole
-function, so it runs on the interpreter tier.
+LANG83 PR6a made `const_f64` compile to the float's bits and an `f64`
+parameter load through a checked `PARAM_F64` prologue. Its float writers
+`write_f64_py` / `write_f64_js` (the `CALL_BUILTIN_F64` bytecode, 0x51) were
+removed in LANG83 PR7e: 0x51 is now an unknown opcode, and a `call_builtin`
+of a float register refuses the function like any other use of a float
+register outside the float ops below.
 LANG83 PR6c adds `ADD_F64` … `DIV_F64`, `NEG_F64`, `SIGNBIT_F64` and `RET_F64`:
 the destinations of `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` are float
 registers too (holding the bits), the ops compute in Rust `f64` (never a trap),
 and `f64_signbit` writes an ordinary integer register.
+LANG83 PR7b adds `CLASS_F64` / `DIGITS_F64` / `EXP10_F64` (`f64_class`,
+`f64_digits`, `f64_exp10`): like `SIGNBIT_F64`, a float register in and an
+integer register out, computed by `vm_core::float_format`. A compiler's
+float-layout helper (`__py_write_float`, `__js_write_number`) is integer code
+over these; its call-free parts compile here, and the parts with a `call` run
+on the interpreter tier.
+The LANG83 conversions follow: `int_to_real` (`I64_TO_F64`, Rust `as f64`)
+reads an integer register and writes a float register, and
+`real_to_int_trunc`/`real_to_int_floor` (`F64_TO_I64_TRUNC`/`F64_TO_I64_FLOOR`)
+read a float register and write an integer one. A source of the wrong class
+refuses the function. A failed narrowing (a non-finite value, or one outside
+i64) writes vm-core's own `real_to_i64_checked` text to the error slot, and
+`JITCore` returns it as the same `VMError::Custom`, so both tiers fail
+identically.

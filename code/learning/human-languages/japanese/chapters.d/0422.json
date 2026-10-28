@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Eating Out on the Road",
+  "label": "ch:ja-eating-out-on-the-road",
+  "canDo": "I can choose what to eat on a trip.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C422-yakitori",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can choose what to eat on a trip.",
+    "assesses": [
+      "JA-LEX-C422-WASHOKU422-03",
+      "JA-LEX-C422-WASHOKU422-04",
+      "JA-LEX-C422-WASHOKU422-05"
+    ]
+  }
+}

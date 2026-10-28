@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C209-yunxu",
+    "language": "chinese",
+    "chapter": 209,
+    "sequence": 16120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c17330eddd1c65bf"
+  },
+  "findings": []
+}

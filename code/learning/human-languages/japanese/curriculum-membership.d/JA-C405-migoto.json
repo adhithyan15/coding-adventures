@@ -1,0 +1,11 @@
+{
+  "id": "JA-C405-migoto",
+  "pathSegment": "JA-PATH-405-TEIEN405",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-405-TEIEN405",
+      "order": 2
+    }
+  ]
+}

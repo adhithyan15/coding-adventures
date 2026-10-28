@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:10ca3ef890ed7182",
+  "lessonIds": [
+    "ZH-C159-woshi",
+    "ZH-C159-keting",
+    "ZH-C159-shufang",
+    "ZH-W159-fang-room",
+    "ZH-C159-yangtai",
+    "ZH-C159-chuanghu"
+  ],
+  "tex": "chinese/book/chapters/ch159-rooms-at-home.tex"
+}

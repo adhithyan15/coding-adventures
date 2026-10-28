@@ -1,0 +1,11 @@
+{
+  "id": "JA-C443-oyayubi",
+  "pathSegment": "JA-PATH-443-WRIST443",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-443-WRIST443",
+      "order": 2
+    }
+  ]
+}

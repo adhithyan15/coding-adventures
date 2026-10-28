@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:1b8f10b1969a76da",
+  "lessonIds": [
+    "JA-C484-saihou",
+    "JA-C484-amu",
+    "JA-C484-keito",
+    "JA-C484-hokorobiru",
+    "JA-C484-shibaru"
+  ],
+  "tex": "japanese/book/chapters/ch484-needle-and-thread.tex"
+}

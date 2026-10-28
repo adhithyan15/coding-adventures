@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C364-songai",
+    "language": "japanese",
+    "chapter": 364,
+    "sequence": 21430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65951ae3d0480ac6"
+  },
+  "findings": []
+}

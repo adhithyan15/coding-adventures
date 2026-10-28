@@ -1,0 +1,11 @@
+{
+  "id": "JA-C359-henkin",
+  "pathSegment": "JA-PATH-359-SHAKKIN359",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-359-SHAKKIN359",
+      "order": 3
+    }
+  ]
+}

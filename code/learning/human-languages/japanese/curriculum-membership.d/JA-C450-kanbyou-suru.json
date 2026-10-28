@@ -1,0 +1,11 @@
+{
+  "id": "JA-C450-kanbyou-suru",
+  "pathSegment": "JA-PATH-450-CLINIC450",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-450-CLINIC450",
+      "order": 4
+    }
+  ]
+}

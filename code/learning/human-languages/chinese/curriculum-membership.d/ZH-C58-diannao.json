@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C58-diannao",
+  "pathSegment": "ZH-PATH-58-THINGS58",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-58-THINGS58",
+      "order": 3
+    }
+  ]
+}

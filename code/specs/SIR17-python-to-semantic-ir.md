@@ -111,6 +111,9 @@ params, body }` row for `def` carries `captures: []` for a top-level
 `def` and a non-empty capture list for a lifted nested `def`/`lambda`.
 A bare reference to a function name yields a `MakeClosure` (re-threading
 the function's captures from the currently visible enclosing values).
+A call by name to a function that **has captures** lowers to
+`IndirectCall(MakeClosure(f, captures), args)` rather than `DirectCall`,
+which cannot pass captures (see §Closures).
 `MutualRecursion` is declared when two top-level functions transitively
 call each other (a self-recursive 1-cycle does not count).
 
@@ -231,6 +234,70 @@ unresolved.
 `lambda` and nested `def` become fresh top-level synthesised
 `Function`s with computed captures, matching SIR11's approach.  Free
 variables not in scope at the call site become `Capture`s.
+
+**Invariant.**  Every `MakeClosure { fn_name: f, captures }` the frontend
+emits threads exactly `f`'s declared `captures` (same names, same count).
+No `DirectCall` targets a function whose `captures` is non-empty.
+
+**Capture rule.**  A closure for `f` captures:
+
+1. every free name of `f`'s body that is a local, param or capture of
+   the enclosing function; and
+2. the captures of every capturing function that `f`'s body names
+   (calls or uses as a value), since `f` must build that function's
+   closure.
+
+**When the list is decided** (#18468).  A function's capture list is
+fixed *before* its body is lowered, so a body that names its own
+function (`h = go`, or a recursive `go(x - 1)`) threads the full list.
+Rule 2 can be circular: mutually-recursive siblings, or a function naming
+itself.  So it is solved as a fixpoint over a *group*: the function plus
+every not-yet-lowered sibling `def` (written directly in the same body)
+that the group names.  A sibling first named before its own `def` has its
+list fixed at that earlier point.  If its body reads a name bound only
+after that point, the program is rejected as deferred: the earlier
+sibling could not have threaded it.  To make this possible, the first
+(name-collecting) pass also records each `def`'s free names and its
+parent body.
+
+**Calls through closures.**  A call by name to a function with captures
+is `IndirectCall(MakeClosure(f, captures), args)`.  Backends apply a
+closure leniently: no default filling, no keyword matching, and a missing
+argument reads as nil.  So the frontend accepts such a call only when `f`
+has plain positional parameters and the call passes exactly that many
+positional arguments.  Anything else is a positioned error.
+
+**Same variable.**  A capture value threaded at a closure-building site
+must denote the variable the function captured.  In the function's
+defining body, any binding of that name qualifies.  Anywhere else, only
+a `Capture` qualifies.  A function that binds a name itself (a param or
+a local) cannot inherit that name through rule 2.  Such programs are
+rejected as deferred.
+
+**Checked, and budgeted.**  The frontend walks the finished module and
+rejects any `MakeClosure` whose capture names (in order) differ from its
+target's, and any `DirectCall` to a capturing function.  This catches
+closures built before their target's list was decided, such as from a
+method body or a default value.
+
+**Budget.**  A function may carry at most 256 captures.  This is
+deliberate: rule 2 spreads captures along chains of functions, and
+without a bound a chain of M functions, the last reading V outer names,
+emits M·V capture slots.  The bound applies to every function, including
+a top-level `def` reading module-level variables (which are `main`
+locals, hence captures).  There is no bound on how many capture-free
+functions name each other.
+
+**Known limitation.**  A function that binds `n` itself is refused if it
+names a function capturing an enclosing `n`, even when the call comes
+before the binding.  Supporting it requires renaming one of the two.
+
+Synthesised `__lambda_<N>` names are not resolvable from source, and
+every `def` name must be unique, since all `def`s share one namespace.
+
+*Divergence note:* the M4 text above described only the bare-reference
+`MakeClosure`; calls to capturing functions were `DirectCall`s that no
+backend could run.  This section was added with the #18468 fix.
 
 ## Top-level
 

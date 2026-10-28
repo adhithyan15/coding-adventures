@@ -42,7 +42,10 @@ vocabulary (attained A2). **Chapters 250-261 are the B1 core**: the track's firs
 grammar lessons (the plain past, the plain negative, -て, -ている, と おもう, から /
 ので, -た ほうが いい, -かった, -た ことが ある, より, -たら, に よります), the five B1
 spine nodes, a reading, a six-line writing task and six copy-only kanji (月 年 出 人
-中 今). The B1 vocabulary (about 1,360 headwords) is the next step toward B1.
+中 今). **Chapters 262-533 are the B1 vocabulary** (1,360 headwords, 439 verbs),
+and Japanese attains B1. Still ahead: the potential, passive, causative,
+volitional and imperative, -ば, -ながら, -たり, -ても, keigo beyond -ます /
+です, katakana beyond コ, ヒ and ー, more kanji, and the four B2 spine nodes.
 
 ## Dependency order from here
 

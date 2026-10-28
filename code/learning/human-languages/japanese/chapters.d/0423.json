@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "A Treat and the Bill",
+  "label": "ch:ja-a-treat-and-the-bill",
+  "canDo": "I can treat a friend and split the bill.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C423-manpuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can treat a friend and split the bill.",
+    "assesses": [
+      "JA-LEX-C423-GOCHISOU423-03",
+      "JA-LEX-C423-GOCHISOU423-04",
+      "JA-LEX-C423-GOCHISOU423-05"
+    ]
+  }
+}

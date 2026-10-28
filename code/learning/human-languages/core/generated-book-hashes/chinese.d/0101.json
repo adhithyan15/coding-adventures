@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:6fa3210b648a442f",
+  "lessonIds": [
+    "ZH-C101-chufang",
+    "ZH-C101-baicai",
+    "ZH-W101-cai",
+    "ZH-C101-kuaizi",
+    "ZH-C101-panzi",
+    "ZH-C101-dao"
+  ],
+  "tex": "chinese/book/chapters/ch101-in-the-kitchen.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-150-EVER",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask whether someone has ever done something, and answer.",
+  "prerequisites": []
+}

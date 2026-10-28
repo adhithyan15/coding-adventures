@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-241-WARD241",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell how someone went into hospital, the ward, the operation, coming home and getting better.",
+  "prerequisites": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:9ce5ce707d3bcf01",
+  "lessonIds": [
+    "ZH-C86-nar-where",
+    "ZH-W86-na-where",
+    "ZH-C86-shangbian",
+    "ZH-C86-xiabian",
+    "ZH-C86-xishoujian",
+    "ZH-C86-practice"
+  ],
+  "tex": "chinese/book/chapters/ch86-where-is-it.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Steamed or Fried",
+  "label": "ch:zh-steamed-or-fried",
+  "canDo": "I can talk about steaming, deep-frying, stewing and boiling water, and ask for sugar.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C168-tang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can talk about steaming, deep-frying, stewing and boiling water, and ask for sugar.",
+    "assesses": [
+      "ZH-LEX-C168-COOK168-03",
+      "ZH-LEX-C168-COOK168-04",
+      "ZH-LEX-C168-COOK168-05"
+    ]
+  }
+}

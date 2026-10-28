@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-50-SLEEP50",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when I sleep, get up and rest, and ask about health.",
+  "prerequisites": []
+}

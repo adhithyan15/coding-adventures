@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W205-gong-public",
+  "pathSegment": "ZH-PATH-205-FAR205",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-205-FAR205",
+      "order": 3
+    }
+  ]
+}

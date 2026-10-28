@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C43-hui",
+  "pathSegment": "ZH-PATH-43-GO43",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-43-GO43",
+      "order": 2
+    }
+  ]
+}

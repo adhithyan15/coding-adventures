@@ -25,7 +25,7 @@
 //!
 //! See `code/specs/LANG83-iir-standard-operation-registry.md`.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport};
+use interpreter_ir::op_registry::{support_from_table, OpSupport, NO_TAGGED_WORD_RUNTIME};
 use OpSupport::{Lowered, Refused};
 
 /// Why the BEAM backend refuses the LANG83 PR6c IEEE arithmetic.
@@ -48,9 +48,6 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("putchar", Lowered),
     ("print_str", Lowered),
     ("write_i64", Lowered),
-    // LANG83 PR6a — module-local '__iir_write_f64'/2.
-    ("write_f64_py", Lowered),
-    ("write_f64_js", Lowered),
     // ── Strings (LANG-FULL E4) ──────────────────────────────────────────────
     ("str_const", Lowered),
     ("str_len", Lowered),
@@ -97,10 +94,30 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_div", Refused(NO_IEEE_SPECIALS)),
     ("f64_neg", Refused(NO_IEEE_SPECIALS)),
     ("f64_signbit", Lowered),
+    // LANG83 PR7b — all three lower: `f64_class` is two exact compares with
+    // ±0.0 (a BEAM float is finite, so only classes 0 and 1 occur);
+    // `f64_digits` / `f64_exp10` call module-local helpers sharing the PR6a
+    // `float_to_list(F, [short])` parse.
+    ("f64_class", Lowered),
+    ("f64_digits", Lowered),
+    ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
     ("int_to_real", Lowered),
     ("real_to_int_trunc", Lowered),
     ("real_to_int_floor", Lowered),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // This backend's dynamic values are structural (lang-aot lowers pairs to
+    // `alloc`/`field_*` before it runs); it has no tagged-word runtime.
+    ("dyn_box_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_unbox_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_tag", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_new", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_first", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_rest", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_pair", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_symbol", Refused(NO_TAGGED_WORD_RUNTIME)),
     // ── Errors ──────────────────────────────────────────────────────────────
     ("trap", Lowered),
 ];

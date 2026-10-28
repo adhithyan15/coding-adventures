@@ -4845,11 +4845,24 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<ExactIntegerSignProof<'n>> {
+        self.builtin_exact_integer_sign_operand_with_limit(
+            node,
+            MAX_EXACT_SIGN_INTEGER_MAGNITUDE,
+        )
+    }
+
+    fn builtin_exact_integer_sign_operand_with_limit<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+        magnitude_limit: u64,
+    ) -> Option<ExactIntegerSignProof<'n>> {
         if let Some((_condition, then_node, else_node)) =
             self.conditional_expression_parts(node)
         {
-            let then_proof = self.builtin_exact_integer_sign_operand(then_node)?;
-            let else_proof = self.builtin_exact_integer_sign_operand(else_node)?;
+            let then_proof =
+                self.builtin_exact_integer_sign_operand_with_limit(then_node, magnitude_limit)?;
+            let else_proof =
+                self.builtin_exact_integer_sign_operand_with_limit(else_node, magnitude_limit)?;
             if self.is_selector_call_safe_runtime_real_root(then_proof.operand)
                 && self.is_selector_call_safe_runtime_real_root(else_proof.operand)
             {
@@ -4862,11 +4875,13 @@ impl Compiler {
             return None;
         }
         if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_exact_integer_sign_operand(child);
+            return self.builtin_exact_integer_sign_operand_with_limit(child, magnitude_limit);
         }
         if let Some((sign, child)) = single_signed_child(node) {
             return matches!(sign, "+" | "-")
-                .then(|| self.builtin_exact_integer_sign_operand(child))?;
+                .then(|| {
+                    self.builtin_exact_integer_sign_operand_with_limit(child, magnitude_limit)
+                })?;
         }
         if pieces(node)
             .iter()
@@ -4901,7 +4916,8 @@ impl Compiler {
                         },
                     )
                 })?;
-            let mut proof = self.builtin_exact_integer_sign_operand(base)?;
+            let mut proof =
+                self.builtin_exact_integer_sign_operand_with_limit(base, magnitude_limit)?;
             if exponent == 0 {
                 proof.magnitude = 1;
                 proof.value_gcd = 1;
@@ -4909,7 +4925,7 @@ impl Compiler {
             }
             proof.magnitude = proof.magnitude.checked_pow(exponent)?;
             proof.value_gcd = proof.value_gcd.checked_pow(exponent)?;
-            return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(proof);
+            return (proof.magnitude <= magnitude_limit).then_some(proof);
         }
         if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
             let sequence = pieces(node);
@@ -4922,7 +4938,9 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(candidate) = self.builtin_exact_integer_sign_operand(operand) {
+                        if let Some(candidate) = self
+                            .builtin_exact_integer_sign_operand_with_limit(operand, magnitude_limit)
+                        {
                             rooted.push(candidate);
                         } else {
                             let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
@@ -4965,8 +4983,7 @@ impl Compiler {
                 }
                 proof.magnitude = proof.magnitude.checked_add(static_magnitude)?;
                 proof.value_gcd = integer_gcd(proof.value_gcd, static_offset.unsigned_abs());
-                return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
-                    .then_some(proof);
+                return (proof.magnitude <= magnitude_limit).then_some(proof);
             }
         }
         if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
@@ -4979,7 +4996,10 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(candidate) = self.builtin_exact_integer_sign_operand(operand) {
+                        if let Some(candidate) = self.builtin_exact_integer_sign_operand_with_limit(
+                            operand,
+                            MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE,
+                        ) {
                             rooted.push((index, candidate));
                         } else {
                             let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
@@ -5055,7 +5075,7 @@ impl Compiler {
                     if let Some(units) = prefix_units {
                         proof.magnitude = proof.magnitude.checked_mul(units)?;
                         proof.value_gcd = proof.value_gcd.checked_mul(units)?;
-                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE {
                             return None;
                         }
                     }
@@ -5114,7 +5134,10 @@ impl Compiler {
                                         *units,
                                     );
                             } else if operator == "/" {
-                                if *units == 0 || proof.value_gcd % *units != 0 {
+                                if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE
+                                    || *units == 0
+                                    || proof.value_gcd % *units != 0
+                                {
                                     return None;
                                 }
                                 proof.magnitude /= *units;
@@ -5123,14 +5146,14 @@ impl Compiler {
                                 return None;
                             }
                         }
-                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE {
                             return None;
                         }
                     }
                     if remaining_roots.next().is_some() || remaining_static.next().is_some() {
                         return None;
                     }
-                    return Some(proof);
+                    return (proof.magnitude <= magnitude_limit).then_some(proof);
                 }
                 let (rooted_index, mut proof) = rooted.into_iter().next()?;
                 let folds_integer_prefix = static_terms.iter().any(
@@ -5167,7 +5190,7 @@ impl Compiler {
                     let prefix_units = prefix_value?.unsigned_abs();
                     proof.magnitude = proof.magnitude.checked_mul(prefix_units)?;
                     proof.value_gcd = proof.value_gcd.checked_mul(prefix_units)?;
-                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE {
                         return None;
                     }
                 } else if rooted_index > 0
@@ -5201,7 +5224,10 @@ impl Compiler {
                             units,
                         );
                     } else if operator == Some("/") {
-                        if units == 0 || proof.value_gcd % units != 0 {
+                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE
+                            || units == 0
+                            || proof.value_gcd % units != 0
+                        {
                             return None;
                         }
                         proof.magnitude /= units;
@@ -5210,17 +5236,18 @@ impl Compiler {
                         proof.magnitude = proof.magnitude.checked_mul(units)?;
                         proof.value_gcd = proof.value_gcd.checked_mul(units)?;
                     }
-                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE {
                         return None;
                     }
                 }
-                return Some(proof);
+                return (proof.magnitude <= magnitude_limit).then_some(proof);
             }
         }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_exact_integer_sign_operand(children[0]);
+                return self
+                    .builtin_exact_integer_sign_operand_with_limit(children[0], magnitude_limit);
             }
             return None;
         }
@@ -5244,7 +5271,8 @@ impl Compiler {
                 magnitude: 1,
                 value_gcd: 1,
             }),
-            "abs" | "entier" => self.builtin_exact_integer_sign_operand(actuals[0]),
+            "abs" | "entier" => self
+                .builtin_exact_integer_sign_operand_with_limit(actuals[0], magnitude_limit),
             _ => None,
         }
     }
@@ -12673,6 +12701,12 @@ struct ExactIntegerSignProof<'n> {
 /// unlike an additive offset, the scaled sign itself may be exactly `2^53`.
 const MAX_EXACT_SIGN_INTEGER_MAGNITUDE: u64 = 9_007_199_254_740_992;
 
+/// Largest worst-case magnitude admitted while a sign-rooted expression is
+/// still entirely in ALGOL's integer domain. A later `div` or `mod` may reduce
+/// this exact i64 intermediate into binary64's contiguous integer range before
+/// any widening occurs. Real `/` still requires the narrower bound first.
+const MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE: u64 = i64::MAX as u64;
+
 /// Units contributed by one variable-free additive term around a bounded
 /// `sign` result: its magnitude when it is a whole number within
 /// [`MAX_SIGN_OFFSET_UNITS`], otherwise `None` (fractional, non-finite, or too
@@ -15901,6 +15935,7 @@ mod tests {
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((2 * sign(left()) + 2) div 5) * sign(right()) / 7); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((2 * sign(left()) + 2) mod 5) * sign(right()) / 2); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((6 * sign(left()) + 6) mod 3) * sign(right()) / 7); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier((9007199254740992 * sign(left()) * 2 * sign(right()) mod 5) / 2); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((12 div 5 * sign(left()) * 15 div 5 * sign(right())) mod 5) ^ 2); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
@@ -16624,6 +16659,8 @@ mod tests {
             "begin real procedure pick; pick := 3.5; real result; result := entier(((2 * sign(pick()) + 2) mod 3) ^ 2); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((((6 * sign(pick())) + 6) mod 4) / 2); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((((6 * sign(pick())) + 6) mod 3) / 7); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick()) * 2 mod 5) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick()) * 2 div 3) mod 5); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
@@ -16645,10 +16682,38 @@ mod tests {
             "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) mod 0); output(result) end",
             "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := entier(pick()); result := entier(sign(pick()) mod divisor); output(result) end",
         ] {
-            let err = compile_source(source, "test").expect_err(
-                "a zero or dynamic modulo divisor must remain outside the composed proof",
-            );
+            let err = compile_source(source, "test")
+                .expect_err("a zero or dynamic modulo divisor must remain outside the composed proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_wide_integer_reductions_reject_overflow_and_early_real_division() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick()) * 1024 mod 5) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick()) * 2 / 2) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "i64 overflow and real division before integer reduction must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_wide_integer_sums_reduce_before_widening() {
+        compile_source(
+            "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740992 * sign(pick()) + 9007199254740992) mod 5); output(result) end",
+            "test",
+        )
+        .expect("an i64-bounded integer sum may reduce below 2^53 before widening");
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(9007199254740992 * sign(pick()) + 9007199254740992); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((9007199254740992 * sign(pick()) + 9007199254740992) / 2) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test")
+                .expect_err("unreduced wide sums and early real division must fail closed");
         }
     }
 

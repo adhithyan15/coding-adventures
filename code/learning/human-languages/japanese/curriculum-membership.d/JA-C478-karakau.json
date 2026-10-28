@@ -1,0 +1,11 @@
+{
+  "id": "JA-C478-karakau",
+  "pathSegment": "JA-PATH-478-GROW478",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-478-GROW478",
+      "order": 3
+    }
+  ]
+}

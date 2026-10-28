@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C225-nongmin",
+  "pathSegment": "ZH-PATH-225-FARM225",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-225-FARM225",
+      "order": 1
+    }
+  ]
+}

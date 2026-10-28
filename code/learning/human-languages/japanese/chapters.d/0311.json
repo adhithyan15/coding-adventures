@@ -1,0 +1,21 @@
+{
+  "chapter": 311,
+  "title": "Memories of Childhood",
+  "label": "ch:ja-memories-of-childhood",
+  "canDo": "I can talk about what I remember from my childhood.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R311-review-307-311",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can talk about what I remember from my childhood.",
+    "assesses": [
+      "JA-LEX-C311-OMOIDE311-01",
+      "JA-LEX-C311-OMOIDE311-02",
+      "JA-LEX-C311-OMOIDE311-03",
+      "JA-LEX-C311-OMOIDE311-04",
+      "JA-LEX-C311-OMOIDE311-05"
+    ]
+  }
+}

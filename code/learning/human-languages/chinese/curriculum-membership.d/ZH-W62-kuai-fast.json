@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W62-kuai-fast",
+  "pathSegment": "ZH-PATH-62-FAST62",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-62-FAST62",
+      "order": 1
+    }
+  ]
+}

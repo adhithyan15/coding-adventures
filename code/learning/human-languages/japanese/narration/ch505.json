@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 505,
+  "title": "Sumo and Archery",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b5fe98bfb05f2a70",
+  "lessons": [
+    {
+      "id": "JA-C505-rikishi",
+      "sequence": 29290,
+      "title": "りきし (rikishi) — a sumo wrestler",
+      "headword": "りきし",
+      "romanization": "rikishi",
+      "gloss": "a sumo wrestler",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c8b7027fed2b16f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an artist, then the Japanese for a picture book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りきし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りきし — rikishi — \"a sumo wrestler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "りきしは おおきいです。 — rikishi wa ōkii desu — \"Sumo wrestlers are big.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りきし (rikishi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are riki, \"power\" (Middle Chinese lik) and shi, \"gentleman\" (dzriX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rikishi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rikishi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rikishi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rikishi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rikishi wa ōkii desu — Sumo wrestlers are big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rikishi wa ōkii desu* — Sumo wrestlers are big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an artist, then the Japanese for a picture book, then say rikishi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an artist, then the Japanese for a picture book, then say *rikishi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りきし (rikishi) mean? (\"A sumo wrestler\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C505-rikishi-type",
+              "prompt": "Say the Japanese for 'a sumo wrestler'.",
+              "assesses": [
+                "JA-LEX-C505-SUMO505-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りきし",
+                "rikishi"
+              ],
+              "feedback": {
+                "correct": "Right: りきし (rikishi) is 'a sumo wrestler'.",
+                "incorrect": "'A sumo wrestler' is りきし (rikishi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C505-dohyou",
+      "sequence": 29300,
+      "title": "どひょう (dohyō) — a sumo ring",
+      "headword": "どひょう",
+      "romanization": "dohyō",
+      "gloss": "a sumo ring",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ac1f8c60d89b11b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a picture book, then the Japanese for a sumo wrestler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どひょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どひょう — dohyō — \"a sumo ring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "りきしが どひょうに あがります。 — rikishi ga dohyō ni agarimasu — \"The wrestlers step up into the ring.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どひょう (dohyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are do, \"soil\" (Middle Chinese thuX) and hyō, \"bag\", a sense the Middle Chinese rhyme books do not give for this character, so no older reading is cited for it (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dohyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dohyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dohyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dohyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rikishi ga dohyō ni agarimasu — The wrestlers step up into the ring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rikishi ga dohyō ni agarimasu* — The wrestlers step up into the ring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a picture book, then the Japanese for a sumo wrestler, then say dohyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a picture book, then the Japanese for a sumo wrestler, then say *dohyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どひょう (dohyō) mean? (\"A sumo ring\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C505-dohyou-type",
+              "prompt": "Say the Japanese for 'a sumo ring'.",
+              "assesses": [
+                "JA-LEX-C505-SUMO505-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どひょう",
+                "dohyō",
+                "dohyou",
+                "dohyoo",
+                "dohyo"
+              ],
+              "feedback": {
+                "correct": "Right: どひょう (dohyō) is 'a sumo ring'.",
+                "incorrect": "'A sumo ring' is どひょう (dohyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C505-gyouji",
+      "sequence": 29310,
+      "title": "ぎょうじ (gyōji) — a sumo referee",
+      "headword": "ぎょうじ",
+      "romanization": "gyōji",
+      "gloss": "a sumo referee",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30a2a980d2a41313",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sumo wrestler, then the Japanese for a sumo ring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぎょうじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎょうじ — gyōji — \"a sumo referee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぎょうじは どひょうの なかに います。 — gyōji wa dohyō no naka ni imasu — \"The referee stands in the sumo ring.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎょうじ (gyōji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gyō, \"going\" (Middle Chinese haeng) and ji, \"director\" (si) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gyōji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gyōji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gyōji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gyōji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gyōji wa dohyō no naka ni imasu — The referee stands in the sumo ring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gyōji wa dohyō no naka ni imasu* — The referee stands in the sumo ring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sumo wrestler, then the Japanese for a sumo ring, then say gyōji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sumo wrestler, then the Japanese for a sumo ring, then say *gyōji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぎょうじ (gyōji) mean? (\"A sumo referee\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C505-gyouji-type",
+              "prompt": "Say the Japanese for 'a sumo referee'.",
+              "assesses": [
+                "JA-LEX-C505-SUMO505-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぎょうじ",
+                "gyōji",
+                "gyouji",
+                "gyooji",
+                "gyoji"
+              ],
+              "feedback": {
+                "correct": "Right: ぎょうじ (gyōji) is 'a sumo referee'.",
+                "incorrect": "'A sumo referee' is ぎょうじ (gyōji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C505-yumi",
+      "sequence": 29320,
+      "title": "ゆみ (yumi) — a bow (for arrows); archery",
+      "headword": "ゆみ",
+      "romanization": "yumi",
+      "gloss": "a bow (for arrows); archery",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:767e78a16d2ee806",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sumo ring, then the Japanese for a sumo referee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆみ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆみ — yumi — \"a bow (for arrows); archery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとうとは ゆみを ならっています。 — otōto wa yumi o naratteimasu — \"My younger brother is learning archery.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆみ (yumi) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yumi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yumi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yumi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yumi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otōto wa yumi o naratteimasu — My younger brother is learning archery.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otōto wa yumi o naratteimasu* — My younger brother is learning archery.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sumo ring, then the Japanese for a sumo referee, then say yumi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sumo ring, then the Japanese for a sumo referee, then say *yumi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆみ (yumi) mean? (\"A bow (for arrows); archery\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C505-yumi-type",
+              "prompt": "Say the Japanese for 'a bow (for arrows)'.",
+              "assesses": [
+                "JA-LEX-C505-SUMO505-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆみ",
+                "yumi"
+              ],
+              "feedback": {
+                "correct": "Right: ゆみ (yumi) is 'a bow (for arrows); archery'.",
+                "incorrect": "'A bow (for arrows)' is ゆみ (yumi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C505-yokeru",
+      "sequence": 29330,
+      "title": "よける (yokeru) — to dodge; to keep out of the way of",
+      "headword": "よける",
+      "romanization": "yokeru",
+      "gloss": "to dodge; to keep out of the way of",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6148a2bcf638c4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sumo referee, then the Japanese for a bow (for arrows)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よける — yokeru — \"to dodge; to keep out of the way of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いしを よけて あるきます。 — ishi o yokete arukimasu — \"I walk around the stones.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite よけます, yokemasu; an ichidan verb. Past (polite): ねこが くるまを よけました。, neko ga kuruma o yokemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よける (yokeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yokeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yokeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yokeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yokeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishi o yokete arukimasu — I walk around the stones.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishi o yokete arukimasu* — I walk around the stones.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sumo referee, then the Japanese for a bow (for arrows), then say yokeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sumo referee, then the Japanese for a bow (for arrows), then say *yokeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よける (yokeru) mean? (\"To dodge; to keep out of the way of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C505-yokeru-type",
+              "prompt": "Say the Japanese for 'to dodge'.",
+              "assesses": [
+                "JA-LEX-C505-SUMO505-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よける",
+                "yokeru"
+              ],
+              "feedback": {
+                "correct": "Right: よける (yokeru) is 'to dodge; to keep out of the way of'.",
+                "incorrect": "'To dodge' is よける (yokeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

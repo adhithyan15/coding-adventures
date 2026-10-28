@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+### Added — `body-placeholder` (0.2.0, E1 of the editor convergence audit)
+
+- **`slot body-placeholder : text`**, bound to the body's `placeholder`: a
+  hint shown only while the body is empty, and `""` shows none. Engram's
+  focused field (its field name, or "Select a field") and Trestle's notes
+  ("Write something…") both want one, and they are the next two consumers
+  (`mosaic-editor-convergence-audit-v1.md` §4.1, probe A).
+- **Breaking, hence 0.2.0.** The slot has no default, like every slot here,
+  and a consumer that does not bind a package component's slot fails to
+  build with `UnknownSlot` (audit R1). Journal, the one consumer, binds
+  `body-placeholder : ""` in the same change and requires `0.2.0`.
+- 0.1.0 left the placeholder out because a slot-bound one was literal-only
+  on React, WebComponent and SwiftUI. EM-13 (2026-10-19) fixed that on every
+  backend. The native gate is unchanged: no capability lost and no new style
+  drop, in both themes.
+- **MosaicBook:** every story sets `body-placeholder`, and a fifth story,
+  "Empty note with a body placeholder", shows one on an empty body.
+- **Tests:** the interface and layout pins include the slot and the
+  binding, and a new test checks that each story sets exactly the declared
+  slots and that one shows the placeholder. It reads the stories with the
+  in-house `coding_adventures_bounded_json`, a new dev-dependency.
+
+### Fixed — stale rationale in the package's own documents (audit R6)
+
+- The spec's layout block named the body `Input`; it is `HostInput`.
+- The spec, `.mil` and README gave a "no body placeholder" reason that EM-13
+  made wrong.
+- The native gate's header said the body is the legacy `Input`.
+- The README said Trestle's notes share the package, and that Journal
+  composes a markdown preview beside it. Journal is the only consumer, and
+  it has no preview.
+- The spec now says why the package stays outside the toolkit although its
+  original reason is gone (audit R7).
+
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 
 ### Changed — the body is `HostInput` and saves on Ctrl/Cmd+Enter (UI25 §4)

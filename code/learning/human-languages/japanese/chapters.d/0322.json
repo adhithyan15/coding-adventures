@@ -1,0 +1,21 @@
+{
+  "chapter": 322,
+  "title": "Saying Yes",
+  "label": "ch:ja-saying-yes",
+  "canDo": "I can agree to a request and say why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-R322-review-317-322",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can agree to a request and say why.",
+    "assesses": [
+      "JA-LEX-C322-SHOUCHI322-01",
+      "JA-LEX-C322-SHOUCHI322-02",
+      "JA-LEX-C322-SHOUCHI322-03",
+      "JA-LEX-C322-SHOUCHI322-04",
+      "JA-LEX-C322-SHOUCHI322-05"
+    ]
+  }
+}

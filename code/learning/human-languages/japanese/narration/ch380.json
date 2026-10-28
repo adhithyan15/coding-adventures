@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 380,
+  "title": "Lunch on the Train",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:382e49fafd5506e6",
+  "lessons": [
+    {
+      "id": "JA-C380-ekiben",
+      "sequence": 22410,
+      "title": "えきべん (ekiben) — a station lunch box",
+      "headword": "えきべん",
+      "romanization": "ekiben",
+      "gloss": "a station lunch box",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93920933d402ccf1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for inside the train, then the Japanese for a fare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えきべん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えきべん — ekiben — \"a station lunch box\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃで えきべんを たべました。 — densha de ekiben o tabemashita — \"I ate a station lunch box on the train.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えきべん (ekiben) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are eki, \"station\" (Middle Chinese yek), and ben, the first sign of bentō, \"a boxed lunch\", a word whose older history is not settled (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekiben",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekiben*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekiben, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekiben*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha de ekiben o tabemashita — I ate a station lunch box on the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha de ekiben o tabemashita* — I ate a station lunch box on the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for inside the train, then the Japanese for a fare, then say ekiben again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for inside the train, then the Japanese for a fare, then say *ekiben* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えきべん (ekiben) mean? (\"A station lunch box\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C380-ekiben-type",
+              "prompt": "Say the Japanese for 'a station lunch box'.",
+              "assesses": [
+                "JA-LEX-C380-EKIBEN380-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えきべん",
+                "ekiben"
+              ],
+              "feedback": {
+                "correct": "Right: えきべん (ekiben) is 'a station lunch box'.",
+                "incorrect": "'A station lunch box' is えきべん (ekiben)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C380-shashou",
+      "sequence": 22420,
+      "title": "しゃしょう (shashō) — a train conductor",
+      "headword": "しゃしょう",
+      "romanization": "shashō",
+      "gloss": "a train conductor",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a261e585fb95913",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a fare, then the Japanese for a station lunch box."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゃしょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃしょう — shashō — \"a train conductor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゃしょうに きっぷを わたしました。 — shashō ni kippu o watashimashita — \"I handed my ticket to the conductor.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃしょう (shashō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sha, \"car\" (Middle Chinese tsyhae) and shō, \"administer\" (tsyangX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shashō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shashō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shashō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shashō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shashō ni kippu o watashimashita — I handed my ticket to the conductor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shashō ni kippu o watashimashita* — I handed my ticket to the conductor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a fare, then the Japanese for a station lunch box, then say shashō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a fare, then the Japanese for a station lunch box, then say *shashō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゃしょう (shashō) mean? (\"A train conductor\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C380-shashou-type",
+              "prompt": "Say the Japanese for 'a train conductor'.",
+              "assesses": [
+                "JA-LEX-C380-EKIBEN380-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃしょう",
+                "shashō",
+                "shashou",
+                "shashoo",
+                "shasho"
+              ],
+              "feedback": {
+                "correct": "Right: しゃしょう (shashō) is 'a train conductor'.",
+                "incorrect": "'A train conductor' is しゃしょう (shashō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C380-nesugosu",
+      "sequence": 22430,
+      "title": "ねすごす (nesugosu) — to oversleep; to sleep past one's stop",
+      "headword": "ねすごす",
+      "romanization": "nesugosu",
+      "gloss": "to oversleep; to sleep past one's stop",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2cc810186a0e3a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a station lunch box, then the Japanese for a train conductor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねすごす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねすごす — nesugosu — \"to oversleep; to sleep past one's stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃで ねすごして、しゅうてんまで いきました。 — densha de nesugoshite, shūten made ikimashita — \"I slept past my stop and went all the way to the end of the line.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ねすごします, nesugoshimasu; a godan verb. Past (polite): あにが でんしゃで ねすごしました。, ani ga densha de nesugoshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねすごす (nesugosu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ne, \"sleeping\" (from neru) and sugosu, \"to let pass\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nesugosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nesugosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nesugosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nesugosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha de nesugoshite, shūten made ikimashita — I slept past my stop and went all the way to the end of the line.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha de nesugoshite, shūten made ikimashita* — I slept past my stop and went all the way to the end of the line.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a station lunch box, then the Japanese for a train conductor, then say nesugosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a station lunch box, then the Japanese for a train conductor, then say *nesugosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねすごす (nesugosu) mean? (\"To oversleep; to sleep past one's stop\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C380-nesugosu-type",
+              "prompt": "Say the Japanese for 'to oversleep'.",
+              "assesses": [
+                "JA-LEX-C380-EKIBEN380-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねすごす",
+                "nesugosu"
+              ],
+              "feedback": {
+                "correct": "Right: ねすごす (nesugosu) is 'to oversleep; to sleep past one's stop'.",
+                "incorrect": "'To oversleep' is ねすごす (nesugosu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C380-utouto",
+      "sequence": 22440,
+      "title": "うとうと (utōto) — dozing off",
+      "headword": "うとうと",
+      "romanization": "utōto",
+      "gloss": "dozing off",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:479bc0f30ed92e03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a train conductor, then the Japanese for to oversleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うとうと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うとうと — utōto — \"dozing off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃで うとうとしました。 — densha de utōto shimashita — \"I dozed off on the train.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うとうと (utōto) is a native mimetic word that pictures someone nodding off into a light sleep: an imitative Japanese form, inherited rather than borrowed, whose older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utōto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utōto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utōto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utōto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha de utōto shimashita — I dozed off on the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha de utōto shimashita* — I dozed off on the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a train conductor, then the Japanese for to oversleep, then say utōto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a train conductor, then the Japanese for to oversleep, then say *utōto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うとうと (utōto) mean? (\"Dozing off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C380-utouto-type",
+              "prompt": "Say the Japanese for 'dozing off'.",
+              "assesses": [
+                "JA-LEX-C380-EKIBEN380-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うとうと",
+                "utōto",
+                "utouto",
+                "utooto",
+                "utoto"
+              ],
+              "feedback": {
+                "correct": "Right: うとうと (utōto) is 'dozing off'.",
+                "incorrect": "'Dozing off' is うとうと (utōto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C380-hitokuchi",
+      "sequence": 22450,
+      "title": "ひとくち (hitokuchi) — a mouthful; a bite",
+      "headword": "ひとくち",
+      "romanization": "hitokuchi",
+      "gloss": "a mouthful; a bite",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fed706eb8daa217f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to oversleep, then the Japanese for dozing off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひとくち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとくち — hitokuchi — \"a mouthful; a bite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきべんを ひとくち たべました。 — ekiben o hitokuchi tabemashita — \"I had a bite of the station lunch box.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひとくち (hitokuchi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from hito, \"one\" and kuchi, \"mouth\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitokuchi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitokuchi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitokuchi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitokuchi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekiben o hitokuchi tabemashita — I had a bite of the station lunch box.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekiben o hitokuchi tabemashita* — I had a bite of the station lunch box.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to oversleep, then the Japanese for dozing off, then say hitokuchi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to oversleep, then the Japanese for dozing off, then say *hitokuchi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひとくち (hitokuchi) mean? (\"A mouthful; a bite\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C380-hitokuchi-type",
+              "prompt": "Say the Japanese for 'a mouthful'.",
+              "assesses": [
+                "JA-LEX-C380-EKIBEN380-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひとくち",
+                "hitokuchi"
+              ],
+              "feedback": {
+                "correct": "Right: ひとくち (hitokuchi) is 'a mouthful; a bite'.",
+                "incorrect": "'A mouthful' is ひとくち (hitokuchi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

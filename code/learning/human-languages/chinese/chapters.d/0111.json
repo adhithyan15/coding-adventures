@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "In Front and Behind",
+  "label": "ch:zh-in-front-and-behind",
+  "canDo": "I can say in front, behind, nearby and at the crossing, and say where to turn.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C111-guai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: I can say in front, behind, nearby and at the crossing, and say where to turn.",
+    "assesses": [
+      "ZH-LEX-C111-FRONT111-03",
+      "ZH-LEX-C111-FRONT111-04",
+      "ZH-LEX-C111-FRONT111-05"
+    ]
+  }
+}
