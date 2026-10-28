@@ -19278,3 +19278,10 @@ implementation and root changelog remain byte-identical to the approved
 implementation receipt, both histories and the merged HyperLogLog receipt are
 intact, lifecycle and graph invariants pass, and the validated worktree is
 artifact-free. Seal this review receipt before publishing the draft PR.
+
+Publish independently reviewed receipt
+`f8b5143724247eea549e60d27446f96f7887bf6d` as draft PR #18533 over exact
+main `ae197369af5c6bfe8ab2768465f67e0119baac97`. Keep it draft only while
+this durable PR-number lifecycle receipt is committed and independently
+reviewed. Then push the receipt, mark the PR ready, and require a completely
+fresh exact-head hosted matrix before guarded auto-merge.

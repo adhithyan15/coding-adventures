@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18533,
+  "active_prs": [
+    18533
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T18:58:48Z",
-    "pr_number": 18531,
-    "head_revision": "1246545183a7d34bc6c1e3b43f83cb49df058890",
-    "action": "Every exact-head check for PR #18531 completed acceptably after rerunning the infrastructure-cancelled Swift CodeQL job, and GitHub reported the reviewed head cleanly mergeable. Guarded squash auto-merge produced exact main revision ae197369af5c6bfe8ab2768465f67e0119baac97; its receipt is verified and the clean completed worktree and local branch are removed.",
+    "observed_at": "2026-10-28T19:04:15Z",
+    "pr_number": 18533,
+    "head_revision": "f8b5143724247eea549e60d27446f96f7887bf6d",
+    "action": "Published independently reviewed Swift Bloom filter receipt f8b5143724247eea549e60d27446f96f7887bf6d as draft PR #18533 over exact current main ae197369af5c6bfe8ab2768465f67e0119baac97. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15267,12 +15269,16 @@
     {
       "id": "swift-bloom-filter-lane-parity",
       "title": "Implement DT22 Bloom filter in Swift",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
       "branch": "codex/swift-bloom-filter-lane-parity",
-      "pr_number": null,
+      "pr_number": 18533,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18533",
+      "opened_at": "2026-10-28T19:04:15Z",
+      "publication_head": "f8b5143724247eea549e60d27446f96f7887bf6d",
+      "publication_notes": "Draft PR #18533 opened from independently reviewed exact receipt head f8b5143724247eea549e60d27446f96f7887bf6d over exact main ae197369af5c6bfe8ab2768465f67e0119baac97. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for that new exact head, and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
       "selected_at": "2026-10-28T16:44:23Z",
       "selection_revision": "3fd9485da978aa6276aba825336f0962897fd456",
       "base_revision": "3fd9485da978aa6276aba825336f0962897fd456",
