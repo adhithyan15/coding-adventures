@@ -19215,3 +19215,11 @@ Publish the independently reviewed exact current-main candidate
 only while the durable PR lifecycle receipt is committed and reviewed. Once
 that exact receipt is pushed, mark the PR ready and require a completely fresh
 hosted matrix before guarded auto-merge.
+
+The first exact-head matrix passes Linux and macOS package builds but fails the
+repository metadata gate: Haskell barcode-layout-1d still records reviewed
+pre-squash implementation `053cb27651a47c061bd2c4739b4657d5e9ac85d9`, which
+is intentionally absent from fresh-clone ancestry after PR #18527's squash
+merge. Repoint the unchanged package tree and its lifecycle implementation
+receipt to reachable exact merge revision
+`3fd9485da978aa6276aba825336f0962897fd456`; require a fresh exact-head matrix.

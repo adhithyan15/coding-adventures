@@ -21,10 +21,10 @@
     18531
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T16:42:35Z",
+    "observed_at": "2026-10-28T16:58:51Z",
     "pr_number": 18531,
-    "head_revision": "60198587d0363966d3ed0ab16d278efa5a3beffc",
-    "action": "Published independently reviewed Swift HyperLogLog candidate 60198587d0363966d3ed0ab16d278efa5a3beffc as draft PR #18531. Keep it draft only while the durable PR lifecycle receipt is committed and reviewed; then mark ready and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
+    "head_revision": "d34b45f4d89a8b4777e64328ce5a1cf1fad6f75d",
+    "action": "Exact PR #18531 head d34b45f4d89a8b4777e64328ce5a1cf1fad6f75d passes Linux and macOS package builds but fails the repository metadata gate because Haskell barcode-layout-1d still records pre-squash implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9, which is not an ancestor of the fresh clone after PR #18527 squash-merged. Repoint unchanged package-tree evidence and its lifecycle owner to reachable exact merge revision 3fd9485da978aa6276aba825336f0962897fd456, then require a fresh exact-head matrix.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -16426,9 +16426,10 @@
       "merged_at": "2026-10-28T16:37:37Z",
       "merge_revision": "3fd9485da978aa6276aba825336f0962897fd456",
       "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures and GitHub reported the reviewed head cleanly mergeable. Guarded squash auto-merge completed without a manual merge command; the merge receipt is an ancestor of current origin/main, and the clean completed worktree and local branch were removed safely.",
-      "implementation_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
-      "validation_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
-      "reverification_notes": "This PR owns re-verification of the unchanged Haskell barcode-layout-1d lane after its BUILD_windows package tree changed. Exact durable implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9 retains the production API, native tests, dynamic 56-case conformance reader, empty capability manifest, and zero-authority evidence; GHC 9.6.7 passes 29 paint-instructions and 27 barcode-layout-1d examples. The target registry now associates the refreshed package tree with PR #18527 rather than rewriting historical adoption PR #16343.",
+      "implementation_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "validation_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "reverification_notes": "This PR owns re-verification of the unchanged Haskell barcode-layout-1d lane after its BUILD_windows package tree changed. The reviewed branch implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9 squash-merged as reachable exact main revision 3fd9485da978aa6276aba825336f0962897fd456 with the same package tree 141d16aba4a61bca2cbc93b593db9f1d9d825ce9. That durable merge revision retains the production API, native tests, dynamic 56-case conformance reader, empty capability manifest, and zero-authority evidence; GHC 9.6.7 passes 29 paint-instructions and 27 barcode-layout-1d examples. The target registry associates the refreshed package tree with PR #18527 rather than rewriting historical adoption PR #16343.",
+      "postmerge_reachability_notes": "Fresh-clone metadata CI on Swift HyperLogLog PR #18531 exposed that the reviewed pre-squash implementation commit is intentionally absent from main ancestry after guarded squash merge. Repoint both the lifecycle implementation receipt and target verified revision to exact squash merge 3fd9485da978aa6276aba825336f0962897fd456, whose barcode-layout-1d package tree is byte-identical, so ancestry and tree evidence remain jointly verifiable.",
       "ci_failure_notes": "Exact hosted head a48db410cdfac57de20de2d11b40fe83bc95b0d7 passed the Linux build and Go analysis but failed the repository metadata gate because the Haskell barcode-layout-1d target registry still pinned the package tree from original adoption PR #16343. Re-verify the unchanged lane against durable Windows-front implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9, update only its verified revision and package-tree hash, then require a fresh exact-head matrix.",
       "selected_at": "2026-10-26T16:52:26Z",
       "selection_revision": "aa568304c93e44d733535cdb3209793041ff9503",
