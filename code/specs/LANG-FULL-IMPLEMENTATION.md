@@ -39,6 +39,8 @@ reduction. Unreduced values, real `/`, and checked overflow still fail closed.
 Call-free built-in `abs`, `sign`, and `entier` preserve that exact integer
 domain for wide static arguments until the same enclosing reduction. User
 overrides and procedure-calling arguments remain outside the proof.
+Pure nested chains of those built-ins receive the same treatment when their
+root is call-free; shadowing or any other nested call still fails closed.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
