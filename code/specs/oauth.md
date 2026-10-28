@@ -1750,6 +1750,23 @@ trust, check revocation, authorize HTTP or OAuth transport, or open a network
 connection. Reviewed HKDF execution remains a prerequisite, and concrete HTTPS
 remains unavailable.
 
+The Rust `hkdf_extract_fixed` entry point now supplies the bounded Extract half
+of reviewed HKDF execution for SHA-256 and SHA-384. A data-driven
+`FixedHkdfHash` policy admits only the repository-owned fixed-output HMAC paths.
+The RFC 5869 default salt occupies a fixed stack buffer, temporary HMAC results
+are wiped on drop, and the returned `HkdfPrk` owns one fixed backing array that
+exposes only the selected 32-byte or 48-byte prefix and wipes the full array on
+drop. Its Debug representation contains algorithm and public length metadata,
+never PRK bytes. Checked hash-length failures remain payload-free.
+
+This primitive performs no credential access, edit, signing operation, audit,
+provider action, I/O, or external effect. It does not change the legacy
+allocation-backed HKDF compatibility APIs, implement fixed-memory HKDF-Expand
+or `HKDF-Expand-Label`, compose a TLS key schedule, process handshake records
+or certificates, establish trust, check revocation, authorize HTTP or OAuth
+transport, or open a network connection. Reviewed fixed-memory Expand remains
+a prerequisite, and concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
