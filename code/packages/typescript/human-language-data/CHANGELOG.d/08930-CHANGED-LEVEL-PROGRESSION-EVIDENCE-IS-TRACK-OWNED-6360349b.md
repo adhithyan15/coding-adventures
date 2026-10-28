@@ -1,4 +1,4 @@
-## Changed — level progression evidence is track-owned
+### Changed — level progression evidence is track-owned
 
 - Extended each `tests/level-gate-attainment/<language>.json` owner to pin
   attained level, highest spine reach, and concise current evidence together.
