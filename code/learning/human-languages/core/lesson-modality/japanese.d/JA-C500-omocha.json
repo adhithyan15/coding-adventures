@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C500-omocha",
+    "language": "japanese",
+    "chapter": 500,
+    "sequence": 29030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a89a88479131b5b2"
+  },
+  "findings": []
+}

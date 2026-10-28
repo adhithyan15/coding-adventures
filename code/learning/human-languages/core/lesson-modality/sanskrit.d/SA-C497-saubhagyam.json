@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C497-saubhagyam",
+    "language": "sanskrit",
+    "chapter": 497,
+    "sequence": 28550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd2967d24f714f4f"
+  },
+  "findings": []
+}

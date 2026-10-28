@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:d2f15ee9dcd73e4a",
+  "lessonIds": [
+    "SA-C526-vyayamabhumih",
+    "SA-C526-dhavakah",
+    "SA-C526-ksiprah",
+    "SA-C526-langhayati",
+    "SA-C526-dalam"
+  ],
+  "tex": "sanskrit/book/chapters/ch526-training-hard.tex"
+}

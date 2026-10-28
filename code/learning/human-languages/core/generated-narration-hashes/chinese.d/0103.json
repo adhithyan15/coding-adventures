@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:595b5fa619591608",
+  "lessonIds": [
+    "ZH-C103-yong",
+    "ZH-W103-yong",
+    "ZH-C103-na",
+    "ZH-C103-reng",
+    "ZH-C103-xiu",
+    "ZH-C103-huai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch103.txt",
+  "json": "chinese/narration/ch103.json",
+  "textHash": "fnv1a64:4a01d7646e33d1ee",
+  "jsonHash": "fnv1a64:cc1943f02b7389a9",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C437-pravrt",
+    "language": "sanskrit",
+    "chapter": 437,
+    "sequence": 25200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8d809024b3d1260"
+  },
+  "findings": []
+}

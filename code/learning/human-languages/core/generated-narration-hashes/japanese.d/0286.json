@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:cebd30e2115a832d",
+  "lessonIds": [
+    "JA-C286-akachan",
+    "JA-C286-umareru",
+    "JA-C286-shussan",
+    "JA-C286-omedetou",
+    "JA-C286-mago"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch286.txt",
+  "json": "japanese/narration/ch286.json",
+  "textHash": "fnv1a64:64e8d4080b083092",
+  "jsonHash": "fnv1a64:0b9dc229c086f1f0",
+  "findings": []
+}

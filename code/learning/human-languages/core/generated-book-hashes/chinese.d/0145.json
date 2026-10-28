@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:09ed69786d206543",
+  "lessonIds": [
+    "ZH-C145-yuanyin",
+    "ZH-C145-wandian",
+    "ZH-C145-naozhong",
+    "ZH-C145-shuilanjiao",
+    "ZH-C145-gankuai"
+  ],
+  "tex": "chinese/book/chapters/ch145-late-again.tex"
+}

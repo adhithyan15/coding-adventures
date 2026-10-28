@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:c3313e8ee47ca78a",
+  "lessonIds": [
+    "ZH-C81-li",
+    "ZH-W81-li-inside",
+    "ZH-C81-chengshi",
+    "ZH-C81-difang",
+    "ZH-C81-waiguo",
+    "ZH-C81-pangbian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch81.txt",
+  "json": "chinese/narration/ch81.json",
+  "textHash": "fnv1a64:e83842485082b7ac",
+  "jsonHash": "fnv1a64:7775958c1cc144c3",
+  "findings": []
+}

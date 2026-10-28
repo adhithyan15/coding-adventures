@@ -1,0 +1,11 @@
+{
+  "id": "SA-C311-sankate",
+  "pathSegment": "SA-PATH-311-KIMVADANTI311",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-311-KIMVADANTI311",
+      "order": 3
+    }
+  ]
+}

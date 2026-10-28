@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:6eded5956b7610ec",
+  "lessonIds": [
+    "JA-C346-kondo",
+    "JA-C346-konkai",
+    "JA-C346-zenkai",
+    "JA-C346-jikai",
+    "JA-C346-jiki",
+    "JA-R346-review-341-346"
+  ],
+  "tex": "japanese/book/chapters/ch346-this-time-and-next-time.tex"
+}

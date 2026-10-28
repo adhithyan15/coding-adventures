@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "The Curse and the Boon",
+  "label": "ch:sa-the-curse-and-the-boon",
+  "canDo": "I can tell how a curse was laid and what followed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C333-amarah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can tell how a curse was laid and what followed.",
+    "assesses": [
+      "SA-LEX-C333-SHAPA333-03",
+      "SA-LEX-C333-SHAPA333-04",
+      "SA-LEX-C333-SHAPA333-05"
+    ]
+  }
+}

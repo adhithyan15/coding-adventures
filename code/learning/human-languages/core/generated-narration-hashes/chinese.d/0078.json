@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:c07caf07a5bb802a",
+  "lessonIds": [
+    "ZH-C78-duoda",
+    "ZH-C78-zhangda",
+    "ZH-C78-qian",
+    "ZH-W78-qian-before",
+    "ZH-C78-nianji",
+    "ZH-C78-xiaoshihou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch78.txt",
+  "json": "chinese/narration/ch78.json",
+  "textHash": "fnv1a64:bfaf1ad0ac4bf8c5",
+  "jsonHash": "fnv1a64:de984f7ad612278a",
+  "findings": []
+}

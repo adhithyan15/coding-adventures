@@ -1,0 +1,11 @@
+{
+  "id": "JA-R301-review-297-301",
+  "pathSegment": "JA-PATH-301-TAKARA301",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-301-TAKARA301",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:f6c254a7de41c891",
+  "lessonIds": [
+    "JA-C322-shouchi-suru",
+    "JA-C322-ukeireru",
+    "JA-C322-mochiron",
+    "JA-C322-zehi",
+    "JA-C322-moushideru",
+    "JA-R322-review-317-322"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch322.txt",
+  "json": "japanese/narration/ch322.json",
+  "textHash": "fnv1a64:c45cbc7c2d709ea3",
+  "jsonHash": "fnv1a64:74d42e53e2f30495",
+  "findings": []
+}

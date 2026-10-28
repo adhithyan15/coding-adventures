@@ -1,0 +1,11 @@
+{
+  "id": "JA-C378-konzatsu",
+  "pathSegment": "JA-PATH-378-MANIN378",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-378-MANIN378",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C376-niyacchati",
+  "pathSegment": "SA-PATH-376-YOGYA376",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-376-YOGYA376",
+      "order": 2
+    }
+  ]
+}

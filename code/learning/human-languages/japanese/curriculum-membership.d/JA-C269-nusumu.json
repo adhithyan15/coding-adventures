@@ -1,0 +1,11 @@
+{
+  "id": "JA-C269-nusumu",
+  "pathSegment": "JA-PATH-269-DOROBOU269",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-269-DOROBOU269",
+      "order": 1
+    }
+  ]
+}

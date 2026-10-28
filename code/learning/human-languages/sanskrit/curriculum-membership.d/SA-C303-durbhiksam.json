@@ -1,0 +1,11 @@
+{
+  "id": "SA-C303-durbhiksam",
+  "pathSegment": "SA-PATH-303-DURBHIKSHA303",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-303-DURBHIKSHA303",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C338-herasu",
+  "pathSegment": "JA-PATH-338-MUDA338",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-338-MUDA338",
+      "order": 1
+    }
+  ]
+}

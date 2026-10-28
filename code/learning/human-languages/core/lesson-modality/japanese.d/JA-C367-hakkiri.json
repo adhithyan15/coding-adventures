@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C367-hakkiri",
+    "language": "japanese",
+    "chapter": 367,
+    "sequence": 21590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc9a4be19d538dd4"
+  },
+  "findings": []
+}

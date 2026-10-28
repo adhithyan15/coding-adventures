@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:2636ce25c2ab4629",
+  "lessonIds": [
+    "SA-C430-hattah",
+    "SA-C430-vikreta",
+    "SA-C430-kreta",
+    "SA-C430-grahakah",
+    "SA-C430-panate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch430.txt",
+  "json": "sanskrit/narration/ch430.json",
+  "textHash": "fnv1a64:875c9c2091ec3def",
+  "jsonHash": "fnv1a64:275bd37d76efc46d",
+  "findings": []
+}

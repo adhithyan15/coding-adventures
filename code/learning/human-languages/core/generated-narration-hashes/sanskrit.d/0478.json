@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:4f11cf5861328bc1",
+  "lessonIds": [
+    "SA-C478-vedana",
+    "SA-C478-kasate",
+    "SA-C478-atisarah",
+    "SA-C478-klesah",
+    "SA-C478-asahyah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch478.txt",
+  "json": "sanskrit/narration/ch478.json",
+  "textHash": "fnv1a64:38e38f4b247ce467",
+  "jsonHash": "fnv1a64:77756004f01dd367",
+  "findings": []
+}

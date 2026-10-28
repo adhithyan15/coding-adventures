@@ -214,7 +214,7 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         // NON-lisp references (`ref<Foo>`) remain unsupported (no value model).
         "any" => Ok("i64"),
         // A lisp heap reference is carried as a tagged `i64`: `ref<LispyPair>`
-        // (a cons cell) and `ref<any>` (a `dyn_car`/`dyn_cdr` result, or a
+        // (a cons cell) and `ref<any>` (a `dyn_pair_first`/`dyn_pair_rest` result, or a
         // re-boxed `dyn_box_int` arithmetic result — E6d-2b) alike. The runtime
         // owns the cell layout; the backend only moves words and calls `__dyn_*`.
         "ref<any>" => Ok("i64"),
@@ -323,6 +323,11 @@ const SUPPORTED_OPS: &[&str] = &[
     // `fneg`, which never trap in LLVM's default floating-point environment)
     // and the sign-bit test (`bitcast` + `lshr 63`).
     "f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg", "f64_signbit",
+    // LANG83 PR7b — the language-neutral float primitives. `f64_class` is a
+    // `bitcast` and three integer compares inline; `f64_digits` / `f64_exp10`
+    // call the module's own `internal` wrappers around the PR6a digit
+    // core (`lang83_f64.rs`), so they need no runtime and no `putchar`.
+    "f64_class", "f64_digits", "f64_exp10",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -375,12 +380,9 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // `linkonce_odr` `@__iir_write_i64` (libc `printf("%lld")`), so it needs no
     // host shim and shares libc's `stdout` with `putchar`.
     "write_i64",
-    // LANG83 PR6a — shortest round-trip float output, Python `repr` / JS
-    // `Number#toString` layout, no newline. Both lower to the module's own
-    // `linkonce_odr` `@__iir_write_f64(double, i32 layout)` (see
-    // `lang83_f64.rs`), which writes with libc `putchar`.
-    "write_f64_py",
-    "write_f64_js",
+    // No float writer: LANG83 PR6a's `write_f64_py` / `write_f64_js` were
+    // removed in PR7e. A compiler prints a float with its own helper over
+    // `f64_digits` / `f64_exp10` (the module-local core in `lang83_f64.rs`).
     "putchar",
     "getchar",
     "input_i64",
@@ -404,38 +406,39 @@ struct LlvmStringLiteralRef {
     len: usize,
 }
 
-/// McCarthy W12b — the **tagged-word lisp** builtins the LLVM backend lowers to
-/// `call`s into the shared C runtime (`twig-aot/runtime/dynval_runtime.c`), the
-/// same runtime the native AOT backend links. Each entry is
-/// `(iir_name, runtime_symbol, arity)`; every lisp value is a tagged 64-bit word
-/// so the signature is always `i64 (i64 × arity)`. The `dyn_*` IIR names are
-/// produced by `iir_builtin_lowering::lower_heap_builtins_runtime` /
-/// `lower_dyn_repr`; they map to the runtime's `__dyn_*` symbols.
+/// McCarthy W12b — the **tagged-word dynamic-value** builtins the LLVM backend
+/// lowers to `call`s into the shared C runtime
+/// (`twig-aot/runtime/dynval_runtime.c`), the same runtime the native AOT
+/// backend links. Each entry is `(iir_name, runtime_symbol, arity)`; every
+/// dynamic value is a tagged 64-bit word, so the signature is always
+/// `i64 (i64 × arity)`. The registered names (LANG83 PR7f, family `Dynamic`)
+/// map to the runtime's `__dyn_*` symbols by prefixing `__`.
 ///
-/// | iir name         | runtime symbol            | McCarthy primitive            |
-/// |------------------|---------------------------|-------------------------------|
-/// | `dyn_cons`     | `__dyn_cons`       | `CONS` — build a pair `[a|b]`  |
-/// | `dyn_car`/`cdr`| `__dyn_car`/`cdr`  | `CAR`/`CDR`                    |
-/// | `dyn_pair_p`   | `__dyn_pair_p`     | `pair?` (→ `ATOM`)            |
-/// | `dyn_null_p`   | `__dyn_null_p`     | `null?` (empty-list test)     |
-/// | `dyn_equal`    | `__dyn_equal`      | `EQ`                          |
-/// | `dyn_not`      | `__dyn_not`        | logical `not`                 |
-/// | `dyn_truthy`   | `__dyn_truthy`     | `COND` clause test            |
-/// | `dyn_box_int`  | `__dyn_box_int`    | int → tagged word             |
-/// | `dyn_unbox_int`| `__dyn_unbox_int`  | tagged word → int (result)    |
-/// | `dyn_nil`      | `__dyn_nil`        | `()` / nil                    |
+/// | iir name          | runtime symbol      | meaning                              |
+/// |-------------------|---------------------|--------------------------------------|
+/// | `dyn_pair_new`    | `__dyn_pair_new`    | a fresh pair `[a|b]` (Lisp `cons`)   |
+/// | `dyn_pair_first`  | `__dyn_pair_first`  | a pair's first field (`car`)         |
+/// | `dyn_pair_rest`   | `__dyn_pair_rest`   | a pair's second field (`cdr`)        |
+/// | `dyn_is_pair`     | `__dyn_is_pair`     | pair test → dynamic boolean          |
+/// | `dyn_is_nil`      | `__dyn_is_nil`      | nil test → dynamic boolean           |
+/// | `dyn_tag`         | `__dyn_tag`         | the tag number (`x & 7`)             |
+/// | `dyn_box_int`     | `__dyn_box_int`     | int → tagged word                    |
+/// | `dyn_unbox_int`   | `__dyn_unbox_int`   | tagged word → int                    |
+/// | `dyn_nil`         | `__dyn_nil`         | nil                                  |
+///
+/// Lisp's `equal?`, `not`, truthiness and exit coercion were rows here too
+/// (`dyn_equal`, `dyn_not`, `dyn_truthy`, `dyn_to_exit_code`) until LANG83
+/// PR7f-2. They are one language family's rules, so the Lisp-family lowering
+/// now writes them as module IIR over the rows above.
 const DYN_BUILTINS: &[(&str, &str, usize)] = &[
-    ("dyn_cons", "__dyn_cons", 2),
-    ("dyn_car", "__dyn_car", 1),
-    ("dyn_cdr", "__dyn_cdr", 1),
-    ("dyn_pair_p", "__dyn_pair_p", 1),
-    ("dyn_null_p", "__dyn_null_p", 1),
-    ("dyn_equal", "__dyn_equal", 2),
-    ("dyn_not", "__dyn_not", 1),
-    ("dyn_truthy", "__dyn_truthy", 1),
+    ("dyn_pair_new", "__dyn_pair_new", 2),
+    ("dyn_pair_first", "__dyn_pair_first", 1),
+    ("dyn_pair_rest", "__dyn_pair_rest", 1),
+    ("dyn_is_pair", "__dyn_is_pair", 1),
+    ("dyn_is_nil", "__dyn_is_nil", 1),
+    ("dyn_tag", "__dyn_tag", 1),
     ("dyn_box_int", "__dyn_box_int", 1),
     ("dyn_unbox_int", "__dyn_unbox_int", 1),
-    ("dyn_to_exit_code", "__dyn_to_exit_code", 1),
     ("dyn_nil", "__dyn_nil", 0),
 ];
 
@@ -871,9 +874,10 @@ pub fn lower_iir_to_llvm(
     // explicit `trap`, or the defined traps of the floor-division ops) — each
     // gets one self-contained definition / message constant.
     let mut used_write_i64 = false;
-    // LANG83 PR6a: either float writer pulls in the module-local
-    // `@__iir_write_f64` definitions (and `putchar`, which they write with).
-    let mut used_write_f64 = false;
+    // LANG83 PR7b: `f64_digits` / `f64_exp10` pull in the digit core and its
+    // two wrappers (`LANG83_F64_DIGITS_LL`); they write nothing, so no
+    // `putchar`.
+    let mut used_f64_digit_ops = false;
     let mut trap_kinds: std::collections::BTreeSet<u32> = std::collections::BTreeSet::new();
     // LANG83 PR4: the `*.with.overflow` intrinsics the checked ops call, each
     // declared once.
@@ -890,6 +894,12 @@ pub fn lower_iir_to_llvm(
                     for kind in floor_trap_kinds(&i.op) {
                         trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(kind));
                     }
+                }
+                // LANG83: a failed narrowing raises the typed `Trap.ConvRange`.
+                "real_to_int_trunc" | "real_to_int_floor" => {
+                    trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(
+                        interpreter_ir::exception_kind::TRAP_CONV_RANGE,
+                    ));
                 }
                 op if overflow_intrinsic(op).is_some() => {
                     trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(
@@ -954,15 +964,14 @@ pub fn lower_iir_to_llvm(
             if i.op == "f64_atan" { used_f64_atan = true; }
             if i.op == "f64_tan"  { used_f64_tan  = true; }
             if i.op == "f64_pow"  { used_f64_pow  = true; }
+            if i.op == "f64_digits" || i.op == "f64_exp10" {
+                used_f64_digit_ops = true;
+            }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
                     match name.as_str() {
                         "print_i64" => used_print_i64 = true,
                         "write_i64" => used_write_i64 = true,
-                        "write_f64_py" | "write_f64_js" => {
-                            used_write_f64 = true;
-                            used_putchar = true;
-                        }
                         "putchar" => used_putchar = true,
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
@@ -984,15 +993,15 @@ pub fn lower_iir_to_llvm(
             }
         }
     }
-    // LANG83 PR6a: the float writer's module-local definitions are all named
+    // LANG83 PR7b: the digit core's module-local definitions are all named
     // `@__iir_*`; a module function with such a name would be a duplicate
     // definition that clang rejects with a confusing error. Refuse it here.
-    if used_write_f64 {
+    if used_f64_digit_ops {
         if let Some(f) = module.functions.iter().find(|f| f.name.starts_with("__iir_")) {
             return Err(IIRLlvmError::InvalidOperand {
                 function: f.name.clone(),
                 detail: "a module function may not use the reserved `__iir_` prefix of the \
-                         float writer's module-local definitions"
+                         float digit core's module-local definitions"
                     .into(),
             });
         }
@@ -1002,8 +1011,9 @@ pub fn lower_iir_to_llvm(
         out.push_str("declare void @__print_i64(i64)\n");
     }
     emit_lang83_runtime(&mut out, used_write_i64, &trap_kinds);
-    if used_write_f64 {
-        out.push_str(lang83_f64::LANG83_F64_RUNTIME_LL);
+    // One copy of the digit core serves both PR7b ops.
+    if used_f64_digit_ops {
+        out.push_str(lang83_f64::LANG83_F64_DIGITS_LL);
     }
     if !used_ovf_intrinsics.is_empty() {
         out.push('\n');
@@ -1258,10 +1268,36 @@ pub fn lower_iir_to_llvm(
     }
 
     // ── Function bodies ───────────────────────────────────────────────────
+    //
+    // Linkage (#18416). A module with an entry point is a whole program: the
+    // only function anything outside the module calls is the entry (`main`,
+    // which the C start-up code calls). Every other function is `internal`.
+    //
+    // External linkage made a program function a *global symbol*, and the
+    // linker resolves every reference to a global symbol in the executable to
+    // the one definition: the program's. So a program that defined a
+    // function named like a libc or runtime function replaced it for the
+    // linked C runtime and the collector too:
+    //
+    // | program defines   | what happened on LLVM (before)                                |
+    // |-------------------|---------------------------------------------------------------|
+    // | `abort`           | the runtime's fail-closed `abort()` returned into the program |
+    // | `malloc`          | gc-core-capi's allocations got 0: "memory allocation failed"  |
+    // | `calloc`          | `__dyn_pair_new`'s cell came back null                        |
+    //
+    // An `internal` function is visible only inside this module, so the C
+    // runtime's `abort` / `malloc` references resolve to libc again. Nothing
+    // in the runtime calls back into a program function by name (closures
+    // dispatch through the module's own `__dyn_call_closure`), so the entry
+    // is the one function that must stay external. A module *without* an
+    // entry point is a library someone else links against, and keeps
+    // external linkage for every function, as before.
     for func in &module.functions {
         out.push('\n');
+        let internal = module.entry_point.as_deref().is_some_and(|entry| entry != func.name);
         lower_function(
             func,
+            internal,
             &callee_sigs,
             &globals,
             &global_types,
@@ -1644,6 +1680,7 @@ impl FnState<'_> {
 /// Emit one LLVM `define` block for one IIR function.
 fn lower_function(
     func: &IIRFunction,
+    internal: bool,
     callee_sigs: &HashMap<String, FnSig>,
     globals: &HashMap<String, String>,
     global_types: &HashMap<String, &'static str>,
@@ -1652,7 +1689,8 @@ fn lower_function(
 ) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
     let ret_ty = llvm_type_for(&func.return_type, &func.name)?;
-    out.push_str(&format!("define {ret_ty} @{}(", llvm_fn_ident(&func.name)));
+    let linkage = if internal { "internal " } else { "" };
+    out.push_str(&format!("define {linkage}{ret_ty} @{}(", llvm_fn_ident(&func.name)));
     for (i, (pname, pty)) in func.params.iter().enumerate() {
         if i > 0 {
             out.push_str(", ");
@@ -2246,6 +2284,8 @@ fn lower_instr(
         "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg" | "f64_signbit" => {
             lower_f64_ieee(instr, state, out)
         }
+        // LANG83 PR7b — the neutral float primitives.
+        "f64_class" | "f64_digits" | "f64_exp10" => lower_f64_digit_query(instr, state, out),
 
         // ── strings (LANG-FULL E4 literal-output foothold) ─────────────────
         "str_const" => lower_str_const(instr, state),
@@ -3219,8 +3259,60 @@ fn lower_f64_ieee(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Re
     Ok(())
 }
 
+/// Lower the LANG83 PR7b float primitives (each `f64 → i64`, never a trap):
+///
+/// | IIR | LLVM |
+/// |-----|------|
+/// | `f64_class d <- a` | `%b = bitcast double a to i64` ; `%m = and i64 %b, 0x7FFF…F` ; three `icmp`s, each `zext`ed and summed |
+/// | `f64_digits d <- a` | `%d = call i64 @__iir_f64_shortest_digits(double a)` |
+/// | `f64_exp10 d <- a` | `%d = call i64 @__iir_f64_shortest_exp10(double a)` |
+///
+/// `f64_class` counts how far the magnitude has climbed past two thresholds:
+///
+/// ```text
+///   class = (m != 0) + (m >= 0x7FF0…0) + (m > 0x7FF0…0)
+///   ±0 → 0     finite ≠ 0 → 1     ±Infinity → 2     NaN → 3
+/// ```
+///
+/// The two wrappers are the module's own `internal` definitions around
+/// the PR6a digit core (`lang83_f64.rs`).
+fn lower_f64_digit_query(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    let opname = instr.op.as_str();
+    let dest = require_dest(instr, opname, state.fn_name)?.to_string();
+    let a = resolve_operand(instr.srcs.first(), &state.env, "f64", state.fn_name)?;
+    match opname {
+        "f64_class" => {
+            let bits = state.fresh("clsbits");
+            let mag = state.fresh("clsmag");
+            out.push_str(&format!("  {bits} = bitcast double {a} to i64\n"));
+            out.push_str(&format!("  {mag} = and i64 {bits}, 9223372036854775807\n"));
+            let mut sum = String::from("0");
+            for (cond, bound) in [("ne", "0"), ("uge", "9218868437227405312"), ("ugt", "9218868437227405312")] {
+                let c = state.fresh("clscmp");
+                let z = state.fresh("clsbit");
+                let t = state.fresh("clssum");
+                out.push_str(&format!("  {c} = icmp {cond} i64 {mag}, {bound}\n"));
+                out.push_str(&format!("  {z} = zext i1 {c} to i64\n"));
+                out.push_str(&format!("  {t} = add i64 {sum}, {z}\n"));
+                sum = t;
+            }
+            out.push_str(&format!("  %{dest} = add i64 {sum}, 0\n"));
+        }
+        "f64_digits" => {
+            out.push_str(&format!("  %{dest} = call i64 @__iir_f64_shortest_digits(double {a})\n"));
+        }
+        _ => {
+            out.push_str(&format!("  %{dest} = call i64 @__iir_f64_shortest_exp10(double {a})\n"));
+        }
+    }
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
 /// Emit the finiteness + `i64`-range check shared by the `real_to_int_*` ops:
-/// trap (`@llvm.trap` + `unreachable`) unless the already-rounded operand is in
+/// raise the LANG83 typed `Trap.ConvRange` (`@__iir_trap`, which flushes
+/// stdout and reports `trap: Trap.ConvRange`, then `unreachable`) unless the
+/// already-rounded operand is in
 /// `[-2⁶³, 2⁶³)`. The comparisons are **ordered** (`fcmp oge`/`olt`), which are
 /// `false` for NaN — so NaN and ±∞ fall through the same single check and trap.
 /// The bounds are the `double` hex literals for −2⁶³ and +2⁶³ (`i64::MAX` =
@@ -3241,8 +3333,11 @@ fn emit_real_range_check(operand: &str, state: &mut FnState, out: &mut String) {
     out.push_str(&format!("  {inr} = and i1 {ge}, {lt}\n"));
     out.push_str(&format!("  br i1 {inr}, label %{ok}, label %{trap}\n"));
     out.push_str(&format!("{trap}:\n"));
-    out.push_str("  call void @llvm.trap()\n");
-    out.push_str("  unreachable\n");
+    let conv_range = interpreter_ir::exception_kind::trap_kind_id(
+        interpreter_ir::exception_kind::TRAP_CONV_RANGE,
+    )
+    .expect("Trap.ConvRange is a built-in kind");
+    emit_trap_call(conv_range, out);
     out.push_str(&format!("{ok}:\n"));
 }
 
@@ -4337,7 +4432,7 @@ fn lower_jmp_if(
         } else if cond_ty == "void" {
             // McCarthy W12b-3: a `COND` whose clause test is a tagged-word lisp
             // predicate carries NO operand type on `jmp_if_*` (type_hint "void");
-            // the condition is the `i64` 0/1 from `dyn_truthy`. Compare it
+            // the condition is the `i64` 0/1 from Lisp truthiness (inline since LANG83 PR7f-2). Compare it
             // against zero to get the `i1` — `trunc void …` would be invalid.
             let i1 = state.fresh("tobool");
             out.push_str(&format!("  {i1} = icmp ne i64 {cond_op}, 0\n"));
@@ -4604,15 +4699,6 @@ fn lower_call_builtin(
         "write_i64" => {
             let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
             out.push_str(&format!("  call void @__iir_write_i64(i64 {val})\n"));
-            Ok(())
-        }
-        // ── write_f64_py / write_f64_js — LANG83 PR6a ───────────────────
-        // One module-local routine; the second argument picks the layout
-        // (0 = Python repr, 1 = JavaScript toString).
-        "write_f64_py" | "write_f64_js" => {
-            let val = resolve_operand(instr.srcs.get(1), &state.env, "double", state.fn_name)?;
-            let layout = i32::from(name == "write_f64_js");
-            out.push_str(&format!("  call void @__iir_write_f64(double {val}, i32 {layout})\n"));
             Ok(())
         }
         "print_i64" => {

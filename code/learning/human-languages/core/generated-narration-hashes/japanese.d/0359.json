@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:4f041c0ea58024fe",
+  "lessonIds": [
+    "JA-C359-shakkin",
+    "JA-C359-rishi",
+    "JA-C359-tatekaeru",
+    "JA-C359-henkin",
+    "JA-C359-kingaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch359.txt",
+  "json": "japanese/narration/ch359.json",
+  "textHash": "fnv1a64:c6ec167aaa548d2a",
+  "jsonHash": "fnv1a64:5f6e27d9b747a105",
+  "findings": []
+}

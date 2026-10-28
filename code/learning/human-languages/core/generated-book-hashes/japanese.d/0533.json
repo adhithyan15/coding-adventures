@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:cce51d46d4687f8f",
+  "lessonIds": [
+    "JA-C533-yarigai",
+    "JA-C533-ikigai",
+    "JA-C533-netchuu-suru",
+    "JA-C533-uchikomu",
+    "JA-C533-joutatsu-suru",
+    "JA-R533-review-528-533",
+    "JA-R533-review-final-533"
+  ],
+  "tex": "japanese/book/chapters/ch533-worth-the-effort.tex"
+}

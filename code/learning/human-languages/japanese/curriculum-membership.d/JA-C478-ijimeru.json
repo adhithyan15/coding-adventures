@@ -1,0 +1,11 @@
+{
+  "id": "JA-C478-ijimeru",
+  "pathSegment": "JA-PATH-478-GROW478",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-478-GROW478",
+      "order": 2
+    }
+  ]
+}

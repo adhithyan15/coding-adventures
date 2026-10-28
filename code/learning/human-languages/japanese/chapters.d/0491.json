@@ -1,0 +1,21 @@
+{
+  "chapter": 491,
+  "title": "Water and Fire in the Kitchen",
+  "label": "ch:ja-water-and-fire-in-the-kitchen",
+  "canDo": "I can talk about water and heat in the kitchen.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R491-review-486-491",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about water and heat in the kitchen.",
+    "assesses": [
+      "JA-LEX-C491-STOVE491-01",
+      "JA-LEX-C491-STOVE491-02",
+      "JA-LEX-C491-STOVE491-03",
+      "JA-LEX-C491-STOVE491-04",
+      "JA-LEX-C491-STOVE491-05"
+    ]
+  }
+}

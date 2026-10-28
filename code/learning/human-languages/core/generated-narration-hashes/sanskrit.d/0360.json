@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:09a3f2616891d1ae",
+  "lessonIds": [
+    "SA-C360-yasah",
+    "SA-C360-pratistha",
+    "SA-C360-ahankarah",
+    "SA-C360-apamanah",
+    "SA-C360-pratarayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch360.txt",
+  "json": "sanskrit/narration/ch360.json",
+  "textHash": "fnv1a64:065e8fcbce79ffbd",
+  "jsonHash": "fnv1a64:967bc4f19daf7d00",
+  "findings": []
+}

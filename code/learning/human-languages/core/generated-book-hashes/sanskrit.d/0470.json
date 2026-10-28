@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:f31d3f2207a62469",
+  "lessonIds": [
+    "SA-C470-phupphusah",
+    "SA-C470-yakrt",
+    "SA-C470-vrkkah",
+    "SA-C470-amasayah",
+    "SA-C470-svasiti"
+  ],
+  "tex": "sanskrit/book/chapters/ch470-inside-the-body.tex"
+}

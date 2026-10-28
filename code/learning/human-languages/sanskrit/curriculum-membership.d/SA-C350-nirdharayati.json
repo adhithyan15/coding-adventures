@@ -1,0 +1,11 @@
+{
+  "id": "SA-C350-nirdharayati",
+  "pathSegment": "SA-PATH-350-MUKTI350",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-350-MUKTI350",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-370-STHITI370",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what I will do if the situation changes.",
+  "prerequisites": []
+}

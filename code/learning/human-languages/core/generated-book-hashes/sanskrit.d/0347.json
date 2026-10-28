@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:da8a7f6cc1c74f94",
+  "lessonIds": [
+    "SA-C347-udaharanam",
+    "SA-C347-drstantah",
+    "SA-C347-ittham",
+    "SA-C347-bodhayati",
+    "SA-C347-abhiprayah",
+    "SA-R347-review-340-347"
+  ],
+  "tex": "sanskrit/book/chapters/ch347-for-example.tex"
+}

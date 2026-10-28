@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:7c1dc3d6a28176a9",
+  "lessonIds": [
+    "ZH-C221-xueren",
+    "ZH-W221-xue-snow",
+    "ZH-C221-huaxue",
+    "ZH-C221-bing",
+    "ZH-C221-lingxia",
+    "ZH-C221-shoutao"
+  ],
+  "tex": "chinese/book/chapters/ch221-snow-and-ice.tex"
+}

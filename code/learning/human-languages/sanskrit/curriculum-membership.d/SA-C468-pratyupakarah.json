@@ -1,0 +1,11 @@
+{
+  "id": "SA-C468-pratyupakarah",
+  "pathSegment": "SA-PATH-468-KRTAVEDIN468",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-468-KRTAVEDIN468",
+      "order": 1
+    }
+  ]
+}

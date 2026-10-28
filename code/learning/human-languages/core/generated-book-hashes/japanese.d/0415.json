@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:4b7f256bd4d62193",
+  "lessonIds": [
+    "JA-C415-yuudachi",
+    "JA-C415-kosame",
+    "JA-C415-bisshori",
+    "JA-C415-nurasu",
+    "JA-C415-amayadori"
+  ],
+  "tex": "japanese/book/chapters/ch415-caught-in-a-shower.tex"
+}

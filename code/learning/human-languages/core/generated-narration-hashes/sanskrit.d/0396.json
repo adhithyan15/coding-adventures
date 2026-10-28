@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:0d41c4b4d96a6181",
+  "lessonIds": [
+    "SA-C396-dhvanati",
+    "SA-C396-darsanam",
+    "SA-C396-pratima",
+    "SA-C396-garbhagrham",
+    "SA-C396-bhaktah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch396.txt",
+  "json": "sanskrit/narration/ch396.json",
+  "textHash": "fnv1a64:3a8d84d672bee4cc",
+  "jsonHash": "fnv1a64:c852fd7a66206d33",
+  "findings": []
+}

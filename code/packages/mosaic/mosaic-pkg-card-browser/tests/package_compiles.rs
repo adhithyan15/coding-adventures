@@ -64,7 +64,7 @@ fn manifest_declares_expected_exports() {
         .and_then(|d| d.get("mosaic-pkg-toolkit"))
         .and_then(|v| v.as_str())
         .expect("[dependencies].mosaic-pkg-toolkit must be set");
-    assert_eq!(toolkit_version, "0.11.0");
+    assert_eq!(toolkit_version, "0.16.0");
 
     let kernel_version = value
         .get("kernel")

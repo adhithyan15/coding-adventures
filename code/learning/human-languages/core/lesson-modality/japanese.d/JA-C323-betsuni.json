@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C323-betsuni",
+    "language": "japanese",
+    "chapter": 323,
+    "sequence": 19350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c25d898e15e5c4be"
+  },
+  "findings": []
+}

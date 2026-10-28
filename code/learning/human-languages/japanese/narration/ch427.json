@@ -1,0 +1,819 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 427,
+  "title": "Nerves Before the Big Day",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0e1c973bacc40c9b",
+  "lessons": [
+    {
+      "id": "JA-C427-kinchou-suru",
+      "sequence": 25050,
+      "title": "きんちょうする (kinchō suru) — to get nervous; to be tense",
+      "headword": "きんちょうする",
+      "romanization": "kinchō suru",
+      "gloss": "to get nervous; to be tense",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8195c6bdbdad2e8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for refreshed, then the Japanese for to endure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きんちょうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんちょうする — kinchō suru — \"to get nervous; to be tense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しあいの まえに きんちょうしました。 — shiai no mae ni kinchō shimashita — \"I got nervous before the match.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きんちょうします, kinchōshimasu; a する verb. Past (polite): せんしゅが きんちょうしました。, senshu ga kinchō shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんちょうする (kinchō suru) is Sino-Japanese (kango) kinchō with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kin, \"tense\" (Middle Chinese kjinX) and chō, \"stretch\" (trjang) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinchō suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinchō suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinchō suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinchō suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiai no mae ni kinchō shimashita — I got nervous before the match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiai no mae ni kinchō shimashita* — I got nervous before the match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for refreshed, then the Japanese for to endure, then say kinchō suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for refreshed, then the Japanese for to endure, then say *kinchō suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きんちょうする (kinchō suru) mean? (\"To get nervous; to be tense\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C427-kinchou-suru-type",
+              "prompt": "Say the Japanese for 'to get nervous'.",
+              "assesses": [
+                "JA-LEX-C427-NERVES427-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きんちょうする",
+                "kinchō suru",
+                "kinchou suru",
+                "kinchoo suru",
+                "kincho suru"
+              ],
+              "feedback": {
+                "correct": "Right: きんちょうする (kinchō suru) is 'to get nervous; to be tense'.",
+                "incorrect": "'To get nervous' is きんちょうする (kinchō suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C427-dokidoki-suru",
+      "sequence": 25060,
+      "title": "どきどきする (dokidoki suru) — to have a pounding heart",
+      "headword": "どきどきする",
+      "romanization": "dokidoki suru",
+      "gloss": "to have a pounding heart",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1315291f82d4b4a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to endure, then the Japanese for to get nervous."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: どきどきする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どきどきする — dokidoki suru — \"to have a pounding heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しけんの まえは むねが どきどきします。 — shiken no mae wa mune ga dokidoki shimasu — \"Before an exam my heart pounds.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite どきどきします, dokidokishimasu; a する verb. Past (polite): かのじょの むねが どきどきしました。, kanojo no mune ga dokidoki shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "どきどきする (dokidoki suru) is a native Japanese mimetic word, dokidoki, inherited rather than borrowed from Chinese, made a verb with suru, \"to do\"; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dokidoki suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dokidoki suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dokidoki suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dokidoki suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiken no mae wa mune ga dokidoki shimasu — Before an exam my heart pounds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiken no mae wa mune ga dokidoki shimasu* — Before an exam my heart pounds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to endure, then the Japanese for to get nervous, then say dokidoki suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to endure, then the Japanese for to get nervous, then say *dokidoki suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does どきどきする (dokidoki suru) mean? (\"To have a pounding heart\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C427-dokidoki-suru-type",
+              "prompt": "Say the Japanese for 'to have a pounding heart'.",
+              "assesses": [
+                "JA-LEX-C427-NERVES427-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "どきどきする",
+                "dokidoki suru"
+              ],
+              "feedback": {
+                "correct": "Right: どきどきする (dokidoki suru) is 'to have a pounding heart'.",
+                "incorrect": "'To have a pounding heart' is どきどきする (dokidoki suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C427-sowasowa-suru",
+      "sequence": 25070,
+      "title": "そわそわする (sowasowa suru) — to be restless; to fidget",
+      "headword": "そわそわする",
+      "romanization": "sowasowa suru",
+      "gloss": "to be restless; to fidget",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:607a0f8b8fbb5b85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get nervous, then the Japanese for to have a pounding heart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: そわそわする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そわそわする — sowasowa suru — \"to be restless; to fidget\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつやすみが ちかいので、こどもが そわそわしています。 — natsuyasumi ga chikai node, kodomo ga sowasowa shite imasu — \"The summer holidays are near, so the children are restless.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite そわそわします, sowasowashimasu; a する verb. Past (polite): こどもが そわそわしました。, kodomo ga sowasowa shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そわそわする (sowasowa suru) is a native Japanese mimetic word, sowasowa, inherited rather than borrowed from Chinese, made a verb with suru, \"to do\"; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sowasowa suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sowasowa suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sowasowa suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sowasowa suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsuyasumi ga chikai node, kodomo ga sowasowa shite imasu — The summer holidays are near, so the children are restless.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsuyasumi ga chikai node, kodomo ga sowasowa shite imasu* — The summer holidays are near, so the children are restless.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get nervous, then the Japanese for to have a pounding heart, then say sowasowa suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get nervous, then the Japanese for to have a pounding heart, then say *sowasowa suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does そわそわする (sowasowa suru) mean? (\"To be restless; to fidget\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C427-sowasowa-suru-type",
+              "prompt": "Say the Japanese for 'to be restless'.",
+              "assesses": [
+                "JA-LEX-C427-NERVES427-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "そわそわする",
+                "sowasowa suru"
+              ],
+              "feedback": {
+                "correct": "Right: そわそわする (sowasowa suru) is 'to be restless; to fidget'.",
+                "incorrect": "'To be restless' is そわそわする (sowasowa suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C427-iraira-suru",
+      "sequence": 25080,
+      "title": "いらいらする (iraira suru) — to get irritated",
+      "headword": "いらいらする",
+      "romanization": "iraira suru",
+      "gloss": "to get irritated",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96b7920a42536e2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to have a pounding heart, then the Japanese for to be restless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いらいらする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いらいらする — iraira suru — \"to get irritated\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃが おくれて、いらいらしました。 — densha ga okurete, iraira shimashita — \"The train was late, and I got irritated.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite いらいらします, irairashimasu; a する verb. Past (polite): ちちが いらいらしました。, chichi ga iraira shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いらいらする (iraira suru) is a native Japanese mimetic word, iraira, inherited rather than borrowed from Chinese, made a verb with suru, \"to do\"; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraira suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraira suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraira suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraira suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha ga okurete, iraira shimashita — The train was late, and I got irritated.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha ga okurete, iraira shimashita* — The train was late, and I got irritated.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to have a pounding heart, then the Japanese for to be restless, then say iraira suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to have a pounding heart, then the Japanese for to be restless, then say *iraira suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いらいらする (iraira suru) mean? (\"To get irritated\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C427-iraira-suru-type",
+              "prompt": "Say the Japanese for 'to get irritated'.",
+              "assesses": [
+                "JA-LEX-C427-NERVES427-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いらいらする",
+                "iraira suru"
+              ],
+              "feedback": {
+                "correct": "Right: いらいらする (iraira suru) is 'to get irritated'.",
+                "incorrect": "'To get irritated' is いらいらする (iraira suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C427-tamerau",
+      "sequence": 25090,
+      "title": "ためらう (tamerau) — to hesitate",
+      "headword": "ためらう",
+      "romanization": "tamerau",
+      "gloss": "to hesitate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7ad8795618ed0b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be restless, then the Japanese for to get irritated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ためらう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ためらう — tamerau — \"to hesitate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは へんじを ためらいました。 — kare wa henji o tameraimashita — \"He hesitated to reply.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ためらいます, tameraimasu; a godan verb. Past (polite): ともだちが すこし ためらいました。, tomodachi ga sukoshi tameraimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ためらう (tamerau) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict marks it as usually written in kana; its kanji spelling borrows two characters that each mean \"hesitate\", chosen for the meaning and not the sound (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamerau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamerau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamerau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamerau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa henji o tameraimashita — He hesitated to reply.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa henji o tameraimashita* — He hesitated to reply.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be restless, then the Japanese for to get irritated, then say tamerau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be restless, then the Japanese for to get irritated, then say *tamerau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ためらう (tamerau) mean? (\"To hesitate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C427-tamerau-type",
+              "prompt": "Say the Japanese for 'to hesitate'.",
+              "assesses": [
+                "JA-LEX-C427-NERVES427-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ためらう",
+                "tamerau"
+              ],
+              "feedback": {
+                "correct": "Right: ためらう (tamerau) is 'to hesitate'.",
+                "incorrect": "'To hesitate' is ためらう (tamerau)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

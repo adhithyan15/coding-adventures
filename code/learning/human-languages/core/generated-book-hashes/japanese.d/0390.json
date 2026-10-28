@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:8b54169532648889",
+  "lessonIds": [
+    "JA-C390-kousokudouro",
+    "JA-C390-shasen",
+    "JA-C390-sokudo",
+    "JA-C390-menkyo",
+    "JA-C390-oikosu"
+  ],
+  "tex": "japanese/book/chapters/ch390-on-the-expressway.tex"
+}

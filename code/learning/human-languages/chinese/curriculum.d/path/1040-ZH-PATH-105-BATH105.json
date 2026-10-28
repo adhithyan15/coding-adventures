@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-105-BATH105",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-105-BATH105"
+  ],
+  "after": []
+}

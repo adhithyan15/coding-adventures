@@ -1,0 +1,21 @@
+{
+  "chapter": 317,
+  "title": "The Envoy",
+  "label": "ch:sa-the-envoy",
+  "canDo": "I can tell how a king sent orders and made peace.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R317-review-310-317",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can tell how a king sent orders and made peace.",
+    "assesses": [
+      "SA-LEX-C317-DUTA317-01",
+      "SA-LEX-C317-DUTA317-02",
+      "SA-LEX-C317-DUTA317-03",
+      "SA-LEX-C317-DUTA317-04",
+      "SA-LEX-C317-DUTA317-05"
+    ]
+  }
+}

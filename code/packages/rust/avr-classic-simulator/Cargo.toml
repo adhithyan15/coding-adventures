@@ -1,0 +1,10 @@
+[package]
+name = "avr-classic-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked ATmega328P-classic AVR functional simulator"
+license = "MIT"
+
+[lib]
+name = "avr_classic_simulator"
+path = "src/lib.rs"

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C207-jingdian",
+  "pathSegment": "ZH-PATH-207-PLACE207",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-207-PLACE207",
+      "order": 5
+    }
+  ]
+}

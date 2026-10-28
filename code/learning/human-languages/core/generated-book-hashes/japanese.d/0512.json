@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:eaad61ae04cb7b3f",
+  "lessonIds": [
+    "JA-C512-henka-suru",
+    "JA-C512-kirikaeru",
+    "JA-C512-hayamaru",
+    "JA-C512-kasanaru",
+    "JA-C512-higawari"
+  ],
+  "tex": "japanese/book/chapters/ch512-when-things-change.tex"
+}

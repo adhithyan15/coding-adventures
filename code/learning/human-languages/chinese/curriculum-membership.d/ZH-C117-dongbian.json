@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C117-dongbian",
+  "pathSegment": "ZH-PATH-117-COMPASS117",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-117-COMPASS117",
+      "order": 0
+    }
+  ]
+}

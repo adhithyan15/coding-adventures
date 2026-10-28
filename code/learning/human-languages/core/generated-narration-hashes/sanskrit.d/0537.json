@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:88384e49053d64e1",
+  "lessonIds": [
+    "SA-C537-pasakah",
+    "SA-C537-harayati",
+    "SA-C537-vancakah",
+    "SA-C537-lubdhah",
+    "SA-C537-dyutakarah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch537.txt",
+  "json": "sanskrit/narration/ch537.json",
+  "textHash": "fnv1a64:43b830f815e99fb9",
+  "jsonHash": "fnv1a64:66cb8b910e11e145",
+  "findings": []
+}

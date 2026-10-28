@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:f051a1a1c9bcf36f",
+  "lessonIds": [
+    "JA-C503-utagoe",
+    "JA-C503-senritsu",
+    "JA-C503-onpu",
+    "JA-C503-ongakuka",
+    "JA-C503-mau",
+    "JA-R503-review-498-503"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch503.txt",
+  "json": "japanese/narration/ch503.json",
+  "textHash": "fnv1a64:bf4210d5d850e67a",
+  "jsonHash": "fnv1a64:4c1dde848e203632",
+  "findings": []
+}

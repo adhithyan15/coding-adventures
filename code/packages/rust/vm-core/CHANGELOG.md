@@ -1,5 +1,237 @@
 # Changelog — vm-core
 
+## Unreleased — field ops require a block base address, not an interior pointer (#18471)
+
+- **Security fix (latent).** `gc_field_load` / `gc_field_store` bounds-checked
+  `idx*8 + 8` against `FlatHeap::payload_size(obj)`. That function resolves an
+  address *inside* a block, or one past its end, to the **whole** block's size,
+  so a `HeapRef` pointing into the middle of a 32-byte object passed the check
+  for indexes that reach up to 32 bytes past the object's end, for both reads
+  and writes. A store through it would also have run the write barrier with
+  `obj - 32` taken as the object's header. No IIR op creates an interior
+  `HeapRef`, so no program could reach this; a host passing a crafted
+  `Value::HeapRef` through `VMCore::execute`'s arguments could.
+- **Fix.** Both handlers now go through one helper, `checked_field_offset`,
+  which asks gc-core's new `FlatHeap::payload_size_at_base` (gc-core 0.37.0)
+  for the size of the object that starts *exactly* at `obj`. Anything else
+  traps with `"<op>: HeapRef is not the base address of a live heap object"`
+  before any memory is touched. The message deliberately does not include
+  the address, so VM errors never echo heap layout. Valid base addresses behave exactly as before,
+  including the `"index N out of bounds for a S-byte object"` trap.
+- **Visible change:** null, garbage and freed `HeapRef`s still trap, but with
+  the not-a-base message instead of `"out of bounds for a 0-byte object"`.
+- **32-bit index truncation closed (pre-existing).** The word index was
+  converted with `idx as usize`, which on a 32-bit target (wasm32) silently
+  truncates an index of `1 << 32` or more to a small one that then passes the
+  bounds check as a different field. It is now converted with
+  `usize::try_from` and traps on failure. On 64-bit targets every
+  non-negative `i64` fits, so nothing changes there; there is no 32-bit test
+  target in this workspace, so this is covered by a comment rather than a test.
+- Order of checks, all before any memory access: index non-negative and
+  fits in `usize`, then base address, then `idx*8 + 8 <= size`.
+- Tests (`tests/gc_heap.rs`), all with real heap allocations passed in as
+  host arguments: `gc_field_ops_accept_a_host_supplied_base_heap_ref`,
+  `gc_field_load_traps_on_an_interior_heap_ref`,
+  `gc_field_store_traps_on_an_interior_heap_ref_and_writes_nothing`,
+  `gc_field_ops_trap_on_a_one_past_the_end_heap_ref`,
+  `gc_field_ops_trap_on_null_and_garbage_heap_refs`. The interior probes stay
+  inside the block even when measured from the interior address, so on the
+  pre-fix code they fail (the op succeeds) without performing an
+  out-of-bounds access.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `op_support` refuses the ten LANG83 PR7f dynamic-value primitives with `NO_TAGGED_WORD_RUNTIME`: the VM's dynamic values are structural heap cells (`alloc` / `field_*`), and it has no handler or default builtin for a `dyn_*` call. `every_standard_op_is_executed` pins that this is the only family the VM refuses.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- **Breaking:** the default builtins `write_f64_py` / `write_f64_js` are
+  removed, and with them `float_format::FloatLayout`, `format_f64`,
+  `python_repr` and `js_to_string` (the two languages' layouts). A VM builtin
+  may not carry one language's rules (LANG83 "PR7"); each compiler now prints
+  a float with its own helper. `shortest_digits`, `f64_class`, `f64_digits`
+  and `f64_exp10` (the PR7b ops' lowering, also the JIT's) are unchanged.
+- New `BuiltinRegistry::names()`: every registered builtin, sorted.
+- Tests: the float tests check the digits (`digits_match_host_python`, ties
+  to even, and a round-trip sweep that also checks no shorter digit string
+  reads back) instead of the layouts; `default_builtins_name_no_language`
+  checks every default builtin against
+  `op_registry::language_name_violation` and that the writers are gone.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- The `trap` handler validates its kind with
+  `interpreter_ir::exception_kind::is_trap_kind`, since LANG83 PR7d removed
+  `is_registered_trap_kind` with the (always empty) `LANGUAGE_TRAP_KINDS`
+  table. Same accepted set: the seven built-in `Trap.*` leaves.
+- Kind 7 is now `Trap.Unbound` (was `Trap.ReferenceError`), so a program
+  that stops on it returns `VMError::Trap { kind: "Trap.Unbound" }`.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- **`float_format::shortest_digits(x) -> (u64, i32)`** now returns the
+  shortest round-trip digits as integers (`D`, `e10`); the string form it
+  returned before is the private `shortest_digit_string`, the one core both
+  it and `format_f64` use, so `python_repr` / `js_to_string` output is
+  unchanged (no caller outside this module used the old signature).
+- **`float_format::{f64_class, f64_digits, f64_exp10}`** — the PR7b
+  semantics on one `f64` (class 0/1/2/3 from `f64::classify`; `D` and `e10`,
+  or 0 for classes 0, 2, 3).
+- **Dispatch:** `f64_class` / `f64_digits` / `f64_exp10` handlers (a
+  `Value::Float` operand, a `Value::Int` result, never a trap), so
+  `op_support` derives `Lowered` for all three.
+- Tests: `neutral_primitives_match_the_layouts` (integer digits agree with
+  the laid-out strings and re-read as the same double) and
+  `neutral_float_primitives_dispatch`.
+
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+- `real_to_i64_checked` now fails with LANG83's typed
+  `VMError::Trap { kind: "Trap.ConvRange" }` (stable id 4) for NaN, ±∞ and
+  values outside `[-2⁶³, 2⁶³)`, as the [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) registry
+  says. It used to fail with `VMError::Custom("real_to_int: …")`, which named
+  no LANG83 kind. The single range test `t >= -2⁶³ && t < 2⁶³` also rejects
+  NaN, so the separate `is_finite` branch is gone.
+- Tests assert the trap kind for NaN, ±∞, 2⁶³ and −1e30, and that −2⁶³ still
+  converts.
+
+## Unreleased — `real_to_i64_checked` is public
+
+- `dispatch::real_to_i64_checked` is now `pub`. jit-core's
+  `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` call it, so the generic JIT
+  accepts exactly the range the interpreter tier accepts and fails with the
+  same `VMError::Custom` text. There is one copy of the rule, not two.
+
+## [0.33.0] — 2026-10-26 (VM-wide register-slot budget; private name map)
+
+- **Fix (pre-existing): a recursive `store_reg` could pin ~768 MiB.**
+  `store_reg idx, v` resized the frame's register file to `idx + 1` for any
+  `idx ≤ 65_535`, whatever the function statically used, so the
+  three-instruction recursion `store_reg 65535, 1; call r = f; ret r` grew
+  every one of 512 frames to 65,536 × 24-byte `Value`s (measured peak RSS
+  ≈ 792 MB) before `FrameOverflow`. The per-frame limit bounds one frame,
+  not a call stack.
+- **New `VMCore::max_register_slots`** (default
+  `VMCore::DEFAULT_MAX_REGISTER_SLOTS` = 2²² = 4,194,304): a budget of
+  register slots shared by every live frame, counted as `Vec` *capacity*.
+  The register files of one `execute` now occupy at most
+  `max_register_slots × size_of::<Value>()` bytes — 96 MiB by default, 8×
+  below the ~768 MiB it prevents. The reproducer stops after 64 frames
+  (peak RSS ≈ 100 MB in the test binary).
+- **Why 2²² and not 2²⁰ (review fix).** Capacity runs ahead of use:
+  growth doubles from the pre-allocation (the `register_count` hint, 8 for
+  almost every frontend), so a frame using `u` slots holds at most
+  `max(pre-allocation, 2u − 1)`. With a 2²⁰ default a 2,049- or
+  3,004-register recursive function stopped at depth 255 with
+  `RegisterBudgetExceeded` instead of reaching 512, so the "2,048 slots a
+  frame at full depth" claim held only with an exact hint. At 2²² the full
+  512-frame stack gets 8,192 slots a frame: any function whose frames use
+  ≤ 4,096 registers (pre-allocating ≤ 8,192) reaches `max_frames` exactly as
+  before, and full 65,536-register frames reach depth 64.
+- **New `VMError::RegisterBudgetExceeded { function, slots, budget }`**,
+  displayed as `function "f" would bring the call stack to 1114112 register
+  slots, more than the vm-core budget of 1048576 (raise
+  VMCore::max_register_slots)`.
+- **A failed `execute` / `execute_traced` clears its call stack** before
+  returning the error, so the frames' register files (up to the budget) are
+  released at once instead of living until the next `execute`. Nothing
+  reads the frames after an error (`frames` is private; only `Debug`'s
+  `frames_depth` showed it), and a successful run already ends with an
+  empty stack.
+- **How it is enforced (O(1), nothing on pop).** Each frame records, when
+  pushed, the slots the frames beneath it hold (`slots_below`); only the top
+  frame ever grows, so the sum stays exact. All growth goes through one
+  private `VMFrame::grow_to`, which checks `slots_below + len ≤ budget` and
+  clamps `Vec`'s capacity doubling to the frame's share. Growth points: new
+  names (`assign` / `register_index`, which now allocates the slot
+  immediately — the `call` handler's return slot is therefore allocated
+  before the callee is pushed), the new **`VMFrame::store_index(idx, v)`**
+  (used by `store_reg` and `ret`), and the callee frame's pre-allocation
+  (`for_call`, crate-private; `for_function` is now the standalone,
+  budget-free form). `DispatchCtx` gains `max_register_slots`.
+- **Unchanged:** the `load_reg`/`store_reg` index range (`0..=65_535`). No
+  frontend in the repository emits numeric-index `load_reg`/`store_reg`
+  for vm-core (`twig-to-beam`'s `load_reg` is a BEAM register copy; the
+  BEAM/CIL/JVM backends lower both to moves), so the budget bounds memory
+  without redefining the index range.
+- **`VMFrame::name_to_reg` is now private** (breaking for code that wrote
+  to it; no crate in the repository did), with a read-only
+  `VMFrame::name_to_reg()` accessor. Inserting a name directly skipped the
+  `next_reg` counter, so the next new register aliased its slot.
+- New `VMFrame::stack_slots()`: the slots held by a frame and every frame
+  beneath it (the running sum the budget checks).
+- Tests: the recursive `store_reg 65535` reproducer ends with
+  `RegisterBudgetExceeded` after exactly 64 full frames, with the live
+  frames' independently summed capacities equal to the budget; a lowered
+  budget is enforced exactly; `store_reg 1023` recursion still ends in
+  `FrameOverflow` at 512; a 3,004-register recursive function with the
+  default hint reaches `FrameOverflow` at 512 under `VMCore::new()` (it
+  fails at the old 2²⁰ default); a failed `execute`/`execute_traced` leaves
+  no frames and the VM reusable; 500-deep ordinary recursion and a
+  `store_reg`/`load_reg` round trip are unaffected; a budget too small for
+  the entry point's parameters is refused before any instruction; frame
+  tests for `store_index` within/past the budget and past the frame limit,
+  a refused name leaving the frame unchanged, capacity never overshooting
+  the frame's share, `for_call`'s budget checks, and the `name_to_reg()`
+  view.
+
+## [0.32.0] — 2026-10-26 (frame register limit is a typed, load-time error)
+
+- **Fix: a frame's 65,537th register is no longer silently dropped.**
+  `VMFrame::assign` used to ignore any new register past
+  `MAX_FRAME_REGISTERS` (65,536), so a long straight-line function (for
+  example a big Python `main` from `python-iir-compiler`'s release path,
+  which gives every temporary a fresh `pyN`) ran on and then failed with a
+  misleading `undefined variable "py65536"`. Integer programs and every
+  frontend were affected.
+- The limit stays — it is a resource bound shared with `load_reg`/`store_reg`
+  (indices `0..=65_535`, now derived from the constant) and twig-vm's
+  `MAX_REGISTERS_PER_FRAME` — but exceeding it is now an error:
+  - **New `VMError::RegisterLimitExceeded { function, registers, limit }`**,
+    displayed as `function "main" needs 65537 registers, more than the 65536
+    a vm-core frame can hold`.
+  - **Load-time check.** `VMCore::execute` and `execute_traced` run the new
+    `core::check_register_limits(module)` before pushing the root frame: each
+    function's registers are counted — **`params.len()` (parameters own
+    slots `0..params.len()` by position, even when names repeat) plus the
+    distinct instruction `dest`s that are not parameter names** — and the
+    whole module is refused before any instruction or output runs. A cheap upper bound (`params + dests`) skips the hash
+    set for every function that is obviously within the limit. Per-function
+    check: `VMFrame::check_register_limit(&IIRFunction)`.
+  - **Run-time backstop.** `VMFrame::assign` now returns
+    `Result<(), VMError>` (breaking: callers add `?`), and the new
+    `VMFrame::register_index` (also used for the `call` return slot, which
+    used to bypass the cap entirely) fails the same way for a register a
+    custom opcode handler invents at run time.
+- **`VMFrame::for_function(&IIRFunction, return_dest) -> Result`** (was
+  `(name, params, register_count, return_dest) -> Self`): refuses a function
+  with more parameters than a frame holds, so every positional argument
+  write is in bounds (a backstop for functions that bypassed the load-time
+  check). It pre-allocates the untrusted `register_count` hint bounded by
+  `params + instructions` (all the function can ever name) and the limit,
+  and never below `params.len()`. A hand-built module declaring
+  `usize::MAX` no longer aborts on allocation, and a tiny recursive
+  function claiming 65,536 registers no longer pre-allocates them in every
+  frame. `VMFrame::new` also clamps its count to the limit.
+- **Fix (pre-existing): a new register no longer overwrites a duplicate-named
+  parameter's argument.** New registers were numbered `name_to_reg.len()`,
+  which is less than `params.len()` when two parameters share a name, so in
+  `f(a, a)` the first local got slot 1 and clobbered the second argument.
+  Frames now keep a separate `next_reg` counter starting at `params.len()`.
+- Security review: the first draft of this change counted *distinct names*
+  only, so 65,537 parameters all named `a` passed the check and then
+  panicked writing the 65,537th argument into a clamped register file (via
+  `execute` or `call`). Fixed by the positional count and the
+  `for_function` backstop above; regression tests cover both paths.
+- Tests: a function with exactly 65,536 registers runs and returns its last
+  register; 65,537 is refused with the typed error and zero instructions
+  executed (via `execute`, `execute_traced`, and a module whose *callee* is
+  over the limit); 65,537 duplicate-named parameters refused with the typed
+  error and no panic (entry point and callee); `f(a, a)` keeps both
+  arguments next to a local; frame-level tests for the 65,537th `assign`,
+  positional parameter counting, a `dest` naming a parameter not counted
+  twice, distinct-name counting, and the `register_count` bounds.
+
 ## [0.31.0] — 2026-10-24 (LANG83 PR6c — non-trapping IEEE f64 arithmetic and `f64_signbit`)
 
 - **`f64_add` / `f64_sub` / `f64_mul` / `f64_div` / `f64_neg` /

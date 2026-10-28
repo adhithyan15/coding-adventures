@@ -1,0 +1,11 @@
+{
+  "id": "JA-C369-tokubetsu",
+  "pathSegment": "JA-PATH-369-JUUYOU369",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-369-JUUYOU369",
+      "order": 2
+    }
+  ]
+}

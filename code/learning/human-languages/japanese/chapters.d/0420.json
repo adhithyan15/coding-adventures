@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Receipts and Fees",
+  "label": "ch:ja-receipts-and-fees",
+  "canDo": "I can pay, ask for a receipt and get a refund.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C420-haraimodosu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can pay, ask for a receipt and get a refund.",
+    "assesses": [
+      "JA-LEX-C420-RYOUSHUUSHO420-03",
+      "JA-LEX-C420-RYOUSHUUSHO420-04",
+      "JA-LEX-C420-RYOUSHUUSHO420-05"
+    ]
+  }
+}

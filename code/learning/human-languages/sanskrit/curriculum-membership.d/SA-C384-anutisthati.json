@@ -1,0 +1,11 @@
+{
+  "id": "SA-C384-anutisthati",
+  "pathSegment": "SA-PATH-384-UDYAMA384",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-384-UDYAMA384",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-363-KAIKEI363",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-363-KAIKEI363"
+  ],
+  "after": []
+}

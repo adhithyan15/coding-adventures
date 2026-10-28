@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:89f78293e8baaee4",
+  "lessonIds": [
+    "JA-C517-ketsudan-suru",
+    "JA-C517-ketsui-suru",
+    "JA-C517-omoikiru",
+    "JA-C517-handan-suru",
+    "JA-C517-sentakushi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch517.txt",
+  "json": "japanese/narration/ch517.json",
+  "textHash": "fnv1a64:18e66966c61da16c",
+  "jsonHash": "fnv1a64:06288ad77795c428",
+  "findings": []
+}

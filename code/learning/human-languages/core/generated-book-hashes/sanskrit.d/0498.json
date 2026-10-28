@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:d1e1823d26f18dde",
+  "lessonIds": [
+    "SA-C498-agrajah",
+    "SA-C498-anujah",
+    "SA-C498-jyesthah",
+    "SA-C498-kanisthah",
+    "SA-C498-yamalau"
+  ],
+  "tex": "sanskrit/book/chapters/ch498-brothers-and-sisters.tex"
+}

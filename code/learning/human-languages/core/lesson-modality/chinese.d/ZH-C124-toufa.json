@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C124-toufa",
+    "language": "chinese",
+    "chapter": 124,
+    "sequence": 10060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c9232327cd21593"
+  },
+  "findings": []
+}

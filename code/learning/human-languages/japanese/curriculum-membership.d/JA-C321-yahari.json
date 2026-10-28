@@ -1,0 +1,11 @@
+{
+  "id": "JA-C321-yahari",
+  "pathSegment": "JA-PATH-321-ZETTAI321",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-321-ZETTAI321",
+      "order": 2
+    }
+  ]
+}

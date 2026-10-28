@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:18a66e3ef666872f",
+  "lessonIds": [
+    "ZH-C46-xingqi",
+    "ZH-W46-xing",
+    "ZH-W46-qi-period",
+    "ZH-C46-xingqiyi",
+    "ZH-C46-shihou",
+    "ZH-C46-zhoumo",
+    "ZH-C46-xingqitian"
+  ],
+  "tex": "chinese/book/chapters/ch46-the-week.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R463-review-456-463",
+    "language": "sanskrit",
+    "chapter": 463,
+    "sequence": 26810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db611e0dfb8d037e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C133-shoushi",
+    "language": "chinese",
+    "chapter": 133,
+    "sequence": 10530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be86a5d8881fb9a8"
+  },
+  "findings": []
+}

@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:681ca915a18c487b",
+  "lessonIds": [
+    "ZH-C30-zenmeyang",
+    "ZH-C30-hen",
+    "ZH-W30-hen",
+    "ZH-C30-henhao",
+    "ZH-C30-mang",
+    "ZH-C30-lei",
+    "ZH-C30-haixing",
+    "ZH-C30-practice"
+  ],
+  "tex": "chinese/book/chapters/ch30-how-are-you.tex"
+}

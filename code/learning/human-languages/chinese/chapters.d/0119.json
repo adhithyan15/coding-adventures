@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Bags and Boxes",
+  "label": "ch:zh-bags-and-boxes",
+  "canDo": "I can name a schoolbag, a suitcase, a box, a carrier bag and luggage.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C119-xingli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: I can name a schoolbag, a suitcase, a box, a carrier bag and luggage.",
+    "assesses": [
+      "ZH-LEX-C119-BAGS119-03",
+      "ZH-LEX-C119-BAGS119-04",
+      "ZH-LEX-C119-BAGS119-05"
+    ]
+  }
+}

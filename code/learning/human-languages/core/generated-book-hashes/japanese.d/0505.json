@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:7511ff5f205064bb",
+  "lessonIds": [
+    "JA-C505-rikishi",
+    "JA-C505-dohyou",
+    "JA-C505-gyouji",
+    "JA-C505-yumi",
+    "JA-C505-yokeru"
+  ],
+  "tex": "japanese/book/chapters/ch505-sumo-and-archery.tex"
+}

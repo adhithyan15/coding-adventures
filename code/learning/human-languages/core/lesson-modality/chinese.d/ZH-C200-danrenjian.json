@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C200-danrenjian",
+    "language": "chinese",
+    "chapter": 200,
+    "sequence": 15640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72333d8363df3518"
+  },
+  "findings": []
+}

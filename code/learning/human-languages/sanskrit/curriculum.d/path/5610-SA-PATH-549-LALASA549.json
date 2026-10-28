@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-549-LALASA549",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-549-LALASA549"
+  ],
+  "after": []
+}

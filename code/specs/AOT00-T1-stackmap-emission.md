@@ -243,13 +243,34 @@ dispatch, §1.2 gap 1).
 ## 7. Frame-pointer requirement
 
 The **mutator** frames are already walkable (§1.1 — both backends set fp). The
-remaining requirement is on the **runtime collector crate** (`gc-core-capi`): its own
-`__gc_collect_precise` frame must have a valid frame pointer for `current_fp()` to be
-a correct anchor once maps exist (see `stack_scan.rs` `current_fp` docs and the
-security review of #8571, finding Q1b). This is tracked as a **prerequisite of this
-rung**: build `gc-core-capi` with `-Cforce-frame-pointers=yes` for the x86-64 targets
-(guaranteed by ABI on `aarch64-apple-darwin`). Verify by disassembling
-`__gc_collect_precise`. *(Background task already filed.)*
+remaining requirement is on the **runtime collector crate** (`gc-core-capi`): the walk
+needs one trustworthy *anchor* — a frame record `[fp] = caller fp`, `[fp+8] = return
+address into the caller` — at the collect entry, and once maps exist a wrong anchor is
+unsafe (security review of #8571, finding Q1b: a garbage `[fp+8]` aliasing a mapped
+return address could exclude a live span).
+
+The first version read the anchor from `rbp`/`x29` inside the Rust entry
+(`current_fp()`) and relied on `-Cforce-frame-pointers=yes`. That is not enough on
+every ABI: on x86-64 Win64 LLVM sets `rbp` with `lea rbp, [rsp+N]` even with the flag,
+so `[rbp]` is a local, not a saved frame pointer (security review of #18337).
+
+**Resolution (flag-independent):** every precise entry (`__gc_collect_precise`,
+`__gc_collect_minor_precise`, `__gc_collect_incremental_start`,
+`__gc_collect_compacting`, `__gc_collect_minor_compacting`, `__gc_safepoint` and the
+`__twig_gc_*` aliases of them) is a **naked trampoline** that builds the record itself
+and passes its address to the Rust body as the first argument:
+
+| ABI          | trampoline                                                                 |
+|--------------|----------------------------------------------------------------------------|
+| x86-64 SysV  | `push rbp; mov rbp, rsp; mov rdi, rbp; call body; pop rbp; ret`             |
+| x86-64 Win64 | `push rbp; mov rbp, rsp; sub rsp, 32; mov rcx, rbp; call body; add rsp, 32; pop rbp; ret` (32 = shadow space) |
+| AArch64      | `stp x29, x30, [sp, #-16]!; mov x29, sp; mov x0, x29; bl body; ldp x29, x30, [sp], #16; ret` |
+
+Each carries hand-written unwind info (`.cfi_*` on SysV/AArch64, `.seh_*` on Win64)
+so debuggers and SEH can walk through it. `twig-aot` still builds `gc-core-capi` with
+`-Cforce-frame-pointers=yes`; the anchor no longer depends on it, but it keeps any
+frames between the trampoline's caller and the Twig code walkable. Verify by
+disassembling `__gc_collect_precise` for each target (see `stack_scan.rs` §2b).
 
 ---
 
@@ -298,7 +319,8 @@ rung**: build `gc-core-capi` with `-Cforce-frame-pointers=yes` for the x86-64 ta
    wire `twig-aot` start-up to call it. Registry round-trip test (§9.3).
 5. **GC-stress differential** (§9.2) proving `live_bytes` tightens on NativeAot while
    T7 stays green. *This is the first PR where precise roots visibly fire.*
-6. **force-frame-pointers** for `gc-core-capi` (§7) — may land earlier if #4 needs it.
+6. **Walk anchor** for `gc-core-capi` (§7): landed as `-Cforce-frame-pointers=yes` in
+   `twig-aot` (#18337), then made flag-independent with frame-building trampolines.
 7. **x86-64 parity:** `op == "safepoint"` lowering + `pc_offset` capture + emission.
 8. **Back-edge `safepoint` insertion pass** (§6).
 9. **Liveness-pass refinement** (§4) — exact live-out, own spec.

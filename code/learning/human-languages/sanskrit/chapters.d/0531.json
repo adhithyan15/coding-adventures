@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Wishes and Prayers",
+  "label": "ch:sa-wishes-and-prayers",
+  "canDo": "I can say what I wish for and what will come of it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C531-kamana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can say what I wish for and what will come of it.",
+    "assesses": [
+      "SA-LEX-C531-VANCHATI531-03",
+      "SA-LEX-C531-VANCHATI531-04",
+      "SA-LEX-C531-VANCHATI531-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-530-ATLEAST530",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say roughly how long and how much.",
+  "prerequisites": []
+}

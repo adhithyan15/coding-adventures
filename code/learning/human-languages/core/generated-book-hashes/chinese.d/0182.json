@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:9b26ff9f3a7d2537",
+  "lessonIds": [
+    "ZH-C182-fanguan",
+    "ZH-C182-lengcai",
+    "ZH-W182-leng-cold",
+    "ZH-C182-xiaochi",
+    "ZH-C182-jiachangcai",
+    "ZH-C182-hefan"
+  ],
+  "tex": "chinese/book/chapters/ch182-eating-out.tex"
+}

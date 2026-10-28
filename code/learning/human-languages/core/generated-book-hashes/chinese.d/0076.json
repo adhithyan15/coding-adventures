@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:271b52a6bda925e0",
+  "lessonIds": [
+    "ZH-C76-yihuir",
+    "ZH-W76-hui",
+    "ZH-C76-mingtianjian",
+    "ZH-C76-zaishuo",
+    "ZH-C76-wanan",
+    "ZH-C76-baibai"
+  ],
+  "tex": "chinese/book/chapters/ch76-parting.tex"
+}

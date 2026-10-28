@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(bounded_json_installed_consumer LANGUAGES CXX)
+find_package(ca_bounded_json CONFIG REQUIRED)
+add_executable(consumer main.cpp)
+target_link_libraries(consumer PRIVATE ca::bounded_json)

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C146-xing-wake",
+    "language": "chinese",
+    "chapter": 146,
+    "sequence": 11210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2de9f9b1cfdec539"
+  },
+  "findings": []
+}

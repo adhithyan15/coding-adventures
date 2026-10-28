@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:455b6c8d3e4732a3",
+  "lessonIds": [
+    "ZH-C202-saoma",
+    "ZH-C202-shouju",
+    "ZH-C202-tuihuo",
+    "ZH-C202-guke",
+    "ZH-C202-shouyintai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch202.txt",
+  "json": "chinese/narration/ch202.json",
+  "textHash": "fnv1a64:12d63cd74319757c",
+  "jsonHash": "fnv1a64:6680b3bc207457de",
+  "findings": []
+}

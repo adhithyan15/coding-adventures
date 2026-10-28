@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:371942dc9e416704",
+  "lessonIds": [
+    "ZH-C269-congxiao",
+    "ZH-C269-xian",
+    "ZH-W269-xian-first",
+    "ZH-C269-tongnian",
+    "ZH-C269-benlai",
+    "ZH-C269-wanju"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch269.txt",
+  "json": "chinese/narration/ch269.json",
+  "textHash": "fnv1a64:e9339831ed41bcb4",
+  "jsonHash": "fnv1a64:727ff786132a2e77",
+  "findings": []
+}

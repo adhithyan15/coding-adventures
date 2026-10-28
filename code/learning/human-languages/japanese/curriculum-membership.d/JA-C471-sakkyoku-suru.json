@@ -1,0 +1,11 @@
+{
+  "id": "JA-C471-sakkyoku-suru",
+  "pathSegment": "JA-PATH-471-STAGE471",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-471-STAGE471",
+      "order": 4
+    }
+  ]
+}

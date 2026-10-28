@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:98323d000c1e590d",
+  "lessonIds": [
+    "ZH-C118-baoguo",
+    "ZH-C118-ji",
+    "ZH-C118-xin",
+    "ZH-C118-duanxin",
+    "ZH-C118-shou"
+  ],
+  "tex": "chinese/book/chapters/ch118-sending-things.tex"
+}

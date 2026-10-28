@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "The Rainy Season",
+  "label": "ch:sa-the-rainy-season",
+  "canDo": "I can describe the rains, from drizzle to downpour.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C437-galati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can describe the rains, from drizzle to downpour.",
+    "assesses": [
+      "SA-LEX-C437-PRAVRSH437-03",
+      "SA-LEX-C437-PRAVRSH437-04",
+      "SA-LEX-C437-PRAVRSH437-05"
+    ]
+  }
+}

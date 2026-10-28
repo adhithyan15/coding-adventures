@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:11bbb725abde7a12",
+  "lessonIds": [
+    "SA-C328-vratam",
+    "SA-C328-upavasah",
+    "SA-C328-naivedyam",
+    "SA-C328-arpayati",
+    "SA-C328-prasadah"
+  ],
+  "tex": "sanskrit/book/chapters/ch328-fasting-and-offerings.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C549-didrksa",
+    "language": "sanskrit",
+    "chapter": 549,
+    "sequence": 31440,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:be6545cf2f42eb27"
+  },
+  "findings": []
+}

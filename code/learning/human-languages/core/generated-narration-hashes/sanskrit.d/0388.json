@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:c6221781e554045f",
+  "lessonIds": [
+    "SA-C388-vyavaharati",
+    "SA-C388-upeksate",
+    "SA-C388-saumyah",
+    "SA-C388-vrtha",
+    "SA-C388-adarsah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch388.txt",
+  "json": "sanskrit/narration/ch388.json",
+  "textHash": "fnv1a64:0047ea98fa3a55df",
+  "jsonHash": "fnv1a64:3ec4347cced4e9d3",
+  "findings": []
+}

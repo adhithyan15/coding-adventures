@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Sunrise",
+  "label": "ch:sa-sunrise",
+  "canDo": "I can describe the dawn and the rising sun.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C442-vibhati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can describe the dawn and the rising sun.",
+    "assesses": [
+      "SA-LEX-C442-UDAYA442-03",
+      "SA-LEX-C442-UDAYA442-04",
+      "SA-LEX-C442-UDAYA442-05"
+    ]
+  }
+}

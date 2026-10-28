@@ -25,6 +25,11 @@ public static class MosaicRuntimeHost
     private static readonly System.Collections.Concurrent.ConcurrentQueue<string> ProfileSamples = new();
     private static int ProfileSampleCount;
     public static IDisposable? BeginProfile(string phase, object? component = null)
+        => BeginProfile(phase, component, null);
+
+    // PropertyInfo comes from the generated component schema, never runtime
+    // JSON keys or values. Keep label extraction behind the opt-in filters.
+    private static IDisposable? BeginProfile(string phase, object? component, PropertyInfo? property)
     {
         if (string.IsNullOrWhiteSpace(ProfilePath)) return null;
         // Detailed conversion/setter phases can exhaust the shared budget before
@@ -39,13 +44,14 @@ public static class MosaicRuntimeHost
             var count = System.Threading.Volatile.Read(ref ProfileSampleCount);
             if (count >= 4096) return null;
             if (System.Threading.Interlocked.CompareExchange(ref ProfileSampleCount, count + 1, count) == count)
-                return new ProfileScope(phase, component);
+                return new ProfileScope(phase, component, property);
         }
     }
 
     private sealed class ProfileScope : IDisposable
     {
         private readonly string phase;
+        private readonly string? property;
         private readonly long started = Stopwatch.GetTimestamp();
         private readonly long allocated = GC.GetAllocatedBytesForCurrentThread();
         private int disposed;
@@ -54,9 +60,11 @@ public static class MosaicRuntimeHost
         private readonly PropertyInfo? realizationProperty;
         private readonly (long, long)? realizationStart;
         private readonly (long, long, long, long)? projectionStart;
-        internal ProfileScope(string phase, object? component)
+        internal ProfileScope(string phase, object? component, PropertyInfo? metadata)
         {
             this.phase = phase;
+            var name = metadata?.Name;
+            property = name is { Length: > 128 } ? name.Substring(0, 128) : name;
             this.component = component;
             // The optional diagnostic contract keeps standalone controls independent
             // of this host. Never inspect application properties or enumerate rows.
@@ -94,6 +102,11 @@ public static class MosaicRuntimeHost
             if (System.Threading.Interlocked.Exchange(ref disposed, 1) != 0) return;
             var milliseconds = (Stopwatch.GetTimestamp() - started) * 1000.0 / Stopwatch.Frequency;
             var bytes = GC.GetAllocatedBytesForCurrentThread() - allocated;
+            if (property is not null)
+            {
+                ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes, property }));
+                return;
+            }
             // Intervals may overlap: these deltas describe work during this scope,
             // not exclusive attribution to an event or native element realization.
             var realizedEnd = ReadRealization();
@@ -146,6 +159,51 @@ public static class MosaicRuntimeHost
     }
 
     public static bool IsAvailable => State is not null;
+
+    // A value-equal list is still a different dependency-property reference after
+    // deserialization. Reuse the live value to avoid needless binding invalidation,
+    // but still call the setter: custom controls may observe every assignment.
+    // Only Mosaic's scalar list shapes participate, never arbitrary object Equals.
+    private static object? ReuseEquivalentList(object component, PropertyInfo property, object? value)
+    {
+        if (!property.CanRead || property.GetIndexParameters().Length != 0
+            || !IsScalarList(property.PropertyType)) return value;
+        try
+        {
+            var current = property.GetValue(component);
+            return EqualListValue(current, value, property.PropertyType) ? current : value;
+        }
+        catch { return value; } // An optional optimization cannot make a getter required.
+    }
+
+    private static bool IsScalarList(Type type)
+    {
+        if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(IReadOnlyList<>))
+            return false;
+        var item = type.GetGenericArguments()[0];
+        return item == typeof(string) || item == typeof(double) || item == typeof(bool)
+            || IsScalarList(item);
+    }
+
+    private static bool EqualListValue(object? current, object? incoming, Type type)
+    {
+        if (current is null || incoming is null) return current is null && incoming is null;
+        if (!IsScalarList(type))
+            return current.GetType() == type && incoming.GetType() == type && current.Equals(incoming);
+        // Converted IReadOnlyList values are List<T>. Use their finite count to
+        // bound reads even if a custom existing list has a broken enumerator.
+        if (incoming is not System.Collections.IList values
+            || current is not System.Collections.IEnumerable existing) return false;
+        var item = type.GetGenericArguments()[0];
+        var cursor = existing.GetEnumerator();
+        try
+        {
+            for (var i = 0; i < values.Count; i++)
+                if (!cursor.MoveNext() || !EqualListValue(cursor.Current, values[i], item)) return false;
+            return !cursor.MoveNext();
+        }
+        finally { (cursor as IDisposable)?.Dispose(); }
+    }
 
     public static void LoadRequired()
     {
@@ -475,6 +533,18 @@ public static class MosaicRuntimeHost
         private ulong sequence;
         private JsonElement latestUpdate;
         private string? persistenceWarning;
+        /// <summary>
+        /// Set when a state file the runtime rejected could not be moved aside
+        /// (see <see cref="QuarantinePersistedState"/>), so it still sits at
+        /// the live path. Every save is skipped from then on, because the
+        /// next one would write over it.
+        /// </summary>
+        /// <remarks>
+        /// Sticky for this runtime, unlike <see cref="persistenceWarning"/>,
+        /// which a successful write clears: here no write is attempted, so the
+        /// warning that explains why stays showing.
+        /// </remarks>
+        private bool persistenceDisabled;
         /// <summary>
         /// The revision the state file was last saved at by an answer, so an
         /// answer at that same revision skips the write. Null until the first
@@ -1324,7 +1394,7 @@ public static class MosaicRuntimeHost
                         // Fixed phase names avoid leaking property names or values.
                         // Repeated scopes separate conversion from synchronous setters.
                         (bool converted, object? value) converted;
-                        using (BeginProfile("apply-props-convert"))
+                        using (BeginProfile("apply-props-convert", null, property))
                             converted = ConvertValue(value, property.PropertyType);
                         if (!converted.converted)
                         {
@@ -1333,8 +1403,8 @@ public static class MosaicRuntimeHost
                                     $"Mosaic runtime prop '{property.Name}' is not valid for {property.PropertyType.Name}");
                             continue;
                         }
-                        using (BeginProfile("apply-props-set"))
-                            property.SetValue(component, converted.value);
+                        using (BeginProfile("apply-props-set", null, property))
+                            property.SetValue(component, ReuseEquivalentList(component, property, converted.value));
                     }
                 }
                 finally
@@ -1369,7 +1439,7 @@ public static class MosaicRuntimeHost
             }
         }
 
-        private static (JsonElement? Snapshot, string? Warning) LoadPersistedSnapshot()
+        private (JsonElement? Snapshot, string? Warning) LoadPersistedSnapshot()
         {
             var path = StatePath();
             if (path is null || !File.Exists(path)) return (null, null);
@@ -1388,29 +1458,119 @@ public static class MosaicRuntimeHost
             }
         }
 
-        private static string QuarantinePersistedState(string reason)
+        /// <summary>How many names a rejected state file can be moved to.</summary>
+        private const int MaxQuarantinedStates = 10;
+
+        /// <summary>
+        /// Move a state file the runtime rejected out of the way, without
+        /// ever replacing an earlier one.
+        /// </summary>
+        /// <remarks>
+        /// A rejected file may be the user's only copy of their data, and so
+        /// may the file an earlier rejection moved aside: startup rejects the
+        /// real state, then a later rejection (the next launch, say) must not
+        /// destroy it. Each rejection takes the first free name:
+        ///
+        /// <code>
+        ///   rejection   moved to
+        ///   ---------   -----------------------------------
+        ///   first       mosaic-state.v1.json.corrupt     (the name release gates compare)
+        ///   second      mosaic-state.v1.json.corrupt.1
+        ///   ...         ...
+        ///   tenth       mosaic-state.v1.json.corrupt.9
+        /// </code>
+        ///
+        /// A name is skipped when anything is there
+        /// (<see cref="QuarantineNameTaken"/>), and
+        /// <c>File.Move(..., overwrite: false)</c> throws rather than replace
+        /// one that is already there: atomically on Windows, and through
+        /// link/unlink on Unix (a file system without hard links falls back to
+        /// check-then-rename, where a second instance quarantining at the same
+        /// moment could replace one rejected file with another). When the move
+        /// throws and the name is now taken, something got there after the
+        /// check, and the next name is tried. That is decided by looking again,
+        /// not from the exception, which differs by what is there and by
+        /// platform. Nothing is deleted first, so a move that fails halfway
+        /// loses nothing either.
+        ///
+        /// If the move fails, or all ten names are taken, the rejected file is
+        /// still at the live path, and the next save would write over it. So
+        /// saving is switched off for the rest of this runtime, and the
+        /// warning says so: an unsaved session is recoverable, an overwritten
+        /// file is not.
+        /// </remarks>
+        private string QuarantinePersistedState(string reason)
         {
             var path = StatePath();
             if (path is null) return reason;
-            var corrupt = path + ".corrupt";
-            try
-            {
-                if (File.Exists(corrupt)) File.Delete(corrupt);
-                if (File.Exists(path)) File.Move(path, corrupt);
-            }
-            catch (Exception moveError)
-            {
-                Debug.WriteLine($"Could not quarantine invalid Mosaic state: {moveError.Message}");
-            }
             var warning = $"{reason} ({path})";
+            if (File.Exists(path) && MovePersistedStateAside(path) is { } failure)
+            {
+                persistenceDisabled = true;
+                warning += $". {failure}. This session will not be saved.";
+            }
             Debug.WriteLine(warning);
             Console.Error.WriteLine(warning);
             return warning;
         }
 
+        /// <summary>
+        /// Move <paramref name="path"/> to its first free quarantine name.
+        /// Null when it moved; otherwise why it did not.
+        /// </summary>
+        private static string? MovePersistedStateAside(string path)
+        {
+            for (var index = 0; index < MaxQuarantinedStates; index++)
+            {
+                var candidate = index == 0 ? path + ".corrupt" : $"{path}.corrupt.{index}";
+                if (QuarantineNameTaken(candidate)) continue;
+                try
+                {
+                    File.Move(path, candidate, overwrite: false);
+                    return null;
+                }
+                catch (Exception moveError)
+                {
+                    if (QuarantineNameTaken(candidate)) continue;
+                    // TrimEnd: the warning adds its own full stop after this.
+                    return $"Could not move it aside to {candidate}: {moveError.Message.TrimEnd('.')}";
+                }
+            }
+            return $"All {MaxQuarantinedStates} quarantine names beside it are taken; move them away to save again";
+        }
+
+        /// <summary>
+        /// Whether anything is at <paramref name="candidate"/>: a file, a
+        /// directory, or a symbolic link or junction, even one whose target
+        /// is gone.
+        /// </summary>
+        /// <remarks>
+        /// <c>File.Exists</c> and <c>Directory.Exists</c> cover a file and a
+        /// directory everywhere, but whether they see a dangling link depends
+        /// on the platform, so <c>LinkTarget</c>, which reads the link itself,
+        /// settles that. A name that cannot even be inspected counts as taken:
+        /// skipping it never overwrites anything.
+        /// </remarks>
+        private static bool QuarantineNameTaken(string candidate)
+        {
+            try
+            {
+                return File.Exists(candidate)
+                    || Directory.Exists(candidate)
+                    || new FileInfo(candidate).LinkTarget is not null;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
+        }
+
         private void PersistSnapshot()
         {
             using var profile = BeginProfile("persist-snapshot");
+            // The rejected file is still at the live path: writing, or
+            // deleting it for a null snapshot, would destroy it.
+            if (persistenceDisabled) return;
             var path = StatePath();
             if (path is null) return;
             if (app == IntPtr.Zero || library == IntPtr.Zero) return;

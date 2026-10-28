@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "For Our Good",
+  "label": "ch:sa-for-our-good",
+  "canDo": "I can say what would be good for someone.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C382-satkaroti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can say what would be good for someone.",
+    "assesses": [
+      "SA-LEX-C382-HITA382-03",
+      "SA-LEX-C382-HITA382-04",
+      "SA-LEX-C382-HITA382-05"
+    ]
+  }
+}

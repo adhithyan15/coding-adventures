@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C275-nagareru",
+    "language": "japanese",
+    "chapter": 275,
+    "sequence": 16680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bc30d00105e2841"
+  },
+  "findings": []
+}

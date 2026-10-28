@@ -42,8 +42,8 @@
 //! - [`builtins`] — TW00 builtin handlers (`+`, `-`, `*`, `/`,
 //!   `=`, `<`, `>`, `cons`, `car`, `cdr`, `null?`, `pair?`,
 //!   `number?`, `symbol?`, `print`).
-//! - [`abi`] — `extern "C"` surface (`dyn_cons`, `dyn_car`,
-//!   `dyn_cdr`, `dyn_make_symbol`, `dyn_make_closure`,
+//! - [`abi`] — `extern "C"` surface (`dyn_pair_new`, `dyn_pair_first`,
+//!   `dyn_pair_rest`, `dyn_symbol`, `dyn_make_closure`,
 //!   `dyn_apply_closure`).
 //!
 //! ## What this PR does NOT ship

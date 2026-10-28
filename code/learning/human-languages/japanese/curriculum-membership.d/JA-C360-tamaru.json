@@ -1,0 +1,11 @@
+{
+  "id": "JA-C360-tamaru",
+  "pathSegment": "JA-PATH-360-SHUUNYUU360",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-360-SHUUNYUU360",
+      "order": 3
+    }
+  ]
+}

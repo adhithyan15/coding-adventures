@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W140-ban-half",
+    "language": "chinese",
+    "chapter": 140,
+    "sequence": 10885,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bd40feec3cec22ce",
+    "detachableSegments": [
+      "Script — two dots, two bars, one vertical"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

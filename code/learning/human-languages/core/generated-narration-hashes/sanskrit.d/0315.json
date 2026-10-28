@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:c92f27e0714385c0",
+  "lessonIds": [
+    "SA-C315-visphotah",
+    "SA-C315-pratidhvanih",
+    "SA-C315-akasmikah",
+    "SA-C315-udvijate",
+    "SA-C315-tvarate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch315.txt",
+  "json": "sanskrit/narration/ch315.json",
+  "textHash": "fnv1a64:5b2256617e7e2afe",
+  "jsonHash": "fnv1a64:ac3cf53ad49aba09",
+  "findings": []
+}

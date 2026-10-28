@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:f13da7747c89ac89",
+  "lessonIds": [
+    "ZH-C37-zhe",
+    "ZH-W37-zhe",
+    "ZH-C37-zhege",
+    "ZH-C37-na",
+    "ZH-W37-na",
+    "ZH-C37-nage-which",
+    "ZH-C37-nage"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch37.txt",
+  "json": "chinese/narration/ch37.json",
+  "textHash": "fnv1a64:641965657e98cd5a",
+  "jsonHash": "fnv1a64:fe9726997a0fb8b7",
+  "findings": []
+}

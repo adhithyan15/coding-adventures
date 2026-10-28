@@ -1,5 +1,6 @@
-//! LANG84 stage **I(py-int-print)** and, since phase 7c slice 1,
-//! **I(py2-int-print)**, for every Python release that claims them.
+//! LANG84 stage **I(py-int-print)** and, since phase 7c slices 1 and 3,
+//! **I(py2-int-print)** and **I(py-float-print)**, for every Python release
+//! that claims them.
 //!
 //! Stage I means: every corpus case of the subset that applies to the
 //! release compiles to IIR that validates and passes C7, and every negative
@@ -36,6 +37,9 @@ use python_iir_compiler::{
 /// Each subset's claiming releases, in `releases.csv` order.
 const PY3_RELEASES: [&str; 7] = ["3.0a1", "3.6.0", "3.5.10", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"];
 const PY2_RELEASES: [&str; 4] = ["2.2", "2.4", "2.6", "2.7.18"];
+/// `py-float-print` (phase 7c slice 3): the `py3` profile's releases, all of
+/// Python 3 but 3.0a1 (whose `str(float)` is `%.12g`).
+const PY_FLOAT_RELEASES: [&str; 6] = ["3.6.0", "3.5.10", "3.12.3", "3.13.16", "3.11.17", "3.16.0a1"];
 
 #[test]
 fn profiles_match_the_inventory() {
@@ -48,8 +52,12 @@ fn profiles_match_the_inventory() {
         assert_eq!(claims, profile_for(release).is_some(), "{release}: a profile exactly when iir_status claims");
         profiled += usize::from(claims);
         if let Some(profile) = profile_for(release) {
-            // A release claims exactly its profile's subset.
-            assert_eq!(row["iir_status"], profile.subset, "{release}: iir_status vs profile subset");
+            // A release claims exactly its profile's subsets, at I and at B,
+            // and its grammar covers the widest of them.
+            let subsets = profile.subsets.join(";");
+            assert_eq!(row["iir_status"], subsets, "{release}: iir_status vs profile subsets");
+            assert_eq!(row["backend_status"], subsets, "{release}: backend_status vs profile subsets");
+            assert_eq!(row["grammar_subset"], profile.subset(), "{release}: grammar_subset");
         }
     }
     assert_eq!(profiled, 11, "2.2, 2.4, 2.6, 2.7.18, 3.0a1, 3.5.10, 3.6.0, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1");
@@ -87,6 +95,12 @@ fn py_int_print_corpus_holds_on_every_claiming_release() {
 }
 
 #[test]
+fn py_float_print_corpus_holds_on_every_claiming_release() {
+    let (checked, trapped) = corpus_holds("py-float-print", &PY_FLOAT_RELEASES, 24);
+    assert!(checked >= 6 * 24 && trapped >= 6 * 5, "{checked} {trapped}");
+}
+
+#[test]
 fn py2_int_print_corpus_holds_on_every_claiming_release() {
     let (checked, trapped) = corpus_holds("py2-int-print", &PY2_RELEASES, 40);
     assert!(checked >= 4 * 40 && trapped >= 4 * 10, "{checked} {trapped}");
@@ -108,13 +122,23 @@ fn corpus_holds(subset: &str, expected_releases: &[&str], min_cases: usize) -> (
             match (case.outcome_on(release), compiled) {
                 (Outcome::Runs { stdout, trap }, Ok(module)) => {
                     assert!(module.validate().is_empty(), "{release} {}", case.name);
-                    // C7: registry entries plus the ungated `const`/`ret`.
-                    for instr in &module.functions[0].instructions {
+                    // C7: registry entries plus the ungated `const`/`ret`; since
+                    // LANG83 PR7c-py also the branches of the module's own
+                    // `repr(float)` helpers and the `call`s between them. No op or
+                    // builtin names Python (`write_f64_py` is gone).
+                    let helpers: Vec<&str> = module.functions.iter().skip(1).map(|f| f.name.as_str()).collect();
+                    for instr in module.functions.iter().flat_map(|f| &f.instructions) {
+                        let ungated = match instr.op.as_str() {
+                            "const" | "ret" | "jmp" | "jmp_if_false" | "label" => true,
+                            "call" => instr.srcs.first().and_then(|s| s.as_var()).is_some_and(|f| helpers.contains(&f)),
+                            _ => false,
+                        };
                         assert!(
-                            registry_name(instr).is_some() || ["const", "ret"].contains(&instr.op.as_str()),
+                            registry_name(instr).is_some() || ungated,
                             "{release} {}: {instr:?} is neither a registry op nor ungated IIR",
                             case.name
                         );
+                        assert_ne!(registry_name(instr), Some("write_f64_py"), "{release} {}", case.name);
                     }
                     let ran = run_module(module).unwrap_or_else(|e| panic!("{release} {}: {e}", case.name));
                     assert_eq!(ran.stdout, stdout, "{release} {}: stdout", case.name);
@@ -145,6 +169,8 @@ fn claiming_releases_form_one_iir_identity_class() {
     assert!(identity_classes_hold("py-int-print", 5) >= 18);
     // `pep3127_literals` is accepted by 2.6 and 2.7.18 only.
     assert!(identity_classes_hold("py2-int-print", 2) >= 24);
+    // `float_underscores` is refused by 3.5.10 only.
+    assert!(identity_classes_hold("py-float-print", 5) >= 13);
 }
 
 /// Every positive case of `subset` compiles to the same IIR on every
@@ -186,11 +212,14 @@ fn python_2_and_python_3_disagree_where_the_languages_do() {
     };
     assert_eq!(category("print 1\n", "3.13.16").as_deref(), Some("Parse"));
     assert_eq!(category("print(1, 2)\n", "2.7.18").as_deref(), Some("Parse"));
-    assert_eq!(category("print(7 / 2)\n", "3.13.16").as_deref(), Some("Unsupported"));
+    // True division: a float on the py-float-print releases, refused on
+    // 3.0a1 (profile `py30`), floor division on Python 2.
+    assert_eq!(category("print(7 / 2)\n", "3.0a1").as_deref(), Some("Unsupported"));
     let run = |source: &str, release: &str| {
         run_module(compile_source_at(source, Some(release), "t", &budgets).unwrap()).unwrap().stdout
     };
     assert_eq!(run("print 7 / 2\n", "2.2"), "3\n");
+    assert_eq!(run("print(7 / 2)\n", "3.13.16"), "3.5\n");
     assert_eq!(run("print(-7 // 2)\n", "3.0a1"), "-4\n");
     // `print(-7 / 2)` is the Python 2 *statement* `print (-7 / 2)`.
     assert_eq!(run("print(-7 / 2)\n", "2.7.18"), "-4\n");
@@ -299,7 +328,14 @@ fn host_for(release: &str) -> Option<&'static str> {
 /// that is absent or on another version is skipped, loudly.
 #[test]
 fn corpus_agrees_with_the_host_cpython_oracles() {
-    let dir = corpus_dir(SUBSET);
+    for subset in [SUBSET, "py-float-print"] {
+        corpus_agrees_with_the_host_cpython_oracles_on(subset);
+    }
+}
+
+/// The oracle for one Python 3 subset's corpus.
+fn corpus_agrees_with_the_host_cpython_oracles_on(subset: &str) {
+    let dir = corpus_dir(subset);
     let mut agreed = 0;
     for release in ["3.11.17", "3.12.3", "3.13.16"] {
         let host = host_for(release).unwrap();
@@ -314,7 +350,7 @@ fn corpus_agrees_with_the_host_cpython_oracles() {
             eprintln!("SKIP {release} oracle: `{host}` is {version}");
             continue;
         }
-        for case in corpus(SUBSET) {
+        for case in corpus(subset) {
             // The file path as one argument: no shell, no interpolation.
             let out = Command::new(host).arg("-I").arg(dir.join(format!("{}.py", case.name))).output().unwrap();
             // Windows Python prints in text mode ("\r\n"); the `.expect` files
@@ -337,8 +373,7 @@ fn corpus_agrees_with_the_host_cpython_oracles() {
                             panic!("{version}: {} printed {stdout:?}, not {want:?} first", case.name)
                         });
                         let next = rest.lines().next().unwrap_or_default();
-                        let value: i128 = next.parse().unwrap_or_else(|_| panic!("{}: {next:?}", case.name));
-                        assert!(i64::try_from(value).is_err(), "{version}: {} stays in i64: {value}", case.name);
+                        assert!(beyond_i64(next), "{version}: {} printed {next:?}, inside i64", case.name);
                         assert!(case.cite.contains(next), "{}.cite must record CPython's {next}", case.name);
                     }
                     Some(other) => panic!("{}: no CPython oracle mapping for {other}", case.name),
@@ -359,9 +394,45 @@ fn corpus_agrees_with_the_host_cpython_oracles() {
             }
         }
         agreed += 1;
-        eprintln!("CPython {version} oracle: the corpus agrees");
+        eprintln!("CPython {version} oracle: the {subset} corpus agrees");
     }
-    eprintln!("{agreed} host oracle(s) ran");
+    eprintln!("{agreed} host oracle(s) ran on {subset}");
+}
+
+/// What CPython prints where the subset traps `Trap.Overflow`: an integer
+/// outside `i64` (`py-int-print`), or the float of one (`py-float-print`,
+/// where the overflowing int meets a float), at least 2^63 in magnitude.
+fn beyond_i64(printed: &str) -> bool {
+    match printed.parse::<i128>() {
+        Ok(value) => i64::try_from(value).is_err(),
+        Err(_) => printed.parse::<f64>().is_ok_and(|value| value.abs() >= 9_223_372_036_854_775_808.0),
+    }
+}
+
+/// 3.0a1's profile (`py30`) has no floats: its `str(float)` is `%.12g`
+/// (`PREC_STR`), which no LANG83 writer produces. So true division and a
+/// float are refused there, whether its own lexer saw the float or a tree
+/// from a 3.13.16 parse is handed to it.
+#[test]
+fn release_3_0a1_refuses_floats_and_true_division() {
+    let budgets = FrontendBudgets::default();
+    let category = |source: &str, release: &str| {
+        compile_source_at(source, Some(release), "t", &budgets).err().map(|e| e.category().to_string())
+    };
+    assert_eq!(category("print(7 / 2)\n", "3.0a1").as_deref(), Some("Unsupported"));
+    // Its pair never lexed a float: `1.5` is INT DOT INT, a parse error.
+    assert_eq!(category("print(1.5)\n", "3.0a1").as_deref(), Some("Parse"));
+    assert_eq!(category("print(1e3)\n", "3.0a1").as_deref(), Some("Lex"));
+    // A FLOAT token from another release's grammar is refused by the profile.
+    let tree = coding_adventures_python_parser::parse_python_at("print(1.5)\n", Some("3.13.16"), &budgets)
+        .unwrap()
+        .ast;
+    let error = python_iir_compiler::compile_cst(&tree, Some("3.0a1"), "t").unwrap_err();
+    assert_eq!(error.category(), "Unsupported", "{error}");
+    assert!(error.to_string().contains("floats are not in py-int-print"), "{error}");
+    for release in PY_FLOAT_RELEASES {
+        assert!(category("print(7 / 2)\n", release).is_none(), "{release}");
+    }
 }
 
 /// `py2-int-print` has no host `python2`, so its `.expect` files rest on

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:7d13e374ffc0ef94",
+  "lessonIds": [
+    "SA-C368-sanka",
+    "SA-C368-tarkayati",
+    "SA-C368-asamsate",
+    "SA-C368-anumanam",
+    "SA-C368-kila"
+  ],
+  "tex": "sanskrit/book/chapters/ch368-doubts-and-hopes.tex"
+}

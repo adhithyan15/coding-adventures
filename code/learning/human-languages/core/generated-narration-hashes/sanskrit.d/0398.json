@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:f9135da31e018769",
+  "lessonIds": [
+    "SA-C398-ghattah",
+    "SA-C398-avagahate",
+    "SA-C398-sangamah",
+    "SA-C398-pavanah",
+    "SA-C398-proksati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch398.txt",
+  "json": "sanskrit/narration/ch398.json",
+  "textHash": "fnv1a64:eeb35c8583d2955c",
+  "jsonHash": "fnv1a64:c6f85310b4e94550",
+  "findings": []
+}

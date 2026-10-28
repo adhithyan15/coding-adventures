@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-42-SHOP42",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "ZH-EXT-42-SHOP42"
+  ],
+  "after": []
+}

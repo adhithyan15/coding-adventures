@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "An Accident",
+  "label": "ch:zh-an-accident",
+  "canDo": "I can tell what happened in an accident: who got hurt, who was bleeding, what crashed and the ambulance.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C232-jiuhuche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can tell what happened in an accident: who got hurt, who was bleeding, what crashed and the ambulance.",
+    "assesses": [
+      "ZH-LEX-C232-HURT232-03",
+      "ZH-LEX-C232-HURT232-04",
+      "ZH-LEX-C232-HURT232-05"
+    ]
+  }
+}

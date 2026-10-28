@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:44b78c049d9224b9",
+  "lessonIds": [
+    "SA-C297-indhanam",
+    "SA-C297-ghatah",
+    "SA-C297-dhara",
+    "SA-C297-nirvapayati",
+    "SA-C297-samyati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch297.txt",
+  "json": "sanskrit/narration/ch297.json",
+  "textHash": "fnv1a64:41ebacbe8ed47d41",
+  "jsonHash": "fnv1a64:26769de471d27968",
+  "findings": []
+}

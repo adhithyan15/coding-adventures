@@ -1,0 +1,11 @@
+{
+  "id": "SA-C497-saubhagyam",
+  "pathSegment": "SA-PATH-497-KANYADANA497",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-497-KANYADANA497",
+      "order": 4
+    }
+  ]
+}

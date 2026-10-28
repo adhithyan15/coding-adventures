@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C192-paidui",
+  "pathSegment": "ZH-PATH-192-SIGN192",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-192-SIGN192",
+      "order": 3
+    }
+  ]
+}

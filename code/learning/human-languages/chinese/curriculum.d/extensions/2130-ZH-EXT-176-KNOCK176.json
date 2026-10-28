@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-176-KNOCK176",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell what happened at home: a knock at the door, the neighbours quarrelling, something toppling over, a fire.",
+  "prerequisites": []
+}

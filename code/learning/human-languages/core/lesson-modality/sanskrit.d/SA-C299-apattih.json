@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C299-apattih",
+    "language": "sanskrit",
+    "chapter": 299,
+    "sequence": 17700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9127a2ac2a4729a"
+  },
+  "findings": []
+}

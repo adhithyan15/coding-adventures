@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Dear and Cheap",
+  "label": "ch:sa-dear-and-cheap",
+  "canDo": "I can say what is dear, what is cheap and what is real.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C431-nikasah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can say what is dear, what is cheap and what is real.",
+    "assesses": [
+      "SA-LEX-C431-ARGHA431-03",
+      "SA-LEX-C431-ARGHA431-04",
+      "SA-LEX-C431-ARGHA431-05"
+    ]
+  }
+}

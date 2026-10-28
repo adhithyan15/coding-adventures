@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Fables",
+  "label": "ch:sa-fables",
+  "canDo": "I can tell a fable and say what it teaches.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C336-lobhayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can tell a fable and say what it teaches.",
+    "assesses": [
+      "SA-LEX-C336-NITI336-03",
+      "SA-LEX-C336-NITI336-04",
+      "SA-LEX-C336-NITI336-05"
+    ]
+  }
+}

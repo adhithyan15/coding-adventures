@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:37295463c9c3ea30",
+  "lessonIds": [
+    "ZH-C58-shouji",
+    "ZH-W58-ji-machine",
+    "ZH-C58-bao",
+    "ZH-C58-diannao",
+    "ZH-C58-beizi",
+    "ZH-C58-yifu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch58.txt",
+  "json": "chinese/narration/ch58.json",
+  "textHash": "fnv1a64:71bb280aa10af417",
+  "jsonHash": "fnv1a64:a259f7890692cdee",
+  "findings": []
+}

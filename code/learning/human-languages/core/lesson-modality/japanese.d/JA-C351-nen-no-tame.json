@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C351-nen-no-tame",
+    "language": "japanese",
+    "chapter": 351,
+    "sequence": 20790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc40f66c51399f37"
+  },
+  "findings": []
+}

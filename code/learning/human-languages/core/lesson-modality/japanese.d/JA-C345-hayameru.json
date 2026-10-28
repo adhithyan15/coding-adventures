@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C345-hayameru",
+    "language": "japanese",
+    "chapter": 345,
+    "sequence": 20480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89495e4d16177f02"
+  },
+  "findings": []
+}

@@ -7225,17 +7225,30 @@ where
     if let Some(config) = &diagram.architecture_config {
         scene_metadata.insert("architecture.numIter".into(), config.num_iter.to_string());
     }
+    if diagram.kind == diagram_ir::StructuralKind::Er {
+        scene_metadata.insert(
+            "er.useMaxWidth".into(),
+            diagram.render_config.use_max_width.to_string(),
+        );
+        scene_metadata.insert(
+            "flowchart.htmlLabels".into(),
+            diagram.render_config.html_labels.to_string(),
+        );
+    }
     let lf = options.label_font.clone();
     let ls = lf.size;
 
     if let Some(title) = &diagram.title {
+        let mut title_font = options.title_font.clone();
+        let title_height = title.split('\n').count() as f64 * title_font.size * 1.4;
+        title_font.line_height = 1.4;
         text_children.push(text_node(
             title,
             8.0,
             6.0,
             diagram.width - 16.0,
-            30.0,
-            options.title_font.clone(),
+            title_height,
+            title_font,
             Color {
                 r: 15,
                 g: 23,
@@ -10131,12 +10144,14 @@ mod tests {
         let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Architecture,
             width: 200.0,
             height: 100.0,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
             architecture_config: None,
+            render_config: Default::default(),
             groups: vec![],
             nodes: vec![diagram_ir::LayoutedStructuralNode {
                 id: "api".into(),
@@ -10188,6 +10203,7 @@ mod tests {
         let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Architecture,
             width: 200.0,
             height: 100.0,
             title: None,
@@ -10197,6 +10213,7 @@ mod tests {
                 num_iter: 5000,
                 ..diagram_ir::ArchitectureConfig::default()
             }),
+            render_config: Default::default(),
             groups: vec![],
             nodes: vec![],
             relationships: vec![],
@@ -10214,12 +10231,14 @@ mod tests {
         let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Class,
             width: 200.0,
             height: 80.0,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
             architecture_config: None,
+            render_config: Default::default(),
             groups: vec![],
             nodes: vec![],
             relationships: vec![diagram_ir::LayoutedStructuralRelationship {
@@ -10265,12 +10284,14 @@ mod tests {
         let resolver = FakeResolver;
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Class,
             width: 200.0,
             height: 80.0,
             title: None,
             accessibility_title: None,
             accessibility_description: None,
             architecture_config: None,
+            render_config: Default::default(),
             groups: vec![],
             nodes: vec![],
             relationships: vec![diagram_ir::LayoutedStructuralRelationship {
@@ -10294,6 +10315,40 @@ mod tests {
         let scene = diagram_to_paint_structural(&layout, &opts);
         assert_eq!(scene.instructions.len(), 1);
         assert!(matches!(scene.instructions[0], PaintInstruction::Path(_)));
+    }
+
+    #[test]
+    fn er_render_policy_lowers_to_scene_metadata() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::Er,
+            width: 200.0,
+            height: 80.0,
+            title: None,
+            accessibility_title: None,
+            accessibility_description: None,
+            architecture_config: None,
+            render_config: diagram_ir::StructuralRenderConfig {
+                use_max_width: false,
+                html_labels: false,
+            },
+            groups: vec![],
+            nodes: vec![],
+            relationships: vec![],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("er.useMaxWidth")),
+            Some(&"false".to_string())
+        );
+        assert_eq!(
+            scene.metadata.as_ref().and_then(|metadata| metadata.get("flowchart.htmlLabels")),
+            Some(&"false".to_string())
+        );
     }
 
     #[test]

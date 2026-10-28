@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C458-darpah",
+    "language": "sanskrit",
+    "chapter": 458,
+    "sequence": 26510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6ab89ed7f96298e"
+  },
+  "findings": []
+}

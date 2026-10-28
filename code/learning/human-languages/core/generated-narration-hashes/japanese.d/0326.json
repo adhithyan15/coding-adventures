@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:36a8fa1719e83c0a",
+  "lessonIds": [
+    "JA-C326-kisoku",
+    "JA-C326-yaburu",
+    "JA-C326-kinshi",
+    "JA-C326-ihan",
+    "JA-C326-batsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch326.txt",
+  "json": "japanese/narration/ch326.json",
+  "textHash": "fnv1a64:88f8179d20217624",
+  "jsonHash": "fnv1a64:e9c731521e2d0739",
+  "findings": []
+}

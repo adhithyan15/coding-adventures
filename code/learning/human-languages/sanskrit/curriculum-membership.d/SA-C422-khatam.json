@@ -1,0 +1,11 @@
+{
+  "id": "SA-C422-khatam",
+  "pathSegment": "SA-PATH-422-PRAKARA422",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-422-PRAKARA422",
+      "order": 4
+    }
+  ]
+}

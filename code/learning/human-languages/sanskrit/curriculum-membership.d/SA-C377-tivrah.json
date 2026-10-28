@@ -1,0 +1,11 @@
+{
+  "id": "SA-C377-tivrah",
+  "pathSegment": "SA-PATH-377-ATIVA377",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-377-ATIVA377",
+      "order": 2
+    }
+  ]
+}

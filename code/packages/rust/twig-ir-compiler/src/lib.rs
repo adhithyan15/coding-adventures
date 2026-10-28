@@ -21,7 +21,9 @@
 //!     ▼  compile_ast / compile_source     ← THIS CRATE
 //!     │    1. check_cst      — validate the tree's shape
 //!     │    2. TW05-B gate    — only for (typed lenient|strict) modules
-//!     │    3. lower          — walk the CST through borrowed views
+//!     │    3. lower          — walk the CST through borrowed views,
+//!     │                        after refusing reserved names
+//!     │                        (every `__` name; see RESERVED_PREFIXES)
 //! IIRModule  (functions: top-level fns + anonymous lambdas + main)
 //!     │
 //!     ▼  vm-core / jit-core
@@ -130,8 +132,10 @@ pub mod compiler;
 mod cst;
 pub mod errors;
 mod free_vars;
+mod reserved_names;
 
 pub use check_cst::check_cst;
+pub use reserved_names::{reserved_prefix, RESERVED_NAMESPACE, RESERVED_PREFIXES};
 pub use compiler::Compiler;
 pub use errors::TwigCompileError;
 
@@ -670,7 +674,7 @@ mod tests {
         // No runtime make_symbol call for a compile-time-known quote literal.
         assert!(
             !i.iter().any(|x| x.op == "call_builtin"
-                && x.srcs.first() == Some(&Operand::Var("make_symbol".into()))),
+                && matches!(x.srcs.first(), Some(Operand::Var(n)) if n == "make_symbol" || n == "dyn_symbol")),
             "a quote literal must not emit runtime make_symbol",
         );
     }

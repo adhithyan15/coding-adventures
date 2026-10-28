@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C143-fenzhong",
+  "pathSegment": "ZH-PATH-143-CLOCK143",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-143-CLOCK143",
+      "order": 1
+    }
+  ]
+}

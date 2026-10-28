@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C406-kannushi",
+    "language": "japanese",
+    "chapter": 406,
+    "sequence": 23780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4468246cb535b082"
+  },
+  "findings": []
+}

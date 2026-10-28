@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C413-sabaku",
+    "language": "japanese",
+    "chapter": 413,
+    "sequence": 24150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f17c59ee341d8008"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C108-huan-change",
+  "pathSegment": "ZH-PATH-108-SHOP108",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-108-SHOP108",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C357-naiyou",
+  "pathSegment": "JA-PATH-357-KEIYAKU357",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-357-KEIYAKU357",
+      "order": 2
+    }
+  ]
+}

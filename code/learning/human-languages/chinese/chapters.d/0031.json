@@ -1,0 +1,20 @@
+{
+  "chapter": 31,
+  "title": "He, She and We",
+  "label": "ch:zh-he-she-and-we",
+  "canDo": "I can say he, she, we, you all and they.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C31-nimen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 31: I can say he, she, we, you all and they.",
+    "assesses": [
+      "ZH-LEX-C31-PEOPLE31-03",
+      "ZH-LEX-C31-PEOPLE31-04",
+      "ZH-LEX-C31-PEOPLE31-05",
+      "ZH-SCRIPT-MEN-01"
+    ]
+  }
+}

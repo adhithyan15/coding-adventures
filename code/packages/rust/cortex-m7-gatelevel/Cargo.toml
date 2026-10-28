@@ -1,0 +1,13 @@
+[package]
+name = "cortex-m7-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed gate-level Arm Cortex-M7 architectural simulator"
+license = "MIT"
+
+[dependencies]
+cortex-m3-gatelevel = { path = "../cortex-m3-gatelevel" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+cortex-m7-simulator = { path = "../cortex-m7-simulator" }

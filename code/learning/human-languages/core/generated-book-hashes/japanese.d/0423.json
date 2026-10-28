@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:49a4f134abab5a1c",
+  "lessonIds": [
+    "JA-C423-gochisou",
+    "JA-C423-kanjou",
+    "JA-C423-warikan",
+    "JA-C423-ogoru",
+    "JA-C423-manpuku"
+  ],
+  "tex": "japanese/book/chapters/ch423-a-treat-and-the-bill.tex"
+}

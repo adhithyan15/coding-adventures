@@ -1,0 +1,21 @@
+{
+  "chapter": 293,
+  "title": "The Case in Court",
+  "label": "ch:sa-the-case-in-court",
+  "canDo": "I can tell how a case ended and say what happens if someone is guilty.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-R293-review-286-293",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can tell how a case ended and say what happens if someone is guilty.",
+    "assesses": [
+      "SA-LEX-C293-NYAYALAYA293-01",
+      "SA-LEX-C293-NYAYALAYA293-02",
+      "SA-LEX-C293-NYAYALAYA293-03",
+      "SA-LEX-C293-NYAYALAYA293-04",
+      "SA-LEX-C293-NYAYALAYA293-05"
+    ]
+  }
+}

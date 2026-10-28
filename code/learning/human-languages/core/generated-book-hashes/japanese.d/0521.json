@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:638f13886467637d",
+  "lessonIds": [
+    "JA-C521-shidaini",
+    "JA-C521-dandan",
+    "JA-C521-jojoni",
+    "JA-C521-youyaku",
+    "JA-C521-zuibun",
+    "JA-R521-review-516-521"
+  ],
+  "tex": "japanese/book/chapters/ch521-little-by-little.tex"
+}

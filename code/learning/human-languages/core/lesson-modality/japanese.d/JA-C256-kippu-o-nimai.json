@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C256-kippu-o-nimai",
+    "language": "japanese",
+    "chapter": 256,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42ba1c23463f9140"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C474-sira",
+  "pathSegment": "SA-PATH-474-SIRA474",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-474-SIRA474",
+      "order": 0
+    }
+  ]
+}

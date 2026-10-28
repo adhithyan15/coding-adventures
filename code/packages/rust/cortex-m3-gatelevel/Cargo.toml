@@ -1,0 +1,17 @@
+[package]
+name = "cortex-m3-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed gate-level Arm Cortex-M3 simulator"
+license = "MIT"
+
+[lib]
+name = "cortex_m3_gatelevel"
+path = "src/lib.rs"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+cortex-m3-simulator = { path = "../cortex-m3-simulator" }

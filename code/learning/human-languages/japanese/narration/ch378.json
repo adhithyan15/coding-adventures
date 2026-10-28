@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 378,
+  "title": "A Crowded Carriage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ef636646bc1e6388",
+  "lessons": [
+    {
+      "id": "JA-C378-man-in",
+      "sequence": 22310,
+      "title": "まんいん (man'in) — full (of people)",
+      "headword": "まんいん",
+      "romanization": "man'in",
+      "gloss": "full (of people)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ff1aac30fd837cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a direction (of travel), then the Japanese for to move away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まんいん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まんいん — man'in — \"full (of people)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あさの でんしゃは いつも まんいんです。 — asa no densha wa itsumo man'in desu — \"The morning trains are always full.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まんいん (man'in) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are man, \"full\" (Middle Chinese manX) and in, \"member\" (hjwen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "man'in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *man'in*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "man'in, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *man'in*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa no densha wa itsumo man'in desu — The morning trains are always full.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa no densha wa itsumo man'in desu* — The morning trains are always full.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a direction (of travel), then the Japanese for to move away, then say man'in again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a direction (of travel), then the Japanese for to move away, then say *man'in* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まんいん (man'in) mean? (\"Full (of people)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C378-man-in-type",
+              "prompt": "Say the Japanese for 'full (of people)'.",
+              "assesses": [
+                "JA-LEX-C378-MANIN378-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まんいん",
+                "man'in"
+              ],
+              "feedback": {
+                "correct": "Right: まんいん (man'in) is 'full (of people)'.",
+                "incorrect": "'Full (of people)' is まんいん (man'in)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C378-konzatsu",
+      "sequence": 22320,
+      "title": "こんざつ (konzatsu) — congestion; crowding",
+      "headword": "こんざつ",
+      "romanization": "konzatsu",
+      "gloss": "congestion; crowding",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87a9a1e0c313f7cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to move away, then the Japanese for full (of people)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こんざつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんざつ — konzatsu — \"congestion; crowding\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅうまつの えきは こんざつしていました。 — shūmatsu no eki wa konzatsu shite imashita — \"The station was crowded at the weekend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんざつ (konzatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kon, \"mix\" (Middle Chinese hwonX) and zatsu, \"miscellaneous\" (dzop) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konzatsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konzatsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konzatsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konzatsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūmatsu no eki wa konzatsu shite imashita — The station was crowded at the weekend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūmatsu no eki wa konzatsu shite imashita* — The station was crowded at the weekend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to move away, then the Japanese for full (of people), then say konzatsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to move away, then the Japanese for full (of people), then say *konzatsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こんざつ (konzatsu) mean? (\"Congestion; crowding\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C378-konzatsu-type",
+              "prompt": "Say the Japanese for 'congestion'.",
+              "assesses": [
+                "JA-LEX-C378-MANIN378-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こんざつ",
+                "konzatsu"
+              ],
+              "feedback": {
+                "correct": "Right: こんざつ (konzatsu) is 'congestion; crowding'.",
+                "incorrect": "'Congestion' is こんざつ (konzatsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C378-gyuugyuu",
+      "sequence": 22330,
+      "title": "ぎゅうぎゅう (gyūgyū) — packed tight; squeezed in",
+      "headword": "ぎゅうぎゅう",
+      "romanization": "gyūgyū",
+      "gloss": "packed tight; squeezed in",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38308cb899b9cdfd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for full (of people), then the Japanese for congestion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぎゅうぎゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎゅうぎゅう — gyūgyū — \"packed tight; squeezed in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃは ぎゅうぎゅうでした。 — densha wa gyūgyū deshita — \"The train was packed tight.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎゅうぎゅう (gyūgyū) is a native mimetic word that pictures people or things pressed tightly together: an imitative Japanese form, inherited rather than borrowed, whose older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gyūgyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gyūgyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gyūgyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gyūgyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha wa gyūgyū deshita — The train was packed tight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha wa gyūgyū deshita* — The train was packed tight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for full (of people), then the Japanese for congestion, then say gyūgyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for full (of people), then the Japanese for congestion, then say *gyūgyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぎゅうぎゅう (gyūgyū) mean? (\"Packed tight; squeezed in\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C378-gyuugyuu-type",
+              "prompt": "Say the Japanese for 'packed tight'.",
+              "assesses": [
+                "JA-LEX-C378-MANIN378-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぎゅうぎゅう",
+                "gyūgyū",
+                "gyuugyuu",
+                "gyugyu"
+              ],
+              "feedback": {
+                "correct": "Right: ぎゅうぎゅう (gyūgyū) is 'packed tight; squeezed in'.",
+                "incorrect": "'Packed tight' is ぎゅうぎゅう (gyūgyū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C378-tsumekomu",
+      "sequence": 22340,
+      "title": "つめこむ (tsumekomu) — to cram in; to stuff",
+      "headword": "つめこむ",
+      "romanization": "tsumekomu",
+      "gloss": "to cram in; to stuff",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b0ae3b7334da6af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for congestion, then the Japanese for packed tight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つめこむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つめこむ — tsumekomu — \"to cram in; to stuff\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かばんに にもつを つめこみました。 — kaban ni nimotsu o tsumekomimashita — \"I crammed my things into the bag.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つめこみます, tsumekomimasu; a godan verb. Past (polite): あねが かばんに ふくを つめこみました。, ane ga kaban ni fuku o tsumekomimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つめこむ (tsumekomu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tsume, \"packing\" (from tsumeru) and komu, \"to go in\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumekomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumekomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumekomu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumekomu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaban ni nimotsu o tsumekomimashita — I crammed my things into the bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaban ni nimotsu o tsumekomimashita* — I crammed my things into the bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for congestion, then the Japanese for packed tight, then say tsumekomu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for congestion, then the Japanese for packed tight, then say *tsumekomu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つめこむ (tsumekomu) mean? (\"To cram in; to stuff\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C378-tsumekomu-type",
+              "prompt": "Say the Japanese for 'to cram in'.",
+              "assesses": [
+                "JA-LEX-C378-MANIN378-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つめこむ",
+                "tsumekomu"
+              ],
+              "feedback": {
+                "correct": "Right: つめこむ (tsumekomu) is 'to cram in; to stuff'.",
+                "incorrect": "'To cram in' is つめこむ (tsumekomu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C378-tachiagaru",
+      "sequence": 22350,
+      "title": "たちあがる (tachiagaru) — to stand up",
+      "headword": "たちあがる",
+      "romanization": "tachiagaru",
+      "gloss": "to stand up",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6f5071627a70556",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for packed tight, then the Japanese for to cram in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たちあがる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たちあがる — tachiagaru — \"to stand up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おじいさんが きたので、たちあがりました。 — ojiisan ga kita node, tachiagarimashita — \"An old man came, so I stood up.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たちあがります, tachiagarimasu; a godan verb. Past (polite): こどもが たちあがりました。, kodomo ga tachiagarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たちあがる (tachiagaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tachi, \"standing\" (from tatsu) and agaru, \"to rise\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tachiagaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tachiagaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tachiagaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tachiagaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojiisan ga kita node, tachiagarimashita — An old man came, so I stood up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojiisan ga kita node, tachiagarimashita* — An old man came, so I stood up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for packed tight, then the Japanese for to cram in, then say tachiagaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for packed tight, then the Japanese for to cram in, then say *tachiagaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たちあがる (tachiagaru) mean? (\"To stand up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C378-tachiagaru-type",
+              "prompt": "Say the Japanese for 'to stand up'.",
+              "assesses": [
+                "JA-LEX-C378-MANIN378-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たちあがる",
+                "tachiagaru"
+              ],
+              "feedback": {
+                "correct": "Right: たちあがる (tachiagaru) is 'to stand up'.",
+                "incorrect": "'To stand up' is たちあがる (tachiagaru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:21dba2129d3e53ca",
+  "lessonIds": [
+    "SA-C382-hitam",
+    "SA-C382-kalyanam",
+    "SA-C382-sreyah",
+    "SA-C382-visramyati",
+    "SA-C382-satkaroti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch382.txt",
+  "json": "sanskrit/narration/ch382.json",
+  "textHash": "fnv1a64:ddca24af4e7dccc6",
+  "jsonHash": "fnv1a64:4c1054dbec5cc011",
+  "findings": []
+}

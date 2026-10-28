@@ -155,4 +155,18 @@ cargo test -p lang-aot --test lang_matrix python_rows_pass_the_lang83_check_on_a
 # five tests cover them (run, LANG83 check, boundary set per subset; the
 # corpus and host-python3 oracle tests read the py-int-print rows only).
 cargo test -p lang-aot --test lang_matrix python_rows_run_their_corpus_case -- --exact
+# LANG84 phase 6e: JavaScript's es-number-log on every backend. The 38 rows
+# (the corpus on es2016, es2021 and the default es2020) also run in the
+# full-corpus aggregate above; these name the JavaScript-specific claims. The
+# oracle compares every row with a host node v22 (skips without one); the
+# LANG83 check runs `check_module_for` on all nine backends and pins exactly
+# which rows BEAM refuses at compile time (the IEEE `f64_*` arithmetic); the JIT
+# test compiles `main` and runs it compiled (no interpreter fallback); the trap test
+# checks `Trap.Unbound` (JavaScript's ReferenceError) after output on every column.
+cargo test -p lang-aot --test lang_matrix javascript_rows_run_on_every_available_backend -- --exact
+cargo test -p lang-aot --test lang_matrix javascript_rows_agree_with_the_host_node_oracle -- --exact
+cargo test -p lang-aot --test lang_matrix javascript_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+cargo test -p lang-aot --test lang_matrix javascript_rows_compile_and_run_on_the_jit_without_its_interpreter_fallback -- --exact
+cargo test -p lang-aot --test lang_matrix javascript_reference_errors_trap_after_output_on_every_available_backend -- --exact
+cargo test -p lang-aot --test lang_matrix javascript_rows_run_their_corpus_case -- --exact
 cargo test -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact

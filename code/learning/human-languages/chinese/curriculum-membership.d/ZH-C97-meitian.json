@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C97-meitian",
+  "pathSegment": "ZH-PATH-97-MY-DAY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-97-MY-DAY",
+      "order": 2
+    }
+  ]
+}

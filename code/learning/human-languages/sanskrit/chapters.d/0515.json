@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "How Does It Taste?",
+  "label": "ch:sa-how-does-it-taste",
+  "canDo": "I can say how food tastes and whether it is cooked.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C515-cusati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can say how food tastes and whether it is cooked.",
+    "assesses": [
+      "SA-LEX-C515-SVADA515-03",
+      "SA-LEX-C515-SVADA515-04",
+      "SA-LEX-C515-SVADA515-05"
+    ]
+  }
+}

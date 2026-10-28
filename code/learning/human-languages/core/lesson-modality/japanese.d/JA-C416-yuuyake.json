@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C416-yuuyake",
+    "language": "japanese",
+    "chapter": 416,
+    "sequence": 24290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e05ab354a7d61297"
+  },
+  "findings": []
+}

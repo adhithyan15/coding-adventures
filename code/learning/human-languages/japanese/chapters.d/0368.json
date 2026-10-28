@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "All or Part",
+  "label": "ch:ja-all-or-part",
+  "canDo": "I can talk about the whole of something or one part of it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C368-katayoru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can talk about the whole of something or one part of it.",
+    "assesses": [
+      "JA-LEX-C368-ZENTAI368-03",
+      "JA-LEX-C368-ZENTAI368-04",
+      "JA-LEX-C368-ZENTAI368-05"
+    ]
+  }
+}

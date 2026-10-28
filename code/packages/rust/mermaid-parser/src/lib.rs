@@ -1207,6 +1207,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
     let mut diagram = StructuralDiagram {
         kind: StructuralKind::Architecture,
         architecture_config: Some(architecture_config),
+        render_config: Default::default(),
         title: None,
         accessibility_title: None,
         accessibility_description: None,
@@ -3587,6 +3588,7 @@ pub fn parse_requirement_diagram(source: &str) -> Result<StructuralDiagram, Pars
     Ok(StructuralDiagram {
         kind: StructuralKind::Requirement,
         architecture_config: None,
+        render_config: Default::default(),
         title,
         accessibility_title,
         accessibility_description,
@@ -4517,6 +4519,7 @@ pub fn parse_class_diagram(source: &str) -> Result<StructuralDiagram, ParseError
     Ok(StructuralDiagram {
         kind: StructuralKind::Class,
         architecture_config: None,
+        render_config: Default::default(),
         title,
         accessibility_title: None,
         accessibility_description: None,
@@ -13507,6 +13510,7 @@ fn expect_gitgraph_token(
 /// Parse Mermaid ER syntax into the shared structural IR.
 pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let front_matter_title = mermaid_front_matter_value(source, "title");
+    let render_config = parse_er_render_config(source);
     let preprocessed = preprocess_mermaid_source(source)?;
     parse_mermaid_er_ast(&preprocessed.source)?;
 
@@ -13762,6 +13766,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::Er,
         architecture_config: None,
+        render_config,
         title,
         accessibility_title,
         accessibility_description,
@@ -13771,6 +13776,45 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         groups: vec![],
         relationships,
     })
+}
+
+fn parse_er_render_config(source: &str) -> diagram_ir::StructuralRenderConfig {
+    let defaults = diagram_ir::StructuralRenderConfig::default();
+    diagram_ir::StructuralRenderConfig {
+        use_max_width: parse_mermaid_boolean_config(
+            source,
+            "er",
+            "useMaxWidth",
+            defaults.use_max_width,
+        ),
+        html_labels: parse_mermaid_boolean_config(
+            source,
+            "flowchart",
+            "htmlLabels",
+            defaults.html_labels,
+        ),
+    }
+}
+
+fn parse_mermaid_boolean_config(source: &str, section: &str, key: &str, fallback: bool) -> bool {
+    let front_matter = mermaid_front_matter_section(source, &["config", section]);
+    let config = mermaid_directive_object(source, section)
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    let value = quadrant_directive_value(config, key).or_else(|| {
+        config.lines().find_map(|line| {
+            let (name, value) = line.trim().split_once(':')?;
+            (name.trim() == key)
+                .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })
+    });
+    value
+        .and_then(|value| match value.to_ascii_lowercase().as_str() {
+            "true" => Some(true),
+            "false" => Some(false),
+            _ => None,
+        })
+        .unwrap_or(fallback)
 }
 
 fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
@@ -13989,6 +14033,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
     let mut groups = Vec::new();
@@ -14001,10 +14047,44 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 let value = cursor.advance().value.clone();
                 title = Some(value.trim_start_matches("title").trim().to_string());
             }
-            "DIRECTION" | "CONFIG_MACRO" => {
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("C4 accessibility block requires '{'");
+                let close = value.rfind('}').expect("C4 accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+            }
+            "DIRECTION" => {
                 cursor.advance();
                 if token_name(cursor.current()) == "LPAREN" {
                     parse_c4_arguments(&mut cursor)?;
+                }
+            }
+            "CONFIG_MACRO" => {
+                let macro_token = cursor.advance().clone();
+                let args = parse_c4_arguments(&mut cursor)?;
+                if macro_token.value == "UpdateElementStyle" {
+                    apply_c4_element_style(&args, &mut nodes, &node_indices);
                 }
             }
             "RBRACE" => {
@@ -14078,12 +14158,17 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         "C4 relationship requires source, target, and label",
                     ));
                 }
+                let (start_arrow, end_arrow) = match macro_token.value.as_str() {
+                    "BiRel" => (true, true),
+                    "Rel_Back" => (true, false),
+                    _ => (false, true),
+                };
                 relationships.push(StructuralRelationship {
                     from: args[0].clone(),
                     to: args[1].clone(),
                     kind: RelKind::Association,
-                    start_arrow: false,
-                    end_arrow: true,
+                    start_arrow,
+                    end_arrow,
                     from_group: false,
                     to_group: false,
                     from_port: None,
@@ -14102,9 +14187,10 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
         architecture_config: None,
+        render_config: Default::default(),
         title,
-        accessibility_title: None,
-        accessibility_description: None,
+        accessibility_title,
+        accessibility_description,
         direction: None,
         alignments: Vec::new(),
         nodes,
@@ -14158,6 +14244,36 @@ fn parse_c4_argument_value(cursor: &mut TokenCursor) -> Result<String, ParseErro
         return Err(token_error(&token, "expected C4 argument value"));
     }
     Ok(cursor.advance().value.clone())
+}
+
+fn apply_c4_element_style(
+    args: &[String],
+    nodes: &mut [StructuralNode],
+    node_indices: &HashMap<String, usize>,
+) {
+    let Some(index) = args.first().and_then(|id| node_indices.get(id)).copied() else {
+        return;
+    };
+    let mut style = nodes[index].style.clone().unwrap_or_default();
+    for (position, argument) in args.iter().skip(1).enumerate() {
+        let (key, value) = argument
+            .split_once('=')
+            .map_or_else(|| (None, argument.as_str()), |(key, value)| (Some(key), value));
+        let color = sanitize_railroad_color(Some(value), "");
+        if color.is_empty() {
+            continue;
+        }
+        match key {
+            Some("$bgColor") => style.fill = Some(color),
+            Some("$fontColor") => style.text_color = Some(color),
+            Some("$borderColor") => style.stroke = Some(color),
+            None if position == 0 => style.fill = Some(color),
+            None if position == 1 => style.text_color = Some(color),
+            None if position == 2 => style.stroke = Some(color),
+            _ => {}
+        }
+    }
+    nodes[index].style = Some(style);
 }
 
 fn upsert_c4_node(

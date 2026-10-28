@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C253-nainai",
+    "language": "chinese",
+    "chapter": 253,
+    "sequence": 19260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ddd4f7c6b40535a"
+  },
+  "findings": []
+}

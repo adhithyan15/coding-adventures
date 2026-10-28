@@ -1,0 +1,11 @@
+{
+  "id": "JA-C323-muri",
+  "pathSegment": "JA-PATH-323-ENRYO323",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-323-ENRYO323",
+      "order": 2
+    }
+  ]
+}

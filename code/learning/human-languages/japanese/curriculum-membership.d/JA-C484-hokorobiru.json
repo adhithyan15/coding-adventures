@@ -1,0 +1,11 @@
+{
+  "id": "JA-C484-hokorobiru",
+  "pathSegment": "JA-PATH-484-THREAD484",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-484-THREAD484",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C534-sammatih",
+    "language": "sanskrit",
+    "chapter": 534,
+    "sequence": 30680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b344182705c8b1a5"
+  },
+  "findings": []
+}

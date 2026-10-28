@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:273b74efc2b4e62d",
+  "lessonIds": [
+    "SA-C419-vapi",
+    "SA-C419-utsah",
+    "SA-C419-puskarini",
+    "SA-C419-kulya",
+    "SA-C419-palvalam"
+  ],
+  "tex": "sanskrit/book/chapters/ch419-reservoirs-springs-and-pools.tex"
+}

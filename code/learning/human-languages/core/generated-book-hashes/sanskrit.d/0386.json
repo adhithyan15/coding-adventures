@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:31b6c480ce6fab2a",
+  "lessonIds": [
+    "SA-C386-siddhih",
+    "SA-C386-sidhyati",
+    "SA-C386-arjayati",
+    "SA-C386-abhyudayah",
+    "SA-C386-samrddhih",
+    "SA-R386-review-380-386"
+  ],
+  "tex": "sanskrit/book/chapters/ch386-success.tex"
+}

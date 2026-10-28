@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "A Japanese-Style Room",
+  "label": "ch:ja-a-japanese-style-room",
+  "canDo": "I can describe a traditional Japanese room.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C400-shimeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can describe a traditional Japanese room.",
+    "assesses": [
+      "JA-LEX-C400-TOKONOMA400-03",
+      "JA-LEX-C400-TOKONOMA400-04",
+      "JA-LEX-C400-TOKONOMA400-05"
+    ]
+  }
+}

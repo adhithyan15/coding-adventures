@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C255-gongzi",
+  "pathSegment": "ZH-PATH-255-PARTTIME255",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-255-PARTTIME255",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:db448acdf211779d",
+  "lessonIds": [
+    "ZH-C48-dian",
+    "ZH-W48-dian",
+    "ZH-C48-fen",
+    "ZH-C48-ban",
+    "ZH-C48-ji",
+    "ZH-C48-deng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch48.txt",
+  "json": "chinese/narration/ch48.json",
+  "textHash": "fnv1a64:7aac038394196e42",
+  "jsonHash": "fnv1a64:0eb4e861461b5f90",
+  "findings": []
+}

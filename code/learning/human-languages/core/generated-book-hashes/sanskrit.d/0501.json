@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:8c17b9d22eee8320",
+  "lessonIds": [
+    "SA-C501-grhasthah",
+    "SA-C501-sambandhah",
+    "SA-C501-sangacchate",
+    "SA-C501-dampati",
+    "SA-C501-pitarau",
+    "SA-R501-review-495-501",
+    "SA-R501-review-final-501"
+  ],
+  "tex": "sanskrit/book/chapters/ch501-getting-along.tex"
+}

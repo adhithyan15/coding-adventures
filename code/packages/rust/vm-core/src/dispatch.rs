@@ -75,6 +75,11 @@ pub struct DispatchCtx<'a> {
     pub builtins: &'a crate::builtins::BuiltinRegistry,
     pub u8_wrap: bool,
     pub max_frames: usize,
+    /// VM-wide register-slot budget, summed over every live frame
+    /// (`VMCore::max_register_slots`).  `handle_call` hands each callee
+    /// frame what the frames beneath it already hold, so the frame can
+    /// enforce the budget itself whenever it grows.
+    pub max_register_slots: usize,
     /// Maximum number of distinct memory-address entries before `store_mem` /
     /// `io_out` return `VMError::Custom`.  Guards against unbounded HashMap
     /// growth from looping IIR programs.
@@ -273,7 +278,7 @@ fn handle_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
         resolve_src(frame, &instr.srcs, 0)?
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -293,7 +298,7 @@ macro_rules! binary_arith_handler {
                 }
             };
             if let Some(dest) = &instr.dest {
-                ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+                ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
             }
             Ok(Some(result))
         }
@@ -326,7 +331,7 @@ fn handle_div(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         }
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -341,7 +346,7 @@ fn handle_mod(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // `wrapping_rem` returns the 0.
     let result = mask_result(a.wrapping_rem(b), &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -398,7 +403,7 @@ fn handle_i64_div_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
     }
     let result = Value::Int(floor_divmod(a, b)?.0);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -411,20 +416,21 @@ fn handle_i64_mod_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
     };
     let result = Value::Int(floor_divmod(a, b)?.1);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
 
 /// `trap "<kind>"` — terminate the program with a LANG83 trap.
 ///
-/// The kind must be in the closed table (`exception_kind::is_registered_trap_kind`);
+/// The kind must be in the closed table (`exception_kind::is_trap_kind`, the
+/// seven built-in `Trap.*` leaves; LANG83 PR7d retired language kinds);
 /// anything else is malformed IR and reported as such rather than as a trap.
 /// Every VM output builtin flushes as it writes, so "flush, then trap" holds
 /// with nothing to do here.
 fn handle_trap(_ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     match instr.srcs.first() {
-        Some(Operand::Str(kind)) if interpreter_ir::exception_kind::is_registered_trap_kind(kind) => {
+        Some(Operand::Str(kind)) if interpreter_ir::exception_kind::is_trap_kind(kind) => {
             Err(trap(kind))
         }
         other => Err(VMError::Custom(format!(
@@ -472,7 +478,7 @@ fn checked_i64_op(
     };
     let result = Value::Int(f(a, b).ok_or_else(|| trap(interpreter_ir::exception_kind::TRAP_OVERFLOW))?);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -514,7 +520,7 @@ fn handle_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         }
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -533,7 +539,7 @@ macro_rules! binary_bitwise_handler {
             // result is kept canonical for downstream width-sensitive ops).
             let result = mask_result(a $op b, &instr.type_hint, ctx.u8_wrap);
             if let Some(dest) = &instr.dest {
-                ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+                ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
             }
             Ok(Some(result))
         }
@@ -555,7 +561,7 @@ fn handle_not(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // must flip exactly 8 bits (`~0 == 255`, not `-1`).
     let result = mask_result(!a, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -573,7 +579,7 @@ fn handle_shl(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // `1u8 << 7` stays `128` and `1u8 << 8` wraps to `0`.
     let result = mask_result(a << shift, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -590,7 +596,7 @@ fn handle_shr(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     // result stays canonical for its width.
     let result = mask_result(a >> shift, &instr.type_hint, ctx.u8_wrap);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -615,7 +621,7 @@ macro_rules! int_cmp_handler {
                 }
             };
             if let Some(dest) = &instr.dest {
-                ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+                ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
             }
             Ok(Some(result))
         }
@@ -629,7 +635,7 @@ fn handle_cmp_eq(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value
     };
     let result = Value::Bool(a == b);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -641,7 +647,7 @@ fn handle_cmp_ne(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value
     };
     let result = Value::Bool(a != b);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -776,10 +782,10 @@ fn handle_ret(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
     };
     ctx.frames.pop();
     if let (Some(dest_idx), Some(caller)) = (return_dest, ctx.frames.last_mut()) {
-        if dest_idx >= caller.registers.len() {
-            caller.registers.resize(dest_idx + 1, Value::Null);
-        }
-        caller.registers[dest_idx] = value.clone();
+        // `call` allocated this slot before pushing the callee (see
+        // `register_index`), so this never grows the caller — `store_index`
+        // is the bounds-safe write, and the one place growth is checked.
+        caller.store_index(dest_idx, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -795,7 +801,11 @@ fn handle_ret_void(ctx: &mut DispatchCtx, _instr: &IIRInstr) -> Result<Option<Va
 /// user-supplied IIR program must be rejected — `(-1i64) as usize` wraps to
 /// `usize::MAX`, making the subsequent `resize(idx + 1, …)` wrap back to 0
 /// and then the index access panics.
-const MAX_REGISTER_IDX: usize = 65_535;
+///
+/// It is the last index of a full frame (65,535), tied to
+/// `VMFrame::MAX_FRAME_REGISTERS` so the by-index and by-name views of the
+/// register file share one limit.
+const MAX_REGISTER_IDX: usize = VMFrame::MAX_FRAME_REGISTERS - 1;
 
 /// `mov dest = src` — copy `src`'s value to the named slot `dest`.
 ///
@@ -813,7 +823,7 @@ fn handle_mov(ctx: &mut DispatchCtx<'_>, instr: &IIRInstr) -> Result<Option<Valu
         resolve_src(frame, &instr.srcs, 0)?
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -828,7 +838,7 @@ fn handle_load_reg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
         frame.registers.get(raw as usize).cloned().unwrap_or(Value::Null)
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -843,11 +853,11 @@ fn handle_store_reg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         let value = resolve_src(frame, &instr.srcs, 1)?;
         (raw as usize, value)
     };
-    let frame = ctx.frames.last_mut().unwrap();
-    if idx >= frame.registers.len() {
-        frame.registers.resize(idx + 1, Value::Null);
-    }
-    frame.registers[idx] = value;
+    // `store_index` grows the file to reach `idx` only within the frame's
+    // share of the VM-wide register-slot budget: an index the frame never
+    // names still costs memory, and a recursive `store_reg 65535` would
+    // otherwise pin 65,536 slots in every frame of the stack.
+    ctx.frames.last_mut().unwrap().store_index(idx, value)?;
     Ok(None)
 }
 
@@ -858,7 +868,7 @@ fn handle_load_mem(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     };
     let value = ctx.memory.get(&addr).cloned().unwrap_or(Value::Int(0));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -904,7 +914,7 @@ fn handle_global_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     let name = global_name(instr, 0)?;
     let value = ctx.globals.get(&name).cloned().unwrap_or(Value::Int(0));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -944,7 +954,7 @@ fn handle_str_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         .to_string();
     let value = Value::Str(s);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -956,7 +966,7 @@ fn handle_str_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     };
     let value = Value::Int(len);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -983,7 +993,7 @@ fn handle_str_index(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     };
     let value = Value::Int(byte);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -997,7 +1007,7 @@ fn handle_str_concat(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<V
         Value::Str(a)
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1031,7 +1041,7 @@ fn handle_str_slice(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         Value::Str(sliced)
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1045,7 +1055,7 @@ fn handle_str_eq(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value
     };
     let value = Value::Int(if same { 1 } else { 0 });
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1063,7 +1073,7 @@ fn handle_str_cmp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
         Ordering::Greater => 1,
     });
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1103,7 +1113,7 @@ fn handle_alloc_bytes(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
         ctx.frames
             .last_mut()
             .ok_or_else(|| VMError::Custom("no frame".into()))?
-            .assign(dest, base.clone());
+            .assign(dest, base.clone())?;
     }
     Ok(Some(base))
 }
@@ -1121,7 +1131,7 @@ fn handle_load_byte(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     let cell = ctx.memory.get(&addr).and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF;
     let value = Value::Int(cell);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1202,7 +1212,7 @@ fn handle_alloc_array(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     ctx.arrays.push(vec![default; count as usize]);
     let value = Value::Int(handle);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1248,7 +1258,7 @@ fn handle_is_null(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     };
     let result = Value::Bool(is_null);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -1269,7 +1279,7 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
         resolve_src(frame, &instr.srcs, 0)?
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, v.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, v.clone())?;
     }
     Ok(Some(v))
 }
@@ -1305,7 +1315,7 @@ fn handle_box(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, 
 // comment above this one explains the tag scheme) — a raw `Value::Int` is a
 // completely legitimate thing to store in, say, a cons cell's car/cdr. This
 // was investigated and found to make a naive `{0,8}`-style *boxed* kind
-// registration (mirroring native-AOT's `__dyn_cons`, via `register_kind`)
+// registration (mirroring native-AOT's `__dyn_pair_new`, via `register_kind`)
 // UNSOUND during AOT00-T9 PR-5 follow-up scouting: marking tolerates a
 // look-alike int fine (`mark_word` tag-strips and validates against
 // `find_header` — safe over-approximation), but *compaction* does not —
@@ -1362,7 +1372,7 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     // used to enforce against `ctx.arrays.len()`/total element count:
     //
     // 1. Live *object count* — so `gc_field_load`/`gc_field_store`'s bounds
-    //    check (`FlatHeap::payload_size`, O(live object count)) can't be
+    //    check (`FlatHeap::payload_size_at_base`, O(live object count)) can't be
     //    driven arbitrarily high: without this cap, N allocations followed
     //    by M field accesses against the oldest one would cost O(N*M)
     //    wall-clock time while an instruction budget (`max_instructions`)
@@ -1402,7 +1412,7 @@ fn handle_gc_alloc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     *ctx.gc_object_count += 1;
     let value = Value::HeapRef(gc_core::HeapRef::new(ptr as usize));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1431,21 +1441,101 @@ const FIELD_TAG_BITS: u32 = gc_core::NAN_BOX_TAG_BITS;
 const FIELD_TAG_MASK: i64 = gc_core::NAN_BOX_TAG_MASK as i64;
 const FIELD_TAG_HEAP_REF: i64 = gc_core::NAN_BOX_REF_TAG as i64;
 
+/// Validate a `gc_field_load`/`gc_field_store` access and return the byte
+/// offset of word `idx` within `obj`'s payload.
+///
+/// Both handlers go through here, so the rule lives in one place: the access
+/// `obj + idx*8 .. obj + idx*8 + 8` is allowed only if it lies wholly inside
+/// the live heap block that **starts at** `obj`.
+///
+/// Why "starts at" matters (issue #18471). `FlatHeap` finds a block from an
+/// address by asking which block's payload range contains it, and that range
+/// includes every interior address and the one-past-the-end address too — a
+/// conservative collector must keep an object alive through *any* pointer
+/// into it. So `payload_size(obj)` for an interior `obj` returns the size of
+/// the whole block, not the bytes left from `obj` to the end:
+///
+/// ```text
+///   32-byte block at P:   [ w0 | w1 | w2 | w3 ]
+///                           P    P+8  P+16 P+24  P+32
+///
+///   obj = P      payload_size = 32   idx 0..=3 → P .. P+32        ✓
+///   obj = P+16   payload_size = 32   idx 0..=3 → P+16 .. P+48     ✗ 16 bytes past the end
+///   obj = P+32   payload_size = 32   idx 0..=3 → P+32 .. P+64     ✗ entirely past the end
+/// ```
+///
+/// `FlatHeap::payload_size_at_base` answers only for the exact base, and
+/// `None` for everything else — null, a non-heap address, a freed block, an
+/// interior address, one-past-the-end — so a single check here rejects all of
+/// them before any memory is touched. No IIR op produces a non-base `HeapRef`
+/// today, but a host can pass any `Value::HeapRef` it likes through
+/// `VMCore::execute`'s arguments, and a future op could do pointer
+/// arithmetic; neither may turn into a heap read or write out of bounds.
+///
+/// The checks run in this order; the first that fails decides the trap:
+///
+/// | step | condition                                  | trap on failure            |
+/// |------|--------------------------------------------|----------------------------|
+/// | 1    | `idx >= 0` and `idx` fits in a `usize`     | negative / too-large index |
+/// | 2    | `obj` is exactly a live block's base       | not the base address       |
+/// | 3    | `idx*8 + 8 <= size`                        | out of bounds              |
+///
+/// The not-a-base trap deliberately does **not** print `obj`'s address: VM
+/// errors can reach whoever supplied the program or the host arguments, and a
+/// heap address is exactly the kind of layout detail that helps an attacker
+/// aim a later bug. The op name and the reason are enough to debug with.
+///
+/// Cost: one O(live objects) walk of the block list, the same as the
+/// `payload_size` lookup it replaces (and bounded the same way, by
+/// `max_memory_entries` — see `handle_gc_alloc`).
+fn checked_field_offset(
+    heap: &gc_core::FlatHeap,
+    op: &str,
+    obj: gc_core::HeapRef,
+    idx: i64,
+) -> Result<usize, VMError> {
+    if idx < 0 {
+        return Err(VMError::Custom(format!("{op}: negative index {idx}")));
+    }
+    // `idx as usize` would silently truncate on a 32-bit target (wasm32, for
+    // one): `idx = 1 << 32` would become word 0 and pass the bounds check as a
+    // different field than the program asked for. `try_from` refuses instead.
+    // On 64-bit targets every non-negative `i64` fits, so this never fires there.
+    let idx_words = usize::try_from(idx).map_err(|_| {
+        VMError::Custom(format!("{op}: index {idx} does not fit in this target's address width"))
+    })?;
+    let size = heap.payload_size_at_base(obj.addr()).ok_or_else(|| {
+        VMError::Custom(format!(
+            "{op}: HeapRef is not the base address of a live heap object \
+             (null, freed, foreign, or pointing inside or past the end of an object)"
+        ))
+    })?;
+    let byte_off = idx_words.saturating_mul(8);
+    if byte_off.saturating_add(8) > size {
+        return Err(VMError::Custom(format!(
+            "{op}: index {idx} out of bounds for a {size}-byte object"
+        )));
+    }
+    Ok(byte_off)
+}
+
 /// `gc_field_load dest <- obj, idx` — read the `idx`-th 8-byte word from a
 /// `gc_alloc`'d object's payload.
 ///
-/// Bounds-checked against the object's *actual* allocated size
-/// (`FlatHeap::payload_size`), which also rejects a null or otherwise
-/// invalid `HeapRef` — `payload_size` reads `0` for any address that isn't a
-/// live block, and `0 + 8 > 0` fails the check for every index, so a null
-/// dereference traps exactly like an out-of-bounds one, no special-casing
-/// needed. This bound is only correct because `obj` is always a block's
-/// *base* address — `payload_size` resolves an interior address to the
-/// whole containing block's size, not the remaining bytes to its end, and
-/// no op in this file ever produces an interior `HeapRef` (no pointer
-/// arithmetic on `HeapRef` exists here). A future op that did would need to
-/// re-derive the bound from the block's real start, not reuse this check
-/// as-is.
+/// Bounds-checked against the object's *actual* allocated size, resolved by
+/// [`checked_field_offset`] (see there for the full argument). Three checks,
+/// in order, all before any memory is touched:
+///
+/// 1. `idx` must be non-negative and fit in a `usize`.
+/// 2. `obj` must be **exactly the base address** of a live `FlatHeap` block
+///    (`FlatHeap::payload_size_at_base`). Null, a garbage address, a freed
+///    block, an address *inside* a block and the address one past a block's
+///    end all trap here.
+/// 3. Word `idx` must fit: `idx*8 + 8 <= size`.
+///
+/// Check 2 is what makes check 3 mean anything (issue #18471): `size` is
+/// measured from the block's base, so it bounds `obj + idx*8` only when `obj`
+/// *is* that base.
 ///
 /// Decoded purely from the word's own tag bits (see [`FIELD_TAG_MASK`]),
 /// never from `instr.type_hint` — a field's *declared* type ("ref<any>")
@@ -1465,20 +1555,10 @@ fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
             .ok_or_else(|| VMError::Custom("gc_field_load: index must be an integer".into()))?;
         (o, i)
     };
-    if idx < 0 {
-        return Err(VMError::Custom(format!("gc_field_load: negative index {idx}")));
-    }
-    let size = ctx.heap.payload_size(obj.addr());
-    let byte_off = (idx as usize).saturating_mul(8);
-    if byte_off.saturating_add(8) > size {
-        return Err(VMError::Custom(format!(
-            "gc_field_load: index {idx} out of bounds for a {size}-byte object"
-        )));
-    }
-    // SAFETY: `byte_off + 8 <= size`, and `size` came from `payload_size`,
-    // which returns a live block's *actual* payload size or 0 (rejected
-    // above) — so this read stays within the allocation `ctx.heap.alloc`
-    // returned for `obj`.
+    let byte_off = checked_field_offset(ctx.heap, "gc_field_load", obj, idx)?;
+    // SAFETY: `checked_field_offset` proved `obj` is the base of a live block
+    // whose payload is at least `byte_off + 8` bytes long, so this read stays
+    // within the allocation `ctx.heap.alloc` returned for `obj`.
     let word = unsafe { std::ptr::read_unaligned((obj.addr() + byte_off) as *const i64) };
     let value = if word & FIELD_TAG_MASK == FIELD_TAG_HEAP_REF {
         Value::HeapRef(gc_core::HeapRef::new((word & !FIELD_TAG_MASK) as usize))
@@ -1486,7 +1566,7 @@ fn handle_gc_field_load(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Optio
         Value::Int(word >> FIELD_TAG_BITS)
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1518,16 +1598,7 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
         let v = resolve_src(frame, &instr.srcs, 2)?;
         (o, i, v)
     };
-    if idx < 0 {
-        return Err(VMError::Custom(format!("gc_field_store: negative index {idx}")));
-    }
-    let size = ctx.heap.payload_size(obj.addr());
-    let byte_off = (idx as usize).saturating_mul(8);
-    if byte_off.saturating_add(8) > size {
-        return Err(VMError::Custom(format!(
-            "gc_field_store: index {idx} out of bounds for a {size}-byte object"
-        )));
-    }
+    let byte_off = checked_field_offset(ctx.heap, "gc_field_store", obj, idx)?;
     let word: i64 = match &val {
         Value::HeapRef(r) => {
             // `FlatHeap::alloc` guarantees a 16-byte-aligned payload, so a real
@@ -1577,15 +1648,16 @@ fn handle_gc_field_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Opti
          value is a HeapRef — a mismatch here means a future GC compaction could \
          misinterpret a scalar as a movable pointer, or fail to relocate a real one"
     );
-    // SAFETY: `byte_off + 8 <= size`, bounds-checked above against the
-    // object's actual allocated payload size.
+    // SAFETY: `checked_field_offset` proved `obj` is the base of a live block
+    // whose payload is at least `byte_off + 8` bytes long.
     unsafe {
         std::ptr::write_unaligned(field_addr as *mut i64, word);
     }
     if let Value::HeapRef(child) = &val {
-        // SAFETY: `obj.addr()` is the payload address of the live object we
-        // just wrote into (bounds-checked above); `write_barrier` only reads
-        // one byte at its header, never dereferences `child`.
+        // SAFETY: `obj.addr()` is the *base* payload address of the live
+        // object we just wrote into (`checked_field_offset` refused anything
+        // else), so the 32 bytes before it really are its header, which is
+        // what `write_barrier` reads. It never dereferences `child`.
         unsafe {
             ctx.heap.write_barrier(obj.addr(), child.addr());
         }
@@ -1739,7 +1811,7 @@ fn handle_array_len(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     let arr = array_ref(ctx, handle)?;
     let value = Value::Int(arr.len() as i64);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1757,7 +1829,7 @@ fn handle_array_get(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
     let arr = array_ref(ctx, handle)?;
     let value = bounds_checked(arr, idx, "array_get")?.clone();
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1839,7 +1911,7 @@ fn handle_call(
         *ctx.metrics_jit_hits += 1;
         let result = handler(&args)?;
         if let Some(dest) = &dest_name {
-            ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+            ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
         }
         return Ok(Some(result));
     }
@@ -1854,20 +1926,31 @@ fn handle_call(
 
     // Step 4: Determine the return-value register slot in the CALLER frame.
     // We need to look up / allocate it in the caller frame before pushing
-    // the callee frame.
-    let ret_dest: Option<usize> = dest_name.as_ref().map(|dest_name| {
-        let frame = ctx.frames.last_mut().unwrap();
-        let next_idx = frame.name_to_reg.len();
-        *frame.name_to_reg.entry(dest_name.clone()).or_insert(next_idx)
-    });
+    // the callee frame.  `register_index` applies the frame register limit
+    // and the register-slot budget, the same as `assign` — this slot is a
+    // register like any other — and grows the caller's file to cover it
+    // *now*: once the callee is pushed the caller must not grow (the budget
+    // accounting below assumes only the top frame does).
+    let ret_dest: Option<usize> = match dest_name.as_ref() {
+        Some(dest_name) => Some(ctx.frames.last_mut().unwrap().register_index(dest_name)?),
+        None => None,
+    };
 
-    // Step 5: Build and push the callee frame.
-    let callee_params = ctx.module_fns[callee_idx].params.clone();
-    let callee_reg_count = ctx.module_fns[callee_idx].register_count;
-    let mut callee_frame = VMFrame::for_function(
-        &fn_name, &callee_params, callee_reg_count, ret_dest,
-    );
-    for (i, val) in args.into_iter().enumerate().take(callee_params.len()) {
+    // Step 5: Build and push the callee frame.  `for_call` gives every
+    // parameter its own slot (or refuses a function with more parameters than
+    // a frame holds), so the positional argument writes stay in bounds.
+    //
+    // The callee's share of the register-slot budget is what the caller's
+    // stack has left:
+    //
+    //   slots_below(callee) = caller.stack_slots()   (caller and everything beneath)
+    //   callee may hold     ≤ max_register_slots − slots_below(callee)
+    let slots_below = ctx.frames.last().map_or(0, VMFrame::stack_slots);
+    let callee = &ctx.module_fns[callee_idx];
+    let n_params = callee.params.len();
+    let mut callee_frame =
+        VMFrame::for_call(callee, ret_dest, slots_below, ctx.max_register_slots)?;
+    for (i, val) in args.into_iter().enumerate().take(n_params) {
         callee_frame.registers[i] = val;
     }
 
@@ -1897,7 +1980,7 @@ fn handle_call_builtin(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option
     // builtins is &BuiltinRegistry (immutable), ctx.frames is the only mutable borrow — fine.
     let result = ctx.builtins.call(&name, &args)?;
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -1911,7 +1994,7 @@ fn handle_io_in(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
     };
     let value = ctx.memory.get(&port).cloned().unwrap_or(Value::Int(0));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, value.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
     Ok(Some(value))
 }
@@ -1955,7 +2038,7 @@ fn handle_cast(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>,
         _          => value,
     };
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -1998,22 +2081,29 @@ fn handle_type_assert(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
 /// caller passes a value that has *already* been `trunc()`'d or `floor()`'d, so
 /// `t` is integral; this only range-checks and casts.
 ///
+/// The failure is LANG83's typed `Trap.ConvRange` (stable id 4), the same
+/// `VMError::Trap` shape `Trap.DivZero` and `Trap.Overflow` use, so a program
+/// observes one registered kind on every backend:
+///
+/// | `t`                     | result                      |
+/// |-------------------------|-----------------------------|
+/// | NaN, +∞, −∞             | `Err(Trap.ConvRange)`       |
+/// | `t < -2⁶³` or `t ≥ 2⁶³` | `Err(Trap.ConvRange)`       |
+/// | otherwise               | `Ok(t as i64)` (exact)      |
+///
 /// The bounds are written so the rejection is **exact**: `i64::MIN as f64` is
 /// exactly −2⁶³, but `i64::MAX` (2⁶³−1) is not representable as an `f64`, so
 /// `i64::MAX as f64` rounds *up* to 2⁶³.  Comparing against `-(i64::MIN as f64)`
 /// (= +2⁶³) therefore rejects 2⁶³ and above; the largest accepted value is the
 /// greatest integral `f64` strictly below 2⁶³.  (`t as i64` for an in-range
 /// integral `t` is exact — Rust's saturating cast never fires here.)
-fn real_to_i64_checked(t: f64) -> Result<i64, VMError> {
-    if !t.is_finite() {
-        return Err(VMError::Custom(
-            "real_to_int: operand is not finite".into(),
-        ));
-    }
-    if t < i64::MIN as f64 || t >= -(i64::MIN as f64) {
-        return Err(VMError::Custom(format!(
-            "real_to_int: {t} is outside the i64 range"
-        )));
+pub fn real_to_i64_checked(t: f64) -> Result<i64, VMError> {
+    // `!(lo <= t < hi)` rather than two ordered rejections: every comparison
+    // with NaN is false, so NaN fails the range test with ±∞ and needs no
+    // separate `is_finite` branch.
+    let in_range = t >= i64::MIN as f64 && t < -(i64::MIN as f64);
+    if !in_range {
+        return Err(trap(interpreter_ir::exception_kind::TRAP_CONV_RANGE));
     }
     Ok(t as i64)
 }
@@ -2029,7 +2119,7 @@ fn handle_int_to_real(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     };
     let result = Value::Float(n as f64);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2045,7 +2135,7 @@ fn handle_real_to_int_trunc(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<O
     };
     let result = Value::Int(real_to_i64_checked(f.trunc())?);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2061,7 +2151,7 @@ fn handle_real_to_int_floor(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<O
     };
     let result = Value::Int(real_to_i64_checked(f.floor())?);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2078,7 +2168,7 @@ fn handle_f64_sqrt(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Val
     };
     let result = Value::Float(f.sqrt());
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2099,7 +2189,7 @@ fn handle_f64_transcendental(
     };
     let result = Value::Float(f(x));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2119,7 +2209,7 @@ fn handle_f64_pow(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     };
     let result = Value::Float(base.powf(exp_));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2154,7 +2244,7 @@ fn handle_f64_ieee_binop(
     let b = f64_operand(ctx, instr, 1)?;
     let result = Value::Float(op(a, b));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2178,7 +2268,7 @@ fn handle_f64_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
     let x = f64_operand(ctx, instr, 0)?;
     let result = Value::Float(-x);
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
 }
@@ -2189,9 +2279,49 @@ fn handle_f64_signbit(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<
     let x = f64_operand(ctx, instr, 0)?;
     let result = Value::Int(i64::from(x.is_sign_negative()));
     if let Some(dest) = &instr.dest {
-        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
     }
     Ok(Some(result))
+}
+
+// ---------------------------------------------------------------------------
+// LANG83 PR7b — the language-neutral float primitives
+// ---------------------------------------------------------------------------
+//
+// Three integer queries on one `f64` operand, the digits every float writer
+// computes before it chooses a layout (see `crate::float_format`):
+//
+//   f64_class x    0 ±0 | 1 finite non-zero | 2 ±Infinity | 3 NaN
+//   f64_digits x   D, the shortest round-trip significand of |x| (class 1)
+//   f64_exp10 x    e10, the exponent of D's leading digit (class 1)
+//
+// Each is pure and never traps; classes 0, 2 and 3 have no digits and give
+// 0 from the last two. The operand must be a `Value::Float`, the same strict
+// check as every other `f64` op.
+
+/// Shared body of the three PR7b handlers: `dest = Int(query(x))`.
+fn handle_f64_query(ctx: &mut DispatchCtx, instr: &IIRInstr, query: fn(f64) -> i64) -> Result<Option<Value>, VMError> {
+    let x = f64_operand(ctx, instr, 0)?;
+    let result = Value::Int(query(x));
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone())?;
+    }
+    Ok(Some(result))
+}
+
+/// `f64_class` — Rust's `f64::classify`, numbered 0/1/2/3.
+fn handle_f64_class(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_query(ctx, instr, crate::float_format::f64_class)
+}
+
+/// `f64_digits` — the shortest round-trip significand `D` (0 unless class 1).
+fn handle_f64_digits(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_query(ctx, instr, crate::float_format::f64_digits)
+}
+
+/// `f64_exp10` — the exponent `e10` of `D`'s leading digit (0 unless class 1).
+fn handle_f64_exp10(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    handle_f64_query(ctx, instr, crate::float_format::f64_exp10)
 }
 
 fn handle_f64_sin(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
@@ -2320,6 +2450,10 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "f64_div"           => Some(handle_f64_div),
         "f64_neg"           => Some(handle_f64_neg),
         "f64_signbit"       => Some(handle_f64_signbit),
+        // LANG83 PR7b.
+        "f64_class"         => Some(handle_f64_class),
+        "f64_digits"        => Some(handle_f64_digits),
+        "f64_exp10"         => Some(handle_f64_exp10),
         // `call` is handled specially (needs jit_handlers) — see dispatch loop.
         _              => None,
     }

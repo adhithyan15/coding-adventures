@@ -27,6 +27,7 @@ const COLS: usize = 3;
 const GROUP_PAD: f64 = 24.0;
 const GROUP_HEADER_H: f64 = 32.0;
 const TITLE_H: f64 = 44.0;
+const TITLE_LINE_H: f64 = 24.0;
 const ROUTE_CLEARANCE: f64 = 12.0;
 const ROUTE_BEND_COST: f64 = 8.0;
 const SELF_RELATIONSHIP_GAP: f64 = 48.0;
@@ -157,9 +158,10 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         None => layout_nodes(diagram),
     };
     apply_alignments(&mut nodes, diagram);
-    if diagram.title.is_some() {
+    if let Some(title) = &diagram.title {
+        let title_height = structural_title_height(title);
         for node in &mut nodes {
-            node.y += TITLE_H;
+            node.y += title_height;
         }
     }
     let groups = layout_groups(diagram, &nodes);
@@ -175,16 +177,22 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         canvas_h = canvas_h.max(position.y + ROW_H + COMP_PAD);
     }
     LayoutedStructuralDiagram {
+        kind: diagram.kind.clone(),
         width: canvas_w,
         height: canvas_h,
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         architecture_config: diagram.architecture_config.clone(),
+        render_config: diagram.render_config.clone(),
         groups,
         nodes,
         relationships: rels,
     }
+}
+
+fn structural_title_height(title: &str) -> f64 {
+    TITLE_H + title.split('\n').count().saturating_sub(1) as f64 * TITLE_LINE_H
 }
 
 fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDiagram) {
@@ -1441,6 +1449,7 @@ mod tests {
         StructuralDiagram {
             kind: StructuralKind::Class,
             architecture_config: None,
+            render_config: Default::default(),
             title: Some("Domain".into()),
             accessibility_title: None,
             accessibility_description: None,
@@ -1858,6 +1867,20 @@ mod tests {
         assert!(node.compartments[0].y_offset > 50.0);
         assert!(node.height > 90.0);
         assert_eq!(node.header, "Primary\nEntity");
+    }
+
+    #[test]
+    fn multiline_titles_reserve_vertical_geometry() {
+        let mut diagram = two_class_diagram();
+        diagram.nodes.truncate(1);
+        diagram.relationships.clear();
+        diagram.title = Some("Domain\nModel\nAcross\nLines".into());
+
+        let layout = layout_structural_diagram(&diagram);
+
+        assert_eq!(layout.title.as_deref(), Some("Domain\nModel\nAcross\nLines"));
+        assert!(layout.nodes[0].y > 120.0);
+        assert!(layout.height > 190.0);
     }
 
     #[test]

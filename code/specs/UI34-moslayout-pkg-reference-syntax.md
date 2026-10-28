@@ -276,6 +276,10 @@ analyzing the consumer's `.mll`:
      the called component's same-named slots — this is how the
      existing same-file component-reference path already works
      (UI14 §6).
+   - **Required slots.** Before substitution, the callee's interface
+     is checked: every slot with no default must be bound at the call
+     site, or the result is `SlotBindingMissing` (§7). An omitted slot
+     with a default takes its default.
    - **Part names.** *As built:* the called component's part names
      are inlined **as authored** (`sheet` stays `sheet`), so the
      consumer, its tests, and every backend's accessibility id,
@@ -418,10 +422,149 @@ The resolver surfaces precise, fixable errors:
 | `ComponentNotExported { package, component }` | Manifest's `[components].exports` does not list the component | Add the component to the manifest, or re-check the PascalCase name. |
 | `ComponentSourceMissing { package, component, file }` | `src/<C>.mil` (or `.mll`/`.msl`) is missing | Add the missing file to the package. |
 | `CircularPackageReference { cycle }` | `pkg::A::X → pkg::B::Y → pkg::A::X` | Refactor the cycle out; package graphs must be DAGs. |
-| `SlotBindingMissing { package, component, slot }` | Call site did not supply a required slot | Bind the slot at the call site or mark it optional in the component's `.mil`. |
+| `SlotBindingMissing { package, component, slot }` | Call site did not supply a required slot | Bind the slot at the call site, or give it a default in the component's `.mil` (`slot x : text = "" ;`). |
+| `UndeclaredPackageReference { consumer, package, component, call_site, manifest_path, found_version }` | `pkg::P::C` names a package that is neither the referencing package nor in its `mosaic-package.toml` `[dependencies]` | Add `P = "<version>"` to `[dependencies]` in the named manifest (mosaic-package-publishing-v1 §10 Phase 1b). |
 
 Each error carries the source span of the offending `pkg::` reference
 so editors and language-server clients can underline it.
+
+**Implementation note: `SlotBindingMissing` (2026-10-26,
+mosaic-unbound-slot-semantics-v1 §4 R1 / follow-up F1).** Built in
+`mosaic-package-resolver` as
+`SlotBindingMissing { consumer, package, component, slot, call_site, defaultable }`.
+How it behaves:
+
+- **When it runs.** Once per resolve, before any substitution. It walks the
+  consumer's tree and, once each, the layout of every package component it
+  reaches. A nested reference inside a package is reported against that
+  package component, and an unqualified reference to a sibling export
+  counts as a call site. Caller-authored children belong to the component
+  that wrote them.
+- **What it checks.** The callee's *interface*: every slot in its `.mil`
+  with no default. It does not look at which slots the layout reads, so a
+  required slot the layout never uses must still be bound. That is what
+  stops an unbound name surviving into the consumer's scope, where it was
+  captured by a same-named consumer slot or leaked into an expression as an
+  undeclared identifier.
+- **The one exemption.** The slot that the layout's `slot: <name>` child
+  mount names is filled by the caller's children, not by a prop, and an
+  unfilled mount is removed (UI29-2). Every other `node` or `list<node>`
+  slot is read as a prop (`HostSurface ( content: slot: x )`), which
+  children cannot fill, so it is required like any other slot.
+- **Callee scope.** When a package component is loaded, two more names are
+  checked, because substitution cannot rewrite them and they would
+  otherwise be resolved in the consumer's scope:
+  - Every free name in its expressions must be a declared slot (kebab-case
+    or camelCase), a `For` `as:`/`index:` binding in scope, or
+    `true`/`false`. Names after `.` and string contents are not free.
+    Anything else is `UndeclaredExpressionIdentifier { package, component,
+    identifier, expression }`.
+  - A bare NAME prop value (`content: title`) is a `Keyword` in the IR, but
+    the emitters lower it to a variable in most positions: React writes
+    `{title}`, HTML writes `{{title}}`. It is treated like a bare name in an
+    expression, except when it is a literal:
+    - `true` or `false`, anywhere;
+    - a position in `moslayout_compiler::KEYWORD_LITERAL_PROPS`, the
+      kernel's enum props (`a11y-role`, `axis`, `collapse`, `kind`, `dir`,
+      `target`, `table-cell-role`);
+    - a `For`'s `as:`/`index:`;
+    - at a call site, a value bound to a `one-of` slot of the component it
+      mounts, but only if it is one of that slot's declared values. Any
+      other bare NAME there is an identifier. `tone: tone` forwards the
+      caller's own `tone`, and `tone: authToken` is
+      `UndeclaredExpressionIdentifier`. If a declared value is also the
+      name of one of the caller's slots or loop bindings, the declared
+      value wins.
+    A bare NAME that names one of the component's own slots is rewritten to
+    `slot: <name>`, so it takes the call site's binding or the default.
+    Before, it showed the consumer's slot of the same name.
+    The layout validator applies the same rule to every layout compiled
+    with its interface, packages and applications alike (UI29 §3.4, "A
+    bare name must be bound"), so outside call sites an unbound bare
+    NAME in a package now fails as the layout compile error
+    `UnboundName` (wrapped in `NestedCompileError`) before this check
+    runs; the check remains for call-site values, which need the
+    mounted component's interface.
+  - The mount slot may be read only by the mount. A read anywhere else,
+    whether as a prop, as a bare NAME, or inside an expression, is
+    `ChildMountSlotReferenced { package, component, slot }`.
+- **`one-of` values are strings in the callee.** A call-site value that is
+  one of a `one-of` slot's declared values (`tone: loud`) is substituted as
+  the string `"loud"`. A `KEYWORD_LITERAL_PROPS` position is the
+  exception: there it is substituted as the bare enum value. It never
+  becomes an identifier. Before, `content: slot: tone` showed React
+  `{loud}`, and `( tone == "calm" )` became `( loud == "calm" )`, an
+  undeclared identifier (unbound-slot-semantics-v1 P14).
+  - After substitution, expressions that have become constant are
+    evaluated, because TypeScript rejects a comparison between two
+    different string literals (TS2367). This covers `==`/`!=` on two
+    literals of one kind, numeric `<`/`<=`/`>`/`>=`, `!` of a boolean, and
+    `&&`/`||` with a boolean literal on the left.
+- **Bindings.** Only call-site props that name a declared slot or emit
+  become bindings. Inside a `For`, a bare name that matches the loop's
+  binding is the loop variable and is not rewritten (UI29 §3.4, "For
+  wins"). Reporting a call-site prop that names nothing is F2
+  (`UnknownSlotBinding`).
+- **Every error.** Every missing slot at every call site is reported in one
+  `Multiple` error, up to 100 of them, followed by "… and N more". The
+  callee-scope errors of one component have the same cap, and an error
+  quotes at most 200 characters of an expression. One missing slot is
+  reported bare. A package that fails to load is compiled once, and is
+  reported once however many call sites name it.
+- **Hygiene: a callee's `For` binding never captures a consumer name**
+  (UI29 §3.4, backlog 6f1m). Two kinds of name come from outside the
+  callee and can land inside one of its loops: a consumer value bound
+  into the callee (`title: row`, read by `Text ( content: title )` in
+  the callee's `For ( each: slot: rows , as: row )`), and the children
+  a caller splices into a child mount that sits inside a callee loop.
+  Both are the consumer's names. Before substitution, the inliner looks
+  at each callee `For`: if its `as:` or `index:` binding (compared in
+  camelCase, the spelling every emitter gives an identifier) is a name
+  that a substituted value or a spliced child would bring into its
+  body, the binding is renamed to a fresh name, `<name>-in<n>` with the
+  smallest `n` that no name in the callee, the bound values or the
+  children already uses. Every use of the binding in the body is
+  renamed with it: bare prop values in name positions, `each:` of a
+  nested `For`, and bare names in expressions; a nested `For` that
+  binds the same name again ends the rename for its own body. Literal
+  positions (see "Callee scope") are not uses. A binding that captures
+  nothing keeps its authored name, so the output of every layout that
+  was not miscompiled is unchanged.
+- **The message.** It names the package and component, and gives the fix.
+  The "give it a default" half is offered only for `text`, `number` and
+  `bool`, the types that can have one today.
+
+Two departures from this section:
+
+- There is no "mark it optional" marker. The marker is `= <default>`
+  (UI13 §1).
+- The layout IR carries no source spans. `call_site` is a path through the
+  consumer's tree instead, for example
+  `Column[app-root] > Row#2 > pkg::mosaic-pkg-lib::Card[hero]`. A named
+  node shows its part name, and an unnamed one shows its 1-based position
+  among its siblings.
+
+Until this was built, a missing binding surfaced as the consumer's
+misleading `UnknownSlot`, or not at all.
+
+**Implementation note: `UndeclaredPackageReference` (2026-10-26,
+mosaic-package-publishing-v1 §10 Phase 1b).** §2.2 says versions live in
+`[dependencies]`, but nothing required a referenced package to be listed
+there. Any package on the search path could be inlined, with no version
+checked (publishing-v1 §7.4) and no build-graph edge. Now:
+
+- **The rule.** Every `pkg::P::C` call site must name the referencing
+  package itself or a dependency it declares.
+- **Which manifest.** Inside a package component's layout, the declared set
+  comes from that package's own manifest. For the layout being resolved, it
+  comes from the consumer manifest the caller supplies with
+  `LayoutPackageResolver::with_consumer`. Package builds and
+  `mosaic-compile` with a package manifest supply it. With no consumer
+  manifest, only nested references are checked.
+- **When it runs.** In the same pre-substitution walk as
+  `SlotBindingMissing`, so both kinds of error come back in one `Multiple`.
+- **How often.** Each undeclared package is reported once per referencing
+  manifest, at its first call site.
 
 ---
 

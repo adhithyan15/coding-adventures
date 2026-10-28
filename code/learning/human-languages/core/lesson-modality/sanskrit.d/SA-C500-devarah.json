@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C500-devarah",
+    "language": "sanskrit",
+    "chapter": 500,
+    "sequence": 28660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0552be5593b63201"
+  },
+  "findings": []
+}

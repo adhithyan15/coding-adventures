@@ -4,6 +4,67 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed — Notes 0.3.0 rows, and Delete only for a saved note (E3)
+
+`noteRows()` builds the toolkit RecordList's six-field rows, `[id, "",
+title or "Untitled", "", "", ""]`, because `mosaic-pkg-notes` 0.3.0 lists
+notes with `RecordList`. The controller also sends `noteDeleteLabel`
+(TaskApp's new `note-delete-label` slot): "Delete" when the open note is one
+the engine has saved, "" for a new note whose id was only minted, so no
+Delete button is drawn for it. The same rule as task-mosaic-app.
+`__tests__/notes.test.ts` covers both.
+
+### Fixed — a refused note Save is visible, and note drafts are capped (E5)
+
+`saveNote` with an *Attach to task* name that matched no task only called
+`console.error`, so the person saw Save do nothing. The controller now sets
+`noteError` (TaskApp's new `note-error` slot) to a one-line reason and keeps
+the draft as typed; any other event, or the next successful Save, clears it.
+This matches task-mosaic-app's native behaviour word for word.
+
+`noteTitleChange` and `noteBodyChange` now refuse an edit past 512
+characters (title) or 1 MiB of UTF-8 (body), task-mosaic-app's and Journal's
+limits; the draft keeps its last value rather than being truncated. A note
+stored over the caps still opens whole and may shrink but not grow. The body
+is only UTF-8-encoded when it is long enough that it could be over the cap.
+`__tests__/notes.test.ts` covers both, against the real task-wasm engine.
+
+### Fixed — a rejected workspace is never written over
+
+When the engine rejected the saved workspace at startup, the host copied it to
+the one fixed recovery record, `workspace/web-corrupt`. A later rejection
+replaced that copy, which may have been the real workspace. Worse, if the copy
+could not be written, or the saved record could not be read at all, the host
+still started fresh and the first edit saved over `workspace/web`, which still
+held the rejected record. Either way the data was gone.
+
+The recovery path also never ran with the real engine. `engine.load` reports
+a snapshot it cannot read as `{ ok: false, error }` and does not throw, but
+both hosts only caught throws. So a rejected record was silently ignored: no
+recovery copy was made, the engine stayed empty, and the first edit saved over
+the record.
+
+Now:
+
+- `main.tsx` and `webcomponent.ts` treat `load` returning `ok: false` as a
+  rejection, so the recovery path below actually runs.
+- The rejected record goes to the first free recovery key, `workspace/web-corrupt`
+  and then `web-corrupt.1` … `web-corrupt.9`, the same sequence the native hosts
+  use for `.corrupt` files. A key that is taken is skipped, never replaced. A
+  record already kept is not copied again, so reloading before any edit does
+  not use up keys.
+- `preserveRejectedWorkspace` returns the key it used, and the warning names it.
+- If the copy fails, all ten keys are taken, or the saved record cannot be
+  read, the host saves nothing for the rest of the session. The warning says
+  so, and `workspace/web` keeps the record.
+
+`__tests__/startup-recovery.test.ts` boots the real Web Components host with
+the real engine over in-memory storage and makes one edit. With a free key,
+the rejected record lands there and the edit saves normally. With every key
+taken, `workspace/web` still holds the rejected record afterwards. The
+persistence unit tests cover the key sequence, never replacing, not copying
+twice, and refusing when full.
+
 ### Changed — the host's stylesheet colours are generated, not copied
 
 `src/theme.ts` used to spell out eight colours from `TaskApp.{light,dark}.msl`

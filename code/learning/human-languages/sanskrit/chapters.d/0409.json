@@ -1,0 +1,21 @@
+{
+  "chapter": 409,
+  "title": "Wheels and Tracks",
+  "label": "ch:sa-wheels-and-tracks",
+  "canDo": "I can name the parts of a wheel and the ruts it leaves.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R409-review-402-409",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can name the parts of a wheel and the ruts it leaves.",
+    "assesses": [
+      "SA-LEX-C409-CAKRA409-01",
+      "SA-LEX-C409-CAKRA409-02",
+      "SA-LEX-C409-CAKRA409-03",
+      "SA-LEX-C409-CAKRA409-04",
+      "SA-LEX-C409-CAKRA409-05"
+    ]
+  }
+}

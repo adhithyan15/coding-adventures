@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:cdb36823db981fd8",
+  "lessonIds": [
+    "SA-C413-unnayati",
+    "SA-C413-sannahyati",
+    "SA-C413-goni",
+    "SA-C413-prapayati",
+    "SA-C413-sampadayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch413.txt",
+  "json": "sanskrit/narration/ch413.json",
+  "textHash": "fnv1a64:058fad5d25917df1",
+  "jsonHash": "fnv1a64:60f7ed8422f57f75",
+  "findings": []
+}

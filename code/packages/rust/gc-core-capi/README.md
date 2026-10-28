@@ -115,20 +115,34 @@ together, the two maps a precise collector needs.
 The precise stack walk is now wired end-to-end: `precise_walk::build_precise_roots`
 unwinds the frame-pointer chain into precise slots (`frame_root_slots`) for mapped
 frames and conservative `[fp, caller_fp)` regions for unmapped ones, and the
-argument-less **`__gc_collect_precise`** captures the running thread's frame pointer
-/ stack pointer / base (mirroring `__gc_collect`'s register spill), walks, and
-collects both in one `collect_mixed` cycle. With no stack maps registered it degrades
-to exactly `__gc_collect`; as frames are mapped they shed floating garbage. Safe by
-construction — an omitted frame pointer or unwalkable stack degrades to a
-conservative scan, never a missed root.
+argument-less **`__gc_collect_precise`** captures the running thread's stack pointer
+/ base (mirroring `__gc_collect`'s register spill), walks, and collects both in one
+`collect_mixed` cycle. With no stack maps registered it degrades to exactly
+`__gc_collect`; as frames are mapped they shed floating garbage. An unwalkable stack
+degrades to a conservative scan, never a missed root.
+
+The walk's anchor (its first frame record) does not come from the frame-pointer
+register. Every precise entry point is a tiny **naked trampoline** that pushes the
+record itself and passes its address to the Rust body:
+
+```text
+x86-64 SysV:  push rbp; mov rbp, rsp; mov rdi, rbp; call body; pop rbp; ret
+x86-64 Win64: push rbp; mov rbp, rsp; sub rsp, 32; mov rcx, rbp; call body; add rsp, 32; pop rbp; ret
+AArch64:      stp x29, x30, [sp, #-16]!; mov x29, sp; mov x0, x29; bl body; ldp x29, x30, [sp], #16; ret
+```
+
+So the anchor is valid on every ABI whatever the compiler flags (on Win64 LLVM sets
+`rbp` with `lea rbp, [rsp+N]`, so reading the register there was wrong). See
+`stack_scan.rs` section 2b.
 
 Still to come (own PRs):
 
 - **Backend record emission** — the code generators (aarch64 / x86_64 / LLVM) emit
   `StackMapRecord`s at safepoints and call sites and register them via
   `__gc_register_stackmap`, so `__gc_collect_precise` actually resolves real frames
-  in production (until then every frame is unmapped → conservative). Precision also
-  needs the image built with frame pointers (`-Cforce-frame-pointers`).
+  in production (until then every frame is unmapped → conservative). Frames between
+  the collect call and the mapped code also need frame pointers to be walked
+  precisely (`twig-aot` builds this crate with `-Cforce-frame-pointers=yes`).
 - **Moving / compacting**, then **incremental** — the rest of the ladder, all as
   `gc-core` algorithms.
 

@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Doubts and Hopes",
+  "label": "ch:sa-doubts-and-hopes",
+  "canDo": "I can say what I fear and what I hope will happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C368-kila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say what I fear and what I hope will happen.",
+    "assesses": [
+      "SA-LEX-C368-SHANKA368-03",
+      "SA-LEX-C368-SHANKA368-04",
+      "SA-LEX-C368-SHANKA368-05"
+    ]
+  }
+}

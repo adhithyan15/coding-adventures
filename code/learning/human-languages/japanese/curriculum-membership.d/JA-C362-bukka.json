@@ -1,0 +1,11 @@
+{
+  "id": "JA-C362-bukka",
+  "pathSegment": "JA-PATH-362-HIYOU362",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-362-HIYOU362",
+      "order": 3
+    }
+  ]
+}

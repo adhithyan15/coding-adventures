@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "In the Right Order",
+  "label": "ch:sa-in-the-right-order",
+  "canDo": "I can talk about order, steps and exceptions.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C545-alocayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can talk about order, steps and exceptions.",
+    "assesses": [
+      "SA-LEX-C545-ANUKRAMA545-03",
+      "SA-LEX-C545-ANUKRAMA545-04",
+      "SA-LEX-C545-ANUKRAMA545-05"
+    ]
+  }
+}

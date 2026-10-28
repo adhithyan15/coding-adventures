@@ -1,0 +1,11 @@
+{
+  "id": "JA-C354-shikke",
+  "pathSegment": "JA-PATH-354-TENKI354",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-354-TENKI354",
+      "order": 2
+    }
+  ]
+}

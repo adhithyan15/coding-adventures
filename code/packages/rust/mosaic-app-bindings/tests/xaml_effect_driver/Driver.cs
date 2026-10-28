@@ -54,6 +54,12 @@ internal sealed class EffectComponent
     public string Status { get; set; } = "unset";
 }
 
+internal sealed class Increment
+{
+    public string MosaicName => "increment";
+    public object MosaicPayload => new Dictionary<string, object?> { ["amount"] = 1 };
+}
+
 internal sealed class RequestEffect
 {
     public RequestEffect(bool batch) => MosaicName = batch
@@ -95,9 +101,94 @@ internal sealed class InvalidBatchComponent : System.ComponentModel.ISupportInit
     public void EndInit() { Depth--; Ends++; }
 }
 
+internal sealed class ListComponent
+{
+    public IReadOnlyList<IReadOnlyList<string>>? Rows { get; set; }
+    public IReadOnlyList<double>? Numbers { get; set; }
+    public IReadOnlyList<bool>? Flags { get; set; }
+    public string[]? Array { get; set; }
+    public int Sets;
+    public IReadOnlyList<string>? Observed;
+    public IReadOnlyList<string>? Values { get => Observed; set { Sets++; Observed = value; } }
+    public int WriteOnlySets;
+    public IReadOnlyList<string>? WriteOnly { set { WriteOnlySets++; } }
+    public int ThrowingSets;
+    public IReadOnlyList<string> Throwing { get => throw new Exception("getter"); set { ThrowingSets++; } }
+}
+
+internal sealed class BrokenList : IReadOnlyList<string>
+{
+    public bool Infinite;
+    public int Moves;
+    public int Count => throw new Exception("count");
+    public string this[int index] => throw new Exception("index");
+    public IEnumerator<string> GetEnumerator()
+    {
+        while (true) { Moves++; if (!Infinite) throw new Exception("enumeration"); yield return "a"; }
+    }
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
 internal static class Driver
 {
     private static int failures;
+
+    private static void CaseListProps()
+    {
+        // Inject a response fixture into the real host, then exercise public
+        // ApplyProps. The conformance app has no list props; this isolates host
+        // conversion/assignment without changing its domain or faking setters.
+        MosaicRuntimeHost.LoadRequired();
+        var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+        var runtime = typeof(MosaicRuntimeHost).GetField("State",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.GetValue(null)!;
+        var update = runtime.GetType().GetField("latestUpdate", flags)!;
+        var original = update.GetValue(runtime);
+        using var document = System.Text.Json.JsonDocument.Parse(
+            "{\"revision\":0,\"props\":{\"rows\":[[\"a\",\"b\"],[]],\"numbers\":[1,2],\"flags\":[true,false],\"array\":[\"a\"],\"values\":[\"a\"],\"writeOnly\":[\"a\"],\"throwing\":[\"a\"]}}");
+        try
+        {
+            update.SetValue(runtime, document.RootElement);
+            var component = new ListComponent();
+            MosaicRuntimeHost.ApplyProps(component);
+            var rows = component.Rows;
+            var numbers = component.Numbers;
+            var booleans = component.Flags;
+            var array = component.Array;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(ReferenceEquals(rows, component.Rows) && ReferenceEquals(numbers, component.Numbers)
+                && ReferenceEquals(booleans, component.Flags), "equal nested and scalar lists keep identity");
+            Check(!ReferenceEquals(array, component.Array), "arrays retain ordinary assignment semantics");
+            Check(component.Sets == 2 && component.WriteOnlySets == 2 && component.ThrowingSets == 2,
+                "equal, write-only and throwing-getter setters still run");
+            ((List<string>)component.Rows![0])[0] = "local edit";
+            ((List<double>)component.Numbers!)[0] = 2;
+            ((List<bool>)component.Flags!)[0] = false;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(!ReferenceEquals(rows, component.Rows) && component.Rows![0][0] == "a"
+                && component.Numbers![0] == 1 && component.Flags![0], "local list mutations are corrected");
+            component.Rows = new List<IReadOnlyList<string>> { new List<string> { "b", "a" }, new List<string>() };
+            component.Observed = new List<string> { "a", "extra" };
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows![0][0] == "a" && component.Observed!.Count == 1, "order and extra elements are replaced");
+            component.Rows = new List<IReadOnlyList<string>> { new List<string> { "a" } };
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows!.Count == 2 && component.Rows[0].Count == 2, "short and nested-short lists are replaced");
+            var broken = new BrokenList();
+            component.Observed = broken;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Observed![0] == "a" && !ReferenceEquals(broken, component.Observed), "enumeration failure falls back to incoming list");
+            var endless = new BrokenList { Infinite = true };
+            component.Observed = endless;
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(endless.Moves == 2 && !ReferenceEquals(endless, component.Observed), "existing enumeration is bounded by incoming length plus one");
+            using var nulls = System.Text.Json.JsonDocument.Parse("{\"revision\":1,\"props\":{\"rows\":null,\"values\":null}}");
+            update.SetValue(runtime, nulls.RootElement);
+            MosaicRuntimeHost.ApplyProps(component);
+            Check(component.Rows is null && component.Observed is null, "null runtime lists clear current values");
+        }
+        finally { update.SetValue(runtime, original); }
+    }
 
     private static void Check(bool ok, string what)
     {
@@ -462,11 +553,85 @@ internal static class Driver
         Check(Counted(settled, "own answer") == 4, "and its value, not the stale one, reached the app");
     }
 
+    /// A state file the runtime rejects moves to the first FREE quarantine
+    /// name, never over an earlier quarantine, which may be someone's real
+    /// data. A directory takes a name as surely as a file does (Windows
+    /// refuses a move onto one as access denied, not as "exists"). With all
+    /// ten names taken the file stays where it is, and nothing is saved over
+    /// it.
+    ///
+    /// <code>
+    ///   launch | before                                  | afterwards
+    ///   -------+-----------------------------------------+------------------------------
+    ///   first  | `{}`, `.corrupt` file, `.corrupt.1` dir | `{}` in `.corrupt.2`, saving
+    ///   second | `{}`, `.corrupt` to `.9` held           | `{}` still live, not saving
+    /// </code>
+    ///
+    /// Each launch is a <c>LoadRequired</c> after a <c>Close</c>, the startup
+    /// retry path. The first <c>Close</c> comes before any seeding, so the
+    /// runtime the static initializer loaded (whenever it ran) saw no file.
+    private static async Task CaseQuarantine()
+    {
+        var path = Environment.GetEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        if (string.IsNullOrEmpty(path))
+        {
+            Check(false, "MOSAIC_APP_STATE_PATH names the quarantine state file");
+            return;
+        }
+        MosaicRuntimeHost.Close();
+        // `{}` parses, so it reaches the runtime, which refuses it: no schema.
+        const string rejected = "{}";
+        File.WriteAllText(path + ".corrupt", "earlier");
+        Directory.CreateDirectory(path + ".corrupt.1");
+        File.WriteAllText(path, rejected);
+
+        MosaicRuntimeHost.LoadRequired();
+        var moved = MosaicRuntimeHost.ApplyProps(new EffectComponent()) ?? string.Empty;
+        Check(File.ReadAllText(path + ".corrupt") == "earlier", "an earlier quarantine is never replaced");
+        Check(
+            Directory.Exists(path + ".corrupt.1")
+                && Directory.GetFileSystemEntries(path + ".corrupt.1").Length == 0,
+            "a directory at a quarantine name is skipped");
+        Check(
+            File.Exists(path + ".corrupt.2") && File.ReadAllText(path + ".corrupt.2") == rejected,
+            "a rejected file moves to the first free name");
+        Check(
+            moved.Contains("rejected persisted state", StringComparison.Ordinal)
+                && !moved.Contains("will not be saved", StringComparison.Ordinal),
+            "a file moved aside leaves saving on");
+        await MosaicRuntimeHost.HandleEvent(new EffectComponent(), new Increment());
+        Check(
+            File.Exists(path) && File.ReadAllText(path) != rejected,
+            "fresh state is saved once the rejected file is aside");
+
+        MosaicRuntimeHost.Close();
+        for (var index = 3; index < 10; index++)
+            File.WriteAllText($"{path}.corrupt.{index}", $"taken {index}");
+        File.WriteAllText(path, rejected);
+        MosaicRuntimeHost.LoadRequired();
+        var blocked = MosaicRuntimeHost.ApplyProps(new EffectComponent()) ?? string.Empty;
+        Check(
+            blocked.Contains("This session will not be saved.", StringComparison.Ordinal),
+            "with every name taken, the warning says nothing is saved");
+        var answer = await MosaicRuntimeHost.HandleEvent(new EffectComponent(), new Increment());
+        Check(File.ReadAllText(path) == rejected, "a file that could not move aside is not written over");
+        Check(
+            answer?.Status.Contains("This session will not be saved.", StringComparison.Ordinal) == true,
+            "the warning stays showing after an event");
+        Check(
+            File.ReadAllText(path + ".corrupt") == "earlier"
+                && Directory.Exists(path + ".corrupt.1")
+                && File.ReadAllText(path + ".corrupt.2") == rejected
+                && File.ReadAllText(path + ".corrupt.9") == "taken 9",
+            "no quarantine was replaced");
+    }
+
     public static async Task<int> Main()
     {
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
         switch (probeCase)
         {
+            case "props-lists": CaseListProps(); break;
             case "profile-disabled":
                 var disabledProjection = new ProjectionProbe();
                 Check(MosaicRuntimeHost.BeginProfile("probe", disabledProjection) is null
@@ -564,6 +729,7 @@ internal static class Driver
                 break;
             case "props-profile-validate":
                 var counts = new Dictionary<string, int>();
+                var labels = new HashSet<string>();
                 foreach (var line in System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!))
                 {
                     using var document = System.Text.Json.JsonDocument.Parse(line);
@@ -574,14 +740,22 @@ internal static class Driver
                         && sample.GetProperty("bytes").GetInt64() >= 0, "nonnegative profiling measurement");
                     var fields = 0;
                     foreach (var property in sample.EnumerateObject()) fields++;
-                    Check(fields == 3, "no names or values in profiling record");
+                    if (phase == "apply-props-convert" || phase == "apply-props-set")
+                    {
+                        Check(fields == 4 && sample.GetProperty("property").GetString() is "Count" or "AwaitedEffects" or "Status",
+                            "detailed scope identifies the reflected property, without values");
+                        labels.Add(sample.GetProperty("property").GetString()!);
+                    }
+                    else Check(fields == 3, "aggregate record shape remains compatible");
                 }
-                Check(counts.GetValueOrDefault("apply-props-convert") == 4, "conversion attempts include failure");
-                Check(counts.GetValueOrDefault("apply-props-set") == 3, "setter attempts include failure");
-                Check(counts.GetValueOrDefault("apply-props-notify") == 4, "every batch releases notifications");
-                Check(counts.GetValueOrDefault("apply-props") == 4, "aggregate covers every attempt");
+                Check(labels.SetEquals(new[] { "Count", "AwaitedEffects", "Status" }), "distinct properties remain distinguishable");
+                Check(counts.GetValueOrDefault("apply-props-convert") == 7, "conversion attempts include failure");
+                Check(counts.GetValueOrDefault("apply-props-set") == 6, "setter attempts include failure");
+                Check(counts.GetValueOrDefault("apply-props-notify") == 5, "every batch releases notifications");
+                Check(counts.GetValueOrDefault("apply-props") == 5, "aggregate covers every attempt");
                 break;
             case "props-batch":
+                MosaicRuntimeHost.ApplyProps(new EffectComponent());
                 var batched = new BatchComponent();
                 MosaicRuntimeHost.ApplyProps(batched);
                 Check(batched.Observed == 0 && batched.Begins == 1 && batched.Ends == 1 && batched.Depth == 0,
@@ -611,6 +785,7 @@ internal static class Driver
             case "closes": await CaseHandlerClosesHost(); break;
             case "deferred": await CaseDeferred(); break;
             case "scoped": await CaseScopedAcrossRetry(); break;
+            case "quarantine": await CaseQuarantine(); break;
             default:
                 Console.WriteLine($"unknown MOSAIC_PROBE_CASE `{probeCase}`");
                 return 2;

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C143-cha",
+    "language": "chinese",
+    "chapter": 143,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a590620697b0170c"
+  },
+  "findings": []
+}

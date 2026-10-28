@@ -26,15 +26,17 @@
 //! | Release(s)                                   | Profile | Evidence |
 //! |----------------------------------------------|---------|----------|
 //! | 2.2, 2.4, 2.6, 2.7.18                        | `py2`   | below    |
-//! | 3.0a1, 3.5.10, 3.6.0, 3.11.17, 3.12.3,       | `py3`   | below    |
-//! | 3.13.16, 3.16.0a1                            |         |          |
+//! | 3.0a1                                        | `py30`  | below    |
+//! | 3.5.10, 3.6.0, 3.11.17, 3.12.3, 3.13.16,     | `py3`   | below    |
+//! | 3.16.0a1                                     |         |          |
 //! | every other row                              | none    | no grammar pair yet |
 //!
-//! A profile also names the subset its releases claim (`subset`):
-//! `py3` releases compile `py-int-print`, `py2` releases `py2-int-print`.
-//! The two are different subsets, not one subset under two profiles,
-//! because the same text means different things in them (`print(1, 2)` is
-//! a call in Python 3 and a tuple in Python 2).
+//! A profile also names the subsets its releases claim (`subsets`): `py3`
+//! releases compile `py-int-print` and, since phase 7c slice 3,
+//! `py-float-print`; `py30` releases `py-int-print`; `py2` releases
+//! `py2-int-print`. Python 2 and Python 3 have different subsets, not one
+//! subset under two profiles, because the same text means different things
+//! in them (`print(1, 2)` is a call in Python 3 and a tuple in Python 2).
 //!
 //! ## The `py3` profile
 //!
@@ -59,7 +61,9 @@
 //!   `builtin_print_impl`. `print()` writes only the newline.
 //! - **`/` is true division** (PEP 238 is the Python 3 default): 3.0a1's
 //!   `nb_true_divide` is `long_true_divide`, which returns a float. So `/`
-//!   is outside an integer subset: [`Slash::True`].
+//!   is outside an integer subset: [`Slash::True`]. Under [`Floats::Repr`]
+//!   it lowers to `f64_div` (`py-float-print`); under [`Floats::None`] it
+//!   is refused.
 //! - **Integer literals are decimal** in `py-int-print`, with PEP 515 `_`
 //!   separators where the release lexes them (3.6.0 and later; 3.0a1 and
 //!   3.5.10 lex `1_000` as an error). A leading zero on a non-zero literal
@@ -68,6 +72,41 @@
 //! The host interpreters (3.11.17, 3.12.3, 3.13.16) reproduce every
 //! accepted corpus case; 3.0a1 and 3.16.0a1 rest on the source evidence
 //! above (LANG84 "Pinned historical source").
+//!
+//! ## Floats: `py3` against `py30` (LANG84 phase 7c slice 3)
+//!
+//! Everything above holds for 3.0a1 too. The two profiles differ in one
+//! switch, [`Floats`], because they differ in what `print` writes for a
+//! float, which is `str(x)`:
+//!
+//! | Release | `float`'s `tp_str` | `print(1/3)` | Profile |
+//! |---------|--------------------|--------------|---------|
+//! | 3.0a1 | `float_str`: `format_float(…, PREC_STR)`, `PREC_STR` 12 (`Objects/floatobject.c` lines 285–299), i.e. `%.12g` | `0.333333333333` | `py30`, [`Floats::None`] |
+//! | 3.5.10 … 3.16.0a1 | `float_repr` (`Objects/floatobject.c` at v3.5.10, `tp_repr` and `tp_str` both, lines 1849/1855): the shortest string that reads back exactly | `0.3333333333333333` | `py3`, [`Floats::Repr`] |
+//!
+//! The compiler writes one float layout, `repr`, into the module
+//! (`__py_write_float`, LANG83 PR7c-py; up to 0.3.0 the `write_f64_py`
+//! builtin). `%.12g` needs correctly rounded 12-digit significands, which
+//! LANG83 plans as `f64_digits_prec` and does not have yet. So floats are in
+//! the subset only under [`Floats::Repr`]. The
+//! difference is semantic, not lexical (LANG84 C2): `7 / 2` lexes in every
+//! Python 3 release, so 3.0a1's lexer could never be its only guard.
+//!
+//! What `py-float-print` relies on, at v3.5.10 and in the host interpreters:
+//!
+//! - **A float literal is correctly rounded** (`PyOS_string_to_double`
+//!   through `dtoa.c`), as Rust's `str::parse::<f64>` is.
+//! - **`float + - *` never raise**: `float_add`, `float_sub`, `float_mul`
+//!   compute in C `double`, so an overflow is `inf` and `inf - inf` is
+//!   `nan`, as IEEE (and LANG83 PR6c's `f64_*`) say.
+//! - **`/` raises on a zero divisor** (`float_div`: "float division by
+//!   zero"; `long_true_divide`: "division by zero"), including `-0.0`.
+//! - **`int / int` is the correctly rounded quotient** of the exact ints;
+//!   when both are at most 2^53 in magnitude `long_true_divide` takes the
+//!   fast path `(double)a / (double)b` (Objects/longobject.c at v3.5.10,
+//!   "Fast path for a and b small"), which is `int_to_real` then `f64_div`.
+//! - **Mixing converts the int** with `PyLong_AsDouble` (round half to
+//!   even), as `int_to_real` does on every backend.
 //!
 //! ## The `py2` profile (LANG84 phase 7c slice 1)
 //!
@@ -136,6 +175,18 @@ pub enum Slash {
     Classic,
 }
 
+/// Whether the release path has floats, and how `print` writes one.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Floats {
+    /// No floats: a `FLOAT` token and a true `/` are refused. 3.0a1
+    /// (`%.12g` for `str(float)`) and Python 2 (the same).
+    None,
+    /// Floats are in the subset and `print` writes `repr` (the module's own
+    /// `__py_write_float`, LANG83 PR7c-py): the `py3` profile, 3.5.10 and
+    /// later.
+    Repr,
+}
+
 /// How an `INT` token's text becomes a value.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IntLiterals {
@@ -158,16 +209,39 @@ pub struct ReleaseProfile {
     pub slash: Slash,
     /// How integer literals are spelled.
     pub int_literals: IntLiterals,
-    /// The subset this profile's releases claim, as `subsets.csv` names it.
-    pub subset: &'static str,
+    /// Whether floats exist, and how `print` writes them.
+    pub floats: Floats,
+    /// The subsets this profile's releases claim, as `subsets.csv` names
+    /// them, narrowest first; `iir_status` lists them joined with `;`.
+    pub subsets: &'static [&'static str],
 }
 
-/// Python 3: unbounded `int`, floor `//` and `%`, true `/`, `print()`.
+impl ReleaseProfile {
+    /// The widest subset this profile compiles (the last of `subsets`),
+    /// for diagnostics.
+    pub fn subset(&self) -> &'static str {
+        self.subsets.last().copied().unwrap_or("")
+    }
+}
+
+/// Python 3 from 3.2: unbounded `int`, floor `//` and `%`, true `/`,
+/// `print()`, and floats printed as `repr`.
 pub const PY3: ReleaseProfile = ReleaseProfile {
     name: "py3",
     slash: Slash::True,
     int_literals: IntLiterals::Decimal,
-    subset: "py-int-print",
+    floats: Floats::Repr,
+    subsets: &["py-int-print", "py-float-print"],
+};
+
+/// Python 3.0: as [`PY3`], but `str(float)` is `%.12g`, which this
+/// compiler does not write yet, so the integer subset only.
+pub const PY30: ReleaseProfile = ReleaseProfile {
+    name: "py30",
+    slash: Slash::True,
+    int_literals: IntLiterals::Decimal,
+    floats: Floats::None,
+    subsets: &["py-int-print"],
 };
 
 /// Python 2: classic `/` on ints, floor `//` and `%`, octal, hex and long
@@ -178,16 +252,23 @@ pub const PY2: ReleaseProfile = ReleaseProfile {
     name: "py2",
     slash: Slash::Classic,
     int_literals: IntLiterals::Python2,
-    subset: "py2-int-print",
+    floats: Floats::None,
+    subsets: &["py2-int-print"],
 };
 
 /// Every profile this crate defines, for tooling and tests.
-pub const PROFILES: &[ReleaseProfile] = &[PY2, PY3];
+pub const PROFILES: &[ReleaseProfile] = &[PY2, PY30, PY3];
 
 /// CST rules a profile's grammars add to [`crate::DISPATCHED_RULES`]
 /// (LANG84 C8): `cst_contract` checks each one exists in every release of
 /// that profile, and only there.
 pub const PROFILE_RULES: &[(&str, &[&str])] = &[("py2", &["print_stmt"])];
+
+/// Token types a profile's grammars add to [`crate::DISPATCHED_TOKENS`]
+/// (LANG84 C8, phase 7c slice 3): `cst_contract` checks each one is defined
+/// and referenced in every release of that profile, and in no other. Only
+/// the `py3` pairs lex a `FLOAT`.
+pub const PROFILE_TOKENS: &[(&str, &[&str])] = &[("py3", &["FLOAT"])];
 
 /// The profile an inventory release compiles under, or `None` when the
 /// release claims no IIR subset. Exact IDs only; nothing here orders or
@@ -195,7 +276,8 @@ pub const PROFILE_RULES: &[(&str, &[&str])] = &[("py2", &["print_stmt"])];
 pub fn profile_for(release: &str) -> Option<&'static ReleaseProfile> {
     match release {
         "2.2" | "2.4" | "2.6" | "2.7.18" => Some(&PY2),
-        "3.0a1" | "3.5.10" | "3.6.0" | "3.11.17" | "3.12.3" | "3.13.16" | "3.16.0a1" => Some(&PY3),
+        "3.0a1" => Some(&PY30),
+        "3.5.10" | "3.6.0" | "3.11.17" | "3.12.3" | "3.13.16" | "3.16.0a1" => Some(&PY3),
         _ => None,
     }
 }
@@ -206,9 +288,10 @@ mod tests {
 
     #[test]
     fn paired_releases_have_their_profile_and_nothing_else_has_one() {
-        for release in ["3.0a1", "3.5.10", "3.6.0", "3.11.17", "3.12.3", "3.13.16", "3.16.0a1"] {
+        for release in ["3.5.10", "3.6.0", "3.11.17", "3.12.3", "3.13.16", "3.16.0a1"] {
             assert_eq!(profile_for(release), Some(&PY3), "{release}");
         }
+        assert_eq!(profile_for("3.0a1"), Some(&PY30));
         for release in ["2.2", "2.4", "2.6", "2.7.18"] {
             assert_eq!(profile_for(release), Some(&PY2), "{release}");
         }
@@ -220,16 +303,26 @@ mod tests {
         assert_eq!(PY2.slash, Slash::Classic);
         assert_eq!(PY3.int_literals, IntLiterals::Decimal);
         assert_eq!(PY2.int_literals, IntLiterals::Python2);
+        // py30 differs from py3 in exactly one switch.
+        assert_eq!(PY30, ReleaseProfile { name: "py30", floats: Floats::None, subsets: &["py-int-print"], ..PY3 });
+        assert_eq!((PY3.floats, PY30.floats, PY2.floats), (Floats::Repr, Floats::None, Floats::None));
         assert!(PROFILES.iter().all(|p| !p.name.is_empty()));
     }
 
     #[test]
     fn each_profile_names_its_own_subset() {
-        assert_eq!(PY3.subset, "py-int-print");
-        assert_eq!(PY2.subset, "py2-int-print");
-        for (profile, rules) in PROFILE_RULES {
+        assert_eq!(PY3.subsets, ["py-int-print", "py-float-print"]);
+        assert_eq!(PY3.subset(), "py-float-print");
+        assert_eq!(PY30.subset(), "py-int-print");
+        assert_eq!(PY2.subset(), "py2-int-print");
+        for (profile, names) in PROFILE_RULES.iter().chain(PROFILE_TOKENS) {
             assert!(PROFILES.iter().any(|p| p.name == *profile), "{profile}");
-            assert!(!rules.is_empty());
+            assert!(!names.is_empty());
+        }
+        // A profile lexes floats exactly when it prints them.
+        for profile in PROFILES {
+            let lexes_floats = PROFILE_TOKENS.iter().any(|(p, names)| *p == profile.name && names.contains(&"FLOAT"));
+            assert_eq!(lexes_floats, profile.floats == Floats::Repr, "{}", profile.name);
         }
     }
 }

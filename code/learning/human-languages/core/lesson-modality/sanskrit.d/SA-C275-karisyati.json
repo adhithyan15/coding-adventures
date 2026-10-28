@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C275-karisyati",
+    "language": "sanskrit",
+    "chapter": 275,
+    "sequence": 16200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9f50ec0d23e6c3b"
+  },
+  "findings": []
+}
