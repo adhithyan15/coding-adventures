@@ -95,7 +95,8 @@ it("adds one bounded Punjabi A2 past-necessity prerequisite without mock credit"
       "subject-content/grammar",
   );
   expect(learnerCopy).not.toMatch(/ਪਈ|ਪਏ|ਪਈਆਂ|ਪੈਂਦਾ|ਪਵੇਗਾ/u);
-  expect(learnerCopy).not.toMatch(/literal.*fall|literal.*lie|full agreement paradigm/is);
+  expect(learnerCopy).toMatch(/not.*full agreement paradigm/is);
+  expect(learnerCopy).not.toMatch(/means? .*fall|means? .*lie/is);
   expect(learnerCopy).toMatch(/thirty-first prerequisite tranche|does not unblock.*mock 1/is);
   expect(learnerCopy).toMatch(/not.*A2 mock|not A2 readiness/is);
 
