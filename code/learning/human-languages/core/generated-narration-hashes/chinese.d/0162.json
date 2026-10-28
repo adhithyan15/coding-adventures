@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:c399de34897a84a4",
+  "lessonIds": [
+    "ZH-C162-yiban",
+    "ZH-C162-zongshi",
+    "ZH-C162-jingchang",
+    "ZH-C162-ouer",
+    "ZH-C162-tongchang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch162.txt",
+  "json": "chinese/narration/ch162.json",
+  "textHash": "fnv1a64:c097e79e86c0ccf1",
+  "jsonHash": "fnv1a64:ad3f0780f9f87879",
+  "findings": []
+}

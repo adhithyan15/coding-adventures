@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:2168a691a718d6b2",
+  "lessonIds": [
+    "ZH-C275-daoqian",
+    "ZH-C275-yuanliang",
+    "ZH-C275-daying",
+    "ZH-C275-jieshou",
+    "ZH-C275-suibian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch275.txt",
+  "json": "chinese/narration/ch275.json",
+  "textHash": "fnv1a64:6444d818c57a6fec",
+  "jsonHash": "fnv1a64:6f9a421ab4d3beb8",
+  "findings": []
+}

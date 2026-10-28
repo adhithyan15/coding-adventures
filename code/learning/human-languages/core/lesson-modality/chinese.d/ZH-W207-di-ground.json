@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W207-di-ground",
+    "language": "chinese",
+    "chapter": 207,
+    "sequence": 15985,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:559c1f84060906b3",
+    "detachableSegments": [
+      "Script — the earth piece, then 也"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

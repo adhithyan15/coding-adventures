@@ -43,8 +43,17 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* `__fastfail` (see lispy_not_a_pair) lives in <intrin.h> on MSVC. */
+#if defined(_MSC_VER)
+#include <intrin.h>
+#ifndef FAST_FAIL_FATAL_APP_EXIT
+#define FAST_FAIL_FATAL_APP_EXIT 7 /* winnt.h's value; avoids <windows.h>. */
+#endif
+#endif
 
 /* TWIG-GC (twig_gc.c) — used by __dyn_pair_new to allocate cons cells on
  * the managed heap instead of leaking via calloc. */
@@ -157,16 +166,147 @@ uint64_t __dyn_pair_new(uint64_t car, uint64_t cdr) {
     return ((uint64_t)(uintptr_t)cell) | LISPY_TAG_HEAP;
 }
 
-/* Recover the cell pointer by clearing the tag bits, then read the field.
- * Reading car/cdr of a non-pair is undefined (V1 has no type checking — the
- * frontend is responsible for only calling car/cdr on pairs), matching the
- * permissive contract of the rest of the runtime. */
+/* ── Reading a pair, and refusing to read a non-pair ────────────────────
+ *
+ * Recover the cell pointer by clearing the tag bits, then read the field —
+ * but only after checking that the word *is* a pair.
+ *
+ * Why the check is here and not "the frontend's job": the word arrives from
+ * a compiled program, and a dynamically typed program can hand `car` any
+ * value at all.  Twig's `(car 1000000)` is perfectly legal source; it lowers
+ * to `dyn_pair_first(8000000)` (the boxed integer, `n << 3`).  Without a
+ * check this function would clear the low bits (they are already 0) and
+ * read the 8 bytes at address 8000000 — an arbitrary memory read steered by
+ * program data.  `(car #t)` would read address 0b101 & ~0b111 = 0.  None of
+ * those words point at a cons cell.
+ *
+ * The test is the same one `__dyn_is_pair` makes — the low three bits equal
+ * the heap tag 0b111 — so it costs one AND and one compare:
+ *
+ *   | word passed          | tag   | what happens                         |
+ *   |----------------------|-------|--------------------------------------|
+ *   | a pair (ptr | 0b111) | 0b111 | read cell[0] / cell[1]               |
+ *   | an integer (n << 3)  | 0b000 | fail closed, no memory read          |
+ *   | nil (1)              | 0b001 | fail closed, no memory read          |
+ *   | a symbol             | 0b010 | fail closed, no memory read          |
+ *   | #f (3) / #t (5)      | 0b011 / 0b101 | fail closed, no memory read  |
+ *
+ * What "fail closed" means is copied from the other implementations of the
+ * same ABI, so every backend agrees on what a program observes:
+ *
+ *   - the VM (`twig-vm`'s `field_load`, `dynval-runtime`'s `car` builtin)
+ *     returns a `TypeError` ("… is not a cons cell") and the run fails;
+ *   - `dynval-runtime`'s own `extern "C" dyn_pair_first` panics with
+ *     "dyn_pair_first: argument with tag 0 (int) is not a pair" — the same
+ *     words this file prints.
+ *
+ * So the C runtime stops the program too, never returning a made-up value
+ * (returning nil would let `(car 5)` quietly exit 0 here while the VM
+ * fails).  It follows the order `__twig_trap` (twig_runtime.c) uses for a
+ * LANG83 trap — flush stdout so the output written before the error reaches
+ * its reader, name the error on stderr, then `abort()` — but it is a local
+ * helper rather than a call to `__twig_trap`, for two reasons: a type error
+ * is not one of the closed LANG83 trap kinds (`Trap.Bounds`, …), and this
+ * file is linked on its own by some harnesses (`lang-aot`'s McCarthy
+ * `conformance` LLVM runner links `dynval_runtime.c` without
+ * `twig_runtime.c`), so it may not depend on a symbol defined there.
+ *
+ * What the tag check does *not* prove: a heap-tagged word that is some
+ * other heap object (a backend that lays a closure out as a tag-0b111
+ * block) still reads that object's first two words.  That is a type
+ * confusion inside a live, at-least-16-byte GC block, not a wild read; a
+ * full answer would ask the collector for the block's kind
+ * (`__gc_kind_of`), which walks the heap and is too slow for every `car`.
+ */
+/* ── What the refusal prints: the tag, never the word ───────────────────
+ *
+ * The message names the operation, the word's tag and that tag's kind —
+ * "dyn_pair_first: argument with tag 0 (int) is not a pair" — and never the
+ * word itself.  The words that reach here today are immediates (an integer, a
+ * symbol id), but stderr is the one channel a program's user always sees, and
+ * printing raw words there is a habit that leaks a heap address (an ASLR
+ * defeat) the day a heap-tagged non-pair is refused too.  The tag is all a
+ * reader needs to tell "you passed an integer" from "you passed #f".
+ *
+ *   | tag   | kind name   |      | tag   | kind name                  |
+ *   |-------|-------------|      |-------|----------------------------|
+ *   | 0b000 | int         |      | 0b100 | unused tag                 |
+ *   | 0b001 | nil         |      | 0b101 | #t                         |
+ *   | 0b010 | symbol      |      | 0b110 | unused tag                 |
+ *   | 0b011 | #f          |      | 0b111 | heap object (never refused |
+ *   |       |             |      |       | here: the check passes it) |
+ */
+static const char *lispy_tag_kind(uint64_t tag) {
+    switch (tag) {
+    case LISPY_TAG_INT:    return "int";
+    case LISPY_TAG_NIL:    return "nil";
+    case LISPY_TAG_SYMBOL: return "symbol";
+    case LISPY_TAG_FALSE:  return "#f";
+    case LISPY_TAG_TRUE:   return "#t";
+    case LISPY_TAG_HEAP:   return "heap object";
+    default:               return "unused tag";
+    }
+}
+
+/* ── Stopping even when `abort` has been replaced ───────────────────────
+ *
+ * `abort()` is a symbol the linker resolves, and on a backend that exports a
+ * program's own functions (LLVM before #18416) a program that defines
+ * `(define (abort) 0)` *replaces* libc's: the runtime's `abort()` then calls
+ * the program's function, which returns.  So `abort()` must not be the last
+ * line of defence:
+ *
+ *   1. The call goes through a `volatile` function pointer.  The C library
+ *      declares `abort` `noreturn`, so a direct `abort(); __builtin_trap();`
+ *      lets the compiler treat everything after the call as unreachable and
+ *      delete the trap — exactly the code that matters when `abort` returns.
+ *      Loading the callee from a volatile object hides that promise.
+ *   2. If the call comes back anyway, a trap instruction the program cannot
+ *      redefine ends the process: `__builtin_trap()` (`ud2` on x86-64, `brk`
+ *      on AArch64 — SIGILL / SIGTRAP), or on MSVC `__fastfail`, which raises
+ *      a non-continuable exception straight to the kernel and skips every
+ *      in-process handler.
+ *
+ * The usual path is unchanged: libc's `abort()` raises SIGABRT and never
+ * returns, so step 2's trap only ever runs when something replaced it.
+ */
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((noreturn))
+#elif defined(_MSC_VER)
+__declspec(noreturn)
+#endif
+static void lispy_not_a_pair(const char *op, uint64_t word) {
+    uint64_t tag = word & LISPY_TAG_BITS;
+    void (*volatile stop)(void) = abort;
+    fflush(stdout);
+    fprintf(stderr, "%s: argument with tag %u (%s) is not a pair\n", op,
+            (unsigned)tag, lispy_tag_kind(tag));
+    fflush(stderr);
+    stop();
+#if defined(_MSC_VER)
+    __fastfail(FAST_FAIL_FATAL_APP_EXIT);
+#elif defined(__GNUC__) || defined(__clang__)
+    __builtin_trap();
+#else
+    for (;;) {
+        /* No trap intrinsic: spin rather than return into the caller, which
+         * would read through the non-pair word. */
+    }
+#endif
+}
+
 uint64_t __dyn_pair_first(uint64_t pair) {
+    if ((pair & LISPY_TAG_BITS) != LISPY_TAG_HEAP) {
+        lispy_not_a_pair("dyn_pair_first", pair);
+    }
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[0];
 }
 
 uint64_t __dyn_pair_rest(uint64_t pair) {
+    if ((pair & LISPY_TAG_BITS) != LISPY_TAG_HEAP) {
+        lispy_not_a_pair("dyn_pair_rest", pair);
+    }
     uint64_t *cell = (uint64_t *)(uintptr_t)(pair & ~LISPY_TAG_BITS);
     return cell[1];
 }

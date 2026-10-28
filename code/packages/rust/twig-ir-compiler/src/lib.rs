@@ -23,7 +23,7 @@
 //!     │    2. TW05-B gate    — only for (typed lenient|strict) modules
 //!     │    3. lower          — walk the CST through borrowed views,
 //!     │                        after refusing reserved names
-//!     │                        (`__lisp_*`, `__dyn_*`; see RESERVED_PREFIXES)
+//!     │                        (every `__` name; see RESERVED_PREFIXES)
 //! IIRModule  (functions: top-level fns + anonymous lambdas + main)
 //!     │
 //!     ▼  vm-core / jit-core
@@ -135,7 +135,7 @@ mod free_vars;
 mod reserved_names;
 
 pub use check_cst::check_cst;
-pub use reserved_names::{reserved_prefix, RESERVED_PREFIXES};
+pub use reserved_names::{reserved_prefix, RESERVED_NAMESPACE, RESERVED_PREFIXES};
 pub use compiler::Compiler;
 pub use errors::TwigCompileError;
 
@@ -1633,7 +1633,7 @@ mod tests {
 
     /// Binding registers have one static writer; parameters have none.
     fn assert_binding_registers_written_once(src: &str) {
-        const JOIN_TEMPS: [&str; 4] = ["_ifv", "_and", "_or", "_match_result"];
+        const JOIN_TEMP_SUFFIXES: [&str; 4] = ["_ifv", "_and", "_or", "_match_result"];
         for f in module(src).functions {
             let mut count: HashMap<&str, usize> = HashMap::new();
             for (p, _) in &f.params {
@@ -1645,8 +1645,10 @@ mod tests {
                 }
             }
             for (reg, n) in count {
+                let is_join_temp = reg.starts_with("__t")
+                    && JOIN_TEMP_SUFFIXES.iter().any(|suffix| reg.ends_with(suffix));
                 assert!(
-                    n == 1 || JOIN_TEMPS.iter().any(|t| reg.starts_with(t)),
+                    n == 1 || is_join_temp,
                     "{}: register {reg} has {n} writers\nprogram: {src:?}\n{:#?}",
                     f.name,
                     f.instructions
@@ -1772,13 +1774,13 @@ mod tests {
     }
 
     #[test]
-    fn rebinding_names_cannot_collide_with_user_names() {
-        // The user binds `__r1_x` first, so the rebinding of `x` must pick
-        // another name; and a user local spelled like a temporary must not
-        // be overwritten by one.
+    fn generated_register_names_cannot_collide_with_user_names() {
+        // Binding registers use the reserved `__r` namespace and temporaries
+        // use reserved `__t` names. Similar single-underscore user names
+        // therefore remain distinct from both.
         for src in [
-            "(let ((__r1_x 7)) (let ((x 1)) (let ((x 2)) (+ x __r1_x))))",
-            "(let ((x 1)) (let ((x 2)) (let ((__r1_x 7)) (+ x __r1_x))))",
+            "(let ((_r1_x 7)) (let ((x 1)) (let ((x 2)) (+ x _r1_x))))",
+            "(let ((x 1)) (let ((x 2)) (let ((_r1_x 7)) (+ x _r1_x))))",
             "(let ((_n1 \"s\")) (+ 1 (string-length _n1)))",
             "(define (f _r1) (+ (g) (string-length _r1))) (define (g) 1) (f \"ab\")",
         ] {

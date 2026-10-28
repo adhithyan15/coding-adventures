@@ -593,9 +593,20 @@ export function makeController(engine: any, init: ControllerInit = {}) {
     const notesMap = (ws.projects?.[activeId]?.notes ?? {}) as Record<string, any>;
     const entries = Object.values(notesMap) as any[];
     entries.sort((a, b) => String(a.title ?? "").localeCompare(String(b.title ?? "")));
+    // Rows are the toolkit RecordList's [key, heading, title, subtitle,
+    // meta, badge] (Notes 0.3.0, task-app-notes-ui-v1.md v1.3), the same
+    // rows task-mosaic-app builds. Only the key and the title are filled:
+    // RecordList leaves an empty field out, so a row stays one line.
     return {
       ids: entries.map((n) => n.id as string),
-      rows: entries.map((n) => [n.id as string, String(n.title ?? "").trim() || "Untitled"]),
+      rows: entries.map((n) => [
+        n.id as string,
+        "",
+        String(n.title ?? "").trim() || "Untitled",
+        "",
+        "",
+        "",
+      ]),
     };
   };
 
@@ -1180,6 +1191,11 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         noteBodyValue: noteBodyDraft,
         noteTaskValue: noteTaskDraft,
         noteError,
+        // Delete only for a note the engine has saved. A new note's id is
+        // minted on "+ New note", before the engine hears of it, so an open
+        // id alone is not enough: "" makes DraftEditor draw no Delete.
+        // Same rule as task-mosaic-app.
+        noteDeleteLabel: notes.ids.includes(selectedNoteId) ? "Delete" : "",
         // Checklists (C3b): the same slots task-mosaic-app fills natively.
         checklistsMode: view === "checklists" ? "checklists" : "",
         checklistsTitle: "Checklists",

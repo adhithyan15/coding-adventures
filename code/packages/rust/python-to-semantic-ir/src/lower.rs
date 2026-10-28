@@ -83,7 +83,10 @@
 //! - **calls** `f(args)` — `f` a known function name → [`Expr::DirectCall`];
 //!   `f` a builtin (`print`/`len`/`range`) → [`Expr::BuiltinCall`]; `f`
 //!   a local/param/captured value (a closure handle) → an
-//!   [`Expr::IndirectCall`] through that `VarRef`.
+//!   [`Expr::IndirectCall`] through that `VarRef`.  A known function that
+//!   *has captures* is called through its re-threaded closure instead:
+//!   `IndirectCall(MakeClosure(f, captures), args)`.  A `DirectCall`
+//!   passes only the arguments, never the captures.
 //!
 //! The manifest declares `Closures` when any `MakeClosure` / capture /
 //! `IndirectCall` is emitted, and `MutualRecursion` when two top-level
@@ -168,6 +171,18 @@
 //! `MakeClosure` site).  Names that resolve to a global / top-level
 //! function / builtin need no capture — they are reachable directly
 //! from the synthesised body.  This mirrors the Twig and Ruby frontends.
+//!
+//! One more rule: a body that *names* a capturing function `g` (calls
+//! it, or uses it as a value) builds `g`'s closure, so it must also
+//! capture `g`'s captures to pass them on.
+//!
+//! The capture list is decided **before** the body is lowered, and
+//! recorded where every closure-building site can read it.  This matters
+//! because the body itself may name the function, or a sibling defined
+//! later.  [`Lowerer::plan_captures`] has the algorithm (a fixpoint over
+//! mutually-referencing siblings).  Recording the list only after the
+//! body was lowered gave a self-reference a closure with zero captures
+//! (#18468).
 //!
 //! ## Still deferred (later milestones)
 //!
@@ -282,6 +297,37 @@ impl std::error::Error for PythonLowerError {}
 /// original path).
 const FILE: &str = "<python>";
 
+/// Most captures one function may carry: a deliberate budget.
+///
+/// Each capture is a slot in every closure built for the function, and (on
+/// the C backend) a leading C parameter.  [`Lowerer::plan_captures`]
+/// spreads captures along chains of functions that name each other.
+/// Without a cap, a chain of M functions naming each other, the last
+/// reading V outer names, emits M·V capture slots: quadratic output from
+/// linear input.  The cap also bounds the planner's work to
+/// (edges × `MAX_CAPTURES`).
+///
+/// Note it applies to *every* function.  Top-level statements are `main`'s
+/// body, so a top-level `def` that reads more than 256 module-level
+/// variables is refused even if it is only ever used as a value.
+///
+/// There is deliberately no cap on how many functions one planning group
+/// holds.  A group of capture-free functions (a long call chain, a
+/// dispatcher calling hundreds of helpers) costs only its edges, and a
+/// group cap refused such ordinary programs.
+const MAX_CAPTURES: usize = 256;
+
+/// The [`FunctionCtx::owner`] / [`DefFacts::parent`] key of the module
+/// body (`main`).  A top-level `def`'s parent is this key.  It cannot
+/// collide with a real `def` name because `<` is not an identifier
+/// character.
+const MODULE_OWNER: &str = "<module>";
+
+/// The owner key of a context that must never plan a sibling's captures
+/// (a method body, a method's default values).  No `def` records it as
+/// its parent.
+const DETACHED_OWNER: &str = "<detached>";
+
 /// Lower a parsed Python CST into a SIR module (M4: literals, variable
 /// references, assignment, operators, control flow, functions, calls,
 /// and closures).
@@ -335,6 +381,54 @@ enum SuffixKind {
     Attr(String),
 }
 
+/// Facts about one `def`, gathered by the first pass
+/// ([`Lowerer::collect_function_names`]) **before any body is lowered**.
+///
+/// ## Why the first pass needs them
+///
+/// A closure's capture list must be known *wherever its name is used*,
+/// and a name can be used before its `def` has been lowered:
+///
+/// ```python
+/// def outer(n):
+///     def ev(x):            # ev's body is lowered first ...
+///         if x == 0:
+///             return n
+///         else:
+///             return od(x - 1)   # ... and already needs od's captures
+///     def od(x):
+///         if x == 0:
+///             return 0 - n
+///         else:
+///             return ev(x - 1)
+///     return ev(4)
+/// ```
+///
+/// To build `od`'s closure inside `ev`, the lowerer needs to know what
+/// `od` captures, and `ev` must capture it too so it can pass it on.
+/// Free-name analysis reads only the CST, so pass 1 records each `def`'s
+/// free names up front.  [`Lowerer::plan_captures`] then works out a
+/// whole group of mutually-referencing siblings at once.
+struct DefFacts {
+    /// The owner key of the body this `def` is written directly inside:
+    /// the enclosing `def`'s name, or [`MODULE_OWNER`] at top level.
+    parent: String,
+    /// Free names of the `def`'s body: every bare name it (or a `def` /
+    /// `lambda` nested in it) reads that is not bound inside it.  The
+    /// order is first-seen and has no duplicates.
+    free: Vec<String>,
+    /// Names the body binds itself: its params, and every name it
+    /// assigns, `for`-binds or `def`s.  Such a name can never also be a
+    /// capture (see [`Lowerer::plan_captures`], rule 2).
+    bound: HashSet<String>,
+    /// The number of parameters.
+    arity: usize,
+    /// True when no parameter has a default value or is keyword-only.
+    /// Only such a `def` can be called through a closure handle with
+    /// its argument count checked here.
+    plain_params: bool,
+}
+
 /// Per-function name-resolution context (M4).
 ///
 /// `main` and every user / synthesised `def`/`lambda` get their own
@@ -354,6 +448,14 @@ struct FunctionCtx {
     params: HashSet<String>,
     captures: HashSet<String>,
     locals: Vec<String>,
+    /// The *owner* key of this context: the name of the `def` whose body
+    /// it lowers ([`MODULE_OWNER`] for `main`, a sentinel for a method
+    /// body or a throwaway default-value context).  It is compared with
+    /// [`DefFacts::parent`] to tell which not-yet-lowered `def`s are
+    /// **siblings** written directly in this same body — the only `def`s
+    /// whose captures may be planned from here (see
+    /// [`Lowerer::plan_captures`]).
+    owner: String,
     /// True only for a method body hoisted from a `class` statement's
     /// `def` (OOP surface).  A method's first parameter (`self`, by Python
     /// convention) is *not* added to `params` — it is not an ordinary
@@ -365,12 +467,14 @@ struct FunctionCtx {
 }
 
 impl FunctionCtx {
-    /// A context for a function with the given params and captures.
-    fn new(params: HashSet<String>, captures: HashSet<String>) -> Self {
+    /// A context for a function with the given params and captures,
+    /// owned by the function named `owner`.
+    fn new(params: HashSet<String>, captures: HashSet<String>, owner: &str) -> Self {
         Self {
             params,
             captures,
             locals: Vec::new(),
+            owner: owner.to_string(),
             in_method: false,
         }
     }
@@ -384,13 +488,23 @@ impl FunctionCtx {
             params,
             captures: HashSet::new(),
             locals: Vec::new(),
+            // No `def` records this sentinel as its parent, so nothing is
+            // ever planned from inside a method body (see `DefFacts`).
+            owner: DETACHED_OWNER.to_string(),
             in_method: true,
         }
     }
 
     /// The top-level / `main` context: no params, no captures.
     fn top_level() -> Self {
-        Self::new(HashSet::new(), HashSet::new())
+        Self::new(HashSet::new(), HashSet::new(), MODULE_OWNER)
+    }
+
+    /// A throwaway context that sees only module-level names, and from
+    /// which no sibling `def` is ever planned (its owner matches no
+    /// `def`'s parent).  Used to lower a method's default values.
+    fn detached() -> Self {
+        Self::new(HashSet::new(), HashSet::new(), DETACHED_OWNER)
     }
 
     /// Is `name` an enclosing-scope value (local / param / capture) of
@@ -425,14 +539,30 @@ struct Lowerer {
     functions: Vec<Function>,
     /// Counter for `__lambda_<N>` gensym names.
     lambda_counter: usize,
-    /// For each *lifted* function (nested `def` / lambda) that carries
-    /// captures, its ordered capture-name list.  When a **bare reference**
-    /// to such a function name appears (constructing a closure handle
-    /// without calling it), the `MakeClosure` must re-thread those
-    /// captures from the *currently visible* enclosing values — this map
-    /// records what to thread.  A function with no captures is absent
-    /// (its bare reference is a zero-capture `MakeClosure`).
+    /// For each named function whose capture list is already decided,
+    /// that ordered capture-name list (empty for a function that
+    /// captures nothing).  When a **bare reference** to such a function
+    /// name appears (constructing a closure handle without calling it),
+    /// or a **call** to one that captures something, the `MakeClosure`
+    /// must re-thread those captures from the *currently visible*
+    /// enclosing values — this map records what to thread.
+    ///
+    /// An entry is written **before** the function's body is lowered
+    /// (by [`Self::lower_callable`]), or even before its `def` is
+    /// reached, when an earlier sibling refers to it (by
+    /// [`Self::plan_captures`]).  So a body that names its own function,
+    /// or a sibling defined later, sees the full list.  Writing the
+    /// entry only after the body was lowered let a self-reference build a
+    /// zero-capture closure for a function that declares captures (#18468).
     fn_captures: std::collections::HashMap<String, Vec<String>>,
+    /// Pass-1 facts about every `def`, keyed by name (see [`DefFacts`]).
+    def_facts: std::collections::HashMap<String, DefFacts>,
+    /// Every function name already taken in the module's single
+    /// function namespace: a `def` is added when its lowering *starts*
+    /// (so a nested `def` reusing its enclosing `def`'s name is caught),
+    /// and every other pushed function (lambda, hoisted method) when it
+    /// is pushed.
+    claimed_names: HashSet<String>,
     /// Call graph among *top-level* functions: `caller → callees` by
     /// name.  Used after lowering to detect [`Feature::MutualRecursion`]
     /// (a cycle of length ≥ 2 — two functions that call each other).
@@ -449,6 +579,8 @@ impl Lowerer {
             functions: Vec::new(),
             lambda_counter: 0,
             fn_captures: std::collections::HashMap::new(),
+            def_facts: std::collections::HashMap::new(),
+            claimed_names: HashSet::new(),
             call_graph: Vec::new(),
         }
     }
@@ -497,7 +629,7 @@ impl Lowerer {
         // ── Pass 1: collect all function names (top-level + nested). ──
         for child in &file.children {
             if let ASTNodeOrToken::Node(stmt) = child {
-                self.collect_function_names(stmt, 0)?;
+                self.collect_function_names(stmt, MODULE_OWNER, 0)?;
             }
         }
 
@@ -531,6 +663,10 @@ impl Lowerer {
         // validator does not care about ordering.
         let mut functions = std::mem::take(&mut self.functions);
         functions.push(main);
+
+        // The closure invariant, checked over the finished module.  See
+        // `check_closure_invariant`.
+        check_closure_invariant(&functions)?;
 
         // Detect mutual recursion among top-level functions.
         if self.has_mutual_recursion() {
@@ -603,9 +739,14 @@ impl Lowerer {
     /// nested `def`s (or compounds) would otherwise overflow the native
     /// (uncatchable) stack here.  Past [`MAX_BLOCK_DEPTH`] we return a
     /// clean positioned `PythonLowerError`, mirroring the lowering guard.
+    ///
+    /// `parent` is the owner key of the body `stmt` sits in (the
+    /// enclosing `def`'s name, or [`MODULE_OWNER`]).  Each `def` found
+    /// also gets its [`DefFacts`] recorded.
     fn collect_function_names(
         &mut self,
         stmt: &GrammarASTNode,
+        parent: &str,
         depth: usize,
     ) -> Result<(), PythonLowerError> {
         if depth > MAX_BLOCK_DEPTH {
@@ -617,13 +758,31 @@ impl Lowerer {
         // Only `statement` nodes carry defs; recurse structurally.
         if let Some(def) = self.as_def_stmt(stmt) {
             let name = self.def_name(def)?;
-            self.function_names.insert(name);
-            // Descend into the def's suite for nested defs.
+            // Every `def`, nested or not, is lifted into one module-level
+            // namespace, and `DefFacts` / `fn_captures` are keyed by name.
+            // A second `def` of the same name would overwrite the first
+            // one's facts, so refuse it here, before anything relies on
+            // them.  (The SIR validator rejects duplicate function names
+            // too.)
+            if !self.function_names.insert(name.clone()) {
+                return Err(self.err_at(
+                    def,
+                    format!(
+                        "unsupported: a second function named `{name}` (every `def`, \
+                         nested or not, shares one module-level namespace) (deferred)"
+                    ),
+                ));
+            }
+            if let Some(facts) = self.def_facts_of(def, parent) {
+                self.def_facts.insert(name.clone(), facts);
+            }
+            // Descend into the def's suite for nested defs, whose parent
+            // is this def.
             if let Some(suite) = self.first_child_named(def, "suite") {
                 for child in &suite.children {
                     if let ASTNodeOrToken::Node(inner) = child {
                         if inner.rule_name == "statement" {
-                            self.collect_function_names(inner, depth + 1)?;
+                            self.collect_function_names(inner, &name, depth + 1)?;
                         }
                     }
                 }
@@ -647,13 +806,48 @@ impl Lowerer {
                 for child in &suite.children {
                     if let ASTNodeOrToken::Node(inner) = child {
                         if inner.rule_name == "statement" {
-                            self.collect_function_names(inner, depth + 1)?;
+                            // An `if`/loop body is not a new scope in
+                            // Python: a `def` under it has the same parent.
+                            self.collect_function_names(inner, parent, depth + 1)?;
                         }
                     }
                 }
             }
         }
         Ok(())
+    }
+
+    /// Gather the [`DefFacts`] of one `def_stmt` written directly in the
+    /// body owned by `parent`.
+    ///
+    /// The free-name scan here is the same one [`Self::lower_callable`]
+    /// runs when it lowers the `def`: parameters plus every name the body
+    /// assigns are bound, and everything else the body reads is free.
+    ///
+    /// Any error (an unsupported parameter form, a too-deep expression) is
+    /// swallowed and yields `None`: the lowering pass reaches the same
+    /// `def` later and reports that error at its usual point, so pass 1
+    /// does not change which error a bad program reports.
+    fn def_facts_of(&self, def: &GrammarASTNode, parent: &str) -> Option<DefFacts> {
+        let specs = self.def_param_specs(def).ok()?;
+        let suite = self.first_child_named(def, "suite")?;
+        let arity = specs.len();
+        let plain_params = specs
+            .iter()
+            .all(|(_, kind, default)| *kind == ParamKind::Required && default.is_none());
+        let mut bound: HashSet<String> = specs.into_iter().map(|(n, _, _)| n).collect();
+        self.collect_suite_bound_names(suite, &mut bound).ok()?;
+        let mut free = Vec::new();
+        let mut seen = HashSet::new();
+        self.collect_free_names(suite, &bound, &mut free, &mut seen, 0)
+            .ok()?;
+        Some(DefFacts {
+            parent: parent.to_string(),
+            free,
+            bound,
+            arity,
+            plain_params,
+        })
     }
 
     /// If `stmt` is a `statement` wrapping a `compound_stmt` wrapping a
@@ -1311,9 +1505,11 @@ impl Lowerer {
         // *written* inside, which for a method is the class body — itself
         // not an expression-evaluating scope a default could meaningfully
         // reference beyond enclosing module-level names already reachable
-        // from `top_level()`. This mirrors `lower_def`'s own def-time
-        // evaluation model one level up.
-        let mut default_ctx = FunctionCtx::top_level();
+        // from an empty context. This mirrors `lower_def`'s own def-time
+        // evaluation model one level up.  The context is `detached`, not
+        // `top_level`, so a lambda default never plans a top-level `def`'s
+        // captures from here, where `main`'s locals are not visible.
+        let mut default_ctx = FunctionCtx::detached();
         for (pname, kind, default_node) in specs_iter {
             let default = match default_node {
                 Some(node) => Some(self.lower_expr_in(node, &mut default_ctx, depth + 1)?),
@@ -1943,10 +2139,14 @@ impl Lowerer {
         let mut seen = HashSet::new();
         self.collect_free_names(body_expr, &bound, &mut free, &mut seen, 0)?;
 
-        let (captures, capture_values) = self.resolve_captures(&free, enclosing, &span)?;
+        // A lambda has no name, so nothing can refer to it before it is
+        // built; its plan only has to cover the named functions it uses.
+        let captures = self.plan_captures(None, &free, &bound, enclosing, &span)?;
+        let capture_values = self.capture_values(&captures, enclosing, &span)?;
 
         // Lower the body in the synthesised function's own context.
-        let mut inner = FunctionCtx::new(bound.clone(), captures.iter().cloned().collect());
+        let mut inner =
+            FunctionCtx::new(bound.clone(), captures.iter().cloned().collect(), &fn_name);
         let value = self.lower_expr_in(body_expr, &mut inner, depth + 1)?;
         let body = Block {
             stmts: vec![],
@@ -2028,12 +2228,65 @@ impl Lowerer {
         let mut seen = HashSet::new();
         self.collect_free_names(suite, &bound, &mut free, &mut seen, 0)?;
 
-        let (captures, capture_values) = self.resolve_captures(&free, enclosing, &span)?;
+        // Every `def` is lifted into one module-level namespace, and
+        // `fn_captures` is keyed by name.  A second `def` with a name
+        // already taken (two functions that each nest an `inner`, or a
+        // nested `def f` inside `def f`) would collide there: its closures
+        // would get the other one's capture list.  The SIR validator also
+        // rejects duplicate function names, so refuse it here, where the
+        // position is known.  The name is claimed *before* the body is
+        // lowered, so a nested `def` reusing it is caught too.
+        if !self.claimed_names.insert(name.to_string()) {
+            return Err(PythonLowerError {
+                message: format!(
+                    "unsupported: a second function named `{name}` (every `def`, \
+                     nested or not, shares one module-level namespace) (deferred)"
+                ),
+                line: span.start_line,
+                column: span.start_col,
+            });
+        }
+
+        // ── Decide the capture list BEFORE lowering the body. ──
+        //
+        // The body may name this very function: as a value (`h = go`) or
+        // in a recursive call (`go(x - 1)`).  Either one builds a closure
+        // for `go` that threads `go`'s captures, so the list has to be in
+        // `fn_captures` before the first statement of the body is
+        // lowered.  (Recording it only after the body, as an earlier
+        // version did, gave such a reference zero captures: a NULL
+        // `caps[0]` read in the C backend, #18468.)
+        let mut captures = self.plan_captures(Some(name), &free, &bound, enclosing, &span)?;
+        if let Some(planned) = self.fn_captures.get(name) {
+            // An earlier sibling already used this function and fixed its
+            // capture list then (see `plan_captures`).  Closures built
+            // there carry that list, so it is the one this function must
+            // declare.  It can only fall short when this `def` reads a
+            // name bound *between* that sibling and here: the earlier
+            // sibling could not have threaded it.
+            let planned_set: HashSet<&String> = planned.iter().collect();
+            if let Some(missing) = captures.iter().find(|c| !planned_set.contains(c)) {
+                return Err(PythonLowerError {
+                    message: format!(
+                        "unsupported: `{name}` is used by a function defined before it, \
+                         but captures `{missing}`, which is bound only after that \
+                         function (deferred)"
+                    ),
+                    line: span.start_line,
+                    column: span.start_col,
+                });
+            }
+            captures = planned.clone();
+        } else {
+            self.fn_captures.insert(name.to_string(), captures.clone());
+        }
+        let capture_values = self.capture_values(&captures, enclosing, &span)?;
 
         // ── Lower the body in the function's own context. ──
         let mut inner = FunctionCtx::new(
             params.iter().map(|(n, _, _)| n.clone()).collect(),
             captures.iter().cloned().collect(),
+            name,
         );
         let body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
 
@@ -2052,6 +2305,9 @@ impl Lowerer {
         body: Block,
         span: Span,
     ) {
+        // A lambda or hoisted method takes its name here; a `def` already
+        // claimed it in `lower_callable`, so the insert is a no-op then.
+        self.claimed_names.insert(name.to_string());
         // Any param with no annotation → DynamicTyping (Python has no
         // parameter type annotations in our subset).
         if !params.is_empty() {
@@ -2059,12 +2315,11 @@ impl Lowerer {
         }
         // A function that carries captures is a closure body — the
         // validator declares `Closures` for it, so we must too.
+        //
+        // (The capture list itself was put in `fn_captures` *before* the
+        // body was lowered — see `lower_callable` — not here.)
         if !captures.is_empty() {
             self.observed.add(Feature::Closures);
-            // Record the capture list so a *bare reference* to this
-            // function name re-threads the captures (a nested closure
-            // returned/passed by name).
-            self.fn_captures.insert(name.to_string(), captures.to_vec());
         }
         let f = Function {
             name: name.to_string(),
@@ -2133,41 +2388,286 @@ impl Lowerer {
         }
     }
 
-    /// Resolve the free names of a closure body against the `enclosing`
-    /// context, partitioning them into *captures* (names that are an
-    /// enclosing local/param/capture — these must be threaded through the
-    /// closure handle) and non-captures (globals / top-level functions /
-    /// builtins, reachable directly from the synthesised body).  Returns
-    /// `(capture_names, capture_value_exprs)` in deterministic
-    /// (alphabetical) order.
-    fn resolve_captures(
+    /// Decide the capture list of a closure body, given its free names
+    /// and the `enclosing` context it is defined in.
+    ///
+    /// `name` is the function's own name (`None` for a lambda); `free` is
+    /// the body's free names (see [`Self::collect_free_names`]).
+    ///
+    /// ## The rule
+    ///
+    /// A closure for `f` captures:
+    ///
+    /// 1. every free name of `f` that is a local, param or capture of
+    ///    the enclosing function (a value only reachable through the
+    ///    closure); and
+    /// 2. the captures of every capturing function `g` that `f` names.
+    ///    Naming `g` (calling it, or using it as a value) builds a
+    ///    closure for `g` *inside* `f`, and that needs `g`'s captured
+    ///    values, so `f` must carry them in.
+    ///
+    /// Names that are globals, builtins or top-level functions with no
+    /// captures need nothing: the body reaches them directly.
+    ///
+    /// Rule 2 is recursive: `f` names `g`, `g` names `h`, ...  And it can
+    /// loop: `ev` names `od` and `od` names `ev`, or `go` names itself.
+    /// So we gather the whole **group**: `f` plus every not-yet-lowered
+    /// `def` written directly in the same body that the group names,
+    /// transitively.  Each member starts from rule 1 (plus rule 2 for
+    /// functions already decided).  Then rule 2 is applied within the
+    /// group until no set grows: a *fixpoint*.  A worklist carries only
+    /// the names a member has just gained, so each name crosses each
+    /// "names" edge once.  The sets only grow, and are capped at
+    /// [`MAX_CAPTURES`], so the work is bounded by
+    /// (edges × [`MAX_CAPTURES`]): it ends quickly, or fails with a
+    /// positioned budget error.  Gathering is cheap too: a `def` joins at
+    /// most one group, because once planned it is decided.
+    ///
+    /// Rule 2 must not hand a member a name it binds itself.  If `f` has
+    /// its own `n` and calls `g`, which captures the enclosing `n`, then
+    /// inside `f` the name `n` means `f`'s own variable, and `f` cannot
+    /// pass `g` the right one.  That is refused (deferred).  `bound` is
+    /// the set of names `f` binds (its params and body assignments).
+    ///
+    /// ```text
+    ///   def outer(n):               rule 1        after rule 2
+    ///       def ev(x): ... od ...   ev: {n}       ev: {n}
+    ///       def od(x): ... ev ...   od: {n}       od: {n}
+    ///       def go(x): ... go ...   go: {n}       go: {n}   (self: no-op)
+    /// ```
+    ///
+    /// Every other group member's list is written to `fn_captures` now
+    /// (it is *planned*): `f`'s body is about to build closures for them.
+    /// When a planned `def` is reached later, [`Self::lower_callable`]
+    /// adopts the planned list.  `f`'s own list is returned for the
+    /// caller to record.
+    ///
+    /// A member defined later is planned against the context *here*
+    /// (the earliest point its closure is built).  That is the only
+    /// context whose values `f` can thread.
+    ///
+    /// Each list is sorted alphabetically, so the order is deterministic.
+    fn plan_captures(
         &mut self,
+        name: Option<&str>,
         free: &[String],
-        enclosing: &mut FunctionCtx,
+        bound: &HashSet<String>,
+        enclosing: &FunctionCtx,
         span: &Span,
-    ) -> Result<(Vec<String>, Vec<Expr>), PythonLowerError> {
-        let mut names: Vec<String> = free
-            .iter()
-            .filter(|n| enclosing.is_enclosing_value(n))
-            .cloned()
-            .collect();
-        names.sort();
-        names.dedup();
+    ) -> Result<Vec<String>, PythonLowerError> {
+        use std::collections::{BTreeSet, HashMap, VecDeque};
 
-        let mut values = Vec::with_capacity(names.len());
-        for n in &names {
-            // The capture *value* is the enclosing reference, resolved in
-            // the enclosing context.
-            values.push(self.resolve_var_in(enclosing, n, span.clone())?);
+        let err = |message: String| PythonLowerError {
+            message,
+            line: span.start_line,
+            column: span.start_col,
+        };
+
+        // A name refers to a *function* here unless an enclosing value of
+        // the same spelling shadows it — the same rule calls and bare
+        // references use (`resolve_var`, `lower_call_suffix`).
+        let names_function = |this: &Self, n: &str| {
+            this.function_names.contains(n) && !enclosing.is_enclosing_value(n)
+        };
+
+        // ── Gather the group. ──
+        // Member 0 is `f` itself.  `index` maps a member's name to its
+        // position, so membership is a hash lookup, not a scan.
+        struct Member {
+            name: Option<String>,
+            free: Vec<String>,
+            bound: HashSet<String>,
         }
-        Ok((names, values))
+        let mut members = vec![Member {
+            name: name.map(str::to_string),
+            free: free.to_vec(),
+            bound: bound.clone(),
+        }];
+        let mut index: HashMap<String, usize> = HashMap::new();
+        if let Some(n) = name {
+            index.insert(n.to_string(), 0);
+        }
+        let mut i = 0;
+        while i < members.len() {
+            for k in 0..members[i].free.len() {
+                let y = members[i].free[k].clone();
+                let y = &y;
+                // In the group already, or already decided (lowered or
+                // planned): rule 2 reads its list below.  Not re-planned.
+                if !names_function(self, y)
+                    || index.contains_key(y)
+                    || self.fn_captures.contains_key(y)
+                {
+                    continue;
+                }
+                // Only a sibling written directly in this same body can be
+                // planned from here.  Any other function either is already
+                // decided or captures nothing reachable from here.
+                let Some(facts) = self.def_facts.get(y) else {
+                    continue;
+                };
+                if facts.parent != enclosing.owner {
+                    continue;
+                }
+                let member = Member {
+                    name: Some(y.clone()),
+                    free: facts.free.clone(),
+                    bound: facts.bound.clone(),
+                };
+                index.insert(y.clone(), members.len());
+                members.push(member);
+            }
+            i += 1;
+        }
+
+        // `who` names a member in error messages.
+        let who = |m: &Member| m.name.clone().unwrap_or_else(|| "this lambda".to_string());
+        let too_many = |m: &Member, n: usize| {
+            err(format!(
+                "`{}` would capture {n} variables, more than the limit of {MAX_CAPTURES}",
+                who(m)
+            ))
+        };
+
+        // ── Rule 1, plus rule 2 from functions already decided. ──
+        // `edges[j]` lists the members that name member `j`: when `j`'s
+        // set grows, theirs must too.
+        let mut caps: Vec<BTreeSet<String>> = Vec::with_capacity(members.len());
+        let mut edges: Vec<Vec<usize>> = vec![Vec::new(); members.len()];
+        for (i, m) in members.iter().enumerate() {
+            let mut set: BTreeSet<String> = m
+                .free
+                .iter()
+                .filter(|n| enclosing.is_enclosing_value(n))
+                .cloned()
+                .collect();
+            for y in m.free.iter().filter(|y| names_function(self, y)) {
+                if let Some(&j) = index.get(y) {
+                    if j != i {
+                        edges[j].push(i);
+                    }
+                } else if let Some(decided) = self.fn_captures.get(y) {
+                    set.extend(decided.iter().cloned());
+                }
+            }
+            if set.len() > MAX_CAPTURES {
+                return Err(too_many(m, set.len()));
+            }
+            caps.push(set);
+        }
+
+        // ── Rule 2 within the group: propagate to a fixpoint. ──
+        // A worklist of *new* names only: each name enters a member's set
+        // at most once and then crosses each edge once, so the work is
+        // bounded by (edges × MAX_CAPTURES), not by repeated full passes.
+        let mut pending: Vec<Vec<String>> =
+            caps.iter().map(|c| c.iter().cloned().collect()).collect();
+        let mut queue: VecDeque<usize> = (0..members.len()).collect();
+        while let Some(j) = queue.pop_front() {
+            let delta = std::mem::take(&mut pending[j]);
+            if delta.is_empty() {
+                continue;
+            }
+            for &i in &edges[j] {
+                let mut grew = false;
+                for c in &delta {
+                    if caps[i].insert(c.clone()) {
+                        pending[i].push(c.clone());
+                        grew = true;
+                    }
+                }
+                if caps[i].len() > MAX_CAPTURES {
+                    return Err(too_many(&members[i], caps[i].len()));
+                }
+                if grew {
+                    queue.push_back(i);
+                }
+            }
+        }
+
+        // ── Check every list before recording any. ──
+        for (m, set) in members.iter().zip(&caps) {
+            for c in set {
+                // A capture must be a value here, or the `MakeClosure` for
+                // the member could not be built at this point.  Rule 1
+                // guarantees this; rule 2 can break it when a named
+                // function captures something this context cannot see.
+                if !enclosing.is_enclosing_value(c) {
+                    return Err(err(format!(
+                        "unsupported: `{}` needs `{c}` to build a closure it uses, \
+                         but `{c}` is not in scope where `{}` is defined (deferred)",
+                        who(m),
+                        who(m)
+                    )));
+                }
+                // Rule 1 never yields a name the member binds itself (such a
+                // name is not free).  Rule 2 can: `f` assigns its own `n` and
+                // calls `g`, which captures the *outer* `n`.  Inside `f` the
+                // name `n` means `f`'s local, so `f` could not hand `g` the
+                // outer one.
+                //
+                // Known limitation: this refuses even when `f` calls `g`
+                // *before* binding `n` (`r = g(); n = 1`), which is valid
+                // Python.  Accepting it needs `f` to hold the inherited
+                // capture and its own local under two SIR names (a rename),
+                // since a capture and a local of one name collide in several
+                // backends.
+                if m.bound.contains(c) {
+                    return Err(err(format!(
+                        "unsupported: `{}` binds its own `{c}`, but needs the \
+                         enclosing `{c}` to build a closure it uses (deferred)",
+                        who(m)
+                    )));
+                }
+            }
+        }
+
+        // Record the planned siblings (members 1..), return `f`'s list.
+        let mut lists = caps
+            .into_iter()
+            .map(|set| set.into_iter().collect::<Vec<_>>());
+        let own = lists.next().unwrap_or_default();
+        for (m, list) in members.iter().skip(1).zip(lists) {
+            if let Some(n) = &m.name {
+                self.fn_captures.insert(n.clone(), list);
+            }
+        }
+        Ok(own)
     }
 
+    /// The value of each capture in `names`, read in the `enclosing`
+    /// context where the closure is built.
+    fn capture_values(
+        &self,
+        names: &[String],
+        enclosing: &FunctionCtx,
+        span: &Span,
+    ) -> Result<Vec<Expr>, PythonLowerError> {
+        names
+            .iter()
+            .map(|n| self.resolve_var_in(enclosing, n, span.clone()))
+            .collect()
+    }
+
+    /// A fresh `__lambda_<N>` name for a lambda's synthesised function.
+    ///
+    /// The name is deliberately **not** added to `function_names`: Python
+    /// source cannot name a lambda, so `__lambda_0` written in source must
+    /// stay unresolved.  (It once resolved, and a bare reference built a
+    /// zero-capture closure for a lambda that declares captures.)  `N`
+    /// also skips any name a user `def` or class already uses, so the
+    /// synthesised function never collides with one.
     fn fresh_lambda_name(&mut self) -> String {
-        let name = format!("__lambda_{}", self.lambda_counter);
-        self.lambda_counter += 1;
-        self.function_names.insert(name.clone());
-        name
+        loop {
+            let name = format!("__lambda_{}", self.lambda_counter);
+            self.lambda_counter += 1;
+            let taken = self.function_names.contains(&name)
+                || self.class_names.contains(&name)
+                || self.claimed_names.contains(&name);
+            if !taken {
+                return name;
+            }
+        }
     }
 
     /// Collect every name *bound* (assigned) inside a suite into `bound`,
@@ -3040,8 +3540,10 @@ impl Lowerer {
     /// Lower a call `suffix` applied to a bare-name `callee` atom, with
     /// full name semantics: a builtin (`print`/`range`) → `BuiltinCall`;
     /// `len(x)` → the dedicated [`Expr::SeqLen`] node (SIR17 prefers it
-    /// over `BuiltinCall("len")`); a known function → `DirectCall`; a
-    /// local/param/capture value → `IndirectCall`.
+    /// over `BuiltinCall("len")`); a known function → `DirectCall` (or,
+    /// when it has captures, an `IndirectCall` through its closure — see
+    /// [`Self::lower_closure_call`]); a local/param/capture value →
+    /// `IndirectCall`.
     fn lower_call_suffix(
         &mut self,
         callee: &GrammarASTNode,
@@ -3151,6 +3653,20 @@ impl Lowerer {
         // only if it is *not* shadowed by an enclosing value of the same
         // name (a local/param/capture closure handle wins).
         if self.function_names.contains(&name) && !ctx.is_enclosing_value(&name) {
+            // A function that captures something cannot be called
+            // directly: every backend gives a closure body its captures
+            // as leading parameters, and a `DirectCall` passes only the
+            // arguments.  So build the closure (as a bare reference
+            // would) and call through it:
+            //
+            //   go(x - 1)   ⇒   IndirectCall(MakeClosure(go, [n ← n]), [x - 1])
+            //
+            // This is what makes a capturing nested `def` callable by
+            // name, recursively, or from a sibling.
+            let captures = self.fn_captures.get(&name).is_some_and(|c| !c.is_empty());
+            if captures {
+                return self.lower_closure_call(&name, args, ctx, span);
+            }
             return Ok(Expr::DirectCall {
                 fn_name: name,
                 args,
@@ -3161,6 +3677,67 @@ impl Lowerer {
         // Otherwise the name must be a value (closure handle) — resolve
         // it and emit an IndirectCall.
         let target = self.resolve_var_in(ctx, &name, span.clone())?;
+        self.observed.add(Feature::Closures);
+        Ok(Expr::IndirectCall {
+            target: Box::new(target),
+            args,
+            effects: EffectSet::PURE,
+            span: span.clone(),
+        })
+    }
+
+    /// Lower a call by name to a function that captures something: an
+    /// [`Expr::IndirectCall`] through the function's re-threaded closure
+    /// (see [`Self::named_closure`]).
+    ///
+    /// A `DirectCall` gets its arity checked by the validator, and
+    /// default values filled in by the backend.  An `IndirectCall` gets
+    /// neither (backends apply closures leniently: a missing argument
+    /// reads as nil).  So this path accepts only what it can check here:
+    /// a callee with plain positional parameters, called with exactly
+    /// that many positional arguments.  Anything else is a positioned
+    /// error, never a silently different call.
+    fn lower_closure_call(
+        &mut self,
+        name: &str,
+        args: Vec<Expr>,
+        ctx: &FunctionCtx,
+        span: &Span,
+    ) -> Result<Expr, PythonLowerError> {
+        let err = |message: String| PythonLowerError {
+            message,
+            line: span.start_line,
+            column: span.start_col,
+        };
+        if args.iter().any(|a| matches!(a, Expr::KeywordArg { .. })) {
+            return Err(err(format!(
+                "unsupported: keyword argument in a call to `{name}`, which captures \
+                 variables (deferred)"
+            )));
+        }
+        // Every capturing named function is a `def` (a lambda has no name
+        // to call), so pass 1 normally recorded its parameters.  Without
+        // them the call cannot be checked, so it is refused, not guessed.
+        let Some(facts) = self.def_facts.get(name) else {
+            return Err(err(format!(
+                "unsupported: call to `{name}`, which captures variables, but \
+                 its parameters are not known here (deferred)"
+            )));
+        };
+        if !facts.plain_params {
+            return Err(err(format!(
+                "unsupported: call to `{name}`, which captures variables and has \
+                 default or keyword-only parameters (deferred)"
+            )));
+        }
+        if args.len() != facts.arity {
+            return Err(err(format!(
+                "call to `{name}` passes {} argument(s) but it takes {}",
+                args.len(),
+                facts.arity
+            )));
+        }
+        let target = self.named_closure(name, ctx, span.clone())?;
         self.observed.add(Feature::Closures);
         Ok(Expr::IndirectCall {
             target: Box::new(target),
@@ -3806,14 +4383,80 @@ impl Lowerer {
         // zero-capture closure handle.
         if self.function_names.contains(name) {
             self.observed.add(Feature::Closures);
-            let cap_names = self.fn_captures.get(name).cloned().unwrap_or_default();
-            let mut capture_values = Vec::with_capacity(cap_names.len());
-            for cn in &cap_names {
-                capture_values.push(self.resolve_var_in(ctx, cn, span.clone())?);
-            }
-            return Ok(self.make_closure(name.to_string(), cap_names, capture_values, span));
+            return self.named_closure(name, ctx, span);
         }
         Err(self.err_at(node, format!("unresolved name `{name}`")))
+    }
+
+    /// Build a closure value for the named function `name`, threading its
+    /// captures (as recorded in `fn_captures`) from their values in
+    /// `ctx`.  A function with no recorded captures yields a
+    /// zero-capture `MakeClosure`.
+    ///
+    /// Used for a bare reference to a function name and for a call to a
+    /// function that captures something.  Inside the function's own body
+    /// the captures resolve as `Scope::Capture`: `go` rebuilds itself
+    /// from the values it was itself built with.
+    ///
+    /// ## Which variable a capture name means
+    ///
+    /// A capture name has to mean the *same variable* here as where the
+    /// function was defined.  Two places guarantee that:
+    ///
+    /// - the body that defines the function (`ctx.owner` is the
+    ///   function's parent): any local, param or capture of that name is
+    ///   the very variable the function captured;
+    /// - anywhere else, only a **capture** of `ctx` will do.  Captures
+    ///   reach here through [`Self::plan_captures`], which threads the
+    ///   defining body's variable down and refuses a member that rebinds
+    ///   the name.  A *local or param* of the same spelling is a different
+    ///   variable.  For example, a method `def m(self, x): return g()`
+    ///   must not hand `g` its own `x` in place of the `main` local `x`
+    ///   that `g` captured.
+    ///
+    /// Anything else is a positioned error.
+    ///
+    /// A function whose list is not decided yet gets a zero-capture
+    /// closure here.  If it later gains captures, the module-level
+    /// [`check_closure_invariant`] refuses the program.
+    fn named_closure(
+        &mut self,
+        name: &str,
+        ctx: &FunctionCtx,
+        span: Span,
+    ) -> Result<Expr, PythonLowerError> {
+        let cap_names = self.fn_captures.get(name).cloned().unwrap_or_default();
+        let in_defining_body = self
+            .def_facts
+            .get(name)
+            .is_some_and(|facts| facts.parent == ctx.owner);
+        let mut capture_values = Vec::with_capacity(cap_names.len());
+        for cn in &cap_names {
+            let not_in_scope = || PythonLowerError {
+                message: format!(
+                    "unsupported: `{name}` captures `{cn}`, which is not in scope here \
+                     (deferred)"
+                ),
+                line: span.start_line,
+                column: span.start_col,
+            };
+            let value = self
+                .resolve_var_in(ctx, cn, span.clone())
+                .map_err(|_| not_in_scope())?;
+            let is_capture = matches!(
+                value,
+                Expr::VarRef {
+                    scope: Scope::Capture,
+                    ..
+                }
+            );
+            let same_variable = in_defining_body || is_capture;
+            if !same_variable {
+                return Err(not_in_scope());
+            }
+            capture_values.push(value);
+        }
+        Ok(self.make_closure(name.to_string(), cap_names, capture_values, span))
     }
 
     /// Resolve a name that is *expected* to be in scope as a value
@@ -4047,6 +4690,126 @@ fn empty_block(span: Span) -> Block {
         stmts: vec![],
         value: Expr::NilLit { span: span.clone() },
         span,
+    }
+}
+
+/// Check the **closure invariant** over a finished module:
+///
+/// 1. every `MakeClosure { fn_name: f, captures }` threads exactly `f`'s
+///    declared captures: the same names, in the same order; and
+/// 2. no `DirectCall` targets a function that has captures (it would pass
+///    the arguments but not the captures).
+///
+/// The lowering is built to keep both.  This walk is the safety net for
+/// what it could not see coming: a closure or call built before its
+/// target's capture list was decided.  One example is a method body
+/// (which plans nothing) naming a later top-level `def` that then
+/// captures a `main` local.  Every backend reads a closure's captures by
+/// position, so a short `MakeClosure` is an out-of-bounds read (a NULL
+/// `caps[0]` in C).  So the program is refused, pointing at the offending
+/// node.
+///
+/// The walk uses the shared SIR [`Visitor`](semantic_ir::Visitor), so it
+/// also reaches parameter default values.  The visitor stops silently at
+/// [`semantic_ir::MAX_IR_DEPTH`]; a tree that deep is refused here rather
+/// than left partly checked.
+fn check_closure_invariant(functions: &[Function]) -> Result<(), PythonLowerError> {
+    use semantic_ir::Visitor;
+    use std::collections::HashMap;
+
+    const TOO_DEEP: &str = "program nests too deeply to check its closures";
+
+    struct Check<'a> {
+        declared: HashMap<&'a str, &'a [Capture]>,
+        error: Option<PythonLowerError>,
+    }
+    impl Check<'_> {
+        fn refuse(&mut self, message: String, span: &Span) {
+            if self.error.is_none() {
+                self.error = Some(PythonLowerError {
+                    message,
+                    line: span.start_line,
+                    column: span.start_col,
+                });
+            }
+        }
+    }
+    impl Visitor for Check<'_> {
+        fn visit_block(&mut self, b: &Block, depth: usize) {
+            if depth >= semantic_ir::MAX_IR_DEPTH {
+                self.refuse(TOO_DEEP.into(), &b.span);
+                return;
+            }
+            semantic_ir::walker::walk_block_default(self, b, depth);
+        }
+        fn visit_stmt(&mut self, st: &Stmt, depth: usize) {
+            if depth >= semantic_ir::MAX_IR_DEPTH {
+                self.refuse(TOO_DEEP.into(), st.span());
+                return;
+            }
+            semantic_ir::walker::walk_stmt_default(self, st, depth);
+        }
+        fn visit_expr(&mut self, e: &Expr, depth: usize) {
+            if self.error.is_some() {
+                return;
+            }
+            if depth >= semantic_ir::MAX_IR_DEPTH {
+                self.refuse(TOO_DEEP.into(), e.span());
+                return;
+            }
+            match e {
+                Expr::MakeClosure {
+                    fn_name,
+                    captures,
+                    span,
+                } => {
+                    if let Some(declared) = self.declared.get(fn_name.as_str()) {
+                        let agrees = declared.len() == captures.len()
+                            && declared.iter().zip(captures).all(|(d, c)| d.name == c.name);
+                        if !agrees {
+                            self.refuse(
+                                format!(
+                                    "unsupported: a closure for `{fn_name}` is built before \
+                                     `{fn_name}`'s captured variables are known (deferred)"
+                                ),
+                                span,
+                            );
+                        }
+                    }
+                }
+                Expr::DirectCall { fn_name, span, .. }
+                    if self
+                        .declared
+                        .get(fn_name.as_str())
+                        .is_some_and(|d| !d.is_empty()) =>
+                {
+                    self.refuse(
+                        format!(
+                            "unsupported: `{fn_name}` is called before `{fn_name}`'s \
+                             captured variables are known (deferred)"
+                        ),
+                        span,
+                    );
+                }
+                _ => {}
+            }
+            semantic_ir::walker::walk_expr_default(self, e, depth);
+        }
+    }
+
+    let mut check = Check {
+        declared: functions
+            .iter()
+            .map(|f| (f.name.as_str(), f.captures.as_slice()))
+            .collect(),
+        error: None,
+    };
+    for f in functions {
+        check.visit_function(f);
+    }
+    match check.error {
+        Some(e) => Err(e),
+        None => Ok(()),
     }
 }
 

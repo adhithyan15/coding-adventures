@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- An explicit schema-v1 empty capability profile documenting that rendering is
+  pure in-memory computation. Terminal output remains the caller's
+  responsibility.
+
 ## [0.1.0]
 
 ### Added

@@ -209,6 +209,43 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Flutter, "font-weight"),
 ];
 
+/// The scroll container each native backend must emit for the screens (EN-6,
+/// engram-anki-parity-plan.md §5.3), as a marker in its generated source, and
+/// the stem of the files it lands in. Before EN-6 none of these appeared
+/// anywhere in Engram's output, so a screen that ran past the window with no
+/// way to reach the rest passed every other check here.
+///
+/// Every marker is the VERTICAL form. Qt and XAML spell a horizontal scroll the
+/// same way, but Engram has none, and `package_compiles::the_screens_scroll`
+/// pins which node the scroll is.
+const SCREEN_SCROLL_MARKERS: &[(Backend, &str, &str)] = &[
+    (Backend::SwiftUI, "swiftui/EngramApp", "ScrollView {"),
+    (Backend::Qt, "qt/EngramApp", "ScrollView {"),
+    (Backend::Xaml, "xaml/EngramApp", "<ScrollViewer"),
+    (
+        Backend::Flutter,
+        "flutter/EngramApp",
+        "SingleChildScrollView(",
+    ),
+    (
+        Backend::Compose,
+        "compose/EngramApp",
+        ".verticalScroll(rememberScrollState())",
+    ),
+];
+
+/// The file extension each backend's generated layout source carries.
+fn layout_extension(backend: Backend) -> &'static str {
+    match backend {
+        Backend::SwiftUI => "swift",
+        Backend::Qt => "qml",
+        Backend::Xaml => "xaml",
+        Backend::Flutter => "dart",
+        Backend::Compose => "kt",
+        other => panic!("{other:?} is not a native backend this gate knows"),
+    }
+}
+
 #[test]
 fn engram_emits_with_no_degradations_on_every_native_backend() {
     let mut failures = Vec::new();
@@ -370,4 +407,45 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
         stale.len(),
         stale.join("\n")
     );
+}
+
+/// Every native backend gives the screens their scroll container (EN-6), in
+/// both layouts: the desktop `EngramApp` and the touch `EngramApp.touch`.
+///
+/// The table must also cover every native backend, so a backend added to
+/// Mosaic cannot skip this check. The runtime half -- that the container gets
+/// a bounded height and really scrolls -- is the Compose and Flutter
+/// reachability tests' job (`conformance/compose/EngramScrollUiTest.kt`,
+/// `conformance/flutter/engram_scroll_test.dart`).
+#[test]
+fn every_native_backend_scrolls_the_screens() {
+    for &backend in NATIVE_BACKENDS {
+        assert!(
+            SCREEN_SCROLL_MARKERS.iter().any(|(b, _, _)| *b == backend),
+            "{backend:?} has no screen-scroll marker in SCREEN_SCROLL_MARKERS"
+        );
+    }
+    for &(backend, stem, marker) in SCREEN_SCROLL_MARKERS {
+        let out = TempDir::new().expect("temp dir");
+        mosaic_package_artifact_builder::build_package(&BuildOptions {
+            package_root: package_root(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_or_else(|e| panic!("{backend:?} build failed: {e}"));
+        let extension = layout_extension(backend);
+        for file in [
+            format!("{stem}.{extension}"),
+            format!("{stem}.touch.{extension}"),
+        ] {
+            let source = std::fs::read_to_string(out.path().join(&file))
+                .unwrap_or_else(|e| panic!("{backend:?}: cannot read {file}: {e}"));
+            assert!(
+                source.contains(marker),
+                "{backend:?}: {file} has no `{marker}`: the screens do not scroll"
+            );
+        }
+    }
 }

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:846e4146020d7de6",
+  "lessonIds": [
+    "ZH-C260-nengli",
+    "ZH-C260-benshi",
+    "ZH-C260-gaoshou",
+    "ZH-C260-jishu",
+    "ZH-C260-jinbu"
+  ],
+  "tex": "chinese/book/chapters/ch260-what-i-can-do.tex"
+}

@@ -1,0 +1,845 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 241,
+  "title": "In Hospital",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c44a65179d2e8454",
+  "lessons": [
+    {
+      "id": "ZH-C241-zhuyuan",
+      "sequence": 18180,
+      "title": "zhùyuàn — to be in hospital",
+      "headword": "zhùyuàn",
+      "romanization": "zhùyuàn",
+      "gloss": "to be in hospital",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee7c14dce020baec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to throw up, then the Mandarin for to have an upset stomach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhùyuàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhùyuàn — \"to be in hospital\"."
+            },
+            {
+              "kind": "speech",
+              "text": "shàng ge yuè wǒ bàba zhùyuàn le — Last month my dad went into hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhùyuàn is built from zhù 'to stay' and yuàn 'a walled courtyard', both inherited from Middle Chinese, drjuH and hjwenH (Guangyun, in Baxter's transcription), which glosses the first 'to stop' and the second 'a wall round a courtyard'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhùyuàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhùyuàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhùyuàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhùyuàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shàng ge yuè wǒ bàba zhùyuàn le — Last month my dad went into hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shàng ge yuè wǒ bàba zhùyuàn le* — Last month my dad went into hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to throw up, then the Mandarin for to have an upset stomach, then say zhùyuàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to throw up, then the Mandarin for to have an upset stomach, then say *zhùyuàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhùyuàn mean? (\"To be in hospital\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C241-bingfang",
+      "sequence": 18190,
+      "title": "病房 (bìngfáng) — hospital ward",
+      "headword": "病房",
+      "romanization": "bìngfáng",
+      "gloss": "hospital ward",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb3a285a46e19c27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to have an upset stomach, then the Mandarin for to be in hospital."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 病房",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "病房 — bìngfáng — \"hospital ward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "医生现在在病房里 yīshēng xiànzài zài bìngfáng lǐ — The doctor's in the ward now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "病房 (bìngfáng) is built from 病 'illness' and 房 'room', both inherited from Middle Chinese, bjaengH and bjang (Guangyun, in Baxter's transcription), which glosses the second 'a chamber'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bìngfáng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bìngfáng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bìngfáng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bìngfáng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīshēng xiànzài zài bìngfáng lǐ — The doctor's in the ward now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīshēng xiànzài zài bìngfáng lǐ* — The doctor's in the ward now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to have an upset stomach, then the Mandarin for to be in hospital, then say bìngfáng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to have an upset stomach, then the Mandarin for to be in hospital, then say *bìngfáng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 病房 (bìngfáng) mean? (\"Hospital ward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C241-shoushu",
+      "sequence": 18200,
+      "title": "shǒushù — surgical operation",
+      "headword": "shǒushù",
+      "romanization": "shǒushù",
+      "gloss": "surgical operation",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2149ac3fa7087e9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be in hospital, then the Mandarin for a hospital ward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shǒushù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shǒushù — \"surgical operation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā zuòle yí cì shǒushù — He had an operation."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shǒushù is built from 手 'hand' and shù 'skill', both inherited from Middle Chinese, syuwX and zywit (Guangyun, in Baxter's transcription), which glosses the second 'skill'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǒushù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǒushù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǒushù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǒushù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā zuòle yí cì shǒushù — He had an operation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā zuòle yí cì shǒushù* — He had an operation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be in hospital, then the Mandarin for a hospital ward, then say shǒushù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be in hospital, then the Mandarin for a hospital ward, then say *shǒushù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shǒushù mean? (\"Surgical operation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C241-chuyuan",
+      "sequence": 18210,
+      "title": "chūyuàn — to leave hospital",
+      "headword": "chūyuàn",
+      "romanization": "chūyuàn",
+      "gloss": "to leave hospital",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3e16ff551822031",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a hospital ward, then the Mandarin for a surgical operation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chūyuàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chūyuàn — \"to leave hospital\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā xià xīngqī kěyǐ chūyuàn — He can leave hospital next week."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chūyuàn is built from 出 'to go out' and yuàn 'a walled courtyard', both inherited from Middle Chinese, tsyhwit and hjwenH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūyuàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūyuàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūyuàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūyuàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā xià xīngqī kěyǐ chūyuàn — He can leave hospital next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā xià xīngqī kěyǐ chūyuàn* — He can leave hospital next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a hospital ward, then the Mandarin for a surgical operation, then say chūyuàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a hospital ward, then the Mandarin for a surgical operation, then say *chūyuàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chūyuàn mean? (\"To leave hospital\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C241-huifu-recover",
+      "sequence": 18220,
+      "title": "huīfù — to recover; to get back to normal",
+      "headword": "huīfù",
+      "romanization": "huīfù",
+      "gloss": "to recover; to get back to normal",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c62c33135405849a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a surgical operation, then the Mandarin for to leave hospital."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: huīfù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huīfù — \"to recover; to get back to normal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā de shēntǐ huīfù de hěn kuài — He's recovering very quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huīfù is built from huī 'vast' and fù 'to return', both inherited from Middle Chinese, khwoj and bjuwk (Guangyun, in Baxter's transcription), which glosses the first 'great' and the second 'to return'. The h of huī is not the regular outcome of that form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huīfù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huīfù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huīfù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huīfù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā de shēntǐ huīfù de hěn kuài — He's recovering very quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā de shēntǐ huīfù de hěn kuài* — He's recovering very quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a surgical operation, then the Mandarin for to leave hospital, then say huīfù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a surgical operation, then the Mandarin for to leave hospital, then say *huīfù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does huīfù mean? (\"To recover; to get back to normal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R241-review-236-241",
+      "sequence": 18230,
+      "title": "Looking back: from Something Odd to In Hospital",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Something Odd to In Hospital",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:911e34515f5cb9ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to turn up and to find out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to turn up, to find out, to be scared, luckily, nearly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to turn up, to find out, to be scared, luckily, nearly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plant, a peanut, a leaf, to sprout, a watermelon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plant, a peanut, a leaf, to sprout, a watermelon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sky, the moon, dark clouds, the open sea, a rainbow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sky, the moon, dark clouds, the open sea, a rainbow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "healthy, to give up smoking, to drink alcohol, to breathe, a medical check-up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: healthy, to give up smoking, to drink alcohol, to breathe, a medical check-up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get sick, to become inflamed, swollen, to throw up, to have an upset stomach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get sick, to become inflamed, swollen, to throw up, to have an upset stomach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be in hospital, a hospital ward, a surgical operation, to leave hospital, to recover",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be in hospital, a hospital ward, a surgical operation, to leave hospital, to recover]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "现 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 现 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To turn up? (出现, chūxiàn.) To find out? (fāxiàn.) To be scared? (hàipà.) Luckily? (xìnghǎo.) Nearly? (chàdiǎnr.) A plant? (zhíwù.) A peanut? (花生, huāshēng.) A leaf? (yèzi.) To sprout? (fāyá.) A watermelon? (xīguā.) The sky? (tiānkōng.) The moon? (yuèliang.) Dark clouds? (wūyún.) The open sea? (dàhǎi.) A rainbow? (cǎihóng.) Healthy? (jiànkāng.) To give up smoking? (jièyān.) To drink alcohol? (hējiǔ.) To breathe? (hūxī.) A medical check-up? (tǐjiǎn.) To get sick? (生病, shēngbìng.) To become inflamed? (fāyán.) Swollen? (zhǒng.) To throw up? (tù.) To have an upset stomach? (lā dùzi.) To be in hospital? (zhùyuàn.) A hospital ward? (病房, bìngfáng.) A surgical operation? (shǒushù.) To leave hospital? (chūyuàn.) To recover? (huīfù.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

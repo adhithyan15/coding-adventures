@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-214-HELP214",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I have a question, ask someone to tell me, say I understand, and ask what to do.",
+  "prerequisites": []
+}

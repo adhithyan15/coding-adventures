@@ -1,0 +1,22 @@
+{
+  "chapter": 253,
+  "title": "Grandparents and Relatives",
+  "label": "ch:zh-grandparents-and-relatives",
+  "canDo": "I can talk about my grandparents, a child, sons and daughters, and relatives.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-R253-review-248-253",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can talk about my grandparents, a child, sons and daughters, and relatives.",
+    "assesses": [
+      "ZH-LEX-C253-GRAND253-01",
+      "ZH-LEX-C253-GRAND253-02",
+      "ZH-LEX-C253-GRAND253-03",
+      "ZH-LEX-C253-GRAND253-04",
+      "ZH-LEX-C253-GRAND253-05",
+      "ZH-SCRIPT-HAI-CHILD-01"
+    ]
+  }
+}

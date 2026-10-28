@@ -5,6 +5,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — #18417 — a builtin callback can fail the run
+
+- `GenericCirJit`'s `CALL_BUILTIN` stops the run right after a callback that has recorded an error in the error slot. A callback captures `error_handle()` to do that, since it returns a plain `Value` and cannot return an `Err`. Before, the run went on with the callback's placeholder result, and the error only surfaced when `JITCore` drained the slot at the end. The check is one mutex lock per builtin call. `error_handle`'s doc states the contract. New test `a_callback_that_records_an_error_stops_the_run`. `lang-aot`'s McCarthy `car` / `cdr` use it to fail on a non-pair.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`. `GenericCirJit` compiles a `call_builtin` only to a handler the embedder registered, and the LANG83 harnesses register no tagged-word runtime (`lang_aot::jit_lisp`'s McCarthy embedding registers its own callbacks; it is not the JIT column). `declared_support_matches_what_generic_jit_compiles` confirms the refusal.

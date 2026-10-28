@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W251-zuo-do",
+    "language": "chinese",
+    "chapter": 251,
+    "sequence": 19165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c48ce5360420d1fe",
+    "detachableSegments": [
+      "Script — the person piece, then a post with two short bars"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -369,11 +369,11 @@ fn typed_arith_op_for(name: &str) -> Option<&'static str> {
 //   mov x ← 1; …; str_const __r1_x "s"; …; add x, _n3   ; x is still 1
 // ```
 //
-// `claimed` makes the names collision-free whatever the user writes: a
-// binding takes `name` only if no register of that spelling exists yet, a
-// rebinding skips any `__r{n}_{name}` already taken, and [`FnCtx::fresh_var`]
-// skips a temporary name a user binding already holds (`(let ((_n1 "s")) …)`).
-// Nothing therefore depends on Twig source being unable to spell `__r1_x`.
+// `claimed` makes binding names collision-free: a binding takes `name` only
+// if no register of that spelling exists yet, and a rebinding skips any
+// `__r{n}_{name}` already taken. Compiler temporaries live in the reserved
+// `__t{n}_{prefix}` namespace and are also recorded in `claimed`, preserving
+// the invariant that the set contains every register handed out by the function.
 //
 // ### E4 aliases are just stack entries
 //
@@ -464,22 +464,31 @@ impl FnCtx {
         }
     }
 
-    /// A new compiler temporary, `_{prefix}{n}`.  In the usual case this is
-    /// the next number; it only skips ahead when a user binding already
-    /// holds that spelling (Twig can name a local `_n1`).
+    /// A register name for a compiler temporary: `__t{n}_{prefix}`.
+    ///
+    /// Two properties make it collision-proof:
+    ///
+    /// | property                         | what it rules out                                      |
+    /// |----------------------------------|--------------------------------------------------------|
+    /// | it begins with `__`              | a program name — `reserved_names` refuses every `__` name, so `(let ((_n2 40)) …)` can no longer overwrite a temporary (the old `_n2` shape) |
+    /// | `__t`, a digit, and it ends in a letter | every name a later pass invents: `iir-to-llvm`'s SSA values are `__<hint><n>` (they end in a digit), `dyn_repr`'s `__truthy_<n>` / `__unbox_<n>` and the closure lowering's `__clo_…` start with other letters |
+    ///
+    /// (Before the security review these were `_{prefix}{n}` — `_n1`, `_ifv3` —
+    /// which a Twig `let` could spell.)
     fn fresh_var(&mut self, prefix: &str) -> String {
-        loop {
-            self.var_counter += 1;
-            let v = format!("_{prefix}{}", self.var_counter);
-            if self.claimed.insert(v.clone()) {
-                return v;
-            }
-        }
+        self.var_counter += 1;
+        let register = format!("__t{}_{prefix}", self.var_counter);
+        let inserted = self.claimed.insert(register.clone());
+        debug_assert!(inserted, "fresh temporary register must be unique");
+        register
     }
 
+    /// A label name: `__l{n}_{prefix}`. Labels are not registers in IIR, but
+    /// LLVM puts basic-block labels and local values in one `%` namespace,
+    /// so a label must not be spellable as a program register either.
     fn fresh_label(&mut self, prefix: &str) -> String {
         self.label_counter += 1;
-        format!("_{prefix}{}", self.label_counter)
+        format!("__l{}_{prefix}", self.label_counter)
     }
 
     /// Push an instruction + its source position in lockstep.  Every
@@ -1603,6 +1612,13 @@ impl Compiler {
         }
 
         // 2. Build the inner function: captures ++ params for its parameter list.
+        //
+        // The name cannot collide with a program function: `__lambda_` is a
+        // reserved prefix (`reserved_names`), refused in every source name
+        // before compilation starts. Before it was, a program's own
+        // `(define (__lambda_0 …) …)` made the module hold two functions of
+        // that name, and backends that look a function up by name (the native
+        // linker's offset table, `closure_heap`'s dispatch) took the program's.
         let fn_name = format!("__lambda_{}", self.lambda_counter);
         self.lambda_counter += 1;
 

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W218-feng-wind",
+    "language": "chinese",
+    "chapter": 218,
+    "sequence": 17005,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:45fba32bb90e3ad5",
+    "detachableSegments": [
+      "Script — a frame, and two short strokes inside"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

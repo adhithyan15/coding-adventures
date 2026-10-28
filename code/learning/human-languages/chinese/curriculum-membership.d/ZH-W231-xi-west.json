@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W231-xi-west",
+  "pathSegment": "ZH-PATH-231-DOCTOR231",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-231-DOCTOR231",
+      "order": 3
+    }
+  ]
+}

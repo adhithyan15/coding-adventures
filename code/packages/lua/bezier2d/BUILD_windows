@@ -1,1 +1,2 @@
+luarocks show dkjson 2.8-2 >NUL 2>&1 || luarocks install --local dkjson 2.8-2
 cd tests && busted . --verbose --pattern=test_
