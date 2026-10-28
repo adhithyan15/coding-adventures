@@ -9,3 +9,6 @@
   tasks, and explicit unknown external audio speed. Update the Chinese A1 exam
   inventory's provenance: the task inventory now exists, while both mock papers
   remain unbuilt.
+- Pin the new A1 reading-reach owner at the measured 2/2 parts and keep the
+  exam-inventory provenance test aligned with that distinction; neither gate is
+  weakened to accommodate the new task shape.

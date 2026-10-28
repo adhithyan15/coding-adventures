@@ -165,6 +165,15 @@ composed short message; speaking requires a personal exchange and a rehearsed
 survival-role-play. Each paper carries 100 points and must independently reach
 60. The receptive timing and item counts use the currently displayed CTI
 Level 1 structure as an anchor, not as a claim about the final HSK 3.0 form.
+For this project's reading stimuli, `stimulusLength.unit: "items"` means Han
+characters **within one prompt**, not the number of scored questions: short
+signs or form fields use 2–10 characters and short messages use 12–30. These
+are project-selected bounds, not CTI measurements. The separate `items` field
+counts scored questions (10 per reading part). A reading-reach floor measures
+only a quoted comprehension passage somewhere in the current track; it does
+not by itself certify that an A1 learner has mastered that text. The A1-side
+`ZH-C97-reading` does contain a 57-Hanzi quoted passage, above both project
+minima, but mock-paper and human-validation evidence remain separate work.
 All productive timings, tasks, replay rules, response bounds, and analytic
 scoring are this project's decisions. Their teaching path decomposes into
 lessons of no more than 300 seconds, with no exam-length lesson or writing cliff.

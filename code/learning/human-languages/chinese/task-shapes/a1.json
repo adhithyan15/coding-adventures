@@ -73,13 +73,13 @@
           "promptGenres": ["short sign", "familiar label", "personal form field"],
           "responseModes": ["meaning selection", "field-to-label match"],
           "items": 10,
-          "stimulusLength": { "unit": "items", "minimum": 1, "maximum": 4, "approximate": false },
+          "stimulusLength": { "unit": "items", "minimum": 2, "maximum": 10, "approximate": false },
           "responseLength": null,
           "interaction": "individual",
           "replayCount": 0,
           "scoring": { "maxRawPoints": 50, "criteria": ["taught-character recognition", "practical meaning", "field interpretation"] },
           "aids": { "allowed": ["printed nonverbal context"], "forbidden": ["dictionary", "translation tool", "pinyin over an assessed character"], "notPublished": ["final HSK 3.0 Level 1 aid policy"] },
-          "notPublished": ["final HSK 3.0 Level 1 stimulus length and item subtype are not published here; these are project choices"],
+          "notPublished": ["stimulusLength counts Han characters per prompt, not questions; the 2–10-character project range and item subtype are not official HSK 3.0 Level 1 measurements"],
           "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment", "cti-hsk-level1-structure"]
         },
         {
@@ -88,13 +88,13 @@
           "promptGenres": ["brief personal message", "simple everyday notice", "rehearsed question-answer exchange"],
           "responseModes": ["gist selection", "detail selection", "question-to-answer match"],
           "items": 10,
-          "stimulusLength": { "unit": "items", "minimum": 1, "maximum": 3, "approximate": false },
+          "stimulusLength": { "unit": "items", "minimum": 12, "maximum": 30, "approximate": false },
           "responseLength": null,
           "interaction": "individual",
           "replayCount": 0,
           "scoring": { "maxRawPoints": 50, "criteria": ["gist", "key detail", "appropriate response"] },
           "aids": { "allowed": [], "forbidden": ["dictionary", "translation tool", "pinyin over an assessed character"], "notPublished": ["final HSK 3.0 Level 1 aid policy"] },
-          "notPublished": ["final HSK 3.0 Level 1 stimulus length and item subtype are not published here; these are project choices"],
+          "notPublished": ["stimulusLength counts Han characters per prompt, not questions; the 12–30-character project range and item subtype are not official HSK 3.0 Level 1 measurements"],
           "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment", "cti-hsk-level1-structure"]
         }
       ],

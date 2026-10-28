@@ -41,6 +41,13 @@ it("pins the A1 four-skill project equivalent without claiming an official four-
   });
   expect([reading?.minutes, listening?.minutes, writing?.minutes, speaking?.minutes]).toEqual([17, 15, 15, 8]);
   expect(reading?.parts.reduce((sum, part) => sum + (part.items ?? 0), 0)).toBe(20);
+  expect(reading?.parts.map((part) => part.stimulusLength)).toEqual([
+    { unit: "items", minimum: 2, maximum: 10, approximate: false },
+    { unit: "items", minimum: 12, maximum: 30, approximate: false },
+  ]);
+  expect(reading?.parts.every((part) => part.notPublished.some((note) =>
+    note.includes("Han characters per prompt, not questions"),
+  ))).toBe(true);
   expect(listening?.parts.reduce((sum, part) => sum + (part.items ?? 0), 0)).toBe(20);
   expect(reading?.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)).toBe(100);
   expect(listening?.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)).toBe(100);
