@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C262-duishou",
+    "language": "chinese",
+    "chapter": 262,
+    "sequence": 19740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ae4435fb30265f4"
+  },
+  "findings": []
+}

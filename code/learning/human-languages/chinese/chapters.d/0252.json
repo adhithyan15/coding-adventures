@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Happy and Sad",
+  "label": "ch:zh-happy-and-sad",
+  "canDo": "I can say I am in high spirits, how I feel, and that I am heartbroken, disappointed or satisfied.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C252-manyi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can say I am in high spirits, how I feel, and that I am heartbroken, disappointed or satisfied.",
+    "assesses": [
+      "ZH-LEX-C252-FEEL252-03",
+      "ZH-LEX-C252-FEEL252-04",
+      "ZH-LEX-C252-FEEL252-05"
+    ]
+  }
+}

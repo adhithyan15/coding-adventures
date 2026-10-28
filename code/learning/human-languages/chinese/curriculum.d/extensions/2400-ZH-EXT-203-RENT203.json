@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-203-RENT203",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about renting a flat: the landlord, the rent, the deposit and the contract.",
+  "prerequisites": []
+}

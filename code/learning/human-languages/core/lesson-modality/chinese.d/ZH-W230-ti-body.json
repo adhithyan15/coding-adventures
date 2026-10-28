@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W230-ti-body",
+    "language": "chinese",
+    "chapter": 230,
+    "sequence": 17635,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e73d973926721669",
+    "detachableSegments": [
+      "Script — the person piece, then 本"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

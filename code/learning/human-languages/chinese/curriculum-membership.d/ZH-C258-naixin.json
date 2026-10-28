@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C258-naixin",
+  "pathSegment": "ZH-PATH-258-KIND258",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-258-KIND258",
+      "order": 3
+    }
+  ]
+}

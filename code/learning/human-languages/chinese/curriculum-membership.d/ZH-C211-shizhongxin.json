@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C211-shizhongxin",
+  "pathSegment": "ZH-PATH-211-LOCAL211",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-211-LOCAL211",
+      "order": 2
+    }
+  ]
+}

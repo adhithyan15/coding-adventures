@@ -2727,8 +2727,9 @@ fn e4dyn_string_procedure_return_and_call_result_print() {
     let ll = lower(&module);
 
     // `str` return type + call result map to i64 (the handle).
-    assert!(ll.contains("define i64 @pick(i64 %n)"),
-        "string procedure must lower to `define i64 @pick(i64 %n)`:\n{ll}");
+    // (`internal`: a non-entry function of a module with an entry point, #18416.)
+    assert!(ll.contains("define internal i64 @pick(i64 %n)"),
+        "string procedure must lower to `define internal i64 @pick(i64 %n)`:\n{ll}");
     assert!(ll.contains("= call i64 @pick(i64"),
         "the call result must be typed i64 (a runtime handle):\n{ll}");
     assert!(ll.contains("ret i64 "),
@@ -3200,7 +3201,7 @@ fn special_char_function_names_are_quoted_at_define_and_call() {
         release: None,
     };
     let ll = lower(&module);
-    assert!(ll.contains(r#"define i64 @"Some?"("#), "define not quoted:\n{ll}");
+    assert!(ll.contains(r#"define internal i64 @"Some?"("#), "define not quoted:\n{ll}");
     assert!(ll.contains(r#"call i64 @"Some?"("#), "call not quoted:\n{ll}");
     // A hyphenated name (Twig record accessor `point-x`) also needs quoting; a
     // plain identifier must stay UNQUOTED (quoting is conservative but the common
@@ -3932,4 +3933,51 @@ fn ieee_ops_follow_the_edge_table_on_real_clang() {
             assert_eq!(*got, want, "{text}");
         }
     }
+}
+
+/// #18416: in a module with an entry point, only the entry keeps external
+/// linkage; every other function is `internal`, so a program function named
+/// `abort` / `malloc` / … cannot replace the libc function the linked C
+/// runtime calls. A module without an entry point is a library and keeps
+/// every function external.
+#[test]
+fn only_the_entry_point_has_external_linkage() {
+    let ret_param = |name: &str| {
+        IIRFunction::new(
+            name,
+            vec![("x".into(), "i64".into())],
+            "i64",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64")],
+        )
+    };
+    let main = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Int(3)], "i64"),
+            IIRInstr::new("call", Some("r".into()), vec![Operand::Var("abort".into()), Operand::Var("k".into())], "i64"),
+            IIRInstr::new("call", Some("s".into()), vec![Operand::Var("malloc".into()), Operand::Var("r".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "i64"),
+        ],
+    );
+    let module = |entry: Option<&str>| IIRModule {
+        name: "t".into(),
+        functions: vec![ret_param("abort"), ret_param("malloc"), main.clone()],
+        entry_point: entry.map(str::to_string),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+        release: None,
+    };
+
+    let ll = lower(&module(Some("main")));
+    assert!(ll.contains("define i64 @main()"), "the entry stays external:\n{ll}");
+    assert!(ll.contains("define internal i64 @abort(i64 %x)"), "abort must be internal:\n{ll}");
+    assert!(ll.contains("define internal i64 @malloc(i64 %x)"), "malloc must be internal:\n{ll}");
+    // Calls inside the module still reach the program's own functions.
+    assert!(ll.contains("call i64 @abort(i64"), "{ll}");
+
+    let lib = lower(&module(None));
+    assert!(!lib.contains("define internal"), "a library module keeps external linkage:\n{lib}");
 }

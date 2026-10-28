@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:f36dfe86e77e35a9",
+  "lessonIds": [
+    "ZH-C270-tongyi",
+    "ZH-C270-fandui",
+    "ZH-C270-zancheng",
+    "ZH-C270-zhichi",
+    "ZH-C270-xiangxin"
+  ],
+  "tex": "chinese/book/chapters/ch270-do-you-agree.tex"
+}

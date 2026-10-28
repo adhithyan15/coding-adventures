@@ -29,6 +29,30 @@ const C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
 ));
+const C4_ELEMENT_COLORS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-colors-11.16.1-corpus.json"
+));
+const C4_ELEMENT_COLORS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-colors-11.16.1-visual-corpus.json"
+));
+const C4_BOUNDARY_COLORS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-boundary-colors-11.16.1-corpus.json"
+));
+const C4_BOUNDARY_COLORS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-boundary-colors-11.16.1-visual-corpus.json"
+));
+const C4_RELATIONSHIP_COLORS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-corpus.json"
+));
+const C4_RELATIONSHIP_COLORS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-visual-corpus.json"
+));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -2482,6 +2506,95 @@ fn pinned_c4_relationship_arrows_reach_semantic_ir() {
     .expect("C4 Rel_Back fixture must parse");
     assert!(backward.relationships[0].start_arrow);
     assert!(!backward.relationships[0].end_arrow);
+}
+
+#[test]
+fn pinned_c4_element_colors_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ELEMENT_COLORS_CORPUS)
+        .expect("C4 element color corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_ELEMENT_COLORS_VISUAL_CORPUS)
+        .expect("C4 element color visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("C4 element color fixtures");
+
+    let keyed = parse_c4_diagram(fixtures[0]["source"].as_str().expect("keyed color source"))
+        .expect("C4 keyed element colors must parse");
+    let keyed_style = keyed.nodes[0].style.as_ref().expect("keyed element style");
+    assert_eq!(keyed_style.fill.as_deref(), Some("grey"));
+    assert_eq!(keyed_style.text_color.as_deref(), Some("red"));
+    assert_eq!(keyed_style.stroke.as_deref(), Some("#b91c1c"));
+
+    let positional = parse_c4_diagram(
+        fixtures[1]["source"].as_str().expect("positional color source"),
+    )
+    .expect("C4 positional element colors must parse");
+    let positional_style = positional.nodes[0].style.as_ref().expect("positional element style");
+    assert_eq!(positional_style.fill.as_deref(), Some("#dcfce7"));
+    assert_eq!(positional_style.text_color.as_deref(), Some("#14532d"));
+    assert_eq!(positional_style.stroke.as_deref(), Some("#166534"));
+}
+
+#[test]
+fn pinned_c4_boundary_colors_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_BOUNDARY_COLORS_CORPUS)
+        .expect("C4 boundary color corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_BOUNDARY_COLORS_VISUAL_CORPUS)
+        .expect("C4 boundary color visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("C4 boundary color fixtures");
+
+    let keyed = parse_c4_diagram(fixtures[0]["source"].as_str().expect("keyed color source"))
+        .expect("C4 keyed boundary colors must parse");
+    let keyed_style = keyed.groups[0].style.as_ref().expect("keyed boundary style");
+    assert_eq!(keyed_style.fill.as_deref(), Some("grey"));
+    assert_eq!(keyed_style.text_color.as_deref(), Some("red"));
+    assert_eq!(keyed_style.stroke.as_deref(), Some("#b91c1c"));
+
+    let positional = parse_c4_diagram(
+        fixtures[1]["source"].as_str().expect("positional color source"),
+    )
+    .expect("C4 positional boundary colors must parse");
+    let positional_style = positional.groups[0]
+        .style
+        .as_ref()
+        .expect("positional boundary style");
+    assert_eq!(positional_style.fill.as_deref(), Some("#dcfce7"));
+    assert_eq!(positional_style.text_color.as_deref(), Some("#14532d"));
+    assert_eq!(positional_style.stroke.as_deref(), Some("#166534"));
+}
+
+#[test]
+fn pinned_c4_relationship_colors_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_COLORS_CORPUS)
+        .expect("C4 relationship color corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_RELATIONSHIP_COLORS_VISUAL_CORPUS)
+        .expect("C4 relationship color visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"]
+        .as_array()
+        .expect("C4 relationship color fixtures");
+
+    let keyed = parse_c4_diagram(fixtures[0]["source"].as_str().expect("keyed color source"))
+        .expect("C4 keyed relationship colors must parse");
+    let keyed_style = keyed.relationships[0]
+        .style
+        .as_ref()
+        .expect("keyed relationship style");
+    assert_eq!(keyed_style.text_color.as_deref(), Some("red"));
+    assert_eq!(keyed_style.fill.as_deref(), Some("#b91c1c"));
+    assert_eq!(keyed_style.stroke.as_deref(), Some("#b91c1c"));
+
+    let positional = parse_c4_diagram(
+        fixtures[1]["source"].as_str().expect("positional color source"),
+    )
+    .expect("C4 positional relationship colors must parse");
+    let positional_style = positional.relationships[0]
+        .style
+        .as_ref()
+        .expect("positional relationship style");
+    assert_eq!(positional_style.text_color.as_deref(), Some("#14532d"));
+    assert_eq!(positional_style.fill.as_deref(), Some("#166534"));
+    assert_eq!(positional_style.stroke.as_deref(), Some("#166534"));
 }
 
 #[test]

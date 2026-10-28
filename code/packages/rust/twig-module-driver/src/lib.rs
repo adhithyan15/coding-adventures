@@ -49,16 +49,22 @@
 //! ## Linking strategy (LANG56 v1: global merge)
 //!
 //! LANG56 v1 uses `iir_linker::link` which merges all functions into one
-//! module.  Per-function import checking (a module may only call functions
-//! it explicitly imported) is deferred to LANG57.  The `(export …)` clause
-//! is honoured — the `IIRExport` list is populated by `twig-ir-compiler`
-//! for each module that declares it — but the linker does not enforce that
-//! callers only use exported names.
+//! module.  Visibility is enforced at both ends (issue #18432):
+//!
+//! | Stage | What a module may name from elsewhere | Otherwise |
+//! |-------|----------------------------------------|-----------|
+//! | IR compiler | the `(export …)`ed functions of its *direct* imports (its externs) | compile error: `unbound name` |
+//! | linker | the same names, declared as `IIRImport`s by this driver | `LinkError::UndeclaredCall` |
+//!
+//! So a private function — one missing from its module's `(export …)`
+//! list — cannot be called, or taken as a value, from any other module.
+//! A module's own definition of a name shadows an imported one.
 
 use std::collections::{HashSet, VecDeque};
 use std::fmt;
 use std::path::{Path, PathBuf};
 
+use interpreter_ir::module_exports::IIRImport;
 use interpreter_ir::IIRModule;
 use iir_linker::LinkError;
 use twig_parser::{Expr, Form, Program};
@@ -122,7 +128,10 @@ pub enum ModuleDriverError {
     /// This normally means two modules *export* functions with the same name
     /// (`LinkError::ConflictingExport`): Twig calls across modules by bare
     /// name, so the call target would be ambiguous.  Same-named *private*
-    /// functions are fine — the linker renames them apart.
+    /// functions are fine — the linker renames them apart.  A reference to
+    /// a name the module neither defines nor imports would be
+    /// `LinkError::UndeclaredCall`, but the IR compiler reports that first
+    /// as an unbound name (see `Compile`).
     Link(Vec<LinkError>),
 
     /// The import graph exceeds [`MAX_MODULES`].
@@ -488,80 +497,37 @@ pub fn compile_module_tree(
         }
     }
 
-    // ── Phase 3: Collect all function names from all modules ──────────────────
+    // ── Phase 3: What each module defines, and what it shows importers ───────
     //
-    // LANG56 v1 uses global-merge linking: the linker merges all functions
-    // into one module.  For the compiler to accept cross-module calls
-    // (e.g. `(double 21)` in main.tw when `double` is defined in lib.tw),
-    // we pre-register every function name from every module as an "extern".
+    // Twig calls across modules by *bare name*: `(double 21)` in main.tw
+    // when `double` lives in lib.tw.  The IR compiler accepts such a call
+    // only if `double` is registered as an *extern*, and the linker accepts
+    // it only if main's `IIRModule` *imports* `double`.  This phase works
+    // out, per module, the two name lists both of those are built from:
     //
-    // We collect names from three sources:
+    // | Map | Key | Value |
+    // |-----|-----|-------|
+    // | `defined`  | module path | every function the module defines (`defined_function_names`) |
+    // | `exported` | module path | the subset its `(export …)` clause offers importers (`library_exports`) |
     //
-    // 1. `(define (fn …) …)` — user-defined lambda functions.
-    //
-    // 2. `(record Name (f0 : T) …)` — the compiler auto-generates:
-    //      • constructor `Name(f0, …)`
-    //      • accessors   `<lowercase(Name)>-<fi>` for each field i
-    //      • predicate   `<lowercase(Name)>?`
-    //
-    // 3. `(union Name (V0 (g0 : T) …) …)` — per-variant:
-    //      • constructor `V0(g0, …)`
-    //      • predicate   `V0?`
-    //      • accessors   `<lowercase(V0)>-<gj>` for each field j
-    //
-    // Without pre-registering these names, calling e.g. `(span-start sp)`
-    // from an importing module fails with "unbound name" during compilation.
-    let mut all_fn_names: Vec<String> = Vec::new();
-
-    for (_, program, _) in &discovered {
-        for form in &program.forms {
-            match form {
-                // ── (define (fn …) …) ──────────────────────────────────
-                Form::Define(def) => {
-                    if matches!(def.expr, Expr::Lambda(_)) {
-                        all_fn_names.push(def.name.clone());
-                    }
-                }
-                // ── (record Name (f0 : T) …) ───────────────────────────
-                Form::RecordDef(rec) => {
-                    let prefix = rec.name.to_lowercase();
-                    // Constructor: exact record name (CamelCase).
-                    all_fn_names.push(rec.name.clone());
-                    // Predicate: <lowercase(name)>?
-                    all_fn_names.push(format!("{prefix}?"));
-                    // Accessors: <lowercase(name)>-<field>
-                    for field in &rec.fields {
-                        all_fn_names.push(format!("{prefix}-{}", field.name));
-                    }
-                }
-                // ── (union Name (V0 …) …) ──────────────────────────────
-                //
-                // Naming rules (must mirror `emit_union_def` in twig-ir-compiler):
-                //   • Constructor: exact variant name (e.g. `TkInteger`)
-                //   • Predicate:   variant name + "?" (exact case, e.g. `TkInteger?`)
-                //   • Accessors:   lowercase(variant) + "-" + field  (e.g. `tkinteger-value`)
-                //
-                // Note: union predicates keep their original case (`TkInteger?`)
-                // whereas record predicates are fully lowercased (`span?`).
-                Form::UnionDef(union) => {
-                    for variant in &union.variants {
-                        let vprefix = variant.name.to_lowercase();
-                        // Constructor: exact variant name (CamelCase).
-                        all_fn_names.push(variant.name.clone());
-                        // Predicate: <variant.name>? (original case — mirrors the compiler).
-                        all_fn_names.push(format!("{}?", variant.name));
-                        // Accessors: <lowercase(variant)>-<field>
-                        for field in &variant.fields {
-                            all_fn_names.push(format!("{vprefix}-{}", field.name));
-                        }
-                    }
-                }
-                _ => {}
-            }
-        }
-    }
-
-    let extern_refs: Vec<&str> = all_fn_names.iter().map(|s| s.as_str()).collect();
+    // Phase 4 then gives each module the `exported` names of its *direct*
+    // imports — nothing else (issue #18432).  Before that fix every
+    // function name of every module in the tree was an extern of every
+    // module, so a module could call a function it never imported, even
+    // another module's private helper, and the linker bound the bare name
+    // to whichever function owned it after merging.
+    let defined: std::collections::HashMap<&Path, Vec<String>> = discovered
+        .iter()
+        .map(|(path, program, _)| (path.as_path(), defined_function_names(program)))
+        .collect();
+    let exported: std::collections::HashMap<&Path, Vec<String>> = discovered
+        .iter()
+        .map(|(path, program, _)| (path.as_path(), library_exports(program, &defined[path.as_path()])))
+        .collect();
+    let module_names: std::collections::HashMap<&Path, &str> = discovered
+        .iter()
+        .map(|(path, _, name)| (path.as_path(), name.as_str()))
+        .collect();
 
     // ── Phase 3.5: Type-check each module in dependency order ────────────────
     //
@@ -690,7 +656,17 @@ pub fn compile_module_tree(
         module_extra_globals
     };
 
-    // ── Phase 4: Compile each module with all extern names pre-registered ─────
+    // ── Phase 4: Compile each module against its imports' exports ────────────
+    //
+    // Each module's externs are the exports of its direct imports
+    // (`visible_imports`), and each extern it does not define itself is
+    // recorded as an `IIRImport` naming the module that exports it:
+    //
+    // ```text
+    //   main.tw: (import lib)     lib.tw: (export double)  private: helper
+    //     externs  = [double]           → `(helper)` in main: unbound name
+    //     imports  = [lib::double]      → the linker checks every reference
+    // ```
     //
     // Uses `compile_ast_with_externs_and_globals` (LANG72; the CST entry
     // point since LANG84) so that the IR
@@ -705,6 +681,12 @@ pub fn compile_module_tree(
     for (path, _program, module_name) in &discovered {
         let globals_for_path = module_extra_globals.get(path).unwrap_or(&empty_globals);
         let cst = &parse_trees[path];
+
+        // What this module may name from elsewhere: the exports of its
+        // direct imports, each with the module that provides it.
+        let imported = visible_imports(path, &adjacency, &exported, &module_names);
+        let extern_refs: Vec<&str> = imported.iter().map(|(_, name)| *name).collect();
+
         let mut iir_mod =
             twig_ir_compiler::compile_ast_with_externs_and_globals(
                 cst,
@@ -716,6 +698,23 @@ pub fn compile_module_tree(
                 path: path.clone(),
                 error: e,
             })?;
+
+        // Declare those names as `IIRImport`s, so the linker resolves each
+        // to its exporting module and rejects any other cross-module name
+        // (`LinkError::UndeclaredCall`, #18432).
+        //
+        // A name the module defines itself is *not* imported: inside the
+        // module the local definition wins (as it does in the type
+        // checker), and the linker gives an import precedence over a
+        // same-named own function — importing it would redirect the
+        // module's own calls to the library.
+        let own: HashSet<&str> = defined[path.as_path()].iter().map(String::as_str).collect();
+        iir_mod.imports.extend(
+            imported
+                .iter()
+                .filter(|(_, name)| !own.contains(name))
+                .map(|(dep, name)| IIRImport::new(*dep, *name, "any")),
+        );
 
         // Only the root module keeps `entry_point = Some("main")`.
         // Library modules have their entry_point cleared so the linker knows
@@ -749,7 +748,10 @@ pub fn compile_module_tree(
     // if two modules share a module name (`DuplicateModuleName`; Phase 1
     // gives every file a distinct name, so this cannot come from the
     // driver), or if the root's entry point does not resolve
-    // (`UnresolvedEntryPoint`; the IR compiler always emits `main`).
+    // (`UnresolvedEntryPoint`; the IR compiler always emits `main`), or if
+    // a function reference names something its module neither defines nor
+    // imports (`UndeclaredCall`, #18432; Phase 4 compiles only against the
+    // names it declares as imports, so this signals a driver bug).
     // Private functions that share a name are *not* an error: the linker
     // renames them apart.
     iir_linker::link(&modules).map_err(ModuleDriverError::Link)
@@ -758,6 +760,144 @@ pub fn compile_module_tree(
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
+
+/// Every function name `program` defines — the names its IR compiler
+/// registers as `fn_globals` and emits a function for.
+///
+/// Three forms define functions:
+///
+/// 1. `(define (fn …) …)` — a user-defined function.
+///
+/// 2. `(record Name (f0 : T) …)` — the compiler auto-generates:
+///
+///    | Kind | Name |
+///    |------|------|
+///    | constructor | `Name` |
+///    | accessor, per field `fi` | `<lowercase(Name)>-<fi>` |
+///    | predicate | `<lowercase(Name)>?` |
+///
+/// 3. `(union Name (V0 (g0 : T) …) …)` — per variant:
+///
+///    | Kind | Name |
+///    |------|------|
+///    | constructor | `V0` |
+///    | predicate | `V0?` (original case) |
+///    | accessor, per field `gj` | `<lowercase(V0)>-<gj>` |
+///
+/// A `(define name value)` that is not a lambda defines a *value*, not a
+/// function, and is not listed.
+fn defined_function_names(program: &Program) -> Vec<String> {
+    let mut names: Vec<String> = Vec::new();
+    for form in &program.forms {
+        match form {
+            // ── (define (fn …) …) ──────────────────────────────────────
+            Form::Define(def) => {
+                if matches!(def.expr, Expr::Lambda(_)) {
+                    names.push(def.name.clone());
+                }
+            }
+            // ── (record Name (f0 : T) …) ───────────────────────────────
+            Form::RecordDef(rec) => {
+                let prefix = rec.name.to_lowercase();
+                // Constructor: exact record name (CamelCase).
+                names.push(rec.name.clone());
+                // Predicate: <lowercase(name)>?
+                names.push(format!("{prefix}?"));
+                // Accessors: <lowercase(name)>-<field>
+                for field in &rec.fields {
+                    names.push(format!("{prefix}-{}", field.name));
+                }
+            }
+            // ── (union Name (V0 …) …) ──────────────────────────────────
+            //
+            // Naming rules (must mirror `emit_union_def` in twig-ir-compiler):
+            //   • Constructor: exact variant name (e.g. `TkInteger`)
+            //   • Predicate:   variant name + "?" (exact case, e.g. `TkInteger?`)
+            //   • Accessors:   lowercase(variant) + "-" + field  (e.g. `tkinteger-value`)
+            //
+            // Note: union predicates keep their original case (`TkInteger?`)
+            // whereas record predicates are fully lowercased (`span?`).
+            Form::UnionDef(union) => {
+                for variant in &union.variants {
+                    let vprefix = variant.name.to_lowercase();
+                    // Constructor: exact variant name (CamelCase).
+                    names.push(variant.name.clone());
+                    // Predicate: <variant.name>? (original case — mirrors the compiler).
+                    names.push(format!("{}?", variant.name));
+                    // Accessors: <lowercase(variant)>-<field>
+                    for field in &variant.fields {
+                        names.push(format!("{vprefix}-{}", field.name));
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    names
+}
+
+/// The function names `program` offers to the modules that import it.
+///
+/// That is its `(export …)` list, restricted to functions it actually
+/// `defined` (exactly the filter the IR compiler applies when it builds
+/// `IIRExport`s), minus `main`:
+///
+/// | Export-list entry | Offered? | Why |
+/// |-------------------|----------|-----|
+/// | a function the module defines | yes | |
+/// | a type name (`Expr`, `TokenKind`) | no | not a function |
+/// | a value `(define x 5)` | no | Twig exports functions only (LANG33b) |
+/// | `main` | no | this list is only consulted for *imported* modules, which are libraries, and Phase 4 withdraws a library's `main` export with its entry point (#18429) |
+///
+/// A module with no `(module …)` clause exports nothing.
+fn library_exports(program: &Program, defined: &[String]) -> Vec<String> {
+    let Some(info) = program.module_info.as_ref() else {
+        return Vec::new();
+    };
+    info.exports
+        .iter()
+        .filter(|name| name.as_str() != LIBRARY_ENTRY && defined.contains(name))
+        .cloned()
+        .collect()
+}
+
+/// The entry function every Twig module gets from the IR compiler, and the
+/// one export a library gives up (see `library_exports`).
+const LIBRARY_ENTRY: &str = "main";
+
+/// The cross-module names visible inside the module at `path`: every name
+/// `exported` by one of its *direct* imports, paired with the module name
+/// that provides it.
+///
+/// Transitive imports are deliberately not included: if `main` imports
+/// `lib_a` and `lib_a` imports `lib_b`, `main` must import `lib_b` itself
+/// to call `lib_b`'s functions — the same visibility the type checker
+/// gives each module (Phase 3.5 seeds it with direct imports' exports).
+///
+/// Each `(module, name)` pair appears once even if the same import is
+/// listed twice.  Two *different* imports exporting the same name both
+/// appear; the linker then reports `ConflictingExport`.
+fn visible_imports<'a>(
+    path: &Path,
+    adjacency: &std::collections::HashMap<PathBuf, Vec<(String, PathBuf)>>,
+    exported: &'a std::collections::HashMap<&Path, Vec<String>>,
+    module_names: &std::collections::HashMap<&Path, &'a str>,
+) -> Vec<(&'a str, &'a str)> {
+    let mut seen: HashSet<(&str, &str)> = HashSet::new();
+    let mut visible = Vec::new();
+    for (_, dep) in adjacency.get(path).map(Vec::as_slice).unwrap_or(&[]) {
+        let (Some(&dep_name), Some(names)) = (module_names.get(dep.as_path()), exported.get(dep.as_path()))
+        else {
+            continue; // every adjacency target was discovered in Phase 1
+        };
+        for name in names {
+            if seen.insert((dep_name, name.as_str())) {
+                visible.push((dep_name, name.as_str()));
+            }
+        }
+    }
+    visible
+}
 
 /// Derive a Twig module name from a file path.
 ///
@@ -1432,6 +1572,135 @@ mod tests {
         ");
         let v = run_in_large_stack(root, dir, "same_stem_18429");
         assert_eq!(v, twig_vm::LispyValue::int(21));
+    }
+
+    // ── Issue #18432: a module sees only what its imports export ─────────────
+    //
+    // Phase 3 used to hand *every* function name in the whole module tree
+    // to the IR compiler as an extern.  So a module could compile a bare
+    // call to a function it never imported — even another module's
+    // *private* one — and the linker bound that bare name to whichever
+    // function owned it after merging.  Now each module's externs are the
+    // exports of its direct imports, and the driver records them as
+    // `IIRImport`s so the linker can check every reference.
+
+    /// Assert that compiling `root` fails with a compile error that names
+    /// `name` as unbound.
+    fn assert_unbound(root: &Path, name: &str) {
+        match compile_module_tree(root, &[]) {
+            Err(ModuleDriverError::Compile { error, .. }) => assert!(
+                error.message.contains("unbound name") && error.message.contains(name),
+                "expected an unbound-name error for {name:?}, got: {}",
+                error.message,
+            ),
+            Err(other) => panic!("expected a compile error for {name:?}, got: {other}"),
+            Ok(_) => panic!("{name:?} must not resolve, but the program linked"),
+        }
+    }
+
+    #[test]
+    fn a_bare_call_cannot_reach_another_modules_private_function() {
+        // The issue's example: two libraries each define a *private*
+        // `helper`; the root calls `(helper)`.  Before the fix this linked
+        // and silently ran lib_a's helper (the first to claim the name).
+        let dir = make_tempdir("private_helper_18432");
+        write_temp(&dir, "lib_a.tw", "
+            (module lib_a (export a-val))
+            (define (helper) 1)
+            (define (a-val) (helper))
+        ");
+        write_temp(&dir, "lib_b.tw", "
+            (module lib_b (export b-val))
+            (define (helper) 2)
+            (define (b-val) (helper))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib_a) (import lib_b))
+            (helper)
+        ");
+        assert_unbound(&root, "helper");
+    }
+
+    #[test]
+    fn a_function_value_cannot_name_another_modules_private_function() {
+        // Same hole through a function *reference* (`alloc_closure`).
+        let dir = make_tempdir("private_ref_18432");
+        write_temp(&dir, "lib.tw", "
+            (module lib (export lib-val))
+            (define (secret) 42)
+            (define (lib-val) (secret))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib))
+            (let ((f secret)) (f))
+        ");
+        assert_unbound(&root, "secret");
+    }
+
+    #[test]
+    fn exports_of_indirect_imports_are_not_visible() {
+        // root → lib_a → lib_b.  `triple` is exported by lib_b, but root
+        // imports only lib_a, so root must import lib_b to call it.  (The
+        // type checker already saw only direct imports' exports; the IR
+        // compiler now agrees with it.)
+        let dir = make_tempdir("indirect_18432");
+        write_temp(&dir, "lib_b.tw", "
+            (module lib_b (export triple))
+            (define (triple x) (* x 3))
+        ");
+        write_temp(&dir, "lib_a.tw", "
+            (module lib_a (import lib_b) (export six))
+            (define (six x) (triple (* x 2)))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib_a))
+            (triple 1)
+        ");
+        assert_unbound(&root, "triple");
+    }
+
+    #[test]
+    fn a_local_value_is_not_hijacked_by_another_modules_function() {
+        // The root defines a *value* `helper`; the library has a private
+        // *function* `helper`.  With every function name in the tree
+        // registered as an extern, the IR compiler took the root's `helper`
+        // for a function and produced a closure over the library's private
+        // function.  Now the library's private name is invisible here.
+        let dir = make_tempdir("value_shadow_18432");
+        write_temp(&dir, "lib.tw", "
+            (module lib (export lib-val))
+            (define (helper) 100)
+            (define (lib-val) (helper))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib))
+            (define helper 5)
+            (+ helper (lib-val))
+        ");
+        let v = run_in_large_stack(root, dir, "value_shadow_18432");
+        assert_eq!(v, twig_vm::LispyValue::int(105));
+    }
+
+    #[test]
+    fn a_modules_own_definition_shadows_an_imported_name() {
+        // The root defines its own `helper` *and* imports a library that
+        // exports `helper`.  Inside the root the local definition wins (as
+        // in the type checker); the library still calls its own.  The
+        // driver must not emit an `IIRImport` for a name the module defines,
+        // or the linker would redirect the root's calls to the library.
+        let dir = make_tempdir("own_shadows_import_18432");
+        write_temp(&dir, "lib.tw", "
+            (module lib (export helper lib-val))
+            (define (helper) 7)
+            (define (lib-val) (helper))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib))
+            (define (helper) 100)
+            (+ (helper) (lib-val))
+        ");
+        let v = run_in_large_stack(root, dir, "own_shadows_import_18432");
+        assert_eq!(v, twig_vm::LispyValue::int(107));
     }
 }
 

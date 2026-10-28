@@ -28,7 +28,10 @@ where `ipad = 0x36` and `opad = 0x5C`, each repeated to the hash function's bloc
 ### Named Variants (bytes)
 
 ```rust
-use coding_adventures_hmac::{hmac_md5, hmac_sha1, hmac_sha256, hmac_sha512};
+use coding_adventures_hmac::{
+    hmac_md5, hmac_sha1, hmac_sha256, hmac_sha256_segments, hmac_sha384,
+    hmac_sha384_segments, hmac_sha512,
+};
 
 let key = b"secret";
 let msg = b"hello";
@@ -36,7 +39,13 @@ let msg = b"hello";
 let tag_md5    = hmac_md5(key, msg);    // [u8; 16]
 let tag_sha1   = hmac_sha1(key, msg);   // [u8; 20]
 let tag_sha256 = hmac_sha256(key, msg); // [u8; 32]
+let tag_sha384 = hmac_sha384(key, msg); // [u8; 48]
 let tag_sha512 = hmac_sha512(key, msg); // [u8; 64]
+
+// Borrowed segments are authenticated as one logical message without
+// allocating or assembling an aggregate message buffer.
+let tag_sha256_segments = hmac_sha256_segments(key, &[b"hel", b"lo"]);
+let tag_sha384_segments = hmac_sha384_segments(key, &[b"hel", b"lo"]);
 ```
 
 ### Hex Variants
@@ -88,6 +97,7 @@ assert_eq!(
 | MD5    | 64           | 16             |
 | SHA-1  | 64           | 20             |
 | SHA-256| 64           | 32             |
+| SHA-384| 128          | 48             |
 | SHA-512| 128          | 64             |
 
 ## Dependencies
@@ -95,6 +105,7 @@ assert_eq!(
 - `coding_adventures_md5`
 - `coding_adventures_sha1`
 - `coding_adventures_sha256`
+- `coding_adventures_sha384`
 - `coding_adventures_sha512`
 - `coding_adventures_ct_compare`
 - `coding_adventures_zeroize`
@@ -108,8 +119,32 @@ primitive. Equal-length tags receive its compiler-preserved full scan;
 mismatched public lengths fail immediately. This removes the HMAC crate's
 external executable comparison dependency without changing its public API.
 
-This comparison boundary does not make generic HMAC fixed-memory, add
-HMAC-SHA-384, select hashes for TLS, or implement HKDF or a TLS key schedule.
+This comparison boundary does not make generic HMAC fixed-memory, select hashes
+for TLS, or implement HKDF or a TLS key schedule.
+
+`hmac_sha256` is the fixed-output exception to the generic allocation model.
+It normalizes the key into one stack-resident 64-byte block, transforms that
+block from the inner pad to the outer pad in place, and feeds both passes into
+the fixed-memory repository SHA-256 hasher. Normalized key bytes, keyed pads,
+the inner digest, and both hash states are wiped at their ownership boundaries.
+The HMAC core performs no heap allocation; only the returned 32-byte tag remains
+caller-owned. Checked SHA-256 length failures are payload-free.
+
+`hmac_sha384` follows the same fixed-memory ownership model with one
+stack-resident 128-byte key block, two repository SHA-384 streams, and a
+caller-owned 48-byte tag. Its checked length failures are also payload-free.
+
+`hmac_sha256_segments` and `hmac_sha384_segments` preserve those ownership and
+failure boundaries while accepting a borrowed slice of borrowed message
+segments. The segments are streamed in order without allocating or assembling
+a concatenated whole-message buffer. The hash state may retain one bounded
+partial block, which is wiped on drop. Segment boundaries do not change the
+tag, and an empty segment list is the empty message. The one-shot entry points
+delegate to these segmented cores.
+
+These fixed-output HMAC boundaries do not audit or replace generic HMAC,
+select a TLS cipher suite, implement HKDF-Expand or a TLS key schedule, process
+certificates, perform I/O, or provide concrete HTTPS.
 
 ## Memory hygiene
 
@@ -125,9 +160,10 @@ Two details are easy to get wrong and are therefore worth naming:
   place. Building the padded key and then growing the buffer with the message
   reallocates, and a reallocation abandons the old buffer *un-wiped*. Wrapping
   the final buffer in `Zeroizing` would wipe the wrong copy.
-- The named `hmac_*` variants **wipe the heap tag** before returning their
+- The heap-backed named variants **wipe the heap tag** before returning their
   fixed-size array, because `try_into` frees that buffer with a live
-  authentication tag still in it.
+  authentication tag still in it. `hmac_sha256` and `hmac_sha384` take the
+  fixed-memory paths documented above and create no heap tag.
 
 The returned array or `Vec` is the function's output and belongs to the caller,
 who is responsible for wiping it if it is secret. A TOTP tag is: the code is
@@ -138,7 +174,7 @@ read straight out of it.
 HMAC is the next layer above the raw hash functions in the `coding-adventures` cryptography stack:
 
 ```
-MD5 / SHA-1 / SHA-256 / SHA-512
+MD5 / SHA-1 / SHA-256 / SHA-384 / SHA-512
          ↓
        HMAC  ← you are here
          ↓

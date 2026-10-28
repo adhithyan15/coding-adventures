@@ -179,7 +179,27 @@ scripts/render-compose.sh /tmp/engram-shots
 
 That builds the Rust runtime, generates the Compose project under
 `native-complete` (asserted, so a degraded fallback cannot be mistaken for the
-product), runs `conformance/compose/EngramScreenshots.kt`, and writes PNGs.
+product), runs `conformance/compose/EngramScreenshots.kt`, and writes PNGs:
+every screen at 1280×900, and again at 800×600 (`800x600-*.png`). The second
+set is the window Engram really opens in, since it declares none, and it is
+where content below the fold shows (EN-6).
+
+## The screens scroll
+
+A native window scrolls nothing unless the layout says so. Each layout's
+screens sit in a vertical `HostScroll [ content-scroll ]`, the shell's last
+child, so a screen taller than the window can be scrolled (EN-6,
+`code/specs/engram-anki-parity-plan.md` §5.3). On desktop the header stays
+above the scroll. On touch it scrolls with the screen, because the stacked
+header is taller than a phone in landscape. Qt does not scroll yet: its
+emitter does not bound the `ScrollView`.
+
+Two tests drive it in CI, each on a fresh `MOSAIC_APP_STATE_PATH`:
+
+- `conformance/compose/EngramScrollUiTest.kt` scrolls Options to the note
+  type editor's New button and clicks it, at 800×600;
+- `conformance/flutter/engram_scroll_test.dart` scrolls Decks to its last
+  button, at 800×600.
 
 It is deliberately not a pixel-diff gate — a strict baseline needs a pinned
 font stack and renderer, which is a separate decision (#14798). Measure a

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W175-mian-face",
+    "language": "chinese",
+    "chapter": 175,
+    "sequence": 13895,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f12ed904b7d7a4f5",
+    "detachableSegments": [
+      "Script — a bar, a short stroke, then a frame"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

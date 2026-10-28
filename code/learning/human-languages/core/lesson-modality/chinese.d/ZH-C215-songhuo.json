@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C215-songhuo",
+    "language": "chinese",
+    "chapter": 215,
+    "sequence": 16390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:591110b2342f9e22"
+  },
+  "findings": []
+}

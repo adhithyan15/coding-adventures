@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:092a2f22c055e092",
+  "lessonIds": [
+    "ZH-C175-jiaju",
+    "ZH-C175-shafa",
+    "ZH-C175-mianqian",
+    "ZH-W175-mian-face",
+    "ZH-C175-guizi",
+    "ZH-C175-shujia",
+    "ZH-R175-review-170-175"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch175.txt",
+  "json": "chinese/narration/ch175.json",
+  "textHash": "fnv1a64:5fa605fc3ca7ecc6",
+  "jsonHash": "fnv1a64:0cd5f565d805e420",
+  "findings": []
+}

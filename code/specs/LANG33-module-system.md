@@ -230,8 +230,29 @@ code/packages/rust/iir-linker/
 ///      `LinkError::UnresolvedEntryPoint`.  (Before #18429 an unresolved
 ///      name stayed bare and could bind to another module's private
 ///      function.)  Later modules' entry points are unused and unchecked.
+///    - Check every *function reference* — the operands step 3 rewrites
+///      (`call` callee, `alloc_closure` body, `task_spawn` / `group_spawn`
+///      target).  Inside module `m` each must name a function `m` defines
+///      or the local name of one of `m`'s imports; anything else is
+///      `LinkError::UndeclaredCall`, reported once per
+///      `(module, function, name)`.  (#18432: before this, nothing raised
+///      `UndeclaredCall`.  A name that was neither stayed bare and bound to
+///      whichever function owned it after merging — so with two libraries
+///      each holding a private `helper`, an app's un-imported `call helper`
+///      ran the first library's private function.)  This is what makes
+///      "private by default" (design goal of `exports`) hold at link time.
+///      Builtins are unaffected: producers reach them with `call_builtin`,
+///      not `call`, and no VM resolves an unknown `call` target to a
+///      builtin.
 /// 3. Merge all functions into a single `IIRModule`:
 ///    - Rename colliding private functions by prefixing with `"<module>::"`.
+///      If that name is taken too (another module exported an alias spelled
+///      `"<module>::<fn>"`), append `$0`, `$1`, … until the name is free.
+///      The search always ends — of `taken + 1` candidates one is free — so
+///      it needs no bound and never panics.  (#18432: it used to `assert!`
+///      a bound of *functions + 1*, but export aliases claim names without
+///      adding functions, so a handful of crafted aliases panicked
+///      `link()` in release builds too.)
 ///    - Rewrite every operand that *names a function* — `call` callee
 ///      (`srcs[0]`), `alloc_closure` body name (`srcs[0]`, an
 ///      `Operand::Str`), `task_spawn` fn (`srcs[0]`) and `group_spawn`
@@ -304,8 +325,10 @@ pub enum LinkError {
         entry_point: String,
     },
 
-    /// A call instruction inside a function references a name that is neither
-    /// a local function nor a declared import.
+    /// A function reference (`call` callee, `alloc_closure` body, spawn
+    /// target) names something that is neither a function of its module
+    /// nor the local name of a declared import — e.g. another module's
+    /// private function (#18432).
     UndeclaredCall {
         in_module:   String,
         in_function: String,
@@ -408,6 +431,11 @@ The `serialise_module` / `deserialise_module` functions are updated to include
    when two input modules share a name, and
    `LinkError::UnresolvedEntryPoint` when the entry point does not resolve
    inside its module (#18429).
+5a. `iir-linker::link` returns `LinkError::UndeclaredCall` when a function
+   reference names another module's private function (or any name the
+   module neither defines nor imports), and returns a renamed module — not
+   a panic — when export aliases occupy every `"<module>::<fn>$N"` name the
+   old counter bound allowed (#18432).
 6. BEAM: a module with explicit `exports` emits only those functions in ExpT.
 7. WASM: a module with imports emits a WASM import section with correct entries,
    and function index offsets are applied correctly.
