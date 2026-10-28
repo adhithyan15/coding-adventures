@@ -18327,3 +18327,23 @@ Re-run the native Bezier2D and dependent Arc2D suites, exact G2D02 selector and
 atomic-plan checks, state/lesson/JSON/diff hygiene, and independent exact-head
 review. Existing guarded auto-merge may remain enabled, but only replacement
 checks on the final exact head may permit the merge.
+
+## October 28, 2026: .NET Bezier merge and Go/Rust reprioritization
+
+.NET Bezier PR #18293 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact independently reviewed head
+`c7b1e98687d3c762a98a9beed61ad71f586ca484` as
+`960397b253474e002be8805103f1f0bca6d82e6c` at
+`2026-10-26T23:13:55Z`. The exact receipt is an ancestor of current origin/main
+`cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed .NET worktree
+and local branch were removed safely.
+
+The merge unblocks all four prepared Bezier successors. A fresh prioritization
+selects the Go/Rust tranche first because it closes two established native lanes
+with explicit bounded-error APIs and completes the final reviewed implementation
+child needed before evaluating the aggregate owner. The branch normally merged
+exact current main as `327ea0a6100` without a textual conflict, preserving the
+dependency receipt and all intervening repository history. Kotlin micro-qr and
+Swift PaintVmAscii remain the two live published parity owners; this local
+tranche may use the open third slot only after fresh native, selector, planner,
+state, lesson, and exact-head independent review gates pass.

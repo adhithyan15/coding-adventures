@@ -16,16 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": 18293,
+  "active_pr": 18355,
   "active_prs": [
-    18293,
-    18355
+    18355,
+    18367
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-26T15:37:25Z",
-    "pr_number": 18324,
-    "head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
-    "action": "Verified Python gradient-descent PR #18324 merged through guarded squash auto-merge as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a and that exact receipt is present on current origin/main. Its merge advanced main and made .NET Bezier PR #18293 conflicting; preserve the published .NET history by merging current main normally and require fresh exact-head validation and hosted checks.",
+    "observed_at": "2026-10-26T23:13:55Z",
+    "pr_number": 18293,
+    "head_revision": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
+    "action": "Verified .NET Bezier PR #18293 merged through guarded squash auto-merge as 960397b253474e002be8805103f1f0bca6d82e6c and that exact receipt is present on current origin/main. Reprioritized the unblocked prepared Bezier successors and selected the reviewed Go/Rust tranche for current-main reconciliation and refreshed validation.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -20742,7 +20742,7 @@
     {
       "id": "geometry-bezier2d-flattening-csharp-fsharp",
       "title": "Consume safe Bezier flattening contract in C# and F#",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
@@ -20750,11 +20750,15 @@
       "pr_number": 18293,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18293",
       "pr_opened_at": "2026-10-26T04:49:54Z",
-      "publication_head": "a62b31f3543f6a09bbf5b9daf1363c10b5862bf4",
+      "publication_head": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
+      "merged_head_revision": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
+      "merged_at": "2026-10-26T23:13:55Z",
+      "merge_revision": "960397b253474e002be8805103f1f0bca6d82e6c",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, and the exact receipt is an ancestor of current origin/main.",
       "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner.",
       "selection_notes": "Selected after the WasmOpcodes and C# document-AST build-quality tranches completed local preparation behind the occupied three-PR publication ceiling. The merged G2D02 termination contract is its only dependency. This two-lane tranche has higher parity leverage than another single build-front repair and no implementation overlap with active TypeScript GFM, CommonMark fixture, Haskell Starlark-provider, or the two prepared .NET branches. Preserve each public ToPolyline signature while replacing midpoint recursion with dynamic nine-case fixture adoption, finite-segment bounds, finite-input checks, deterministic 32-depth/65,535-split failure, 95% production line gates, and dependent Arc2D regression runs.",
       "validation_notes": "Clean BUILD runs execute 12 tests in each lane after independent review exposed and repaired a subnormal-distance underflow. Scaled norm and projection arithmetic makes the new Double.Epsilon regression fail closed; the production-only reports measure C# at 100% line, 96.96% branch and 100% method coverage and F# at 99.39% line, 90.9% branch and 100% method coverage. Earlier one-test selections reported 35.13% C# and 34.89% F# line coverage and exited 1 against the 95% floor, proving fail-closed enforcement. The dependent C# and F# Arc2D suites pass 10 tests each at 97.01% and 98.83% line coverage respectively. Direct and transitive NuGet vulnerability audits report none. Focused G2D02 exact-selection and atomic-plan tests plus Go vet pass. Strict state parsing, lesson validation, JSON, and diff hygiene pass. The branch preserves published history by normally merging exact main 0be03745d775ffa9ee8c66ffda1700baa76ba58f and then exact current main 1bb58a0d7ed8d818d622e69890234d96b6e26b3a; the shared lifecycle and append-only roadmap conflicts retain both owners' receipts, including Python PR #18324's verified merge. Fresh exact-merge-head validation, independent review, and hosted CI remain publication gates.",
-      "publication_notes": "PR #18293 remains open and non-draft with guarded auto-merge enabled. Its exact 038a3cea63d20e86bcc96bca367466dd653470f4 head became conflicting after Python PR #18324 merged as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a; preserve published history with a normal merge, then require fresh exact-head review and terminal acceptable replacement checks before merge."
+      "publication_notes": "PR #18293 merged through guarded squash auto-merge from exact independently reviewed head c7b1e98687d3c762a98a9beed61ad71f586ca484 after every replacement hosted check completed acceptably. The exact merge receipt 960397b253474e002be8805103f1f0bca6d82e6c is present on current origin/main."
     },
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
@@ -20780,6 +20784,8 @@
       "selection_notes": "Selected as the final bounded existing-lane G2D02 implementation child after the C#/F#, Python/Ruby/Perl, TypeScript/Elixir/Lua, and Haskell/Swift tranches were implemented or prepared. Its neutral termination-contract dependency is merged, its Go and Rust package paths do not overlap the three active PRs or prepared branches, and it closes the last two stale midpoint-recursive implementations before the aggregate owner can be evaluated. Change the public flattening methods to explicit error returns, preserve evaluation/split/bounds behavior, consume all nine fixture rows dynamically, carry the subnormal-underflow regression, and run native Bezier2D plus same-language Arc2D suites. Shared selector integration remains sequenced behind PR #18293; no fourth PR opens while the publication ceiling is full.",
       "started_at": "2026-10-25T22:12:00-07:00",
       "base_revision": "396c0320b98e515279f3ba348392099fa769952d",
+      "reconciled_main_revision": "cee485ce0a48464b35619f156ff7674b7c72ad58",
+      "reconciliation_revision": "327ea0a6100",
       "implementation_revision": "f1b794083386aac5f3d3af1cfb96fc0fad0b4c2b",
       "correction_revision": "d176c5ffb51c601dd2ae8da0813abba7075b78a3",
       "validation_revision": "d176c5ffb51c601dd2ae8da0813abba7075b78a3",
@@ -20787,7 +20793,7 @@
         "code/packages/go/bezier2d",
         "code/packages/rust/bezier2d"
       ],
-      "validation_notes": "Local implementation is complete but remains unpublished while shared fixture-selector integration in PR #18293 is pending. Both public APIs now return explicit errors, consume all nine neutral rows dynamically, use the finite-segment control bound and a left-first iterative stack, and fail atomically for invalid tolerance, non-finite control or derived geometry, depth 32, or 65,535 subdivisions. Independent review found that scaling both the chord and point vectors erased a 1e-16 perpendicular offset beside a 1e308 chord; correction d176c5ffb51c601dd2ae8da0813abba7075b78a3 now uses chord-only scaling, compensated finite products, explicit floating-error widening, and outward-rounded magnitudes, with public-API regression tests in both lanes. The same correction series gives the root changelog shard its heading-derived slug and digest. Current-main reconciliation at 396c0320b98e515279f3ba348392099fa769952d is complete. Fresh native, coverage, planner, state, and lesson receipts are recorded in the roadmap; the 1,548-item state graph is unique, dependency-complete, and acyclic, and 1,587 lesson shards validate with zero problems. Publication remains blocked on PR #18293, followed by a fresh rebase, selector validation, and independent exact-head correctness/security review."
+      "validation_notes": "Local implementation is complete. Both public APIs return explicit errors, consume all nine neutral rows dynamically, use the finite-segment control bound and a left-first iterative stack, and fail atomically for invalid tolerance, non-finite control or derived geometry, depth 32, or 65,535 subdivisions. Independent review found that scaling both the chord and point vectors erased a 1e-16 perpendicular offset beside a 1e308 chord; correction d176c5ffb51c601dd2ae8da0813abba7075b78a3 uses chord-only scaling, compensated finite products, explicit floating-error widening, and outward-rounded magnitudes, with public-API regression tests in both lanes. The same correction series gives the root changelog shard its heading-derived slug and digest. After dependency PR #18293 merged, exact current origin/main cee485ce0a48464b35619f156ff7674b7c72ad58 was merged conflict-free as reconciliation head 327ea0a6100, preserving the dependency receipt and all intervening history. Fresh native, selector, planner, state, lesson, and exact-head independent review remain required before publication."
     },
     {
       "id": "geometry-bezier2d-go-rust-trig-dependency-contract",
