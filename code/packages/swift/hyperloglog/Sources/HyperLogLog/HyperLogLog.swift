@@ -82,15 +82,16 @@ public struct HyperLogLog: Equatable, Sendable {
       }
     }
 
-    let twoTo32 = 4_294_967_296.0
-    if estimate > twoTo32 / 30.0 {
-      let ratio = 1.0 - estimate / twoTo32
+    let twoTo64 = 18_446_744_073_709_551_616.0
+    if estimate > twoTo64 / 30.0 {
+      let ratio = 1.0 - estimate / twoTo64
       if ratio > 0 {
-        estimate = -twoTo32 * log(ratio)
+        estimate = -twoTo64 * log(ratio)
       }
     }
 
     guard estimate.isFinite, estimate > 0 else { return 0 }
+    if estimate >= twoTo64 { return UInt64.max }
     return UInt64(estimate.rounded())
   }
 
