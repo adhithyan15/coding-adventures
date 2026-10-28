@@ -18874,3 +18874,11 @@ fronts. Keep package sources, Linux, Windows, unrelated Haskell packages, and
 the separate fleet-wide cleanup out of scope. Validate all three fronts plus
 the downstream Arc2D closure locally, then require a completely fresh hosted
 matrix before guarded auto-merge.
+
+The closure repair is implemented at
+`b6248dcddd0f45a199a6d086950c71cc17eb53bc`. On local macOS, point2d passes
+19 Trig and 27 Point2D examples, wave passes 19 Trig and 21 Wave examples,
+Bezier2D passes 19 Trig, 27 Point2D, and 29 Bezier2D examples, and the explicit
+downstream Arc2D closure passes all 25 Arc2D examples as well. Publish the
+normal follow-up history and require a completely fresh exact-head hosted
+matrix before guarded auto-merge.

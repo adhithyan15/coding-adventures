@@ -25,8 +25,8 @@
   "last_ci_action": {
     "observed_at": "2026-10-28T11:47:55Z",
     "pr_number": 18511,
-    "head_revision": "d7277e638d7aea6a9a729708f6e9c43ef810385f",
-    "action": "The replacement exact head passed Ubuntu and Windows but failed hosted macOS in the reverse dependency closure. The trig BUILD fix worked only for the direct package; separate point2d, wave, and Bezier2D BUILD processes inherited the same mismatched linker and rejected the CommandLineTools SDK arm64e.x1 stubs. Logged and immediately selected the bounded closure repair; guarded auto-merge remains disabled.",
+    "head_revision": "b6248dcddd0f45a199a6d086950c71cc17eb53bc",
+    "action": "The replacement exact head passed Ubuntu and Windows but failed hosted macOS in the reverse dependency closure. The trig BUILD fix worked only for the direct package; separate point2d, wave, and Bezier2D BUILD processes inherited the same mismatched linker. Logged, prioritized, implemented, and locally validated the bounded closure repair at b6248dcddd0f45a199a6d086950c71cc17eb53bc; guarded auto-merge remains disabled pending a fresh hosted matrix.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -20922,7 +20922,7 @@
     {
       "id": "haskell-bezier-reverse-closure-macos-clt-linker-selection",
       "title": "Select the matching CLT linker across the Haskell Bezier reverse closure",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
       "pr_number": 18511,
@@ -20934,8 +20934,10 @@
         "code/packages/haskell/wave",
         "code/packages/haskell/bezier2d"
       ],
+      "implementation_revision": "b6248dcddd0f45a199a6d086950c71cc17eb53bc",
+      "validation_revision": "b6248dcddd0f45a199a6d086950c71cc17eb53bc",
       "selection_notes": "The fresh hosted failure invalidated the earlier direct-package assumption: changing trig selects its reverse dependencies, and every selected package launches an independent BUILD process. Reprioritize this closure repair ahead of all independent work because it is the exact blocker on an already-published two-language PR, Ubuntu and Windows are green, and the required Darwin-only Cabal wrapper is the same reviewed repository pattern. Keep scope to point2d, wave, and Bezier2D BUILD fronts; package sources, Linux, Windows, unrelated Haskell packages, and the separate fleet-wide cleanup remain unchanged.",
-      "notes": "Hosted macOS job 122783571620 in run 40678136914 failed haskell/point2d and haskell/wave with the same arm64e.x1 TAPI error after the direct trig BUILD fix. Bezier2D was dependency-skipped and would launch its own Cabal process next, so apply the matching CommandLineTools selection to all three independent BUILD fronts. Validate each native front plus the downstream Arc2D closure locally, then require a completely fresh exact-head hosted matrix."
+      "notes": "Hosted macOS job 122783571620 in run 40678136914 failed haskell/point2d and haskell/wave with the same arm64e.x1 TAPI error after the direct trig BUILD fix. Bezier2D was dependency-skipped and would launch its own Cabal process next. The repair applies the matching CommandLineTools selection to all three independent BUILD fronts. Local macOS validation passes 19 Trig plus 27 Point2D examples through point2d, 19 Trig plus 21 Wave examples through wave, 19 Trig plus 27 Point2D plus 29 Bezier2D examples through Bezier2D, and the downstream Arc2D closure with 25 Arc2D examples. A completely fresh exact-head hosted matrix remains mandatory."
     },
     {
       "id": "geometry-bezier2d-flattening-typescript-elixir-lua",
