@@ -19187,3 +19187,10 @@ lines, 96.55% of functions, and 92.11% of regions. The real Go build tool's
 bounded sparse inventory selects the new package together with its DT17
 hash-functions prerequisite and records the intended dependency edge. Keep the
 branch local while exact-head review and active-main reconciliation complete.
+
+Independent review of exact head
+`233185c373fda90720db60c17c5ba188ec3edf6c` passes with no remaining code,
+security, test, authority, or local publication finding. Review required the
+closed capability schema and a stable capacity-overflow boundary; both fixes
+and their regressions pass. Keep the approved branch local pending PR #18531
+and current-main lifecycle reconciliation.
