@@ -18329,6 +18329,69 @@ are #18293 at exact head `c7b1e98687d3c762a98a9beed61ad71f586ca484`
 and #18355 at exact head `f27058ffa18abe1fb7a7167237eb0b761414162f`;
 GitHub reports both open, non-draft, and mergeable. The live parity set is now
 exactly {18293, 18355, 18367}.
+## October 26, 2026: Kotlin micro-qr build-front selection
+
+PR #18312 completed every reported final-head check acceptably and merged from
+exact head `b804a122612f4ae64d967efbff454af771bf6130` as
+`0be03745d775ffa9ee8c66ffda1700baa76ba58f` at
+`2026-10-26T11:52:29Z`. That receipt is an ancestor of the reconciled selection
+base, exact origin/main `9dce8120cfc6ed37c205d7a03f35de40b509260a`, so the live
+parity PR set is now #18293 and #18324.
+
+The refreshed ready-owner prioritization selects
+`kotlin-micro-qr-build-front-and-gradle-metadata-coverage` next. This bounded
+repair restores an existing 123-test Kotlin package to repository discovery
+and scheduling, and its external Gradle consumer verifies that the public
+`ModuleGrid` return type is transitively available through the package API.
+That build-front and public-metadata work ranks ahead of the capability-only
+Swift PaintVmAscii repair. The prepared Bezier successors remain blocked on
+selector dependency PR #18293.
+
+The two local implementation commits were rebased conflict-free onto the exact
+selection base on branch
+`codex/parity-kotlin-micro-qr-build-front-20261026`. The tranche adds the
+Gradle package definition, fail-closed Unix and Windows BUILD fronts, empty
+capability declaration, and documentation; it does not change encoder source
+or behavior. The intervening mainline advances are unrelated System/360,
+TaskApp, and LANG84 changes with no path overlap. Neither live PR touches this
+Kotlin package. PR #18324 removes a different `code/BUILD-EXEMPTIONS` record,
+so later reconciliation must preserve both removals and both append-only
+lifecycle receipts.
+
+Reconciliation also removes one inherited duplicate `merged_at` key from the
+already-merged CommonMark fixture owner while retaining its canonical identical
+value. Publication remains prohibited until the final local head has passed
+the native Kotlin build, external-consumer compile, focused planner, capability
+schema, lesson, state-graph, diff-hygiene, and independent exact-head review
+gates.
+
+## October 26, 2026: Kotlin micro-qr publication
+
+The reconciled Kotlin front passed exact-head independent review at
+`34c40e1eee79ccf526d6217e63d166b19f13e1e1` and opened as draft PR #18355.
+GitHub reported the reviewed implementation head mergeable. The draft exists
+only to record the durable PR identity while this lifecycle receipt receives
+independent delta review; it must not be marked ready until that review passes,
+and guarded auto-merge remains disabled until every exact-head hosted check is
+terminal acceptable. The hosted parity queue is now at its three-PR ceiling.
+
+## October 26, 2026: Python merge and Kotlin conflict reconciliation
+
+Python gradient-descent PR #18324 completed every final-head check acceptably
+at exact independently reviewed head
+`d34af356d621175dd8cc307d953ecb7a99d1b79a` and merged through guarded squash
+as `1bb58a0d7ed8d818d622e69890234d96b6e26b3a` at
+`2026-10-26T15:37:25Z`. The receipt is exact current origin/main, leaving only
+#18293 and #18355 in the live parity set.
+
+That base advance conflicts only with the Kotlin branch's append-only state and
+roadmap records. Merge exact current main normally into the published Kotlin
+branch without rewriting history, preserving both distinct BUILD-exemption
+removals, the complete Python merge receipt, and the Kotlin selection and
+publication records. The Kotlin owner remains pr-open. The resulting local
+merge head must pass focused validation and independent exact-head review before
+a normal push; fresh hosted checks must then finish acceptably before guarded
+auto-merge can be considered.
 ## October 26, 2026: Python merge and .NET Bezier conflict reconciliation
 
 Python gradient-descent PR #18324 completed its guarded lifecycle and merged as
@@ -18366,3 +18429,38 @@ pushed normally at exact replacement head
 downstream validation plus independent exact-head review before a normal push;
 all replacement hosted checks must then finish acceptably before guarded
 auto-merge can be enabled.
+
+## October 26, 2026: .NET Bezier merge and Kotlin conflict reconciliation
+
+The .NET merge receipt is an ancestor of exact reconciliation base
+`cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed
+.NET worktree and local branch were removed safely.
+
+That base advance conflicts only with the Kotlin branch's append-only state and
+roadmap records. Preserve the published Kotlin history by merging exact current
+main normally, retaining the complete Python and .NET merge receipts, the
+Kotlin selection and publication records, and both distinct BUILD-exemption
+removals. The other live parity owner is Swift PaintVmAscii PR #18367 at exact
+published head `365f455bbaa57c41b1ff825f85fbca883d0cfb92`; it requires its own
+normal conflict reconciliation. The live publication set is now {#18355,
+#18367}. The resulting Kotlin merge head must pass focused validation and
+independent exact-head review before a normal push, and all replacement hosted
+checks must finish acceptably before guarded auto-merge can be enabled.
+
+## October 28, 2026: Kotlin merge and Swift conflict reconciliation
+
+Kotlin micro-qr PR #18355 completed every replacement check acceptably and
+merged through guarded squash auto-merge from exact independently reviewed head
+`dac7bcee4255e286754d39a1e5bc33cb51430b19` as
+`36178b3a0d81054cbaf4424b81aec7792f0bcfb0` at
+`2026-10-28T07:21:45Z`. The exact receipt is current origin/main, and the clean
+completed Kotlin worktree and local branch were removed safely.
+
+That base advance conflicts only with the Swift branch's append-only lifecycle
+records. Preserve the published Swift history by merging exact current main
+normally, retaining the complete Python, .NET, and Kotlin merge receipts plus
+the PaintVmAscii preparation, selection, publication, and exact-review history.
+Go/Rust Bezier PR #18503 is the other live parity owner. The live publication
+set is now {#18367, #18503}. The resulting Swift merge head must pass the 34
+PaintVmAscii tests, all 43 downstream cowsay tests, exact-head review, and fresh
+hosted checks before guarded auto-merge can be enabled.
