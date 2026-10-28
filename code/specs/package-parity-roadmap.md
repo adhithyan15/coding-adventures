@@ -18770,3 +18770,22 @@ current main while retaining every prior merge receipt and its complete
 implementation, validation, publication, and review history. The live
 publication set is now {#18508, #18511}; replacement exact-head hosted checks
 remain required before guarded auto-merge.
+
+## October 28, 2026: Haskell/Swift hosted macOS linker blocker reprioritization
+
+Exact Haskell/Swift Bezier head `cd46abd9c493004912415a69ae6df75e5ee67c9d`
+failed its hosted macOS build before package tests. GHC 9.4.8 is linked to the
+CommandLineTools SDK, but Cabal inherited the Xcode linker; that linker rejects
+the SDK's `arm64e.x1-macos` TAPI stubs while linking the first dependency in the
+Haskell closure, `haskell/trig`. This is the same runner/toolchain mismatch
+already repaired for the Haskell Starlark package and documented in the
+repository's macOS GHC linker lesson, not a Bezier implementation failure.
+
+Log `haskell-trig-macos-clt-linker-selection` as a distinct bounded backlog
+owner, then prioritize it immediately because it directly blocks an existing
+two-language PR and has no open-PR path overlap. Scope the repair to selecting
+`/Library/Developer/CommandLineTools` for Cabal and its children on Darwin in
+the trig BUILD front. Linux, Windows, package source, and unrelated owners stay
+unchanged. Native trig and Haskell Bezier closure validation plus a completely
+fresh hosted matrix on the repaired exact head remain mandatory before guarded
+auto-merge.
