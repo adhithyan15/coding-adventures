@@ -18347,3 +18347,14 @@ dependency receipt and all intervening repository history. Kotlin micro-qr and
 Swift PaintVmAscii remain the two live published parity owners; this local
 tranche may use the open third slot only after fresh native, selector, planner,
 state, lesson, and exact-head independent review gates pass.
+
+Fresh validation at exact receipt head
+`17f4ee3b2202ae97f7c7669050791706a158cc66` passes Go Bezier2D at 95.1%
+statement coverage and downstream Go Arc2D at 96.8%. Exact tracked-tree exports
+avoid the sparse Rust workspace's intentionally omitted unrelated sources:
+Rust Bezier2D passes all 23 tests, and downstream Rust Arc2D passes all 20 tests
+plus doc tests. The focused G2D02 exact-selection and atomic-plan tests pass
+against the same tracked tree. Both temporary exports were moved to Trash after
+validation. The production delta is unchanged from the previously independently
+reviewed correction series; only the current-main and validation receipts need
+final exact-head review before publication.
