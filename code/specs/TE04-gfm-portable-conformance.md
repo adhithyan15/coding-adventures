@@ -132,3 +132,27 @@ owners stay ordered as follows: reconcile the present C#, F#, and Haskell
 packages; add Swift after its CommonMark prerequisites; then add Java, Kotlin,
 and Dart after their parser and renderer prerequisites.  None is implied by
 TypeScript's result.
+
+## Swift fenced-block prerequisite
+
+The backlog owner `gfm-fenced-block-swift-contract-adoption` is the first
+same-lane prerequisite for Swift GFM. It adds a distinct, source-preserving
+`fenced_block` variant to the Swift Document AST and teaches the existing
+CommonMark parser and HTML renderer to carry it end to end:
+
+- `name` is the first whitespace-delimited token of the normalized info string,
+  or `nil` when the fence is anonymous;
+- `info` retains the complete normalized info string, or `nil` when empty; and
+- `value` retains the literal payload and its terminal newline behavior.
+
+Indented code blocks remain ordinary `code_block` nodes. The HTML fallback may
+use the escaped `name` as a language-class hint, but it must escape the literal
+payload and must never interpolate, execute, or otherwise interpret the full
+`info` metadata.
+
+Native tests must cover the named, anonymous-empty, and inert diagram fence
+shapes frozen by this profile, plus an adversarial metadata value that proves
+the renderer uses only escaped `name`. This prerequisite does not adopt the
+complete sixteen-case fixture and earns no Swift GFM parser credit. Task items,
+tables, strikethrough, the 652-example CommonMark reconciliation, the missing
+`gfm-parser` package, and the convenience facade remain separately owned.

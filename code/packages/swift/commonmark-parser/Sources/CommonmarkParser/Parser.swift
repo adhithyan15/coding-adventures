@@ -68,6 +68,9 @@ func resolveInlines(_ block: IntermediateBlock) -> BlockNode {
     case .codeBlock(let lang, let value):
         return .codeBlock(CodeBlockNode(language: lang, value: value))
 
+    case .fencedBlock(let name, let info, let value):
+        return .fencedBlock(FencedBlockNode(name: name, info: info, value: value))
+
     case .blockquote(let children):
         return .blockquote(BlockquoteNode(children: children.map { resolveInlines($0) }))
 

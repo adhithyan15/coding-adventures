@@ -16,17 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": 18517,
+  "active_pr": 18516,
   "active_prs": [
     18511,
-    18516,
-    18517
+    18516
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T11:08:57Z",
-    "pr_number": 18508,
-    "head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
-    "action": "Verified scripting Bezier PR #18508 completed every exact-head check acceptably and merged through guarded squash auto-merge as fe057f18c6e8b62cae9921fee2538c091fae1bbb. The exact receipt is current origin/main and the clean completed worktree and local branch were removed. The two remaining published parity PRs were selected for normal current-main reconciliation and fresh hosted checks; the newly open slot was reprioritized to the dependency-ready Swift hash-map preparation.",
+    "observed_at": "2026-10-28T12:21:19Z",
+    "pr_number": 18517,
+    "head_revision": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+    "action": "Verified Swift hash-map PR #18517 completed all exact-head checks acceptably and merged through guarded squash auto-merge as 031553c39dda7b68b9aa43d4abb4ab688ceff3a0. The exact receipt is current origin/main and the clean completed worktree and local branch were removed. The base advance made Swift fenced-block PR #18516 conflicting, so preserve its published history with a normal current-main merge and require fresh exact-head checks.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15167,7 +15166,7 @@
     {
       "id": "swift-hash-map-lane-parity",
       "title": "Implement DT18 hash-map in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
@@ -15175,8 +15174,12 @@
       "pr_number": 18517,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18517",
       "pr_opened_at": "2026-10-28T11:17:09Z",
-      "publication_head": "e8fed125d8e611f657bd358b2dc69bf5dffc4808",
-      "publication_notes": "PR #18517 is open and non-draft from exact current-main reconciliation and lifecycle head e8fed125d8e611f657bd358b2dc69bf5dffc4808. The three-slot publication ceiling is full with #18511, #18516, and #18517. Guarded auto-merge remains disabled until every exact-head hosted check is terminal and acceptable.",
+      "publication_head": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+      "publication_notes": "PR #18517 completed every exact-head hosted check acceptably and merged through guarded squash auto-merge from exact lifecycle head 6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc.",
+      "merged_head_revision": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+      "merged_at": "2026-10-28T12:21:19Z",
+      "merge_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "started_at": "2026-10-28T11:16:04Z",
       "selected_main_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
       "reconciliation_revision": "e8d5e1897756bb0e012a3f01769ba5df03cf85dc",
@@ -20849,7 +20852,7 @@
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
       "title": "Consume safe Bezier flattening contract in Python, Ruby, and Perl",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
@@ -20857,8 +20860,12 @@
       "pr_number": 18508,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18508",
       "pr_opened_at": "2026-10-28T08:41:21Z",
-      "publication_head": "ec16a6829e41cc5d5c0e1f3fbf747452faee8b7e",
-      "publication_notes": "PR #18508 is open and non-draft. Dynamic Bezier PR #18506 advanced main and made exact reconciliation head ec16a6829e41cc5d5c0e1f3fbf747452faee8b7e conflicting, so exact current main is being merged normally without rewriting history. The resulting head requires exact delta review and fresh hosted checks before guarded auto-merge.",
+      "publication_head": "c780f49320552adab7eea83c283a6c7afbce17eb",
+      "publication_notes": "PR #18508 completed every exact-head hosted check acceptably and merged through guarded squash auto-merge from exact reconciliation head c780f49320552adab7eea83c283a6c7afbce17eb.",
+      "merged_head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
+      "merged_at": "2026-10-28T11:08:57Z",
+      "merge_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "notes": "Exception-based scripting API slice. All three use midpoint flatness and unbounded recursion without explicit flattening-input validation. Consume nine neutral cases; test NaN/infinity and nonfinite controls natively, atomic budget failure, and same-language Arc2D regressions.",
       "selection_notes": "Selected as the next independent implementation tranche while the three-PR publication ceiling is occupied. Its sole dependency, the G2D02 termination contract and nine-case neutral corpus, is merged. Python, Ruby, and Perl share the same exception-based API shape but have disjoint native sources and test fronts, so this removes three stale midpoint-recursive lanes without depending on the prepared C#/F# implementation. Keep shared build-tool selector work out of this branch until the C#/F# selector change lands, avoiding a conflict while preserving exact native fixture consumption and Arc2D regression coverage.",
       "reconciled_main_revision": "e08ed142125a4441e2ca53470e6b584573b7e6ac",
@@ -26223,15 +26230,20 @@
     {
       "id": "gfm-fenced-block-swift-contract-adoption",
       "title": "Adopt the source-preserving fenced-block contract in Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "gfm-language-neutral-conformance-fixture"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-gfm-swift-fenced-block-20261025",
+      "pr_number": 18516,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18516",
+      "pr_opened_at": "2026-10-28T10:30:33Z",
+      "publication_head": "af66b66094b0a62248189f542a5b8bedede9c18f",
+      "publication_notes": "PR #18516 is open and non-draft. Swift hash-map PR #18517 advanced main after exact reconciliation head 4858782cc6ec82230530ab56e810801dd265a730, so preserve the published history through a normal exact-main merge, re-run all six affected native suites, and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
       "delivery_class": "portable-lane-reconciliation",
       "selection_blocked": false,
       "registered_at": "2026-10-24T19:17:58Z",
+      "selected_at": "2026-10-26T05:23:49Z",
       "preparation_head_revision": "47bcc00857695c53f9caeb9a0568b2d4cfb8356b",
       "preparation_notes": "A complete local preparation exists at exact clean head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b but remains unpublished. Keep this owner pending in shared lifecycle state; every downstream GFM owner remains blocked until this fenced-block prerequisite is published and merged.",
       "package_paths": [
@@ -26239,7 +26251,17 @@
         "code/packages/swift/commonmark-parser",
         "code/packages/swift/document-ast-to-html"
       ],
-      "notes": "Swift currently lowers fences to code_block and has no fenced_block AST/renderer case. Adopt TE04 source-preserving name/info/value semantics and inert HTML fallback before adding the missing GFM parser root. Keep the sixteen-case GFM parser adoption itself downstream."
+      "notes": "Swift currently lowers fences to code_block and has no fenced_block AST/renderer case. Adopt TE04 source-preserving name/info/value semantics and inert HTML fallback before adding the missing GFM parser root. Keep the sixteen-case GFM parser adoption itself downstream.",
+      "selection_notes": "Selected locally as the smallest dependency-ready Swift GFM prerequisite after a 2026-10-26 reprioritization. The older codex/parity-gfm-swift-20261024 preparation predates the three-owner decomposition and combines this contract with downstream parser work, so it is retained only as implementation evidence and is not publishable as one PR. All prepared Bezier successors remain blocked on PR #18293, while hosted slots are full with live PRs #18293, #18355, and #18367; this owner therefore remains unpublished local-only preparation.",
+      "base_revision": "79322a77c561c1c0cbe21a397a6cd7c41021c3a0",
+      "validation_revision": "6501bf72b5efba02fc4746757ded9a08fcc4a19c",
+      "reconciled_main_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
+      "reconciliation_notes": "Its prerequisite gfm-language-neutral-conformance-fixture is merged as PR #18118 at 83f1871e3d61e8151b0e9313337f5dc2c842a3e6. The published branch normally merged exact current origin/main 031553c39dda7b68b9aa43d4abb4ab688ceff3a0 after Swift hash-map PR #18517 merged, without rewriting its preparation or publication history. The production delta across the six-package Swift closure is unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. The live parity set is {18511, 18516}, leaving one publication slot after fresh backlog prioritization.",
+      "validation_notes": "RED compilation proved the missing FencedBlockNode and BlockNode.fencedBlock surface. Fresh post-merge GREEN validation passes 96 document-AST tests, 62 CommonMark-parser tests, and 63 renderer tests; the complete affected Swift closure also passes 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests. Production coverage receipts remain patch-identical at 100% lines/functions for document-ast, 92.38% aggregate lines and 90.77% functions for document-ast-to-html with its AST dependency, and 81.91% aggregate lines for commonmark-parser including its pre-existing 77.66% InlineParser baseline; the changed BlockParser and Parser files measure 86.99% and 97.78% lines respectively. The three directly changed packages and six-package manifest-confirmed closure remain unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b after normally merging current main c32d5acc15c3563487cce56a7976c754f62e4bd2. The sixteen-case GFM reader, tasks, tables, strikethrough, 652-example reconciliation, missing parser root, and facade remain downstream. Exact merge-head review remains the publication gate.",
+      "post_scripting_merge_validation_notes": "After normally merging exact current main fe057f18c6e8b62cae9921fee2538c091fae1bbb, all six affected native suites pass again: 96 document-AST, 62 CommonMark-parser, 63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests. The production delta remains unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. Fresh exact-head hosted checks remain mandatory before guarded auto-merge.",
+      "post_hash_map_merge_validation_notes": "After normally merging exact current main 031553c39dda7b68b9aa43d4abb4ab688ceff3a0, all six affected native suites pass again: 96 document-AST, 62 CommonMark-parser, 63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests. The production delta remains unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. Fresh exact-head hosted checks remain mandatory before guarded auto-merge.",
+      "final_review_revision": "ceaf3495edeca23f92c0cac65d12319cd07b30ab",
+      "final_review_notes": "Exact merge-head review confirms the six-package production delta is unchanged from prepared reviewed head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. All six native suites pass after current-main reconciliation, the 17-path diff is clean, strict JSON state parsing passes, and no live open PR overlaps any of the three directly changed package roots."
     },
     {
       "id": "commonmark-parser-swift-652-reconciliation",
