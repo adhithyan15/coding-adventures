@@ -19110,3 +19110,20 @@ GHC 9.4.8 invoke a linker that could not parse the CLT SDK's newer
 affine2d's Cabal process, record the root-selection lesson, validate the full
 22 affine2d, 27 point2d, and 19 trig examples, and normally merge current main.
 A completely fresh exact-head hosted matrix remains mandatory.
+
+## October 28, 2026: Swift HyperLogLog local selection
+
+While Haskell ITF Windows-front PR #18527 runs replacement CI, fresh backlog
+prioritization selects `swift-hyperloglog-lane-parity` for independent local
+work. Its sole DT17 hash-functions prerequisite is merged, it adds one missing
+non-Rust package, and its new package root does not overlap the active Haskell
+or Go build-tool surfaces. It ranks ahead of the two-lane binary-tree owner
+because it is a bounded single package and directly advances the recorded
+Swift store-engine dependency chain.
+
+Keep scope to DT21 precision bounds, deterministic FNV-1a plus fixed avalanche
+mixing, persistent register values, small- and large-range correction, merge
+compatibility, stable errors, native build fronts, documentation, and empty
+capabilities. Keep the branch local until current-main lifecycle receipts are
+reconciled, complete native validation passes, and the exact head receives
+independent review.

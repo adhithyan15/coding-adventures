@@ -15233,12 +15233,16 @@
     {
       "id": "swift-hyperloglog-lane-parity",
       "title": "Implement DT21 HyperLogLog in Swift",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
-      "branch": null,
+      "branch": "codex/swift-hyperloglog-lane-parity",
       "pr_number": null,
+      "selected_at": "2026-10-28T16:25:00Z",
+      "selection_revision": "d70b1afc3de8ae83b641d8ca8fe9565d901798f6",
+      "base_revision": "d70b1afc3de8ae83b641d8ca8fe9565d901798f6",
+      "selection_notes": "Fresh prioritization while Haskell ITF Windows-front PR #18527 runs replacement CI selects the dependency-ready Swift DT21 child for local-only implementation. Its sole DT17 hash-functions prerequisite is merged, it adds one missing non-Rust package, and it has no package-path overlap with the active Haskell barcode-layout-1d, ITF, or Go build-tool surfaces. It ranks ahead of the two-lane binary-tree owner because it is a single bounded package and directly unlocks the recorded Swift store-engine dependency chain. Keep this branch local until current-main lifecycle receipts are reconciled and exact-head review passes.",
       "notes": "Preserve precision bounds, register, index and rank behavior, correction regimes, merge compatibility, stable errors, and deterministic hashing.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-hyperloglog-lane-parity"
