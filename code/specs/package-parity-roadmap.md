@@ -18887,3 +18887,47 @@ Post-reconciliation validation passes 96 document-AST, 62 CommonMark-parser,
 tests. The production delta remains unchanged from exact prepared head
 `47bcc00857695c53f9caeb9a0568b2d4cfb8356b`; publish the normal merge and
 require a full replacement hosted matrix.
+
+## October 28, 2026: Swift fenced-block merge and hash-set continuation
+
+Swift fenced-block PR #18516 completed every exact-head check acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`8a9ac79a9308df20e88c1def222967a51f3a1abb` as
+`7bb2f044fed05e25d8c1cfb330ccfd3c286e1550` at
+`2026-10-28T13:29:40Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+The dedicated `swift-hash-set-lane-parity` branch preserved its selection
+commit through a normal merge of that exact main. Its DT17 hash-functions and
+DT18 persistent-map prerequisites are both merged, it advances another
+non-Rust lane, and its new package root does not overlap active Haskell/Swift
+Bezier PR #18511. Keep scope to DT19 membership, deterministic set algebra,
+persistent value semantics, native build fronts, docs, empty capabilities,
+and lifecycle receipts. Do not publish hash-set until implementation,
+validation, and exact-head review are complete.
+
+The package implementation now passes 10 native tests and a production release
+build with 100% production-source region, function, and line coverage. The real
+build tool discovers and successfully builds the exact three-package Swift
+closure: hash-functions, hash-map, and hash-set. Independent security review
+found no implementation or authority defect and confirmed an external
+HashSet-only consumer compiles. Its hygiene findings are resolved before
+publication: imports are strictly ordered, a root changelog shard and lifecycle
+receipt are present, and generated artifacts are cleaned.
+
+The older Haskell ITF Windows-front branch is truthfully reclassified as a
+pending local preparation at `fa152d9eb70c3e95ad2b3529da63607a84f4305b`,
+not a second selected owner. It remains 112 main revisions behind and must wait
+for a future prioritization, current-main reconciliation, validation, and
+review. Swift hash-set is the sole selected local owner; PR #18511 remains the
+sole live parity publication.
+
+## October 28, 2026: Swift hash-set publication
+
+Open non-draft PR #18525 from clean, independently reviewed publication head
+`16a89f287a210f4262dc8af2dddbf16b3db60d8c`. Its implementation is based on
+exact current main `7bb2f044fed05e25d8c1cfb330ccfd3c286e1550`; the new package
+root has no overlap with any other open PR. The live parity set is now
+{#18511, #18525}, leaving one publication slot open. Guarded auto-merge remains
+disabled until every hosted check for the final exact head is terminal and
+acceptable and GitHub reports a clean merge state.
