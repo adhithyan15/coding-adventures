@@ -1,7 +1,9 @@
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toAwtImage
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.captureToImage
@@ -41,14 +43,30 @@ import org.junit.Test
 // kind of fact this harness exists to make visible.
 private val SHOT_VIEWPORT = Size(1280f, 900f)
 
+// The window Engram actually opens in. Engram declares no `[app]` window, so
+// the generated `Main.kt` calls a bare `Window(...)`, and Compose Desktop's
+// default is 800x600. The 1280x900 shots above are wide enough to show the
+// width caps, but tall enough to hide what falls below the fold of the real
+// window -- which is how "nothing in Engram scrolls" (EN-6) went unseen. These
+// shots are prefixed `800x600-` and cover the same screens.
+private val DEFAULT_WINDOW = Size(800f, 600f)
+
+private val switcherOption = SemanticsMatcher("a screen switcher option") { node ->
+    node.config.getOrNull(SemanticsProperties.TestTag)?.startsWith("segmented-option") == true
+}
+
 class EngramScreenshots {
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun renderTheProductScreens() {
         val target = System.getenv("MOSAIC_SHOT_DIR") ?: return
         val dir = File(target).apply { mkdirs() }
+        renderEveryScreen(dir, SHOT_VIEWPORT, prefix = "")
+        renderEveryScreen(dir, DEFAULT_WINDOW, prefix = "800x600-")
+    }
 
-        runSkikoComposeUiTest(size = SHOT_VIEWPORT) {
+    @OptIn(ExperimentalTestApi::class)
+    private fun renderEveryScreen(dir: File, viewport: Size, prefix: String) {
+        runSkikoComposeUiTest(size = viewport) {
             val host = checkNotNull(MosaicRuntimeHost.load()) {
                 "standard Compose binding did not load the Engram Rust runtime"
             }
@@ -63,28 +81,31 @@ class EngramScreenshots {
 
             fun shot(name: String) {
                 val image = captureToImage().toAwtImage()
-                val file = File(dir, "$name.png")
+                val file = File(dir, "$prefix$name.png")
                 ImageIO.write(image, "png", file)
                 // A window that rendered nothing still writes a valid PNG, so
                 // check the surface is the size we asked for rather than
                 // trusting that the write succeeded.
-                check(image.width == SHOT_VIEWPORT.width.toInt()) {
-                    "rendered ${image.width}px wide, expected ${SHOT_VIEWPORT.width.toInt()}"
+                check(image.width == viewport.width.toInt()) {
+                    "rendered ${image.width}px wide, expected ${viewport.width.toInt()}"
                 }
                 println("SHOT ${file.absolutePath} ${image.width}x${image.height}")
             }
-
-            shot("01-decks")
 
             // Every screen, through the nav's own control. "Decks" is also the
             // deck list's label, so each option is matched by the toolkit
             // SegmentedControl's `segmented-option` tag as well as its label
             // (the nav is the first SegmentedControl mount, so its parts keep
-            // the unsuffixed names).
-            listOf("Study", "Browse", "Add", "Stats", "Options").forEachIndexed { i, label ->
-                onNode(hasTestTag("segmented-option") and hasText(label)).performClick()
+            // the unsuffixed names). The selected option is tagged
+            // `segmented-option-selected`, hence the prefix.
+            //
+            // Decks is clicked too, not assumed: the runtime saves which screen
+            // is showing, so a second pass on the same state file starts on
+            // the screen the first pass ended on.
+            listOf("Decks", "Study", "Browse", "Add", "Stats", "Options").forEachIndexed { i, label ->
+                onNode(switcherOption and hasText(label)).performClick()
                 waitForIdle()
-                shot("0${i + 2}-${label.lowercase()}")
+                shot("0${i + 1}-${label.lowercase()}")
             }
         }
     }

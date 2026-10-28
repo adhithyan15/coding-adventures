@@ -317,6 +317,119 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(!source.contains("layout SessionProgress"));
 }
 
+/// Every part name at or below `node`, in tree order.
+fn part_names(node: &moslayout_compiler::LayoutNode) -> Vec<String> {
+    let mut names: Vec<String> = node.part_name.iter().cloned().collect();
+    for child in &node.children {
+        names.extend(part_names(child));
+    }
+    names
+}
+
+/// Whether any node at or below `node` has this tag.
+fn contains_tag(node: &moslayout_compiler::LayoutNode, tag: &str) -> bool {
+    node.tag == tag || node.children.iter().any(|child| contains_tag(child, tag))
+}
+
+/// The screens scroll (EN-6, engram-anki-parity-plan.md §5.3).
+///
+/// A native window scrolls nothing unless the layout says so, and before this
+/// no native backend scrolled Engram: whatever a screen laid out past the
+/// window's bottom edge (all of Options' note type editor, in Compose's
+/// default 800x600 window) could not be reached. So, in both layouts:
+///
+/// - the shell's LAST child is a vertical `HostScroll [ content-scroll ]`
+///   (no `axis`, so vertical) wrapping exactly one `Column [ content ]`;
+/// - all six screens are inside it;
+/// - the header is OUTSIDE it on the desktop layout, so the screen switcher
+///   never scrolls away, and INSIDE it on touch, where the stacked header is
+///   taller than a phone in landscape;
+/// - nothing is a `HostNavigationSplit`, which a vertical scroll would crash on
+///   Compose and collapse to zero height on SwiftUI (the lesson #18458
+///   records);
+/// - both themes give the scroll `flex-grow : 1`, the remaining height that
+///   bounds its viewport.
+#[test]
+fn the_screens_scroll() {
+    const SCREENS: [&str; 6] = [
+        "decks-screen",
+        "study-screen",
+        "browse-screen",
+        "add-screen",
+        "stats-screen",
+        "options-screen",
+    ];
+    let mil = mosmodel_compiler::compile(&read_source("EngramApp.mil"))
+        .expect("EngramApp.mil should compile");
+    for (layout, header_scrolls) in [("EngramApp.mll", false), ("EngramApp.touch.mll", true)] {
+        let mll = moslayout_compiler::compile(&read_source(layout), Some(&mil.descriptor_json))
+            .unwrap_or_else(|e| panic!("{layout} should compile: {e:?}"));
+        let shell = &mll.def.root;
+        assert_eq!(shell.part_name.as_deref(), Some("app-shell"), "{layout}");
+        assert!(
+            !contains_tag(shell, "HostNavigationSplit"),
+            "{layout}: a split inside the vertical scroll crashes Compose and collapses SwiftUI"
+        );
+
+        let scroll = shell.children.last().expect("the shell has children");
+        assert_eq!(
+            scroll.tag, "HostScroll",
+            "{layout}: the shell ends in the scroll"
+        );
+        assert_eq!(
+            scroll.part_name.as_deref(),
+            Some("content-scroll"),
+            "{layout}"
+        );
+        assert!(
+            scroll.props.iter().all(|p| p.name != "axis"),
+            "{layout}: no axis, so the default, vertical, scroll ({:?})",
+            scroll.props
+        );
+        assert_eq!(
+            scroll.children.len(),
+            1,
+            "{layout}: the scroll wraps one column"
+        );
+        let content = &scroll.children[0];
+        assert_eq!(content.tag, "Column", "{layout}");
+        assert_eq!(content.part_name.as_deref(), Some("content"), "{layout}");
+
+        let inside = part_names(content);
+        for screen in SCREENS {
+            assert!(
+                inside.iter().any(|p| p == screen),
+                "{layout}: {screen} does not scroll"
+            );
+        }
+        let outside: Vec<String> = shell.children[..shell.children.len() - 1]
+            .iter()
+            .flat_map(part_names)
+            .collect();
+        assert_eq!(
+            inside.iter().any(|p| p == "app-header"),
+            header_scrolls,
+            "{layout}: the header should {}scroll",
+            if header_scrolls { "" } else { "not " }
+        );
+        assert_eq!(
+            outside.iter().any(|p| p == "app-header"),
+            !header_scrolls,
+            "{layout}"
+        );
+    }
+
+    for theme in ["light", "dark"] {
+        let style = read_source(&format!("EngramApp.{theme}.msl"));
+        let block = style
+            .split("part content-scroll {")
+            .nth(1)
+            .and_then(|rest| rest.split('}').next())
+            .unwrap_or_else(|| panic!("the {theme} theme must style content-scroll"));
+        assert!(block.contains("flex-grow : 1 ;"), "{theme}: {block}");
+    }
+}
+
 #[test]
 fn shared_engram_app_props_match_mosaic_slots() {
     let mil = mosmodel_compiler::compile(&read_source("EngramApp.mil"))
@@ -2220,12 +2333,14 @@ fn native_project_shells_expose_engram_host_contract() {
         // Dependency-owned axes that are absent from EngramApp must not add a
         // VisualStateManager wrapper or bind a nonexistent consumer property.
         // The indentation is the ReviewCard's depth: since #15440 it sits in
-        // the Study screen's `Else`, beside the toolkit EmptyState.
-        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                        <StackPanel Orientation=\"Vertical\">",
+        // the Study screen's `Else`, beside the toolkit EmptyState, and since
+        // EN-6 the screens sit two levels deeper, inside
+        // `HostScroll [ content-scroll ] { Column [ content ] }`.
+        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                                <StackPanel Orientation=\"Vertical\">",
     );
     assert_contains(
         &xaml_markup,
-        "<DataTemplate x:DataType=\"local:EngramApp_ItemVm\">\n                                                    <StackPanel Orientation=\"Vertical\">",
+        "<DataTemplate x:DataType=\"local:EngramApp_ItemVm\">\n                                                            <StackPanel Orientation=\"Vertical\">",
     );
     assert!(
         !xaml_markup.contains("{x:Bind Size") && !xaml_markup.contains("{x:Bind Variant"),

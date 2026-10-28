@@ -266,6 +266,7 @@ exist.
 | EN-3 | Image occlusion notes | **real**, blocked on UI88. #13938 | feature | L |
 | EN-4 | Engram is not in the XAML PR lane (`mosaic_xaml_windows_ci_acceptance.py`), and `mosaic-pkg-card` has only 5 tests | **real** | CI | S |
 | EN-5 | Out-of-date `golden-v11` naming, and `engram-anki-parity.md:120` | **real**, after #13942 and #14134 | docs | S |
+| EN-6 | Engram's screens never scroll on a native backend. In Compose's default 800×600 window, Options' note type editor and Decks' collection buttons cannot be reached; Flutter's Decks overflows by 344px | **fixed** except on Qt: the screens are in a `HostScroll [ content-scroll ]` on every backend ([`engram-anki-parity-plan.md` §5.3](engram-anki-parity-plan.md)). Pinned by `package_compiles::the_screens_scroll`, `native_complete_gate::every_native_backend_scrolls_the_screens`, and reachability tests on Compose and Flutter. **Qt still does not scroll**: its emitter sizes a `Column` shell to its content and drops `flex-grow`, so the `ScrollView` is never bounded | bug | S |
 
 ## Emitters and toolkit (`code/packages/rust/mosaic-emit-*`, `code/packages/mosaic`)
 

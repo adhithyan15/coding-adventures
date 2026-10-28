@@ -2780,6 +2780,18 @@ jobs:
             flutter pub get
             flutter analyze
             flutter build linux --debug
+
+            # The screens scroll (EN-6): engram_scroll_test.dart starts on
+            # Decks in an 800x600 window, requires its last button to start
+            # below the window, drags the screen until the button is inside
+            # it, and requires it to be hit-testable. Its own fresh state file,
+            # so it starts on Decks with an empty collection.
+            unset MOSAIC_APP_LIBRARY
+            cp "$GITHUB_WORKSPACE/code/programs/mosaic/engram-app/conformance/flutter/engram_scroll_test.dart" \
+              test/engram_scroll_test.dart
+            engram_scroll_state="$RUNNER_TEMP/mosaic-flutter-engram-scroll-state.json"
+            rm -f "$engram_scroll_state" "$engram_scroll_state.corrupt" "$engram_scroll_state.tmp"
+            MOSAIC_APP_STATE_PATH="$engram_scroll_state" flutter test test/engram_scroll_test.dart
           )
 
       - name: Round-trip Rust engine through standard Compose binding
@@ -2924,6 +2936,25 @@ jobs:
           # exercises `createDistributable` on task-app, and what is new here is
           # the handler source, not the packaging.
           gradle --no-daemon --stacktrace -p "$engram_output/compose" compileKotlin
+
+          # The screens scroll (EN-6): EngramScrollUiTest opens Options in
+          # Compose Desktop's default 800x600 window, requires the note type
+          # editor's New button to be off screen, scrolls the screen (ScrollBy,
+          # since performScrollTo hangs, EM-11) until it is displayed, and
+          # clicks it. Its own fresh state file. This lane packages nothing, so
+          # the runtime is read from the project's app-resources, as
+          # scripts/render-compose.sh does.
+          engram_app_resources="$engram_output/compose/app-resources/linux"
+          cmp "$engram_runtime_library" "$engram_app_resources/libmosaic_app.so"
+          mkdir -p "$engram_output/compose/src/test/kotlin"
+          cp code/programs/mosaic/engram-app/conformance/compose/EngramScrollUiTest.kt \
+            "$engram_output/compose/src/test/kotlin/EngramScrollUiTest.kt"
+          engram_scroll_state="$RUNNER_TEMP/mosaic-compose-engram-scroll-state.json"
+          rm -f "$engram_scroll_state" "$engram_scroll_state.corrupt" "$engram_scroll_state.tmp"
+          MOSAIC_APP_STATE_PATH="$engram_scroll_state" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$engram_app_resources" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$engram_output/compose" \
+              test --tests EngramScrollUiTest
 
           # ---- Journal: emit and COMPILE on Compose (J5b, #14416). -----------
           # Same gate as Engram above, minus the effects handler Journal does

@@ -208,6 +208,37 @@ class MosaicFlutterRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn("rust/mosaic-package-manifest", MODULE.ACCEPTANCE_PACKAGES)
 
+    def test_engram_screens_scroll_test_runs_in_the_lane(self) -> None:
+        """EN-6: the lane runs Engram's scroll reachability test in the
+        project it built, on a fresh state file of its own, so a screen that
+        stops scrolling fails CI rather than only a person's window."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# The screens scroll (EN-6): engram_scroll_test.dart")
+        block = workflow[start : workflow.index("\n          )", start)]
+        self.assertIn(
+            "code/programs/mosaic/engram-app/conformance/flutter/engram_scroll_test.dart",
+            block,
+        )
+        self.assertIn('rm -f "$engram_scroll_state"', block)
+        self.assertIn(
+            'MOSAIC_APP_STATE_PATH="$engram_scroll_state" flutter test test/engram_scroll_test.dart',
+            block,
+        )
+        # In the Engram project, after it is built.
+        self.assertLess(workflow.index("--project-name mosaic_engram_app ."), start)
+        test = (
+            Path(__file__).resolve().parents[2]
+            / "programs"
+            / "mosaic"
+            / "engram-app"
+            / "conformance"
+            / "flutter"
+            / "engram_scroll_test.dart"
+        ).read_text(encoding="utf-8")
+        self.assertIn("expect(tester.takeException(), isNull);", test)
+        self.assertIn("MOSAIC_APP_STATE_PATH", test)
+
     def test_layout_variants_fixture_is_resized_in_the_lane(self) -> None:
         """UI48 §7 wants a gate that changes the environment: the lane runs
         the layout-variants fixture's widget test, which resizes the window
