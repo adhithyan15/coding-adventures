@@ -18751,3 +18751,32 @@ retaining every prior merge receipt and the complete Python/Ruby/Perl
 implementation, validation, publication, and review history. The live
 publication set is now {#18508, #18511}; replacement exact-head hosted checks
 remain required before guarded auto-merge.
+
+## October 28, 2026: Swift hash-map selection after scripting Bezier merge
+
+Scripting Bezier PR #18508 merged from exact reviewed head
+`c780f49320552adab7eea83c283a6c7afbce17eb` as
+`fe057f18c6e8b62cae9921fee2538c091fae1bbb`, opening the third publication
+slot. Reprioritization selects `swift-hash-map-lane-parity`: its hash-functions
+prerequisite is merged, the complete preparation has no open-PR path overlap,
+and landing one missing non-Rust package immediately unlocks the recorded
+Swift hash-set and HyperLogLog descendants. It ranks ahead of new documentary
+contracts and the lower-leverage Go/Rust Bezier dependency cleanup.
+
+The preparation normally merged exact current main without rewriting its four
+commits; merge head `e8d5e1897756bb0e012a3f01769ba5df03cf85dc`
+preserves the corrected implementation at
+`a04423e471cbcbd6e59f8e22738e98eefa658739`. The native BUILD passes all 17
+focused tests, including both collision strategies and exact UTF-8 identity,
+then completes a production release build. Keep scope to the prepared DT18
+package, exact DT17 hashing, persistent semantics, native build fronts, docs,
+capability declaration, and lifecycle receipts. Exact merge-head review and
+hosted Windows qualification remain before publication.
+
+## October 28, 2026: Swift hash-map draft publication
+
+Open PR #18517 from exact current-main reconciliation and lifecycle head
+`e8fed125d8e611f657bd358b2dc69bf5dffc4808`. The live publication set is now
+{#18511, #18516, #18517}; do not open a fourth parity PR. Guarded auto-merge
+remains disabled until every hosted check for this exact head is terminal and
+acceptable, including the Windows BUILD front.
