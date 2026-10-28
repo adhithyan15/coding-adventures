@@ -18112,6 +18112,46 @@ enforce the 95% library line target on Unix and Windows. Package APIs, AST
 nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
 of scope.
 
+## October 25, 2026: dynamic-runtime Bezier flattening selection
+
+With the three publication slots still occupied and the C#/F# plus
+Python/Ruby/Perl tranches prepared locally, the next independent owner is
+`geometry-bezier2d-flattening-typescript-elixir-lua`. Its sole dependency is
+the merged G2D02 termination contract, and its three native package trees do
+not overlap active or prepared work. Three non-Rust lanes provide more parity
+leverage than either remaining two-lane successor.
+
+Consume all nine neutral cases dynamically through the public polyline APIs,
+replace midpoint recursion with the finite-segment control bound and bounded
+left-first traversal, and reject nonpositive/nonfinite tolerance, nonfinite
+controls, nonfinite derived arithmetic, and exhausted work without returning
+partial output. Carry the independent subnormal-distance regression into all
+three runtimes and run each same-language Arc2D suite. Shared Go selector
+changes remain owned by the prepared C#/F# tranche to avoid branch conflicts.
+
+The prepared implementation now replaces recursion in all three lanes with
+bounded left-first traversal, a depth limit of 32, and a shared 65,535-split
+budget. Scaled finite-segment distance arithmetic carries the independent
+.NET review's subnormal-underflow lesson into these lanes before publication.
+All nine corpus cases and native invalid-input, overflow, budget, and
+subnormal regressions pass. TypeScript passes 36 Bezier2D tests at 100% line
+coverage, with a focused selection proving the 95% floor fails closed; Elixir
+passes 16 tests and Lua passes 24. Their real dependent Arc2D suites pass 32,
+9, and 9 tests respectively.
+
+Independent review rejected the initially suspected TypeScript Arc2D
+working-directory gap. The repository runner starts every BUILD line from the
+package directory, so dependency-install directory changes do not persist into
+the Arc2D install, compile, test, or coverage commands. Runner-equivalent
+execution passes the actual 32-test Arc2D suite at 100% line and 95.23% branch
+coverage. The invalid repair candidate and its provisional backlog item are
+retired rather than published. Reconciliation over the unrelated Mermaid
+receipt at `20ba82cbe644174616d85b05a314c8395772ad8f` preserves that result: all
+three Bezier2D suites plus Elixir and Lua Arc2D pass again. The TypeScript
+Arc2D rerun reached its unchanged npm install front but hit the known shared
+npm Arborist `edgesOut` transient, not a package or working-directory failure.
+A clean rerun, shared-fixture selector integration, hosted platforms, and
+independent final-head review remain required before publication.
 ## October 25: serial Haskell opcode-provider recovery
 
 PR #18174 actually merged as `bd533925647b7fbac74eba35e611a8ba3930757f`; PR #18147 previously merged its frozen16 adoption. The unpublished67 draft remains separate. Earlier three-slot and draft-publication statements above are historical. Existing PR #18183 is now the sole active implementation. Its original `231de32b` head is preserved locally while its net change is carefully rebased onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. Actual CI fails before compilation in Cabal3.10.3.0 coverage planning for vector0.13.2; preserve coverage and inert metadata APIs while validating a package-local repair. Local native13tests/all359records, productionHPC100percent expressions/alternatives, Go15packages/84.6percentcoverage, vet/build, realplanner14-packageclosure and metadata/parity checks pass. Runtime source80a01 passed independent review; final documentation delta and fresh hosted CI remain required. See [the exact recovery evidence](../packages/haskell/starlark-compiler/VALIDATION.md).
@@ -18311,6 +18351,87 @@ current main into the Python branch without rewriting its published history,
 then rerun exact-head independent review and hosted checks before re-enabling
 guarded auto-merge.
 
+## October 26, 2026: Swift PaintVmAscii capability preparation
+
+PR #18312 completed its final-head checks and merged from exact head
+`b804a122612f4ae64d967efbff454af771bf6130` as
+`0be03745d775ffa9ee8c66ffda1700baa76ba58f` at
+`2026-10-26T11:52:29Z`. That verified receipt is present on exact reconciled
+origin/main `d1730421d34c9fe6ebe9cc68473f505017659a5a`. The three
+authorized publication slots are now occupied by live PRs #18293, #18324, and
+#18355, so the PaintVmAscii owner remains pending and this work stays local.
+
+The existing branch
+`codex/parity-swift-paint-vm-ascii-capabilities-20261026` was rebased
+conflict-free onto that main revision while preserving the intervening
+append-only lifecycle and roadmap history. Its bounded change adds only an
+explicit schema-v1 empty capability profile plus documentation for the already
+merged Swift renderer. Production source, public API, dependencies, BUILD
+fronts, scene semantics, and terminal behavior do not change: the library
+still consumes an in-memory scene and returns a string, and only its caller may
+choose to print it.
+
+The three live PRs overlap this preparation only in shared lifecycle documents,
+not in the PaintVmAscii package or its changelog shard. Local validation passes
+all 34 PaintVmAscii tests and all 43 downstream cowsay tests. The production Go
+planner selects and executes only the six-package Swift closure containing
+PaintInstructions, PaintVmAscii, cli-builder, directed-graph, cowsay, and
+state-machine; no special CI suite is widened. Capability-schema, strict JSON,
+state-graph, lessons, changelog-shard, diff-hygiene, and artifact-cleanup gates
+remain required before recording the local preparation head. Publication and
+selection require a later slot-opening reprioritization and independent review.
+
+## October 26, 2026: Swift PaintVmAscii selection after Python merge
+
+Python gradient-descent PR #18324 completed every required check and merged
+from exact reviewed head `d34af356d621175dd8cc307d953ecb7a99d1b79a` as
+`1bb58a0d7ed8d818d622e69890234d96b6e26b3a` at
+`2026-10-26T15:37:25Z`. The receipt was exact current origin/main at selection
+time, and its clean
+completed worktree and local branch were removed. The only live parity PRs are
+now #18293 and #18355.
+
+The ready backlog was reprioritized before using the opened slot. Every
+prepared Bezier successor remains blocked on selector dependency PR #18293, so
+the independently reviewed, dependency-free Swift PaintVmAscii capability
+repair is the next eligible candidate. Its exact owner advances from pending
+to in-progress locally; this does not publish a branch or create a PR.
+
+The three preparation commits were rebased onto exact main while preserving
+the complete Swift-hash, Python-gradient, and other intervening append-only
+history. Shared state and roadmap conflicts retained both sides. The resulting
+product scope remains one empty capability manifest plus documentation and the
+canonical changelog filename correction; production code, public API, BUILD
+fronts, dependencies, and caller-owned terminal authority remain unchanged.
+Fresh focused validation and independent review of the final local head are
+required before publication.
+
+Before publication, unrelated PA-RISC PR #18342 advanced origin/main to
+`de088e2ddfacd2372fab3677d38b969eea602c00` without touching the parity state,
+roadmap, or PaintVmAscii scope. The still-unpublished four-commit series was
+rebased onto that exact tip. Range comparison confirms all four commits are
+patch-identical to the previously validated series; the lifecycle receipt now
+records `de088e2ddfacd2372fab3677d38b969eea602c00` as the exact reconciled base.
+
+## October 26, 2026: Swift PaintVmAscii draft publication
+
+Independent exact-head review passed at
+`0ecc1c018da921308dac726c91dab152d93bf753`. The reviewed branch was pushed
+normally without rewriting that head and opened as draft PR #18367 at
+`2026-10-26T15:52:35Z`. GitHub reports the exact draft head open and mergeable.
+The draft records the durable PR identity only; it must remain draft until this
+lifecycle-only receipt receives separate exact-head review, and no readiness,
+auto-merge, or merge action is authorized here.
+
+After the independent review, unrelated Japanese-book PR #18338 advanced
+origin/main to `eb841de8f43fd001bde8bdc7ece462a008779da0`. It has no path
+overlap with the PaintVmAscii tranche, and a three-way merge-tree check is
+conflict-free, so publication preserves the exact reviewed implementation head
+rather than rewriting it for unrelated content. The other live parity owners
+are #18293 at exact head `c7b1e98687d3c762a98a9beed61ad71f586ca484`
+and #18355 at exact head `f27058ffa18abe1fb7a7167237eb0b761414162f`;
+GitHub reports both open, non-draft, and mergeable. The live parity set is now
+exactly {18293, 18355, 18367}.
 ## October 26, 2026: Kotlin micro-qr build-front selection
 
 PR #18312 completed every reported final-head check acceptably and merged from
@@ -18391,12 +18512,34 @@ atomic-plan checks, state/lesson/JSON/diff hygiene, and independent exact-head
 review. Existing guarded auto-merge may remain enabled, but only replacement
 checks on the final exact head may permit the merge.
 
-## October 28, 2026: .NET Bezier merge and Go/Rust reprioritization
+## October 26, 2026: .NET Bezier merge and Swift conflict reconciliation
 
 .NET Bezier PR #18293 completed every exact-head check acceptably and merged
 through guarded squash auto-merge from exact independently reviewed head
 `c7b1e98687d3c762a98a9beed61ad71f586ca484` as
 `960397b253474e002be8805103f1f0bca6d82e6c` at
+`2026-10-26T23:13:55Z`. The merge receipt is an ancestor of exact current
+origin/main `cee485ce0a48464b35619f156ff7674b7c72ad58`.
+
+That base advance conflicts only with the Swift branch's append-only state and
+roadmap records. Preserve the published Swift history by merging exact current
+main normally, retaining the complete Python and .NET merge receipts and the
+PaintVmAscii preparation, selection, publication, and exact-review records.
+Kotlin micro-qr PR #18355 has independently reconciled the same base and was
+pushed normally at exact replacement head
+`dac7bcee4255e286754d39a1e5bc33cb51430b19`. The live publication set is now
+{#18355, #18367}. The resulting Swift merge head must pass focused package and
+downstream validation plus independent exact-head review before a normal push;
+all replacement hosted checks must then finish acceptably before guarded
+auto-merge can be enabled.
+
+## October 26, 2026: .NET Bezier merge and Kotlin conflict reconciliation
+
+The .NET merge receipt is an ancestor of exact reconciliation base
+`cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed
+
+## October 28, 2026: .NET Bezier merge and Go/Rust reprioritization
+
 `2026-10-26T23:13:55Z`. The exact receipt is an ancestor of current origin/main
 `cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed .NET worktree
 and local branch were removed safely.
@@ -18451,7 +18594,43 @@ normal conflict reconciliation. The live publication set is now {#18355,
 independent exact-head review before a normal push, and all replacement hosted
 checks must finish acceptably before guarded auto-merge can be enabled.
 
-## October 28, 2026: Kotlin merge and Go/Rust conflict reconciliation
+## October 28, 2026: dynamic Bezier reprioritization after Kotlin merge
+
+Kotlin micro-qr PR #18355 merged through guarded squash auto-merge from exact
+reviewed head `dac7bcee4255e286754d39a1e5bc33cb51430b19` as
+`36178b3a0d81054cbaf4424b81aec7792f0bcfb0` at
+`2026-10-28T07:21:45Z`. The receipt is exact current origin/main, and the clean
+completed Kotlin worktree and local branch were removed safely.
+
+The refreshed ready-owner prioritization selects the prepared
+TypeScript/Elixir/Lua Bezier tranche for the open publication slot. It advances
+three non-Rust lanes, is dependency-ready after #18293, and does not overlap
+the live Swift PaintVmAscii or Go/Rust Bezier package roots. Exact current main
+was merged into the still-unpublished local branch while preserving its reviewed
+implementation history. Publication remains gated on refreshed native and
+downstream validation, exact-head review, and confirmation that the live parity
+set remains below the three-PR ceiling.
+
+Fresh post-reconciliation validation passes TypeScript Bezier2D's 36 tests at
+100% production line and function coverage, Elixir Bezier2D's 16 tests, and Lua
+Bezier2D's 24 tests. The downstream TypeScript Arc2D front completes cleanly,
+and the Elixir and Lua Arc2D suites each pass all nine tests. The production
+package delta is unchanged from the previously reviewed prepared head; only the
+current-main and validation receipts require final exact-head review before
+publication.
+
+## October 28, 2026: dynamic Bezier draft publication
+
+The reconciled and revalidated tranche passed exact-head receipt review at
+`4708c642472672b7c47e5421fb2930ea476641cc`. The branch was pushed normally
+without rewriting history and opened as draft PR #18506 at
+`2026-10-28T08:01:01Z`. GitHub reports the exact draft head mergeable. This
+draft records the durable PR identity only; the lifecycle-only receipt requires
+exact delta review before readiness. Guarded auto-merge remains disabled until
+the final exact head is conflict-free and every hosted check reaches a terminal
+acceptable conclusion. The live parity set is now exactly {#18367, #18503,
+#18506}, filling the three-PR publication ceiling.
+## October 28, 2026: Kotlin merge and Swift conflict reconciliation
 
 Kotlin micro-qr PR #18355 completed every replacement check acceptably and
 merged through guarded squash auto-merge from exact independently reviewed head
@@ -18459,6 +18638,17 @@ merged through guarded squash auto-merge from exact independently reviewed head
 `36178b3a0d81054cbaf4424b81aec7792f0bcfb0` at
 `2026-10-28T07:21:45Z`. The exact receipt is current origin/main, and the clean
 completed Kotlin worktree and local branch were removed safely.
+
+That base advance conflicts only with the Swift branch's append-only lifecycle
+records. Preserve the published Swift history by merging exact current main
+normally, retaining the complete Python, .NET, and Kotlin merge receipts plus
+the PaintVmAscii preparation, selection, publication, and exact-review history.
+Go/Rust Bezier PR #18503 is the other live parity owner. The live publication
+set is now {#18367, #18503}. The resulting Swift merge head must pass the 34
+PaintVmAscii tests, all 43 downstream cowsay tests, exact-head review, and fresh
+hosted checks before guarded auto-merge can be enabled.
+
+## October 28, 2026: Kotlin merge and Go/Rust conflict reconciliation
 
 That base advance conflicts only with the published Go/Rust branch's append-only
 lifecycle records. Preserve its published history by merging exact current main
@@ -18468,3 +18658,43 @@ PaintVmAscii PR #18367 is the other live parity owner. The live publication set
 is now {#18367, #18503}. The resulting Go/Rust merge head requires confirmation
 that the production delta is unchanged, exact-head review, and fresh hosted
 checks before guarded auto-merge can be enabled.
+
+## October 28, 2026: Go/Rust merge and published-branch conflict reconciliation
+
+Go/Rust Bezier PR #18503 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact independently reviewed head
+`ad3ba31a0d1ee7f8865fcdd0bdf31727afcd86a5` as
+`5daf063f8aeaf4f2c40936ab579a00113706074b` at
+`2026-10-28T08:32:42Z`. The exact receipt is current origin/main, and the clean
+completed Go/Rust worktree and local branch were removed safely.
+
+That base advance conflicts only with the dynamic branch's append-only lifecycle
+records. Preserve published history by merging exact current main normally,
+retaining all prior merge receipts and the TypeScript/Elixir/Lua implementation,
+validation, publication, and review history. Swift PaintVmAscii PR #18367 is the
+other live parity owner. The live publication set is now {#18367, #18506}.
+
+That base advance conflicts only with the Swift branch's append-only lifecycle
+records. Preserve published history by merging exact current main normally,
+retaining the full Python, .NET, Kotlin, and Go/Rust merge receipts plus the
+PaintVmAscii preparation, publication, and review history. Dynamic Bezier PR
+#18506 is the other live parity owner. The live publication set is now
+{#18367, #18506}. The resulting Swift merge head must pass focused validation,
+exact-head review, and fresh hosted checks before guarded auto-merge.
+
+## October 28, 2026: Swift merge and dynamic Bezier conflict reconciliation
+
+Swift PaintVmAscii PR #18367 completed all 40 exact-head checks acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`6251a402fc319a9c7dcb19e06d908dadc5d7a5e6` as
+`98eac40cc0ebba14b6c4a22eebfd60419ea28777` at
+`2026-10-28T09:14:13Z`. The exact receipt is current origin/main, and its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with the published dynamic and scripting Bezier
+branches only on their append-only lifecycle records. Preserve the dynamic
+branch's published history with a normal merge of exact current main while
+retaining every prior merge receipt and the TypeScript/Elixir/Lua implementation,
+validation, publication, and review history. The live publication set is now
+{#18506, #18508}; each reconciled exact head requires fresh hosted checks before
+guarded auto-merge can be enabled.
