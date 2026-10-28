@@ -2404,6 +2404,7 @@ pub struct StructuralGroup {
     pub label: String,
     pub stereotype: Option<String>,
     pub metadata: Option<StructuralGroupMetadata>,
+    pub style: Option<DiagramStyle>,
     pub parent_group: Option<String>,
 }
 
@@ -2525,6 +2526,7 @@ pub struct LayoutedStructuralGroup {
     pub label: String,
     pub stereotype: Option<String>,
     pub icon_name: Option<String>,
+    pub style: ResolvedDiagramStyle,
     pub parent_group: Option<String>,
 }
 
