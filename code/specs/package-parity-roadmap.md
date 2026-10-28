@@ -18112,6 +18112,46 @@ enforce the 95% library line target on Unix and Windows. Package APIs, AST
 nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
 of scope.
 
+## October 25, 2026: dynamic-runtime Bezier flattening selection
+
+With the three publication slots still occupied and the C#/F# plus
+Python/Ruby/Perl tranches prepared locally, the next independent owner is
+`geometry-bezier2d-flattening-typescript-elixir-lua`. Its sole dependency is
+the merged G2D02 termination contract, and its three native package trees do
+not overlap active or prepared work. Three non-Rust lanes provide more parity
+leverage than either remaining two-lane successor.
+
+Consume all nine neutral cases dynamically through the public polyline APIs,
+replace midpoint recursion with the finite-segment control bound and bounded
+left-first traversal, and reject nonpositive/nonfinite tolerance, nonfinite
+controls, nonfinite derived arithmetic, and exhausted work without returning
+partial output. Carry the independent subnormal-distance regression into all
+three runtimes and run each same-language Arc2D suite. Shared Go selector
+changes remain owned by the prepared C#/F# tranche to avoid branch conflicts.
+
+The prepared implementation now replaces recursion in all three lanes with
+bounded left-first traversal, a depth limit of 32, and a shared 65,535-split
+budget. Scaled finite-segment distance arithmetic carries the independent
+.NET review's subnormal-underflow lesson into these lanes before publication.
+All nine corpus cases and native invalid-input, overflow, budget, and
+subnormal regressions pass. TypeScript passes 36 Bezier2D tests at 100% line
+coverage, with a focused selection proving the 95% floor fails closed; Elixir
+passes 16 tests and Lua passes 24. Their real dependent Arc2D suites pass 32,
+9, and 9 tests respectively.
+
+Independent review rejected the initially suspected TypeScript Arc2D
+working-directory gap. The repository runner starts every BUILD line from the
+package directory, so dependency-install directory changes do not persist into
+the Arc2D install, compile, test, or coverage commands. Runner-equivalent
+execution passes the actual 32-test Arc2D suite at 100% line and 95.23% branch
+coverage. The invalid repair candidate and its provisional backlog item are
+retired rather than published. Reconciliation over the unrelated Mermaid
+receipt at `20ba82cbe644174616d85b05a314c8395772ad8f` preserves that result: all
+three Bezier2D suites plus Elixir and Lua Arc2D pass again. The TypeScript
+Arc2D rerun reached its unchanged npm install front but hit the known shared
+npm Arborist `edgesOut` transient, not a package or working-directory failure.
+A clean rerun, shared-fixture selector integration, hosted platforms, and
+independent final-head review remain required before publication.
 ## October 25: serial Haskell opcode-provider recovery
 
 PR #18174 actually merged as `bd533925647b7fbac74eba35e611a8ba3930757f`; PR #18147 previously merged its frozen16 adoption. The unpublished67 draft remains separate. Earlier three-slot and draft-publication statements above are historical. Existing PR #18183 is now the sole active implementation. Its original `231de32b` head is preserved locally while its net change is carefully rebased onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. Actual CI fails before compilation in Cabal3.10.3.0 coverage planning for vector0.13.2; preserve coverage and inert metadata APIs while validating a package-local repair. Local native13tests/all359records, productionHPC100percent expressions/alternatives, Go15packages/84.6percentcoverage, vet/build, realplanner14-packageclosure and metadata/parity checks pass. Runtime source80a01 passed independent review; final documentation delta and fresh hosted CI remain required. See [the exact recovery evidence](../packages/haskell/starlark-compiler/VALIDATION.md).
@@ -18554,6 +18594,42 @@ normal conflict reconciliation. The live publication set is now {#18355,
 independent exact-head review before a normal push, and all replacement hosted
 checks must finish acceptably before guarded auto-merge can be enabled.
 
+## October 28, 2026: dynamic Bezier reprioritization after Kotlin merge
+
+Kotlin micro-qr PR #18355 merged through guarded squash auto-merge from exact
+reviewed head `dac7bcee4255e286754d39a1e5bc33cb51430b19` as
+`36178b3a0d81054cbaf4424b81aec7792f0bcfb0` at
+`2026-10-28T07:21:45Z`. The receipt is exact current origin/main, and the clean
+completed Kotlin worktree and local branch were removed safely.
+
+The refreshed ready-owner prioritization selects the prepared
+TypeScript/Elixir/Lua Bezier tranche for the open publication slot. It advances
+three non-Rust lanes, is dependency-ready after #18293, and does not overlap
+the live Swift PaintVmAscii or Go/Rust Bezier package roots. Exact current main
+was merged into the still-unpublished local branch while preserving its reviewed
+implementation history. Publication remains gated on refreshed native and
+downstream validation, exact-head review, and confirmation that the live parity
+set remains below the three-PR ceiling.
+
+Fresh post-reconciliation validation passes TypeScript Bezier2D's 36 tests at
+100% production line and function coverage, Elixir Bezier2D's 16 tests, and Lua
+Bezier2D's 24 tests. The downstream TypeScript Arc2D front completes cleanly,
+and the Elixir and Lua Arc2D suites each pass all nine tests. The production
+package delta is unchanged from the previously reviewed prepared head; only the
+current-main and validation receipts require final exact-head review before
+publication.
+
+## October 28, 2026: dynamic Bezier draft publication
+
+The reconciled and revalidated tranche passed exact-head receipt review at
+`4708c642472672b7c47e5421fb2930ea476641cc`. The branch was pushed normally
+without rewriting history and opened as draft PR #18506 at
+`2026-10-28T08:01:01Z`. GitHub reports the exact draft head mergeable. This
+draft records the durable PR identity only; the lifecycle-only receipt requires
+exact delta review before readiness. Guarded auto-merge remains disabled until
+the final exact head is conflict-free and every hosted check reaches a terminal
+acceptable conclusion. The live parity set is now exactly {#18367, #18503,
+#18506}, filling the three-PR publication ceiling.
 ## October 28, 2026: Kotlin merge and Swift conflict reconciliation
 
 Kotlin micro-qr PR #18355 completed every replacement check acceptably and
@@ -18583,7 +18659,7 @@ is now {#18367, #18503}. The resulting Go/Rust merge head requires confirmation
 that the production delta is unchanged, exact-head review, and fresh hosted
 checks before guarded auto-merge can be enabled.
 
-## October 28, 2026: Go/Rust merge and Swift conflict reconciliation
+## October 28, 2026: Go/Rust merge and published-branch conflict reconciliation
 
 Go/Rust Bezier PR #18503 completed every exact-head check acceptably and merged
 through guarded squash auto-merge from exact independently reviewed head
@@ -18592,6 +18668,12 @@ through guarded squash auto-merge from exact independently reviewed head
 `2026-10-28T08:32:42Z`. The exact receipt is current origin/main, and the clean
 completed Go/Rust worktree and local branch were removed safely.
 
+That base advance conflicts only with the dynamic branch's append-only lifecycle
+records. Preserve published history by merging exact current main normally,
+retaining all prior merge receipts and the TypeScript/Elixir/Lua implementation,
+validation, publication, and review history. Swift PaintVmAscii PR #18367 is the
+other live parity owner. The live publication set is now {#18367, #18506}.
+
 That base advance conflicts only with the Swift branch's append-only lifecycle
 records. Preserve published history by merging exact current main normally,
 retaining the full Python, .NET, Kotlin, and Go/Rust merge receipts plus the
@@ -18599,3 +18681,20 @@ PaintVmAscii preparation, publication, and review history. Dynamic Bezier PR
 #18506 is the other live parity owner. The live publication set is now
 {#18367, #18506}. The resulting Swift merge head must pass focused validation,
 exact-head review, and fresh hosted checks before guarded auto-merge.
+
+## October 28, 2026: Swift merge and dynamic Bezier conflict reconciliation
+
+Swift PaintVmAscii PR #18367 completed all 40 exact-head checks acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`6251a402fc319a9c7dcb19e06d908dadc5d7a5e6` as
+`98eac40cc0ebba14b6c4a22eebfd60419ea28777` at
+`2026-10-28T09:14:13Z`. The exact receipt is current origin/main, and its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with the published dynamic and scripting Bezier
+branches only on their append-only lifecycle records. Preserve the dynamic
+branch's published history with a normal merge of exact current main while
+retaining every prior merge receipt and the TypeScript/Elixir/Lua implementation,
+validation, publication, and review history. The live publication set is now
+{#18506, #18508}; each reconciled exact head requires fresh hosted checks before
+guarded auto-merge can be enabled.
