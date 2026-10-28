@@ -1,0 +1,21 @@
+{
+  "chapter": 193,
+  "title": "Prices Up and Down",
+  "label": "ch:zh-prices-up-and-down",
+  "canDo": "I can talk about special offers, prices going up and down, haggling and quality.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-R193-review-188-193",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can talk about special offers, prices going up and down, haggling and quality.",
+    "assesses": [
+      "ZH-LEX-C193-PRICE193-01",
+      "ZH-LEX-C193-PRICE193-02",
+      "ZH-LEX-C193-PRICE193-03",
+      "ZH-LEX-C193-PRICE193-04",
+      "ZH-LEX-C193-PRICE193-05"
+    ]
+  }
+}

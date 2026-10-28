@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:c45548b9d65350b3",
+  "lessonIds": [
+    "ZH-C225-nongcun",
+    "ZH-C225-nongmin",
+    "ZH-C225-zhongdi",
+    "ZH-C225-zhai",
+    "ZH-C225-luying"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch225.txt",
+  "json": "chinese/narration/ch225.json",
+  "textHash": "fnv1a64:677e0c70f0a3c060",
+  "jsonHash": "fnv1a64:8365f0de0c0797a3",
+  "findings": []
+}

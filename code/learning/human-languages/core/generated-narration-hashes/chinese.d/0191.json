@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:c73890387b5967dd",
+  "lessonIds": [
+    "ZH-C191-huilai",
+    "ZH-W191-hui-return",
+    "ZH-C191-huiqu",
+    "ZH-C191-huiguo",
+    "ZH-C191-chuguo",
+    "ZH-C191-chuchai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch191.txt",
+  "json": "chinese/narration/ch191.json",
+  "textHash": "fnv1a64:ec9bd346c09a6ab3",
+  "jsonHash": "fnv1a64:99fac39704615faa",
+  "findings": []
+}

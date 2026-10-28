@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:ccb081ba8b6b2138",
+  "lessonIds": [
+    "ZH-C240-shengbing",
+    "ZH-C240-fayan",
+    "ZH-C240-zhong",
+    "ZH-C240-tu",
+    "ZH-C240-laduzi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch240.txt",
+  "json": "chinese/narration/ch240.json",
+  "textHash": "fnv1a64:f7b3ca2c60e63967",
+  "jsonHash": "fnv1a64:f041380b7d75d8af",
+  "findings": []
+}

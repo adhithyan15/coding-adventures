@@ -1403,7 +1403,9 @@ PR6a `python_repr` and with host `python3` byte for byte.
   in a release build. Now it stops after 3 steps. A test measures the
   dearest print over the sweep and pins it between half the bound and
   the bound; another runs the largest program the default budgets accept,
-  and a trusted-budget one at vm-core's register limit; a third hands
+  and a trusted-budget one at vm-core's register limit (one float line
+  more is refused by the compiler since #18419, which sizes the trusted
+  budgets to vm-core's frame: see LANG84 C5); a third hands
   `run_module` looping modules and requires the step-limit error from a
   budget of their own size.
 - *Which rows BEAM runs did not change.* The five literal-only float rows
@@ -1614,7 +1616,7 @@ the frontends.
   | `dyn_unbox_int` | dyn → `i64` | a dynamic integer's value, arithmetic `>> 3` |
   | `dyn_tag` | dyn → `i64` | the low three bits: 0 integer, 1 nil, 2 symbol, 3 false, 5 true, 7 pair |
   | `dyn_pair_new` | dyn, dyn → dyn | a fresh, garbage-collected pair |
-  | `dyn_pair_first` / `dyn_pair_rest` | dyn → dyn | a pair's fields; undefined for a non-pair |
+  | `dyn_pair_first` / `dyn_pair_rest` | dyn → dyn | a pair's fields; a non-pair stops the program (see below) |
   | `dyn_is_pair` / `dyn_is_nil` | dyn → dyn | the pair and nil tests, as the dynamic booleans (words 5 and 3) |
   | `dyn_nil` | → dyn | nil (the word 1) |
   | `dyn_symbol` | literal → dyn | the symbol a name denotes |
@@ -1628,6 +1630,32 @@ the frontends.
   (call `__dyn_<name>`) *is* their lowering, and it fires only for a name in
   the backend's builtin table, so an unregistered `dyn_` name is still
   refused (`dyn_new` is still a name-rule violation).
+- *A non-pair stops the program* (follow-up to PR7f-2). `dyn_pair_first` /
+  `dyn_pair_rest` of a word that is not a pair never reads through it. The
+  VM's `field_load` and `dynval-runtime`'s `car` return a `TypeError`; the
+  `extern "C"` functions in `dynval-runtime` panic; and `dynval_runtime.c` — which
+  read the cell at `word & ~7` unconditionally until this change, so Twig's
+  `(car 1000000)` read the 8 bytes at address 8000000 on LLVM and native —
+  checks for the pair tag `0b111`, flushes stdout, prints
+  `dyn_pair_first: argument with tag 0 (int) is not a pair` on stderr and
+  aborts. The message names the word's tag and kind, never the word, so no
+  heap address reaches stderr; `dynval-runtime`'s panic uses the same words.
+  If `abort` returns — a program-defined `abort` replaced libc's, possible on
+  LLVM before #18416 — a trap instruction (`__builtin_trap`, or `__fastfail`
+  on MSVC) still ends the process; `abort` is called through a `volatile`
+  pointer so the compiler cannot delete that trap as unreachable. The
+  op's traps list stays empty: a type error is not one of the closed
+  `Trap.*` kinds, so it is not catchable, and `lang_matrix`'s
+  `twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column` pins the
+  agreement (LLVM, native x86-64, VM, JIT, JVM). A heap-tagged word that is
+  some other heap object is still read as a pair by the C runtime; that is a
+  type confusion inside a live GC block, not a wild read, and telling the
+  kinds apart there needs `__gc_kind_of`, a heap walk. `lang_aot::jit_lisp`'s
+  McCarthy callbacks used to answer nil for `car` of a non-pair; they now
+  fail on both JIT tiers (#18417). The interpreter tier returns a
+  `VMError::TypeError`. The compiled tier records the refusal in the JIT's
+  error slot, and `GenericCirJit` stops after the call. Both use the same
+  tag-only text.
 - *Renamed everywhere they are lowered or handled.* `iir-builtin-lowering`'s
   native runtime-call path (`heap.rs`'s `RUNTIME_RENAMES`, `dyn_repr.rs`,
   `list_ops.rs`, `closure_heap.rs`, `dynamic_arith.rs`); the x86-64 and
@@ -1768,8 +1796,32 @@ the frontends.
   spell either. `__dyn_` has the same exposure — `length` binds to an
   existing `__dyn_list_length`, closures to an existing
   `__dyn_call_closure`, and `__dyn_pair_new` … are runtime symbols — and is
-  closed at the Twig frontend; a pass-level refusal for the list and
-  closure helpers is left for a follow-up.
+  closed at the Twig frontend. *Follow-up (landed):* the list and closure
+  passes now refuse a module that holds a different function under one of
+  their helpers' names (`helper_names::HelperNameError`, plumbed like
+  `ReservedNameError`). A second review found two more shadowing routes, also
+  closed. First, `twig-aot`'s link step patched a runtime call to a program
+  function of the same name: `(define (__twig_print_i64 n) 0)` swallowed
+  `print`. It now refuses a function named like a runtime symbol, or two
+  functions of one name. Second, a program could define `__lambda_0`, the
+  name of a lifted lambda. Twig now also reserves `__lambda_` and `__twig_`.
+  A third review extended this to *registers*. A Twig parameter or `let` name
+  is an IIR register, and the compiler's temporaries (`_n1`, `_else1`, …)
+  and the passes' (`__aot_str{n}_len`, `__clo_*`, …) live in the same
+  function: `(let ((_n2 40)) (+ _n2 2))` computed 4. Fixes:
+  - Twig reserves the whole `__` namespace.
+  - Its temporaries and labels are `__t{n}_{what}` / `__l{n}_{what}`. An
+    unspellable character was ruled out because LLVM already uses `.` in its
+    derived names (`%x.slot`).
+  - `closure_heap` picks temporaries the function does not already use.
+  - `twig-aot` refuses a module that already uses a register beginning
+    `__aot_`.
+  - `twig-aot`'s `__dyn_*` check fails closed, through an allowlist of the
+    pass helpers (`PASS_GENERATED_DYN_HELPERS`), and `lang-aot`'s LLVM path
+    runs the same check, so `__gc_alloc_kind` and friends are refused there
+    too.
+  - `claim_helper_name` refuses if *any* function under the helper's name
+    differs from the helper.
 - *Not moved yet.* The managed backends (WASM, JVM, CLR, BEAM) still lower
   the source-level `pair?`, `not` and `equal?` builtins in their own code
   (their value model is structural, and `lower_dyn_repr_structural` leaves

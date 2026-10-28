@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C231-zhongyi",
+  "pathSegment": "ZH-PATH-231-DOCTOR231",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-231-DOCTOR231",
+      "order": 0
+    }
+  ]
+}

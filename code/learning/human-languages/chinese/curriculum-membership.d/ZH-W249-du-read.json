@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W249-du-read",
+  "pathSegment": "ZH-PATH-249-STUDY249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-249-STUDY249",
+      "order": 3
+    }
+  ]
+}

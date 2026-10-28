@@ -1,0 +1,20 @@
+{
+  "chapter": 186,
+  "title": "Odds and Ends",
+  "label": "ch:zh-odds-and-ends",
+  "canDo": "I can name scissors, a rubbish bin, a plastic bag, a bottle and a drawer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C186-chouti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can name scissors, a rubbish bin, a plastic bag, a bottle and a drawer.",
+    "assesses": [
+      "ZH-LEX-C186-THINGS186-01",
+      "ZH-LEX-C186-THINGS186-03",
+      "ZH-LEX-C186-THINGS186-04",
+      "ZH-LEX-C186-THINGS186-05"
+    ]
+  }
+}

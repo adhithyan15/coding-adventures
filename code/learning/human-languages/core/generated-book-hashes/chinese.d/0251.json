@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:b6104ce0fb027d67",
+  "lessonIds": [
+    "ZH-C251-pian",
+    "ZH-C251-zuowen",
+    "ZH-W251-zuo-do",
+    "ZH-C251-xiezuo",
+    "ZH-W251-xie-write",
+    "ZH-C251-shengzi",
+    "ZH-C251-xiugai"
+  ],
+  "tex": "chinese/book/chapters/ch251-essays-and-new-characters.tex"
+}

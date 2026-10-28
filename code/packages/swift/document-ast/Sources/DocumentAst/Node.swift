@@ -30,7 +30,8 @@
 //     document           — root of the entire document
 //     heading            — h1–h6
 //     paragraph          — flow of inline content
-//     codeBlock          — fenced or indented code
+//     codeBlock          — ordinary or indented code
+//     fencedBlock        — source-preserving fence with inert metadata
 //     blockquote         — nested quoted content
 //     list               — ordered or unordered list
 //     listItem           — one item in a list
@@ -136,8 +137,9 @@ public struct ParagraphNode: Equatable, Sendable {
 
 /// A block of preformatted (monospace) code.
 ///
-/// Produced by fenced code blocks (` ```lang ... ``` `) and indented code
-/// blocks (4+ leading spaces). The `value` always ends with a newline.
+/// Produced by indented code blocks (4+ leading spaces) and callers that do
+/// not need source-preserving fence metadata. The `value` always ends with a
+/// newline when non-empty.
 ///
 ///     let code = CodeBlockNode(language: "swift", value: "let x = 1\n")
 public struct CodeBlockNode: Equatable, Sendable {
@@ -149,6 +151,27 @@ public struct CodeBlockNode: Equatable, Sendable {
 
     public init(language: String?, value: String) {
         self.language = language
+        self.value = value
+    }
+}
+
+/// A source-preserving fenced block.
+///
+/// A fence carries more information than an indented code block. `name` is
+/// only the first normalized info token, while `info` retains the complete
+/// normalized metadata for an explicit later transform. Renderers must treat
+/// both the metadata and literal payload as inert by default.
+public struct FencedBlockNode: Equatable, Sendable {
+    /// First whitespace-delimited info token, or `nil` for an anonymous fence.
+    public let name: String?
+    /// Complete normalized info string, or `nil` when it is empty.
+    public let info: String?
+    /// Literal payload, including the final newline when non-empty.
+    public let value: String
+
+    public init(name: String?, info: String?, value: String) {
+        self.name = name
+        self.info = info
         self.value = value
     }
 }
@@ -492,6 +515,8 @@ public indirect enum BlockNode: Equatable, Sendable {
     case paragraph(ParagraphNode)
     /// A fenced or indented code block.
     case codeBlock(CodeBlockNode)
+    /// A source-preserving fenced block with inert metadata.
+    case fencedBlock(FencedBlockNode)
     /// A block quotation.
     case blockquote(BlockquoteNode)
     /// An ordered or unordered list.

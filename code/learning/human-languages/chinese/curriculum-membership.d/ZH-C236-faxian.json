@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C236-faxian",
+  "pathSegment": "ZH-PATH-236-ODD236",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-236-ODD236",
+      "order": 2
+    }
+  ]
+}

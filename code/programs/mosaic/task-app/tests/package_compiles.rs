@@ -93,6 +93,8 @@ fn task_app_sources_compile() {
         "task-rows",
         // A refused note Save's reason (E5).
         "note-error",
+        // Notes 0.3.0: Delete only for a saved note (E3).
+        "note-delete-label",
         // Checklists (C3a, task-app-checklists-view-v1.md).
         "checklists-mode",
         "checklist-library-rows",

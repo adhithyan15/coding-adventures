@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C181-yushi",
+  "pathSegment": "ZH-PATH-181-BED181",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-181-BED181",
+      "order": 4
+    }
+  ]
+}

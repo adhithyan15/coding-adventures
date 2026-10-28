@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "Finding the Way",
+  "label": "ch:zh-finding-the-way",
+  "canDo": "I can ask the way, say I have found a place or got lost, and go straight on.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C197-luxian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can ask the way, say I have found a place or got lost, and go straight on.",
+    "assesses": [
+      "ZH-LEX-C197-WAY197-03",
+      "ZH-LEX-C197-WAY197-04",
+      "ZH-LEX-C197-WAY197-05"
+    ]
+  }
+}

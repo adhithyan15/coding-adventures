@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C231-guahao",
+    "language": "chinese",
+    "chapter": 231,
+    "sequence": 17690,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0409a20fc4a0f451"
+  },
+  "findings": []
+}
