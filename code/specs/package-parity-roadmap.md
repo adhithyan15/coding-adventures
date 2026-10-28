@@ -19264,3 +19264,17 @@ landed it as `ae197369af5c6bfe8ab2768465f67e0119baac97` at
 worktree and local branch. Preserve the independently reviewed Bloom filter
 preparation through a normal merge of that exact current main, then re-run its
 bounded validation before publication.
+
+Exact merge head `3ba0e748758cccf1e9a53ccf503f2fdc967e430e`
+preserves both histories. All five Bloom filter tests, the release build,
+strict formatting, closed capability schema, JSON and diff checks, and the
+bounded build-tool dependency plan pass again; generated SwiftPM artifacts are
+removed and no open PR overlaps the package root. Require final exact-head
+review before publication.
+
+Independent exact-head review approved merge head
+`3ba0e748758cccf1e9a53ccf503f2fdc967e430e` with no findings. The Bloom
+implementation and root changelog remain byte-identical to the approved
+implementation receipt, both histories and the merged HyperLogLog receipt are
+intact, lifecycle and graph invariants pass, and the validated worktree is
+artifact-free. Seal this review receipt before publishing the draft PR.
