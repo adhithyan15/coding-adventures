@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Re-verify the Haskell lane at the durable Windows-front implementation and
+  repoint its package-tree evidence after `BUILD_windows` changed outside the
+  dependency-lockfile exception.
 - Let the repository gate accept a lane whose package tree moved after its
   verified revision only through dependency lockfiles, so Dependabot and
   repo-wide advisory sweeps no longer fail the pinned `package_tree` check.

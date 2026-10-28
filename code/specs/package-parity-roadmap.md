@@ -19110,3 +19110,55 @@ GHC 9.4.8 invoke a linker that could not parse the CLT SDK's newer
 affine2d's Cabal process, record the root-selection lesson, validate the full
 22 affine2d, 27 point2d, and 19 trig examples, and normally merge current main.
 A completely fresh exact-head hosted matrix remains mandatory.
+
+## October 28, 2026: Bezier merge and Haskell ITF Windows-front continuation
+
+Haskell/Swift Bezier PR #18511 completed every exact-head check acceptably and
+merged through guarded squash auto-merge from independently reviewed head
+`20545a2563a2d921e61f4af51af28d3db059ef0a` as
+`71ac0f0ab54aada8ed9a6da34b1140b546afbbc8` at `2026-10-28T15:06:15Z`.
+The receipt is exact current origin/main; its clean worktree and local branch
+were removed safely.
+
+Fresh prioritization keeps the already-complete
+`haskell-itf-stack-windows-build-front-coverage` preparation selected. It
+advances a separate Haskell build front, all prior live parity PRs are merged,
+and its bounded implementation remains isolated to the barcode-layout-1d and
+ITF Windows fronts plus their regression and lifecycle receipts.
+
+Preserve its preparation through a normal merge of exact current main
+`71ac0f0ab54aada8ed9a6da34b1140b546afbbc8`. Independent review found that the
+two-line cmd.exe recipe could not implement a successful Cabal-absent skip
+because the build tool executes each line in a fresh process and stops at the
+first failure. Replace it with one PowerShell invocation that exits zero only
+for confirmed absence and propagates the real Cabal exit status. Cover absent,
+successful, and failing Cabal paths before exact-head re-review and publication.
+
+## October 28, 2026: Haskell ITF Windows-front draft publication
+
+Open draft PR #18527 from exact-current-main independently reviewed candidate
+`053cb27651a47c061bd2c4739b4657d5e9ac85d9`. The corrected fronts use one
+PowerShell process, and the focused build-tool regression pins both literal
+fronts while exercising absent, successful, and failing fake Cabal paths on
+Windows. The native GHC 9.6.7 closures pass 29 paint-instructions, 27
+barcode-layout-1d, 25 SHA-256 plus allocation budget, and 19 ITF examples.
+
+Keep the PR draft only while this durable lifecycle receipt is committed and
+independently reviewed. After the reviewed receipt is published, mark it ready
+and require a completely fresh exact-head hosted matrix; guarded auto-merge
+remains disabled until every final-head check is terminal acceptable and the
+merge state is clean.
+
+The first hosted matrix failed only the repository metadata gate: the Haskell
+barcode-layout-1d target registry still pinned the package tree from original
+adoption PR #16343, so the new `BUILD_windows` correctly appeared as unverified
+non-lockfile drift. Re-verify the unchanged Haskell lane at durable
+implementation `053cb27651a47c061bd2c4739b4657d5e9ac85d9`, repoint the exact package
+tree, and require another complete exact-head matrix.
+
+Before publishing that repair, current main advanced to
+`d70b1afc3de8ae83b641d8ca8fe9565d901798f6` with unrelated human-language
+level-progress owner sharding. Preserve both histories through a normal merge;
+the Haskell package trees and metadata repair are unchanged. Re-run the focused
+registry and Windows-front checks, then independently review the exact merge
+head before push.
