@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C158-xiguan",
+  "pathSegment": "ZH-PATH-158-WAKE158",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-158-WAKE158",
+      "order": 4
+    }
+  ]
+}

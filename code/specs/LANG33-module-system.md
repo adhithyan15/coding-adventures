@@ -206,22 +206,65 @@ code/packages/rust/iir-linker/
 ///
 /// # Algorithm
 ///
+/// 0. Reject two input modules with the same `name`
+///    (`LinkError::DuplicateModuleName`).  Exports and import rewrites are
+///    keyed by module name, so two modules called `util` would share one
+///    set of import rewrites: an import in one could override the other's
+///    own function of the same name.  (#18429)
 /// 1. Collect the export map: `HashMap<(module_name, public_name), &IIRFunction>`.
+///    - The same key twice → `LinkError::DuplicateExport`.
+///    - The same *public name* from two different modules →
+///      `LinkError::ConflictingExport`.  Exported functions keep their bare
+///      public name in the merged module, so only one function may own it;
+///      before #18429 both kept the name and every reference — including
+///      the second module's own calls — ran the first module's function.
+///      Export aliases count by their public (aliased) name.  One module
+///      holding two functions of the same name (Twig's user `main` beside
+///      its synthesized `main`) is not a conflict.
 /// 2. For each import in each module, resolve it from the export map.
 ///    - Type-check parameter and return types if provided.
 ///    - Accumulate `LinkError::Unresolved` if not found.
+///    - Check that the merged entry point — the `entry_point` of the first
+///      module that has one — names a function that module defines or the
+///      local name of one of its imports; otherwise
+///      `LinkError::UnresolvedEntryPoint`.  (Before #18429 an unresolved
+///      name stayed bare and could bind to another module's private
+///      function.)  Later modules' entry points are unused and unchecked.
+///    - Check every *function reference* — the operands step 3 rewrites
+///      (`call` callee, `alloc_closure` body, `task_spawn` / `group_spawn`
+///      target).  Inside module `m` each must name a function `m` defines
+///      or the local name of one of `m`'s imports; anything else is
+///      `LinkError::UndeclaredCall`, reported once per
+///      `(module, function, name)`.  (#18432: before this, nothing raised
+///      `UndeclaredCall`.  A name that was neither stayed bare and bound to
+///      whichever function owned it after merging — so with two libraries
+///      each holding a private `helper`, an app's un-imported `call helper`
+///      ran the first library's private function.)  This is what makes
+///      "private by default" (design goal of `exports`) hold at link time.
+///      Builtins are unaffected: producers reach them with `call_builtin`,
+///      not `call`, and no VM resolves an unknown `call` target to a
+///      builtin.
 /// 3. Merge all functions into a single `IIRModule`:
 ///    - Rename colliding private functions by prefixing with `"<module>::"`.
+///      If that name is taken too (another module exported an alias spelled
+///      `"<module>::<fn>"`), append `$0`, `$1`, … until the name is free.
+///      The search always ends — of `taken + 1` candidates one is free — so
+///      it needs no bound and never panics.  (#18432: it used to `assert!`
+///      a bound of *functions + 1*, but export aliases claim names without
+///      adding functions, so a handful of crafted aliases panicked
+///      `link()` in release builds too.)
 ///    - Rewrite every operand that *names a function* — `call` callee
 ///      (`srcs[0]`), `alloc_closure` body name (`srcs[0]`, an
-///      `Operand::Str`), `task_spawn` callee (`srcs[0]`) and `group_spawn`
+///      `Operand::Str`), `task_spawn` fn (`srcs[0]`) and `group_spawn`
 ///      fn (`srcs[1]`) — through the module's rename map: its own renamed
 ///      functions plus its imports (imports win on a clash).  Data operands
 ///      such as `const(Str(..))` are never rewritten.  (#18421: earlier
 ///      versions rewrote only `call` callees of imported names, so a renamed
 ///      private function — e.g. a second module's `__lambda_0` — was still
 ///      referenced by its old bare name and silently bound to another
-///      module's function.)
+///      module's function.)  The spawn operands are function *names*, never
+///      closure registers — LANG28 pins this contract (#18429), because the
+///      rewrite matches on operand text.
 /// 4. Preserve `entry_point` from the first module that has one, mapped
 ///    through that module's rename map.
 /// 5. Return the merged module (or all errors if any were found).
@@ -257,14 +300,35 @@ pub enum LinkError {
         actual:           Vec<String>,
     },
 
-    /// Two modules export the same (module_name, function_name) pair.
+    /// The same (module_name, function_name) pair is exported twice.
     DuplicateExport {
         module_name:   String,
         function_name: String,
     },
 
-    /// A call instruction inside a function references a name that is neither
-    /// a local function nor a declared import.
+    /// Two different modules export the same public name (#18429).
+    ConflictingExport {
+        function_name: String,
+        first_module:  String,
+        second_module: String,
+    },
+
+    /// Two input modules share a name (#18429).
+    DuplicateModuleName {
+        module_name: String,
+    },
+
+    /// The entry module's entry_point is neither defined nor imported by
+    /// that module (#18429).
+    UnresolvedEntryPoint {
+        module_name: String,
+        entry_point: String,
+    },
+
+    /// A function reference (`call` callee, `alloc_closure` body, spawn
+    /// target) names something that is neither a function of its module
+    /// nor the local name of a declared import — e.g. another module's
+    /// private function (#18432).
     UndeclaredCall {
         in_module:   String,
         in_function: String,
@@ -362,12 +426,22 @@ The `serialise_module` / `deserialise_module` functions are updated to include
    matching export.
 4. `iir-linker::link` returns `LinkError::TypeMismatch` when param/return
    types don't match.
-5. BEAM: a module with explicit `exports` emits only those functions in ExpT.
-6. WASM: a module with imports emits a WASM import section with correct entries,
+5. `iir-linker::link` returns `LinkError::ConflictingExport` when two
+   modules export the same public name, `LinkError::DuplicateModuleName`
+   when two input modules share a name, and
+   `LinkError::UnresolvedEntryPoint` when the entry point does not resolve
+   inside its module (#18429).
+5a. `iir-linker::link` returns `LinkError::UndeclaredCall` when a function
+   reference names another module's private function (or any name the
+   module neither defines nor imports), and returns a renamed module — not
+   a panic — when export aliases occupy every `"<module>::<fn>$N"` name the
+   old counter bound allowed (#18432).
+6. BEAM: a module with explicit `exports` emits only those functions in ExpT.
+7. WASM: a module with imports emits a WASM import section with correct entries,
    and function index offsets are applied correctly.
-7. ≥ 30 tests in `iir-linker/tests/test_linker.rs`.
-8. ≥ 5 tests each for BEAM/WASM/JVM/CLR export/import round-trips.
-9. `cargo build --workspace` is clean.
+8. ≥ 30 tests in `iir-linker/tests/test_linker.rs`.
+9. ≥ 5 tests each for BEAM/WASM/JVM/CLR export/import round-trips.
+10. `cargo build --workspace` is clean.
 
 ---
 

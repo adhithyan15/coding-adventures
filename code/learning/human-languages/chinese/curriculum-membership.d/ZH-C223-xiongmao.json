@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C223-xiongmao",
+  "pathSegment": "ZH-PATH-223-ZOO223",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-223-ZOO223",
+      "order": 1
+    }
+  ]
+}

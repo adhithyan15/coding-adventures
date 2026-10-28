@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C202-shouyintai",
+  "pathSegment": "ZH-PATH-202-TILL202",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-202-TILL202",
+      "order": 4
+    }
+  ]
+}

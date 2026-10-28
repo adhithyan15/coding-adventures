@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C165-weijin",
+  "pathSegment": "ZH-PATH-165-COAT165",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-165-COAT165",
+      "order": 5
+    }
+  ]
+}

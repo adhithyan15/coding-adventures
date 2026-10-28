@@ -1,0 +1,19 @@
+{
+  "chapter": 179,
+  "title": "Laundry Day",
+  "label": "ch:zh-laundry-day",
+  "canDo": "I can talk about the washing machine and powder, hanging things out, ironing and the wardrobe.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C179-yigui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 179: I can talk about the washing machine and powder, hanging things out, ironing and the wardrobe.",
+    "assesses": [
+      "ZH-LEX-C179-WASH179-03",
+      "ZH-LEX-C179-WASH179-04",
+      "ZH-LEX-C179-WASH179-05"
+    ]
+  }
+}

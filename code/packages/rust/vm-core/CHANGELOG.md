@@ -29,6 +29,44 @@
   the change.
 - README and the builtin table at the top of `builtins.rs` list the dynamic
   builtins.
+## Unreleased — field ops require a block base address, not an interior pointer (#18471)
+
+- **Security fix (latent).** `gc_field_load` / `gc_field_store` bounds-checked
+  `idx*8 + 8` against `FlatHeap::payload_size(obj)`. That function resolves an
+  address *inside* a block, or one past its end, to the **whole** block's size,
+  so a `HeapRef` pointing into the middle of a 32-byte object passed the check
+  for indexes that reach up to 32 bytes past the object's end, for both reads
+  and writes. A store through it would also have run the write barrier with
+  `obj - 32` taken as the object's header. No IIR op creates an interior
+  `HeapRef`, so no program could reach this; a host passing a crafted
+  `Value::HeapRef` through `VMCore::execute`'s arguments could.
+- **Fix.** Both handlers now go through one helper, `checked_field_offset`,
+  which asks gc-core's new `FlatHeap::payload_size_at_base` (gc-core 0.37.0)
+  for the size of the object that starts *exactly* at `obj`. Anything else
+  traps with `"<op>: HeapRef is not the base address of a live heap object"`
+  before any memory is touched. The message deliberately does not include
+  the address, so VM errors never echo heap layout. Valid base addresses behave exactly as before,
+  including the `"index N out of bounds for a S-byte object"` trap.
+- **Visible change:** null, garbage and freed `HeapRef`s still trap, but with
+  the not-a-base message instead of `"out of bounds for a 0-byte object"`.
+- **32-bit index truncation closed (pre-existing).** The word index was
+  converted with `idx as usize`, which on a 32-bit target (wasm32) silently
+  truncates an index of `1 << 32` or more to a small one that then passes the
+  bounds check as a different field. It is now converted with
+  `usize::try_from` and traps on failure. On 64-bit targets every
+  non-negative `i64` fits, so nothing changes there; there is no 32-bit test
+  target in this workspace, so this is covered by a comment rather than a test.
+- Order of checks, all before any memory access: index non-negative and
+  fits in `usize`, then base address, then `idx*8 + 8 <= size`.
+- Tests (`tests/gc_heap.rs`), all with real heap allocations passed in as
+  host arguments: `gc_field_ops_accept_a_host_supplied_base_heap_ref`,
+  `gc_field_load_traps_on_an_interior_heap_ref`,
+  `gc_field_store_traps_on_an_interior_heap_ref_and_writes_nothing`,
+  `gc_field_ops_trap_on_a_one_past_the_end_heap_ref`,
+  `gc_field_ops_trap_on_null_and_garbage_heap_refs`. The interior probes stay
+  inside the block even when measured from the interior address, so on the
+  pre-fix code they fail (the op succeeds) without performing an
+  out-of-bounds access.
 
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 

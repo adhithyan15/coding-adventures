@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:f655370874b887af",
+  "lessonIds": [
+    "ZH-C187-dapo",
+    "ZH-C187-shuai",
+    "ZH-C187-houhui",
+    "ZH-C187-dangshi",
+    "ZH-C187-jieguo",
+    "ZH-R187-review-182-187",
+    "ZH-R187-review-final-187"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch187.txt",
+  "json": "chinese/narration/ch187.json",
+  "textHash": "fnv1a64:410970da4efb928e",
+  "jsonHash": "fnv1a64:49180bb5f67651ee",
+  "findings": []
+}

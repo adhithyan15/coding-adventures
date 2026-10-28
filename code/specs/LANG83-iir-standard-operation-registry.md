@@ -1133,7 +1133,7 @@ With helpers, a new language's float output changes no backend at all.
 | `py_float_div`, `py_name_error`, `py_print_float`, `py_print_empty`, `py_print_two_floats`, `py_print_three_floats` | `python-iir-compiler/src/lib.rs`, registered on the VM only by the LANG79 pilot's `compile_source` | the LANG79 pilot path | **Language-specific**, unregistered, VM only. Retired in PR7g: the pilot entry points move onto the release path (`f64_div` with a `b == 0` check that traps `Trap.DivZero`; `trap Trap.Unbound`; the PR7b print helper). |
 | `dyn_truthy`, `dyn_equal`, `dyn_not`, `dyn_to_exit_code` | `iir-builtin-lowering/src/dyn_repr.rs`, lispy-runtime | Twig, McCarthy Lisp (through the `+`/`cons`/`null?` lowering) | **Language-specific semantics in a runtime op.** Lisp truthiness (only nil and `#f` are false), `equal?`'s structural equality and Lisp's exit-code coercion are each one language family's rules. Replaced in PR7f by neutral representation primitives plus compiler-emitted helpers (below). *Landed in PR7f-2:* truthiness and `not` inline, `__lisp_equal` and `__lisp_exit_code` module functions; the four are gone from the runtime and every backend (see "What PR7f-2 landed"). |
 | `dyn_cons`, `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol` | `dyn_repr.rs`, `heap.rs`, lispy-runtime | Twig, McCarthy Lisp | **Neutral semantics, Lisp vocabulary.** A two-field heap cell and a nil sentinel are a representation, not a language rule. Renamed in PR7f to `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil` and `dyn_symbol`, then registered. *Landed in PR7f-1,* with the new `dyn_tag` and the existing `dyn_box_int` / `dyn_unbox_int` (see "What PR7f-1 landed"). |
-| Source-level builtin names `+ - * / % = < <= > >= cons car cdr pair? null? equal? not` | emitted as `call_builtin` by twig-ir-compiler, mccarthy-lisp, and the seven CAS frontends (axiom, maple, macsyma, derive, reduce, wolfram, maxima); rewritten by the shared `iir-builtin-lowering` pass | as listed | **Source vocabulary reaching the IIR.** The module is not neutral until that pass runs, and the pass's `is_lisp_function_call` and `rename_lisp_not` know Lisp. PR7f moves the translation into the frontends: the shared pass becomes a compiler-side library those frontends call, and the module they hand to a backend holds registry ops only. |
+| Source-level builtin names `+ - * / % = < <= > >= cons car cdr pair? null? equal? not` | emitted as `call_builtin` by twig-ir-compiler, mccarthy-lisp, and the seven CAS frontends (axiom, maple, macsyma, derive, reduce, wolfram, maxima); rewritten by the shared `iir-builtin-lowering` pass | as listed | **Source vocabulary reaching the IIR.** The module is not neutral until that pass runs, and the pass's `is_lisp_function_call` and `rename_lisp_not` know Lisp. PR7f moves the translation into the frontends: the shared pass becomes a compiler-side library those frontends call, and the module they hand to a backend holds registry ops only. *Not landed:* the translation is per target and eight interpreters read the names, so it is split into PR7f-3a/-3b/-3c (see "PR7f-3 — what moving the source names into the frontends takes"). |
 | `print_i64`, `putchar`, `getchar`, `print_str`, `write_i64`, `str_*`, `i64_*`, `cmp_*`, `f64_*` arithmetic and math, `int_to_real`, `real_to_int_*`, `trap`, `Trap.Bounds` … `Trap.User` | registry | many | **Neutral.** They stay. `print_i64` appends `\n`, a convenience every integer-printing frontend uses; it is not a language rule. |
 | `input_i64`, `input_more`, `input_str`, `getchar` | lang-aot harnesses, flow-matic and brainfuck compilers | flow-matic, brainfuck | **Neutral but unregistered.** Registered with honest `op_support` in PR7h. |
 | `print`, `double`, `noop`, `assert_eq` | `vm-core/src/builtins.rs` defaults | tests and doc examples | Neutral test fixtures. Out of scope: no frontend emits them and the registry does not gate them. |
@@ -1403,7 +1403,9 @@ PR6a `python_repr` and with host `python3` byte for byte.
   in a release build. Now it stops after 3 steps. A test measures the
   dearest print over the sweep and pins it between half the bound and
   the bound; another runs the largest program the default budgets accept,
-  and a trusted-budget one at vm-core's register limit; a third hands
+  and a trusted-budget one at vm-core's register limit (one float line
+  more is refused by the compiler since #18419, which sizes the trusted
+  budgets to vm-core's frame: see LANG84 C5); a third hands
   `run_module` looping modules and requires the step-limit error from a
   budget of their own size.
 - *Which rows BEAM runs did not change.* The five literal-only float rows
@@ -1459,7 +1461,9 @@ column.
   becomes a compiler-side library. The Twig, McCarthy Lisp and CAS compilers
   call it before they return the module, so `check_module_for` sees
   registry ops only. The LANG84 C7.1 clause "a pre-registry instruction
-  that the registry does not gate" shrinks accordingly.
+  that the registry does not gate" shrinks accordingly. (Scoped after
+  PR7f-2 into PR7f-3a/-3b/-3c; see "PR7f-3 — what moving the source names
+  into the frontends takes".)
 
 **What PR7d landed, and where it diverged from the plan above.**
 
@@ -1612,7 +1616,7 @@ the frontends.
   | `dyn_unbox_int` | dyn → `i64` | a dynamic integer's value, arithmetic `>> 3` |
   | `dyn_tag` | dyn → `i64` | the low three bits: 0 integer, 1 nil, 2 symbol, 3 false, 5 true, 7 pair |
   | `dyn_pair_new` | dyn, dyn → dyn | a fresh, garbage-collected pair |
-  | `dyn_pair_first` / `dyn_pair_rest` | dyn → dyn | a pair's fields; undefined for a non-pair |
+  | `dyn_pair_first` / `dyn_pair_rest` | dyn → dyn | a pair's fields; a non-pair stops the program (see below) |
   | `dyn_is_pair` / `dyn_is_nil` | dyn → dyn | the pair and nil tests, as the dynamic booleans (words 5 and 3) |
   | `dyn_nil` | → dyn | nil (the word 1) |
   | `dyn_symbol` | literal → dyn | the symbol a name denotes |
@@ -1626,6 +1630,32 @@ the frontends.
   (call `__dyn_<name>`) *is* their lowering, and it fires only for a name in
   the backend's builtin table, so an unregistered `dyn_` name is still
   refused (`dyn_new` is still a name-rule violation).
+- *A non-pair stops the program* (follow-up to PR7f-2). `dyn_pair_first` /
+  `dyn_pair_rest` of a word that is not a pair never reads through it. The
+  VM's `field_load` and `dynval-runtime`'s `car` return a `TypeError`; the
+  `extern "C"` functions in `dynval-runtime` panic; and `dynval_runtime.c` — which
+  read the cell at `word & ~7` unconditionally until this change, so Twig's
+  `(car 1000000)` read the 8 bytes at address 8000000 on LLVM and native —
+  checks for the pair tag `0b111`, flushes stdout, prints
+  `dyn_pair_first: argument with tag 0 (int) is not a pair` on stderr and
+  aborts. The message names the word's tag and kind, never the word, so no
+  heap address reaches stderr; `dynval-runtime`'s panic uses the same words.
+  If `abort` returns — a program-defined `abort` replaced libc's, possible on
+  LLVM before #18416 — a trap instruction (`__builtin_trap`, or `__fastfail`
+  on MSVC) still ends the process; `abort` is called through a `volatile`
+  pointer so the compiler cannot delete that trap as unreachable. The
+  op's traps list stays empty: a type error is not one of the closed
+  `Trap.*` kinds, so it is not catchable, and `lang_matrix`'s
+  `twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column` pins the
+  agreement (LLVM, native x86-64, VM, JIT, JVM). A heap-tagged word that is
+  some other heap object is still read as a pair by the C runtime; that is a
+  type confusion inside a live GC block, not a wild read, and telling the
+  kinds apart there needs `__gc_kind_of`, a heap walk. `lang_aot::jit_lisp`'s
+  McCarthy callbacks used to answer nil for `car` of a non-pair; they now
+  fail on both JIT tiers (#18417). The interpreter tier returns a
+  `VMError::TypeError`. The compiled tier records the refusal in the JIT's
+  error slot, and `GenericCirJit` stops after the call. Both use the same
+  tag-only text.
 - *Renamed everywhere they are lowered or handled.* `iir-builtin-lowering`'s
   native runtime-call path (`heap.rs`'s `RUNTIME_RENAMES`, `dyn_repr.rs`,
   `list_ops.rs`, `closure_heap.rs`, `dynamic_arith.rs`); the x86-64 and
@@ -1766,12 +1796,108 @@ the frontends.
   spell either. `__dyn_` has the same exposure — `length` binds to an
   existing `__dyn_list_length`, closures to an existing
   `__dyn_call_closure`, and `__dyn_pair_new` … are runtime symbols — and is
-  closed at the Twig frontend; a pass-level refusal for the list and
-  closure helpers is left for a follow-up.
+  closed at the Twig frontend. *Follow-up (landed):* the list and closure
+  passes now refuse a module that holds a different function under one of
+  their helpers' names (`helper_names::HelperNameError`, plumbed like
+  `ReservedNameError`). A second review found two more shadowing routes, also
+  closed. First, `twig-aot`'s link step patched a runtime call to a program
+  function of the same name: `(define (__twig_print_i64 n) 0)` swallowed
+  `print`. It now refuses a function named like a runtime symbol, or two
+  functions of one name. Second, a program could define `__lambda_0`, the
+  name of a lifted lambda. Twig now also reserves `__lambda_` and `__twig_`.
+  A third review extended this to *registers*. A Twig parameter or `let` name
+  is an IIR register, and the compiler's temporaries (`_n1`, `_else1`, …)
+  and the passes' (`__aot_str{n}_len`, `__clo_*`, …) live in the same
+  function: `(let ((_n2 40)) (+ _n2 2))` computed 4. Fixes:
+  - Twig reserves the whole `__` namespace.
+  - Its temporaries and labels are `__t{n}_{what}` / `__l{n}_{what}`. An
+    unspellable character was ruled out because LLVM already uses `.` in its
+    derived names (`%x.slot`).
+  - `closure_heap` picks temporaries the function does not already use.
+  - `twig-aot` refuses a module that already uses a register beginning
+    `__aot_`.
+  - `twig-aot`'s `__dyn_*` check fails closed, through an allowlist of the
+    pass helpers (`PASS_GENERATED_DYN_HELPERS`), and `lang-aot`'s LLVM path
+    runs the same check, so `__gc_alloc_kind` and friends are refused there
+    too.
+  - `claim_helper_name` refuses if *any* function under the helper's name
+    differs from the helper.
 - *Not moved yet.* The managed backends (WASM, JVM, CLR, BEAM) still lower
   the source-level `pair?`, `not` and `equal?` builtins in their own code
   (their value model is structural, and `lower_dyn_repr_structural` leaves
   those names for them). That is PR7f-3's "source-level builtin names".
+
+**PR7f-3 — what moving the source names into the frontends takes.**
+
+The plan above says `iir-builtin-lowering` "becomes a compiler-side library"
+that Twig, McCarthy Lisp and the CAS compilers call before returning the
+module. Surveying the code after PR7f-2 shows that the library is not one
+translation but several **target-specific** ones, and that the source names
+are read by more consumers than the backends. Moving the call into the
+frontends therefore needs the work below first; it is split into its own
+PRs rather than landed as one.
+
+*Who reads the source names today.*
+
+| Consumer | Reads | Value model |
+| --- | --- | --- |
+| `lang-aot` LLVM, `twig-aot` native (x86-64 / AArch64), `jit_lisp` | `cons` `car` `cdr` `pair?` `null?` `equal?` `not` `+` … via `lower_heap_builtins_runtime`, `lower_dynamic_arith`, `lower_dyn_repr` | tagged word, `dynval_runtime.c` |
+| `lang-aot` WASM / JVM / CLR / BEAM | the same names via `lower_heap_builtins` (`alloc` / `field_*` / `is_null`), `lower_dyn_repr_structural` (`box` → `i31ref` / object); `pair?`, `not`, `equal?` reach the backend, which lowers them itself (`iir-to-wasm` `lower.rs`, `iir-to-jvm-class-file` `lower.rs`, `iir-to-cil-bytecode` `il_text.rs`, `iir-to-beam`) | structural: GC struct / object / Erlang term; booleans are machine `i32`, nil is a null reference, a symbol is an interned `i31` indistinguishable from an integer |
+| `lang_matrix` VM and JIT columns | `lower_heap_builtins` + `intern_symbols_structural` in the harness | structural (`vm-core` heap cells) |
+| `twig-vm` | `call_builtin "+" / "cons" / …` resolved by `dynval-runtime`'s `LispyBinding` (about 50 names, the TW00 / LANG47 / LANG52 surface) | `LispyValue` |
+| `mccarthy-lisp-vm`, `macsyma-vm`, `maple-vm`, `axiom-vm`, `derive-vm`, `reduce-vm`, `wolfram-vm` (maxima has no VM of its own) | their own `resolve_builtin` tables over the source names (`+` → `dynval_runtime::builtins::add`, `cons`, …) | `LispyValue` |
+
+*Why it is not a move.*
+
+1. **The translation is per target.** `cons` becomes a `dyn_pair_new`
+   runtime call on the tagged-word backends and `alloc` + two `field_store`s
+   on the structural ones; an integer atom is boxed by `n << 3` in one and by
+   `box` → `i31ref` in the other, and the two passes decide *which* atoms to
+   box with different rules (a use-site rule over `dyn_*` arguments, and a
+   cons-field rule). A frontend that emits registry ops only must emit one
+   form, so every backend has to lower the *registry* form.
+2. **The structural backends cannot lower the primitives as defined.** PR7f-1
+   declares WASM, JVM, CLR, BEAM, the VM and the JIT `Refused` for all ten.
+   To accept a module that uses them they need: `dyn_pair_*` / `dyn_is_*` /
+   `dyn_nil` lowered onto their object model (feasible, it is what
+   `lower_heap_builtins` does today, moved behind `op_support`); and
+   `dyn_tag`, which `__lisp_equal` and `__lisp_exit_code` use, answering
+   the six tag numbers — which needs a symbol representation distinct from
+   an integer (today both are `i31ref`) and booleans that are dynamic values
+   rather than machine `i32`s. PR7f-2's truthiness and `not` do not use
+   `dyn_tag`: they compare the whole word against the `#f` and nil words
+   (3 and 1), so on a managed object model they need `#f` and nil to be
+   values an `i64`-typed `cmp_ne` can tell apart from every other value. That is a change to the managed value model, with CLR and BEAM
+   executable only in CI.
+3. **Eight interpreters consume the names.** `twig-vm` and the seven
+   `*-vm` crates execute the frontends' IIR directly. Each must accept the
+   registry primitives (and `box` / `unbox` / typed arithmetic for dynamic
+   `+`) before its frontend stops emitting the source names, or the
+   frontend's own end-to-end tests break.
+4. **`+` is not always integer arithmetic.** In the CAS VMs `+` is
+   `dynval_runtime::builtins::add` today, but the CAS languages build
+   unevaluated symbolic expressions with `cons`; their frontends would have
+   to decide, statically or with an emitted helper, where integer arithmetic
+   ends and expression building begins.
+
+*Proposed sequence* (each keeps every `lang_matrix` row byte-identical):
+
+- **PR7f-3a** — the structural backends lower the ten primitives on their
+  object model and declare them `Lowered` (moving `lower_heap_builtins`'s
+  job behind `op_support`); the managed symbol becomes distinguishable from
+  an integer and booleans become dynamic values, so `dyn_tag`,
+  `__lisp_equal` and `__lisp_exit_code` run there, and `#f` and nil get
+  representations the whole-word truthiness comparison can recognise; `pair?` / `not` / `equal?` leave the four
+  backends' own lowering.
+- **PR7f-3b** — `vm-core` lowers the primitives (the VM and JIT columns
+  stop needing the harness's structural pass), and `twig-vm` and the seven
+  `*-vm` interpreters accept the registry names beside the source names.
+- **PR7f-3c** — Twig, McCarthy Lisp and the seven CAS compilers call the
+  translation library (`lower_heap_builtins_runtime`'s renames,
+  `lower_dynamic_arith`, the boxing decision and `lisp_semantics`) before
+  returning the module, `check_module_for` sees registry ops only, the
+  interpreters drop the source names, and LANG84 C7.1's pre-registry
+  allowance shrinks to control flow, calls and memory.
 
 ### Migration, as a PR sequence
 
@@ -1833,6 +1959,10 @@ anything still emits it.
      `dyn_equal`, `dyn_not`, `dyn_to_exit_code`) become compiler-emitted
      IIR built from the primitives. *Landed;* see "What PR7f-2 landed".
    - **PR7f-3** — the source-name translation moves into the frontends.
+     *Scoped, not landed:* it needs the structural backends, `vm-core`
+     and eight interpreters to lower the primitives first; see "PR7f-3 —
+     what moving the source names into the frontends takes" for the
+     inventory and the PR7f-3a / -3b / -3c sequence.
 8. **PR7g — retire the LANG79 Python pilot builtins** (`py_*`) by putting
    `compile_source` on the release path.
 9. **PR7h — register `getchar`, `input_i64`, `input_more`, `input_str`**

@@ -31,7 +31,8 @@ DOCX ─────────────────────────
 | `.document(DocumentNode)` | Root of the document |
 | `.heading(HeadingNode)` | Section heading (h1–h6) |
 | `.paragraph(ParagraphNode)` | Paragraph of inline content |
-| `.codeBlock(CodeBlockNode)` | Fenced or indented code block |
+| `.codeBlock(CodeBlockNode)` | Ordinary or indented code block |
+| `.fencedBlock(FencedBlockNode)` | Source-preserving fence with inert metadata |
 | `.blockquote(BlockquoteNode)` | Block quotation |
 | `.list(ListNode)` | Ordered or unordered list |
 | `.listItem(ListItemNode)` | One list item |
@@ -41,6 +42,11 @@ DOCX ─────────────────────────
 | `.table(TableNode)` | Tabular data |
 | `.tableRow(TableRowNode)` | One table row |
 | `.tableCell(TableCellNode)` | One table cell |
+
+`FencedBlockNode` keeps the first normalized info token in `name`, the complete
+normalized metadata in `info`, and the literal payload in `value`. Consumers
+must opt in before interpreting metadata; the default HTML renderer treats it
+as an escaped code fallback.
 
 ### Inline Nodes (character-level)
 

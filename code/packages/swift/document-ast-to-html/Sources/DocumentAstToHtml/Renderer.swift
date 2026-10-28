@@ -13,6 +13,7 @@
 // - `rawBlock` / `rawInline` nodes with an unknown format are silently skipped.
 // - Tight lists suppress `<p>` wrappers around single-paragraph list items.
 // - `codeBlock` content is HTML-escaped and always ends with a newline.
+// - `fencedBlock` uses only escaped name metadata and never executes a payload.
 // - Heading levels are expected to be 1–6 (guaranteed by the parser).
 //
 // # HTML Escaping
@@ -131,6 +132,12 @@ private func renderBlock(_ node: BlockNode, tight: Bool) -> String {
         }
         let escapedValue = htmlEscape(cb.value)
         return "<pre><code\(langAttr)>\(escapedValue)</code></pre>\n"
+
+    case .fencedBlock(let fence):
+        // A fence is inert metadata plus literal text. Only the first token is
+        // an optional class hint; the complete info string is never rendered.
+        let langAttr = fence.name.map { " class=\"language-\(htmlEscape($0))\"" } ?? ""
+        return "<pre><code\(langAttr)>\(htmlEscape(fence.value))</code></pre>\n"
 
     case .blockquote(let bq):
         // Blockquotes nest arbitrarily deep. Inner blocks render with

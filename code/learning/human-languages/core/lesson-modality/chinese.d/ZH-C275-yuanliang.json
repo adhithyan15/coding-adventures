@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C275-yuanliang",
+    "language": "chinese",
+    "chapter": 275,
+    "sequence": 20400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5c1e2cf8205d576"
+  },
+  "findings": []
+}

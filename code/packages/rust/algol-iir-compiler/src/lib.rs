@@ -3628,6 +3628,43 @@ impl Compiler {
         }
     }
 
+    /// Evaluate the integer-preserving standard normalizers without routing a
+    /// wide static integer through binary64. The argument must itself be
+    /// call-free, and user declarations continue to shadow the built-ins.
+    fn exact_call_free_static_integer_normalizer_value(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Option<i64> {
+        if node.rule_name != "proc_call" {
+            if let Some(child) = single_parenthesized_child(node) {
+                return self.exact_call_free_static_integer_normalizer_value(child);
+            }
+            let children = direct_nodes(node);
+            return (direct_tokens(node).is_empty() && children.len() == 1)
+                .then(|| self.exact_call_free_static_integer_normalizer_value(children[0]))?;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 || self.contains_procedure_call(actuals[0]) {
+            return None;
+        }
+        let value = self.static_integer_scalar_value(actuals[0])?;
+        match target_name.as_str() {
+            "abs" => value.checked_abs(),
+            "sign" => Some(value.signum()),
+            "entier" => Some(value),
+            _ => None,
+        }
+    }
+
     /// Evaluate deterministic real standard-function calls inside the static
     /// arithmetic tree. User declarations still shadow the built-ins, and
     /// `sqrt` is accepted only when the host operation round-trips exactly to
@@ -4845,11 +4882,53 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<ExactIntegerSignProof<'n>> {
+        self.builtin_exact_integer_sign_operand_with_limit(
+            node,
+            MAX_EXACT_SIGN_INTEGER_MAGNITUDE,
+        )
+    }
+
+    /// Read a variable-free or tracked static integer term without first
+    /// converting it to binary64. Integer-domain reductions may temporarily
+    /// exceed `2^53`; real-valued static terms retain the narrower exact-f64
+    /// boundary.
+    fn exact_integer_sign_static_term(
+        &self,
+        node: &GrammarASTNode,
+        magnitude_limit: u64,
+    ) -> Option<(u64, i64)> {
+        if let Some(value) = self.exact_call_free_static_integer_normalizer_value(node) {
+            return (value.unsigned_abs() <= magnitude_limit)
+                .then_some((value.unsigned_abs(), value));
+        }
+        if !self.contains_procedure_call(node) {
+            if let Some(value) = self.static_integer_scalar_value(node) {
+                return (value.unsigned_abs() <= magnitude_limit)
+                    .then_some((value.unsigned_abs(), value));
+            }
+        }
+        let value = expr_static_real_arithmetic_value_with(node, &|_| None)
+            .or_else(|| {
+                exact_static_integer_reduction_value_with(node, &|candidate| {
+                    self.exact_static_integer_reduction_leaf_value(candidate)
+                })
+                .map(|value| value as f64)
+            })?;
+        Some((exact_sign_integer_units(value)?, value as i64))
+    }
+
+    fn builtin_exact_integer_sign_operand_with_limit<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+        magnitude_limit: u64,
+    ) -> Option<ExactIntegerSignProof<'n>> {
         if let Some((_condition, then_node, else_node)) =
             self.conditional_expression_parts(node)
         {
-            let then_proof = self.builtin_exact_integer_sign_operand(then_node)?;
-            let else_proof = self.builtin_exact_integer_sign_operand(else_node)?;
+            let then_proof =
+                self.builtin_exact_integer_sign_operand_with_limit(then_node, magnitude_limit)?;
+            let else_proof =
+                self.builtin_exact_integer_sign_operand_with_limit(else_node, magnitude_limit)?;
             if self.is_selector_call_safe_runtime_real_root(then_proof.operand)
                 && self.is_selector_call_safe_runtime_real_root(else_proof.operand)
             {
@@ -4862,11 +4941,13 @@ impl Compiler {
             return None;
         }
         if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_exact_integer_sign_operand(child);
+            return self.builtin_exact_integer_sign_operand_with_limit(child, magnitude_limit);
         }
         if let Some((sign, child)) = single_signed_child(node) {
             return matches!(sign, "+" | "-")
-                .then(|| self.builtin_exact_integer_sign_operand(child))?;
+                .then(|| {
+                    self.builtin_exact_integer_sign_operand_with_limit(child, magnitude_limit)
+                })?;
         }
         if pieces(node)
             .iter()
@@ -4901,7 +4982,8 @@ impl Compiler {
                         },
                     )
                 })?;
-            let mut proof = self.builtin_exact_integer_sign_operand(base)?;
+            let mut proof =
+                self.builtin_exact_integer_sign_operand_with_limit(base, magnitude_limit)?;
             if exponent == 0 {
                 proof.magnitude = 1;
                 proof.value_gcd = 1;
@@ -4909,7 +4991,7 @@ impl Compiler {
             }
             proof.magnitude = proof.magnitude.checked_pow(exponent)?;
             proof.value_gcd = proof.value_gcd.checked_pow(exponent)?;
-            return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(proof);
+            return (proof.magnitude <= magnitude_limit).then_some(proof);
         }
         if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
             let sequence = pieces(node);
@@ -4922,24 +5004,14 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(candidate) = self.builtin_exact_integer_sign_operand(operand) {
+                        if let Some(candidate) = self
+                            .builtin_exact_integer_sign_operand_with_limit(operand, magnitude_limit)
+                        {
                             rooted.push(candidate);
                         } else {
-                            let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
-                                .or_else(|| {
-                                    exact_static_integer_reduction_value_with(
-                                        operand,
-                                        &|candidate| {
-                                            self.exact_static_integer_reduction_leaf_value(
-                                                candidate,
-                                            )
-                                        },
-                                    )
-                                    .map(|value| value as f64)
-                                })?;
-                            let units = exact_sign_integer_units(value)?;
+                            let (units, signed_value) = self
+                                .exact_integer_sign_static_term(operand, magnitude_limit)?;
                             static_magnitude = static_magnitude.checked_add(units)?;
-                            let signed_value = value as i64;
                             if index > 0
                                 && matches!(sequence.get(index - 1), Some(Piece::Op(op)) if op == "-")
                             {
@@ -4965,8 +5037,7 @@ impl Compiler {
                 }
                 proof.magnitude = proof.magnitude.checked_add(static_magnitude)?;
                 proof.value_gcd = integer_gcd(proof.value_gcd, static_offset.unsigned_abs());
-                return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
-                    .then_some(proof);
+                return (proof.magnitude <= magnitude_limit).then_some(proof);
             }
         }
         if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
@@ -4979,22 +5050,16 @@ impl Compiler {
                         let Piece::Node(operand) = piece else {
                             return None;
                         };
-                        if let Some(candidate) = self.builtin_exact_integer_sign_operand(operand) {
+                        if let Some(candidate) = self.builtin_exact_integer_sign_operand_with_limit(
+                            operand,
+                            MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE,
+                        ) {
                             rooted.push((index, candidate));
                         } else {
-                            let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
-                                .or_else(|| {
-                                    exact_static_integer_reduction_value_with(
-                                        operand,
-                                        &|candidate| {
-                                            self.exact_static_integer_reduction_leaf_value(
-                                                candidate,
-                                            )
-                                        },
-                                    )
-                                    .map(|value| value as f64)
-                                })?;
-                            let units = exact_sign_integer_units(value)?;
+                            let (units, signed_value) = self.exact_integer_sign_static_term(
+                                operand,
+                                MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE,
+                            )?;
                             let operator = (index > 0)
                                 .then(|| sequence.get(index - 1))
                                 .flatten()
@@ -5002,7 +5067,7 @@ impl Compiler {
                                     Piece::Op(op) => Some(op.as_str()),
                                     Piece::Node(_) => None,
                                 });
-                            static_terms.push((index, operator, units, value as i64));
+                            static_terms.push((index, operator, units, signed_value));
                         }
                     } else {
                         let Piece::Op(op) = piece else {
@@ -5133,8 +5198,7 @@ impl Compiler {
                     if remaining_roots.next().is_some() || remaining_static.next().is_some() {
                         return None;
                     }
-                    return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
-                        .then_some(proof);
+                    return (proof.magnitude <= magnitude_limit).then_some(proof);
                 }
                 let (rooted_index, mut proof) = rooted.into_iter().next()?;
                 let folds_integer_prefix = static_terms.iter().any(
@@ -5221,13 +5285,14 @@ impl Compiler {
                         return None;
                     }
                 }
-                return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(proof);
+                return (proof.magnitude <= magnitude_limit).then_some(proof);
             }
         }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_exact_integer_sign_operand(children[0]);
+                return self
+                    .builtin_exact_integer_sign_operand_with_limit(children[0], magnitude_limit);
             }
             return None;
         }
@@ -5251,7 +5316,8 @@ impl Compiler {
                 magnitude: 1,
                 value_gcd: 1,
             }),
-            "abs" | "entier" => self.builtin_exact_integer_sign_operand(actuals[0]),
+            "abs" | "entier" => self
+                .builtin_exact_integer_sign_operand_with_limit(actuals[0], magnitude_limit),
             _ => None,
         }
     }
@@ -16675,6 +16741,72 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "i64 overflow and real division before integer reduction must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_wide_integer_sums_reduce_before_widening() {
+        compile_source(
+            "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740992 * sign(pick()) + 9007199254740992) mod 5); output(result) end",
+            "test",
+        )
+        .expect("an i64-bounded integer sum may reduce below 2^53 before widening");
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(9007199254740992 * sign(pick()) + 9007199254740992); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((9007199254740992 * sign(pick()) + 9007199254740992) / 2) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test")
+                .expect_err("unreduced wide sums and early real division must fail closed");
+        }
+    }
+
+    #[test]
+    fn al4_wide_static_integer_terms_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740993 * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740993 * sign(pick()) + 9007199254740993) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "an exact i64 static term may reduce below 2^53 before widening for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(9007199254740993 * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((9007199254740993 * sign(pick())) / 2) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740993 * 1024 * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, early-widened, and overflowing wide static terms must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-9007199254740993) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((entier(9007199254740993) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a call-free exact integer normalizer may reduce before widening for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(abs(-9007199254740993) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((abs(-9007199254740993) * sign(pick())) / 2) mod 5); output(result) end",
+            "begin real procedure abs(x); value x; real x; abs := x; real procedure pick; pick := 3.5; real result; result := entier((abs(9007199254740993) * sign(pick())) mod 5); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 3.5; real result; result := entier((abs(if choose() then -9007199254740993 else -9007199254740993) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, early-divided, shadowed, and effectful normalizers must fail closed",
             );
         }
     }

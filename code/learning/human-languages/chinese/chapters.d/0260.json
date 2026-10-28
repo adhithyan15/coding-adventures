@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "What I Can Do",
+  "label": "ch:zh-what-i-can-do",
+  "canDo": "I can talk about ability, what someone can do, an expert, technique and making progress.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C260-jinbu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can talk about ability, what someone can do, an expert, technique and making progress.",
+    "assesses": [
+      "ZH-LEX-C260-SKILL260-03",
+      "ZH-LEX-C260-SKILL260-04",
+      "ZH-LEX-C260-SKILL260-05"
+    ]
+  }
+}

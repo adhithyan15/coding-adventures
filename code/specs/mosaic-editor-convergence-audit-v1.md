@@ -227,6 +227,31 @@ one consumer rather than three.
    not change.
 4. **PR-6, `Notes` on `HostNavigationSplit`.** This removes the remaining
    flex drops. It is already in the backlog.
+
+   **Status (2026-10-27): blocked.** The package-level result matches probe
+   C. With `notes-body` as the split (`pane-width : 220`,
+   `collapse : never`), the old Row `gap` moved to a `padding-left` on a
+   detail `Column`, and the three flex hints deleted, the gate measures **2
+   drops per theme, down from 10**: only `draft-editor-body`'s `min-height`
+   on Qt and Flutter remains. There are zero capability and zero behaviour
+   degradations.
+
+   The app breaks, though. Trestle mounts `Notes` inside its vertical
+   `HostScroll [ content-scroll ]`, and two native lowerings of the split
+   need a bounded height:
+
+   - **Compose:** `NavigationSuiteScaffoldLayout` lays itself out at
+     `constraints.maxHeight`. On the Notes tab, the emitted TaskApp's
+     `TaskAppScreenshots` harness throws
+     `Size(984 x 2147483647) is out of range`.
+   - **SwiftUI:** a macOS probe measured `NavigationSplitView` at 0 points
+     tall inside a vertical `ScrollView`, and at 776 points without one.
+
+   No CI lane opens the Notes view natively, so CI would not catch either.
+   PR-6 waits on one of two things. Either the split lowerings gain a
+   bounded-height behaviour for a nested split, or Trestle gives the Notes
+   view a bounded height outside `content-scroll`. Lesson:
+   `a-hostnavigationsplit-nested-in-a-vertical-hostscroll-crashes-compose-and-collap`.
 5. **E4, `NoteEditor` on `DraftEditor`.** Last, because it is the only step
    that changes behaviour: single-line becomes multi-line, and a new commit
    chord appears. It also brings the new nested drops that R2 describes.

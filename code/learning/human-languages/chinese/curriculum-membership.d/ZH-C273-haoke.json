@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C273-haoke",
+  "pathSegment": "ZH-PATH-273-CHAR273",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-273-CHAR273",
+      "order": 1
+    }
+  ]
+}

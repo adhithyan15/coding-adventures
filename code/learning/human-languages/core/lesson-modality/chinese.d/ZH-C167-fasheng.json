@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C167-fasheng",
+    "language": "chinese",
+    "chapter": 167,
+    "sequence": 13470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78d07a820d9d7b26"
+  },
+  "findings": []
+}

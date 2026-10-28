@@ -510,6 +510,37 @@ def right_child(root: BinaryTreeNode, value) -> BinaryTreeNode | None:
 
 ## Public API
 
+### Portable Conformance Profile
+
+The examples below predate nullable payloads and hostile-input limits. New
+portable lanes MUST apply this profile; established lanes are reconciled under
+their own backlog owner rather than silently changing behavior:
+
+- A node is named by **object identity**, never by payload equality. Duplicate
+  values are valid. Child, membership, and depth queries accept a node identity.
+- Nodes and the published tree are immutable. Payload ownership is shallow:
+  implementations retain payload references or values and do not invent a
+  language-specific deep-copy requirement.
+- Level-order input and output use a tagged slot with `missing` and `value(T)`
+  cases. This keeps a missing position distinct from a present nullable value.
+- Trailing missing slots are removed from output. A present input slot whose
+  parent slot is missing is an `orphanSlot` error, not discarded data.
+- A supplied node graph must be a tree: repeated/shared identities and cycles
+  are rejected before the tree is published. Construction is failure-atomic.
+- Traversals, height, size, predicates, validation, and projection are
+  iterative so a skewed input cannot exhaust the language call stack.
+- Positional indices use checked `2*i+1` / `2*i+2` arithmetic. Input slots,
+  visited nodes, and produced slots are each limited to **1,048,575**. A shape
+  whose positional projection crosses that ceiling is rejected even if it has
+  relatively few nodes.
+- Stable error categories are `tooManySlots`, `orphanSlot`, `sharedNode`,
+  `cycle`, `positionalLimit`, and `nodeNotFound`. Human-readable messages may
+  vary by language.
+- Empty trees have size `0`, edge height `-1`, empty traversals/projection, and
+  are full, complete, and perfect. A leaf has height `0`.
+- DT02 explains the conceptual layer, but the portable DT03 package does not
+  need a runtime DT02 dependency. No ASCII renderer is required for conformance.
+
 ```python
 class BinaryTreeNode:
     """A single node in a binary tree."""

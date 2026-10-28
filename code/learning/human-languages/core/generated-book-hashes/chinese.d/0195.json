@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:576d7e8fd10e3c0b",
+  "lessonIds": [
+    "ZH-C195-cunqian",
+    "ZH-C195-quqian",
+    "ZH-C195-xinyongka",
+    "ZH-C195-mima",
+    "ZH-C195-zhanghu"
+  ],
+  "tex": "chinese/book/chapters/ch195-at-the-bank.tex"
+}

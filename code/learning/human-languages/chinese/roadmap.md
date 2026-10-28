@@ -272,6 +272,16 @@ a named reader. A2 headwords 645 -> 690, verbs 173 -> 185; all five A2 nodes
 realized, no A2 writing stage missing. A2 is not attained: the A2 vocabulary
 (about 510 more headwords, with 48 more characters planned) comes next.
 
+## The A2 vocabulary (delivered, chapters 158-277)
+
+600 words (218 verbs) in four reviewed tranches on the A2 nodes, and 48 more characters
+written (房 米 衣 茶 事 觉 杯 候 面 常 间 冷 钱 号 店 回 路 票 找 关 东 离 公 地 风 云 雪 花 草 头 疼 身
+体 医 西 现 校 高 读 作 写 孩 工 热 假 笑 先 老), 211 inventory rows in all. 126 words are
+headed in written characters and 474 are taught by ear with pinyin headwords. Chinese
+attains A2: 1,290 headwords and 403 verbs at or below A2. Next: the B1 rung, whose
+five spine nodes (narrating, giving reasons, travel, describing experience and
+conditions) are all still unrealized.
+
 ## Part II onward — cumulative pre-A1 to C2 build *(planned)*
 
 Continue the official vocabulary tranche with oral meaning, source-verified
