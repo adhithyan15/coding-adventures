@@ -315,6 +315,9 @@ Call-free integer arguments above `2^53` also stay in checked `i64` through
 those three normalizers when a following `div` or `mod` reduces the result
 before widening. Procedure-calling arguments, overflow, and unreduced wide
 results remain conservative.
+Purely nested chains of those normalizers preserve the same exact integer
+root. A user override or any other procedure call at any level keeps the
+chain outside the proof.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
