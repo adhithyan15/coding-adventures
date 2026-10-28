@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C202-shouju",
+  "pathSegment": "ZH-PATH-202-TILL202",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-202-TILL202",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C161-niurou",
+    "language": "chinese",
+    "chapter": 161,
+    "sequence": 13180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6488fa93601a31b0"
+  },
+  "findings": []
+}

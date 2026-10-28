@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-199-SIZE199",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask what size someone wears, say clothes are thin, baggy or tight, and pick one out.",
+  "prerequisites": []
+}

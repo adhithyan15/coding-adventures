@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C200-danrenjian",
+  "pathSegment": "ZH-PATH-200-HOTEL200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-200-HOTEL200",
+      "order": 2
+    }
+  ]
+}

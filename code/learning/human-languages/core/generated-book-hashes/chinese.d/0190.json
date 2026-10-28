@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:6e668f8a404dec94",
+  "lessonIds": [
+    "ZH-C190-shudian",
+    "ZH-W190-dian-shop",
+    "ZH-C190-yaodian",
+    "ZH-C190-shangchang",
+    "ZH-C190-dianyingyuan",
+    "ZH-C190-bowuguan"
+  ],
+  "tex": "chinese/book/chapters/ch190-shops-in-town.tex"
+}

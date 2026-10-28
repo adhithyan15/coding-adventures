@@ -1059,7 +1059,11 @@ final class _MosaicRuntime {
   ///      even a dangling one (`followLinks: false`);
   ///   2. `createSync(exclusive: true)` makes an empty file there, and fails if
   ///      anything got there first (`O_CREAT | O_EXCL`, Windows `CREATE_NEW`).
-  ///      The name is now ours: no other quarantine can be at it;
+  ///      The name is now ours: no other quarantine can be at it. If it fails
+  ///      and the name is now taken, move on; that is decided by looking
+  ///      again, because the error cannot say so: onto a directory, POSIX
+  ///      reports "file exists" but Windows "access denied". Any other failure
+  ///      stops here;
   ///   3. [_replaceAtomically] moves the rejected file onto that empty
   ///      placeholder, the same atomic replace a save uses. It replaces only
   ///      the placeholder, and the rejected bytes are never copied, so they
@@ -1068,13 +1072,16 @@ final class _MosaicRuntime {
   /// If step 3 fails the rejected file has not moved; the placeholder, still
   /// empty, is removed so it does not use up a name.
   String? _moveStateAside(String path) {
+    bool taken(File candidate) =>
+        FileSystemEntity.typeSync(candidate.path, followLinks: false) !=
+        FileSystemEntityType.notFound;
     for (var index = 0; index < _maxQuarantinedStates; index++) {
       final candidate = File(index == 0 ? '$path.corrupt' : '$path.corrupt.$index');
-      final existing = FileSystemEntity.typeSync(candidate.path, followLinks: false);
-      if (existing != FileSystemEntityType.notFound) continue;
+      if (taken(candidate)) continue;
       try {
         candidate.createSync(exclusive: true);
       } on Object catch (error) {
+        if (taken(candidate)) continue;
         return 'Could not move it aside to ${candidate.path}: $error';
       }
       try {

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C230-tizhong",
+    "language": "chinese",
+    "chapter": 230,
+    "sequence": 17630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d4da3715417e9ee"
+  },
+  "findings": []
+}

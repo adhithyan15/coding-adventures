@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Hobbies",
+  "label": "ch:zh-hobbies",
+  "canDo": "I can ask about hobbies and interests, and talk about novels, stories and playing chess.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C250-xiaqi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can ask about hobbies and interests, and talk about novels, stories and playing chess.",
+    "assesses": [
+      "ZH-LEX-C250-HOBBY250-03",
+      "ZH-LEX-C250-HOBBY250-04",
+      "ZH-LEX-C250-HOBBY250-05"
+    ]
+  }
+}

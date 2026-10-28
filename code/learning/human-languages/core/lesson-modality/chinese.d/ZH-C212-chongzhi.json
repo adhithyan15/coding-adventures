@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C212-chongzhi",
+    "language": "chinese",
+    "chapter": 212,
+    "sequence": 16260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adae17d8b52b9f70"
+  },
+  "findings": []
+}

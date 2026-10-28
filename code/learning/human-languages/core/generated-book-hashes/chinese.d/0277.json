@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:edf67e5b1d5a1407",
+  "lessonIds": [
+    "ZH-C277-youqu",
+    "ZH-C277-taoyan",
+    "ZH-C277-xinshang",
+    "ZH-C277-xiangshou",
+    "ZH-C277-reai",
+    "ZH-R277-review-272-277",
+    "ZH-R277-review-final-277"
+  ],
+  "tex": "chinese/book/chapters/ch277-likes-and-dislikes.tex"
+}

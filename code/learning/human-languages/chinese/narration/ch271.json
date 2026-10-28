@@ -1,0 +1,845 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 271,
+  "title": "Moods",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:31778a53de33edde",
+  "lessons": [
+    {
+      "id": "ZH-C271-jidong",
+      "sequence": 20180,
+      "title": "jīdòng — excited; worked up",
+      "headword": "jīdòng",
+      "romanization": "jīdòng",
+      "gloss": "excited; worked up",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e3891fd064231b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to back someone up, then the Mandarin for to believe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jīdòng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīdòng — \"excited; worked up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā hěn jīdòng — He's very excited."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīdòng is built from jī and dòng 'to move', both inherited from Middle Chinese, kek and duwngX (Guangyun, in Baxter's transcription), which glosses the first 'a rushing wave' and the second 'to stir'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīdòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīdòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīdòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīdòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā hěn jīdòng — He's very excited.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā hěn jīdòng* — He's very excited.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to back someone up, then the Mandarin for to believe, then say jīdòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to back someone up, then the Mandarin for to believe, then say *jīdòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jīdòng mean? (\"Excited; worked up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C271-gandong",
+      "sequence": 20190,
+      "title": "gǎndòng — to move; to touch someone's heart",
+      "headword": "gǎndòng",
+      "romanization": "gǎndòng",
+      "gloss": "to move; to touch someone's heart",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c14f56ccc5ba5a79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to believe, then the Mandarin for worked up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gǎndòng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gǎndòng — \"to move; to touch someone's heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhège gùshi gǎndòngle dàjiā — This story moved everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gǎndòng is built from gǎn and dòng, both inherited from Middle Chinese, komX and duwngX (Guangyun, in Baxter's transcription), which glosses the first 'to move' and the second 'to stir'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎndòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎndòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎndòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎndòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège gùshi gǎndòngle dàjiā — This story moved everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège gùshi gǎndòngle dàjiā* — This story moved everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to believe, then the Mandarin for worked up, then say gǎndòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to believe, then the Mandarin for worked up, then say *gǎndòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gǎndòng mean? (\"To move; to touch someone's heart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C271-chijing",
+      "sequence": 20200,
+      "title": "chījīng — surprised; taken aback",
+      "headword": "chījīng",
+      "romanization": "chījīng",
+      "gloss": "surprised; taken aback",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa5a6a8444f6888a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for worked up, then the Mandarin for to touch someone's heart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chījīng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chījīng — \"surprised; taken aback\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ hěn chījīng — I'm surprised."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chījīng is built from 吃 'to eat' and jīng 'a fright'. The second is inherited from Middle Chinese kjaeng (Guangyun, in Baxter's transcription), glossed 'to fear' and, after an older dictionary, 'a horse taking fright'; how eating a fright came to mean surprise is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chījīng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chījīng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chījīng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chījīng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ hěn chījīng — I'm surprised.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ hěn chījīng* — I'm surprised.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for worked up, then the Mandarin for to touch someone's heart, then say chījīng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for worked up, then the Mandarin for to touch someone's heart, then say *chījīng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chījīng mean? (\"Surprised; taken aback\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C271-wuliao",
+      "sequence": 20210,
+      "title": "wúliáo — bored; boring",
+      "headword": "wúliáo",
+      "romanization": "wúliáo",
+      "gloss": "bored; boring",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84ca96f3a081270c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to touch someone's heart, then the Mandarin for taken aback."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wúliáo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wúliáo — \"bored; boring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhège jiémù hěn wúliáo — This show is boring."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wúliáo is built from wú 'not to have' and liáo, both inherited from Middle Chinese, mju and lew (Guangyun, in Baxter's transcription), which glosses the first 'to have or not have' and calls the second a particle. How the pair came to mean bored is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wúliáo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wúliáo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wúliáo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wúliáo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège jiémù hěn wúliáo — This show is boring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège jiémù hěn wúliáo* — This show is boring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to touch someone's heart, then the Mandarin for taken aback, then say wúliáo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to touch someone's heart, then the Mandarin for taken aback, then say *wúliáo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wúliáo mean? (\"Bored; boring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C271-xinshi",
+      "sequence": 20220,
+      "title": "心事 (xīnshì) — something on your mind; a worry",
+      "headword": "心事",
+      "romanization": "xīnshì",
+      "gloss": "something on your mind; a worry",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:baaa83d3a6137e0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for taken aback, then the Mandarin for bored."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 心事",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "心事 — xīnshì — \"something on your mind; a worry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他今天不笑有心事 tā jīntiān bú xiào yǒu xīnshì — He hasn't smiled today; something's on his mind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "心事 (xīnshì) is built from 心 'the heart' and 事 'an affair', both inherited from Middle Chinese, sim and dzriH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnshì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnshì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnshì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnshì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā jīntiān bú xiào yǒu xīnshì — He hasn't smiled today; something's on his mind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā jīntiān bú xiào yǒu xīnshì* — He hasn't smiled today; something's on his mind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for taken aback, then the Mandarin for bored, then say xīnshì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for taken aback, then the Mandarin for bored, then say *xīnshì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 心事 (xīnshì) mean? (\"Something on your mind; a worry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R271-review-266-271",
+      "sequence": 20230,
+      "title": "Looking back: from Grown-Ups and Children to Moods",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Grown-Ups and Children to Moods",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7934066e5fd68d76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a grown-up and a baby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a grown-up, a baby, a boy, a girl, middle age",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a grown-up, a baby, a boy, a girl, middle age]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an actor, a TV show, a celebrity, a joke, funny",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an actor, a TV show, a celebrity, a joke, funny]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sign up, an oral exam, to pass an exam, the answer to a question, to explain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sign up, an oral exam, to pass an exam, the answer to a question, to explain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "since childhood, before anything else, childhood, originally, a toy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: since childhood, before anything else, childhood, originally, a toy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to agree, to be against, to be in favour, to back someone up, to believe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to agree, to be against, to be in favour, to back someone up, to believe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "worked up, to touch someone's heart, taken aback, bored, something on your mind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: worked up, to touch someone's heart, taken aback, bored, something on your mind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "笑 先 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 笑 先 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A grown-up? (大人, dàren.) A baby? (bǎobao.) A boy? (男孩, nánhái.) A girl? (女孩, nǚhái.) Middle age? (中年, zhōngnián.) An actor? (yǎnyuán.) A TV show? (jiémù.) A celebrity? (明星, míngxīng.) A joke? (笑话, xiàohua.) Funny? (好笑, hǎoxiào.) To sign up? (bàomíng.) An oral exam? (口试, kǒushì.) To pass an exam? (jígé.) The answer to a question? (dá'àn.) To explain? (jiěshì.) Since childhood? (从小, cóngxiǎo.) Before anything else? (先, xiān.) Childhood? (tóngnián.) Originally? (本来, běnlái.) A toy? (wánjù.) To agree? (tóngyì.) To be against? (fǎnduì.) To be in favour? (zànchéng.) To back someone up? (zhīchí.) To believe? (xiāngxìn.) Worked up? (jīdòng.) To touch someone's heart? (gǎndòng.) Taken aback? (chījīng.) Bored? (wúliáo.) Something on your mind? (心事, xīnshì.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

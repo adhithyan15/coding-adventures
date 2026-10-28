@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C240-laduzi",
+  "pathSegment": "ZH-PATH-240-SICK240",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-240-SICK240",
+      "order": 4
+    }
+  ]
+}

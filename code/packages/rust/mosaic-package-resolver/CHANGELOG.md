@@ -67,6 +67,48 @@ What changed:
   - three undeclared packages reported once each, beside a missing
     binding and a `PackageNotFound`.
 
+### Fixed — a callee `For` no longer captures a consumer name (UI29 §3.4, 6f1m)
+
+Backlog 6f1m reported that a bare NAME naming a package component's own
+slot (`Text ( content: title )`) survived inlining as `title`, an unbound
+identifier in every backend. That half was already fixed by F1 (#18393):
+`check_callee_scope` rewrites such a name to `slot: title` when the
+component loads. This entry pins it with tests and fixes the half that
+was still wrong, which UI34 §5 listed as a known follow-up.
+
+Inlining could capture. The consumer loops `For ( …, as: row )` and binds
+`title: row`; Card reads `title` inside its own `For ( …, as: row )`.
+Substitution produced `Text ( content: row )` inside Card's loop, which
+reads Card's `row`. Every backend compiled it and showed the wrong value.
+The same happened to caller children spliced into a mount inside a callee
+loop.
+
+- **The fix.** Before substitution, `substitute` asks each callee `For`
+  which names the bound values (and, if the mount is inside it, the
+  caller's children) would bring into its body. A binding (`as:` or
+  `index:`) that is one of them is renamed to `<name>-in<n>`, the smallest
+  `n` unused by the callee, the values and the children. Its uses are
+  renamed with it: bare prop values in name positions, a nested `For`'s
+  `each:`, and bare names in expressions. A nested `For` that binds the
+  name again ends the rename for its body.
+- **What counts as a name.** Names are compared in camelCase, the
+  identifier every emitter writes. A literal is never a use: the same
+  table as the scope check, now shared as `is_bare_literal` (`true` /
+  `false`, `KEYWORD_LITERAL_PROPS`, a callee `one-of` value at a call
+  site).
+- **No churn.** A binding that captures nothing keeps its authored name,
+  and the mounted components' interfaces are loaded only when something
+  must be renamed. No layout in the repository is affected.
+
+Tests: the own-slot bare name in both spellings at a primitive and at a
+nested call site; a loop shadowing an own slot only inside its body;
+capture of a bare value and of a `slot:` value, in a prop and in an
+expression; an `index:` binding renamed alone; spliced children with the
+mount inside and outside the loop; literals, `slot:` references and a
+rebinding loop left alone; camelCase matching and a fresh name skipping
+one in use; hygiene through nested inlining with a `one-of` value of the
+same spelling.
+
 ### Added — `SlotBindingMissing`: a required slot must be bound (UI34 §7, E6 F1)
 
 UI13 §1 says a slot without a default is required, and that the compiler

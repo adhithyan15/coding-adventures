@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C250-xiaqi",
+  "pathSegment": "ZH-PATH-250-HOBBY250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-250-HOBBY250",
+      "order": 4
+    }
+  ]
+}

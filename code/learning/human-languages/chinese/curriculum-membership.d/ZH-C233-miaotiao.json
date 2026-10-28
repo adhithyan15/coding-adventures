@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C233-miaotiao",
+  "pathSegment": "ZH-PATH-233-LOOKS233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-233-LOOKS233",
+      "order": 3
+    }
+  ]
+}

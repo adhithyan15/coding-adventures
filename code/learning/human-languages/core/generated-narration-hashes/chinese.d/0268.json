@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:0db707042fee252c",
+  "lessonIds": [
+    "ZH-C268-baoming",
+    "ZH-C268-koushi",
+    "ZH-C268-jige",
+    "ZH-C268-daan",
+    "ZH-C268-jieshi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch268.txt",
+  "json": "chinese/narration/ch268.json",
+  "textHash": "fnv1a64:2d04d1b00e2000b0",
+  "jsonHash": "fnv1a64:e26609583f4a40c1",
+  "findings": []
+}

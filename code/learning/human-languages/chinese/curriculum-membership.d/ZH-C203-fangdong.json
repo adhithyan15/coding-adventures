@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C203-fangdong",
+  "pathSegment": "ZH-PATH-203-RENT203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-203-RENT203",
+      "order": 1
+    }
+  ]
+}
