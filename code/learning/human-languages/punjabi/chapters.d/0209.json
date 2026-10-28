@@ -1,0 +1,18 @@
+{
+  "chapter": 209,
+  "title": "This Is a Blue Shoe",
+  "label": "ch:pa-a2-nili",
+  "canDo": "I can recognise and use one bounded feminine singular adjective form.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C209-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce one bounded blue-shoe frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-FORM-NILI-209"
+    ],
+    "note": "This thirty-second Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}
