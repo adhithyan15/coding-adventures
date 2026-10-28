@@ -15111,7 +15111,7 @@
       "branch": "codex/binary-tree-dart-swift-lane-parity",
       "pr_number": 18537,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18537",
-      "opened_at": "2026-10-28T20:52:00Z",
+      "opened_at": "2026-10-28T20:49:37Z",
       "publication_head": "375212df3a2b40234660f6c8892fcd2f8981fade",
       "publication_notes": "Draft PR #18537 opened from independently reviewed exact current-main head 375212df3a2b40234660f6c8892fcd2f8981fade. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for the new exact head and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
       "notes": "Implement the existing DT03 node, traversal, shape-predicate, height and depth, array conversion, boundary and error, ownership, and empty-capability contract with package-native tests. These are the exact two canonical gaps; DT03 already provides the governing neutral contract.",
