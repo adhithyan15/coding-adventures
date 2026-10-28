@@ -81,7 +81,7 @@ fn optimized_fixed_expand_scrubs_result_slots_without_allocating() {
     assert_result_slot_wiped(expand, 33, 32);
     assert_result_slot_wiped(expand, 49, 48);
     let previous = alloca_name(expand, 48, 1);
-    assert_wipe_precedes_lifetime_end(expand, &previous, &previous, 48, 48);
+    assert_owner_wiped(expand, &previous, 48);
 }
 
 fn assert_result_slot_wiped(function: &str, result_size: usize, tag_size: usize) {
@@ -100,7 +100,7 @@ fn assert_result_slot_wiped(function: &str, result_size: usize, tag_size: usize)
         })
         .unwrap_or_else(|| panic!("optimized Expand has no payload pointer for {result}"));
 
-    assert_wipe_precedes_lifetime_end(function, &result, &payload, result_size, tag_size);
+    assert_success_copies_are_wiped(function, &payload, tag_size);
 }
 
 fn alloca_name(function: &str, size: usize, alignment: usize) -> String {
@@ -120,31 +120,188 @@ fn alloca_name(function: &str, size: usize, alignment: usize) -> String {
     matches.into_iter().next().expect("one slot was required")
 }
 
-fn assert_wipe_precedes_lifetime_end(
-    function: &str,
-    owner: &str,
-    wipe_pointer: &str,
-    owner_size: usize,
-    wipe_size: usize,
-) {
+fn assert_success_copies_are_wiped(function: &str, payload: &str, tag_size: usize) {
     let lines: Vec<&str> = function.lines().collect();
-    let wipe_pointer_marker = format!("{wipe_pointer}, i64 noundef {wipe_size}");
-    let wipe_index = lines
+    let copies: Vec<usize> = lines
         .iter()
-        .position(|line| line.contains("zeroize_bytes") && line.contains(&wipe_pointer_marker))
-        .unwrap_or_else(|| {
-            panic!("optimized Expand did not scrub {wipe_size} bytes through {wipe_pointer}")
-        });
-    let lifetime_marker = format!("lifetime.end.p0(i64 {owner_size}, ptr nonnull {owner})");
-    let lifetime_end_index = lines
+        .enumerate()
+        .filter_map(|(index, line)| is_full_tag_copy(line, payload, tag_size).then_some(index))
+        .collect();
+    assert!(
+        !copies.is_empty(),
+        "optimized Expand did not copy a {tag_size}-byte tag from {payload} into the previous-block buffer"
+    );
+
+    for copy_index in copies {
+        let following = &lines[copy_index + 1..];
+        let wipe_offset = following
+            .iter()
+            .position(|line| is_zeroize_call(line, payload, tag_size));
+        let block_offset = following.iter().position(|line| is_basic_block_label(line));
+        assert!(
+            wipe_offset.is_some_and(|wipe| block_offset.is_none_or(|block| wipe < block)),
+            "optimized Expand did not scrub {payload} directly after its successful {tag_size}-byte copy:\n{function}"
+        );
+    }
+}
+
+fn assert_owner_wiped(function: &str, owner: &str, size: usize) {
+    let lines: Vec<&str> = function.lines().collect();
+    let return_slot = return_slot_name(function);
+    // HkdfError has four variants, so Result<(), HkdfError>::Ok is encoded as
+    // discriminant 4 in this function's return slot.
+    let success_store = lines
         .iter()
-        .position(|line| line.contains(&lifetime_marker))
-        .unwrap_or_else(|| panic!("optimized Expand did not end the lifetime of {owner}"));
+        .position(|line| is_success_store(line, &return_slot))
+        .unwrap_or_else(|| panic!("optimized Expand has no success store through {return_slot}"));
+    let block_start = lines[..success_store]
+        .iter()
+        .rposition(|line| is_basic_block_label(line))
+        .map_or(0, |index| index + 1);
+    let block_end = lines[success_store + 1..]
+        .iter()
+        .position(|line| is_basic_block_label(line))
+        .map_or(lines.len(), |offset| success_store + 1 + offset);
 
     assert!(
-        wipe_index < lifetime_end_index,
-        "optimized Expand ended {owner} before scrubbing {wipe_pointer}:\n{function}"
+        lines[block_start..block_end]
+            .iter()
+            .any(|line| is_zeroize_call(line, owner, size)),
+        "optimized Expand does not scrub {size} bytes through {owner} in its success-return block:\n{function}"
     );
+}
+
+fn return_slot_name(function: &str) -> String {
+    let definition = function
+        .lines()
+        .find(|line| line.starts_with("define "))
+        .expect("optimized function must have a definition");
+    let first_argument = call_arguments(definition)
+        .and_then(|arguments| arguments.split(',').next())
+        .expect("optimized function must have a return-slot argument");
+    first_argument
+        .split_ascii_whitespace()
+        .find(|token| token.starts_with('%'))
+        .map(str::to_owned)
+        .expect("optimized function must name its return slot")
+}
+
+fn is_success_store(line: &str, return_slot: &str) -> bool {
+    let tokens: Vec<&str> = line.split_ascii_whitespace().collect();
+    tokens.len() >= 5
+        && tokens[0] == "store"
+        && tokens[1]
+            .strip_prefix('i')
+            .is_some_and(|width| width.bytes().all(|byte| byte.is_ascii_digit()))
+        && tokens[2].trim_end_matches(',') == "4"
+        && line_mentions_value(line, return_slot)
+}
+
+fn is_full_tag_copy(line: &str, payload: &str, tag_size: usize) -> bool {
+    if !line.contains("llvm.memcpy") {
+        return false;
+    }
+    let Some(arguments) = call_arguments(line) else {
+        return false;
+    };
+    let arguments: Vec<&str> = arguments.split(',').collect();
+    arguments.len() >= 3
+        && line_mentions_value(arguments[1], payload)
+        && i64_argument_equals(arguments[2], tag_size)
+}
+
+fn is_zeroize_call(line: &str, pointer: &str, size: usize) -> bool {
+    line.contains("zeroize_bytes")
+        && line_mentions_value(line, pointer)
+        && call_has_i64_constant(line, size)
+}
+
+fn call_has_i64_constant(line: &str, value: usize) -> bool {
+    call_arguments(line).is_some_and(|arguments| {
+        arguments
+            .split(',')
+            .any(|arg| i64_argument_equals(arg, value))
+    })
+}
+
+fn i64_argument_equals(argument: &str, value: usize) -> bool {
+    let tokens: Vec<&str> = argument.split_ascii_whitespace().collect();
+    tokens.first() == Some(&"i64")
+        && tokens
+            .last()
+            .and_then(|token| token.trim_end_matches(')').parse::<usize>().ok())
+            == Some(value)
+}
+
+fn call_arguments(line: &str) -> Option<&str> {
+    let start = line.find('(')? + 1;
+    let mut depth = 1usize;
+    for (offset, byte) in line.as_bytes()[start..].iter().enumerate() {
+        match byte {
+            b'(' => depth += 1,
+            b')' => {
+                depth -= 1;
+                if depth == 0 {
+                    return Some(&line[start..start + offset]);
+                }
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+fn line_mentions_value(line: &str, value: &str) -> bool {
+    line.match_indices(value).any(|(start, _)| {
+        let end = start + value.len();
+        let before_is_value = start
+            .checked_sub(1)
+            .and_then(|index| line.as_bytes().get(index))
+            .is_some_and(|byte| is_ir_value_byte(*byte));
+        let after_is_value = line
+            .as_bytes()
+            .get(end)
+            .is_some_and(|byte| is_ir_value_byte(*byte));
+        !before_is_value && !after_is_value
+    })
+}
+
+fn is_ir_value_byte(byte: u8) -> bool {
+    byte.is_ascii_alphanumeric() || matches!(byte, b'_' | b'.' | b'-' | b'$')
+}
+
+fn is_basic_block_label(line: &str) -> bool {
+    let code = line.split(';').next().unwrap_or_default().trim();
+    !code.is_empty() && code.ends_with(':')
+}
+
+#[test]
+fn parser_does_not_require_lifetime_intrinsics() {
+    let result_without_lifetime = "bb0:\n  call void @llvm.memcpy.p0.p0.i64(ptr %previous, ptr %tag, i64 32, i1 false)\n  invoke void @zeroize_bytes(ptr %tag, i64 32)\n";
+    assert_success_copies_are_wiped(result_without_lifetime, "%tag", 32);
+
+    let owner_without_lifetime = "define void @expand(ptr sret([24 x i8]) %return) {\nbb0:\n  store i64 4, ptr %return, align 8\n  call void @zeroize_bytes(ptr %previous, i64 48)\n  ret void\n}";
+    assert_owner_wiped(owner_without_lifetime, "%previous", 48);
+}
+
+#[test]
+#[should_panic(expected = "did not scrub %tag directly after")]
+fn parser_rejects_a_success_copy_without_a_same_block_wipe() {
+    let function = "bb0:\n  call void @llvm.memcpy.p0.p0.i64(ptr %previous, ptr %tag, i64 32, i1 false)\nbb1:\n  invoke void @zeroize_bytes(ptr %tag, i64 32)\n";
+    assert_success_copies_are_wiped(function, "%tag", 32);
+}
+
+#[test]
+fn parser_distinguishes_overlapping_ir_value_names() {
+    assert!(line_mentions_value("ptr %tag, i64 32", "%tag"));
+    assert!(!line_mentions_value("ptr %tag1, i64 32", "%tag"));
+}
+
+#[test]
+#[should_panic(expected = "does not scrub 48 bytes through %previous in its success-return block")]
+fn parser_rejects_an_owner_wipe_only_on_an_error_path() {
+    let function = "define void @expand(ptr sret([24 x i8]) %return) {\nerror:\n  call void @zeroize_bytes(ptr %previous, i64 48)\n  ret void\nsuccess:\n  store i64 4, ptr %return, align 8\n  ret void\n}";
+    assert_owner_wiped(function, "%previous", 48);
 }
 
 fn rust_function_body<'a>(ir: &'a str, rust_name: &str) -> &'a str {
