@@ -16,16 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18525,
+  "active_pr": 18511,
   "active_prs": [
-    18511,
-    18525
+    18511
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T13:44:36Z",
-    "pr_number": 18525,
-    "head_revision": "d3884fb31e50c2dc17c9b4ccc51820d227d96dc8",
-    "action": "Observed non-draft Swift hash-set PR #18525 at its exact lifecycle receipt head with fresh hosted checks starting. The live parity publication set is {18511, 18525}; while those checks run, reprioritize the already-complete Haskell ITF Windows-front preparation for current-main reconciliation without opening another worktree or publishing a conflicting lifecycle branch.",
+    "observed_at": "2026-10-28T14:25:00Z",
+    "pr_number": 18511,
+    "head_revision": "20545a2563a2d921e61f4af51af28d3db059ef0a",
+    "action": "Published the independently reviewed affine2d macOS linker repair and exact-current-main reconciliation to sole live parity PR #18511. GitHub reports the replacement head mergeable and fresh hosted checks are starting; guarded auto-merge remains disabled until every exact-head check is terminal acceptable and the merge state is clean.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -297,7 +296,7 @@
     {
       "id": "build-tool-extra-ci-toolchain-declaration-remaining-engines",
       "title": "Implement extra CI toolchain declarations in every supported build-tool engine",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [
         "build-tool-csharp-extra-ci-toolchain-declaration-conformance",
         "build-tool-fsharp-extra-ci-toolchain-declaration-conformance",
@@ -15202,13 +15201,25 @@
     {
       "id": "swift-hash-set-lane-parity",
       "title": "Implement DT19 hash-set in Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "swift-hash-functions-lane-parity",
         "swift-hash-map-lane-parity"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-swift-hash-set-20261028",
+      "pr_number": 18525,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18525",
+      "pr_opened_at": "2026-10-28T13:44:36Z",
+      "publication_head": "16a89f287a210f4262dc8af2dddbf16b3db60d8c",
+      "publication_notes": "PR #18525 opened non-draft from exact current main after package validation and independent security review passed. The final lifecycle receipt commit must receive a completely fresh hosted matrix; do not enable guarded auto-merge until every exact-head check is terminal and acceptable and the PR is conflict-free.",
+      "started_at": "2026-10-28T12:20:55Z",
+      "selected_main_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
+      "reconciled_main_revision": "7bb2f044fed05e25d8c1cfb330ccfd3c286e1550",
+      "selection_notes": "Reprioritized immediately after Swift hash-map PR #18517 merged. Hash-set is dependency-ready, directly advances another non-Rust DT lane, reuses the reviewed DT18 persistent map and DT17 hash contracts, and has no implementation overlap with active Haskell/Swift Bezier PR #18511. The dedicated branch preserved its selection commit through a normal merge of exact current main 7bb2f044fed05e25d8c1cfb330ccfd3c286e1550 after Swift fenced-block PR #18516 merged. It ranks ahead of Swift HyperLogLog because it consumes both freshly merged prerequisites and closes the direct recorded successor edge; keep scope to DT19 membership, deterministic set algebra, persistent value semantics, native build fronts, docs, empty capabilities, and lifecycle receipts.",
+      "implementation_revision": "70ead8ca85776b44d1ebc701e1f91e04c019f0de",
+      "validation_notes": "The package-native BUILD passes 10 tests across separate chaining and linear probing, including exact UTF-8/byte identity, persistence, algebra, relation laws, receiver-profile retention, stable HashMap errors, and oversized-key rejection; the production release build passes. LLVM coverage reports 100% regions, functions, and lines for the 94-line production source. The real Go build tool discovers exactly the Swift hash-functions -> hash-map -> hash-set closure and builds all three affected packages successfully. SwiftPM package description, JSON parsing/diff checks, capability-manifest shape, and an audit of 23 open PRs show no package-root or DT19-spec overlap. Independent security review of exact implementation head 70ead8ca85776b44d1ebc701e1f91e04c019f0de found no implementation or authority defect and confirmed an external HashSet-only consumer compiles; its publication-hygiene findings are resolved in the following receipt commit. The inherited origin/main state contains a pre-existing duplicate merged_head_revision key, so duplicate-key-strict whole-state parsing is not claimed by this branch. Fresh hosted macOS, Linux, and Windows checks remain mandatory after publication.",
+      "security_review_revision": "70ead8ca85776b44d1ebc701e1f91e04c019f0de",
+      "security_review_notes": "Independent review found no code or security defect: exact identity, persistent algebra, receiver profiles, finite limits, stable errors, empty capabilities, dependency metadata, and both build fronts are sound. It required import-order normalization, a root changelog shard, final lifecycle evidence, generated-artifact cleanup, and truthful reclassification of the older Haskell ITF preparation before publication; all are addressed before push.",
       "notes": "Preserve set algebra and membership semantics using the reviewed DT18 and DT17 dependency chain, with empty capabilities.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-hash-set-lane-parity"
@@ -16380,7 +16391,7 @@
     {
       "id": "haskell-itf-stack-windows-build-front-coverage",
       "title": "Add Windows build fronts for the Haskell ITF stack",
-      "status": "in_progress",
+      "status": "pending",
       "depends_on": [
         "itf-existing-lanes-v1-conformance"
       ],
@@ -16390,9 +16401,10 @@
       "selection_revision": "aa568304c93e44d733535cdb3209793041ff9503",
       "base_revision": "aa568304c93e44d733535cdb3209793041ff9503",
       "selection_notes": "Fresh prioritization after Swift hash-set PR #18525 opened selects this existing local preparation for reconciliation rather than creating another worktree. It advances a distinct Haskell build front, has no package-path overlap with live Bezier or Swift hash-set PRs, and already contains the bounded implementation and follow-up discoveries. Keep it local while shared lifecycle branches are live; publication requires current-main validation, exact-head review, and a conflict-free hosted slot.",
-      "reconciled_main_revision": "7bb2f044fed05e25d8c1cfb330ccfd3c286e1550",
-      "reconciliation_notes": "Preserved the four-commit preparation through a normal merge of exact origin/main 7bb2f044fed05e25d8c1cfb330ccfd3c286e1550 without rewriting its history. Main's complete package and lifecycle history wins every stale receipt, while this branch retains only its two BUILD_windows repairs, root changelog shard, bounded follow-up owners, and current selection receipt. Re-run both Haskell closures and exact metadata review before any publication.",
-      "current_main_validation_notes": "After normally merging exact current main, Cabal 3.16.1.0 with explicit GHC 9.6.7 passes the complete barcode-layout-1d and ITF closures: 27 barcode-layout-1d, 19 ITF, 29 paint-instructions, and 25 SHA-256 examples plus the allocation-budget suite. Both repaired BUILD_windows fronts use standalone cmd.exe lines, skip successfully only when Cabal is absent, and propagate cabal test all --builddir=dist failures when present. The known default GHC 9.14.1 containers-0.8 solver gap remains separately owned and is not evidence against the Windows routing repair. Generated validation artifacts were cleaned; exact-head review and hosted Windows qualification remain required before publication.",
+      "preparation_revision": "fa152d9eb70c3e95ad2b3529da63607a84f4305b",
+      "reconciled_main_revision": "f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc",
+      "reconciliation_notes": "Preserved the complete preparation through normal merges of current main without rewriting its history, most recently exact origin/main f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc after Swift hash-set PR #18525 merged. Main supplies every newer package and receipt; this local branch retains only its two BUILD_windows repairs, root changelog shard, bounded follow-up owners, and current selection receipt. Re-run both Haskell closures and exact metadata review before publication.",
+      "current_main_validation_notes": "After normally merging exact current main f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc, Cabal 3.16.1.0 with explicit GHC 9.6.7 passes the complete barcode-layout-1d and ITF closures: 27 barcode-layout-1d, 19 ITF, 29 paint-instructions, and 25 SHA-256 examples plus the allocation-budget suite. Both repaired BUILD_windows fronts use standalone cmd.exe lines, skip successfully only when Cabal is absent, and propagate cabal test all --builddir=dist failures when present. The known default GHC 9.14.1 containers-0.8 solver gap remains separately owned and is not evidence against the Windows routing repair. Generated validation artifacts are cleaned; exact-head review and hosted Windows qualification remain required before publication.",
       "notes": "Add real BUILD_windows fronts for barcode-layout-1d and itf, preserve their exact Cabal closure and tests: True project metadata, and cover Windows-front precedence without absorbing the complete barcode-1d facade."
     },
     {

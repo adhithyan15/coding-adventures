@@ -18888,29 +18888,72 @@ tests. The production delta remains unchanged from exact prepared head
 `47bcc00857695c53f9caeb9a0568b2d4cfb8356b`; publish the normal merge and
 require a full replacement hosted matrix.
 
+## October 28, 2026: Swift fenced-block merge and hash-set continuation
+
+Swift fenced-block PR #18516 completed every exact-head check acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`8a9ac79a9308df20e88c1def222967a51f3a1abb` as
+`7bb2f044fed05e25d8c1cfb330ccfd3c286e1550` at
+`2026-10-28T13:29:40Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+The dedicated `swift-hash-set-lane-parity` branch preserved its selection
+commit through a normal merge of that exact main. Its DT17 hash-functions and
+DT18 persistent-map prerequisites are both merged, it advances another
+non-Rust lane, and its new package root does not overlap active Haskell/Swift
+Bezier PR #18511. Keep scope to DT19 membership, deterministic set algebra,
+persistent value semantics, native build fronts, docs, empty capabilities,
+and lifecycle receipts. Do not publish hash-set until implementation,
+validation, and exact-head review are complete.
+
+The package implementation now passes 10 native tests and a production release
+build with 100% production-source region, function, and line coverage. The real
+build tool discovers and successfully builds the exact three-package Swift
+closure: hash-functions, hash-map, and hash-set. Independent security review
+found no implementation or authority defect and confirmed an external
+HashSet-only consumer compiles. Its hygiene findings are resolved before
+publication: imports are strictly ordered, a root changelog shard and lifecycle
+receipt are present, and generated artifacts are cleaned.
+
+The older Haskell ITF Windows-front branch is truthfully reclassified as a
+pending local preparation at `fa152d9eb70c3e95ad2b3529da63607a84f4305b`,
+not a second selected owner. It remains 112 main revisions behind and must wait
+for a future prioritization, current-main reconciliation, validation, and
+review. Swift hash-set is the sole selected local owner; PR #18511 remains the
+sole live parity publication.
+
+## October 28, 2026: Swift hash-set publication
+
+Open non-draft PR #18525 from clean, independently reviewed publication head
+`16a89f287a210f4262dc8af2dddbf16b3db60d8c`. Its implementation is based on
+exact current main `7bb2f044fed05e25d8c1cfb330ccfd3c286e1550`; the new package
+root has no overlap with any other open PR. The live parity set is now
+{#18511, #18525}, leaving one publication slot open. Guarded auto-merge remains
+disabled until every hosted check for the final exact head is terminal and
+acceptable and GitHub reports a clean merge state.
+
 ## October 28, 2026: Haskell ITF Windows-front current-main reconciliation
 
-Fresh backlog prioritization after Swift hash-set PR #18525 opened selects the
+Fresh backlog prioritization after Swift hash-set PR #18525 opened selected the
 already-complete `haskell-itf-stack-windows-build-front-coverage` preparation
 instead of allocating another worktree. It advances a separate Haskell build
-front, has no package overlap with live PRs #18511 or #18525, and retains the
+front, has no package overlap with live Bezier PR #18511, and retains the
 bounded repair from exact implementation commit
 `2fe55e3311bc8e755e2f18f2116543d5fd3710a3`.
 
-Preserve its four commits through a normal merge of exact current main
-`7bb2f044fed05e25d8c1cfb330ccfd3c286e1550`. Main supplies every newer package,
-merge, and lifecycle receipt; this local branch retains only the two optional
-Cabal `BUILD_windows` fronts, its root changelog shard, and the separately
-registered pending owners for six-lane ITF capability metadata, GHC 9.14
-`containers-0.8` bounds, and existing-lane DT03 semantics. Re-run both Haskell
-closures and exact metadata review before publication. Keep the branch local
-while the shared lifecycle files overlap live PRs.
+Preserve its complete preparation through normal merges of exact current main,
+most recently `f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc` after Swift hash-set
+PR #18525 merged. Main supplies every newer package and receipt; this local
+branch retains only the two optional Cabal `BUILD_windows` fronts, its root
+changelog shard, and the separately registered pending owners for six-lane ITF
+capability metadata, GHC 9.14 `containers-0.8` bounds, and existing-lane DT03
+semantics. Keep it local while its shared lifecycle files overlap live PR #18511.
 
-Current-main validation with Cabal 3.16.1.0 and explicit GHC 9.6.7 passes the
-complete closures: 27 barcode-layout-1d, 19 ITF, 29 paint-instructions, and 25
-SHA-256 examples plus the allocation-budget suite. The two Windows fronts use
-independent cmd.exe lines, skip only when Cabal is absent, and propagate the
-real Cabal test exit status when present. The separately owned GHC 9.14.1
-`containers-0.8` solver gap remains unchanged. Generated validation artifacts
-are cleaned; exact-head review and hosted Windows qualification remain before
-publication.
+Exact-current-main validation with Cabal 3.16.1.0 and explicit GHC 9.6.7
+passes the complete closures: 27 barcode-layout-1d, 19 ITF, 29
+paint-instructions, and 25 SHA-256 examples plus the allocation-budget suite.
+The two Windows fronts use independent cmd.exe lines, skip only when Cabal is
+absent, and propagate the real Cabal test exit status when present. The
+separately owned GHC 9.14.1 `containers-0.8` solver gap remains unchanged.
+Generated artifacts are cleaned; exact-head review and hosted Windows
+qualification remain required before publication.

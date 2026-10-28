@@ -4,6 +4,12 @@
 
 ### Changed
 
+- Added fixed-memory `hmac_sha256_segments` and `hmac_sha384_segments` entry
+  points. They stream borrowed message segments in order without allocating or
+  assembling a concatenated whole-message buffer, preserve the existing
+  payload-free failure and wipe-on-drop ownership boundaries, and make segment
+  boundaries irrelevant to the tag. The one-shot fixed-output entry points now
+  delegate to these cores.
 - Added the fixed-memory `hmac_sha384` byte-array entry point and matching
   `hmac_sha384_hex` convenience wrapper, backed by the repository SHA-384
   stream with wipe-on-drop key-derived state and payload-free length failure.
