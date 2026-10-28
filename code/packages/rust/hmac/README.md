@@ -28,7 +28,10 @@ where `ipad = 0x36` and `opad = 0x5C`, each repeated to the hash function's bloc
 ### Named Variants (bytes)
 
 ```rust
-use coding_adventures_hmac::{hmac_md5, hmac_sha1, hmac_sha256, hmac_sha384, hmac_sha512};
+use coding_adventures_hmac::{
+    hmac_md5, hmac_sha1, hmac_sha256, hmac_sha256_segments, hmac_sha384,
+    hmac_sha384_segments, hmac_sha512,
+};
 
 let key = b"secret";
 let msg = b"hello";
@@ -38,6 +41,11 @@ let tag_sha1   = hmac_sha1(key, msg);   // [u8; 20]
 let tag_sha256 = hmac_sha256(key, msg); // [u8; 32]
 let tag_sha384 = hmac_sha384(key, msg); // [u8; 48]
 let tag_sha512 = hmac_sha512(key, msg); // [u8; 64]
+
+// Borrowed segments are authenticated as one logical message without
+// allocating or assembling an aggregate message buffer.
+let tag_sha256_segments = hmac_sha256_segments(key, &[b"hel", b"lo"]);
+let tag_sha384_segments = hmac_sha384_segments(key, &[b"hel", b"lo"]);
 ```
 
 ### Hex Variants
@@ -126,8 +134,16 @@ caller-owned. Checked SHA-256 length failures are payload-free.
 stack-resident 128-byte key block, two repository SHA-384 streams, and a
 caller-owned 48-byte tag. Its checked length failures are also payload-free.
 
+`hmac_sha256_segments` and `hmac_sha384_segments` preserve those ownership and
+failure boundaries while accepting a borrowed slice of borrowed message
+segments. The segments are streamed in order without allocating or assembling
+a concatenated whole-message buffer. The hash state may retain one bounded
+partial block, which is wiped on drop. Segment boundaries do not change the
+tag, and an empty segment list is the empty message. The one-shot entry points
+delegate to these segmented cores.
+
 These fixed-output HMAC boundaries do not audit or replace generic HMAC,
-select a TLS cipher suite, implement HKDF or a TLS key schedule, process
+select a TLS cipher suite, implement HKDF-Expand or a TLS key schedule, process
 certificates, perform I/O, or provide concrete HTTPS.
 
 ## Memory hygiene

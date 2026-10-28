@@ -257,6 +257,10 @@ intermediate because its integer operand would widen before division.
 The same checked intermediate budget applies to integer-only additive
 subexpressions nested inside such a reduction, while a top-level additive
 result still has to fit the contiguous exact-integer range.
+Variable-free and tracked integer terms in that reduction are read directly as
+checked `i64` values, so odd integers above `2^53` do not round through
+binary64 before a later `div` or `mod`. Real-valued terms retain the narrower
+exact-binary64 boundary, and unreduced wide terms remain conservative.
 Independently bounded dynamic sign-rooted transforms may multiply under the
 same checked magnitude limit because every factor remains an exact integer.
 They may also add or subtract under a checked complete-sum magnitude limit,
