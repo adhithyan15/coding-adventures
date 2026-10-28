@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18540,
+  "active_prs": [
+    18540
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T22:09:42Z",
-    "pr_number": 18537,
-    "head_revision": "3d147429f868c416b2f0f18e70d4ec2c4ffe39f6",
-    "action": "All exact-head checks completed terminal acceptable on reviewed Dart and Swift binary-tree head 3d147429f868c416b2f0f18e70d4ec2c4ffe39f6. GitHub reported CLEAN and MERGEABLE; guarded squash auto-merge landed PR #18537 as 4a32928e2f0e6ef12b9665def9602039d32364af, and the completed worktree and local branch were removed.",
+    "observed_at": "2026-10-28T22:13:22Z",
+    "pr_number": 18540,
+    "head_revision": "b9cb795db6b14b85fbe52292b3a6a68e67e74cc9",
+    "action": "Opened independently reviewed Swift protocol IR receipt b9cb795db6b14b85fbe52292b3a6a68e67e74cc9 as draft PR #18540. GitHub recorded live base e2119773be5b8881191bcb5b8657946d2b51ed5f, revealing that main had advanced moments before creation and the draft head still required a normal current-main merge plus lifecycle review before being pushed and marked ready.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -16987,10 +16989,14 @@
     {
       "id": "swift-in-memory-data-store-protocol-lane-parity",
       "title": "Implement the in-memory data-store protocol IR in Swift",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/swift-in-memory-data-store-protocol-lane-parity",
-      "pr_number": null,
+      "pr_number": 18540,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18540",
+      "opened_at": "2026-10-28T22:13:22Z",
+      "publication_head": "b9cb795db6b14b85fbe52292b3a6a68e67e74cc9",
+      "publication_notes": "Draft PR #18540 opened from independently reviewed head b9cb795db6b14b85fbe52292b3a6a68e67e74cc9. GitHub recorded exact base e2119773be5b8881191bcb5b8657946d2b51ed5f, which had advanced moments before creation through one path-disjoint Rust HKDF commit while the branch still contained prior main 4a32928e2f0e6ef12b9665def9602039d32364af. Preserve both histories through a normal merge, review the final receipt, then push and mark ready for completely fresh hosted qualification.",
       "selection_blocked": false,
       "selected_at": "2026-10-28T20:53:48Z",
       "selected_revision": "729e0b761e339bcc8d5863550da644e5b3ccec24",
@@ -17003,8 +17009,12 @@
       "reconciliation_revision": "8f7c055b98c7e95e4ca312e6b12f43970d91d76d",
       "reconciliation_notes": "Normal merge head 8f7c055b98c7e95e4ca312e6b12f43970d91d76d preserves reviewed protocol receipt parent 7772470c6e8d8b7dd3e800ed848a645bdecce83c and exact current-main parent 4a32928e2f0e6ef12b9665def9602039d32364af. The main parent supplies the merged Dart/Swift binary-tree packages and terminal PR #18537 receipt; the protocol code, DT25 amendment, changelog, and review evidence remain unchanged. Conflicts were limited to state and roadmap lifecycle text and resolved by preserving both histories plus the verified merge receipt.",
       "postmerge_prioritization_notes": "After PR #18537 merged and its completed worktree/branch were removed, this already selected protocol IR remains the highest-leverage ready bounded item with three direct and five total unfinished descendants, ahead of Swift RESP and radix tree at two/four each. The binary-tree item is now merged, no parity PR remains active, and publishing this independently reviewed one-package tranche stays within the three-PR ceiling.",
-      "current_main_validation_revision": "8f7c055b98c7e95e4ca312e6b12f43970d91d76d",
-      "current_main_validation_notes": "On exact current-main merge head 8f7c055b98c7e95e4ca312e6b12f43970d91d76d, all ten tests, strict Swift Format, release build, canonical Unix BUILD, JSON/diff hygiene, and empty capabilities pass with unchanged 100% production line, function, and region coverage across 249 lines. A fresh real Go build-tool dry plan discovers 173 Swift packages and selects exactly swift/in-memory-data-store-protocol while the merged swift/binary-tree is skipped. Windows BUILD execution, full repository orphan validation, exact merge-head review, and hosted qualification remain publication/merge gates.",
+      "publication_reconciled_main_revision": "e2119773be5b8881191bcb5b8657946d2b51ed5f",
+      "publication_reconciliation_revision": "1d23920b2584877943a283eaf03770611c3fe680",
+      "current_main_validation_revision": "1d23920b2584877943a283eaf03770611c3fe680",
+      "current_main_validation_notes": "After draft creation exposed newly advanced remote main, normal merge head 1d23920b2584877943a283eaf03770611c3fe680 preserves reviewed publication parent b9cb795db6b14b85fbe52292b3a6a68e67e74cc9 and exact current-main parent e2119773be5b8881191bcb5b8657946d2b51ed5f. Main adds one path-disjoint fixed-memory Rust HKDF change and four lessons. All ten protocol tests, strict Swift Format, release build, JSON/diff hygiene, and empty capabilities pass with unchanged 100% production line, function, and region coverage across 249 lines. The real Go build-tool dry plan still discovers 173 Swift packages and selects exactly swift/in-memory-data-store-protocol. Windows BUILD execution, full repository orphan validation, exact final receipt review, and hosted qualification remain publication/merge gates.",
+      "final_review_revision": "b9cb795db6b14b85fbe52292b3a6a68e67e74cc9",
+      "final_review_notes": "Independent exact current-main review approved b9cb795db6b14b85fbe52292b3a6a68e67e74cc9 with no findings. It verified byte-identical protocol implementation/spec/changelog, both normal-merge parents, PR #18537 terminal receipt and cleanup, the complete acyclic 1,557-owner graph, native validation and coverage, canonical changelog digest, lessons, merge-tree, diff, and artifact hygiene. The later path-disjoint current-main merge and PR-number lifecycle receipt require one focused final delta review before the draft is made ready.",
       "notes": "Implement the dependency-free command-frame and engine-response IR with ASCII command normalization, binary-safe arguments, immutable value ownership, deterministic ordering, stable errors, package-native tests, and empty capabilities. Keep RESP conversion in the facade rather than coupling this IR owner to the wire codec.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-in-memory-data-store-protocol-lane-parity"

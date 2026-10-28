@@ -19480,3 +19480,23 @@ prioritization keeps this three-direct/five-total-descendant item ahead of RESP
 and radix tree at two/four each. Require independent exact merge-head review
 before publication, then fresh hosted Windows and repository-wide qualification
 before guarded auto-merge.
+
+### Draft PR #18540 and live-main refresh
+
+Publish independently reviewed head
+`b9cb795db6b14b85fbe52292b3a6a68e67e74cc9` as draft PR #18540 to record its
+durable identity. At creation, GitHub records live base
+`e2119773be5b8881191bcb5b8657946d2b51ed5f`, which had advanced moments
+earlier through one path-disjoint Rust HKDF change while the draft head still
+contained prior main. Normal merge head
+`1d23920b2584877943a283eaf03770611c3fe680` preserves both reviewed
+publication history and exact live main.
+
+The protocol implementation, DT25 amendment, and changelog remain unchanged.
+All ten tests, release build, strict formatting, JSON/diff checks, and empty
+capabilities pass with 100% coverage across 249 production lines. The bounded
+build-tool plan still discovers 173 Swift packages and selects exactly
+`swift/in-memory-data-store-protocol`. Keep the PR draft until this lifecycle
+and current-main delta is independently reviewed; then push the receipt, mark
+ready, and require a completely fresh exact-head hosted matrix before guarded
+auto-merge.
