@@ -551,6 +551,7 @@ fn emit_component(
     //    walker so `For`/`If` can register helpers, RowVms, and the
     //    converter requirement (PR-2).
     let mut ctx = EmitContext::new(name, &interface.slots, &interface.emits);
+    ctx.reserve_conditional_names(&layout.root);
     ctx.interface_name = &interface.component;
     ctx.registry = registry;
 
@@ -1147,6 +1148,9 @@ struct EmitContext<'a> {
     /// Counter used to disambiguate Host* `x:Name`s when the node has
     /// no `part_name`. Incremented per emitted Host* primitive.
     host_counter: u32,
+    /// Conditional fields must not collide with authored parts, slots, or
+    /// the enclosing class, including names encountered later in the walk.
+    conditional_names: std::collections::HashSet<String>,
     /// Optional registry of resolvable component references. Populated
     /// by `from_pipeline`'s `registry` argument. PR-5 uses this to
     /// emit `<{prefix}:{Tag}/>` references for non-kernel tags.
@@ -1254,6 +1258,8 @@ impl<'a> EmitContext<'a> {
             row_projections: Vec::new(),
             host_handlers: Vec::new(),
             host_counter: 0,
+            conditional_names: slots.iter().map(|s| kebab_to_pascal_case(&s.name))
+                .chain(std::iter::once(name.to_string())).collect(),
             registry: None,
             used_xmlns: std::collections::BTreeMap::new(),
             slot_aliases: std::collections::HashMap::new(),
@@ -1276,6 +1282,33 @@ impl<'a> EmitContext<'a> {
             header_width_source: None,
             text_style_resource: None,
             text_style_resource_count: 0,
+        }
+    }
+
+    fn reserve_conditional_names(&mut self, node: &LayoutNode) {
+        if let Some(part) = &node.part_name {
+            let name = kebab_to_pascal_case(part);
+            self.conditional_names.insert(name.clone());
+            if name == self.component_name {
+                self.conditional_names.insert(format!("{name}Element"));
+            }
+        }
+        for child in &node.children {
+            self.reserve_conditional_names(child);
+        }
+    }
+
+    fn next_conditional_id(&mut self) -> u32 {
+        loop {
+            let id = self.next_host_counter();
+            let then_name = format!("MosaicConditional{id}Then");
+            let else_name = format!("MosaicConditional{id}Else");
+            if !self.conditional_names.contains(&then_name)
+                && !self.conditional_names.contains(&else_name) {
+                self.conditional_names.insert(then_name);
+                self.conditional_names.insert(else_name);
+                return id;
+            }
         }
     }
 
@@ -8502,7 +8535,7 @@ fn emit_if(
     //    inside a single `<ContentControl>` with bound Visibility. --
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
-    let branch_id = ctx.next_host_counter();
+    let branch_id = ctx.next_conditional_id();
     let then_body =
         emit_xaml_single_content_children(&if_node.children, indent + 8, part_styles, ctx)?;
 
@@ -20818,6 +20851,24 @@ mod tests {
         assert!(r.xaml.contains("<Border x:Name=\"MosaicConditional1Then\" x:Load=\"{x:Bind Editable, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">"));
         // Then-branch content lives inside.
         assert!(r.xaml.contains("Text=\"editable!\""));
+    }
+
+    #[test]
+    fn conditional_names_reserve_class_slots_and_later_parts() {
+        let c = component("MosaicConditional1Then",
+            vec![slot("mosaic-conditional2-else", SlotType::Bool, true)], vec![]);
+        let mut later = if_node(LayoutPropValue::Keyword("true".to_string()), vec![]);
+        later.part_name = Some("mosaic-conditional3-then".to_string());
+        let l = layout_with_root("MosaicConditional1Then", LayoutNode {
+            tag: "Column".to_string(), part_name: None, props: vec![],
+            children: vec![if_node(LayoutPropValue::Keyword("true".to_string()), vec![]), later],
+        });
+        let result = compile(&c, &l, &empty_style("MosaicConditional1Then"));
+        assert!(result.xaml.contains("x:Name=\"MosaicConditional4Then\""));
+        assert!(result.xaml.contains("x:Name=\"MosaicConditional5Then\""));
+        for id in 1..=3 {
+            assert!(!result.xaml.contains(&format!("x:Name=\"MosaicConditional{id}Then\"")));
+        }
     }
 
     #[test]
