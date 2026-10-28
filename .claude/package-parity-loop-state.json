@@ -16,15 +16,13 @@
       "external-approval"
     ]
   },
-  "active_pr": 18527,
-  "active_prs": [
-    18527
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-10-28T15:27:51Z",
-    "pr_number": 18527,
-    "head_revision": "a48db410cdfac57de20de2d11b40fe83bc95b0d7",
-    "action": "Exact head a48db410cdfac57de20de2d11b40fe83bc95b0d7 of ready PR #18527 passed the Linux build and Go analysis but failed the repository metadata gate because the Haskell barcode-layout-1d target registry still pinned its pre-Windows-front package tree. Re-verify the unchanged lane at durable implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9, repoint its exact tree and PR owner, then publish an independently reviewed replacement head for a fresh matrix.",
+    "observed_at": "2026-10-28T18:58:48Z",
+    "pr_number": 18531,
+    "head_revision": "1246545183a7d34bc6c1e3b43f83cb49df058890",
+    "action": "Every exact-head check for PR #18531 completed acceptably after rerunning the infrastructure-cancelled Swift CodeQL job, and GitHub reported the reviewed head cleanly mergeable. Guarded squash auto-merge produced exact main revision ae197369af5c6bfe8ab2768465f67e0119baac97; its receipt is verified and the clean completed worktree and local branch are removed.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15233,12 +15231,33 @@
     {
       "id": "swift-hyperloglog-lane-parity",
       "title": "Implement DT21 HyperLogLog in Swift",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/swift-hyperloglog-lane-parity",
+      "pr_number": 18531,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18531",
+      "pr_opened_at": "2026-10-28T16:42:35Z",
+      "publication_head": "1246545183a7d34bc6c1e3b43f83cb49df058890",
+      "publication_notes": "PR #18531 completed every exact-head hosted check acceptably after repairing the post-squash Haskell barcode evidence and rerunning one infrastructure-cancelled Swift CodeQL job. It merged through guarded squash auto-merge from independently reviewed head 1246545183a7d34bc6c1e3b43f83cb49df058890.",
+      "merged_head_revision": "1246545183a7d34bc6c1e3b43f83cb49df058890",
+      "merged_at": "2026-10-28T18:58:48Z",
+      "merge_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures after the cancelled no-step Swift analysis reran successfully. GitHub reported the reviewed head cleanly mergeable, guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
+      "selected_at": "2026-10-28T16:25:00Z",
+      "selection_revision": "d70b1afc3de8ae83b641d8ca8fe9565d901798f6",
+      "base_revision": "d70b1afc3de8ae83b641d8ca8fe9565d901798f6",
+      "reconciled_main_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "reconciliation_notes": "Preserved the complete reviewed Swift HyperLogLog preparation through a normal merge of exact current main after Haskell ITF Windows-front PR #18527 merged. Main supplies the terminal Haskell lifecycle receipt and unrelated Chinese A1 inventory; this branch retains the isolated DT21 package, validation, review evidence, and root changelog shard.",
+      "selection_notes": "Fresh prioritization while Haskell ITF Windows-front PR #18527 runs replacement CI selects the dependency-ready Swift DT21 child for local-only implementation. Its sole DT17 hash-functions prerequisite is merged, it adds one missing non-Rust package, and it has no package-path overlap with the active Haskell barcode-layout-1d, ITF, or Go build-tool surfaces. It ranks ahead of the two-lane binary-tree owner because it is a single bounded package and directly unlocks the recorded Swift store-engine dependency chain. Keep this branch local until current-main lifecycle receipts are reconciled and exact-head review passes.",
+      "implementation_revision": "d9eff3c2776c4093894bc3544b996cb048019212",
+      "validation_notes": "The package-native suite passes six tests covering precision bounds, empty and duplicate behavior, exact UTF-8/byte identity, persistent updates and merges, stable validation failures including NaN equality, deterministic 10,000-element accuracy, helper calculations, the DT21 64-bit large-range correction, and safe UInt64 saturation; the production release build passes. Swift Format 6.3 strict lint and diff checks pass. LLVM coverage reports 98.68% lines, 96.00% functions, and 92.75% regions for the 152-line production source. The real Go build tool discovers the bounded sparse Swift package inventory, selects exactly hyperloglog and its hash-functions prerequisite, and records the intended dependency edge. Capability JSON parsing and the root changelog contract pass locally. Exact-head independent review, current-main reconciliation, and fresh hosted macOS, Linux, and Windows checks remain mandatory before merge.",
+      "security_review_revision": "d9eff3c2776c4093894bc3544b996cb048019212",
+      "security_review_notes": "Independent exact-head review found no remaining code, security, or test defect after requiring two fixes: DT21's large-range estimator now uses the full 64-bit hash domain with safe UInt64 saturation, and invalid desired-error values preserve reflexive stable-error equality for NaN. The final regression pins the exact corrected 64-bit estimate separately from saturation. A clean rebuild passes all six tests, the release build, and strict Swift Format. Lifecycle/current-main reconciliation, generated-artifact cleanup, and hosted checks remain publication work.",
+      "current_main_validation_notes": "After normally merging exact current main 3fd9485da978aa6276aba825336f0962897fd456, strict Swift Format, all six package tests, the release build, capability JSON, and diff checks pass. The real Go build tool again selects exactly swift/hyperloglog plus prerequisite swift/hash-functions in the bounded sparse inventory. Swift package reset removes the generated .build tree. Exact merge-head review confirms the approved package and root changelog are byte-identical to reviewed implementation d9eff3c2776c4093894bc3544b996cb048019212 and both merge histories are preserved.",
+      "final_review_revision": "03ca6ba7cd1fc2e11635457ffb0c628bf2b9b475",
+      "final_review_notes": "Independent exact merge-head review found the implementation unchanged and correct, both merge parents present, roadmap conflict resolution complete, and the Haskell PR #18527 receipt exact. It required clearing the obsolete active-PR/failed-CI pointers and removing the ignored SwiftPM build tree; both publication-hygiene findings are addressed in the following receipt commit. No open PR overlaps HyperLogLog.",
       "notes": "Preserve precision bounds, register, index and rank behavior, correction regimes, merge compatibility, stable errors, and deterministic hashing.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-hyperloglog-lane-parity"
@@ -15257,6 +15276,8 @@
       "selected_at": "2026-10-28T16:44:23Z",
       "selection_revision": "3fd9485da978aa6276aba825336f0962897fd456",
       "base_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "reconciled_main_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
+      "reconciliation_notes": "Preserved the complete independently reviewed Swift Bloom filter preparation through a normal merge of exact current main after Swift HyperLogLog PR #18531 merged. Main supplies the terminal HyperLogLog lifecycle and barcode-evidence repair plus unrelated Algol exact-wide normalization work; this branch retains the isolated DT22 package, validation/review evidence, and root changelog shard.",
       "selection_notes": "Fresh prioritization after Haskell ITF Windows-front PR #18527 merged and while the isolated Swift HyperLogLog PR #18531 runs fresh CI selects the dependency-ready Swift DT22 Bloom filter for local-only parallel implementation. Its sole DT17 hash-functions prerequisite is merged, it adds one bounded missing non-Rust package, and it has no package-path overlap with HyperLogLog. It ranks ahead of the Swift store-engine chain because that chain still depends on the active HyperLogLog publication. Keep this branch local until the active lifecycle state is reconciled from main and exact-head review passes.",
       "implementation_revision": "dc7ac4b6db0b3eea11de45b34d7c26ab549b5e93",
       "validation_notes": "The package-native suite passes five focused tests covering defaults and explicit parameters, persistent updates, exact UTF-8/byte identity, duplicates, zero false negatives across 10,000 inserted values, a bounded deterministic false-positive fixture, sizing and capacity helpers, over-capacity status, stable errors including NaN and capacity overflow, and finite allocation/hash-work limits; the production release build passes. Swift Format 6.3 strict lint and diff checks pass. LLVM coverage reports 95.22% lines, 96.55% functions, and 92.11% regions for the 209-line production source. The real Go build tool discovers the bounded sparse Swift inventory, selects exactly bloom-filter and prerequisite hash-functions, and records the intended dependency edge. The capability manifest validates against the repository schema and the root changelog contract passes locally. Exact-head independent review, active-main lifecycle reconciliation, and fresh hosted macOS, Linux, and Windows checks remain mandatory before merge.",
@@ -16403,7 +16424,7 @@
     {
       "id": "haskell-itf-stack-windows-build-front-coverage",
       "title": "Add Windows build fronts for the Haskell ITF stack",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "itf-existing-lanes-v1-conformance"
       ],
@@ -16411,11 +16432,16 @@
       "pr_number": 18527,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18527",
       "pr_opened_at": "2026-10-28T15:14:20Z",
-      "publication_head": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
-      "publication_notes": "PR #18527 is open and non-draft. Exact head a48db410cdfac57de20de2d11b40fe83bc95b0d7 failed only the repository metadata gate because the Haskell barcode-layout-1d target registry still pinned its pre-Windows-front package tree. The unchanged lane is re-verified at durable implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9 and associated with this PR; exact replacement-head independent review and a completely fresh hosted matrix remain mandatory before guarded auto-merge.",
-      "implementation_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
-      "validation_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
-      "reverification_notes": "This PR owns re-verification of the unchanged Haskell barcode-layout-1d lane after its BUILD_windows package tree changed. Exact durable implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9 retains the production API, native tests, dynamic 56-case conformance reader, empty capability manifest, and zero-authority evidence; GHC 9.6.7 passes 29 paint-instructions and 27 barcode-layout-1d examples. The target registry now associates the refreshed package tree with PR #18527 rather than rewriting historical adoption PR #16343.",
+      "publication_head": "70f21eaf0b154c39490b19dd47ec5ae0cc1cf2de",
+      "publication_notes": "PR #18527 completed every exact-head hosted check acceptably after the barcode-layout-1d metadata repair and merged through guarded squash auto-merge from independently reviewed lifecycle head 70f21eaf0b154c39490b19dd47ec5ae0cc1cf2de.",
+      "merged_head_revision": "70f21eaf0b154c39490b19dd47ec5ae0cc1cf2de",
+      "merged_at": "2026-10-28T16:37:37Z",
+      "merge_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures and GitHub reported the reviewed head cleanly mergeable. Guarded squash auto-merge completed without a manual merge command; the merge receipt is an ancestor of current origin/main, and the clean completed worktree and local branch were removed safely.",
+      "implementation_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "validation_revision": "3fd9485da978aa6276aba825336f0962897fd456",
+      "reverification_notes": "This PR owns re-verification of the unchanged Haskell barcode-layout-1d lane after its BUILD_windows package tree changed. The reviewed branch implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9 squash-merged as reachable exact main revision 3fd9485da978aa6276aba825336f0962897fd456 with the same package tree 141d16aba4a61bca2cbc93b593db9f1d9d825ce9. That durable merge revision retains the production API, native tests, dynamic 56-case conformance reader, empty capability manifest, and zero-authority evidence; GHC 9.6.7 passes 29 paint-instructions and 27 barcode-layout-1d examples. The target registry associates the refreshed package tree with PR #18527 rather than rewriting historical adoption PR #16343.",
+      "postmerge_reachability_notes": "Fresh-clone metadata CI on Swift HyperLogLog PR #18531 exposed that the reviewed pre-squash implementation commit is intentionally absent from main ancestry after guarded squash merge. Repoint both the lifecycle implementation receipt and target verified revision to exact squash merge 3fd9485da978aa6276aba825336f0962897fd456, whose barcode-layout-1d package tree is byte-identical, so ancestry and tree evidence remain jointly verifiable.",
       "ci_failure_notes": "Exact hosted head a48db410cdfac57de20de2d11b40fe83bc95b0d7 passed the Linux build and Go analysis but failed the repository metadata gate because the Haskell barcode-layout-1d target registry still pinned the package tree from original adoption PR #16343. Re-verify the unchanged lane against durable Windows-front implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9, update only its verified revision and package-tree hash, then require a fresh exact-head matrix.",
       "selected_at": "2026-10-26T16:52:26Z",
       "selection_revision": "aa568304c93e44d733535cdb3209793041ff9503",

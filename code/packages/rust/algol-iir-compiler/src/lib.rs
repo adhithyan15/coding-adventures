@@ -3628,6 +3628,43 @@ impl Compiler {
         }
     }
 
+    /// Evaluate the integer-preserving standard normalizers without routing a
+    /// wide static integer through binary64. The argument must itself be
+    /// call-free, and user declarations continue to shadow the built-ins.
+    fn exact_call_free_static_integer_normalizer_value(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Option<i64> {
+        if node.rule_name != "proc_call" {
+            if let Some(child) = single_parenthesized_child(node) {
+                return self.exact_call_free_static_integer_normalizer_value(child);
+            }
+            let children = direct_nodes(node);
+            return (direct_tokens(node).is_empty() && children.len() == 1)
+                .then(|| self.exact_call_free_static_integer_normalizer_value(children[0]))?;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 || self.contains_procedure_call(actuals[0]) {
+            return None;
+        }
+        let value = self.static_integer_scalar_value(actuals[0])?;
+        match target_name.as_str() {
+            "abs" => value.checked_abs(),
+            "sign" => Some(value.signum()),
+            "entier" => Some(value),
+            _ => None,
+        }
+    }
+
     /// Evaluate deterministic real standard-function calls inside the static
     /// arithmetic tree. User declarations still shadow the built-ins, and
     /// `sqrt` is accepted only when the host operation round-trips exactly to
@@ -4860,6 +4897,10 @@ impl Compiler {
         node: &GrammarASTNode,
         magnitude_limit: u64,
     ) -> Option<(u64, i64)> {
+        if let Some(value) = self.exact_call_free_static_integer_normalizer_value(node) {
+            return (value.unsigned_abs() <= magnitude_limit)
+                .then_some((value.unsigned_abs(), value));
+        }
         if !self.contains_procedure_call(node) {
             if let Some(value) = self.static_integer_scalar_value(node) {
                 return (value.unsigned_abs() <= magnitude_limit)
@@ -16741,6 +16782,31 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "unreduced, early-widened, and overflowing wide static terms must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-9007199254740993) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((entier(9007199254740993) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a call-free exact integer normalizer may reduce before widening for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(abs(-9007199254740993) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((abs(-9007199254740993) * sign(pick())) / 2) mod 5); output(result) end",
+            "begin real procedure abs(x); value x; real x; abs := x; real procedure pick; pick := 3.5; real result; result := entier((abs(9007199254740993) * sign(pick())) mod 5); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 3.5; real result; result := entier((abs(if choose() then -9007199254740993 else -9007199254740993) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, early-divided, shadowed, and effectful normalizers must fail closed",
             );
         }
     }
