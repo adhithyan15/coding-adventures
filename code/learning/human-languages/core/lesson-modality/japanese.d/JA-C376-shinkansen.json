@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C376-shinkansen",
+    "language": "japanese",
+    "chapter": 376,
+    "sequence": 22200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f39f4a6f8037f838"
+  },
+  "findings": []
+}

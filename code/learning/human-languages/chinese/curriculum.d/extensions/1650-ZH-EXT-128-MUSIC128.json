@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-128-MUSIC128",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about music: songs, the piano and the guitar, and what sounds good.",
+  "prerequisites": []
+}

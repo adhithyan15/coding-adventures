@@ -1,0 +1,11 @@
+{
+  "id": "JA-C261-baai",
+  "pathSegment": "JA-PATH-261-CONDITION261",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-261-CONDITION261",
+      "order": 1
+    }
+  ]
+}

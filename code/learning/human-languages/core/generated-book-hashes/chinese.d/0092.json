@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:02bfd727dea53875",
+  "lessonIds": [
+    "ZH-C92-ye",
+    "ZH-W92-ye",
+    "ZH-C92-caidan",
+    "ZH-C92-fuwuyuan",
+    "ZH-C92-biede",
+    "ZH-C92-practice"
+  ],
+  "tex": "chinese/book/chapters/ch92-me-too.tex"
+}

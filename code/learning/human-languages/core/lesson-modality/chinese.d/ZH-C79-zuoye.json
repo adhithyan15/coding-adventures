@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C79-zuoye",
+    "language": "chinese",
+    "chapter": 79,
+    "sequence": 6110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:784d0e8933c75f88"
+  },
+  "findings": []
+}

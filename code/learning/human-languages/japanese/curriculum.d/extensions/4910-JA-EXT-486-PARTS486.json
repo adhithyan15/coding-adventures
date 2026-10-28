@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-486-PARTS486",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is broken and what needs replacing.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:33cebae41bf24ae6",
+  "lessonIds": [
+    "JA-C355-tabun",
+    "JA-C355-kitto",
+    "JA-C355-osoraku",
+    "JA-C355-kanousei",
+    "JA-C355-hazureru"
+  ],
+  "tex": "japanese/book/chapters/ch355-how-likely-is-it.tex"
+}

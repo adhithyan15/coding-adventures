@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:20e553f2d993457a",
+  "lessonIds": [
+    "JA-C475-reizouko",
+    "JA-C475-shokki",
+    "JA-C475-ousaji",
+    "JA-C475-kozara",
+    "JA-C475-ajitsuke"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch475.txt",
+  "json": "japanese/narration/ch475.json",
+  "textHash": "fnv1a64:ba9811ba2069af89",
+  "jsonHash": "fnv1a64:80bbe91a1fb052e9",
+  "findings": []
+}

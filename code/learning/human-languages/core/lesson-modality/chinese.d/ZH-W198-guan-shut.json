@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W198-guan-shut",
+    "language": "chinese",
+    "chapter": 198,
+    "sequence": 15515,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:768085cff9008be9",
+    "detachableSegments": [
+      "Script — two short strokes over 天"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

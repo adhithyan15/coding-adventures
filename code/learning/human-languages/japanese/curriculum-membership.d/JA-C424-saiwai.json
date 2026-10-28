@@ -1,0 +1,11 @@
+{
+  "id": "JA-C424-saiwai",
+  "pathSegment": "JA-PATH-424-OTOSHIMONO424",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-424-OTOSHIMONO424",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C447-memai",
+    "language": "japanese",
+    "chapter": 447,
+    "sequence": 26080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:949a075f8906f3d6"
+  },
+  "findings": []
+}

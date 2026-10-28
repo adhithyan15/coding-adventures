@@ -1,0 +1,11 @@
+{
+  "id": "JA-C334-bokin",
+  "pathSegment": "JA-PATH-334-FUKUSHI334",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-334-FUKUSHI334",
+      "order": 2
+    }
+  ]
+}

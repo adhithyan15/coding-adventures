@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:889c81f35123f8b8",
+  "lessonIds": [
+    "ZH-C260-nengli",
+    "ZH-C260-benshi",
+    "ZH-C260-gaoshou",
+    "ZH-C260-jishu",
+    "ZH-C260-jinbu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch260.txt",
+  "json": "chinese/narration/ch260.json",
+  "textHash": "fnv1a64:7abcb9ef55db5ab2",
+  "jsonHash": "fnv1a64:4274706ecfdac818",
+  "findings": []
+}

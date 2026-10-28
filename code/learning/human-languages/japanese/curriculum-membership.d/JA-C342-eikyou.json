@@ -1,0 +1,11 @@
+{
+  "id": "JA-C342-eikyou",
+  "pathSegment": "JA-PATH-342-GENIN342",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-342-GENIN342",
+      "order": 1
+    }
+  ]
+}

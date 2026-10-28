@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W74-jin-enter",
+    "language": "chinese",
+    "chapter": 74,
+    "sequence": 5825,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:77e2635c45e8db93",
+    "detachableSegments": [
+      "Script — jǐng on the road piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C192-tingchechang",
+  "pathSegment": "ZH-PATH-192-SIGN192",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-192-SIGN192",
+      "order": 2
+    }
+  ]
+}

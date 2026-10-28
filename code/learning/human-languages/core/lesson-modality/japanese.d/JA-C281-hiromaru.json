@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C281-hiromaru",
+    "language": "japanese",
+    "chapter": 281,
+    "sequence": 17000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9ca0b9b2fcbbca8"
+  },
+  "findings": []
+}

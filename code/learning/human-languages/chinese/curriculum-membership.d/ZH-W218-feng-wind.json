@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W218-feng-wind",
+  "pathSegment": "ZH-PATH-218-WIND218",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-218-WIND218",
+      "order": 1
+    }
+  ]
+}

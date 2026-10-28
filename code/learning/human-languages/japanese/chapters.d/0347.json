@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Visiting Someone",
+  "label": "ch:ja-visiting-someone",
+  "canDo": "I can arrange a visit and say what we will do if it is not convenient.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C347-raikyaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can arrange a visit and say what we will do if it is not convenient.",
+    "assesses": [
+      "JA-LEX-C347-HOUMON347-03",
+      "JA-LEX-C347-HOUMON347-04",
+      "JA-LEX-C347-HOUMON347-05"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W79-ke-lesson",
+    "language": "chinese",
+    "chapter": 79,
+    "sequence": 6085,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b0f6b3ef04c8475d",
+    "detachableSegments": [
+      "Script — the speech piece, then guǒ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

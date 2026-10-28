@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W131-chun-spring",
+    "language": "chinese",
+    "chapter": 131,
+    "sequence": 10415,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:78b8cc9794542992",
+    "detachableSegments": [
+      "Script — 三 and 人 over 日"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 271,
+  "title": "Caught at Last",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9b37be03f09957ea",
+  "lessons": [
+    {
+      "id": "JA-C271-tsukamaru",
+      "sequence": 16460,
+      "title": "つかまる (tsukamaru) — to be caught; to be arrested",
+      "headword": "つかまる",
+      "romanization": "tsukamaru",
+      "gloss": "to be caught; to be arrested",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb7a91bce7988130",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for that (one), then the Japanese for to touch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つかまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つかまる — tsukamaru — \"to be caught; to be arrested\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はんにんは えきで つかまりました。 — hannin wa eki de tsukamarimashita — \"The culprit was arrested at the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つかまります, tsukamarimasu; a godan verb. Past (polite): はんにんが つかまりました。, hannin ga tsukamarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つかまる (tsukamaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukamaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukamaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukamaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukamaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hannin wa eki de tsukamarimashita — The culprit was arrested at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hannin wa eki de tsukamarimashita* — The culprit was arrested at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for that (one), then the Japanese for to touch, then say tsukamaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for that (one), then the Japanese for to touch, then say *tsukamaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つかまる (tsukamaru) mean? (\"To be caught; to be arrested\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C271-tsukamaru-type",
+              "prompt": "Say the Japanese for 'to be caught'.",
+              "assesses": [
+                "JA-LEX-C271-TSUKAMARU271-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つかまる",
+                "tsukamaru"
+              ],
+              "feedback": {
+                "correct": "Right: つかまる (tsukamaru) is 'to be caught; to be arrested'.",
+                "incorrect": "'To be caught' is つかまる (tsukamaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C271-oikakeru",
+      "sequence": 16470,
+      "title": "おいかける (oikakeru) — to chase; to run after",
+      "headword": "おいかける",
+      "romanization": "oikakeru",
+      "gloss": "to chase; to run after",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ec07c17a9deac3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to touch, then the Japanese for to be caught."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おいかける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいかける — oikakeru — \"to chase; to run after\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おまわりさんが どろぼうを おいかけました。 — omawarisan ga dorobō o oikakemashita — \"A police officer ran after the thief.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おいかけます, oikakemasu; an ichidan verb. Past (polite): いぬが ねこを おいかけました。, inu ga neko o oikakemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいかける (oikakeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from oi, \"chasing\" (from ou), and kakeru, \"to set about\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oikakeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oikakeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oikakeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oikakeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omawarisan ga dorobō o oikakemashita — A police officer ran after the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omawarisan ga dorobō o oikakemashita* — A police officer ran after the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to touch, then the Japanese for to be caught, then say oikakeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to touch, then the Japanese for to be caught, then say *oikakeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おいかける (oikakeru) mean? (\"To chase; to run after\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C271-oikakeru-type",
+              "prompt": "Say the Japanese for 'to chase'.",
+              "assesses": [
+                "JA-LEX-C271-TSUKAMARU271-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おいかける",
+                "oikakeru"
+              ],
+              "feedback": {
+                "correct": "Right: おいかける (oikakeru) is 'to chase; to run after'.",
+                "incorrect": "'To chase' is おいかける (oikakeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C271-tsuini",
+      "sequence": 16480,
+      "title": "ついに (tsuini) — finally; in the end",
+      "headword": "ついに",
+      "romanization": "tsuini",
+      "gloss": "finally; in the end",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efc3b256978a58dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be caught, then the Japanese for to chase."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ついに",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ついに — tsuini — \"finally; in the end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ついに はんにんが つかまりました。 — tsuini hannin ga tsukamarimashita — \"At long last the culprit was caught.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ついに (tsuini) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsuini",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsuini*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsuini, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsuini*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsuini hannin ga tsukamarimashita — At long last the culprit was caught.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsuini hannin ga tsukamarimashita* — At long last the culprit was caught.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be caught, then the Japanese for to chase, then say tsuini again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be caught, then the Japanese for to chase, then say *tsuini* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ついに (tsuini) mean? (\"Finally; in the end\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C271-tsuini-type",
+              "prompt": "Say the Japanese for 'finally'.",
+              "assesses": [
+                "JA-LEX-C271-TSUKAMARU271-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ついに",
+                "tsuini"
+              ],
+              "feedback": {
+                "correct": "Right: ついに (tsuini) is 'finally; in the end'.",
+                "incorrect": "'Finally' is ついに (tsuini)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C271-kakureru",
+      "sequence": 16490,
+      "title": "かくれる (kakureru) — to hide (oneself)",
+      "headword": "かくれる",
+      "romanization": "kakureru",
+      "gloss": "to hide (oneself)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b249aa403b2db68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to chase, then the Japanese for finally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かくれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かくれる — kakureru — \"to hide (oneself)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はんにんは やまに かくれていました。 — hannin wa yama ni kakurete imashita — \"The culprit had been hiding in the hills.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かくれます, kakuremasu; an ichidan verb. Past (polite): ねこが かくれました。, neko ga kakuremashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かくれる (kakureru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakureru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakureru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakureru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakureru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hannin wa yama ni kakurete imashita — The culprit had been hiding in the hills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hannin wa yama ni kakurete imashita* — The culprit had been hiding in the hills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to chase, then the Japanese for finally, then say kakureru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to chase, then the Japanese for finally, then say *kakureru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かくれる (kakureru) mean? (\"To hide (oneself)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C271-kakureru-type",
+              "prompt": "Say the Japanese for 'to hide (oneself)'.",
+              "assesses": [
+                "JA-LEX-C271-TSUKAMARU271-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かくれる",
+                "kakureru"
+              ],
+              "feedback": {
+                "correct": "Right: かくれる (kakureru) is 'to hide (oneself)'.",
+                "incorrect": "'To hide (oneself)' is かくれる (kakureru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C271-tsukamaeru",
+      "sequence": 16500,
+      "title": "つかまえる (tsukamaeru) — to catch; to arrest",
+      "headword": "つかまえる",
+      "romanization": "tsukamaeru",
+      "gloss": "to catch; to arrest",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d193d456a68d1075",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for finally, then the Japanese for to hide (oneself)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つかまえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つかまえる — tsukamaeru — \"to catch; to arrest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けいさつは きのう はんにんを つかまえました。 — keisatsu wa kinō hannin o tsukamaemashita — \"The police caught the culprit yesterday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つかまえます, tsukamaemasu; an ichidan verb. Past (polite): けいさつが はんにんを つかまえました。, keisatsu ga hannin o tsukamaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つかまえる (tsukamaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict). It is the transitive partner of tsukamaru, \"to be caught\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukamaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukamaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukamaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukamaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keisatsu wa kinō hannin o tsukamaemashita — The police caught the culprit yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keisatsu wa kinō hannin o tsukamaemashita* — The police caught the culprit yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for finally, then the Japanese for to hide (oneself), then say tsukamaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for finally, then the Japanese for to hide (oneself), then say *tsukamaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つかまえる (tsukamaeru) mean? (\"To catch; to arrest\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C271-tsukamaeru-type",
+              "prompt": "Say the Japanese for 'to catch'.",
+              "assesses": [
+                "JA-LEX-C271-TSUKAMARU271-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つかまえる",
+                "tsukamaeru"
+              ],
+              "feedback": {
+                "correct": "Right: つかまえる (tsukamaeru) is 'to catch; to arrest'.",
+                "incorrect": "'To catch' is つかまえる (tsukamaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

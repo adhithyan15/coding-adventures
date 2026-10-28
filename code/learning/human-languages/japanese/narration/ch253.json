@@ -1,0 +1,1007 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 253,
+  "title": "What Was Going On",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:489e1082329cbccc",
+  "lessons": [
+    {
+      "id": "JA-C253-futte-imasu",
+      "sequence": 15140,
+      "title": "ふっています / ふっていました (futte imasu / futte imashita) — what is going on",
+      "headword": "ふっています / ふっていました",
+      "romanization": "futte imasu / futte imashita",
+      "gloss": "it is raining, it was raining — -te imasu for what is going on, -te imashita for what was",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa751906d00c2b03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"It will probably rain tomorrow\". (ashita ame ga furu deshō.) Then the -て form of ふる. (futte.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ています",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あめが ふっています。 ame ga futte imasu. — \"It is raining.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -て form with います (imasu), \"is there\", says what is going on: the rain has started and has not stopped."
+            },
+            {
+              "kind": "speech",
+              "text": "いま あめが ふっています。 ima ame ga futte imasu. — \"It is raining now.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちを まっています。 tomodachi o matte imasu. — \"I am waiting for a friend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -ていました",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With いました (imashita), it was going on:"
+            },
+            {
+              "kind": "speech",
+              "text": "きのう あめが ふっていました。 kinō ame ga futte imashita. — \"It was raining yesterday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ははは しんぶんを よんでいました。 haha wa shinbun o yonde imashita. — \"My mother was reading the newspaper.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A story needs both kinds of past. -ていました is the scene, going on; -ました is the event, once, inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふっていました。 ame ga futte imashita. — \"It was raining.\""
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃが とまりました。 densha ga tomarimashita. — \"The train stopped.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My mother was reading the newspaper\" — haha wa shinbun o yonde imashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My mother was reading the newspaper\" — *haha wa shinbun o yonde imashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My father was reading the newspaper\" — chichi wa shinbun o yonde imashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My father was reading the newspaper\" — *chichi wa shinbun o yonde imashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My elder sister was reading the newspaper\" — ane wa shinbun o yonde imashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My elder sister was reading the newspaper\" — *ane wa shinbun o yonde imashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C253-futte-imasu-say",
+              "prompt": "Say that it was raining yesterday.",
+              "assesses": [
+                "JA-GRAMMAR-C253-ONGOING-01",
+                "JA-GRAMMAR-C253-ONGOING-02"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "kinō ame ga futte imashita",
+                "きのう あめが ふっていました。",
+                "きのう あめが ふっていました"
+              ],
+              "feedback": {
+                "correct": "futte imashita: the -te form with imashita, going on in the past.",
+                "incorrect": "Take futte and add imashita: kinō ame ga futte imashita."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It is raining\"? (あめが ふっています.) \"It was raining\"? (ふっていました.) \"I am waiting\"? (まっています.) Which is the scene, ふっていました or とまりました? (ふっていました.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C253-toki",
+      "sequence": 15150,
+      "title": "とき (toki) — when; the time when",
+      "headword": "とき",
+      "romanization": "toki",
+      "gloss": "when; the time when",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab687390acbd5fae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"My mother was asleep\". (haha wa nete imashita.) Then say \"I got up\", to a friend. (okita.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とき — toki — \"when\", \"the time when\". The plain form goes before it, and 、 closes the time:"
+            },
+            {
+              "kind": "speech",
+              "text": "かえった とき、ははは ねていました。 kaetta toki, haha wa nete imashita. — \"When I got home, my mother was asleep.\""
+            },
+            {
+              "kind": "speech",
+              "text": "おきた とき、あめが ふっていました。 okita toki, ame ga futte imashita. — \"When I got up, it was raining.\""
+            },
+            {
+              "kind": "speech",
+              "text": "After a noun it takes の:"
+            },
+            {
+              "kind": "speech",
+              "text": "こどもの とき、うみに いきました。 kodomo no toki, umi ni ikimashita. — \"When I was a child, I went to the sea.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とき (toki) is a native Japanese word (wago), inherited rather than borrowed from Chinese. JMdict writes it with one kanji and glosses it \"time; hour; moment\" and \"occasion; case\"; KANJIDIC2 glosses that kanji \"time, hour\" and gives とき as its native reading. It is the とき inside ときどき, \"sometimes\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When I got home, my mother was asleep\" — kaetta toki, haha wa nete imashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When I got home, my mother was asleep\" — *kaetta toki, haha wa nete imashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When I got home, my father was asleep\" — kaetta toki, chichi wa nete imashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When I got home, my father was asleep\" — *kaetta toki, chichi wa nete imashita*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C253-toki-say",
+              "prompt": "Say that when you got up, it was raining.",
+              "assesses": [
+                "JA-LEX-C253-TOKI-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "okita toki, ame ga futte imashita",
+                "おきた とき、あめが ふっていました。",
+                "okita toki ame ga futte imashita"
+              ],
+              "feedback": {
+                "correct": "okita toki: the plain past before toki sets the time.",
+                "incorrect": "The plain past goes before toki: okita toki, then the scene."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"When I was a child\"? (こどもの とき (toki).) \"When I got home\"? (かえった とき (toki).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C253-nenjuu",
+      "sequence": 15160,
+      "title": "年じゅう (nenjū) — all year round",
+      "headword": "年じゅう",
+      "romanization": "nenjū",
+      "gloss": "all year round",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:342cc8ddc5affe63",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "You'll want to know: 年じゅう"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: You'll want to know: 年じゅう."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say \"when I was a child\". (kodomo no toki.) Then say \"hot\". (atsui.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 年じゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "年じゅう — nenjū — \"all year round\", the whole year through."
+            },
+            {
+              "kind": "speech",
+              "text": "ここは 年じゅう あついです。 koko wa nenjū atsui desu. — \"It is hot here all year round.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Four beats: ne–n–ju–u, the long ū held for two. The first sign is new, read ねん (nen): the nen of らいねん and きょねん. The next lesson writes it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "年じゅう (nenjū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nen, \"year\" (Middle Chinese nen) and jū, \"in, inside, middle\" (trjuwng) (KANJIDIC2; Middle Chinese in Baxter's transcription). KANJIDIC2 gives that second kanji the on'yomi chū; JMdict lists nenchū as another reading of this same word, so jū is chū voiced. JMdict spells the word with two kanji, or with the second part in kana, as here, and glosses it \"all year round; throughout the year\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nenjū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nenjū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It is hot here all year round\" — koko wa nenjū atsui desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It is hot here all year round\" — *koko wa nenjū atsui desu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It is cold here all year round\" — koko wa nenjū samui desu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It is cold here all year round\" — *koko wa nenjū samui desu*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C253-nenjuu-say",
+              "prompt": "Say the Japanese for 'all year round'.",
+              "assesses": [
+                "JA-LEX-C253-NENJUU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "nenjū",
+                "年じゅう",
+                "nenjuu",
+                "nenju",
+                "ねんじゅう"
+              ],
+              "feedback": {
+                "correct": "Right: nenjū, all year round.",
+                "incorrect": "'All year round' is nenjū."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"All year round\"? (年じゅう, nenjū.) Its first sign is read? (ねん, nen, as in らいねん.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W253-nen-kanji",
+      "sequence": 15170,
+      "title": "年 (nen) — the year, six strokes",
+      "headword": "年",
+      "romanization": "nen",
+      "gloss": "the six-stroke kanji for a year, read nen in 年じゅう",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:4b2e3f58d8017156",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — the shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — the shape and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say nenjū, all year round. Then call up the four strokes of 月: left side, top and right side, two bars."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "年 — nen."
+            },
+            {
+              "kind": "speech",
+              "text": "Its parts:"
+            },
+            {
+              "kind": "speech",
+              "text": "a short falling stroke at the top."
+            },
+            {
+              "kind": "speech",
+              "text": "three bars."
+            },
+            {
+              "kind": "speech",
+              "text": "a short stem on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "a long centre stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Six strokes, five lifts:"
+            },
+            {
+              "kind": "speech",
+              "text": "draw the short falling stroke at the top, down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the top bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the second bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the short stem on the left, down from the second bar."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the long third bar from left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "lift, draw the long centre stem from the top bar straight down through the others."
+            },
+            {
+              "kind": "speech",
+              "text": "The long stem comes last and runs through the bars below the top one. Here it is read ねん (nen), as in 年じゅう (nenjū); this lesson asks only for that reading."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find 年 (nen) in 年じゅう and say nenjū."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy 年 three times, saying nen at each one."
+            },
+            {
+              "kind": "speech",
+              "text": "Find it once more, in ここは 年じゅう あついです (koko wa nenjū atsui desu), and say the line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many strokes in all? (Six.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: KanjiVG stroke-order data: KanjiVG, kanji/05e74.svg, kanji 年 (nen) (U+5E74), 6 stroke paths kvg:05e74-s1 to s6 (Ulrich Apel and contributors, CC BY-SA 3.0). Only the order and direction are taken from it."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-W253-nen-kanji-strokes",
+              "prompt": "Which stroke of the kanji read nen comes last?",
+              "assesses": [
+                "JA-SCRIPT-KANJI-NEN-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the long centre stem",
+                "the centre stem",
+                "the long stem",
+                "the vertical"
+              ],
+              "feedback": {
+                "correct": "Last comes the long centre stem, through the bars.",
+                "incorrect": "The long centre stem comes last, after the three bars."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C253-kawa-no-hi",
+      "sequence": 15180,
+      "title": "(reading) — a day at the river",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "a day at the river, told with what happened and what was going on",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:6471b431c10ae2fe",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Thirteen short lines, a summer day told in order. Every word in them is one you know."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なつやすみに ちちと かわに いきました。 あさ はやく おきて、でかけました。 でんしゃに のって、えきで おりました。 それから、すこし あるきました。 ついた とき (toki)、あめが ふっていました。 あめは ひるに やみました。 ちちと かわで およぎました。 みずは きれいでした。 ひるごはんを たべてから、さかなを みました。 ちちは しんぶんを よんでいました。 そして、ゆうがた うちに かえりました。 かわの みずは 年じゅう (nenjū) つめたいです。 月日は はやいです。"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the thirteen lines once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the thirteen lines once, without stopping]"
+            },
+            {
+              "kind": "speech",
+              "text": "Line by line:"
+            },
+            {
+              "kind": "speech",
+              "text": "なつやすみに ちちと かわに いきました。 (natsuyasumi ni chichi to kawa ni ikimashita.) — \"In the summer holidays I went to the river with my father.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あさ はやく おきて、でかけました。 (asa hayaku okite, dekakemashita.) — \"I got up early in the morning and set off.\""
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃに のって、えきで おりました。 (densha ni notte, eki de orimashita.) — \"We took the train and got off at the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "それから、すこし あるきました。 (sorekara, sukoshi arukimashita.) — \"After that, we walked a little.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ついた とき、あめが ふっていました。 (tsuita toki, ame ga futte imashita.) — \"When we arrived, it was raining.\""
+            },
+            {
+              "kind": "speech",
+              "text": "あめは ひるに やみました。 (ame wa hiru ni yamimashita.) — \"The rain stopped at noon.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ちちと かわで およぎました。 (chichi to kawa de oyogimashita.) — \"I swam in the river with my father.\""
+            },
+            {
+              "kind": "speech",
+              "text": "みずは きれいでした。 (mizu wa kirei deshita.) — \"The water was clean.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ひるごはんを たべてから、さかなを みました。 (hirugohan o tabete kara, sakana o mimashita.) — \"After eating lunch, we watched the fish.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは しんぶんを よんでいました。 (chichi wa shinbun o yonde imashita.) — \"My father was reading the newspaper.\""
+            },
+            {
+              "kind": "speech",
+              "text": "そして、ゆうがた うちに かえりました。 (soshite, yūgata uchi ni kaerimashita.) — \"And in the evening we went home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "かわの みずは 年じゅう つめたいです。 (kawa no mizu wa nenjū tsumetai desu.) — \"The river water is cold all year round.\""
+            },
+            {
+              "kind": "speech",
+              "text": "月日は はやいです。 (tsukihi wa hayai desu.) — \"Time flies.\""
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the thirteen lines again, aloud, without the glosses",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the thirteen lines again, aloud, without the glosses]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "who went to the river — chichi to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: who went to the river — *chichi to*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the father was doing after lunch — shinbun o yonde imashita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the father was doing after lunch — *shinbun o yonde imashita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when they went home — yūgata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when they went home — *yūgata*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C253-kawa-no-hi-rain",
+              "prompt": "When they arrived at the river, what was the weather doing?",
+              "assesses": [
+                "JA-SKILL-READ-STORY-B1-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "it was raining",
+                "raining",
+                "ame ga futte imashita",
+                "あめが ふっていました"
+              ],
+              "feedback": {
+                "correct": "Ame ga futte imashita: the scene when they arrived.",
+                "incorrect": "Line five: tsuita toki, ame ga futte imashita, it was raining."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which lines set a scene, going on? (Five and ten: ふっていました, よんでいました.) Which word puts lunch first? (たべてから.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R253-what-was-going-on",
+      "sequence": 15190,
+      "title": "Review — what was going on",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "setting the scene of a story and saying what happened in it",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:831c6ed896170e44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"It is raining now\". (ima ame ga futte imasu.) Then \"when I got up\". (okita toki.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I am waiting for a friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I am waiting for a friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yesterday it was raining, and the train stopped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Yesterday it was raining, and the train stopped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When I was a child, I went to the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When I was a child, I went to the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It is cold here all year round.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It is cold here all year round.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My father was reading the newspaper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My father was reading the newspaper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I brush my teeth before I go to bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I brush my teeth before I go to bed.]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R253-what-was-going-on-say",
+              "prompt": "Say that when you got home, your mother was asleep.",
+              "assesses": [
+                "JA-GRAMMAR-C253-ONGOING-02",
+                "JA-LEX-C253-TOKI-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "kaetta toki, haha wa nete imashita",
+                "かえった とき、ははは ねていました。",
+                "kaetta toki haha wa nete imashita"
+              ],
+              "feedback": {
+                "correct": "kaetta toki sets the time; nete imashita is the scene.",
+                "incorrect": "The plain past before toki, then nete imashita."
+              }
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Was reading\"? (よんでいました.) \"Is waiting\"? (まっています.) \"When\"? (とき (toki), after the plain form.) \"All year round\"? (年じゅう (nenjū).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

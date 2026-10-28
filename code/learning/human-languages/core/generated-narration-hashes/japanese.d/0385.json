@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:0443f1f63f0a6246",
+  "lessonIds": [
+    "JA-C385-kaigai",
+    "JA-C385-gaikoku",
+    "JA-C385-kokusai",
+    "JA-C385-jisa",
+    "JA-C385-mezasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch385.txt",
+  "json": "japanese/narration/ch385.json",
+  "textHash": "fnv1a64:006912745544af5c",
+  "jsonHash": "fnv1a64:06ac931c6ae8d6b5",
+  "findings": []
+}

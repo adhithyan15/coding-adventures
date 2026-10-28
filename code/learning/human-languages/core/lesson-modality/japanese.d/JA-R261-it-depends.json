@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R261-it-depends",
+    "language": "japanese",
+    "chapter": 261,
+    "sequence": 15610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63dfd8d69177a52f"
+  },
+  "findings": []
+}

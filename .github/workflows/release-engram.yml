@@ -26,8 +26,18 @@ on:
       - .github/workflows/release-engram.yml
       - code/scripts/engram_release.py
       - code/scripts/tests/test_engram_release.py
+      # The shared upgrade/corrupt-recovery gate, and Engram's v0.4.0 fixture
+      # (under engram-app/** below) that its tests verify end to end.
+      - code/scripts/mosaic_release_state_gate.py
+      - code/scripts/tests/test_mosaic_release_state_gate.py
       - code/scripts/verify_relocatable_bundle.py
       - code/scripts/tests/test_verify_relocatable_bundle.py
+      # The Compose Linux leg launches its payload through this helper, and
+      # the generated Compose host is what decides where state lives and how
+      # an unreadable file is quarantined -- the two things that leg's gate
+      # checks.
+      - code/scripts/run-under-xvfb.sh
+      - code/packages/rust/mosaic-app-bindings/templates/compose/**
       - code/programs/mosaic/engram-app/**
       - code/packages/rust/engram-core/**
       - code/packages/rust/engram-core-wasm/**
@@ -95,6 +105,8 @@ jobs:
           python -m unittest discover -s code/scripts/tests -p 'test_engram_release.py'
           python -m unittest discover -s code/scripts/tests \
             -p 'test_verify_relocatable_bundle.py'
+          python -m unittest discover -s code/scripts/tests \
+            -p 'test_mosaic_release_state_gate.py'
 
       - name: Validate version and tag
         id: release
@@ -357,14 +369,16 @@ jobs:
         with:
           python-version: "3.13"
 
-      # `mosaic-compile` links `cairo-sys-rs` through the paint backend.
+      # `mosaic-compile` links `cairo-sys-rs` through the paint backend. `xvfb`
+      # and `unzip` are for the upgrade/corrupt-recovery gate below, which
+      # launches the extracted Linux payload on a virtual display.
       - name: Install Linux build dependencies
         if: runner.os == 'Linux'
         shell: bash
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           set -euo pipefail
-          bash code/scripts/ci/apt-install.sh libcairo2-dev
+          bash code/scripts/ci/apt-install.sh libcairo2-dev xvfb unzip
 
       # The script builds the engine, emits the project, runs Gradle, and --
       # the part that matters -- asserts the engine landed beside the host jar
@@ -407,6 +421,108 @@ jobs:
             --source "$dist" --output-dir release-assets \
             --commit "$RELEASE_COMMIT"
           ls -la release-assets
+
+      # The upgrade and corrupt-recovery gate (mosaic-release-state-gate-v1.md,
+      # "How an app adopts the gate", step 3), judged on what a user downloads:
+      # the zip just archived is extracted to a fresh directory and launched
+      # from `/` with MOSAIC_APP_LIBRARY unset, so only the runtime inside the
+      # payload can load.
+      #
+      # The state goes where the shipped host REALLY looks, not into a path
+      # handed to it through MOSAIC_APP_STATE_PATH (which is unset too). The
+      # generated Compose host (mosaic-app-bindings
+      # templates/compose/MosaicRuntimeHost.kt, `stateFile()`) resolves, on
+      # Linux,
+      #
+      #   ${XDG_DATA_HOME:-~/.local/share}/<application id>/mosaic-state.v1.json
+      #
+      # and the emitter passes the PACKAGE name, `engram-app`, as the
+      # application id. XDG_DATA_HOME only moves the root to a scratch
+      # directory; the branch the host takes is the one a user's machine takes.
+      # (Checked on a real macOS build of this distribution, whose `apple`
+      # branch lands in `<home>/Library/Application Support/engram-app/`.)
+      #
+      #   upgrade   v0.4.0's state (a v1 envelope) is materialized, the app
+      #             runs on it, and `verify` requires the deck and card to have
+      #             survived with no `.corrupt` beside them. The host re-saves
+      #             as v3; the fixture accepts both.
+      #   recovery  unreadable bytes replace the state, and `verify-quarantine`
+      #             requires the host to have MOVED them, byte for byte, to
+      #             `mosaic-state.v1.json.corrupt` rather than deleted or
+      #             overwritten them. The state root is fresh, so that is the
+      #             name whether the host keeps one quarantine slot or takes
+      #             the first free `.corrupt`, `.corrupt.1`, ...
+      #
+      # The recovery half is also what proves the host reads THIS path at all:
+      # a host looking elsewhere leaves the v1 file untouched, which `verify`
+      # alone would accept.
+      #
+      # Exit 124 is `timeout` killing an app that was still up; anything else
+      # means it crashed or quit -- including `Main.kt`'s refusal to start
+      # without the Rust runtime. `mosaic.app.debug` makes that refusal print
+      # why the runtime did not load.
+      - name: Verify upgrade and corrupt-state recovery on the Linux payload
+        if: matrix.platform == 'linux'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -euo pipefail
+          fixture="code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"
+          gate="code/scripts/mosaic_release_state_gate.py"
+          work="$RUNNER_TEMP/engram-compose-gate"
+          rm -rf "$work"
+          mkdir -p "$work/unpacked"
+          archive="release-assets/$(python code/scripts/engram_release.py compose-name \
+            --version "$RELEASE_VERSION" --platform "$PLATFORM")"
+          unzip -q "$archive" -d "$work/unpacked"
+          launcher="$(find "$work/unpacked" -type f -path '*/bin/engram_app' -perm -111 -print -quit)"
+          if [[ -z "$launcher" ]]; then
+            echo "::error::the extracted Compose payload has no executable bin/engram_app"
+            find "$work/unpacked" -maxdepth 4 >&2
+            exit 1
+          fi
+
+          state_root="$work/xdg-data"
+          state="$state_root/engram-app/mosaic-state.v1.json"
+          probe="$work/corrupt-probe.bin"
+
+          launch() {
+            local name="$1"
+            local log="$work/launch-$name.log"
+            local status
+            set +e
+            (cd / && env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+              XDG_DATA_HOME="$state_root" JAVA_TOOL_OPTIONS="-Dmosaic.app.debug=true" \
+              bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 15s "$launcher") \
+              >"$log" 2>&1
+            status=$?
+            set -e
+            echo "::group::$name launch log (exit $status)"
+            cat "$log"
+            echo "::endgroup::"
+            if [[ "$status" -ne 124 ]]; then
+              echo "::error::the $name launch exited with $status before the timeout"
+              cat "$log" >&2
+              exit 1
+            fi
+            if grep -F "Mosaic Rust runtime unavailable" "$log"; then
+              echo "::error::the $name launch could not load the bundled runtime"
+              exit 1
+            fi
+            echo "after the $name launch:"
+            ls -la "$(dirname "$state")"
+          }
+
+          python "$gate" materialize --fixture "$fixture" --output "$state"
+          launch upgrade
+          python "$gate" verify --fixture "$fixture" --state "$state"
+
+          printf 'invalid Engram state\n' > "$state"
+          cp "$state" "$probe"
+          launch recovery
+          python "$gate" verify-quarantine --app engram --state "$state" --probe "$probe"
 
       - name: Upload the Compose payload
         uses: actions/upload-artifact@v7

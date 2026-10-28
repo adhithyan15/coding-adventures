@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C524-jitsugen-suru",
+    "language": "japanese",
+    "chapter": 524,
+    "sequence": 30310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72a0d3811c497f95"
+  },
+  "findings": []
+}

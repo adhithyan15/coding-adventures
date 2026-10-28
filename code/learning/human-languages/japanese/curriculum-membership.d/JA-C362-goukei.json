@@ -1,0 +1,11 @@
+{
+  "id": "JA-C362-goukei",
+  "pathSegment": "JA-PATH-362-HIYOU362",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-362-HIYOU362",
+      "order": 2
+    }
+  ]
+}

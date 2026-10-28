@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C68-taiyang",
+  "pathSegment": "ZH-PATH-68-NATURE68",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-68-NATURE68",
+      "order": 5
+    }
+  ]
+}

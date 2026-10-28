@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C61-ai",
+    "language": "chinese",
+    "chapter": 61,
+    "sequence": 5180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c3ede3db285e55f0"
+  },
+  "findings": []
+}

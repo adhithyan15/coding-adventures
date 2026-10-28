@@ -13,6 +13,35 @@
 //! is `IIRExport::public_name()` — the alias if one was set, otherwise the
 //! function name.
 //!
+//! # One owner per public name (issue #18429)
+//!
+//! The export map is keyed per module, but the *merged* module has one flat
+//! namespace: an exported function keeps its bare public name there, because
+//! that is the name its importers call.  So two different modules may not
+//! export the same public name, even though their export-map keys differ:
+//!
+//! ```text
+//!   key ("left",  "foo") ─┐            merged module
+//!                         ├─ both ──►  foo   (left's)
+//!   key ("right", "foo") ─┘            foo   (right's — unreachable: every
+//!                                             `call foo` binds to the first)
+//! ```
+//!
+//! `build_export_map` therefore also records which module first claimed each
+//! public name and reports `ConflictingExport` when a second module claims
+//! it.  A name exported twice by the *same* module is the older
+//! `DuplicateExport`.
+//!
+//! # Link-wide sanity checks
+//!
+//! Two more checks guard names the merge pass would otherwise bind to the
+//! wrong function:
+//!
+//! * [`check_module_names`] — module names must be unique, because exports
+//!   and import rewrites are keyed by module name.
+//! * [`check_entry_point`] — the entry point must resolve inside the module
+//!   it came from (a function it defines, or the local name of an import).
+//!
 //! # Type checking
 //!
 //! Type checking only fires when the import provides non-empty `param_types`
@@ -23,7 +52,7 @@
 //! about types (e.g., a dynamically typed language frontend) can still use the
 //! linker.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::module::IIRModule;
@@ -39,8 +68,11 @@ pub struct ResolvedExport<'a> {
 
 /// Build an export map from a set of modules.
 ///
-/// Returns `(map, errors)` where `errors` contains one `DuplicateExport` per
-/// collision.
+/// Returns `(map, errors)` where `errors` contains:
+///
+/// * one `DuplicateExport` per `(module_name, public_name)` key seen twice;
+/// * one `ConflictingExport` per public name claimed by a second, *different*
+///   module (see the module docs — the merged namespace is flat).
 ///
 /// # Key
 ///
@@ -51,6 +83,12 @@ pub fn build_export_map<'a>(
 ) -> (HashMap<(String, String), ResolvedExport<'a>>, Vec<LinkError>) {
     let mut map: HashMap<(String, String), ResolvedExport<'a>> = HashMap::new();
     let mut errors: Vec<LinkError> = Vec::new();
+    // public name → name of the module that claimed it first.  Comparing
+    // module *names* (not slice positions) keeps the two error kinds
+    // disjoint: same-named modules collide on the map key above and are
+    // reported as `DuplicateExport` (plus `DuplicateModuleName` from
+    // `check_module_names`), never also as `ConflictingExport`.
+    let mut owner_of: HashMap<&'a str, &'a str> = HashMap::new();
 
     for module in modules {
         // If the module has no explicit exports, it exports *nothing* —
@@ -67,6 +105,23 @@ pub fn build_export_map<'a>(
                 // resolving later imports and can report more errors.
                 continue;
             }
+            // Issue #18429: a public name has exactly one owner across the
+            // whole link.  We still insert the second module's entry below
+            // so imports of it resolve and the user sees only the real
+            // problem, not a cascade of `Unresolved` errors.
+            match owner_of.get(export.public_name()) {
+                Some(&first) if first != module.name => {
+                    errors.push(LinkError::ConflictingExport {
+                        function_name: export.public_name().to_string(),
+                        first_module: first.to_string(),
+                        second_module: module.name.clone(),
+                    });
+                }
+                Some(_) => {}
+                None => {
+                    owner_of.insert(export.public_name(), &module.name);
+                }
+            }
             // The validator already checked that function_name exists, so
             // `unwrap_or_else` is a belt-and-suspenders fallback.
             if let Some(fn_) = module.get_function(&export.function_name) {
@@ -82,6 +137,111 @@ pub fn build_export_map<'a>(
     }
 
     (map, errors)
+}
+
+/// Report every module name that appears more than once in `modules`.
+///
+/// One `DuplicateModuleName` per distinct repeated name, in input order —
+/// three modules called `util` are one problem, not two.
+pub fn check_module_names(modules: &[IIRModule]) -> Vec<LinkError> {
+    let mut seen: HashSet<&str> = HashSet::new();
+    let mut reported: HashSet<&str> = HashSet::new();
+    let mut errors = Vec::new();
+    for module in modules {
+        if !seen.insert(&module.name) && reported.insert(&module.name) {
+            errors.push(LinkError::DuplicateModuleName {
+                module_name: module.name.clone(),
+            });
+        }
+    }
+    errors
+}
+
+/// Check that the merged module's entry point resolves inside its module.
+///
+/// The merged entry point comes from the first module (input order) whose
+/// `entry_point` is `Some`; later modules' entry points are ignored, so they
+/// are not checked either.  The name resolves when the module
+///
+/// | defines a function with that name | e.g. Twig's synthesized `main` |
+/// |-----------------------------------|--------------------------------|
+/// | or imports a function under that local name | `import lib::run as start` |
+///
+/// Anything else is `UnresolvedEntryPoint`: left alone, the bare name would
+/// bind to whichever function owns it after merging — possibly another
+/// module's private function.
+pub fn check_entry_point(modules: &[IIRModule]) -> Option<LinkError> {
+    let (module, entry) = modules
+        .iter()
+        .find_map(|m| m.entry_point.as_deref().map(|ep| (m, ep)))?;
+    let defined = module.get_function(entry).is_some();
+    let imported = module.imports.iter().any(|i| i.local_name() == entry);
+    if defined || imported {
+        None
+    } else {
+        Some(LinkError::UnresolvedEntryPoint {
+            module_name: module.name.clone(),
+            entry_point: entry.to_string(),
+        })
+    }
+}
+
+/// Check that every function reference names something its module may use.
+///
+/// A *function reference* is the operand in a function-name slot — `call`
+/// callee, `alloc_closure` body, `task_spawn` / `group_spawn` target; the
+/// one table of slots lives in `merge::function_name_slot`, which the
+/// rename pass uses too.  Inside module `m` such a name may be:
+///
+/// | Name | Example | After merging it means |
+/// |------|---------|------------------------|
+/// | a function `m` defines | `helper`, `__lambda_0` | `m`'s own function (renamed if needed) |
+/// | the local name of one of `m`'s imports | `sqrt`, or an alias | the exported function it resolves to |
+/// | anything else | `helper` defined only in *another* module | **error** — `UndeclaredCall` |
+///
+/// # Why the third row is an error (issue #18432)
+///
+/// The merge pass rewrites the first two kinds and leaves every other name
+/// bare.  A bare name binds to whichever function owns it in the merged
+/// module — and that can be another module's *private* function:
+///
+/// ```text
+///   lib_a: private helper  ─┐   merged: helper        (lib_a's — first)
+///   lib_b: private helper  ─┤           lib_b::helper
+///   app:   call helper     ─┘   app's call runs lib_a's private helper
+/// ```
+///
+/// Privacy is the point of a module system, and an IIR producer that
+/// forgot an `IIRImport` should fail at link time, not run whichever
+/// function happened to come first.  Builtins are not affected: no IIR
+/// producer reaches them through these slots (Twig emits `call_builtin`),
+/// and neither VM resolves an unknown `call` target to anything but an
+/// "unknown function" error.
+///
+/// Each `(module, function, name)` is reported once, however many times
+/// the function repeats the reference.
+pub fn check_function_references(modules: &[IIRModule]) -> Vec<LinkError> {
+    let mut errors = Vec::new();
+    for module in modules {
+        let mut visible: HashSet<&str> = module.functions.iter().map(|f| f.name.as_str()).collect();
+        visible.extend(module.imports.iter().map(|i| i.local_name()));
+        for function in &module.functions {
+            let mut reported: HashSet<&str> = HashSet::new();
+            for instr in &function.instructions {
+                let Some(callee) = crate::merge::function_name_operand(instr) else {
+                    continue;
+                };
+                if !visible.contains(callee) && reported.insert(callee) {
+                    errors.push(LinkError::UndeclaredCall {
+                        in_module: module.name.clone(),
+                        in_function: function.name.clone(),
+                        callee: callee.to_string(),
+                    });
+                }
+            }
+        }
+    }
+    errors
 }
 
 /// Resolve all imports in `modules` against the export map.
@@ -261,6 +421,142 @@ mod tests {
         let (_, errs) = build_export_map(&modules);
         assert_eq!(errs.len(), 1);
         assert!(matches!(&errs[0], LinkError::DuplicateExport { function_name, .. } if function_name == "add"));
+    }
+
+    #[test]
+    fn same_public_name_from_two_modules_is_a_conflict() {
+        let mut m1 = make_math_module();
+        m1.name = "left".into();
+        let mut m2 = make_math_module();
+        m2.name = "right".into();
+        let modules = vec![m1, m2];
+        let (map, errs) = build_export_map(&modules);
+        assert_eq!(
+            errs,
+            vec![LinkError::ConflictingExport {
+                function_name: "add".into(),
+                first_module: "left".into(),
+                second_module: "right".into(),
+            }]
+        );
+        // Both entries stay in the map so their importers still resolve.
+        assert!(map.contains_key(&("left".to_string(), "add".to_string())));
+        assert!(map.contains_key(&("right".to_string(), "add".to_string())));
+    }
+
+    #[test]
+    fn same_named_modules_report_duplicate_export_not_conflict() {
+        let modules = vec![make_math_module(), make_math_module()];
+        let (_, errs) = build_export_map(&modules);
+        assert_eq!(errs.len(), 1);
+        assert!(matches!(errs[0], LinkError::DuplicateExport { .. }));
+    }
+
+    #[test]
+    fn check_module_names_accepts_unique_names() {
+        let mut other = make_math_module();
+        other.name = "other".into();
+        assert!(check_module_names(&[make_math_module(), other]).is_empty());
+    }
+
+    #[test]
+    fn check_entry_point_with_no_entry_is_fine() {
+        assert_eq!(check_entry_point(&[make_math_module()]), None);
+        assert_eq!(check_entry_point(&[]), None);
+    }
+
+    #[test]
+    fn check_entry_point_accepts_defined_function() {
+        let mut m = make_math_module();
+        m.entry_point = Some("add".into());
+        assert_eq!(check_entry_point(&[m]), None);
+    }
+
+    #[test]
+    fn check_entry_point_rejects_missing_function() {
+        let mut m = make_math_module();
+        m.entry_point = Some("main".into());
+        assert_eq!(
+            check_entry_point(&[m]),
+            Some(LinkError::UnresolvedEntryPoint {
+                module_name: "math".into(),
+                entry_point: "main".into(),
+            })
+        );
+    }
+
+    // ── check_function_references (#18432) ──────────────────────────────
+
+    fn fn_with(name: &str, instrs: Vec<IIRInstr>) -> IIRFunction {
+        IIRFunction::new(name, vec![], "any", instrs)
+    }
+
+    fn call(callee: &str) -> IIRInstr {
+        use interpreter_ir::instr::Operand;
+        IIRInstr::new("call", Some("r".into()), vec![Operand::Var(callee.into())], "any")
+    }
+
+    #[test]
+    fn references_to_own_functions_and_imports_are_accepted() {
+        let mut m = IIRModule::new("app", "twig");
+        m.add_or_replace(fn_with("own", vec![]));
+        m.add_or_replace(fn_with("main", vec![call("own"), call("add"), call("plus")]));
+        m.imports.push(IIRImport::new("math", "add", "any"));
+        m.imports.push(IIRImport::new("math", "add", "any").with_local_alias("plus"));
+        assert!(check_function_references(&[m]).is_empty());
+    }
+
+    #[test]
+    fn a_reference_to_an_unknown_name_is_undeclared() {
+        let mut m = IIRModule::new("app", "twig");
+        m.add_or_replace(fn_with("main", vec![call("ghost")]));
+        assert_eq!(
+            check_function_references(&[m]),
+            vec![LinkError::UndeclaredCall {
+                in_module: "app".into(),
+                in_function: "main".into(),
+                callee: "ghost".into(),
+            }]
+        );
+    }
+
+    #[test]
+    fn imports_of_one_module_do_not_cover_another() {
+        // `lib` imports `add`; `app` does not — so `app`'s call is undeclared
+        // even though some module in the link imports that name.
+        let mut lib = IIRModule::new("lib", "twig");
+        lib.entry_point = None;
+        lib.imports.push(IIRImport::new("math", "add", "any"));
+        let mut app = IIRModule::new("app", "twig");
+        app.add_or_replace(fn_with("main", vec![call("add")]));
+        let errs = check_function_references(&[lib, app]);
+        assert_eq!(errs.len(), 1);
+        assert!(matches!(&errs[0], LinkError::UndeclaredCall { in_module, .. } if in_module == "app"));
+    }
+
+    #[test]
+    fn data_operands_and_builtins_are_not_function_references() {
+        // `call_builtin`, string constants and global names live in other
+        // namespaces; only function-name slots are checked.  A malformed
+        // slot (an integer callee) names no function and is left to the VM.
+        use interpreter_ir::instr::Operand;
+        let mut m = IIRModule::new("app", "twig");
+        m.add_or_replace(fn_with(
+            "main",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("a".into()),
+                    vec![Operand::Var("host/read_file".into())],
+                    "any",
+                ),
+                IIRInstr::new("const", Some("s".into()), vec![Operand::Str("ghost".into())], "str"),
+                IIRInstr::new("global_load", Some("g".into()), vec![Operand::Str("ghost".into())], "any"),
+                IIRInstr::new("call", Some("x".into()), vec![Operand::Int(7)], "any"),
+                IIRInstr::new("call", Some("y".into()), vec![], "any"),
+            ],
+        ));
+        assert!(check_function_references(&[m]).is_empty());
     }
 
     #[test]

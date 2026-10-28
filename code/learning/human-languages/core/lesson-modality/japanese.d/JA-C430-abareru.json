@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C430-abareru",
+    "language": "japanese",
+    "chapter": 430,
+    "sequence": 25240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee00a01d6e146e2f"
+  },
+  "findings": []
+}

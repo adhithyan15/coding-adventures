@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W189-hao-number",
+  "pathSegment": "ZH-PATH-189-FORM189",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-189-FORM189",
+      "order": 1
+    }
+  ]
+}

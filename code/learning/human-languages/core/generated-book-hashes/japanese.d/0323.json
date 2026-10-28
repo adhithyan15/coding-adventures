@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:cec988275f511324",
+  "lessonIds": [
+    "JA-C323-enryo-suru",
+    "JA-C323-kobamu",
+    "JA-C323-muri",
+    "JA-C323-kekkou",
+    "JA-C323-betsuni"
+  ],
+  "tex": "japanese/book/chapters/ch323-saying-no-politely.tex"
+}

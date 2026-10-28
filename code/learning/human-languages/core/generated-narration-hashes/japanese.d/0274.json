@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:5ecc05abf38cbaba",
+  "lessonIds": [
+    "JA-C274-jishin",
+    "JA-C274-kuzureru",
+    "JA-C274-korogaru",
+    "JA-C274-osoroshii",
+    "JA-C274-hinan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch274.txt",
+  "json": "japanese/narration/ch274.json",
+  "textHash": "fnv1a64:6d55a00d86b05387",
+  "jsonHash": "fnv1a64:01850aaa0c253264",
+  "findings": []
+}

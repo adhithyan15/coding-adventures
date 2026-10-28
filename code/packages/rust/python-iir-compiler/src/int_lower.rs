@@ -132,7 +132,7 @@
 //! | `a / b` (any types)             | both converted, then `f64_div`                   |
 //! | `a / b`, `b` known `±0.0`       | `trap "Trap.DivZero"`, then the (dead) `f64_div` |
 //! | `-a`, `+a` (float)              | `f64_neg` (`-0.0` stays `-0.0`); nothing         |
-//! | `print(a)` (float)              | `call_builtin write_f64_py, a`; `putchar 10`     |
+//! | `print(a)` (float)              | `call __py_write_float, a`; `putchar 10`         |
 //! | `a // b`, `a % b`, one a float  | refused (`Unsupported`): no LANG83 op yet        |
 //!
 //! Three refusals keep the IIR exactly CPython's arithmetic:
@@ -150,16 +150,81 @@
 //!
 //! Known float values are folded with Rust's `f64`, the same IEEE binary64
 //! arithmetic the PR6c ops specify; they decide only the zero-divisor test.
+//!
+//! ## Printing a float (LANG83 PR7c-py)
+//!
+//! No backend knows Python's float layout. `repr(x)` is a function this
+//! compiler writes into the module, `__py_write_float`, built from the
+//! neutral `f64_class`, `f64_signbit`, `f64_digits` and `f64_exp10` plus
+//! integer code and `putchar` (see the `float_repr` module). Every float
+//! `print` is one `call` of it. Python prints the sign of a zero itself
+//! (`-0.0`), so unlike JavaScript's `console.log` the call site needs no sign
+//! test. Only a profile with [`Floats::Repr`] ever reaches a float print:
+//! under `py30` and `py2` a `FLOAT` token and a true `/` are refused, so
+//! their modules never carry the helpers.
+//!
+//! ## Registers: `main` must fit one vm-core frame (#18419)
+//!
+//! vm-core refuses, before it runs anything, a function whose frame needs
+//! more than `VMFrame::MAX_FRAME_REGISTERS` (2¹⁶ = 65,536) registers, and it
+//! counts them as
+//!
+//! ```text
+//!   registers = params + distinct instruction dests that are not params
+//! ```
+//!
+//! `main` has no parameters, so its registers are its distinct dests: one
+//! fresh `pyN` per literal and per operator result, the shared `py_repr`
+//! every float print writes, and the `pyN` of the `return 0` that ends the
+//! module. The default frontend budgets cannot reach 65,536 of them, but the
+//! trusted ones (1 MiB, 256 Ki tokens) can, and such a program used to
+//! compile and then fail at VM load, far from its source.
+//!
+//! So the walker counts distinct dests as it emits them, against
+//! [`MAX_REGISTERS_PER_FUNCTION`], which *is* vm-core's constant, not a
+//! copy of its value. The one register of the epilogue is reserved up front,
+//! so the refusal names the statement that left no room, not the
+//! compiler-written `return`:
+//!
+//! ```text
+//!   while lowering statements:   dests + 1 (exit)  ≤ 65,536
+//!   the epilogue:                dests             ≤ 65,536   (always holds)
+//! ```
+//!
+//! That is exact: a program is refused if and only if its `main` would need
+//! more than 65,536 registers. The error is a `Budget` naming `main` and the
+//! start of the statement being lowered. `release_api` then puts every
+//! function of the finished module through vm-core's own
+//! `VMFrame::check_register_limit`, so the compiler cannot hand out a module
+//! the VM would refuse to load even if this count ever drifted.
+
+use std::collections::HashSet;
 
 use interpreter_ir::{IIRInstr, Operand};
 use lexer::token::Token;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
+use crate::float_repr;
 use crate::frontend_error::FrontendError;
 use crate::profiles::{Floats, IntLiterals, ReleaseProfile, Slash};
 
 /// LANG84 C5: most IIR instructions one module may hold.
 pub const MAX_IIR_INSTRUCTIONS: usize = 1_000_000;
+
+/// Most registers one lowered function may need: vm-core's per-frame limit,
+/// `VMFrame::MAX_FRAME_REGISTERS` (2¹⁶ = 65,536), re-exported rather than
+/// restated, so the compiler and the VM cannot disagree about it (#18419).
+/// See the module docs' "Registers" section for how `main`'s are counted.
+pub const MAX_REGISTERS_PER_FUNCTION: usize = vm_core::frame::VMFrame::MAX_FRAME_REGISTERS;
+
+/// The one function the walker lowers into; `release_api` adds it to the
+/// module under this name.
+const LOWERED_FUNCTION: &str = "main";
+
+/// Registers the epilogue (`const pyN <- 0; ret pyN`) needs after the last
+/// statement. Reserved while statements are lowered, so a program that does
+/// not fit is refused at a statement of its own.
+const EPILOGUE_REGISTERS: usize = 1;
 
 /// Every CST rule name the compiler dispatches on. The `cst_contract` test
 /// (LANG84 C8) checks each one exists in every release that claims an IIR
@@ -200,6 +265,10 @@ pub const DISPATCHED_TOKENS: &[&str] = &[
     "FLOOR_DIV",
     "PERCENT",
 ];
+
+/// The register every `call __py_write_float` writes its unused `0` into.
+/// A temporary is `py` followed only by digits, so this cannot collide.
+const REPR_RESULT: &str = "py_repr";
 
 /// The newline `print()` writes, as the byte `putchar` takes.
 const NEWLINE_BYTE: i64 = b'\n' as i64;
@@ -302,6 +371,15 @@ pub(crate) struct Lowering<'a> {
     profile: &'a ReleaseProfile,
     instructions: Vec<IIRInstr>,
     next_register: usize,
+    /// Every distinct dest emitted so far: `main`'s registers, counted as
+    /// vm-core counts them (it has no parameters).
+    registers: HashSet<String>,
+    /// Registers held back for code still to come ([`EPILOGUE_REGISTERS`]
+    /// while statements are lowered, 0 for the epilogue itself).
+    reserved_registers: usize,
+    /// The 1-based start of the statement being lowered, for a `Budget`
+    /// error that refuses it.
+    statement_start: Option<(usize, usize)>,
 }
 
 impl<'a> Lowering<'a> {
@@ -320,6 +398,9 @@ impl<'a> Lowering<'a> {
             profile,
             instructions: Vec::new(),
             next_register: 0,
+            registers: HashSet::new(),
+            reserved_registers: EPILOGUE_REGISTERS,
+            statement_start: None,
         }
     }
 
@@ -348,7 +429,10 @@ impl<'a> Lowering<'a> {
         // A module that runs off its end exits 0. Returning a real `i64`
         // (not `ret_void`) is what every AOT entry point expects: native and
         // LLVM turn it into the exit status, the CLR launcher and BEAM read
-        // an integer back (LANG84 phase 5a/4a lesson).
+        // an integer back (LANG84 phase 5a/4a lesson). Its register was
+        // reserved while the statements were lowered, so it always fits.
+        self.reserved_registers = 0;
+        self.statement_start = None;
         let exit = self.register();
         self.emit("const", Some(exit.clone()), vec![Operand::Int(0)], "i64")?;
         self.emit("ret", None, vec![Operand::Var(exit)], "i64")?;
@@ -365,26 +449,31 @@ impl<'a> Lowering<'a> {
                 return Err(self.unsupported(simple, "nothing may follow a statement's NEWLINE"));
             }
             match child {
-                ASTNodeOrToken::Node(small) if small.rule_name == "small_stmt" => match small.children.as_slice() {
-                    // Python 2: `small_stmt = print_stmt | expression`.
-                    [ASTNodeOrToken::Node(print)] if print.rule_name == "print_stmt" => {
-                        // A caller-supplied tree (`compile_cst`) may come from
-                        // another release's grammar. Only a profile whose
-                        // grammars define `print_stmt` may lower one: under
-                        // `py3`, `print x` is a SyntaxError, not output.
-                        if !self.profile_owns_rule("print_stmt") {
-                            return Err(self.unsupported(
-                                print,
-                                format!("a `print` statement is not in {}; this tree is not from this release's grammar", self.profile.subset()),
-                            ));
+                ASTNodeOrToken::Node(small) if small.rule_name == "small_stmt" => {
+                    // `print(1); print(2)` is two statements on one line: a
+                    // register refusal names the one that went over.
+                    self.statement_start = small.start_line.zip(small.start_column);
+                    match small.children.as_slice() {
+                        // Python 2: `small_stmt = print_stmt | expression`.
+                        [ASTNodeOrToken::Node(print)] if print.rule_name == "print_stmt" => {
+                            // A caller-supplied tree (`compile_cst`) may come from
+                            // another release's grammar. Only a profile whose
+                            // grammars define `print_stmt` may lower one: under
+                            // `py3`, `print x` is a SyntaxError, not output.
+                            if !self.profile_owns_rule("print_stmt") {
+                                return Err(self.unsupported(
+                                    print,
+                                    format!("a `print` statement is not in {}; this tree is not from this release's grammar", self.profile.subset()),
+                                ));
+                            }
+                            self.lower_print_stmt(print)?;
                         }
-                        self.lower_print_stmt(print)?;
+                        _ => {
+                            let expression = self.only_child(small, "expression")?;
+                            self.lower_print_statement(small, expression)?;
+                        }
                     }
-                    _ => {
-                        let expression = self.only_child(small, "expression")?;
-                        self.lower_print_statement(small, expression)?;
-                    }
-                },
+                }
                 ASTNodeOrToken::Token(token) if token.effective_type_name() == "SEMICOLON" => {}
                 ASTNodeOrToken::Token(token) if is_newline(token) => ended = true,
                 ASTNodeOrToken::Token(token) => {
@@ -464,8 +553,20 @@ impl<'a> Lowering<'a> {
 
     /// `print(x)` writes `str(x)` and `\n`. For an `int` that is LANG83
     /// `print_i64`, newline included; for a `float` it is `repr(x)` (what
-    /// `str` is since 3.2, and the only floats a profile admits) through
-    /// `write_f64_py`, which writes no newline, then `putchar 10`.
+    /// `str` is since 3.2, and the only floats a profile admits), which the
+    /// module's own `__py_write_float` writes with no newline, then
+    /// `putchar 10`:
+    ///
+    /// ```text
+    ///   call          py_repr <- __py_write_float, x   (result unused, 0)
+    ///   const         pyM <- 10
+    ///   call_builtin  putchar, pyM
+    /// ```
+    ///
+    /// One `call` per print site, never the layout inlined (LANG83 PR7c-py):
+    /// [`crate::release_api`] adds the helper and the three it calls to the
+    /// module when `main` holds such a call. Up to 0.3.0 this was the
+    /// `write_f64_py` builtin, which every backend had to implement.
     fn emit_print(&mut self, value: Evaluated) -> Result<(), FrontendError> {
         match value.ty {
             Ty::Int => self.emit(
@@ -475,11 +576,14 @@ impl<'a> Lowering<'a> {
                 "void",
             ),
             Ty::Float => {
+                // Every print writes its (unused) `0` into the same register,
+                // so a float print costs `main` no register of its own: a
+                // VM frame holds at most 65,536 (`VMFrame::MAX_FRAME_REGISTERS`).
                 self.emit(
-                    "call_builtin",
-                    None,
-                    vec![Operand::Var("write_f64_py".into()), value.operand],
-                    "void",
+                    "call",
+                    Some(REPR_RESULT.into()),
+                    vec![Operand::Var(float_repr::WRITE_FLOAT.into()), value.operand],
+                    "i64",
                 )?;
                 self.emit_newline()
             }
@@ -1029,9 +1133,45 @@ impl<'a> Lowering<'a> {
                 release: self.release.to_string(),
                 which: "IIR instructions",
                 limit: MAX_IIR_INSTRUCTIONS,
+                function: None,
+                start: None,
             });
         }
+        if let Some(name) = &dest {
+            self.claim_register(name)?;
+        }
         self.instructions.push(IIRInstr::new(op, dest, srcs, type_hint));
+        Ok(())
+    }
+
+    /// Count `name` as one of `main`'s registers, refusing the statement
+    /// being lowered if that leaves no room in a vm-core frame:
+    ///
+    /// ```text
+    ///   name is already a register (py_repr again)  → Ok, nothing new to count
+    ///   new, and count + 1 + reserved ≤ limit       → Ok, counted
+    ///   new, and over                               → Budget naming main and
+    ///                                                 the statement's start
+    /// ```
+    ///
+    /// `reserved` is the epilogue's register while statements are lowered
+    /// (module docs, "Registers"). The set holds each name once, so a
+    /// program over the limit costs at most 65,536 names before it stops.
+    fn claim_register(&mut self, name: &str) -> Result<(), FrontendError> {
+        if self.registers.contains(name) {
+            return Ok(());
+        }
+        let needed = self.registers.len() + 1 + self.reserved_registers;
+        if needed > MAX_REGISTERS_PER_FUNCTION {
+            return Err(FrontendError::Budget {
+                release: self.release.to_string(),
+                which: "registers per function",
+                limit: MAX_REGISTERS_PER_FUNCTION,
+                function: Some(LOWERED_FUNCTION.to_string()),
+                start: self.statement_start,
+            });
+        }
+        self.registers.insert(name.to_string());
         Ok(())
     }
 

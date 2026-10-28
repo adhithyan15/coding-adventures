@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:066913078fb5803d",
+  "lessonIds": [
+    "JA-C315-suruto",
+    "JA-C315-tokoroga",
+    "JA-C315-shikashi",
+    "JA-C315-tokorodokoro",
+    "JA-C315-miharu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch315.txt",
+  "json": "japanese/narration/ch315.json",
+  "textHash": "fnv1a64:5ced39c3ee9ff225",
+  "jsonHash": "fnv1a64:72aff5b5d4bf8773",
+  "findings": []
+}

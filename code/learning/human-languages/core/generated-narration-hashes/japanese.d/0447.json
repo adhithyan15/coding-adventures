@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:3a1651239f1023d1",
+  "lessonIds": [
+    "JA-C447-memai",
+    "JA-C447-furafura",
+    "JA-C447-darui",
+    "JA-C447-guttari",
+    "JA-C447-nebusoku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch447.txt",
+  "json": "japanese/narration/ch447.json",
+  "textHash": "fnv1a64:81c58830d0e0377e",
+  "jsonHash": "fnv1a64:fb488d422411c363",
+  "findings": []
+}

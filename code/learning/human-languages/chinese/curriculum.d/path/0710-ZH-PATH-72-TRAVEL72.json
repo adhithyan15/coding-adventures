@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-72-TRAVEL72",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-72-TRAVEL72"
+  ],
+  "after": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W37-na",
+    "language": "chinese",
+    "chapter": 37,
+    "sequence": 3335,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7b366c0f3ce7619e",
+    "detachableSegments": [
+      "Script — four strokes, then an ear"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,3 @@
+@PACKAGE_INIT@
+include("${CMAKE_CURRENT_LIST_DIR}/ca_bounded_json_targets.cmake")
+check_required_components(ca_bounded_json)

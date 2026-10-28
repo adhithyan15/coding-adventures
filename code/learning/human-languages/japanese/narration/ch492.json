@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 492,
+  "title": "Simmer, Soak and Steam",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:40ee62f48acff539",
+  "lessons": [
+    {
+      "id": "JA-C492-nieru",
+      "sequence": 28620,
+      "title": "にえる (nieru) — to be cooked through",
+      "headword": "にえる",
+      "romanization": "nieru",
+      "gloss": "to be cooked through",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f691397cc4bc0c36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for tap water, then the Japanese for to come to the boil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にえる — nieru — \"to be cooked through\"."
+            },
+            {
+              "kind": "speech",
+              "text": "だいこんが よく にえました。 — daikon ga yoku niemashita — \"The radish is well cooked.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite にえます, niemasu; an ichidan verb. Past (polite): だいこんが にえました。, daikon ga niemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にえる (nieru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nieru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nieru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nieru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nieru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daikon ga yoku niemashita — The radish is well cooked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daikon ga yoku niemashita* — The radish is well cooked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for tap water, then the Japanese for to come to the boil, then say nieru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for tap water, then the Japanese for to come to the boil, then say *nieru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にえる (nieru) mean? (\"To be cooked through\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C492-nieru-type",
+              "prompt": "Say the Japanese for 'to be cooked through'.",
+              "assesses": [
+                "JA-LEX-C492-BOIL492-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にえる",
+                "nieru"
+              ],
+              "feedback": {
+                "correct": "Right: にえる (nieru) is 'to be cooked through'.",
+                "incorrect": "'To be cooked through' is にえる (nieru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C492-waku",
+      "sequence": 28630,
+      "title": "わく (waku) — to boil; to get hot",
+      "headword": "わく",
+      "romanization": "waku",
+      "gloss": "to boil; to get hot",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d401d4cb984cfcc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to come to the boil, then the Japanese for to be cooked through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わく — waku — \"to boil; to get hot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やかんの ゆが わいています。 — yakan no yu ga waiteimasu — \"The water in the kettle is boiling.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite わきます, wakimasu; a godan verb. Past (polite): おふろが わきました。, ofuro ga wakimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わく (waku) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakan no yu ga waiteimasu — The water in the kettle is boiling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakan no yu ga waiteimasu* — The water in the kettle is boiling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to come to the boil, then the Japanese for to be cooked through, then say waku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to come to the boil, then the Japanese for to be cooked through, then say *waku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わく (waku) mean? (\"To boil; to get hot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C492-waku-type",
+              "prompt": "Say the Japanese for 'to boil'.",
+              "assesses": [
+                "JA-LEX-C492-BOIL492-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わく",
+                "waku"
+              ],
+              "feedback": {
+                "correct": "Right: わく (waku) is 'to boil; to get hot'.",
+                "incorrect": "'To boil' is わく (waku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C492-hitasu",
+      "sequence": 28640,
+      "title": "ひたす (hitasu) — to dip in liquid; to steep",
+      "headword": "ひたす",
+      "romanization": "hitasu",
+      "gloss": "to dip in liquid; to steep",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8aa85deef3ae1d0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be cooked through, then the Japanese for to boil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひたす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひたす — hitasu — \"to dip in liquid; to steep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まめを みずに ひたします。 — mame o mizu ni hitashimasu — \"I soak the beans in water.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひたします, hitashimasu; a godan verb. Past (polite): ははが まめを みずに ひたしました。, haha ga mame o mizu ni hitashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひたす (hitasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mame o mizu ni hitashimasu — I soak the beans in water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mame o mizu ni hitashimasu* — I soak the beans in water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be cooked through, then the Japanese for to boil, then say hitasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be cooked through, then the Japanese for to boil, then say *hitasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひたす (hitasu) mean? (\"To dip in liquid; to steep\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C492-hitasu-type",
+              "prompt": "Say the Japanese for 'to dip in liquid'.",
+              "assesses": [
+                "JA-LEX-C492-BOIL492-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひたす",
+                "hitasu"
+              ],
+              "feedback": {
+                "correct": "Right: ひたす (hitasu) is 'to dip in liquid; to steep'.",
+                "incorrect": "'To dip in liquid' is ひたす (hitasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C492-fukasu",
+      "sequence": 28650,
+      "title": "ふかす (fukasu) — to steam (food)",
+      "headword": "ふかす",
+      "romanization": "fukasu",
+      "gloss": "to steam (food)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d99ba55991e24583",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to boil, then the Japanese for to dip in liquid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふかす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふかす — fukasu — \"to steam (food)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いもを ふかして たべます。 — imo o fukashite tabemasu — \"I steam potatoes and eat them.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ふかします, fukashimasu; a godan verb. Past (polite): そぼが いもを ふかしました。, sobo ga imo o fukashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふかす (fukasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fukasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fukasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fukasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fukasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imo o fukashite tabemasu — I steam potatoes and eat them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imo o fukashite tabemasu* — I steam potatoes and eat them.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to boil, then the Japanese for to dip in liquid, then say fukasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to boil, then the Japanese for to dip in liquid, then say *fukasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふかす (fukasu) mean? (\"To steam (food)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C492-fukasu-type",
+              "prompt": "Say the Japanese for 'to steam (food)'.",
+              "assesses": [
+                "JA-LEX-C492-BOIL492-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふかす",
+                "fukasu"
+              ],
+              "feedback": {
+                "correct": "Right: ふかす (fukasu) is 'to steam (food)'.",
+                "incorrect": "'To steam (food)' is ふかす (fukasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C492-muku",
+      "sequence": 28660,
+      "title": "むく (muku) — to peel",
+      "headword": "むく",
+      "romanization": "muku",
+      "gloss": "to peel",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b77804ce497c157",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to dip in liquid, then the Japanese for to steam (food)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むく — muku — \"to peel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "りんごの かわを むきます。 — ringo no kawa o mukimasu — \"I peel the apple.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite むきます, mukimasu; a godan verb. Past (polite): あねが みかんを むきました。, ane ga mikan o mukimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むく (muku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ringo no kawa o mukimasu — I peel the apple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ringo no kawa o mukimasu* — I peel the apple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to dip in liquid, then the Japanese for to steam (food), then say muku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to dip in liquid, then the Japanese for to steam (food), then say *muku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むく (muku) mean? (\"To peel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C492-muku-type",
+              "prompt": "Say the Japanese for 'to peel'.",
+              "assesses": [
+                "JA-LEX-C492-BOIL492-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むく",
+                "muku"
+              ],
+              "feedback": {
+                "correct": "Right: むく (muku) is 'to peel'.",
+                "incorrect": "'To peel' is むく (muku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

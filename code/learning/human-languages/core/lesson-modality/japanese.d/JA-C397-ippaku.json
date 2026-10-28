@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C397-ippaku",
+    "language": "japanese",
+    "chapter": 397,
+    "sequence": 23310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c167fe555065502d"
+  },
+  "findings": []
+}

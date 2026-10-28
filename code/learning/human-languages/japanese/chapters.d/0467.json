@@ -1,0 +1,21 @@
+{
+  "chapter": 467,
+  "title": "Sewing and Knitting",
+  "label": "ch:ja-sewing-and-knitting",
+  "canDo": "I can talk about things people make.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R467-review-462-467",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about things people make.",
+    "assesses": [
+      "JA-LEX-C467-CRAFT467-01",
+      "JA-LEX-C467-CRAFT467-02",
+      "JA-LEX-C467-CRAFT467-03",
+      "JA-LEX-C467-CRAFT467-04",
+      "JA-LEX-C467-CRAFT467-05"
+    ]
+  }
+}

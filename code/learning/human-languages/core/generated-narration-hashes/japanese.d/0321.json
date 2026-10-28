@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:30bd01ab8d0983ad",
+  "lessonIds": [
+    "JA-C321-zettai",
+    "JA-C321-kanarazu",
+    "JA-C321-yahari",
+    "JA-C321-mushiro",
+    "JA-C321-unazuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch321.txt",
+  "json": "japanese/narration/ch321.json",
+  "textHash": "fnv1a64:67456e988c880a82",
+  "jsonHash": "fnv1a64:8a11a3cd3ff91cf2",
+  "findings": []
+}

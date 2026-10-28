@@ -1,0 +1,17 @@
+{
+  "language": "japanese",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:f962140c220e5f3e",
+  "lessonIds": [
+    "JA-C250-mita",
+    "JA-C250-katta",
+    "JA-R250-what-i-did-yesterday"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "japanese/narration/ch250.txt",
+  "json": "japanese/narration/ch250.json",
+  "textHash": "fnv1a64:3d1260d3eff2b24e",
+  "jsonHash": "fnv1a64:358ce51a8101a4a2",
+  "findings": []
+}

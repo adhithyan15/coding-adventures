@@ -1,0 +1,11 @@
+{
+  "id": "JA-C477-mendou",
+  "pathSegment": "JA-PATH-477-PARENT477",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-477-PARENT477",
+      "order": 3
+    }
+  ]
+}

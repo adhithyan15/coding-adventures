@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C159-keting",
+    "language": "chinese",
+    "chapter": 159,
+    "sequence": 13060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d24c7a6d31fd4f2"
+  },
+  "findings": []
+}

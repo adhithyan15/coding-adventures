@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Progress",
+  "label": "ch:ja-progress",
+  "canDo": "I can say how things would get better.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C526-dondon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can say how things would get better.",
+    "assesses": [
+      "JA-LEX-C526-PROGRESS526-03",
+      "JA-LEX-C526-PROGRESS526-04",
+      "JA-LEX-C526-PROGRESS526-05"
+    ]
+  }
+}

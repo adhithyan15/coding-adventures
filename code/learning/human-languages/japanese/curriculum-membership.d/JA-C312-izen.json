@@ -1,0 +1,11 @@
+{
+  "id": "JA-C312-izen",
+  "pathSegment": "JA-PATH-312-REKISHI312",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-312-REKISHI312",
+      "order": 3
+    }
+  ]
+}

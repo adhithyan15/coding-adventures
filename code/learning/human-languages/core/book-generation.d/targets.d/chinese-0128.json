@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 128,
+  "output": "chinese/book/chapters/ch128-music.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

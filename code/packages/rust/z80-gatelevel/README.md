@@ -113,8 +113,10 @@ The shared typed lifecycle provides checked atomic load/step/ports, complete
 snapshot/restore and before/after traces, transactional bounded runs, and
 maskable interrupt modes 0/1/2 plus NMI. The completion differential covers
 all 1,160 defined base/CB/ED/DD/FD/DDCB/FDCB vectors against the Python oracle.
-The completion suite has 58 unit, 4 integration, and 8 documentation tests;
-core line coverage is 97.64% (1,489/1,525).
+The one-bit HALT `StateRegister` Q output is authoritative throughout that
+lifecycle; its retained host boolean is only a synchronized compatibility
+observer. The completion suite has 60 unit, 6 integration, and 8 documentation
+tests; core line coverage is 98.16% (2,621/2,670).
 
 ## Package layout
 

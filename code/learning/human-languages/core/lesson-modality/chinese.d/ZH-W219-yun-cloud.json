@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W219-yun-cloud",
+    "language": "chinese",
+    "chapter": 219,
+    "sequence": 17055,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:af4ba19363e54100",
+    "detachableSegments": [
+      "Script — two bars, then a turn and a dot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

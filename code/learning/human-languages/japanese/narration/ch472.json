@@ -1,0 +1,802 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 472,
+  "title": "Ingredients",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0f552fef14da14b6",
+  "lessons": [
+    {
+      "id": "JA-C472-zairyou",
+      "sequence": 27370,
+      "title": "ざいりょう (zairyō) — ingredients; materials",
+      "headword": "ざいりょう",
+      "romanization": "zairyō",
+      "gloss": "ingredients; materials",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25c16dc9f88dc4bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to sing in a choir, then the Japanese for to compose music."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ざいりょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざいりょう — zairyō — \"ingredients; materials\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ばんごはんの ざいりょうを かいました。 — bangohan no zairyō o kaimashita — \"I bought the ingredients for dinner.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざいりょう (zairyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zai, \"ingredients\" (Middle Chinese dzoj) and ryō, \"materials\" (lew) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zairyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zairyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zairyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zairyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bangohan no zairyō o kaimashita — I bought the ingredients for dinner.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bangohan no zairyō o kaimashita* — I bought the ingredients for dinner.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to sing in a choir, then the Japanese for to compose music, then say zairyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to sing in a choir, then the Japanese for to compose music, then say *zairyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ざいりょう (zairyō) mean? (\"Ingredients; materials\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C472-zairyou-type",
+              "prompt": "Say the Japanese for 'ingredients'.",
+              "assesses": [
+                "JA-LEX-C472-INGR472-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ざいりょう",
+                "zairyō",
+                "zairyou",
+                "zairyoo",
+                "zairyo"
+              ],
+              "feedback": {
+                "correct": "Right: ざいりょう (zairyō) is 'ingredients; materials'.",
+                "incorrect": "'Ingredients' is ざいりょう (zairyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C472-choumiryou",
+      "sequence": 27380,
+      "title": "ちょうみりょう (chōmiryō) — a seasoning",
+      "headword": "ちょうみりょう",
+      "romanization": "chōmiryō",
+      "gloss": "a seasoning",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:242109c7a914a635",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to compose music, then the Japanese for ingredients."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちょうみりょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうみりょう — chōmiryō — \"a seasoning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しおと しょうゆは ちょうみりょうです。 — shio to shōyu wa chōmiryō desu — \"Salt and soy sauce are seasonings.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちょうみりょう (chōmiryō) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chō, \"prepare\" (Middle Chinese dew), mi, \"taste\" (mj+jH), and ryō, \"materials\" (lew) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōmiryō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōmiryō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōmiryō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōmiryō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shio to shōyu wa chōmiryō desu — Salt and soy sauce are seasonings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shio to shōyu wa chōmiryō desu* — Salt and soy sauce are seasonings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to compose music, then the Japanese for ingredients, then say chōmiryō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to compose music, then the Japanese for ingredients, then say *chōmiryō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちょうみりょう (chōmiryō) mean? (\"A seasoning\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C472-choumiryou-type",
+              "prompt": "Say the Japanese for 'a seasoning'.",
+              "assesses": [
+                "JA-LEX-C472-INGR472-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちょうみりょう",
+                "chōmiryō",
+                "choumiryou",
+                "choomiryoo",
+                "chomiryo"
+              ],
+              "feedback": {
+                "correct": "Right: ちょうみりょう (chōmiryō) is 'a seasoning'.",
+                "incorrect": "'A seasoning' is ちょうみりょう (chōmiryō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C472-negi",
+      "sequence": 27390,
+      "title": "ねぎ (negi) — a green onion",
+      "headword": "ねぎ",
+      "romanization": "negi",
+      "gloss": "a green onion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f903fff9e151a02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for ingredients, then the Japanese for a seasoning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねぎ — negi — \"a green onion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みそしるに ねぎを いれました。 — misoshiru ni negi o iremashita — \"I put green onion in the miso soup.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねぎ (negi) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *negi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "negi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *negi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "misoshiru ni negi o iremashita — I put green onion in the miso soup.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *misoshiru ni negi o iremashita* — I put green onion in the miso soup.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for ingredients, then the Japanese for a seasoning, then say negi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for ingredients, then the Japanese for a seasoning, then say *negi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねぎ (negi) mean? (\"A green onion\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C472-negi-type",
+              "prompt": "Say the Japanese for 'a green onion'.",
+              "assesses": [
+                "JA-LEX-C472-INGR472-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねぎ",
+                "negi"
+              ],
+              "feedback": {
+                "correct": "Right: ねぎ (negi) is 'a green onion'.",
+                "incorrect": "'A green onion' is ねぎ (negi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C472-komugiko",
+      "sequence": 27400,
+      "title": "こむぎこ (komugiko) — wheat flour",
+      "headword": "こむぎこ",
+      "romanization": "komugiko",
+      "gloss": "wheat flour",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c1acb2d665d8267",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a seasoning, then the Japanese for a green onion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こむぎこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こむぎこ — komugiko — \"wheat flour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こむぎこと たまごを まぜます。 — komugiko to tamago o mazemasu — \"I mix the flour and the eggs.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こむぎこ (komugiko) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: ko, \"small\", mugi, \"wheat\", and ko, \"powder\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "komugiko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *komugiko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "komugiko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *komugiko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "komugiko to tamago o mazemasu — I mix the flour and the eggs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *komugiko to tamago o mazemasu* — I mix the flour and the eggs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a seasoning, then the Japanese for a green onion, then say komugiko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a seasoning, then the Japanese for a green onion, then say *komugiko* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こむぎこ (komugiko) mean? (\"Wheat flour\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C472-komugiko-type",
+              "prompt": "Say the Japanese for 'wheat flour'.",
+              "assesses": [
+                "JA-LEX-C472-INGR472-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こむぎこ",
+                "komugiko"
+              ],
+              "feedback": {
+                "correct": "Right: こむぎこ (komugiko) is 'wheat flour'.",
+                "incorrect": "'Wheat flour' is こむぎこ (komugiko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C472-daizu",
+      "sequence": 27410,
+      "title": "だいず (daizu) — soybeans",
+      "headword": "だいず",
+      "romanization": "daizu",
+      "gloss": "soybeans",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a79065fa307b2213",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a green onion, then the Japanese for wheat flour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だいず",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいず — daizu — \"soybeans\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なっとうは だいずの たべものです。 — nattō wa daizu no tabemono desu — \"Natto is a food made from soybeans.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいず (daizu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dai, \"large\" (Middle Chinese dajH) and zu, \"beans\" (duwH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daizu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daizu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daizu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daizu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nattō wa daizu no tabemono desu — Natto is a food made from soybeans.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nattō wa daizu no tabemono desu* — Natto is a food made from soybeans.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a green onion, then the Japanese for wheat flour, then say daizu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a green onion, then the Japanese for wheat flour, then say *daizu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だいず (daizu) mean? (\"Soybeans\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C472-daizu-type",
+              "prompt": "Say the Japanese for 'soybeans'.",
+              "assesses": [
+                "JA-LEX-C472-INGR472-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だいず",
+                "daizu"
+              ],
+              "feedback": {
+                "correct": "Right: だいず (daizu) is 'soybeans'.",
+                "incorrect": "'Soybeans' is だいず (daizu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

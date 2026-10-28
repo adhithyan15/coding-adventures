@@ -70,7 +70,19 @@ shared invalid cases, and native serialized resumes match complete uninterrupted
 baselines through 3002. Native training and installed-library evidence do not
 imply six-native interchange. NN49's separate [six-native conformance trace](./six-native-dense-conformance.md)
 connects C through thirty directed pairs and return trips (78 real children),
-comparing complete states through 3002; exact-head CI/merge remains pending.
+comparing complete states through 3002. Exact reviewed head `8e93a7917131`
+merged in #18301 after all selected checks and actual three-platform BUILDs passed.
+
+NN50 supplies the separate [native C++ JSON prerequisite](./bounded-cpp-json-foundation.md)
+before C++ checkpoint loading: immutable owned values, duplicate/NUL names,
+lexical integer kinds and measured allocation envelopes. Parser validation is
+not a C++ training or seven-native exchange claim.
+
+NN51 adds [native C++ dense training](./native-cpp-dense-framework.md): paper
+gradients, independent ownership, finite candidate-loss publication, strict
+copied checkpoints and real full-state fresh/resumed commands. Native-local
+validation is recorded separately from actual three-platform CI and merge.
+Seven-native interchange remains a separate runner expansion.
 
 Every model family below starts with the smallest example that needs its new
 idea.

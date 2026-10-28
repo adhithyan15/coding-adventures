@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 327,
+  "title": "Good Manners",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ca774f0dce1752c3",
+  "lessons": [
+    {
+      "id": "JA-C327-reigi",
+      "sequence": 19510,
+      "title": "れいぎ (reigi) — courtesy; manners",
+      "headword": "れいぎ",
+      "romanization": "reigi",
+      "gloss": "courtesy; manners",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6244b17baec2cc1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a violation, then the Japanese for a punishment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: れいぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れいぎ — reigi — \"courtesy; manners\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもに れいぎを おしえた ほうが いいです。 — kodomo ni reigi o oshieta hō ga ii desu — \"You should teach children good manners.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れいぎ (reigi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are rei, \"bow\" (Middle Chinese lejX) and gi, \"ceremony\" (ngje) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reigi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reigi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reigi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reigi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ni reigi o oshieta hō ga ii desu — You should teach children good manners.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ni reigi o oshieta hō ga ii desu* — You should teach children good manners.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a violation, then the Japanese for a punishment, then say reigi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a violation, then the Japanese for a punishment, then say *reigi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does れいぎ (reigi) mean? (\"Courtesy; manners\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C327-reigi-type",
+              "prompt": "Say the Japanese for 'courtesy'.",
+              "assesses": [
+                "JA-LEX-C327-REIGI327-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "れいぎ",
+                "reigi"
+              ],
+              "feedback": {
+                "correct": "Right: れいぎ (reigi) is 'courtesy; manners'.",
+                "incorrect": "'Courtesy' is れいぎ (reigi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C327-gyougi",
+      "sequence": 19520,
+      "title": "ぎょうぎ (gyōgi) — behaviour; manners at table",
+      "headword": "ぎょうぎ",
+      "romanization": "gyōgi",
+      "gloss": "behaviour; manners at table",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e35148ed87b933a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a punishment, then the Japanese for courtesy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぎょうぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎょうぎ — gyōgi — \"behaviour; manners at table\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぎょうぎが いいので、みんなが ほめました。 — gyōgi ga ii node, minna ga homemashita — \"She behaves well, so everyone praised her.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぎょうぎ (gyōgi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gyō, \"conduct\" (Middle Chinese haengH) and gi, \"ceremony\" (ngje) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gyōgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gyōgi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gyōgi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gyōgi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gyōgi ga ii node, minna ga homemashita — She behaves well, so everyone praised her.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gyōgi ga ii node, minna ga homemashita* — She behaves well, so everyone praised her.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a punishment, then the Japanese for courtesy, then say gyōgi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a punishment, then the Japanese for courtesy, then say *gyōgi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぎょうぎ (gyōgi) mean? (\"Behaviour; manners at table\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C327-gyougi-type",
+              "prompt": "Say the Japanese for 'behaviour'.",
+              "assesses": [
+                "JA-LEX-C327-REIGI327-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぎょうぎ",
+                "gyōgi",
+                "gyougi",
+                "gyoogi",
+                "gyogi"
+              ],
+              "feedback": {
+                "correct": "Right: ぎょうぎ (gyōgi) is 'behaviour; manners at table'.",
+                "incorrect": "'Behaviour' is ぎょうぎ (gyōgi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C327-shitsurei",
+      "sequence": 19530,
+      "title": "しつれい (shitsurei) — rude; impolite",
+      "headword": "しつれい",
+      "romanization": "shitsurei",
+      "gloss": "rude; impolite",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b95c8fc2fc56a40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for courtesy, then the Japanese for behaviour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しつれい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しつれい — shitsurei — \"rude; impolite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちに うそを 言ったら、しつれいです。 — tomodachi ni uso o ittara, shitsurei desu — \"Lying to a friend is rude.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しつれい (shitsurei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shitsu, \"lose\" and rei, \"bow\" (Middle Chinese lejX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitsurei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitsurei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitsurei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitsurei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi ni uso o ittara, shitsurei desu — Lying to a friend is rude.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi ni uso o ittara, shitsurei desu* — Lying to a friend is rude.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for courtesy, then the Japanese for behaviour, then say shitsurei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for courtesy, then the Japanese for behaviour, then say *shitsurei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しつれい (shitsurei) mean? (\"Rude; impolite\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C327-shitsurei-type",
+              "prompt": "Say the Japanese for 'rude'.",
+              "assesses": [
+                "JA-LEX-C327-REIGI327-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しつれい",
+                "shitsurei"
+              ],
+              "feedback": {
+                "correct": "Right: しつれい (shitsurei) is 'rude; impolite'.",
+                "incorrect": "'Rude' is しつれい (shitsurei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C327-meiwaku",
+      "sequence": 19540,
+      "title": "めいわく (meiwaku) — a nuisance; trouble for others",
+      "headword": "めいわく",
+      "romanization": "meiwaku",
+      "gloss": "a nuisance; trouble for others",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b56bb8d84dc03c16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for behaviour, then the Japanese for rude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めいわく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいわく — meiwaku — \"a nuisance; trouble for others\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ばんに うたったら、めいわくです。 — ban ni utattara, meiwaku desu — \"Singing in the evening is a nuisance.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めいわく (meiwaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are mei, \"astray\" (Middle Chinese mej) and waku, \"delusion\" (hwok) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meiwaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meiwaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meiwaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meiwaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ban ni utattara, meiwaku desu — Singing in the evening is a nuisance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ban ni utattara, meiwaku desu* — Singing in the evening is a nuisance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for behaviour, then the Japanese for rude, then say meiwaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for behaviour, then the Japanese for rude, then say *meiwaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めいわく (meiwaku) mean? (\"A nuisance; trouble for others\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C327-meiwaku-type",
+              "prompt": "Say the Japanese for 'a nuisance'.",
+              "assesses": [
+                "JA-LEX-C327-REIGI327-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めいわく",
+                "meiwaku"
+              ],
+              "feedback": {
+                "correct": "Right: めいわく (meiwaku) is 'a nuisance; trouble for others'.",
+                "incorrect": "'A nuisance' is めいわく (meiwaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C327-ojigi",
+      "sequence": 19550,
+      "title": "おじぎ (ojigi) — a bow (as a greeting)",
+      "headword": "おじぎ",
+      "romanization": "ojigi",
+      "gloss": "a bow (as a greeting)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84fa9d08269d60e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for rude, then the Japanese for a nuisance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おじぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おじぎ — ojigi — \"a bow (as a greeting)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "日本人は おれいの とき、おじぎを します。 — nihonjin wa orei no toki, ojigi o shimasu — \"Japanese people bow when they thank someone.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おじぎ (ojigi) is built from the native polite prefix o- and the Sino-Japanese jigi: two Chinese characters read with their on'yomi, readings borrowed from Chinese, ji, \"word\" (Middle Chinese zi) and gi, \"ceremony\" (ngje) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojigi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojigi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojigi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojigi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nihonjin wa orei no toki, ojigi o shimasu — Japanese people bow when they thank someone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nihonjin wa orei no toki, ojigi o shimasu* — Japanese people bow when they thank someone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for rude, then the Japanese for a nuisance, then say ojigi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for rude, then the Japanese for a nuisance, then say *ojigi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おじぎ (ojigi) mean? (\"A bow (as a greeting)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C327-ojigi-type",
+              "prompt": "Say the Japanese for 'a bow'.",
+              "assesses": [
+                "JA-LEX-C327-REIGI327-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おじぎ",
+                "ojigi"
+              ],
+              "feedback": {
+                "correct": "Right: おじぎ (ojigi) is 'a bow (as a greeting)'.",
+                "incorrect": "'A bow' is おじぎ (ojigi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

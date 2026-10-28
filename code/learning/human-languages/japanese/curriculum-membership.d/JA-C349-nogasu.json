@@ -1,0 +1,11 @@
+{
+  "id": "JA-C349-nogasu",
+  "pathSegment": "JA-PATH-349-YOSOU349",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-349-YOSOU349",
+      "order": 3
+    }
+  ]
+}

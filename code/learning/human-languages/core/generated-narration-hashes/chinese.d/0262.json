@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:aa32aade75b80aef",
+  "lessonIds": [
+    "ZH-C262-wangqiu",
+    "ZH-C262-pingpangqiu",
+    "ZH-C262-duishou",
+    "ZH-C262-dabai",
+    "ZH-C262-jiayou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch262.txt",
+  "json": "chinese/narration/ch262.json",
+  "textHash": "fnv1a64:b61b78217a862389",
+  "jsonHash": "fnv1a64:955157ec274d6c46",
+  "findings": []
+}

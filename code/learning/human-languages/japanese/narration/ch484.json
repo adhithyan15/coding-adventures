@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 484,
+  "title": "Needle and Thread",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:35bdc633ad0dd2af",
+  "lessons": [
+    {
+      "id": "JA-C484-saihou",
+      "sequence": 28200,
+      "title": "さいほう (saihō) — sewing; needlework",
+      "headword": "さいほう",
+      "romanization": "saihō",
+      "gloss": "sewing; needlework",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ba80edf98dcd9e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to harden, then the Japanese for to set hard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さいほう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいほう — saihō — \"sewing; needlework\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そぼは さいほうが じょうずです。 — sobo wa saihō ga jōzu desu — \"My grandmother is good at sewing.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さいほう (saihō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sai, \"tailor\" and hō, \"sew\" (Middle Chinese bjowng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saihō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saihō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saihō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saihō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobo wa saihō ga jōzu desu — My grandmother is good at sewing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobo wa saihō ga jōzu desu* — My grandmother is good at sewing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to harden, then the Japanese for to set hard, then say saihō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to harden, then the Japanese for to set hard, then say *saihō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さいほう (saihō) mean? (\"Sewing; needlework\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C484-saihou-type",
+              "prompt": "Say the Japanese for 'sewing'.",
+              "assesses": [
+                "JA-LEX-C484-THREAD484-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さいほう",
+                "saihō",
+                "saihou",
+                "saihoo",
+                "saiho"
+              ],
+              "feedback": {
+                "correct": "Right: さいほう (saihō) is 'sewing; needlework'.",
+                "incorrect": "'Sewing' is さいほう (saihō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C484-amu",
+      "sequence": 28210,
+      "title": "あむ (amu) — to knit",
+      "headword": "あむ",
+      "romanization": "amu",
+      "gloss": "to knit",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68688e0168eda106",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to set hard, then the Japanese for sewing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あむ — amu — \"to knit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははは ふゆの ぼうしを あみます。 — haha wa fuyu no bōshi o amimasu — \"My mother knits a winter hat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あみます, amimasu; a godan verb. Past (polite): ははが てぶくろを あみました。, haha ga tebukuro o amimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あむ (amu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha wa fuyu no bōshi o amimasu — My mother knits a winter hat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha wa fuyu no bōshi o amimasu* — My mother knits a winter hat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to set hard, then the Japanese for sewing, then say amu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to set hard, then the Japanese for sewing, then say *amu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あむ (amu) mean? (\"To knit\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C484-amu-type",
+              "prompt": "Say the Japanese for 'to knit'.",
+              "assesses": [
+                "JA-LEX-C484-THREAD484-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あむ",
+                "amu"
+              ],
+              "feedback": {
+                "correct": "Right: あむ (amu) is 'to knit'.",
+                "incorrect": "'To knit' is あむ (amu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C484-keito",
+      "sequence": 28220,
+      "title": "けいと (keito) — knitting wool; yarn",
+      "headword": "けいと",
+      "romanization": "keito",
+      "gloss": "knitting wool; yarn",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bf02dabc27b52ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sewing, then the Japanese for to knit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けいと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいと — keito — \"knitting wool; yarn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けいとで てぶくろを あみます。 — keito de tebukuro o amimasu — \"I knit gloves from wool.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けいと (keito) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from ke, \"hair\" and ito, \"thread\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keito, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keito*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keito de tebukuro o amimasu — I knit gloves from wool.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keito de tebukuro o amimasu* — I knit gloves from wool.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sewing, then the Japanese for to knit, then say keito again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sewing, then the Japanese for to knit, then say *keito* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けいと (keito) mean? (\"Knitting wool; yarn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C484-keito-type",
+              "prompt": "Say the Japanese for 'knitting wool'.",
+              "assesses": [
+                "JA-LEX-C484-THREAD484-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けいと",
+                "keito"
+              ],
+              "feedback": {
+                "correct": "Right: けいと (keito) is 'knitting wool; yarn'.",
+                "incorrect": "'Knitting wool' is けいと (keito)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C484-hokorobiru",
+      "sequence": 28230,
+      "title": "ほころびる (hokorobiru) — to come apart at the seams",
+      "headword": "ほころびる",
+      "romanization": "hokorobiru",
+      "gloss": "to come apart at the seams",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8eb5a23adf61eb2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to knit, then the Japanese for knitting wool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほころびる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほころびる — hokorobiru — \"to come apart at the seams\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うわぎの そでが ほころびました。 — uwagi no sode ga hokorobimashita — \"The sleeve of my jacket came apart at the seam.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ほころびます, hokorobimasu; an ichidan verb. Past (polite): ふくの そでが ほころびました。, fuku no sode ga hokorobimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほころびる (hokorobiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hokorobiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hokorobiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hokorobiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hokorobiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uwagi no sode ga hokorobimashita — The sleeve of my jacket came apart at the seam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uwagi no sode ga hokorobimashita* — The sleeve of my jacket came apart at the seam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to knit, then the Japanese for knitting wool, then say hokorobiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to knit, then the Japanese for knitting wool, then say *hokorobiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほころびる (hokorobiru) mean? (\"To come apart at the seams\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C484-hokorobiru-type",
+              "prompt": "Say the Japanese for 'to come apart at the seams'.",
+              "assesses": [
+                "JA-LEX-C484-THREAD484-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほころびる",
+                "hokorobiru"
+              ],
+              "feedback": {
+                "correct": "Right: ほころびる (hokorobiru) is 'to come apart at the seams'.",
+                "incorrect": "'To come apart at the seams' is ほころびる (hokorobiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C484-shibaru",
+      "sequence": 28240,
+      "title": "しばる (shibaru) — to tie up; to bind",
+      "headword": "しばる",
+      "romanization": "shibaru",
+      "gloss": "to tie up; to bind",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25bd88f0239d05dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for knitting wool, then the Japanese for to come apart at the seams."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しばる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しばる — shibaru — \"to tie up; to bind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふるい しんぶんを ひもで しばります。 — furui shinbun o himo de shibarimasu — \"I tie up the old newspapers with string.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しばります, shibarimasu; a godan verb. Past (polite): ちちが にもつを しばりました。, chichi ga nimotsu o shibarimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しばる (shibaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shibaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shibaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shibaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shibaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furui shinbun o himo de shibarimasu — I tie up the old newspapers with string.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furui shinbun o himo de shibarimasu* — I tie up the old newspapers with string.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for knitting wool, then the Japanese for to come apart at the seams, then say shibaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for knitting wool, then the Japanese for to come apart at the seams, then say *shibaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しばる (shibaru) mean? (\"To tie up; to bind\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C484-shibaru-type",
+              "prompt": "Say the Japanese for 'to tie up'.",
+              "assesses": [
+                "JA-LEX-C484-THREAD484-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しばる",
+                "shibaru"
+              ],
+              "feedback": {
+                "correct": "Right: しばる (shibaru) is 'to tie up; to bind'.",
+                "incorrect": "'To tie up' is しばる (shibaru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

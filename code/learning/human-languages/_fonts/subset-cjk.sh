@@ -45,11 +45,20 @@ if [[ "$got" != "$EXPECTED_SHA" ]]; then
   exit 1
 fi
 
-# Collect every CJK codepoint that appears anywhere in chinese.json.
+# Collect every CJK codepoint that appears anywhere in chinese.json, and every ideograph the
+# track PRINTS (lessons, chapter ledgers, book fragments, mocks). A headword shown with its
+# pinyin is exposure (script-closure.ts), so the track prints characters it has not taught to
+# write, and each of them must still render. subset-jp.sh gathers from its track the same way.
 python3 - "$WORK/zh_chars.txt" <<'PY'
 import pathlib, sys
 t = pathlib.Path("../data/scripts/chinese.json").read_text(encoding="utf8")
 cps = {c for c in t if 0x2E80 <= ord(c) <= 0x9FFF}
+printed = ""
+for sub in ("lessons", "chapters.d", "book", "mocks"):
+    for p in sorted(pathlib.Path("../chinese", sub).rglob("*")):
+        if p.is_file() and p.suffix in (".md", ".tex", ".json"):
+            printed += p.read_text(encoding="utf8")
+cps |= {c for c in printed if 0x3400 <= ord(c) <= 0x4DBF or 0x4E00 <= ord(c) <= 0x9FFF}
 # Printable Basic Latin, including the ordinary space. XeLaTeX typesets a space
 # inside a \zh{...} group with the Chinese font selected, and a font with no
 # U+0020 emits "Missing character" for every one of them — six of them at font

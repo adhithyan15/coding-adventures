@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C66-tianqi",
+    "language": "chinese",
+    "chapter": 66,
+    "sequence": 5410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82835fa5f900cacd"
+  },
+  "findings": []
+}

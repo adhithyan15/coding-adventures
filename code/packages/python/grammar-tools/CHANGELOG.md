@@ -5,6 +5,21 @@ All notable changes to the grammar-tools package will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2026-10-24
+
+### Changed
+- LANG84 E1/E8 syntax is refused with a clear "not implemented" error instead
+  of being misread: a definition guard after an alias
+  (`X = /x/ -> Y @line_start` used to become the alias `Y @line_start`) and an
+  `if` condition list in a transition head (`on X if space_before -> pop` used
+  to become the token name `X if space_before`). A bare `@line_start` suffix
+  and `-> refuse` were already rejected. These features are implemented by the
+  Rust grammar-tools only.
+- Security review follow-up: an alias that contains `@` (a guard written
+  without a space, `->Y@line_start`) is refused too, and `if` is found as a
+  whitespace-delimited word, so a tab before it (`on X\tif …`) and a bare
+  trailing `on X if -> …` are refused instead of read as a token name.
+
 ## [0.4.1] - 2026-08-17
 
 ### Fixed

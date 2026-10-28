@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Mountain Passes and High Plains",
+  "label": "ch:ja-mountain-passes-and-high-plains",
+  "canDo": "I can talk about climbing in the mountains.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C412-tozan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about climbing in the mountains.",
+    "assesses": [
+      "JA-LEX-C412-TOUGE412-03",
+      "JA-LEX-C412-TOUGE412-04",
+      "JA-LEX-C412-TOUGE412-05"
+    ]
+  }
+}

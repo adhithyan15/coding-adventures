@@ -184,9 +184,11 @@ impl RegAlloc {
 // | `input_str`   | `int64_t __twig_input_str(void)` (E4-dyn str handle) | yes |
 // | `exit`        | `void __twig_exit(int32_t)` (noreturn)        | no      |
 // | `alloc_bytes` | `int64_t __twig_alloc_bytes(int64_t n)`       | yes     |
-// | `dyn_cons`  | `uint64_t __dyn_cons(uint64_t, uint64_t)` | yes  |
-// | `dyn_car`   | `uint64_t __dyn_car(uint64_t)`         | yes     |
-// | `dyn_cdr`   | `uint64_t __dyn_cdr(uint64_t)`         | yes     |
+// | `dyn_pair_new`   | `uint64_t __dyn_pair_new(uint64_t, uint64_t)` | yes |
+// | `dyn_pair_first` | `uint64_t __dyn_pair_first(uint64_t)`         | yes |
+// | `dyn_pair_rest`  | `uint64_t __dyn_pair_rest(uint64_t)`          | yes |
+// | `dyn_tag`        | `int64_t __dyn_tag(uint64_t)`                 | yes |
+// | `dyn_nil`        | `uint64_t __dyn_nil(void)`                    | yes |
 // | `str_eq`      | `int64_t __twig_str_eq(int64_t, int64_t)`    | yes     |
 // | `str_cmp`     | `int64_t __twig_str_cmp(int64_t, int64_t)`   | yes     |
 
@@ -201,12 +203,10 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "print_i64",    n_args: 1, returns: false },
     // LANG83 PR1b — decimal, no newline (`__twig_write_i64`, same stdout FILE*).
     BuiltinSig { name: "write_i64",    n_args: 1, returns: false },
-    // LANG83 PR6a — a double as Python `repr` / JS `Number#toString`, no
-    // newline (`__twig_write_f64_py` / `__twig_write_f64_js`). The f64 slot's
-    // raw 8 bytes travel in the integer argument register, so the generic
-    // marshalling is unchanged; the runtime reinterprets them.
-    BuiltinSig { name: "write_f64_py", n_args: 1, returns: false },
-    BuiltinSig { name: "write_f64_js", n_args: 1, returns: false },
+    // No float writer: LANG83 PR6a's `write_f64_py` / `write_f64_js` were
+    // removed in PR7e (a compiler lays a float out itself over the PR7b
+    // `__twig_f64_digits` / `__twig_f64_exp10` calls below), so a
+    // `call_builtin "write_f64_py"` is now an unknown builtin, refused.
     BuiltinSig { name: "putchar",      n_args: 1, returns: false },
     BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
@@ -221,14 +221,21 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "exit",         n_args: 1, returns: false },
     // LANG76 — heap allocator.  Returns a pointer (treated as i64).
     BuiltinSig { name: "alloc_bytes",  n_args: 1, returns: true  },
-    // LANG77 — the shared lisp value runtime (McCarthy Lisp L3b-2b).  These
-    // dispatch to `__dyn_*` in `twig-aot/runtime/dynval_runtime.c`,
-    // which implements `lispy-runtime`'s NaN-box tagged-value model.  Each
-    // takes/returns an opaque 64-bit `LispyValue`.  No backend-specific
-    // logic — the generic `call_builtin` path marshals args + emits the BL.
-    BuiltinSig { name: "dyn_cons",   n_args: 2, returns: true  },
-    BuiltinSig { name: "dyn_car",    n_args: 1, returns: true  },
-    BuiltinSig { name: "dyn_cdr",    n_args: 1, returns: true  },
+    // LANG77 — the shared dynamic-value runtime (McCarthy Lisp L3b-2b).  These
+    // dispatch to `__dyn_*` in `twig-aot/runtime/dynval_runtime.c`, which
+    // implements `dynval-runtime`'s tagged-word value model.  Each takes/returns
+    // an opaque 64-bit tagged word.  No backend-specific logic — the generic
+    // `call_builtin` path marshals args + emits the BL.  LANG83 PR7f
+    // registered the representation primitives under neutral names (they were
+    // `dyn_cons`/`dyn_car`/`dyn_cdr`/`dyn_pair_p`/`dyn_null_p`); each row here
+    // is what `op_support` reports as `Lowered`.
+    BuiltinSig { name: "dyn_pair_new",   n_args: 2, returns: true  },
+    BuiltinSig { name: "dyn_pair_first", n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_pair_rest",  n_args: 1, returns: true  },
+    // LANG83 PR7f — the tag number (`x & 7`) and the nil singleton.
+    // `int64_t __dyn_tag(uint64_t)`, `uint64_t __dyn_nil(void)`.
+    BuiltinSig { name: "dyn_tag",        n_args: 1, returns: true  },
+    BuiltinSig { name: "dyn_nil",        n_args: 0, returns: true  },
     // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
     // program-exit boundary.  `int64_t __dyn_unbox_int(uint64_t)`.
     BuiltinSig { name: "dyn_unbox_int", n_args: 1, returns: true },
@@ -237,17 +244,13 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // e.g. the result of dynamic arithmetic re-entering the lisp value world.
     // `uint64_t __dyn_box_int(int64_t)`.
     BuiltinSig { name: "dyn_box_int", n_args: 1, returns: true },
-    // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
-    // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
-    BuiltinSig { name: "dyn_pair_p",    n_args: 1, returns: true },
-    BuiltinSig { name: "dyn_null_p",    n_args: 1, returns: true },
-    BuiltinSig { name: "dyn_not",       n_args: 1, returns: true },
-    BuiltinSig { name: "dyn_equal",     n_args: 2, returns: true },
-    BuiltinSig { name: "dyn_truthy",    n_args: 1, returns: true },
-    // LANG77 W13b — the universal program-exit coercion for a polymorphic
-    // (lambda / `any`) result: dispatch on the runtime tag.
-    // `int64_t __dyn_to_exit_code(uint64_t)`.
-    BuiltinSig { name: "dyn_to_exit_code", n_args: 1, returns: true },
+    // LANG77 L3b-2c-2 — the pair and nil tests (return tagged #t/#f). Lisp's
+    // `not`, `equal?`, truthiness and exit coercion were runtime calls here
+    // too (`dyn_not`, `dyn_equal`, `dyn_truthy`, `dyn_to_exit_code`) until
+    // LANG83 PR7f-2; they are language rules, so the Lisp-family lowering now
+    // writes them as IIR and this table no longer has them.
+    BuiltinSig { name: "dyn_is_pair",   n_args: 1, returns: true },
+    BuiltinSig { name: "dyn_is_nil",    n_args: 1, returns: true },
     // LANG-STR-RT — runtime string ops on LANG-STR-RT length-prefixed buffers.
     // Both operands are i64 pointers to `[int64_t len][char bytes...]` buffers.
     BuiltinSig { name: "str_eq", n_args: 2, returns: true },
@@ -628,7 +631,7 @@ fn is_definitely_not_ref(ty: &str) -> bool {
 /// and — critically — **`any`**.
 ///
 /// `any` is not a fallback here; it is the *normal* type of every dynamic value.
-/// `__dyn_cons` and friends allocate through `__twig_gc_alloc`, and the whole
+/// `__dyn_pair_new` and friends allocate through `__twig_gc_alloc`, and the whole
 /// dyn-value world is typed `any` by design, so treating `any` as a non-root would
 /// leave every lispy pair unrooted.
 ///
@@ -848,7 +851,7 @@ fn emit_instr(
     //                      scvtf d1,x0 ; fcmp d0,d1      ; round-trip check
     //                      b.vs trap ; b.ne trap         ; NaN / out of range
     //                      mov x2,#i64::MAX ; cmp x0,x2 ; b.ne ok
-    //               trap:  udf #0xDEAD
+    //               trap:  movz x0,#4 ; bl __twig_trap ; udf   ; Trap.ConvRange
     //                 ok:  str x0,[dest]
     //
     // `fcvtzs` does not trap. On NaN, ±∞ and out-of-range values it
@@ -867,6 +870,10 @@ fn emit_instr(
     // The last check is needed because i64::MAX rounds to 2^63 as a double.
     // No in-range double truncates to i64::MAX (doubles near 2^63 are 1024
     // apart), so that result always means saturation.
+    //
+    // The trap is the LANG83 typed `Trap.ConvRange` (stable id 4) through the
+    // shared `__twig_trap` call, as `Trap.DivZero` is: stdout is flushed and
+    // the program reports `trap: Trap.ConvRange`, not a bare `udf` (SIGILL).
     if op == "int_to_real" {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
@@ -899,7 +906,11 @@ fn emit_instr(
         asm.cmp(Reg::X0, Reg::X2);
         asm.b_cond(Cond::Ne, ok);                   // not the +2^63 saturation
         asm.bind(trap).map_err(BackendError::from)?;
-        asm.udf(0xDEAD);
+        let conv_range = interpreter_ir::exception_kind::trap_kind_id(
+            interpreter_ir::exception_kind::TRAP_CONV_RANGE,
+        )
+        .expect("Trap.ConvRange is a built-in kind");
+        emit_trap_call(asm, conv_range)?;
         asm.bind(ok).map_err(BackendError::from)?;
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;          // store the integer
@@ -944,6 +955,60 @@ fn emit_instr(
             asm.mov_imm64(Reg::X1, 63);
             asm.lsr_reg(Reg::X0, Reg::X0, Reg::X1);  // bit 63 → 0/1
         }
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
+        return Ok(());
+    }
+    // LANG83 PR7b — the language-neutral float primitives, on the raw bits.
+    //
+    // `f64_class` is branch-free: one compare of the magnitude (the bits with
+    // bit 63 shifted out) against +Infinity's bits, and three `cset`s summed:
+    //
+    //   class = (mag != 0) + (mag >= 0x7FF0…0) + (mag > 0x7FF0…0)
+    //           ±0 → 0   finite ≠ 0 → 1   ±Infinity → 2   NaN → 3
+    //
+    //   ldr x0,[a]; mov x1,#1; lsl x0,x0,x1; lsr x0,x0,x1   ; x0 = mag
+    //   mov x2,#0;  cmp x0,x2; cset x3,ne                    ; x3 = mag != 0
+    //   mov x1,#0x7FF0000000000000; cmp x0,x1
+    //   cset x2,hs; add x3,x3,x2                             ; + (mag >= inf)
+    //   cset x2,hi; add x3,x3,x2                             ; + (mag >  inf)
+    //   str x3,[d]
+    //
+    // (`cset` and a plain `add` leave the flags alone, so one `cmp` feeds
+    // both unsigned tests.)
+    //
+    // `f64_digits` / `f64_exp10` call the native runtime's shortest-digits
+    // search (`twig_runtime.c`, the PR6a C digit core): the bits in `x0`, the
+    // integer result back in `x0`:
+    //
+    //   ldr x0,[a]; bl __twig_f64_digits; str x0,[d]
+    if op == "f64_class" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_f64_bits(asm, alloc, Reg::X0, src)?;   // x0 = bits of a
+        asm.mov_imm64(Reg::X1, 1);
+        asm.lsl_reg(Reg::X0, Reg::X0, Reg::X1);     // drop the sign bit…
+        asm.lsr_reg(Reg::X0, Reg::X0, Reg::X1);     // …x0 = magnitude
+        asm.mov_imm64(Reg::X2, 0);
+        asm.cmp(Reg::X0, Reg::X2);
+        asm.cset(Reg::X3, Cond::Ne);                // x3 = mag != 0
+        asm.mov_imm64(Reg::X1, 0x7FF0_0000_0000_0000);
+        asm.cmp(Reg::X0, Reg::X1);
+        asm.cset(Reg::X2, Cond::Hs);                // unsigned >=
+        asm.add(Reg::X3, Reg::X3, Reg::X2);
+        asm.cset(Reg::X2, Cond::Hi);                // unsigned >
+        asm.add(Reg::X3, Reg::X3, Reg::X2);
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X3, Reg::Sp, slot)?;
+        return Ok(());
+    }
+    if op == "f64_digits" || op == "f64_exp10" {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_f64_bits(asm, alloc, Reg::X0, src)?;   // x0 = bits of a
+        asm.bl_external(format!("__twig_{op}"));
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
         return Ok(());
@@ -1425,8 +1490,8 @@ fn emit_instr(
         //     (`print_i64`, `getchar`, `str_eq`, `gc_alloc`, …).
         //   - the **dyn** value runtime (`dynval_runtime.c`) exports `__dyn_<name>`
         //     for the tagged-value builtins, whose IIR names already carry the
-        //     `dyn_` namespace (`dyn_cons` → `__dyn_cons`, `dyn_to_exit_code` →
-        //     `__dyn_to_exit_code`). So a `dyn_*` builtin is just `__` + name;
+        //     `dyn_` namespace (`dyn_pair_new` → `__dyn_pair_new`, `dyn_tag` →
+        //     `__dyn_tag`). So a `dyn_*` builtin is just `__` + name;
         //     everything else is `__twig_` + name.
         let symbol = if name.starts_with("dyn_") {
             format!("__{name}")
@@ -2932,16 +2997,16 @@ mod tests {
         let cir = vec![
             const_u64("h", 7),
             const_u64("t", 9),
-            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
-            call_builtin(Some("r"), "dyn_car", &["cell"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h", "t"]),
+            call_builtin(Some("r"), "dyn_pair_first", &["cell"]),
             ret_u64("r"),
         ];
         let (bytes, ext) = compile_with_relocs(&ctx("lispy", &[], "u64"), &cir)
             .unwrap_or_else(|e| panic!("lispy runtime calls must lower: {e}"));
         assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
-        assert!(symbols.contains(&"__dyn_cons"), "missing cons call: {symbols:?}");
-        assert!(symbols.contains(&"__dyn_car"), "missing car call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_pair_new"), "missing cons call: {symbols:?}");
+        assert!(symbols.contains(&"__dyn_pair_first"), "missing car call: {symbols:?}");
     }
 
     #[test]
@@ -3032,11 +3097,11 @@ mod tests {
     }
 
     #[test]
-    fn dyn_cons_wrong_arity_is_rejected() {
-        // dyn_cons takes exactly 2 args — one arg must be a soft refusal.
+    fn dyn_pair_new_wrong_arity_is_rejected() {
+        // dyn_pair_new takes exactly 2 args — one arg must be a soft refusal.
         let cir = vec![
             const_u64("h", 7),
-            call_builtin(Some("cell"), "dyn_cons", &["h"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h"]),
             ret_u64("cell"),
         ];
         assert!(compile(&ctx("bad_cons", &[], "u64"), &cir).is_err());
@@ -3049,8 +3114,8 @@ mod tests {
         let cir = vec![
             const_u64("h", 7 << 3),
             const_u64("t", 9 << 3),
-            call_builtin(Some("cell"), "dyn_cons", &["h", "t"]),
-            call_builtin(Some("boxed"), "dyn_car", &["cell"]),
+            call_builtin(Some("cell"), "dyn_pair_new", &["h", "t"]),
+            call_builtin(Some("boxed"), "dyn_pair_first", &["cell"]),
             call_builtin(Some("r"), "dyn_unbox_int", &["boxed"]),
             ret_u64("r"),
         ];
@@ -3058,53 +3123,39 @@ mod tests {
             .unwrap_or_else(|e| panic!("boxed cons/car/unbox must lower: {e}"));
         assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
-        for want in ["__dyn_cons", "__dyn_car", "__dyn_unbox_int"] {
+        for want in ["__dyn_pair_new", "__dyn_pair_first", "__dyn_unbox_int"] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
 
     #[test]
-    fn dyn_atom_eq_predicates_and_truthy_lower() {
-        // L3b-2c-2: `(ATOM 5)` = not(pair?(5)), normalised for a branch via
-        // dyn_truthy; plus equal? (EQ). All four predicates must lower.
+    fn dyn_pair_test_tag_and_nil_lower() {
+        // L3b-2c-2 / LANG83 PR7f: the pair test, the tag number and nil are
+        // runtime calls (`BL __dyn_is_pair`, `__dyn_tag`, `__dyn_nil`).
         let cir = vec![
             const_u64("x", 5 << 3),
-            call_builtin(Some("p"), "dyn_pair_p", &["x"]),
-            call_builtin(Some("a"), "dyn_not", &["p"]),
-            call_builtin(Some("t"), "dyn_truthy", &["a"]),
-            call_builtin(Some("e"), "dyn_equal", &["x", "x"]),
-            ret_u64("e"),
+            call_builtin(Some("p"), "dyn_is_pair", &["x"]),
+            call_builtin(Some("t"), "dyn_tag", &["p"]),
+            call_builtin(Some("n"), "dyn_nil", &[]),
+            ret_u64("t"),
         ];
         let (bytes, ext) = compile_with_relocs(&ctx("preds", &[], "u64"), &cir)
             .unwrap_or_else(|e| panic!("predicates must lower: {e}"));
         assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
-        for want in [
-            "__dyn_pair_p", "__dyn_not",
-            "__dyn_truthy", "__dyn_equal",
-        ] {
+        for want in ["__dyn_is_pair", "__dyn_tag", "__dyn_nil"] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
 
-    /// W14b (F7): the universal exit coercion `dyn_to_exit_code` — the program
-    /// boundary for a polymorphic lambda result — lowers to a BL into the runtime.
+    /// LANG83 PR7f-2: Lisp's truthiness, `not`, `equal?` and exit coercion
+    /// are no longer runtime calls (each Lisp-family compiler writes them as
+    /// IIR), so this backend no longer knows their names.
     #[test]
-    fn dyn_to_exit_code_lowers() {
-        assert!(lookup_builtin("dyn_to_exit_code").is_some(), "builtin must be registered");
-        let cir = vec![
-            const_u64("x", 5 << 3),
-            call_builtin(Some("r"), "dyn_to_exit_code", &["x"]),
-            ret_u64("r"),
-        ];
-        let (bytes, ext) = compile_with_relocs(&ctx("exit_coerce", &[], "u64"), &cir)
-            .unwrap_or_else(|e| panic!("to_exit_code must lower: {e}"));
-        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
-        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
-        assert!(
-            symbols.contains(&"__dyn_to_exit_code"),
-            "missing __dyn_to_exit_code: {symbols:?}",
-        );
+    fn lisp_semantic_builtins_are_not_in_the_table() {
+        for name in ["dyn_truthy", "dyn_not", "dyn_equal", "dyn_to_exit_code"] {
+            assert!(lookup_builtin(name).is_none(), "{name} must not be a builtin");
+        }
     }
 
     #[test]
@@ -3708,6 +3759,50 @@ mod tests {
         assert!(compile(&ctx("f", &params, "void"), &bad).is_err());
     }
 
+    // ── LANG83 PR7b: the neutral float primitives ────────────────────────────
+
+    /// `f64_class` is the magnitude compared once against +Infinity's bits
+    /// and three `cset`s summed — inline, no call.
+    #[test]
+    fn f64_class_is_three_csets_on_the_magnitude() {
+        let ws = pr6c_fn("f64_class", vec![CIROperand::Var("a".into())]);
+        let one = pos(&ws, word_of(|a| a.movz(Reg::X1, 1, 0)));
+        assert_eq!(ws[one + 1], word_of(|a| a.lsl_reg(Reg::X0, Reg::X0, Reg::X1)));
+        assert_eq!(ws[one + 2], word_of(|a| a.lsr_reg(Reg::X0, Reg::X0, Reg::X1)));
+        pos(&ws, word_of(|a| a.cset(Reg::X3, Cond::Ne)));
+        let hs = pos(&ws, word_of(|a| a.cset(Reg::X2, Cond::Hs)));
+        assert_eq!(ws[hs + 1], word_of(|a| a.add(Reg::X3, Reg::X3, Reg::X2)));
+        assert_eq!(ws[hs + 2], word_of(|a| a.cset(Reg::X2, Cond::Hi)));
+        assert_eq!(ws[hs + 3], word_of(|a| a.add(Reg::X3, Reg::X3, Reg::X2)));
+        let params: [(String, String); 0] = [];
+        let bad = vec![CIRInstr { op: "f64_class".into(), dest: Some("r".into()),
+                                  srcs: vec![CIROperand::Int(1)], ty: "i64".into(), deopt_to: None }];
+        assert!(compile(&ctx("f", &params, "void"), &bad).is_err(), "an integer literal is not float bits");
+    }
+
+    /// `f64_digits` / `f64_exp10` are `bl __twig_f64_*` with the bits in x0,
+    /// and the result is stored from x0 right after the call.
+    #[test]
+    fn f64_digits_and_exp10_call_the_runtime_with_the_bits() {
+        for op in ["f64_digits", "f64_exp10"] {
+            let cir = |op: &str, dest: Option<&str>, srcs: Vec<CIROperand>, ty: &str| CIRInstr {
+                op: op.into(), dest: dest.map(Into::into), srcs, ty: ty.into(), deopt_to: None,
+            };
+            let params: [(String, String); 0] = [];
+            let body = vec![
+                cir("const_f64", Some("a"), vec![CIROperand::Float(1.5)], "f64"),
+                cir(op, Some("d"), vec![CIROperand::Var("a".into())], "i64"),
+                cir("ret_void", None, vec![], "void"),
+            ];
+            let (bytes, relocs) = compile_with_relocs(&ctx("f", &params, "void"), &body).unwrap();
+            let ws = words(&bytes);
+            let call = relocs.iter().find(|r| r.symbol == format!("__twig_{op}")).expect(op).word_idx;
+            assert_eq!(ws[call] & 0xFC00_0000, 0x9400_0000, "{op}: bl");
+            // The word after the call stores x0 (STR Xt, Rt = 0).
+            assert_eq!(ws[call + 1] & 0xFFC0_001F, 0xF900_0000, "{op}: str x0, [sp, #slot]");
+        }
+    }
+
     #[test]
     fn checked_ops_need_their_operands() {
         let params: [(String, String); 0] = [];
@@ -3753,39 +3848,6 @@ mod tests {
         let params: [(String, String); 0] = [];
         let (_bytes, relocs) = compile_with_relocs(&ctx("w", &params, "void"), &cir).unwrap();
         assert_eq!(relocs.iter().map(|r| r.symbol.as_str()).collect::<Vec<_>>(), ["__twig_write_i64"]);
-    }
-
-    /// LANG83 PR6a: a float writer is a plain V1 builtin call. The f64's
-    /// raw bits are materialised in a general register (`movz …, #0x3FF8,
-    /// lsl #48` for 1.5), stored to its slot, and reloaded into x0 with an
-    /// integer `ldr` right before `bl __twig_write_f64_*`: no FP register is
-    /// involved, which is what the runtime's `int64_t bits` parameter expects.
-    #[test]
-    fn float_writers_pass_the_raw_bits_in_x0() {
-        for name in ["write_f64_py", "write_f64_js"] {
-            let cir = vec![
-                const_f64("x", 1.5),
-                CIRInstr { op: "call_builtin".into(), dest: None,
-                           srcs: vec![CIROperand::Var(name.into()), CIROperand::Var("x".into())],
-                           ty: "void".into(), deopt_to: None },
-                CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
-            ];
-            let params: [(String, String); 0] = [];
-            let (bytes, relocs) = compile_with_relocs(&ctx("f", &params, "void"), &cir).unwrap();
-            let symbol = format!("__twig_{name}");
-            assert_eq!(relocs.iter().map(|r| r.symbol.as_str()).collect::<Vec<_>>(), [symbol.as_str()]);
-            let ws = words(&bytes);
-            // MOVZ/MOVK (64-bit) with hw = 3 and imm16 = 0x3FF8: the top half of 1.5's bits.
-            assert!(
-                ws.iter().any(|w| (w & 0xDFE0_0000) == 0xD2E0_0000 && ((w >> 5) & 0xFFFF) == 0x3FF8),
-                "{name}: 1.5's bit pattern is built in a general register"
-            );
-            // The word before the BL is `ldr x0, [sp, #imm]` (64-bit, unsigned offset).
-            let call = relocs[0].word_idx;
-            let ldr = ws[call - 1];
-            assert_eq!(ldr & 0xFFC0_0000, 0xF940_0000, "{name}: an integer LDR, not an FP load");
-            assert_eq!((ldr & 0x1F, (ldr >> 5) & 0x1F), (0, 31), "{name}: into x0, from sp");
-        }
     }
 
     // ---- LANG40/LANG41: io_out handler (BL __twig_print_i64 external reloc) ----
@@ -3916,6 +3978,24 @@ mod tests {
             &ctx("bad_name", &[], "void"), &cir, &HashMap::new()
         );
         assert!(result.is_err(), "unknown builtin name should error");
+    }
+
+    /// LANG83 PR7e: the PR6a float writers are gone from the helper table,
+    /// so a module that still calls one is refused, never linked against a
+    /// runtime symbol that no longer exists.
+    #[test]
+    fn retired_float_writers_are_unknown_builtins() {
+        for name in ["write_f64_py", "write_f64_js"] {
+            let cir = vec![
+                const_f64("x", 1.5),
+                CIRInstr { op: "call_builtin".into(), dest: None,
+                           srcs: vec![CIROperand::Var(name.into()), CIROperand::Var("x".into())],
+                           ty: "void".into(), deopt_to: None },
+                CIRInstr { op: "ret_void".into(), dest: None, srcs: vec![], ty: "void".into(), deopt_to: None },
+            ];
+            let result = compile_with_globals(&ctx("f", &[], "void"), &cir, &HashMap::new());
+            assert!(result.is_err(), "{name}");
+        }
     }
 
     #[test]
@@ -4283,11 +4363,13 @@ mod tests {
     }
 
     /// Narrowing fails closed: each conversion rounds with the matching
-    /// `frint*`, round-trips through `scvtf` + `fcmp`, and reaches a
-    /// `udf #0xDEAD` trap instead of storing a saturated integer.
+    /// `frint*`, round-trips through `scvtf` + `fcmp`, and reaches the typed
+    /// `Trap.ConvRange` trap (`movz x0, #4; bl __twig_trap; udf #0x7EA9`)
+    /// instead of storing a saturated integer.
     #[test]
     fn e8_narrowing_traps_instead_of_saturating() {
-        const UDF_DEAD: u32 = 0x0000_DEAD;
+        const MOVZ_X0_4: u32 = 0xD280_0080; // movz x0, #4
+        let trap_udf = u32::from(TRAP_UDF_IMM);
         const FRINTZ_D0: u32 = 0x1E65_C000;
         const FRINTM_D0: u32 = 0x1E65_4000;
         const SCVTF_D1_X0: u32 = 0x9E62_0001;
@@ -4298,7 +4380,9 @@ mod tests {
             let w = words(e8_round_module(op, 45, 0.0));
             assert!(w.contains(&frint), "{op}: expected its frint* rounding");
             assert!(w.contains(&SCVTF_D1_X0), "{op}: expected the scvtf round trip");
-            assert!(w.contains(&UDF_DEAD), "{op}: expected a udf trap");
+            let at = w.iter().position(|x| *x == MOVZ_X0_4)
+                .unwrap_or_else(|| panic!("{op}: expected movz x0, #4 (Trap.ConvRange)"));
+            assert_eq!(w[at + 2], trap_udf, "{op}: udf after the noreturn bl __twig_trap");
         }
     }
 

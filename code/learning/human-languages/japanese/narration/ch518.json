@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 518,
+  "title": "Slips and Second Chances",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:87a9c674036eda77",
+  "lessons": [
+    {
+      "id": "JA-C518-torimodosu",
+      "sequence": 29960,
+      "title": "とりもどす (torimodosu) — to get back; to regain",
+      "headword": "とりもどす",
+      "romanization": "torimodosu",
+      "gloss": "to get back; to regain",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5e312acc403357a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to judge, then the Japanese for an option."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とりもどす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とりもどす — torimodosu — \"to get back; to regain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし びょうきが なおったら、かれは げんきを とりもどすでしょう。 — moshi byōki ga naottara, kare wa genki o torimodosu deshō — \"If his illness gets better, he will get his strength back.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とりもどします, torimodoshimasu; a godan verb. Past (polite): かれが げんきを とりもどしました。, kare ga genki o torimodoshimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とりもどす (torimodosu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from toru, \"to take\", and modosu, \"to put back\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torimodosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torimodosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torimodosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torimodosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi byōki ga naottara, kare wa genki o torimodosu deshō — If his illness gets better, he will get his strength back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi byōki ga naottara, kare wa genki o torimodosu deshō* — If his illness gets better, he will get his strength back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to judge, then the Japanese for an option, then say torimodosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to judge, then the Japanese for an option, then say *torimodosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とりもどす (torimodosu) mean? (\"To get back; to regain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C518-torimodosu-type",
+              "prompt": "Say the Japanese for 'to get back'.",
+              "assesses": [
+                "JA-LEX-C518-REGRET518-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とりもどす",
+                "torimodosu"
+              ],
+              "feedback": {
+                "correct": "Right: とりもどす (torimodosu) is 'to get back; to regain'.",
+                "incorrect": "'To get back' is とりもどす (torimodosu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C518-koriru",
+      "sequence": 29970,
+      "title": "こりる (koriru) — to learn one's lesson",
+      "headword": "こりる",
+      "romanization": "koriru",
+      "gloss": "to learn one's lesson",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50221698f922a579",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an option, then the Japanese for to get back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こりる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こりる — koriru — \"to learn one's lesson\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いちど けがを したら、おとうとも こりるでしょう。 — ichido kega o shitara, otōto mo koriru deshō — \"Once he gets hurt, my younger brother will learn his lesson too.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こります, korimasu; an ichidan verb. Past (polite): おとうとが こりました。, otōto ga korimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こりる (koriru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koriru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koriru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koriru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koriru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ichido kega o shitara, otōto mo koriru deshō — Once he gets hurt, my younger brother will learn his lesson too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ichido kega o shitara, otōto mo koriru deshō* — Once he gets hurt, my younger brother will learn his lesson too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an option, then the Japanese for to get back, then say koriru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an option, then the Japanese for to get back, then say *koriru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こりる (koriru) mean? (\"To learn one's lesson\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C518-koriru-type",
+              "prompt": "Say the Japanese for 'to learn one's lesson'.",
+              "assesses": [
+                "JA-LEX-C518-REGRET518-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こりる",
+                "koriru"
+              ],
+              "feedback": {
+                "correct": "Right: こりる (koriru) is 'to learn one's lesson'.",
+                "incorrect": "'To learn one's lesson' is こりる (koriru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C518-oshii",
+      "sequence": 29980,
+      "title": "おしい (oshii) — so close; regrettable",
+      "headword": "おしい",
+      "romanization": "oshii",
+      "gloss": "so close; regrettable",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c16574a8699ab29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get back, then the Japanese for to learn one's lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おしい — oshii — \"so close; regrettable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし いちてんで まけたら、おしいでしょう。 — moshi ichiten de maketara, oshii deshō — \"If we lose by one point, it will be a real pity.\""
+            },
+            {
+              "kind": "speech",
+              "text": "An i-adjective."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おしい (oshii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oshii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oshii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oshii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oshii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ichiten de maketara, oshii deshō — If we lose by one point, it will be a real pity.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ichiten de maketara, oshii deshō* — If we lose by one point, it will be a real pity.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get back, then the Japanese for to learn one's lesson, then say oshii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get back, then the Japanese for to learn one's lesson, then say *oshii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おしい (oshii) mean? (\"So close; regrettable\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C518-oshii-type",
+              "prompt": "Say the Japanese for 'so close'.",
+              "assesses": [
+                "JA-LEX-C518-REGRET518-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おしい",
+                "oshii"
+              ],
+              "feedback": {
+                "correct": "Right: おしい (oshii) is 'so close; regrettable'.",
+                "incorrect": "'So close' is おしい (oshii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C518-shikujiru",
+      "sequence": 29990,
+      "title": "しくじる (shikujiru) — to slip up; to fail (at something)",
+      "headword": "しくじる",
+      "romanization": "shikujiru",
+      "gloss": "to slip up; to fail (at something)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6957aed7e03722c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to learn one's lesson, then the Japanese for so close."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しくじる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しくじる — shikujiru — \"to slip up; to fail (at something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし しけんで しくじったら、らいねん もう いちど うけます。 — moshi shiken de shikujittara, rainen mō ichido ukemasu — \"If I slip up in the exam, I will take it again next year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しくじります, shikujirimasu; a godan verb. Past (polite): おとうとが しけんで しくじりました。, otōto ga shiken de shikujirimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しくじる (shikujiru) is usually counted a native Japanese word (wago), inherited rather than borrowed from Chinese: JMdict gives it no kanji spelling, and no dictionary we use records an older form, so its history is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikujiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikujiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikujiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikujiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi shiken de shikujittara, rainen mō ichido ukemasu — If I slip up in the exam, I will take it again next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi shiken de shikujittara, rainen mō ichido ukemasu* — If I slip up in the exam, I will take it again next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to learn one's lesson, then the Japanese for so close, then say shikujiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to learn one's lesson, then the Japanese for so close, then say *shikujiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しくじる (shikujiru) mean? (\"To slip up; to fail (at something)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C518-shikujiru-type",
+              "prompt": "Say the Japanese for 'to slip up'.",
+              "assesses": [
+                "JA-LEX-C518-REGRET518-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しくじる",
+                "shikujiru"
+              ],
+              "feedback": {
+                "correct": "Right: しくじる (shikujiru) is 'to slip up; to fail (at something)'.",
+                "incorrect": "'To slip up' is しくじる (shikujiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C518-ochido",
+      "sequence": 30000,
+      "title": "おちど (ochido) — a fault; an oversight",
+      "headword": "おちど",
+      "romanization": "ochido",
+      "gloss": "a fault; an oversight",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5858ba19bb2fcb00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for so close, then the Japanese for to slip up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おちど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おちど — ochido — \"a fault; an oversight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし みせに おちどが あったら、あやまります。 — moshi mise ni ochido ga attara, ayamarimasu — \"If the shop is at fault, we will apologize.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おちど (ochido) mixes the two layers, native and Sino-Japanese: native ochi, \"falling\", from ochiru, \"to fall\", and Sino-Japanese do, \"degrees\" (Middle Chinese duH), borrowed from Chinese (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ochido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ochido*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ochido, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ochido*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi mise ni ochido ga attara, ayamarimasu — If the shop is at fault, we will apologize.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi mise ni ochido ga attara, ayamarimasu* — If the shop is at fault, we will apologize.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for so close, then the Japanese for to slip up, then say ochido again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for so close, then the Japanese for to slip up, then say *ochido* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おちど (ochido) mean? (\"A fault; an oversight\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C518-ochido-type",
+              "prompt": "Say the Japanese for 'a fault'.",
+              "assesses": [
+                "JA-LEX-C518-REGRET518-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おちど",
+                "ochido"
+              ],
+              "feedback": {
+                "correct": "Right: おちど (ochido) is 'a fault; an oversight'.",
+                "incorrect": "'A fault' is おちど (ochido)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

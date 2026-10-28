@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C56-daqiu",
+    "language": "chinese",
+    "chapter": 56,
+    "sequence": 4300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f11fa2321d20d84"
+  },
+  "findings": []
+}

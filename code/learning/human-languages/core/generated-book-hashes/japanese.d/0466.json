@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:4ccb76db92c1c387",
+  "lessonIds": [
+    "JA-C466-shodou",
+    "JA-C466-ikebana",
+    "JA-C466-sadou",
+    "JA-C466-origami",
+    "JA-C466-geijutsu"
+  ],
+  "tex": "japanese/book/chapters/ch466-the-traditional-arts.tex"
+}

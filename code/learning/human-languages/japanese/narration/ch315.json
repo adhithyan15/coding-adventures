@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 315,
+  "title": "And Then",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:066913078fb5803d",
+  "lessons": [
+    {
+      "id": "JA-C315-suruto",
+      "sequence": 18740,
+      "title": "すると (suruto) — thereupon; at that",
+      "headword": "すると",
+      "romanization": "suruto",
+      "gloss": "thereupon; at that",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:433ad69521504fd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to decrease, then the Japanese for to think of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すると",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すると — suruto — \"thereupon; at that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "すると、いぬが ほえました。 — suruto, inu ga hoemashita — \"At that, the dog began to bark.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すると (suruto) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suruto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suruto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suruto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suruto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suruto, inu ga hoemashita — At that, the dog began to bark.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suruto, inu ga hoemashita* — At that, the dog began to bark.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to decrease, then the Japanese for to think of, then say suruto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to decrease, then the Japanese for to think of, then say *suruto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すると (suruto) mean? (\"Thereupon; at that\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C315-suruto-type",
+              "prompt": "Say the Japanese for 'thereupon'.",
+              "assesses": [
+                "JA-LEX-C315-SURUTO315-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すると",
+                "suruto"
+              ],
+              "feedback": {
+                "correct": "Right: すると (suruto) is 'thereupon; at that'.",
+                "incorrect": "'Thereupon' is すると (suruto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C315-tokoroga",
+      "sequence": 18750,
+      "title": "ところが (tokoroga) — however; but then",
+      "headword": "ところが",
+      "romanization": "tokoroga",
+      "gloss": "however; but then",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:397559bee01bc0f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to think of, then the Japanese for thereupon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ところが",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ところが — tokoroga — \"however; but then\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ところが、へんじは きませんでした。 — tokoroga, henji wa kimasen deshita — \"But no answer came.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ところが (tokoroga) is a native Japanese word (wago), inherited rather than borrowed from Chinese: JMdict writes it with the kanji of tokoro, \"place\", and the particle ga, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokoroga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokoroga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokoroga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokoroga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokoroga, henji wa kimasen deshita — But no answer came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokoroga, henji wa kimasen deshita* — But no answer came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to think of, then the Japanese for thereupon, then say tokoroga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to think of, then the Japanese for thereupon, then say *tokoroga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ところが (tokoroga) mean? (\"However; but then\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C315-tokoroga-type",
+              "prompt": "Say the Japanese for 'however'.",
+              "assesses": [
+                "JA-LEX-C315-SURUTO315-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ところが",
+                "tokoroga"
+              ],
+              "feedback": {
+                "correct": "Right: ところが (tokoroga) is 'however; but then'.",
+                "incorrect": "'However' is ところが (tokoroga)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C315-shikashi",
+      "sequence": 18760,
+      "title": "しかし (shikashi) — but; however",
+      "headword": "しかし",
+      "romanization": "shikashi",
+      "gloss": "but; however",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84b27067b9dab7f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for thereupon, then the Japanese for however."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しかし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しかし — shikashi — \"but; however\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しかし、だれも いませんでした。 — shikashi, daremo imasen deshita — \"But there was nobody there.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しかし (shikashi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikashi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikashi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikashi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikashi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shikashi, daremo imasen deshita — But there was nobody there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shikashi, daremo imasen deshita* — But there was nobody there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for thereupon, then the Japanese for however, then say shikashi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for thereupon, then the Japanese for however, then say *shikashi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しかし (shikashi) mean? (\"But; however\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C315-shikashi-type",
+              "prompt": "Say the Japanese for 'but'.",
+              "assesses": [
+                "JA-LEX-C315-SURUTO315-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しかし",
+                "shikashi"
+              ],
+              "feedback": {
+                "correct": "Right: しかし (shikashi) is 'but; however'.",
+                "incorrect": "'But' is しかし (shikashi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C315-tokorodokoro",
+      "sequence": 18770,
+      "title": "ところどころ (tokorodokoro) — here and there; in places",
+      "headword": "ところどころ",
+      "romanization": "tokorodokoro",
+      "gloss": "here and there; in places",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:facefaf2631ae1a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for however, then the Japanese for but."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ところどころ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ところどころ — tokorodokoro — \"here and there; in places\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みちは ところどころ こおっていました。 — michi wa tokorodokoro kōtte imashita — \"The road was icy in places.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ところどころ (tokorodokoro) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tokoro, \"place\", and dokoro, \"place\" (from tokoro) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokorodokoro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokorodokoro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokorodokoro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokorodokoro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "michi wa tokorodokoro kōtte imashita — The road was icy in places.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *michi wa tokorodokoro kōtte imashita* — The road was icy in places.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for however, then the Japanese for but, then say tokorodokoro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for however, then the Japanese for but, then say *tokorodokoro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ところどころ (tokorodokoro) mean? (\"Here and there; in places\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C315-tokorodokoro-type",
+              "prompt": "Say the Japanese for 'here and there'.",
+              "assesses": [
+                "JA-LEX-C315-SURUTO315-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ところどころ",
+                "tokorodokoro"
+              ],
+              "feedback": {
+                "correct": "Right: ところどころ (tokorodokoro) is 'here and there; in places'.",
+                "incorrect": "'Here and there' is ところどころ (tokorodokoro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C315-miharu",
+      "sequence": 18780,
+      "title": "みはる (miharu) — to keep watch; to guard",
+      "headword": "みはる",
+      "romanization": "miharu",
+      "gloss": "to keep watch; to guard",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6175cb938857da78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for but, then the Japanese for here and there."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みはる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みはる — miharu — \"to keep watch; to guard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おまわりさんが みちを みはっています。 — omawarisan ga michi o mihatte imasu — \"A police officer is keeping watch on the road.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みはります, miharimasu; a godan verb. Past (polite): おまわりさんが えきを みはりました。, omawarisan ga eki o miharimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みはる (miharu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mi, \"seeing\" (from miru), and haru, \"to stretch\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miharu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miharu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miharu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miharu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omawarisan ga michi o mihatte imasu — A police officer is keeping watch on the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omawarisan ga michi o mihatte imasu* — A police officer is keeping watch on the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for but, then the Japanese for here and there, then say miharu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for but, then the Japanese for here and there, then say *miharu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みはる (miharu) mean? (\"To keep watch; to guard\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C315-miharu-type",
+              "prompt": "Say the Japanese for 'to keep watch'.",
+              "assesses": [
+                "JA-LEX-C315-SURUTO315-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みはる",
+                "miharu"
+              ],
+              "feedback": {
+                "correct": "Right: みはる (miharu) is 'to keep watch; to guard'.",
+                "incorrect": "'To keep watch' is みはる (miharu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

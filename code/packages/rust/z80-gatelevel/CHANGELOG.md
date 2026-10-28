@@ -4,6 +4,12 @@
 
 ### Changed
 
+- Made the HALT `StateRegister` Q output the sole architectural halt authority
+  across observation, execution, reset/load/restore, IRQ/NMI, and rollback;
+  the retained host boolean is now only a synchronized compatibility observer.
+- Published a container-derived 528,597-DFF inventory and added two-way
+  divergence, already-halted, interrupt, typed-rollback, exact transition-chain,
+  and compiler-checked hostile full-crate anti-bypass regressions.
 - Replaced host-backed memory, register banks, index registers, interrupt
   state, halt state, and port latches with an exact 528,597-DFF topology.
 - Adopted the functional simulator's shared typed complete state, traces,

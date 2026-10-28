@@ -58,7 +58,11 @@
 //! - **Language agnostic**: the linker operates on `IIRModule`s regardless of
 //!   the source language.  Twig, NIB, Prolog, Brainfuck all get the same linker.
 //! - **Fail loudly**: every error carries enough context to produce a helpful
-//!   diagnostic without re-reading source files.
+//!   diagnostic without re-reading source files.  Bad input is reported as a
+//!   `LinkError`, never a panic (#18432).
+//! - **Private by default**: a module reaches another module's function only
+//!   through an `IIRImport` of something that module exports.  Any other
+//!   name in a call / closure / spawn operand is `LinkError::UndeclaredCall`.
 //! - **No side effects**: `link` is a pure function — no global state, no I/O.
 
 pub mod error;

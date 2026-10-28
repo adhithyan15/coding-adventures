@@ -1,0 +1,11 @@
+{
+  "id": "JA-C337-denryoku",
+  "pathSegment": "JA-PATH-337-SETSUYAKU337",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-337-SETSUYAKU337",
+      "order": 1
+    }
+  ]
+}

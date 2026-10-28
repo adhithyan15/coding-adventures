@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-521-GRADUAL521",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "JA-EXT-521-GRADUAL521"
+  ],
+  "after": []
+}

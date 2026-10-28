@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "The King's Daughter",
+  "label": "ch:ja-the-king-s-daughter",
+  "canDo": "I can say who ruled and who protected them.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C299-tonosama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say who ruled and who protected them.",
+    "assesses": [
+      "JA-LEX-C299-OUSAMA299-03",
+      "JA-LEX-C299-OUSAMA299-04",
+      "JA-LEX-C299-OUSAMA299-05"
+    ]
+  }
+}

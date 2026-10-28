@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C196-jipiao",
+    "language": "chinese",
+    "chapter": 196,
+    "sequence": 15420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d46aca8405ea6aea"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:2c60faa7ecdc9d30",
+  "lessonIds": [
+    "ZH-C128-yinyue",
+    "ZH-W128-yin-sound",
+    "ZH-C128-ge",
+    "ZH-C128-haoting",
+    "ZH-C128-yinyuehui",
+    "ZH-C128-jita",
+    "ZH-R128-review-123-128"
+  ],
+  "tex": "chinese/book/chapters/ch128-music.tex"
+}

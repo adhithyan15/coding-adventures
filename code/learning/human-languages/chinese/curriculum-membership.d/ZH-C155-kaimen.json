@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C155-kaimen",
+  "pathSegment": "ZH-PATH-155-TIMETABLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-155-TIMETABLE",
+      "order": 4
+    }
+  ]
+}

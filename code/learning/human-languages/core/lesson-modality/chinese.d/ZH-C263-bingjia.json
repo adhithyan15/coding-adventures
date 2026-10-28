@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C263-bingjia",
+    "language": "chinese",
+    "chapter": 263,
+    "sequence": 19800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfdbf232d29f2462"
+  },
+  "findings": []
+}

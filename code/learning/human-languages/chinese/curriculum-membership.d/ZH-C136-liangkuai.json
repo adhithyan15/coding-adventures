@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C136-liangkuai",
+  "pathSegment": "ZH-PATH-136-WEATHER136",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-136-WEATHER136",
+      "order": 4
+    }
+  ]
+}

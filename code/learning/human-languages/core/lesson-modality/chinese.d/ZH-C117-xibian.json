@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C117-xibian",
+    "language": "chinese",
+    "chapter": 117,
+    "sequence": 8950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec5a423fe74e3079"
+  },
+  "findings": []
+}

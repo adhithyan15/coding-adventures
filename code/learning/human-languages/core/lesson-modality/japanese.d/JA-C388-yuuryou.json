@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C388-yuuryou",
+    "language": "japanese",
+    "chapter": 388,
+    "sequence": 22860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c591a6cd2d0fa9a"
+  },
+  "findings": []
+}

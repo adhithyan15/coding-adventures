@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W104-ben",
+    "language": "chinese",
+    "chapter": 104,
+    "sequence": 8255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b13f29751a745d45",
+    "detachableSegments": [
+      "Script — the tree piece, and a bar at its foot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

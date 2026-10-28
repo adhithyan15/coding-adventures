@@ -1,0 +1,11 @@
+{
+  "id": "JA-C350-bousai",
+  "pathSegment": "JA-PATH-350-YOUJIN350",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-350-YOUJIN350",
+      "order": 4
+    }
+  ]
+}

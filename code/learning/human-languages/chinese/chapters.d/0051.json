@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "How You Feel",
+  "label": "ch:zh-how-you-feel",
+  "canDo": "I can say I am happy, afraid, cold or hot.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ZH-C51-ku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: I can say I am happy, afraid, cold or hot.",
+    "assesses": [
+      "ZH-LEX-C51-FEEL51-03",
+      "ZH-LEX-C51-FEEL51-04",
+      "ZH-LEX-C51-FEEL51-05"
+    ]
+  }
+}

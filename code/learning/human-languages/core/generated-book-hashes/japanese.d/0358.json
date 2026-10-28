@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:4fb5f0b7a6bf6f09",
+  "lessonIds": [
+    "JA-C358-yachin",
+    "JA-C358-ouya",
+    "JA-C358-kouza",
+    "JA-C358-furikomu",
+    "JA-C358-zandaka"
+  ],
+  "tex": "japanese/book/chapters/ch358-renting-a-room.tex"
+}

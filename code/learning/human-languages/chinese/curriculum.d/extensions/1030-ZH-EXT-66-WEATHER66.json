@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-66-WEATHER66",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the weather is like: rain, snow and wind.",
+  "prerequisites": []
+}

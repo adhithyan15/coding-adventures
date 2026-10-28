@@ -1,0 +1,11 @@
+{
+  "id": "JA-C481-gijutsu",
+  "pathSegment": "JA-PATH-481-SKILL481",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-481-SKILL481",
+      "order": 2
+    }
+  ]
+}

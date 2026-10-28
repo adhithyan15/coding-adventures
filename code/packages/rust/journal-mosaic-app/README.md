@@ -11,7 +11,7 @@ in [`code/specs/journal-mosaic-app.md`](../../../specs/journal-mosaic-app.md).
 ```
 journal-core          pure engine: journals, entries, timeline, search…
   └ journal-mosaic-app  ← you are here: slots and events for the Mosaic package
-      └ journal-app       the .mil/.mll/.msl UI (J3c-2): RecordList + DraftEditor
+      └ journal-app       the .mil/.mll/.msl UI (J3c-2): Cards + DraftEditor
 ```
 
 It is the same adapter shape as `task-mosaic-app` (Trestle) and
@@ -22,7 +22,7 @@ engine's state, and `dispatch` turns the package's events into engine commands.
 
 | props | events |
 | --- | --- |
-| `timeline-rows` (RecordList rows), `selected-key`, `timeline-empty`, `draft-title`, `draft-body`, `delete-label` | `onSelectEntry(index)`, `onNewEntry`, `onTitleChange(value)`, `onBodyChange(value)`, `onSaveEntry`, `onDeleteEntry`, `onCancelEdit` |
+| `timeline-rows` (rows `[key, heading, title, subtitle, meta, badge, open-label]`, drawn as Cards), `selected-key`, `timeline-empty`, `draft-title`, `draft-body`, `delete-label` | `onSelectEntry(index)`, `onNewEntry`, `onTitleChange(value)`, `onBodyChange(value)`, `onSaveEntry`, `onDeleteEntry`, `onCancelEdit` |
 
 - **The editor holds a draft for a target** (a new entry, or an existing one).
   Typing only changes the draft, Save commits it, and Cancel reloads it.

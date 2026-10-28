@@ -333,6 +333,85 @@ Future<void> caseDeferred() async {
   );
 }
 
+/// A state file the runtime rejects moves to the first FREE quarantine name,
+/// never over an earlier quarantine, which may be someone's real data. A
+/// directory takes a name as surely as a file does (Windows refuses an
+/// exclusive create onto one as "access denied", not "exists"). With all ten
+/// names taken the file stays where it is, and nothing is saved over it.
+///
+/// | launch | before                                 | afterwards                    |
+/// |--------|----------------------------------------|-------------------------------|
+/// | first  | `{}`, `.corrupt` file, `.corrupt.1` dir | `{}` in `.corrupt.2`, saving  |
+/// | second | `{}`, `.corrupt` to `.9` held          | `{}` still live, not saving   |
+Future<void> caseQuarantine() async {
+  final path = Platform.environment['MOSAIC_APP_STATE_PATH'];
+  if (path == null) {
+    check(false, 'MOSAIC_APP_STATE_PATH names the quarantine state file');
+    return;
+  }
+  // `{}` parses, so it reaches the runtime, which refuses it: no schema.
+  const rejected = '{}';
+  const increment = <String, Object?>{
+    'name': 'increment',
+    'payload': <String, Object?>{'amount': 1},
+  };
+  final earlier = File('$path.corrupt')..writeAsStringSync('earlier');
+  final directory = Directory('$path.corrupt.1')..createSync();
+  File(path).writeAsStringSync(rejected);
+
+  final first = loadHost();
+  final moved = (await first.props())?['persistenceWarning'];
+  check(
+    earlier.readAsStringSync() == 'earlier',
+    'an earlier quarantine is never replaced',
+  );
+  check(
+    directory.existsSync() && directory.listSync().isEmpty,
+    'a directory at a quarantine name is skipped',
+  );
+  final next = File('$path.corrupt.2');
+  check(
+    next.existsSync() && next.readAsStringSync() == rejected,
+    'a rejected file moves to the first free name',
+  );
+  check(
+    moved is String && !moved.contains('will not be saved'),
+    'a file moved aside leaves saving on',
+  );
+  await first.handleEvent(increment);
+  check(
+    File(path).existsSync() && File(path).readAsStringSync() != rejected,
+    'fresh state is saved once the rejected file is aside',
+  );
+
+  for (var index = 3; index < 10; index++) {
+    File('$path.corrupt.$index').writeAsStringSync('taken $index');
+  }
+  File(path).writeAsStringSync(rejected);
+  final second = loadHost();
+  final blocked = (await second.props())?['persistenceWarning'];
+  check(
+    blocked is String && blocked.contains('This session will not be saved.'),
+    'with every name taken, the warning says nothing is saved',
+  );
+  final answer = await second.handleEvent(increment);
+  check(
+    File(path).readAsStringSync() == rejected,
+    'a file that could not move aside is not written over',
+  );
+  check(
+    answer?['persistenceWarning'] == blocked,
+    'the warning stays showing after an event',
+  );
+  check(
+    earlier.readAsStringSync() == 'earlier' &&
+        directory.existsSync() &&
+        next.readAsStringSync() == rejected &&
+        File('$path.corrupt.9').readAsStringSync() == 'taken 9',
+    'no quarantine was replaced',
+  );
+}
+
 Future<void> main() async {
   final probeCase = Platform.environment['MOSAIC_PROBE_CASE'] ?? '';
   switch (probeCase) {
@@ -352,6 +431,8 @@ Future<void> main() async {
       await caseRunawayChaining();
     case 'deferred':
       await caseDeferred();
+    case 'quarantine':
+      await caseQuarantine();
     default:
       stdout.writeln('unknown MOSAIC_PROBE_CASE `$probeCase`');
       exit(2);

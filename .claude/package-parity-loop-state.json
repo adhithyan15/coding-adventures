@@ -16,16 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": 18293,
+  "active_pr": 18355,
   "active_prs": [
-    18293,
-    18355
+    18355,
+    18367
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-26T15:37:25Z",
-    "pr_number": 18324,
-    "head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
-    "action": "Verified every exact-head check terminal acceptable and the reviewed Python gradient-descent head conflict-free, completed guarded squash merge as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a, and verified the receipt on origin/main.",
+    "observed_at": "2026-10-26T23:13:55Z",
+    "pr_number": 18293,
+    "head_revision": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
+    "action": "Verified .NET Bezier PR #18293 merged through guarded squash auto-merge as 960397b253474e002be8805103f1f0bca6d82e6c and that exact receipt is present on current origin/main. Its merge advanced main and made the published Kotlin and Swift parity branches conflicting; preserve their published histories with normal merges and require fresh exact-head validation and hosted checks.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -16427,19 +16427,19 @@
       "pr_number": 18355,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18355",
       "pr_opened_at": "2026-10-26T13:52:05Z",
-      "publication_head": "34c40e1eee79ccf526d6217e63d166b19f13e1e1",
-      "publication_notes": "Draft PR #18355 opened from the exact independently reviewed implementation and reconciliation head. GitHub reports the branch mergeable. The draft records its durable PR identity; this lifecycle-only receipt requires independent delta review before the PR is marked ready. Guarded auto-merge remains disabled until every exact-head check is terminal acceptable and the head remains conflict-free.",
+      "publication_head": "f27058ffa18abe1fb7a7167237eb0b761414162f",
+      "publication_notes": "PR #18355 is open and non-draft at exact independently reviewed published head f27058ffa18abe1fb7a7167237eb0b761414162f. Every replacement hosted check completed acceptably, but guarded auto-merge remained disabled. The guarded merge of .NET Bezier PR #18293 advanced main and made this published head conflicting, so current main is being merged normally without rewriting history; the resulting head requires fresh exact-head review and hosted checks before guarded auto-merge.",
       "selected_at": "2026-10-26T12:35:04Z",
       "base_revision": "9dce8120cfc6ed37c205d7a03f35de40b509260a",
       "implementation_revision": "28a9c35b08fe59795913b3076e47b422df3de6d6",
       "public_dependency_fix_revision": "dbf2b2f4c1b6255b5bdbcdef64e3aca7468f09cb",
-      "reconciled_main_revision": "9dce8120cfc6ed37c205d7a03f35de40b509260a",
+      "reconciled_main_revision": "cee485ce0a48464b35619f156ff7674b7c72ad58",
       "package_paths": [
         "code/packages/kotlin/micro-qr"
       ],
       "selection_notes": "Selected after verified guarded merge of PR #18312 opened a publication slot. This bounded build-front and Gradle-metadata repair restores an existing 123-test Kotlin package to repository discovery and scheduling and proves its public transitive ModuleGrid API from an external Gradle consumer, so it ranks ahead of the capability-only Swift PaintVmAscii repair. Prepared Bezier successors remain blocked on live selector dependency PR #18293. The only live parity PRs are #18293 and #18324; neither overlaps this Kotlin production/package root. PR #18324 also removes its own distinct code/BUILD-EXEMPTIONS line, so later append-only reconciliation must preserve both removals plus both owners' state/roadmap receipts.",
       "reconciliation_notes": "Rebased the two local implementation commits conflict-free onto exact origin/main 9dce8120cfc6ed37c205d7a03f35de40b509260a. Preserved main's intervening package, roadmap, and lifecycle history; repaired the inherited duplicate merged_at key on the CommonMark fixture owner without changing its value; reconciled live PRs to {18293, 18324}; and recorded the verified #18312 final head, merge timestamp, merge commit, and acceptable terminal checks.",
-      "merge_reconciliation_notes": "Merged exact origin/main 1bb58a0d7ed8d818d622e69890234d96b6e26b3a normally into the published branch without rewriting history. Preserved the Kotlin selection and publication history, both distinct BUILD-exemption removals, and main's Python package and lifecycle history; recorded PR #18324 merged from exact reviewed head d34af356d621175dd8cc307d953ecb7a99d1b79a at 2026-10-26T15:37:25Z as 1bb58a0d7ed8d818d622e69890234d96b6e26b3a; and reconciled live PRs to {18293, 18355}. The Kotlin owner remains pr-open pending independent review of the resulting merge head and fresh hosted checks.",
+      "merge_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main cee485ce0a48464b35619f156ff7674b7c72ad58 after .NET Bezier PR #18293 merged from exact reviewed head c7b1e98687d3c762a98a9beed61ad71f586ca484 at 2026-10-26T23:13:55Z as 960397b253474e002be8805103f1f0bca6d82e6c. Preserved the complete Python and .NET merge receipts, the Kotlin selection and publication history, and both distinct BUILD-exemption removals. The live parity set is now {18355, 18367}; both published branches require independent conflict reconciliation, fresh exact-head review, and replacement hosted checks.",
       "validation_notes": "A clean package BUILD under Gradle 9.4.1 and JDK 25/JVM target 21 passes all 123 existing tests with zero failures, errors, or skips. A temporary external Gradle consumer depending only on com.codingadventures:micro-qr compiles while importing the public com.codingadventures.barcode2d.ModuleGrid return type, proving barcode-2d is correctly exposed as an api dependency; gf256 remains an implementation dependency. The production Go planner discovers 20 sparse-worktree packages, selects exactly one changed package and the four-package Kotlin closure {barcode-2d, gf256, micro-qr, paint-instructions}, reports only the Kotlin toolchain and no special suites, and executes exactly those four BUILD fronts successfully from the emitted plan. Go vet and build pass; the full Go test inventory is intentionally not a sparse-worktree gate because its cross-language source-reference tests require absent native roots and PowerShell. Capability schema validation passes for the empty authority declaration. The root changelog shard has the required level-3 heading, canonical 60-character slug, and exact SHA-256 heading digest 0ceccd50. lessons.py validates 1,587 unique shards with zero problems. Strict duplicate-key JSON parsing, 1,547 unique owners, dependency completeness, acyclicity, zero merged-to-unfinished edges, exactly one in-progress owner, exactly two pr-open owners {18293, 18324}, and diff hygiene pass. No encoder production source changed.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. `code/packages/kotlin/micro-qr` has production and test sources plus package documentation but no Gradle package metadata and no BUILD front, so established-lane discovery cannot schedule or validate it. Add lane-consistent Gradle metadata, fail-closed cross-platform BUILD fronts, execution of the existing test suite, capability metadata, and documentation without widening the portable Micro QR contract."
     },
@@ -16545,6 +16545,10 @@
       "pr_opened_at": "2026-10-26T09:06:48Z",
       "publication_head": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
       "publication_notes": "Draft PR #18324 opened from exact independently reviewed implementation head 773fb4cafe0033da22128682b3b14ae19a6cb4d2. After the Swift hash-functions main advance, current main was merged into the published Python branch without rewriting history; integrity-only head d34af356d621175dd8cc307d953ecb7a99d1b79a passed independent review and every hosted check before guarded squash merge.",
+      "merged_head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "merged_at": "2026-10-26T15:37:25Z",
+      "merge_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. GitHub reported the reviewed head conflict-free, and guarded squash auto-merge completed without a manual merge command. The merge receipt is present on current origin/main.",
       "selection_revision": "27dc687739ac74e8f5bbab70916a03d62a609743",
       "selection_notes": "Selected after the local Swift hash-functions tranche reached an exact-head independent PASS while the hosted parity queue remained full. Among dependency-ready portable owners, this bounded Python front ranks ahead of the Swift paint-vm-ascii capability-only repair because it removes one exact orphan exemption and unblocks two recorded descendants without changing SGD behavior. Scope is limited to truthful Unix and Windows BUILD fronts, production-only coverage, Ruff, existing ML02 behavior tests, publishable metadata, package documentation, and removal of the exact gradient-descent exemption. No training loop, randomness, convergence guarantee, model API, native runtime, or new host authority is introduced.",
       "reconciled_main_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
@@ -20743,7 +20747,7 @@
     {
       "id": "geometry-bezier2d-flattening-csharp-fsharp",
       "title": "Consume safe Bezier flattening contract in C# and F#",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
@@ -20751,9 +20755,15 @@
       "pr_number": 18293,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18293",
       "pr_opened_at": "2026-10-26T04:49:54Z",
-      "publication_head": "a62b31f3543f6a09bbf5b9daf1363c10b5862bf4",
+      "publication_head": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
+      "merged_head_revision": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
+      "merged_at": "2026-10-26T23:13:55Z",
+      "merge_revision": "960397b253474e002be8805103f1f0bca6d82e6c",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, and the merge receipt is an ancestor of current origin/main.",
       "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner.",
-      "publication_notes": "PR #18293 is open, non-draft, mergeable, and failure-free at its exact independently reviewed head. Required jobs remain queued or running, so guarded auto-merge is not yet enabled."
+      "selection_notes": "Selected after the WasmOpcodes and C# document-AST build-quality tranches completed local preparation behind the occupied three-PR publication ceiling. The merged G2D02 termination contract is its only dependency. This two-lane tranche has higher parity leverage than another single build-front repair and no implementation overlap with active TypeScript GFM, CommonMark fixture, Haskell Starlark-provider, or the two prepared .NET branches. Preserve each public ToPolyline signature while replacing midpoint recursion with dynamic nine-case fixture adoption, finite-segment bounds, finite-input checks, deterministic 32-depth/65,535-split failure, 95% production line gates, and dependent Arc2D regression runs.",
+      "validation_notes": "Clean BUILD runs execute 12 tests in each lane after independent review exposed and repaired a subnormal-distance underflow. Scaled norm and projection arithmetic makes the new Double.Epsilon regression fail closed; the production-only reports measure C# at 100% line, 96.96% branch and 100% method coverage and F# at 99.39% line, 90.9% branch and 100% method coverage. Earlier one-test selections reported 35.13% C# and 34.89% F# line coverage and exited 1 against the 95% floor, proving fail-closed enforcement. The dependent C# and F# Arc2D suites pass 10 tests each at 97.01% and 98.83% line coverage respectively. Direct and transitive NuGet vulnerability audits report none. Focused G2D02 exact-selection and atomic-plan tests plus Go vet pass. Strict state parsing, lesson validation, JSON, and diff hygiene pass. The branch preserves published history by normally merging exact main 0be03745d775ffa9ee8c66ffda1700baa76ba58f and then exact current main 1bb58a0d7ed8d818d622e69890234d96b6e26b3a; the shared lifecycle and append-only roadmap conflicts retain both owners' receipts, including Python PR #18324's verified merge. Fresh exact-merge-head validation, independent review, and hosted CI remain publication gates.",
+      "publication_notes": "PR #18293 merged through guarded squash auto-merge from exact independently reviewed head c7b1e98687d3c762a98a9beed61ad71f586ca484 after every replacement hosted check completed acceptably. The exact merge receipt 960397b253474e002be8805103f1f0bca6d82e6c is present on current origin/main."
     },
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",

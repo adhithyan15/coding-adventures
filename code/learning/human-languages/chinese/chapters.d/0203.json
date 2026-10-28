@@ -1,0 +1,20 @@
+{
+  "chapter": 203,
+  "title": "Renting a Flat",
+  "label": "ch:zh-renting-a-flat",
+  "canDo": "I can talk about renting a flat: the landlord, the rent, the deposit and the contract.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C203-hetong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can talk about renting a flat: the landlord, the rent, the deposit and the contract.",
+    "assesses": [
+      "ZH-LEX-C203-RENT203-02",
+      "ZH-LEX-C203-RENT203-03",
+      "ZH-LEX-C203-RENT203-04",
+      "ZH-LEX-C203-RENT203-05"
+    ]
+  }
+}

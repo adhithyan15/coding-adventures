@@ -1,0 +1,11 @@
+{
+  "id": "JA-C487-tenchou",
+  "pathSegment": "JA-PATH-487-SHOP487",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-487-SHOP487",
+      "order": 2
+    }
+  ]
+}

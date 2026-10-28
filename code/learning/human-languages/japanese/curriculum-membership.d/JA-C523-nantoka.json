@@ -1,0 +1,11 @@
+{
+  "id": "JA-C523-nantoka",
+  "pathSegment": "JA-PATH-523-ANY523",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-523-ANY523",
+      "order": 4
+    }
+  ]
+}

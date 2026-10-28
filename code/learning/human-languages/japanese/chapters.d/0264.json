@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "A Bad Fall",
+  "label": "ch:ja-a-bad-fall",
+  "canDo": "I can say how someone fell and got hurt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C264-shibaraku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can say how someone fell and got hurt.",
+    "assesses": [
+      "JA-LEX-C264-KOROBU264-03",
+      "JA-LEX-C264-KOROBU264-04",
+      "JA-LEX-C264-KOROBU264-05"
+    ]
+  }
+}

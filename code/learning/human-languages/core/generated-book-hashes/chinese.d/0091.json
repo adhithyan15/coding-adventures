@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:b7caf76ba6c58905",
+  "lessonIds": [
+    "ZH-C91-xiangyao",
+    "ZH-W91-yao",
+    "ZH-C91-buyao",
+    "ZH-C91-xuyao",
+    "ZH-C91-yidianr",
+    "ZH-C91-practice"
+  ],
+  "tex": "chinese/book/chapters/ch91-what-id-like.tex"
+}
