@@ -32,3 +32,8 @@ Microsoft documents x:Load as conditional creation/removal with a named-element 
 - [ ] Native candidate and meaningful regression tests.
 - [ ] Performance and interaction validation; choose/reject realization strategy.
 - [ ] Review, publish, CI and verified merge.
+## Initial experiment result
+
+The current local prototype wraps each branch body in a named deferred Border below the eager ContentControl. The shared truthiness converter returns bool when requested by x:Load, preserving inverse handling. All 395 emitter library tests pass. Regenerated VisiCalc and Startup components compile in WinUI Debug (zero errors, two existing CS0067 warnings) and launch. One formula staging/commit visibly produced A1=42 and dependent65/66/196. The first smoke's EditContent setter timings were0.4095ms for staging and2.3104ms for commit, but the cold commit callback was105.9771ms. This is not a performance win claim; matched warm sampling and lifecycle testing are still required. The prototype currently affects all If branches and must pass the compatibility review in step3 before publication.
+
+Generated files and candidate-detail.jsonl are retained outside the worktree in C:/Users/adhit/.codex/worktrees/mosaic-conditional-editor-20261028-output. The scaffold/runtime/Rust DLL are retained from #18386, while both application component triples and helpers were regenerated from this checkout. Do not describe this as a fully rebuilt native release.

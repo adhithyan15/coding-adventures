@@ -8502,8 +8502,9 @@ fn emit_if(
     //    inside a single `<ContentControl>` with bound Visibility. --
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
+    let branch_id = ctx.next_host_counter();
     let then_body =
-        emit_xaml_single_content_children(&if_node.children, indent + 4, part_styles, ctx)?;
+        emit_xaml_single_content_children(&if_node.children, indent + 8, part_styles, ctx)?;
 
     let mut out = String::new();
     writeln!(
@@ -8511,7 +8512,12 @@ fn emit_if(
         "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, Mode=OneWay}}\"{extra}>"
     )
     .unwrap();
+    // Keep the outer wrapper eager: x:Load cannot be a template root.
+    // The inner subtree is created only while its branch is selected, so
+    // inactive editors do not receive every owner text update.
+    writeln!(out, "{pad2}<Border x:Name=\"MosaicConditional{branch_id}Then\" x:Load=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, Mode=OneWay}}\">").unwrap();
     out.push_str(&then_body);
+    writeln!(out, "{pad2}</Border>").unwrap();
     writeln!(out, "{pad}</ContentControl>").unwrap();
 
     // -- 4. Emit the else-branch wrapper, when paired. Visibility is
@@ -8519,13 +8525,15 @@ fn emit_if(
     //    so the converter inverts the boolean. --
     if let Some(else_node) = else_node {
         let else_body =
-            emit_xaml_single_content_children(&else_node.children, indent + 4, part_styles, ctx)?;
+            emit_xaml_single_content_children(&else_node.children, indent + 8, part_styles, ctx)?;
         writeln!(
             out,
             "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert, Mode=OneWay}}\"{extra}>"
         )
         .unwrap();
+        writeln!(out, "{pad2}<Border x:Name=\"MosaicConditional{branch_id}Else\" x:Load=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert, Mode=OneWay}}\">").unwrap();
         out.push_str(&else_body);
+        writeln!(out, "{pad2}</Border>").unwrap();
         writeln!(out, "{pad}</ContentControl>").unwrap();
         let _ = pad2; // silence unused if no Else
     } else {
@@ -8618,6 +8626,7 @@ fn emit_bool_to_vis_converter_source(namespace: &str) -> String {
                      _ => true,\n        \
                  }};\n        \
                  if (parameter is string p && p == \"invert\") b = !b;\n        \
+                 if (targetType == typeof(bool)) return b;\n        \
                  return b ? Visibility.Visible : Visibility.Collapsed;\n    \
              }}\n\n    \
              public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
@@ -20805,6 +20814,8 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+        // A deferred child is below the eager wrapper, never the template root.
+        assert!(r.xaml.contains("<Border x:Name=\"MosaicConditional1Then\" x:Load=\"{x:Bind Editable, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">"));
         // Then-branch content lives inside.
         assert!(r.xaml.contains("Text=\"editable!\""));
     }
