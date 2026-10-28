@@ -254,6 +254,9 @@ An integer-only multiplication chain may temporarily exceed `2^53` up to
 into binary64's contiguous exact-integer range before widening. Checked
 overflow still fails closed, and real `/` may not consume an over-wide
 intermediate because its integer operand would widen before division.
+The same checked intermediate budget applies to integer-only additive
+subexpressions nested inside such a reduction, while a top-level additive
+result still has to fit the contiguous exact-integer range.
 Independently bounded dynamic sign-rooted transforms may multiply under the
 same checked magnitude limit because every factor remains an exact integer.
 They may also add or subtract under a checked complete-sum magnitude limit,

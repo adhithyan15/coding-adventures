@@ -18,15 +18,14 @@
   },
   "active_pr": 18511,
   "active_prs": [
-    18508,
     18511,
     18516
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T11:05:56Z",
-    "pr_number": 18511,
-    "head_revision": "77107207763aec5fc8302eb8b55c9abb13dd2deb",
-    "action": "The exact Haskell/Swift Bezier head failed before package tests on hosted macOS because GHC 9.4.8 selected the Xcode linker while its hardcoded CLT SDK contains arm64e.x1 stubs. Logged, reprioritized, implemented, and locally validated the bounded Haskell trig BUILD repair at 77107207763aec5fc8302eb8b55c9abb13dd2deb. No guarded merge action is allowed until the repaired published exact head completes fresh hosted checks.",
+    "observed_at": "2026-10-28T11:08:57Z",
+    "pr_number": 18508,
+    "head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
+    "action": "Verified scripting Bezier PR #18508 completed every exact-head check acceptably and merged through guarded squash auto-merge as fe057f18c6e8b62cae9921fee2538c091fae1bbb. The receipt is current origin/main and the clean completed worktree and local branch were removed. Normal current-main reconciliation is now required for the two remaining published parity PRs, including a fresh hosted matrix for the repaired Haskell linker head.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -20802,7 +20801,7 @@
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
       "title": "Consume safe Bezier flattening contract in Python, Ruby, and Perl",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
@@ -20811,9 +20810,19 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18508",
       "pr_opened_at": "2026-10-28T08:41:21Z",
       "publication_head": "c780f49320552adab7eea83c283a6c7afbce17eb",
-      "publication_notes": "PR #18508 is open and non-draft at exact reconciliation head c780f49320552adab7eea83c283a6c7afbce17eb. Dynamic Bezier PR #18506 advanced main and triggered that normal reconciliation; replacement exact-head hosted checks are running.",
+      "publication_notes": "PR #18508 completed every exact-head hosted check acceptably and merged through guarded squash auto-merge from exact reconciliation head c780f49320552adab7eea83c283a6c7afbce17eb.",
+      "merged_head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
+      "merged_at": "2026-10-28T11:08:57Z",
+      "merge_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
+      "notes": "Exception-based scripting API slice. All three use midpoint flatness and unbounded recursion without explicit flattening-input validation. Consume nine neutral cases; test NaN/infinity and nonfinite controls natively, atomic budget failure, and same-language Arc2D regressions.",
+      "selection_notes": "Selected as the next independent implementation tranche while the three-PR publication ceiling is occupied. Its sole dependency, the G2D02 termination contract and nine-case neutral corpus, is merged. Python, Ruby, and Perl share the same exception-based API shape but have disjoint native sources and test fronts, so this removes three stale midpoint-recursive lanes without depending on the prepared C#/F# implementation. Keep shared build-tool selector work out of this branch until the C#/F# selector change lands, avoiding a conflict while preserving exact native fixture consumption and Arc2D regression coverage.",
       "reconciled_main_revision": "e08ed142125a4441e2ca53470e6b584573b7e6ac",
-      "notes": "Exception-based scripting API slice. All three use midpoint flatness and unbounded recursion without explicit flattening-input validation. Consume nine neutral cases; test NaN/infinity and nonfinite controls natively, atomic budget failure, and same-language Arc2D regressions."
+      "current_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main e08ed142125a4441e2ca53470e6b584573b7e6ac after dynamic Bezier PR #18506 merged from exact reviewed head 133ed55bc690321aef534d18902b875353bedff9. The merge retained every prior parity receipt and the complete Python/Ruby/Perl implementation, validation, publication, and review history. The production package delta remains unchanged from exact reviewed head ec16a6829e41cc5d5c0e1f3fbf747452faee8b7e; only lifecycle receipts changed. The live parity publication set is {18508, 18511}.",
+      "implementation_revision": "4f0ea830ec3e2a18eade21a4dac5f8233046717d",
+      "validation_notes": "All three native Bezier2D builds pass the dynamic nine-case corpus plus nonfinite, derived-overflow, atomic-failure, and subnormal-underflow regressions. Independent review added exact fixture-version, depth, and split-budget assertions to all three readers and repaired stale Ruby midpoint documentation. Python passes 35 tests at 95.73% production coverage; a one-test selection measures 22.56% and exits 1 against the raised 95% floor. Ruby passes 19 tests with 138 assertions on its Unix build, and its Windows front now loads the same complete test set. Perl passes 86 assertions across both native files. Dependent Arc2D builds remain green: Python 19 tests at 98.36%, Ruby 9 tests/25 assertions, and Perl 16 tests. Ruff passes for changed Python source/tests, Ruby and Perl syntax checks pass, strict state parsing finds 1,547 unique items, and 1,568 canonical lesson shards validate with zero problems. The branch is reconciled onto exact current main 5daf063f8aeaf4f2c40936ab579a00113706074b with all intervening parity receipts preserved and no production-package delta from exact reviewed head 6138482108a9535aed890eb76424c2bfe442275b. Refreshed native validation and exact merge-head review remain publication gates.",
+      "final_review_revision": "8e20119629ae0487a7e505c1ea97c08ac9a3ae4e",
+      "final_review_notes": "Exact merge-head review confirms the Python, Ruby, and Perl package delta is unchanged from prepared reviewed head 6138482108a9535aed890eb76424c2bfe442275b. Fresh post-merge builds pass Python Bezier2D 35 tests at 95.73% coverage and Arc2D 19 tests at 98.36%, Ruby Bezier2D 19 tests/138 assertions and Arc2D 9 tests/25 assertions, and Perl Bezier2D 86 assertions and Arc2D 16 assertions. The 17-path branch diff is clean, the state is strict JSON, and no live open PR overlaps any of the three package roots."
     },
     {
       "id": "geometry-bezier2d-flattening-go-rust",
@@ -20876,18 +20885,18 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18511",
       "pr_opened_at": "2026-10-28T09:20:52Z",
       "publication_head": "2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a",
-      "publication_notes": "PR #18511 is open and non-draft. Exact head cd46abd9c493004912415a69ae6df75e5ee67c9d reached a hosted macOS runner/toolchain failure before Haskell package tests. The bounded trig BUILD repair is implemented and locally validated at 77107207763aec5fc8302eb8b55c9abb13dd2deb. Publish the normal follow-up history and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
+      "publication_notes": "PR #18511 is open and non-draft. Exact head cd46abd9c493004912415a69ae6df75e5ee67c9d reached a hosted macOS runner/toolchain failure before Haskell package tests. The bounded trig BUILD repair is implemented and locally validated at 77107207763aec5fc8302eb8b55c9abb13dd2deb. Scripting Bezier PR #18508 then advanced main, so preserve the published repair history through a normal exact-main merge and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
       "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all.",
       "selection_notes": "Selected from current main after independent review rejected the unpublished TypeScript Arc2D build candidate: the production runner already starts every BUILD line in the package directory, while the proposed POSIX identity guard would fail under the Windows fallback. That non-defect branch was retired rather than published. All three publication slots remain occupied; the ready C#/F# tranche stays first in the publication queue, while Python/Ruby/Perl and TypeScript/Elixir/Lua remain sequenced behind shared selector integration. Haskell/Swift is the highest independent implementation owner because it advances two non-Rust lanes, depends only on the already-merged neutral contract, and has no changed-path overlap with the active or prepared tranches. Keep scope to deterministic safe flattening APIs, all nine neutral fixture cases, native Bezier2D and Arc2D regressions, package docs/changelogs, and lifecycle receipts; Go/Rust, the aggregate owner, and build-selector integration remain separate.",
       "started_at": "2026-10-25T20:56:00-07:00",
-      "reconciled_main_revision": "e08ed142125a4441e2ca53470e6b584573b7e6ac",
-      "current_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main e08ed142125a4441e2ca53470e6b584573b7e6ac after dynamic Bezier PR #18506 merged from exact reviewed head 133ed55bc690321aef534d18902b875353bedff9. The merge preserved every prior parity receipt and the complete Haskell/Swift implementation, validation, publication, and review history. The production package delta remains unchanged from exact reviewed head 2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a; only lifecycle receipts changed. The live parity publication set is {18508, 18511}.",
+      "reconciled_main_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
+      "current_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main fe057f18c6e8b62cae9921fee2538c091fae1bbb after scripting Bezier PR #18508 merged from exact reviewed head c780f49320552adab7eea83c283a6c7afbce17eb. The merge preserved every prior parity receipt, the complete Haskell/Swift implementation and review history, and the hosted-macOS trig repair. The Haskell/Swift production package delta remains unchanged from exact reviewed head 2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a apart from the bounded trig BUILD fix at 77107207763aec5fc8302eb8b55c9abb13dd2deb. The live parity publication set is {18511, 18516}; replacement exact-head checks remain mandatory.",
       "implementation_revision": "b77bc12a78ea02fe560b9cea38aeb06018b53d22",
       "package_paths": [
         "code/packages/haskell/bezier2d",
         "code/packages/swift/bezier2d"
       ],
-      "validation_notes": "Local implementation is complete. Haskell dynamically consumes all nine neutral rows and passes 29 Bezier2D examples; its explicit downstream Arc2D Cabal run also passes 25 Arc2D, 29 Bezier2D, 27 Point2D, and 19 Trig examples. Swift dynamically consumes all nine neutral rows and passes all 27 Bezier2D tests; its downstream Arc2D BUILD passes all 13 tests. Both lanes reject invalid tolerance, non-finite controls and derived geometry, and subnormal geometry that would otherwise underflow into a false chord; they preserve atomic failure under the pinned depth and 65,535-subdivision budgets. After normally merging exact current main 98eac40cc0ebba14b6c4a22eebfd60419ea28777, all four native and downstream suites pass again and the production package delta is unchanged from prepared reviewed head b48a6da1880522ff003959ab31bf8ca473d06b22. Exact merge-head review remains the publication gate.",
+      "validation_notes": "Local implementation is complete. Haskell dynamically consumes all nine neutral rows and passes 29 Bezier2D examples; its explicit downstream Arc2D Cabal run also passes 25 Arc2D, 29 Bezier2D, 27 Point2D, and 19 Trig examples. Swift dynamically consumes all nine neutral rows and passes all 27 Bezier2D tests; its downstream Arc2D BUILD passes all 13 tests. Both lanes reject invalid tolerance, non-finite controls and derived geometry, and subnormal geometry that would otherwise underflow into a false chord; they preserve atomic failure under the pinned depth and 65,535-subdivision budgets. After normally merging exact current main fe057f18c6e8b62cae9921fee2538c091fae1bbb, the complete Haskell Bezier2D and Arc2D closures pass again, including 29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples; Swift Bezier2D passes all 27 tests and downstream Arc2D passes all 13. The production delta is unchanged from prepared reviewed head b48a6da1880522ff003959ab31bf8ca473d06b22 apart from the bounded trig BUILD repair. Fresh exact-head hosted checks remain the publication gate.",
       "final_review_revision": "ac67ca81e00f470e2cb095c8b68fe43f923d92df",
       "final_review_notes": "Exact merge-head review confirms the Haskell and Swift production package delta is unchanged from prepared reviewed head b48a6da1880522ff003959ab31bf8ca473d06b22. Fresh post-merge native and downstream suites pass, the 15-path branch diff is clean, the lifecycle state parses as strict JSON, and no live open PR overlaps either package root."
     },

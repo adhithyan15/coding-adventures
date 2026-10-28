@@ -18167,6 +18167,42 @@ all 13 downstream Swift Arc2D tests pass after reconciliation. The live set is
 {#18506, #18508}; exact merge-head review remains before the two-lane tranche
 can occupy the third slot.
 
+## October 25, 2026: scripting Bezier flattening selection
+
+The occupied three-PR publication ceiling does not block independent local
+preparation. The next dependency-ready tranche is
+`geometry-bezier2d-flattening-python-ruby-perl`: its sole prerequisite is the
+merged G2D02 termination contract, and its native package sources do not
+overlap the active Haskell, C# document-AST, or .NET Wasm PRs or the prepared
+C#/F# Bezier tranche.
+
+All three scripting implementations still use midpoint-only flatness and
+unbounded recursion. Adopt the nine-case neutral fixture through each public
+polyline API, reject nonpositive or nonfinite tolerance and nonfinite control
+points, use the finite-segment control-point bound, and fail atomically when
+the shared depth or split budget is exhausted. Preserve public return shapes
+and endpoint ordering, and run each same-language Arc2D regression suite.
+Shared Go build-tool selector changes remain with the earlier C#/F# tranche;
+this branch consumes the fixture natively and avoids conflicting selector
+edits until that dependency-independent publication lands.
+
+The prepared implementation now replaces recursion in all three lanes with a
+left-first explicit stack, a depth limit of 32, and a shared 65,535-split
+budget. Scaled finite-segment distance arithmetic also carries the independent
+.NET review's subnormal-underflow lesson into these lanes before publication.
+The branch is now reconciled normally with exact current main
+`5daf063f8aeaf4f2c40936ab579a00113706074b`, preserving every intervening
+parity merge receipt without rewriting its prepared implementation history.
+The Python, Ruby, and Perl production delta is unchanged from exact reviewed
+head `6138482108a9535aed890eb76424c2bfe442275b`; the live publication set is
+{#18367, #18506}, leaving one slot for this independent three-lane tranche.
+All native fixtures and same-language Arc2D suites pass. Python's 35-test
+Bezier2D build measures 95.73% production coverage and its one-test negative
+selection fails the raised 95% floor; Ruby passes 19 tests with 138 assertions,
+and Perl passes 86 assertions. Independent review also pinned the fixture
+version, depth, and split-budget metadata in every reader and corrected Ruby's
+retired midpoint-flatness comment. Hosted platforms and independent final-head
+review remain required before this tranche can be published.
 ## October 25, 2026: dynamic-runtime Bezier flattening selection
 
 With the three publication slots still occupied and the C#/F# plus
@@ -18737,7 +18773,7 @@ PaintVmAscii preparation, publication, and review history. Dynamic Bezier PR
 {#18367, #18506}. The resulting Swift merge head must pass focused validation,
 exact-head review, and fresh hosted checks before guarded auto-merge.
 
-## October 28, 2026: Swift merge and dynamic Bezier conflict reconciliation
+## October 28, 2026: Swift merge and published Bezier conflict reconciliation
 
 Swift PaintVmAscii PR #18367 completed all 40 exact-head checks acceptably and
 merged through guarded squash auto-merge from exact reconciliation head
@@ -18747,14 +18783,14 @@ merged through guarded squash auto-merge from exact reconciliation head
 completed worktree and local branch were removed safely.
 
 That base advance conflicts with the published dynamic and scripting Bezier
-branches only on their append-only lifecycle records. Preserve the dynamic
-branch's published history with a normal merge of exact current main while
-retaining every prior merge receipt and the TypeScript/Elixir/Lua implementation,
-validation, publication, and review history. The live publication set is now
-{#18506, #18508}; each reconciled exact head requires fresh hosted checks before
-guarded auto-merge can be enabled.
+branches only on append-only lifecycle records. Both branches preserve their
+published histories through normal merges of exact current main: the scripting
+branch retains the Python/Ruby/Perl implementation and review receipts, while
+the dynamic branch retains the TypeScript/Elixir/Lua implementation and review
+receipts. The live publication set is now {#18506, #18508}; each reconciled
+exact head requires fresh hosted checks before guarded auto-merge can be enabled.
 
-## October 28, 2026: dynamic Bezier merge and Haskell/Swift reconciliation
+## October 28, 2026: dynamic Bezier merge and scripting reconciliation
 
 Dynamic Bezier PR #18506 completed all 39 exact-head checks acceptably and
 merged through guarded squash auto-merge from exact reconciliation head
@@ -18796,3 +18832,27 @@ BUILD follows the CLT route and passes all 19 examples. The dependent Haskell
 Bezier2D BUILD passes all 19 Trig, 27 Point2D, and 29 Bezier2D examples. Keep
 PR #18511 blocked until the normal follow-up commit is published and every
 replacement exact-head hosted check reaches a terminal acceptable result.
+
+## October 28, 2026: scripting Bezier merge and Haskell/Swift reconciliation
+
+Scripting Bezier PR #18508 completed every exact-head check acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`c780f49320552adab7eea83c283a6c7afbce17eb` as
+`fe057f18c6e8b62cae9921fee2538c091fae1bbb` at
+`2026-10-28T11:08:57Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+Reprioritization keeps Haskell/Swift PR #18511's macOS linker repair first: the
+published failure blocks an existing two-language tranche and the repair is
+already locally green. Preserve that published history by normally merging
+exact current main. The Haskell/Swift production delta remains unchanged from
+its reviewed head apart from the bounded trig BUILD fix. PR #18516 is the
+other live parity owner, leaving one publication slot open for the next
+dependency-ready, non-overlapping backlog item. Both reconciled published
+heads require fresh hosted checks before guarded auto-merge.
+
+Post-reconciliation local validation passes the complete Haskell Bezier2D and
+Arc2D closures (29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples), all
+27 Swift Bezier2D tests, and all 13 downstream Swift Arc2D tests. The normal
+merge may now be published; its new exact head still needs a full replacement
+hosted matrix.
