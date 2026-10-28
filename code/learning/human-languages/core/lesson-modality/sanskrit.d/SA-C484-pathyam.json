@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C484-pathyam",
+    "language": "sanskrit",
+    "chapter": 484,
+    "sequence": 27880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e931e5544fc1bd03"
+  },
+  "findings": []
+}

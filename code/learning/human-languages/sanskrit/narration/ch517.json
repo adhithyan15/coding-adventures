@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 517,
+  "title": "Games at Home",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1530132ef5c57986",
+  "lessons": [
+    {
+      "id": "SA-C517-caturangam",
+      "sequence": 29760,
+      "title": "चतुरंगम् (caturaṅgam) — chess",
+      "headword": "चतुरंगम्",
+      "romanization": "caturaṅgam",
+      "gloss": "chess",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48ee91a3d1632c5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a collection, then the Sanskrit for a liking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चतुरंगम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चतुरंगम् — caturaṅgam — \"chess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुणः मीरा च चतुरंगं क्रीडतः। aruṇaḥ mīrā ca caturaṅgaṃ krīḍataḥ. Arun and Mira are playing chess."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चतुरंगम् (caturaṅgam) is built from catur, \"four\", and aṅga, \"a limb\": the four arms of an old army; MW gives caturaṅga also as a kind of chess played by four (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caturaṅgam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caturaṅgam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caturaṅgam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caturaṅgam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruṇaḥ mīrā ca caturaṅgaṃ krīḍataḥ. — Arun and Mira are playing chess.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruṇaḥ mīrā ca caturaṅgaṃ krīḍataḥ.* — Arun and Mira are playing chess.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a collection, then the Sanskrit for a liking, then say caturaṅgam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a collection, then the Sanskrit for a liking, then say *caturaṅgam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चतुरंगम् (caturaṅgam) mean? (\"Chess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C517-prahelika",
+      "sequence": 29770,
+      "title": "प्रहेलिका (prahelikā) — a riddle",
+      "headword": "प्रहेलिका",
+      "romanization": "prahelikā",
+      "gloss": "a riddle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0ccaab1774a7a6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a liking, then the Sanskrit for chess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रहेलिका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रहेलिका — prahelikā — \"a riddle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पितामहः प्रहेलिकां पृच्छति। pitāmahaḥ prahelikāṃ pṛcchati. Grandfather asks a riddle."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रहेलिका (prahelikā) is the word MW records for a riddle, an enigma; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prahelikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prahelikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prahelikā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prahelikā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitāmahaḥ prahelikāṃ pṛcchati. — Grandfather asks a riddle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitāmahaḥ prahelikāṃ pṛcchati.* — Grandfather asks a riddle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a liking, then the Sanskrit for chess, then say prahelikā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a liking, then the Sanskrit for chess, then say *prahelikā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रहेलिका (prahelikā) mean? (\"A riddle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C517-kridakah",
+      "sequence": 29780,
+      "title": "क्रीडकः (krīḍakaḥ) — a player",
+      "headword": "क्रीडकः",
+      "romanization": "krīḍakaḥ",
+      "gloss": "a player",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7698868423577323",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for chess, then the Sanskrit for a riddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्रीडकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रीडकः — krīḍakaḥ — \"a player\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सः उत्तमः क्रीडकः अस्ति। saḥ uttamaḥ krīḍakaḥ asti. He is a good player."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रीडकः (krīḍakaḥ) comes from the root √krīḍ, \"to play\", which also gives krīḍati, with the agent ending -aka; MW gives krīḍaka as one who sports, a player (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krīḍakaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krīḍakaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krīḍakaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krīḍakaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥ uttamaḥ krīḍakaḥ asti. — He is a good player.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥ uttamaḥ krīḍakaḥ asti.* — He is a good player.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for chess, then the Sanskrit for a riddle, then say krīḍakaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for chess, then the Sanskrit for a riddle, then say *krīḍakaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्रीडकः (krīḍakaḥ) mean? (\"A player\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C517-gulika",
+      "sequence": 29790,
+      "title": "गुलिका (gulikā) — a marble; a small ball",
+      "headword": "गुलिका",
+      "romanization": "gulikā",
+      "gloss": "a marble; a small ball",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb7c9112ae668c90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a riddle, then the Sanskrit for a player."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गुलिका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुलिका — gulikā — \"a marble; a small ball\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बालः उद्याने गुलिकया क्रीडति। bālaḥ udyāne gulikayā krīḍati. The boy plays marbles in the park."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गुलिका (gulikā) is the word MW records, the same as guḍikā, for a ball, a small globule, and a ball to play with; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gulikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gulikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gulikā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gulikā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālaḥ udyāne gulikayā krīḍati. — The boy plays marbles in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālaḥ udyāne gulikayā krīḍati.* — The boy plays marbles in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a riddle, then the Sanskrit for a player, then say gulikā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a riddle, then the Sanskrit for a player, then say *gulikā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गुलिका (gulikā) mean? (\"A marble; a small ball\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C517-putrika",
+      "sequence": 29800,
+      "title": "पुत्रिका (putrikā) — a doll",
+      "headword": "पुत्रिका",
+      "romanization": "putrikā",
+      "gloss": "a doll",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c7e0648625e4d2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a player, then the Sanskrit for a marble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुत्रिका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुत्रिका — putrikā — \"a doll\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बालिका पुत्रिकया क्रीडति। bālikā putrikayā krīḍati. The girl plays with a doll."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुत्रिका (putrikā) is built on putra, \"a son, a child\", with the ending -ikā; MW gives putrikā as a daughter, and as a puppet, a doll (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putrikā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putrikā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putrikā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putrikā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālikā putrikayā krīḍati. — The girl plays with a doll.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālikā putrikayā krīḍati.* — The girl plays with a doll.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a player, then the Sanskrit for a marble, then say putrikā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a player, then the Sanskrit for a marble, then say *putrikā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुत्रिका (putrikā) mean? (\"A doll\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R517-review-510-517",
+      "sequence": 29810,
+      "title": "Looking back: from Clearing the Clutter to Games at Home",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Clearing the Clutter to Games at Home",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49faf0635356b72a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for rubbish and clears away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rubbish, clears away, puts in order, a pile, a thorough cleaning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rubbish, clears away, puts in order, a pile, a thorough cleaning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "firewood, makes hot, takes down, cooking, roasts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: firewood, makes hot, takes down, cooking, roasts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a knife, cuts up, grinds to powder, a winnowing basket, combines",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a knife, cuts up, grinds to powder, a winnowing basket, combines]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "churns, a churning stick, ghee, strains, oily",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: churns, a churning stick, ghee, strains, oily]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "serves food, feeds, dines, leftovers, a lid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: serves food, feeds, dines, leftovers, a lid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flavour, tasty, raw, ripe, sucks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flavour, tasty, raw, ripe, sucks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entertainment, fun, amuses, a collection, a liking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: entertainment, fun, amuses, a collection, a liking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chess, a riddle, a player, a marble, a doll",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: chess, a riddle, a player, a marble, a doll]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rubbish? (अवकरः, avakaraḥ.) Clears away? (उत्सारयति, utsārayati.) Puts in order? (व्यवस्थापयति, vyavasthāpayati.) A pile? (पुञ्जः, puñjaḥ.) A thorough cleaning? (सम्मार्जनम्, sammārjanam.) Firewood? (काष्ठम्, kāṣṭham.) Makes hot? (तापयति, tāpayati.) Takes down? (उत्तारयति, uttārayati.) Cooking? (पाकः, pākaḥ.) Roasts? (भृज्जति, bhṛjjati.) A knife? (छुरिका, churikā.) Cuts up? (कृन्तति, kṛntati.) Grinds to powder? (चूर्णयति, cūrṇayati.) A winnowing basket? (शूर्पम्, śūrpam.) Combines? (संयोजयति, saṃyojayati.) Churns? (मथ्नाति, mathnāti.) A churning stick? (मन्थः, manthaḥ.) Ghee? (घृतम्, ghṛtam.) Strains? (गालयति, gālayati.) Oily? (स्निग्धः, snigdhaḥ.) Serves food? (परिवेषयति, pariveṣayati.) Feeds? (भोजयति, bhojayati.) Dines? (अश्नाति, aśnāti.) Leftovers? (उच्छिष्टम्, ucchiṣṭam.) A lid? (पिधानम्, pidhānam.) A flavour? (स्वादः, svādaḥ.) Tasty? (स्वादुः, svāduḥ.) Raw? (आमः, āmaḥ.) Ripe? (पक्वः, pakvaḥ.) Sucks? (चूषति, cūṣati.) Entertainment? (मनोरञ्जनम्, manorañjanam.) Fun? (हास्यम्, hāsyam.) Amuses? (विनोदयति, vinodayati.) A collection? (संग्रहः, saṅgrahaḥ.) A liking? (रुचिः, ruciḥ.) Chess? (चतुरंगम्, caturaṅgam.) A riddle? (प्रहेलिका, prahelikā.) A player? (क्रीडकः, krīḍakaḥ.) A marble? (गुलिका, gulikā.) A doll? (पुत्रिका, putrikā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

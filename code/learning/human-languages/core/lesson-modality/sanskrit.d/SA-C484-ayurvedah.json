@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C484-ayurvedah",
+    "language": "sanskrit",
+    "chapter": 484,
+    "sequence": 27840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a0229ebb54f5300"
+  },
+  "findings": []
+}

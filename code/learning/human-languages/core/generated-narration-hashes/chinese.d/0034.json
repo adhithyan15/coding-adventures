@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:24580c330c29a903",
+  "lessonIds": [
+    "ZH-C34-jiao",
+    "ZH-W34-jiao",
+    "ZH-C34-nin",
+    "ZH-C34-xing",
+    "ZH-C34-renshi",
+    "ZH-C34-pengyou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch34.txt",
+  "json": "chinese/narration/ch34.json",
+  "textHash": "fnv1a64:d7b0da1fa53a98aa",
+  "jsonHash": "fnv1a64:3ae50d97b2e8ea22",
+  "findings": []
+}

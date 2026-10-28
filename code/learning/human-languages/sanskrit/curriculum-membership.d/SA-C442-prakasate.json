@@ -1,0 +1,11 @@
+{
+  "id": "SA-C442-prakasate",
+  "pathSegment": "SA-PATH-442-UDAYA442",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-442-UDAYA442",
+      "order": 2
+    }
+  ]
+}

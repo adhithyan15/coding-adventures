@@ -4,7 +4,7 @@ use diagram_ir::DiagramDirection;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_er_diagram, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
+    parse_c4_diagram, parse_cynefin, parse_er_diagram, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -12,6 +12,30 @@ use serde_json::Value;
 const COMPATIBILITY_MANIFEST: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/compatibility.json"
+));
+const C4_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-accessibility-11.16.1-corpus.json"
+));
+const C4_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
+));
+const C4_RELATIONSHIP_ARROWS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-corpus.json"
+));
+const C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
+));
+const C4_ELEMENT_COLORS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-colors-11.16.1-corpus.json"
+));
+const C4_ELEMENT_COLORS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-colors-11.16.1-visual-corpus.json"
 ));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -189,6 +213,22 @@ const ER_FRONTMATTER_TITLE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-frontmatter-title-11.16.1-visual-corpus.json"
 ));
+const ER_USE_MAX_WIDTH_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-use-max-width-11.16.1-corpus.json"
+));
+const ER_USE_MAX_WIDTH_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-use-max-width-11.16.1-visual-corpus.json"
+));
+const ER_HTML_LABELS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-html-labels-11.16.1-corpus.json"
+));
+const ER_HTML_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-html-labels-11.16.1-visual-corpus.json"
+));
 const ER_VARIABLE_NODE_WIDTHS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-corpus.json"
@@ -268,6 +308,14 @@ const ER_ALIAS_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
 const ER_ALIAS_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-alias-line-breaks-11.16.1-visual-corpus.json"
+));
+const ER_TITLE_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-title-line-breaks-11.16.1-corpus.json"
+));
+const ER_TITLE_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-title-line-breaks-11.16.1-visual-corpus.json"
 ));
 const ER_UNICODE_SYMBOLS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -2398,6 +2446,79 @@ fn pinned_er_accessibility_metadata_reaches_semantic_ir() {
 }
 
 #[test]
+fn pinned_c4_accessibility_metadata_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ACCESSIBILITY_CORPUS)
+        .expect("C4 accessibility corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_ACCESSIBILITY_VISUAL_CORPUS)
+        .expect("C4 accessibility visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("C4 accessibility fixtures");
+
+    let single = parse_c4_diagram(fixtures[0]["source"].as_str().expect("single-line source"))
+        .expect("single-line C4 accessibility metadata must parse");
+    assert_eq!(single.accessibility_title.as_deref(), Some("C4 context demo"));
+    assert_eq!(single.accessibility_description.as_deref(), Some("Many large C4 diagrams"));
+
+    let multiline = parse_c4_diagram(fixtures[1]["source"].as_str().expect("multiline source"))
+        .expect("multiline C4 accessibility metadata must parse");
+    assert_eq!(multiline.accessibility_title.as_deref(), Some("C4 container demo"));
+    assert_eq!(
+        multiline.accessibility_description.as_deref(),
+        Some("Native C4 structure\nthrough shared paint metadata")
+    );
+}
+
+#[test]
+fn pinned_c4_relationship_arrows_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_ARROWS_CORPUS)
+        .expect("C4 relationship arrow corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS)
+        .expect("C4 relationship arrow visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("C4 relationship arrow fixtures");
+
+    let bidirectional = parse_c4_diagram(
+        fixtures[0]["source"].as_str().expect("bidirectional relationship source"),
+    )
+    .expect("C4 BiRel fixture must parse");
+    assert!(bidirectional.relationships[0].start_arrow);
+    assert!(bidirectional.relationships[0].end_arrow);
+
+    let backward = parse_c4_diagram(
+        fixtures[1]["source"].as_str().expect("backward relationship source"),
+    )
+    .expect("C4 Rel_Back fixture must parse");
+    assert!(backward.relationships[0].start_arrow);
+    assert!(!backward.relationships[0].end_arrow);
+}
+
+#[test]
+fn pinned_c4_element_colors_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ELEMENT_COLORS_CORPUS)
+        .expect("C4 element color corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_ELEMENT_COLORS_VISUAL_CORPUS)
+        .expect("C4 element color visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("C4 element color fixtures");
+
+    let keyed = parse_c4_diagram(fixtures[0]["source"].as_str().expect("keyed color source"))
+        .expect("C4 keyed element colors must parse");
+    let keyed_style = keyed.nodes[0].style.as_ref().expect("keyed element style");
+    assert_eq!(keyed_style.fill.as_deref(), Some("grey"));
+    assert_eq!(keyed_style.text_color.as_deref(), Some("red"));
+    assert_eq!(keyed_style.stroke.as_deref(), Some("#b91c1c"));
+
+    let positional = parse_c4_diagram(
+        fixtures[1]["source"].as_str().expect("positional color source"),
+    )
+    .expect("C4 positional element colors must parse");
+    let positional_style = positional.nodes[0].style.as_ref().expect("positional element style");
+    assert_eq!(positional_style.fill.as_deref(), Some("#dcfce7"));
+    assert_eq!(positional_style.text_color.as_deref(), Some("#14532d"));
+    assert_eq!(positional_style.stroke.as_deref(), Some("#166534"));
+}
+
+#[test]
 fn pinned_er_backtick_attributes_reach_semantic_ir() {
     let syntax: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_CORPUS)
         .expect("ER backtick attribute corpus must be JSON");
@@ -2835,6 +2956,44 @@ fn pinned_er_frontmatter_title_reaches_semantic_ir() {
 }
 
 #[test]
+fn pinned_er_use_max_width_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_USE_MAX_WIDTH_CORPUS)
+        .expect("ER useMaxWidth corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_USE_MAX_WIDTH_VISUAL_CORPUS)
+        .expect("ER useMaxWidth visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+
+    for (index, fixture) in syntax["fixtures"].as_array().expect("ER fixtures").iter().enumerate() {
+        assert_eq!(visual["fixtures"][index], fixture["name"]);
+        let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER source"))
+            .expect("configured ER fixture must parse");
+        assert_eq!(
+            diagram.render_config.use_max_width,
+            fixture["use_max_width"].as_bool().expect("useMaxWidth expectation")
+        );
+    }
+}
+
+#[test]
+fn pinned_er_html_labels_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_HTML_LABELS_CORPUS)
+        .expect("ER htmlLabels corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_HTML_LABELS_VISUAL_CORPUS)
+        .expect("ER htmlLabels visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+
+    for (index, fixture) in syntax["fixtures"].as_array().expect("ER fixtures").iter().enumerate() {
+        assert_eq!(visual["fixtures"][index], fixture["name"]);
+        let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER source"))
+            .expect("configured ER fixture must parse");
+        assert_eq!(
+            diagram.render_config.html_labels,
+            fixture["html_labels"].as_bool().expect("htmlLabels expectation")
+        );
+    }
+}
+
+#[test]
 fn pinned_er_variable_node_widths_reach_semantic_ir() {
     let syntax: Value = serde_json::from_str(ER_VARIABLE_NODE_WIDTHS_CORPUS)
         .expect("ER variable node widths corpus must be JSON");
@@ -3109,6 +3268,27 @@ fn pinned_er_alias_breaks_reach_semantic_ir() {
     assert_eq!(diagram.nodes[0].label, "Primary\nEntity");
     assert_eq!(diagram.nodes[1].label, "Second\nEntity");
     assert_eq!(diagram.nodes[2].label, "Third\nEntity");
+}
+
+#[test]
+fn pinned_er_title_breaks_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_TITLE_LINE_BREAKS_CORPUS)
+        .expect("ER title line-break corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_TITLE_LINE_BREAKS_VISUAL_CORPUS)
+        .expect("ER title line-break visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER title line-break source"),
+    )
+    .expect("ER title line-break fixture must parse");
+
+    assert_eq!(
+        diagram.title.as_deref(),
+        Some("Domain\nModel\nAcross\nLines")
+    );
 }
 
 #[test]

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:a1c0cb3c7884238f",
+  "lessonIds": [
+    "SA-C523-natah",
+    "SA-C523-abhinayati",
+    "SA-C523-vidusakah",
+    "SA-C523-nepathyam",
+    "SA-C523-abhinayah"
+  ],
+  "tex": "sanskrit/book/chapters/ch523-a-play-in-the-village.tex"
+}

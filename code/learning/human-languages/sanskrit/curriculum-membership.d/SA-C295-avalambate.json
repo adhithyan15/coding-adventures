@@ -1,0 +1,11 @@
+{
+  "id": "SA-C295-avalambate",
+  "pathSegment": "SA-PATH-295-CETANA295",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-295-CETANA295",
+      "order": 4
+    }
+  ]
+}

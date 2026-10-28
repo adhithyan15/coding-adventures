@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:310f032d91f40e8d",
+  "lessonIds": [
+    "JA-C421-negiru",
+    "JA-C421-teika",
+    "JA-C421-neage",
+    "JA-C421-nesage",
+    "JA-C421-shouhin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch421.txt",
+  "json": "japanese/narration/ch421.json",
+  "textHash": "fnv1a64:f4c32bd877e673b3",
+  "jsonHash": "fnv1a64:01a7186031b1ff8e",
+  "findings": []
+}

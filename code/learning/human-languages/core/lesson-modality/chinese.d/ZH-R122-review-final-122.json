@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R122-review-final-122",
+    "language": "chinese",
+    "chapter": 122,
+    "sequence": 9240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:048c32f8fcadad8b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Learning",
+  "label": "ch:zh-learning",
+  "canDo": "I can say what I study, read and ask about in class.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ZH-C54-ke",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: I can say what I study, read and ask about in class.",
+    "assesses": [
+      "ZH-LEX-C54-LEARN54-03",
+      "ZH-LEX-C54-LEARN54-04",
+      "ZH-LEX-C54-LEARN54-05"
+    ]
+  }
+}

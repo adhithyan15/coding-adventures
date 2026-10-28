@@ -1,0 +1,996 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 36,
+  "title": "Where People Come From",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:86fc5c51a874c9cf",
+  "lessons": [
+    {
+      "id": "ZH-C36-lai",
+      "sequence": 3250,
+      "title": "来 (lái) — to come",
+      "headword": "来",
+      "romanization": "lái",
+      "gloss": "to come",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5aacf83dbc078c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for sir, then the Mandarin for to live somewhere."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 来",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "来 — lái — \"to come\"."
+            },
+            {
+              "kind": "speech",
+              "text": "妈妈来了 māma lái le — Mum's here."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 来 (lái) — one piece built from the top down: a short bar, a dot and a short stroke under it, a long bar, a vertical through it, and two strokes spreading at the foot. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "来 (lái) is inherited from Middle Chinese loj (Guangyun, in Baxter's transcription), glossed 'to arrive'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lái",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lái*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lái, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lái*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māma lái le — Mum's here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māma lái le* — Mum's here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for sir, then the Mandarin for to live somewhere, then say lái again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for sir, then the Mandarin for to live somewhere, then say *lái* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 来 (lái) mean? (\"To come\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W36-lai",
+      "sequence": 3255,
+      "title": "来 (lái) — one piece, top to bottom",
+      "headword": "来",
+      "romanization": "lái",
+      "gloss": "来 — one piece, built from the top down",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:146968f54cadf8b7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — one piece, top to bottom",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — one piece, top to bottom and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lái — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lái* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "大 十."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — dà, shí",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *dà*, *shí*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one piece, top to bottom",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "来 (lái)."
+            },
+            {
+              "kind": "speech",
+              "text": "One piece, three layers, top to bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The top layer, three strokes. A short horizontal. Under it, a dot on the left and a short left-falling stroke on the right, leaning in toward each other."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle, two strokes. A long horizontal, then the vertical through the middle of everything, from the very top, through both bars, to the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "The foot, two strokes. A left-falling stroke and a right-falling stroke, spreading out from the vertical like the legs of 大."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 2 + 2 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "来 (lái), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 来, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many layers in 来 (lái)? (Three.) Which comes first, the dot or the short left-falling stroke? (The dot.) Which character you know ends with the same two spreading strokes? (大.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 来 (lái), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C36-meiguo",
+      "sequence": 3260,
+      "title": "Měiguó — America; the United States",
+      "headword": "Měiguó",
+      "romanization": "Měiguó",
+      "gloss": "America; the United States",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6cb356b88500cee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to live somewhere, then the Mandarin for to come."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Měiguó",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Měiguó — \"America; the United States\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Měiguó hěn dà — America is huge."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Měiguó is built from měi 'beautiful' and 国 'country', both inherited from Middle Chinese, mijX and kwok (Guangyun, in Baxter's transcription). Měi is usually explained as standing for a syllable of the name America."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Měiguó",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Měiguó*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Měiguó, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Měiguó*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Měiguó hěn dà — America is huge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Měiguó hěn dà* — America is huge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to live somewhere, then the Mandarin for to come, then say Měiguó again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to live somewhere, then the Mandarin for to come, then say *Měiguó* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Měiguó mean? (\"America; the United States\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C36-yingguo",
+      "sequence": 3270,
+      "title": "Yīngguó — Britain; the United Kingdom",
+      "headword": "Yīngguó",
+      "romanization": "Yīngguó",
+      "gloss": "Britain; the United Kingdom",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2c727da0330f70d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to come, then the Mandarin for the United States."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Yīngguó",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Yīngguó — \"Britain; the United Kingdom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Yīngguó hěn xiǎo — Britain is quite small."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Yīngguó is built from yīng 'flower, fine' and 国 'country', both inherited from Middle Chinese, 'jaeng and kwok (Guangyun, in Baxter's transcription). Yīng is usually explained as standing for the first syllable of England."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yīngguó",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yīngguó*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yīngguó, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yīngguó*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Yīngguó hěn xiǎo — Britain is quite small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Yīngguó hěn xiǎo* — Britain is quite small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to come, then the Mandarin for the United States, then say Yīngguó again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to come, then the Mandarin for the United States, then say *Yīngguó* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Yīngguó mean? (\"Britain; the United Kingdom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C36-beijing",
+      "sequence": 3280,
+      "title": "Běijīng — Beijing",
+      "headword": "Běijīng",
+      "romanization": "Běijīng",
+      "gloss": "Beijing",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85a40552f1ccd0d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the United States, then the Mandarin for the United Kingdom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: Běijīng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Běijīng — \"Beijing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen lái Běijīng le — We've come to Beijing."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Běijīng is built from běi 'north' and jīng 'capital', both inherited from Middle Chinese, pok and kjaeng (Guangyun, in Baxter's transcription): the northern capital."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Běijīng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Běijīng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Běijīng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Běijīng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen lái Běijīng le — We've come to Beijing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen lái Běijīng le* — We've come to Beijing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the United States, then the Mandarin for the United Kingdom, then say Běijīng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the United States, then the Mandarin for the United Kingdom, then say *Běijīng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Běijīng mean? (\"Beijing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C36-na",
+      "sequence": 3290,
+      "title": "nǎ — which",
+      "headword": "nǎ",
+      "romanization": "nǎ",
+      "gloss": "which",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0492b7203b33321b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the United Kingdom, then the Mandarin for Beijing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nǎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nǎ — \"which\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ shì nǎ guó rén — Which country are you from?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nǎ has no older form in any dictionary we use, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word about people."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǎ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǎ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǎ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǎ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ shì nǎ guó rén — Which country are you from?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ shì nǎ guó rén* — Which country are you from?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the United Kingdom, then the Mandarin for Beijing, then say nǎ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the United Kingdom, then the Mandarin for Beijing, then say *nǎ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nǎ mean? (\"Which\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R36-review-31-36",
+      "sequence": 3300,
+      "title": "Looking back: from He, She and We to Where People Come From",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from He, She and We to Where People Come From",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbe8806fb8fb1023",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for she and he."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she, he, they, we, you all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: she, he, they, we, you all]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mum, dad, elder brother, elder sister, younger brother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mum, dad, elder brother, elder sister, younger brother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "male, man, woman, younger sister, child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: male, man, woman, younger sister, child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be called, you (polite), to have the family name, to know someone, friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be called, you (polite), to have the family name, to know someone, friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to work, old, teacher, sir, to live somewhere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to work, old, teacher, sir, to live somewhere]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to come, the United States, the United Kingdom, Beijing, which",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to come, the United States, the United Kingdom, Beijing, which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "他 们 妈 男 叫 来 (lái) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 他 们 妈 男 叫 来 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "She? (tā.) He? (他, tā.) They? (他们, tāmen.) We? (我们, wǒmen.) You all? (你们, nǐmen.) Mum? (妈妈, māma.) Dad? (bàba.) Elder brother? (gēge.) Elder sister? (jiějie.) Younger brother? (dìdi.) Male? (男, nán.) Man? (男人, nánrén.) Woman? (女人, nǚrén.) Younger sister? (mèimei.) Child? (háizi.) To be called? (叫, jiào.) You (polite)? (nín.) To have the family name? (xìng.) To know someone? (rènshi.) Friend? (péngyou.) To work? (gōngzuò.) Old? (lǎo.) Teacher? (lǎoshī.) Sir? (xiānsheng.) To live somewhere? (zhù.) To come? (来, lái.) The United States? (Měiguó.) The United Kingdom? (Yīngguó.) Beijing? (Běijīng.) Which? (nǎ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

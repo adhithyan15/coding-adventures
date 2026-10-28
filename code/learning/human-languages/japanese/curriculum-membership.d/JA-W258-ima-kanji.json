@@ -1,0 +1,11 @@
+{
+  "id": "JA-W258-ima-kanji",
+  "pathSegment": "JA-PATH-258-EXPERIENCE258",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-258-EXPERIENCE258",
+      "order": 5
+    }
+  ]
+}

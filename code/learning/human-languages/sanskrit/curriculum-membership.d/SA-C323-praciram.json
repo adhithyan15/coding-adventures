@@ -1,0 +1,11 @@
+{
+  "id": "SA-C323-praciram",
+  "pathSegment": "SA-PATH-323-STUPA323",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-323-STUPA323",
+      "order": 1
+    }
+  ]
+}

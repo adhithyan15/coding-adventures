@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C33-nanren",
+  "pathSegment": "ZH-PATH-33-FAMILY33",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-33-FAMILY33",
+      "order": 2
+    }
+  ]
+}

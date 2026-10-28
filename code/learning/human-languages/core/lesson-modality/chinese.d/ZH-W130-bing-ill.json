@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W130-bing-ill",
+    "language": "chinese",
+    "chapter": 130,
+    "sequence": 10365,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8989e0177d48605f",
+    "detachableSegments": [
+      "Script — the sickbed piece around a box"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

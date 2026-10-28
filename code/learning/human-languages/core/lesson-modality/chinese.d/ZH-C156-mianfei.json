@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C156-mianfei",
+    "language": "chinese",
+    "chapter": 156,
+    "sequence": 12670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ac6e9bf21a742fe"
+  },
+  "findings": []
+}

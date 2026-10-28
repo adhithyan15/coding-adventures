@@ -1,0 +1,11 @@
+{
+  "id": "SA-C450-rodanam",
+  "pathSegment": "SA-PATH-450-VISADA450",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-450-VISADA450",
+      "order": 2
+    }
+  ]
+}

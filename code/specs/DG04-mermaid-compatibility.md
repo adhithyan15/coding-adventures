@@ -159,8 +159,22 @@ markers, numeric tokens, and quoted strings do not become types.
 Attribute comments normalize Mermaid HTML break variants to semantic newlines,
 with line-aware structural measurement and backend-neutral text lowering. ER
 entity aliases apply the same normalization with multiline header geometry. ER
-remains partial while the rest of the pinned upstream syntax and visual corpus
+titles reserve line-aware vertical geometry after semantic normalization. ER
+`useMaxWidth` configuration is preserved as structural render policy through
+layout and lowers to PaintScene metadata without changing intrinsic geometry.
+The shared `flowchart.htmlLabels` policy follows the same pipeline for ER edge
+labels while native backends continue to receive portable shaped text.
+ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
+
+C4 accessibility titles and single-line or block descriptions are grammar-first
+and survive semantic IR plus structural layout into backend-neutral PaintScene
+metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
+bidirectional and backward relationships also preserve their authored endpoint
+arrows through structural layout and backend-neutral PaintInstructions. Core
+`UpdateElementStyle` background, font, and border colors flow through the same
+pipeline for C4 elements. C4 remains partial while its remaining macro semantics
+and visual corpus are incomplete.
 
 ## Required New Semantic Families
 

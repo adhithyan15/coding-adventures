@@ -8,6 +8,7 @@
         "title-placeholder": "Untitled",
         "body-label": "Entry",
         "body-value": "Walked to the lighthouse before breakfast.\n\nThe fog had not lifted yet.",
+        "body-placeholder": "",
         "save-label": "Save",
         "delete-label": "",
         "cancel-label": "Cancel"
@@ -21,6 +22,7 @@
         "title-placeholder": "Title",
         "body-label": "Note",
         "body-value": "- oats\n- lemons\n- tea",
+        "body-placeholder": "",
         "save-label": "Save",
         "delete-label": "Delete",
         "cancel-label": "Cancel"
@@ -34,6 +36,7 @@
         "title-placeholder": "",
         "body-label": "Front",
         "body-value": "What is the capital of Australia?",
+        "body-placeholder": "",
         "save-label": "",
         "delete-label": "",
         "cancel-label": ""
@@ -47,6 +50,21 @@
         "title-placeholder": "Untitled",
         "body-label": "Entry",
         "body-value": "",
+        "body-placeholder": "",
+        "save-label": "Save",
+        "delete-label": "",
+        "cancel-label": "Cancel"
+      }
+    },
+    {
+      "name": "Empty note with a body placeholder",
+      "fixtures": {
+        "title-label": "Title",
+        "title-value": "",
+        "title-placeholder": "Title",
+        "body-label": "Note",
+        "body-value": "",
+        "body-placeholder": "Write something…",
         "save-label": "Save",
         "delete-label": "",
         "cancel-label": "Cancel"

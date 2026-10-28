@@ -56,6 +56,29 @@ paths. Persistent state must use D flip-flops with this exact topology:
 
 The public `FLIP_FLOP_COUNT` constant must equal that total.
 
+### HALT storage authority
+
+The one-bit `StateRegister` Q output is the sole architectural HALT authority.
+Every observation, snapshot, reset, load, restore, instruction-step guard,
+bounded-run guard/result, BRK transition, IRQ/NMI helper, and transactional
+rollback must read or clock that Q bit. A host Boolean may remain only as a
+source-compatible observation mirror. Deliberately corrupting that mirror in
+either direction must not change execution or returned state, and the next
+simulator-owned HALT transition must repair it from Q.
+
+No lifecycle or execution path may assign the packed HALT bit directly after
+construction. All changes pass through one reviewed helper that clocks the
+one-bit `StateRegister`; ordinary instruction commit and interrupt entry may
+only synchronize an observer from Q. The physical-storage inventory must be
+derived independently from the lengths of the owned memory, register, flag,
+HALT, and port containers and must total exactly 528,184 D flip-flops.
+
+Structural conformance tests exact-lock the complete HALT authority chain and
+must reject compile-valid hostile variants that make the observer decisive,
+write HALT Q directly, hide either bypass behind a helper, retain a dead clock
+anchor, or overwrite a clocked result after commit. The hostile variants must
+be type-checked by Rust, not merely accepted by a parser.
+
 ## Lifecycle contract
 
 The Rust API must provide deterministic reset, checked load, single-step,
@@ -79,12 +102,18 @@ Completion requires:
 2. identical typed, atomic rejection of all 105 undefined bytes;
 3. exact topology, lifecycle, multi-instruction, stack, control-flow, decimal,
    memory, and I/O tests;
-4. at least 80% core line coverage; and
-5. clean formatting, Clippy with warnings denied, and rustdoc with warnings
+4. two-way observer/Q divergence, reset/load/restore, BRK, IRQ/NMI,
+   checked-step and transactional-run rollback tests that prove Q authority;
+5. exact source-chain locks plus compile-valid hostile observer, direct-Q,
+   helper-indirection, dead-anchor, and post-commit bypass fixtures;
+6. at least 80% core line coverage; and
+7. clean formatting, Clippy with warnings denied, and rustdoc with warnings
    denied.
 
-The completion audit records 81 unit, 5 integration, and 7 documentation tests
-with 96.60% core line coverage (994/1,029).
+The HALT-authority completion audit records 83 unit, 7 integration, and 7
+documentation tests with 98.75% package-source line coverage (1,834/1,857).
+It includes five compiler-checked hostile full-crate variants and preserves the
+complete 256-opcode functional differential.
 
 ## Dependencies
 

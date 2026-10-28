@@ -2462,9 +2462,25 @@ pub struct StructuralAlignment {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct StructuralRenderConfig {
+    pub use_max_width: bool,
+    pub html_labels: bool,
+}
+
+impl Default for StructuralRenderConfig {
+    fn default() -> Self {
+        Self {
+            use_max_width: true,
+            html_labels: true,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct StructuralDiagram {
     pub kind: StructuralKind,
     pub architecture_config: Option<ArchitectureConfig>,
+    pub render_config: StructuralRenderConfig,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
@@ -2531,12 +2547,14 @@ pub struct LayoutedStructuralRelationship {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedStructuralDiagram {
+    pub kind: StructuralKind,
     pub width: f64,
     pub height: f64,
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
     pub architecture_config: Option<ArchitectureConfig>,
+    pub render_config: StructuralRenderConfig,
     pub groups: Vec<LayoutedStructuralGroup>,
     pub nodes: Vec<LayoutedStructuralNode>,
     pub relationships: Vec<LayoutedStructuralRelationship>,
@@ -3304,6 +3322,7 @@ mod tests {
         let d = StructuralDiagram {
             kind: StructuralKind::Class,
             architecture_config: None,
+            render_config: Default::default(),
             title: None,
             accessibility_title: None,
             accessibility_description: None,

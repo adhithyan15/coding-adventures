@@ -679,14 +679,14 @@
       "version": "python3.11.17",
       "kind": "grammar",
       "path": "code/grammars/python/python3.11.17.grammar",
-      "sha256": "9f86f290edd0233b3a992dda65963092b886291d637a8784e880ce2fe9bc7c4f"
+      "sha256": "69505403025647bba522ec355cf6f80b7eff15c50100e8903211f901e2d0f245"
     },
     {
       "family": "python",
       "version": "python3.11.17",
       "kind": "tokens",
       "path": "code/grammars/python/python3.11.17.tokens",
-      "sha256": "9be8cefb1631cd31b36ad70d4d256d051cde6e376fba1f746cf9413ab08b8d16"
+      "sha256": "c3f1bc577c8dfbf1de27da3e612468c9fb065db5d1d707653a879a9ada21c6e7"
     },
     {
       "family": "python",
@@ -707,56 +707,56 @@
       "version": "python3.12.3",
       "kind": "grammar",
       "path": "code/grammars/python/python3.12.3.grammar",
-      "sha256": "dee886da9e3097234953dd3676a019e3173e42dcee31f36630107b984c5c1086"
+      "sha256": "aade34bab7988a4139dbec9606b18072c3d5e7e531fe672b1140bb7a7c00c35b"
     },
     {
       "family": "python",
       "version": "python3.12.3",
       "kind": "tokens",
       "path": "code/grammars/python/python3.12.3.tokens",
-      "sha256": "e20d480315b14aba967a672b02b18bc17ce0792f28dc9f5554d325dc57dd6fab"
+      "sha256": "0e2c26276e72d342d2bbe5cfb8474a5bfb2c8813b90c99363ccdcb382f0a82d3"
     },
     {
       "family": "python",
       "version": "python3.13.16",
       "kind": "grammar",
       "path": "code/grammars/python/python3.13.16.grammar",
-      "sha256": "2f32c189dcf45dc6017ea411a4140ac3abdb91ef0e1b2adb34129bf6786806ab"
+      "sha256": "77f69f7aadb575bade213d4946baedabf34e4bf768bca481d66bafea8982a1f7"
     },
     {
       "family": "python",
       "version": "python3.13.16",
       "kind": "tokens",
       "path": "code/grammars/python/python3.13.16.tokens",
-      "sha256": "1dab4cb8fbc3480de95e19df2c0ba0c199a140e6656c3722b429c47b01627bbc"
+      "sha256": "5402672321a80f71c8ea1f346a94ea5838f3d86bf2dc154ab20b66e869a028c1"
     },
     {
       "family": "python",
       "version": "python3.16.0a1",
       "kind": "grammar",
       "path": "code/grammars/python/python3.16.0a1.grammar",
-      "sha256": "e3be92c01facba16ad6a2ecd5883d1754f3373e69c49921d780c9ce67465361d"
+      "sha256": "d706126db05d080869abd4ec45b98189e71cdaa7920bc65859bf38b79d63041d"
     },
     {
       "family": "python",
       "version": "python3.16.0a1",
       "kind": "tokens",
       "path": "code/grammars/python/python3.16.0a1.tokens",
-      "sha256": "12c7529c8d1377fff1df5a8fcb06d3c006e8b5a36fe97dae2826d264d5d39dc7"
+      "sha256": "fb520ce5b5e3447fdd4d816f2e01425c6963ada15434f94233eddcee66bdf9a4"
     },
     {
       "family": "python",
       "version": "python3.5.10",
       "kind": "grammar",
       "path": "code/grammars/python/python3.5.10.grammar",
-      "sha256": "bd8f6b8077cde00f241e245204bc77c0498ef39f36b9d960243a64b81378eb7f"
+      "sha256": "be935af8f19d1634d14a21a24ae7ff513e84f94c6ad3dbf06127b4fbe55db5d3"
     },
     {
       "family": "python",
       "version": "python3.5.10",
       "kind": "tokens",
       "path": "code/grammars/python/python3.5.10.tokens",
-      "sha256": "b00d567d3b6c05af3b861a6ac7aeeaab3e2a288eaf3c0f5991df65481b0822c1"
+      "sha256": "a3f5b151bccce138f1b8f6f6e4b7f33df3d8de3fbee0068fabbd2278bb67cebc"
     },
     {
       "family": "python",
@@ -777,14 +777,14 @@
       "version": "python3.6.0",
       "kind": "grammar",
       "path": "code/grammars/python/python3.6.0.grammar",
-      "sha256": "6e46eb88461ca9692a61e0ba9ca44c95022894917d0f0cd176efeadd323c153f"
+      "sha256": "a3825ee8573f36924e16c5cfc2e8819ed7fd93b37a6afb5dc70cc22070d7acff"
     },
     {
       "family": "python",
       "version": "python3.6.0",
       "kind": "tokens",
       "path": "code/grammars/python/python3.6.0.tokens",
-      "sha256": "afe40e0127834083614b3aa076b3f95291b7541ec53eb422652811d9eb417dd9"
+      "sha256": "a6e1842cc3c4c855066c82d1f5751b3010a6c97244dd78a317a6b01f8f8d455a"
     },
     {
       "family": "python",
@@ -826,7 +826,7 @@
       "version": "ruby0.49",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby0.49.tokens",
-      "sha256": "992187c7bd54b5ad59e535987ba52e6ef2d4b0509b25185ebf2d0044bb213850"
+      "sha256": "c900768f383129aee68ab394702509e26cbf7285c36d74c3b32f2789d8ff93f6"
     },
     {
       "family": "ruby",
@@ -840,7 +840,7 @@
       "version": "ruby0.50",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby0.50.tokens",
-      "sha256": "ccea3f4880eb70a4045563f297c204d338c33f58e908bd2c389923e12a19dbf4"
+      "sha256": "2c803c6845cfe6d0e820bfe942c39a0682185219c6cb81ef92531ceb6f7637d5"
     },
     {
       "family": "ruby",
@@ -854,7 +854,7 @@
       "version": "ruby3.3.5",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby3.3.5.tokens",
-      "sha256": "59ffca2a7f1a5586ee5cc63f107e1a684f91901f43a13cd67035dd33e2039666"
+      "sha256": "cefc1780a0ea6e5ba8e8bdbc6086298cdef5dfbaccdab46a926c6380fe5e264b"
     },
     {
       "family": "ruby",
@@ -868,7 +868,7 @@
       "version": "ruby3.3.6",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby3.3.6.tokens",
-      "sha256": "6b981074af7fb2e789a7d5ae6ff0c4efcb16869d8498657cd0262dd0b04b7544"
+      "sha256": "ffd58e539428779c53d401568483f2291f775ef11f92e0023ad9b7834d1e817f"
     },
     {
       "family": "ruby",
@@ -882,7 +882,7 @@
       "version": "ruby3.3.7",
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby3.3.7.tokens",
-      "sha256": "b605886404df95dba61cac50153e45eed8a267ee263c6740e989f9c6f2a0d3bb"
+      "sha256": "8f09cb7c4f8988931574c79a8ca87ee38daddd7fb7e9590f48b6d5feb326ba3d"
     },
     {
       "family": "sql",

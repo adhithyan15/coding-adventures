@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "A Debate",
+  "label": "ch:sa-a-debate",
+  "canDo": "I can say who spoke in a debate and who listened.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C343-pratipadayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say who spoke in a debate and who listened.",
+    "assesses": [
+      "SA-LEX-C343-VADA343-03",
+      "SA-LEX-C343-VADA343-04",
+      "SA-LEX-C343-VADA343-05"
+    ]
+  }
+}

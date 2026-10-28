@@ -119,7 +119,7 @@ cargo test -p twig-vm
 
 **117 unit + 2 doc tests** covering:
 - Compilation success + error propagation
-- Builtin resolution for every Lispy builtin (plus PR 5: `make_symbol`, `make_closure`, `make_builtin_closure`)
+- Builtin resolution for every Lispy builtin (plus PR 5: `dyn_symbol` — `make_symbol` before LANG83 PR7f — `make_closure`, `make_builtin_closure`)
 - `Operand → LispyValue` round-trip (Int, Bool, Float errors, Var-as-symbol, nil)
 - Range checking (Lispy's tagged-int range is narrower than `i64`)
 - Full dispatcher: arithmetic, comparison, cons family, `if`, `let`, `begin`, user-defined functions, factorial, fibonacci, mutual recursion

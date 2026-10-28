@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C334-atsukau",
+    "language": "japanese",
+    "chapter": 334,
+    "sequence": 19910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d1893b606a183d0"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:53e77327405f628c",
+  "lessonIds": [
+    "SA-C484-ayurvedah",
+    "SA-C484-vatah",
+    "SA-C484-pittam",
+    "SA-C484-kaphah",
+    "SA-C484-pathyam"
+  ],
+  "tex": "sanskrit/book/chapters/ch484-ayurveda.tex"
+}

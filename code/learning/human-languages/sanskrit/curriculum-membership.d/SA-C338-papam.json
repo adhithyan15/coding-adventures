@@ -1,0 +1,11 @@
+{
+  "id": "SA-C338-papam",
+  "pathSegment": "SA-PATH-338-SVARGA338",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-338-SVARGA338",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 385,
+  "title": "Competing",
+  "label": "ch:sa-competing",
+  "canDo": "I can say who will win if they compete well.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C385-utkarsah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 385: I can say who will win if they compete well.",
+    "assesses": [
+      "SA-LEX-C385-SPARDHA385-03",
+      "SA-LEX-C385-SPARDHA385-04",
+      "SA-LEX-C385-SPARDHA385-05"
+    ]
+  }
+}

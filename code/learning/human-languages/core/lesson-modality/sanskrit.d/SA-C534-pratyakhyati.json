@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C534-pratyakhyati",
+    "language": "sanskrit",
+    "chapter": 534,
+    "sequence": 30670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:939c898226d5f54e"
+  },
+  "findings": []
+}

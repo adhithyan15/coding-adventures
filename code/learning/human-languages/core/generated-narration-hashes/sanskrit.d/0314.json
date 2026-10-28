@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:8025cddb4db4af24",
+  "lessonIds": [
+    "SA-C314-sauryam",
+    "SA-C314-dhirah",
+    "SA-C314-kirtih",
+    "SA-C314-gauravam",
+    "SA-C314-abhinandati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch314.txt",
+  "json": "sanskrit/narration/ch314.json",
+  "textHash": "fnv1a64:8482674ec35b6f07",
+  "jsonHash": "fnv1a64:68260c5cbe88ab30",
+  "findings": []
+}

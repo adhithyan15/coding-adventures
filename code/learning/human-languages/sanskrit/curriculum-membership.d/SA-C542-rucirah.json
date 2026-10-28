@@ -1,0 +1,11 @@
+{
+  "id": "SA-C542-rucirah",
+  "pathSegment": "SA-PATH-542-UTKRSTA542",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-542-UTKRSTA542",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:67f86c55d9ec7aac",
+  "lessonIds": [
+    "JA-C456-kyuuryou",
+    "JA-C456-kasegu",
+    "JA-C456-kyuuka",
+    "JA-C456-yatou",
+    "JA-C456-shokuba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch456.txt",
+  "json": "japanese/narration/ch456.json",
+  "textHash": "fnv1a64:c904cf91db309109",
+  "jsonHash": "fnv1a64:fca702ae77c9ce29",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Sea and Sky",
+  "label": "ch:zh-sea-and-sky",
+  "canDo": "I can describe the sky, the moon, dark clouds, the open sea and a rainbow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C238-caihong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can describe the sky, the moon, dark clouds, the open sea and a rainbow.",
+    "assesses": [
+      "ZH-LEX-C238-SKY238-03",
+      "ZH-LEX-C238-SKY238-04",
+      "ZH-LEX-C238-SKY238-05"
+    ]
+  }
+}

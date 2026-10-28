@@ -57,6 +57,10 @@ impl Register8 {
     pub fn read(&self) -> u8 {
         self.state.read() as u8
     }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.dff_count()
+    }
 }
 
 /// 16-bit register modeled as 16 D flip-flops.
@@ -82,6 +86,10 @@ impl Register16 {
     /// Read the current value.
     pub fn read(&self) -> u16 {
         self.state.read()
+    }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.dff_count()
     }
 
     /// Increment by `amount` via the 16-bit ripple-carry adder.
@@ -192,6 +200,10 @@ impl FlagRegister {
         self.c = 0;
         self.clock();
     }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.state.dff_count()
+    }
 }
 
 impl Default for FlagRegister {
@@ -234,6 +246,15 @@ impl RegisterFile6502 {
         self.s.write(0xFD);
         self.pc.write(0);
         self.flags.reset();
+    }
+
+    pub(crate) fn dff_count(&self) -> usize {
+        self.a.dff_count()
+            + self.x.dff_count()
+            + self.y.dff_count()
+            + self.s.dff_count()
+            + self.pc.dff_count()
+            + self.flags.dff_count()
     }
 
     pub(crate) fn stack_push(&mut self, memory: &mut DffMemory, value: u8) {

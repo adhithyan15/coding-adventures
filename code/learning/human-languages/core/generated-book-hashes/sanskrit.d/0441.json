@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:dd49bfa7de3684a7",
+  "lessonIds": [
+    "SA-C441-durdinam",
+    "SA-C441-sajalah",
+    "SA-C441-ativrstih",
+    "SA-C441-tuhinam",
+    "SA-C441-avrnoti"
+  ],
+  "tex": "sanskrit/book/chapters/ch441-bad-weather.tex"
+}

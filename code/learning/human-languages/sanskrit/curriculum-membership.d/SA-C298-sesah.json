@@ -1,0 +1,11 @@
+{
+  "id": "SA-C298-sesah",
+  "pathSegment": "SA-PATH-298-KSHATI298",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-298-KSHATI298",
+      "order": 4
+    }
+  ]
+}

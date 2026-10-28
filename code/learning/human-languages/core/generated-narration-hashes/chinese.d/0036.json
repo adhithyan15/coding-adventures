@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:86fc5c51a874c9cf",
+  "lessonIds": [
+    "ZH-C36-lai",
+    "ZH-W36-lai",
+    "ZH-C36-meiguo",
+    "ZH-C36-yingguo",
+    "ZH-C36-beijing",
+    "ZH-C36-na",
+    "ZH-R36-review-31-36"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch36.txt",
+  "json": "chinese/narration/ch36.json",
+  "textHash": "fnv1a64:abb2235361dd7b5b",
+  "jsonHash": "fnv1a64:784194bfcec85ce7",
+  "findings": []
+}

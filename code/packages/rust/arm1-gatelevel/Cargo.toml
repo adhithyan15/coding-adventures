@@ -8,3 +8,7 @@ description = "Complete ARM1 gate-level simulator with exact 536,871,777-DFF sta
 logic-gates = { path = "../logic-gates" }
 arithmetic = { path = "../arithmetic" }
 arm1-simulator = { path = "../arm1-simulator" }
+
+[dev-dependencies]
+quote = "1.0.47"
+syn = { version = "2.0.119", features = ["full"] }

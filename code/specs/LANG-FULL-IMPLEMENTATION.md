@@ -70,7 +70,18 @@ integral. If a sign-rooted reduction's magnitude equals that common divisor,
 its values are confined to the negative magnitude, zero, and the positive
 magnitude; `div` and `mod` preserve the exact reduced divisor for this stable
 shape, including across another stable multiplied root, and may thereby prove
-a later `/` exact. Wider value sets keep the conservative fallback.
+a later `/` exact. Wider value sets keep the conservative fallback. When the
+complete magnitude is below a static divisor, `div` instead proves a zero
+quotient and `mod` preserves the operand and its common divisor; these
+range-dominated reductions likewise compose through multiplied roots and
+later exact `/`. A static `mod` divisor that divides the operand's conservative
+common divisor proves every remainder is zero even for a wider value set; that
+zero proof also composes through multiplied roots and later exact `/`.
+Integer-only sign-rooted multiplication may temporarily cross the contiguous
+binary64 exact-integer ceiling while remaining within `i64::MAX` when a later
+static `div` or `mod` reduces the final result back below that ceiling before
+widening. Overflow and real `/` over an over-wide intermediate still fail
+closed.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the right-associative chain stays within the power
 unroll cap. A zero result proves the complete power is exactly one; negative,
@@ -544,6 +555,10 @@ multiple languages; close an enabler before the features that depend on it.
     `udf #0xDEAD`) on mismatch or NaN. All seven backends now share the VM's
     fail-closed contract, pinned by two matrix rows (finite ≈ 5.1e23, and +∞).
     Details in `lang-full-e8-numeric-conversions.md` footnotes ² and ⁴.
+  - ✅ **Typed `Trap.ConvRange`** (LANG83). The fail-closed narrowings above now
+    all raise the registered kind `Trap.ConvRange`, replacing
+    `ArithmeticException`, `OverflowException`, a bare `ud2`/`udf` and the VM's
+    custom error. See footnote ⁵ there and LANG83's per-backend table.
   - ✅ **PR-7 — ALGOL `entier`** (algol-iir-compiler 0.10.0 + lang-aot matrix). The
     standard function `entier(E)` (§3.2.5) — the largest integer ≤ the *real* `E`,
     floor toward −∞ — lowers to a single E8 `real_to_int_floor` op (the floor + the

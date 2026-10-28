@@ -1,0 +1,801 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 331,
+  "title": "Society",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d3785f17967989ec",
+  "lessons": [
+    {
+      "id": "JA-C331-shakai",
+      "sequence": 19720,
+      "title": "しゃかい (shakai) — society",
+      "headword": "しゃかい",
+      "romanization": "shakai",
+      "gloss": "society",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11e917abc1ad1ae7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to line up neatly, then the Japanese for to revise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゃかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃかい — shakai — \"society\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゃかいは かわったと おもいます。 — shakai wa kawatta to omoimasu — \"I think society has changed.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃかい (shakai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sha, \"association\" (Middle Chinese dzyaeX) and kai, \"meeting\" (hwajH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shakai wa kawatta to omoimasu — I think society has changed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shakai wa kawatta to omoimasu* — I think society has changed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to line up neatly, then the Japanese for to revise, then say shakai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to line up neatly, then the Japanese for to revise, then say *shakai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゃかい (shakai) mean? (\"Society\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C331-shakai-type",
+              "prompt": "Say the Japanese for 'society'.",
+              "assesses": [
+                "JA-LEX-C331-SHAKAI331-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃかい",
+                "shakai"
+              ],
+              "feedback": {
+                "correct": "Right: しゃかい (shakai) is 'society'.",
+                "incorrect": "'Society' is しゃかい (shakai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C331-shimin",
+      "sequence": 19730,
+      "title": "しみん (shimin) — a citizen",
+      "headword": "しみん",
+      "romanization": "shimin",
+      "gloss": "a citizen",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c89161c902beb86a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to revise, then the Japanese for society."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しみん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しみん — shimin — \"a citizen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しみんの いけんを きいた ほうが いいです。 — shimin no iken o kiita hō ga ii desu — \"They ought to listen to what the citizens think.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しみん (shimin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"city\" (Middle Chinese dzyiX) and min, \"people\" (mjin) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shimin no iken o kiita hō ga ii desu — They ought to listen to what the citizens think.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shimin no iken o kiita hō ga ii desu* — They ought to listen to what the citizens think.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to revise, then the Japanese for society, then say shimin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to revise, then the Japanese for society, then say *shimin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しみん (shimin) mean? (\"A citizen\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C331-shimin-type",
+              "prompt": "Say the Japanese for 'a citizen'.",
+              "assesses": [
+                "JA-LEX-C331-SHAKAI331-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しみん",
+                "shimin"
+              ],
+              "feedback": {
+                "correct": "Right: しみん (shimin) is 'a citizen'.",
+                "incorrect": "'A citizen' is しみん (shimin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C331-juumin",
+      "sequence": 19740,
+      "title": "じゅうみん (jūmin) — a resident; the local people",
+      "headword": "じゅうみん",
+      "romanization": "jūmin",
+      "gloss": "a resident; the local people",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6b0c93c9e6d326d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for society, then the Japanese for a citizen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅうみん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうみん — jūmin — \"a resident; the local people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じゅうみんが はんたいしたので、ちゅうしに なりました。 — jūmin ga hantai shita node, chūshi ni narimashita — \"The residents were against it, so it was called off.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうみん (jūmin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jū, \"dwell\" (Middle Chinese drjuH) and min, \"people\" (mjin) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūmin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūmin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūmin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūmin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūmin ga hantai shita node, chūshi ni narimashita — The residents were against it, so it was called off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūmin ga hantai shita node, chūshi ni narimashita* — The residents were against it, so it was called off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for society, then the Japanese for a citizen, then say jūmin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for society, then the Japanese for a citizen, then say *jūmin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅうみん (jūmin) mean? (\"A resident; the local people\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C331-juumin-type",
+              "prompt": "Say the Japanese for 'a resident'.",
+              "assesses": [
+                "JA-LEX-C331-SHAKAI331-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅうみん",
+                "jūmin",
+                "juumin",
+                "jumin"
+              ],
+              "feedback": {
+                "correct": "Right: じゅうみん (jūmin) is 'a resident; the local people'.",
+                "incorrect": "'A resident' is じゅうみん (jūmin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C331-seiji",
+      "sequence": 19750,
+      "title": "せいじ (seiji) — politics",
+      "headword": "せいじ",
+      "romanization": "seiji",
+      "gloss": "politics",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2a55c1c214ffa81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a citizen, then the Japanese for a resident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せいじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいじ — seiji — \"politics\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうらいの ために、せいじを べんきょうしたいです。 — shōrai no tame ni, seiji o benkyō shitai desu — \"I want to study politics for my future.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せいじ (seiji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sei, \"politics\" (Middle Chinese tsyengH) and ji, \"reign\" (dri) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seiji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seiji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seiji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seiji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōrai no tame ni, seiji o benkyō shitai desu — I want to study politics for my future.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōrai no tame ni, seiji o benkyō shitai desu* — I want to study politics for my future.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a citizen, then the Japanese for a resident, then say seiji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a citizen, then the Japanese for a resident, then say *seiji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せいじ (seiji) mean? (\"Politics\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C331-seiji-type",
+              "prompt": "Say the Japanese for 'politics'.",
+              "assesses": [
+                "JA-LEX-C331-SHAKAI331-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せいじ",
+                "seiji"
+              ],
+              "feedback": {
+                "correct": "Right: せいじ (seiji) is 'politics'.",
+                "incorrect": "'Politics' is せいじ (seiji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C331-houritsu",
+      "sequence": 19760,
+      "title": "ほうりつ (hōritsu) — a law",
+      "headword": "ほうりつ",
+      "romanization": "hōritsu",
+      "gloss": "a law",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:031e6a1d1fe9f983",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a resident, then the Japanese for politics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほうりつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうりつ — hōritsu — \"a law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ほうりつが かわったので、ぜいきんが たかく なりました。 — hōritsu ga kawatta node, zeikin ga takaku narimashita — \"The law changed, so taxes went up.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうりつ (hōritsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hō, \"law\" (Middle Chinese pjop) and ritsu, \"regulation\" (lwit) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōritsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōritsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōritsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōritsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōritsu ga kawatta node, zeikin ga takaku narimashita — The law changed, so taxes went up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōritsu ga kawatta node, zeikin ga takaku narimashita* — The law changed, so taxes went up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a resident, then the Japanese for politics, then say hōritsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a resident, then the Japanese for politics, then say *hōritsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほうりつ (hōritsu) mean? (\"A law\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C331-houritsu-type",
+              "prompt": "Say the Japanese for 'a law'.",
+              "assesses": [
+                "JA-LEX-C331-SHAKAI331-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうりつ",
+                "hōritsu",
+                "houritsu",
+                "hooritsu",
+                "horitsu"
+              ],
+              "feedback": {
+                "correct": "Right: ほうりつ (hōritsu) is 'a law'.",
+                "incorrect": "'A law' is ほうりつ (hōritsu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

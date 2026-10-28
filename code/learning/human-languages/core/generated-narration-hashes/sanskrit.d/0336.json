@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:077182c90915470d",
+  "lessonIds": [
+    "SA-C336-nitih",
+    "SA-C336-lobhah",
+    "SA-C336-makarah",
+    "SA-C336-mudhah",
+    "SA-C336-lobhayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch336.txt",
+  "json": "sanskrit/narration/ch336.json",
+  "textHash": "fnv1a64:840f9086192e7172",
+  "jsonHash": "fnv1a64:952618a96ca51948",
+  "findings": []
+}

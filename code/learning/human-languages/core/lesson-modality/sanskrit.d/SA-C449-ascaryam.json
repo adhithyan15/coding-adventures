@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C449-ascaryam",
+    "language": "sanskrit",
+    "chapter": 449,
+    "sequence": 26070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:764d8ac6f243098c"
+  },
+  "findings": []
+}

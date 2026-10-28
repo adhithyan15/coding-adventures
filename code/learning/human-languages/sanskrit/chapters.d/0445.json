@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Stars by Night and Day",
+  "label": "ch:sa-stars-by-night-and-day",
+  "canDo": "I can talk about shooting stars, the pole star and eclipses.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-C445-yapayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can talk about shooting stars, the pole star and eclipses.",
+    "assesses": [
+      "SA-LEX-C445-ULKA445-03",
+      "SA-LEX-C445-ULKA445-04",
+      "SA-LEX-C445-ULKA445-05"
+    ]
+  }
+}

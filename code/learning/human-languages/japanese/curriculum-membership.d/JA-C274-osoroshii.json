@@ -1,0 +1,11 @@
+{
+  "id": "JA-C274-osoroshii",
+  "pathSegment": "JA-PATH-274-JISHIN274",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-274-JISHIN274",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C88-practice",
+  "pathSegment": "ZH-PATH-88-HOW-MANY",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ZH-EXT-88-HOW-MANY",
+      "order": 7
+    }
+  ]
+}

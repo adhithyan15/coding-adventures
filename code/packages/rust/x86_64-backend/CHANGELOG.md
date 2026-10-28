@@ -1,5 +1,47 @@
 # Changelog — `x86_64-backend`
 
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- `V1_BUILTINS` drops `dyn_not`, `dyn_equal`, `dyn_truthy` and `dyn_to_exit_code`: they were Lisp's rules in the runtime, and the Lisp-family lowering now writes them as IIR. A module that still calls one is refused at compile time. Test `lisp_semantic_builtins_are_not_in_the_table`; `dyn_pair_test_tag_and_nil_lower` replaces the predicate/truthy and exit-code tests.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives: `Lowered` for `dyn_box_int`, `dyn_unbox_int`, `dyn_tag`, `dyn_pair_new`, `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil` and `dyn_nil` (each a call to the runtime's `__dyn_<name>` through `V1_BUILTINS`), `Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)` for `dyn_symbol` (a symbol reaches this backend as an interned immediate).
+- `V1_BUILTINS`: the Lisp-vocabulary rows `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil` (calls to the renamed `__dyn_*` runtime symbols), and `dyn_tag` (1 argument) and `dyn_nil` (0 arguments) are new rows. `builtin_rows_agree_with_the_builtin_table` checks the declaration against this table. Unit tests use the new names.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave the V1 builtin table and
+  `OP_SUPPORT`: a `call_builtin` of either is now an unknown builtin,
+  refused, and nothing calls `__twig_write_f64_*` (removed from the native
+  runtime). `f64_digits` / `f64_exp10` still call `__twig_f64_digits` /
+  `__twig_f64_exp10` with the raw bits in `rdi` / `rcx`.
+- Tests: `float_writers_pass_the_raw_bits_in_rdi` is replaced by
+  `retired_float_writers_are_unknown_builtins`; the bits-in-a-GPR contract
+  stays pinned by `f64_digits_and_exp10_call_the_runtime_with_the_bits`.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- `f64_class` lowers inline and branch-free on the raw bits: `shl`/`shr`
+  drop the sign, then `(mag != 0) + (mag >= 0x7FF0…0) + (mag > 0x7FF0…0)`
+  with three `setcc`s. `f64_digits` / `f64_exp10` pass the bits in the ABI's
+  first integer register (`rdi` SysV, `rcx` MS x64) to the runtime's
+  `__twig_f64_digits` / `__twig_f64_exp10` and store `rax`. All three
+  `Lowered` in `OP_SUPPORT`; byte-shape tests for both.
+- The runtime helpers are named `__twig_f64_digits` / `__twig_f64_exp10`, in
+  the runtime's own namespace. An `__iir_` name would have interposed on
+  iir-to-llvm's module-local 3-argument `@__iir_f64_digits` in any LLVM
+  program that links this runtime (found in security review).
+
+## Unreleased — a failed narrowing raises `Trap.ConvRange`
+
+### Fixed
+
+- `real_to_int_trunc` / `real_to_int_floor` call `__twig_trap(4)` when the
+  `cvtsi2sd` + `ucomisd` round trip fails, so a NaN, ±∞ or out-of-range value
+  stops with `trap: Trap.ConvRange` after flushing stdout ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). It used
+  to execute a bare `ud2` (SIGILL), with no LANG83 kind and unflushed output.
+
 ## Unreleased — f64 negation flips the sign bit
 
 ### Fixed

@@ -1,0 +1,23 @@
+{
+  "chapter": 63,
+  "title": "On the Phone",
+  "label": "ch:zh-on-the-phone",
+  "canDo": "I can answer the phone, ask for a number and say what I am looking for.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ZH-R63-review-58-63",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: I can answer the phone, ask for a number and say what I am looking for.",
+    "assesses": [
+      "ZH-LEX-C63-PHONE63-01",
+      "ZH-LEX-C63-PHONE63-02",
+      "ZH-LEX-C63-PHONE63-03",
+      "ZH-LEX-C63-PHONE63-04",
+      "ZH-LEX-C63-PHONE63-05",
+      "ZH-SCRIPT-DIAN-ELECTRIC-01",
+      "ZH-SCRIPT-DA-HIT-01"
+    ]
+  }
+}

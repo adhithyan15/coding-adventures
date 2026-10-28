@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:7c7cde8da933e85b",
+  "lessonIds": [
+    "JA-C418-shomei",
+    "JA-C418-youshi",
+    "JA-C418-kinyuu",
+    "JA-C418-ran",
+    "JA-C418-hinichi"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "japanese/narration/ch418.txt",
+  "json": "japanese/narration/ch418.json",
+  "textHash": "fnv1a64:aa3c0d6785b086d5",
+  "jsonHash": "fnv1a64:c15aaea9bef22440",
+  "findings": []
+}

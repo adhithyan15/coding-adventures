@@ -1,0 +1,11 @@
+{
+  "id": "JA-C332-zen-in",
+  "pathSegment": "JA-PATH-332-KENRI332",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-332-KENRI332",
+      "order": 4
+    }
+  ]
+}

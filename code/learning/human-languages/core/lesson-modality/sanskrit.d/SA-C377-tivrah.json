@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C377-tivrah",
+    "language": "sanskrit",
+    "chapter": 377,
+    "sequence": 21910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:948ab42bb246fc90"
+  },
+  "findings": []
+}

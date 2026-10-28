@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:5387f3842e850c1a",
+  "lessonIds": [
+    "ZH-C210-zise",
+    "ZH-C210-zongse",
+    "ZH-C210-kuanshi",
+    "ZH-C210-shiyijian",
+    "ZH-C210-xuan"
+  ],
+  "tex": "chinese/book/chapters/ch210-colours-and-styles.tex"
+}

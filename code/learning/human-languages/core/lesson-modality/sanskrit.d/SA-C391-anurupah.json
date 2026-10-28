@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C391-anurupah",
+    "language": "sanskrit",
+    "chapter": 391,
+    "sequence": 22630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d9af40f008c5a1c"
+  },
+  "findings": []
+}

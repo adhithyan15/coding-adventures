@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C531-nantonaku",
+    "language": "japanese",
+    "chapter": 531,
+    "sequence": 30670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:925cadfea08ca207"
+  },
+  "findings": []
+}

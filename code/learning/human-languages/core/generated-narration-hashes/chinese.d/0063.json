@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:74ba9ab536a9e641",
+  "lessonIds": [
+    "ZH-C63-dianhua",
+    "ZH-W63-dian-electric",
+    "ZH-C63-dadianhua",
+    "ZH-W63-da-hit",
+    "ZH-C63-wei",
+    "ZH-C63-haoma",
+    "ZH-C63-zhao",
+    "ZH-R63-review-58-63"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch63.txt",
+  "json": "chinese/narration/ch63.json",
+  "textHash": "fnv1a64:ea4b3daa798fefb2",
+  "jsonHash": "fnv1a64:b57117919a7e0657",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 417,
+  "title": "Sandbanks and Shores",
+  "label": "ch:sa-sandbanks-and-shores",
+  "canDo": "I can describe the sand, foam and shore by the water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "SA-R417-review-410-417",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can describe the sand, foam and shore by the water.",
+    "assesses": [
+      "SA-LEX-C417-PULINA417-01",
+      "SA-LEX-C417-PULINA417-02",
+      "SA-LEX-C417-PULINA417-03",
+      "SA-LEX-C417-PULINA417-04",
+      "SA-LEX-C417-PULINA417-05"
+    ]
+  }
+}

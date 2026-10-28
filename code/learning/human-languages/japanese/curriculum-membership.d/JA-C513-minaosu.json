@@ -1,0 +1,11 @@
+{
+  "id": "JA-C513-minaosu",
+  "pathSegment": "JA-PATH-513-PLAN513",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-513-PLAN513",
+      "order": 1
+    }
+  ]
+}

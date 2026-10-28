@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C138-ziji",
+  "pathSegment": "ZH-PATH-138-EVERY138",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-138-EVERY138",
+      "order": 2
+    }
+  ]
+}

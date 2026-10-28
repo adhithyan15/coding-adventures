@@ -50,7 +50,7 @@ use crate::alu::{
     not8_flags, or16, or32, or8, shift_op, sub16, sub32, sub8, xor16, xor32, xor8, AluResult68K,
 };
 use crate::registers::{RegisterFile68K, ADDR_MASK, BYTE_MASK, LONG_MASK, WORD_MASK};
-use crate::state::{DffMemory, StateRegister};
+use crate::state::{DffBit, DffMemory};
 use m68k_simulator::{
     ExecutionResult, M68kError, M68kSimulator, M68kState, StepTrace, INITIAL_SP, LOAD_ADDRESS,
     MEMORY_SIZE,
@@ -67,6 +67,36 @@ const INIT_SP: u32 = INITIAL_SP;
 /// bits, 32 PC bits, 16 SR bits, and one halt bit.
 pub const FLIP_FLOP_COUNT: usize = MEM_SIZE * 8 + 16 * 32 + 32 + 16 + 1;
 
+/// Concrete inventory of every persistent DFF owner in the gate machine.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    /// Stable-Q memory bits.
+    pub memory_dffs: usize,
+    /// D0-D7 storage bits.
+    pub data_register_dffs: usize,
+    /// A0-A7 storage bits.
+    pub address_register_dffs: usize,
+    /// Program-counter storage bits.
+    pub program_counter_dffs: usize,
+    /// Status-register storage bits.
+    pub status_register_dffs: usize,
+    /// HALT storage bits.
+    pub halt_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum the independently discovered concrete storage banks.
+    #[must_use]
+    pub fn total(self) -> usize {
+        self.memory_dffs
+            + self.data_register_dffs
+            + self.address_register_dffs
+            + self.program_counter_dffs
+            + self.status_register_dffs
+            + self.halt_dffs
+    }
+}
+
 /// Motorola 68000 CPU — gate-level simulation.
 #[derive(Clone)]
 pub struct Cpu68K {
@@ -75,9 +105,12 @@ pub struct Cpu68K {
     /// Flat 16 MB memory (big-endian byte order).
     /// Heap-allocated via `vec!` to avoid stack overflow (16 MB > default stack).
     pub mem: DffMemory,
-    /// True after STOP / TRAP #15.
+    /// Source-compatible observer of the HALT DFF Q output.
+    ///
+    /// Architectural behavior is driven by [`Self::halted`]. External writes
+    /// are repaired at the next mutating execution boundary.
     pub halted: bool,
-    halt_state: StateRegister,
+    halt: DffBit,
 }
 
 impl Default for Cpu68K {
@@ -93,9 +126,9 @@ impl Cpu68K {
             rf: RegisterFile68K::new(),
             mem: DffMemory::new(MEM_SIZE),
             halted: false,
-            halt_state: StateRegister::new(1),
+            halt: DffBit::new(),
         };
-        cpu.clock_wires_into_state();
+        cpu.clock_halted(false);
         cpu
     }
 
@@ -113,17 +146,17 @@ impl Cpu68K {
         let end = LOAD_ADDR.saturating_add(program.len()).min(MEM_SIZE);
         let len = end - LOAD_ADDR;
         self.mem.copy_from_slice(LOAD_ADDR, &program[..len]);
-        self.clock_wires_into_state();
+        self.synchronize_compatibility_observers();
     }
 
     /// Return a complete owned snapshot of every architectural bit.
     pub fn get_state(&self) -> M68kState {
         M68kState {
-            d: self.rf.d,
-            a: self.rf.a,
-            pc: self.rf.pc,
-            sr: self.rf.sr,
-            halted: self.halted,
+            d: self.rf.data_snapshot(),
+            a: self.rf.address_snapshot(),
+            pc: self.rf.read_pc(),
+            sr: self.rf.read_sr(),
+            halted: self.halted(),
             memory: self.mem.snapshot(),
         }
     }
@@ -142,13 +175,10 @@ impl Cpu68K {
                 state.pc
             )));
         }
-        self.rf.d = state.d;
-        self.rf.a = state.a;
-        self.rf.pc = state.pc;
-        self.rf.sr = state.sr;
-        self.halted = state.halted;
+        self.rf
+            .restore_architecture(state.d, state.a, state.pc, state.sr);
+        self.clock_halted(state.halted);
         self.mem.restore_snapshot(&state.memory);
-        self.clock_wires_into_state();
         Ok(())
     }
 
@@ -170,24 +200,25 @@ impl Cpu68K {
         }
         self.reset();
         self.mem.copy_from_slice(origin as usize, program);
-        self.rf.pc = origin;
-        self.clock_wires_into_state();
+        self.rf.write_pc(origin);
+        self.synchronize_compatibility_observers();
         Ok(())
     }
 
     /// Execute one instruction atomically with complete before/after state.
     pub fn step_checked(&mut self) -> Result<StepTrace, M68kError> {
-        if self.halted {
+        self.synchronize_compatibility_observers();
+        if self.halted() {
             return Err(M68kError::Halted);
         }
-        if self.rf.pc & 1 != 0 {
+        if self.rf.read_pc() & 1 != 0 {
             return Err(M68kError::Execution(format!(
                 "misaligned instruction fetch at {:#08x}",
-                self.rf.pc
+                self.rf.read_pc()
             )));
         }
         let state_before = self.get_state();
-        let pc_before = self.rf.pc;
+        let pc_before = self.rf.read_pc();
         let raw = self.mem_read_word(pc_before);
 
         let mut oracle = M68kSimulator::architectural();
@@ -205,7 +236,7 @@ impl Cpu68K {
         }
         Ok(StepTrace {
             pc_before,
-            pc_after: self.rf.pc,
+            pc_after: self.rf.read_pc(),
             raw,
             mnemonic: oracle_trace.mnemonic,
             state_before,
@@ -217,7 +248,8 @@ impl Cpu68K {
     pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, M68kError> {
         let original = self.get_state();
         let mut traces = Vec::new();
-        while traces.len() < max_steps && !self.halted {
+        self.synchronize_compatibility_observers();
+        while traces.len() < max_steps && !self.halted() {
             match self.step_checked() {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
@@ -227,9 +259,9 @@ impl Cpu68K {
             }
         }
         Ok(ExecutionResult {
-            halted: self.halted,
+            halted: self.halted(),
             steps: traces.len(),
-            pc: self.rf.pc,
+            pc: self.rf.read_pc(),
             final_state: self.get_state(),
             traces,
         })
@@ -252,9 +284,33 @@ impl Cpu68K {
         }
     }
 
-    fn clock_wires_into_state(&mut self) {
-        self.rf.clock_wires_into_state();
-        self.halt_state.write(u32::from(self.halted));
+    /// Read the authoritative HALT DFF Q output.
+    #[must_use]
+    pub fn halted(&self) -> bool {
+        self.halt.q()
+    }
+
+    /// Inventory the concrete persistent storage owners.
+    #[must_use]
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        PhysicalStorageInventory {
+            memory_dffs: self.mem.dff_count(),
+            data_register_dffs: self.rf.data_register_dff_count(),
+            address_register_dffs: self.rf.address_register_dff_count(),
+            program_counter_dffs: self.rf.program_counter_dff_count(),
+            status_register_dffs: self.rf.status_register_dff_count(),
+            halt_dffs: self.halt.dff_count(),
+        }
+    }
+
+    fn clock_halted(&mut self, value: bool) {
+        self.halt.clock(value);
+        self.halted = self.halted();
+    }
+
+    fn synchronize_compatibility_observers(&mut self) {
+        self.rf.synchronize_compatibility_observers();
+        self.halted = self.halted();
     }
 
     /// Reset, load, and run up to `max_steps` instructions.  Returns steps taken.
@@ -271,13 +327,13 @@ impl Cpu68K {
     ///     0x4E, 0x72, 0x27, 0x00, // STOP #0x2700
     /// ], 1000);
     /// assert_eq!(cpu.rf.d[0], 8);
-    /// assert!(cpu.halted);
+    /// assert!(cpu.halted());
     /// ```
     pub fn execute(&mut self, program: &[u8], max_steps: usize) -> usize {
         self.reset();
         self.load(program);
         let mut steps = 0;
-        while !self.halted && steps < max_steps {
+        while !self.halted() && steps < max_steps {
             self.step();
             steps += 1;
         }
@@ -286,7 +342,8 @@ impl Cpu68K {
 
     /// Execute one instruction.
     pub fn step(&mut self) {
-        if self.halted {
+        self.synchronize_compatibility_observers();
+        if self.halted() {
             return;
         }
         let op = self.fetch_word();
@@ -305,10 +362,9 @@ impl Cpu68K {
             0xD => self.exec_line_d(op),
             0xE => self.exec_line_e(op),
             _ => {
-                self.halted = true;
+                self.clock_halted(true);
             } // unimplemented — halt
         }
-        self.clock_wires_into_state();
     }
 
     // ── Memory helpers ────────────────────────────────────────────────────────
@@ -378,14 +434,16 @@ impl Cpu68K {
     // ── PC fetch helpers ──────────────────────────────────────────────────────
 
     fn fetch_word(&mut self) -> u16 {
-        let w = self.mem_read_word(self.rf.pc);
-        self.rf.pc = (self.rf.pc + 2) & ADDR_MASK;
+        let pc = self.rf.read_pc();
+        let w = self.mem_read_word(pc);
+        self.rf.write_pc(pc.wrapping_add(2));
         w
     }
 
     fn fetch_long(&mut self) -> u32 {
-        let v = self.mem_read_long(self.rf.pc);
-        self.rf.pc = (self.rf.pc + 4) & ADDR_MASK;
+        let pc = self.rf.read_pc();
+        let v = self.mem_read_long(pc);
+        self.rf.write_pc(pc.wrapping_add(4));
         v
     }
 
@@ -407,29 +465,29 @@ impl Cpu68K {
     // ── Stack helpers ─────────────────────────────────────────────────────────
 
     fn push_long(&mut self, val: u32) {
-        self.rf.a[7] = (self.rf.a[7].wrapping_sub(4)) & ADDR_MASK;
-        let sp = self.rf.a[7];
+        let sp = self.rf.read_an(7).wrapping_sub(4) & ADDR_MASK;
+        self.rf.write_an(7, sp, 4);
         self.mem_write_long(sp, val);
     }
 
     fn pop_long(&mut self) -> u32 {
-        let sp = self.rf.a[7];
+        let sp = self.rf.read_an(7);
         let val = self.mem_read_long(sp);
-        self.rf.a[7] = (self.rf.a[7] + 4) & ADDR_MASK;
+        self.rf.write_an(7, sp.wrapping_add(4) & ADDR_MASK, 4);
         val
     }
 
     #[allow(dead_code)] // defined for completeness; push_long is sufficient for this ISA subset
     fn push_word(&mut self, val: u32) {
-        self.rf.a[7] = (self.rf.a[7].wrapping_sub(2)) & ADDR_MASK;
-        let sp = self.rf.a[7];
+        let sp = self.rf.read_an(7).wrapping_sub(2) & ADDR_MASK;
+        self.rf.write_an(7, sp, 4);
         self.mem_write_word(sp, val);
     }
 
     fn pop_word(&mut self) -> u32 {
-        let sp = self.rf.a[7];
+        let sp = self.rf.read_an(7);
         let val = self.mem_read_word(sp) as u32;
-        self.rf.a[7] = (self.rf.a[7] + 2) & ADDR_MASK;
+        self.rf.write_an(7, sp.wrapping_add(2) & ADDR_MASK, 4);
         val
     }
 
@@ -440,27 +498,29 @@ impl Cpu68K {
     /// Updates An for pre/post-increment modes.  Invalid for Dn/An/imm.
     fn ea_address(&mut self, mode: u16, reg: u16, sz: usize) -> u32 {
         match mode {
-            2 => self.rf.a[reg as usize] & ADDR_MASK,
+            2 => self.rf.read_an(reg as usize) & ADDR_MASK,
 
             3 => {
                 // (An)+ — postincrement: return current An, then increment.
-                let addr = self.rf.a[reg as usize] & ADDR_MASK;
+                let addr = self.rf.read_an(reg as usize) & ADDR_MASK;
                 let inc = if reg == 7 { sz.max(2) } else { sz } as u32;
-                self.rf.a[reg as usize] = (self.rf.a[reg as usize] + inc) & ADDR_MASK;
+                self.rf
+                    .write_an(reg as usize, addr.wrapping_add(inc) & ADDR_MASK, 4);
                 addr
             }
 
             4 => {
                 // -(An) — predecrement: decrement An, then return new An.
                 let dec = if reg == 7 { sz.max(2) } else { sz } as u32;
-                self.rf.a[reg as usize] = (self.rf.a[reg as usize].wrapping_sub(dec)) & ADDR_MASK;
-                self.rf.a[reg as usize] & ADDR_MASK
+                let addr = self.rf.read_an(reg as usize).wrapping_sub(dec) & ADDR_MASK;
+                self.rf.write_an(reg as usize, addr, 4);
+                addr
             }
 
             5 => {
                 // d16(An) — indirect with 16-bit displacement.
                 let d16 = self.fetch_word_signed();
-                (self.rf.a[reg as usize].wrapping_add(d16 as u32)) & ADDR_MASK
+                (self.rf.read_an(reg as usize).wrapping_add(d16 as u32)) & ADDR_MASK
             }
 
             6 => {
@@ -471,16 +531,21 @@ impl Cpu68K {
                 let xn_long = (ext >> 11) & 1; // 0=word, 1=long
                 let is_an = (ext >> 15) & 1;
                 let xn_val = if is_an == 1 {
-                    self.rf.a[xn_n]
+                    self.rf.read_an(xn_n)
                 } else {
-                    self.rf.d[xn_n]
+                    self.rf.read_dn(xn_n, 4)
                 };
                 let xn = if xn_long == 0 {
                     sign_extend_16(xn_val & WORD_MASK)
                 } else {
                     xn_val & LONG_MASK
                 };
-                (self.rf.a[reg as usize].wrapping_add(xn).wrapping_add(d8)) & ADDR_MASK
+                (self
+                    .rf
+                    .read_an(reg as usize)
+                    .wrapping_add(xn)
+                    .wrapping_add(d8))
+                    & ADDR_MASK
             }
 
             7 => {
@@ -493,22 +558,22 @@ impl Cpu68K {
                     1 => self.fetch_long() & ADDR_MASK, // (abs).L
                     2 => {
                         // d16(PC)
-                        let pc_base = self.rf.pc;
+                        let pc_base = self.rf.read_pc();
                         let d16 = self.fetch_word_signed();
                         (pc_base.wrapping_add(d16 as u32)) & ADDR_MASK
                     }
                     3 => {
                         // d8(PC,Xn)
-                        let pc_base = self.rf.pc;
+                        let pc_base = self.rf.read_pc();
                         let ext = self.fetch_word();
                         let d8 = sign_extend_8((ext & 0xFF) as u32);
                         let xn_n = ((ext >> 12) & 7) as usize;
                         let xn_long = (ext >> 11) & 1;
                         let is_an = (ext >> 15) & 1;
                         let xn_val = if is_an == 1 {
-                            self.rf.a[xn_n]
+                            self.rf.read_an(xn_n)
                         } else {
-                            self.rf.d[xn_n]
+                            self.rf.read_dn(xn_n, 4)
                         };
                         let xn = if xn_long == 0 {
                             sign_extend_16(xn_val & WORD_MASK)
@@ -518,14 +583,14 @@ impl Cpu68K {
                         (pc_base.wrapping_add(xn).wrapping_add(d8)) & ADDR_MASK
                     }
                     _ => {
-                        self.halted = true;
+                        self.clock_halted(true);
                         0
                     }
                 }
             }
 
             _ => {
-                self.halted = true;
+                self.clock_halted(true);
                 0
             }
         }
@@ -534,8 +599,8 @@ impl Cpu68K {
     /// Read `sz` bytes from EA.  Works for all modes including Dn/An/imm.
     fn ea_read(&mut self, mode: u16, reg: u16, sz: usize) -> u32 {
         match mode {
-            0 => self.rf.d[reg as usize] & sz_mask(sz),
-            1 => self.rf.a[reg as usize] & LONG_MASK, // An always full 32-bit
+            0 => self.rf.read_dn(reg as usize, sz),
+            1 => self.rf.read_an(reg as usize) & LONG_MASK, // An always full 32-bit
             _ => {
                 if mode == 7 && reg == 4 {
                     return self.fetch_imm(sz);
@@ -609,13 +674,16 @@ impl Cpu68K {
     fn exec_bit_op(&mut self, bit_n_in: u32, kind: u16, mode: u16, reg: u16) {
         if mode == 0 {
             let bit_n = (bit_n_in & 31) as u8;
-            let val = self.rf.d[reg as usize];
+            let val = self.rf.read_dn(reg as usize, 4);
             let z_val = (val & (1 << bit_n)) == 0;
-            match kind {
-                1 => self.rf.d[reg as usize] = val ^ (1 << bit_n),
-                2 => self.rf.d[reg as usize] = val & !(1 << bit_n),
-                3 => self.rf.d[reg as usize] = val | (1 << bit_n),
-                _ => {}
+            let updated = match kind {
+                1 => Some(val ^ (1 << bit_n)),
+                2 => Some(val & !(1 << bit_n)),
+                3 => Some(val | (1 << bit_n)),
+                _ => None,
+            };
+            if let Some(updated) = updated {
+                self.rf.write_dn(reg as usize, updated, 4);
             }
             let old_x = self.rf.flag_x();
             let old_n = self.rf.flag_n();
@@ -664,7 +732,7 @@ impl Cpu68K {
         if (op & 0x0138) == 0x0100 && sz_code <= 3 {
             let dn = (op >> 9) & 7;
             let kind = (op >> 6) & 3;
-            let bit_n = self.rf.d[dn as usize];
+            let bit_n = self.rf.read_dn(dn as usize, 4);
             self.exec_bit_op(bit_n, kind, mode, reg);
             return;
         }
@@ -676,7 +744,7 @@ impl Cpu68K {
                 let sz = match Self::sz_from_code_arith(sz_code) {
                     Some(s) => s,
                     None => {
-                        self.halted = true;
+                        self.clock_halted(true);
                         return;
                     }
                 };
@@ -701,7 +769,7 @@ impl Cpu68K {
                 let sz = match Self::sz_from_code_arith(sz_code) {
                     Some(s) => s,
                     None => {
-                        self.halted = true;
+                        self.clock_halted(true);
                         return;
                     }
                 };
@@ -725,7 +793,7 @@ impl Cpu68K {
                 let sz = match Self::sz_from_code_arith(sz_code) {
                     Some(s) => s,
                     None => {
-                        self.halted = true;
+                        self.clock_halted(true);
                         return;
                     }
                 };
@@ -739,7 +807,7 @@ impl Cpu68K {
                 let sz = match Self::sz_from_code_arith(sz_code) {
                     Some(s) => s,
                     None => {
-                        self.halted = true;
+                        self.clock_halted(true);
                         return;
                     }
                 };
@@ -753,7 +821,7 @@ impl Cpu68K {
                 let sz = match Self::sz_from_code_arith(sz_code) {
                     Some(s) => s,
                     None => {
-                        self.halted = true;
+                        self.clock_halted(true);
                         return;
                     }
                 };
@@ -772,7 +840,7 @@ impl Cpu68K {
                 let sz = match Self::sz_from_code_arith(sz_code) {
                     Some(s) => s,
                     None => {
-                        self.halted = true;
+                        self.clock_halted(true);
                         return;
                     }
                 };
@@ -781,7 +849,7 @@ impl Cpu68K {
                 self.do_cmp(a, imm, sz);
             }
             _ => {
-                self.halted = true;
+                self.clock_halted(true);
             }
         }
     }
@@ -856,7 +924,7 @@ impl Cpu68K {
         let sz = match Self::sz_from_code_move(sz_code) {
             Some(s) => s,
             None => {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
         };
@@ -901,7 +969,8 @@ impl Cpu68K {
 
         // RTS
         if op == 0x4E75 {
-            self.rf.pc = self.pop_long() & ADDR_MASK;
+            let pc = self.pop_long() & ADDR_MASK;
+            self.rf.write_pc(pc);
             return;
         }
 
@@ -909,7 +978,8 @@ impl Cpu68K {
         if op == 0x4E77 {
             let ccr = self.pop_word() as u8;
             self.rf.write_ccr(ccr);
-            self.rf.pc = self.pop_long() & ADDR_MASK;
+            let pc = self.pop_long() & ADDR_MASK;
+            self.rf.write_pc(pc);
             return;
         }
 
@@ -917,7 +987,7 @@ impl Cpu68K {
         if op == 0x4E72 {
             let imm = self.fetch_word();
             self.rf.write_sr(imm);
-            self.halted = true;
+            self.clock_halted(true);
             return;
         }
 
@@ -925,9 +995,9 @@ impl Cpu68K {
         if (0x4E40..=0x4E4F).contains(&op) {
             let n = op & 0xF;
             if n == 15 {
-                self.halted = true;
+                self.clock_halted(true);
             } else {
-                self.rf.d[7] = n as u32;
+                self.rf.write_dn(7, n as u32, 4);
             }
             return;
         }
@@ -936,26 +1006,28 @@ impl Cpu68K {
         if (0x4E50..=0x4E57).contains(&op) {
             let n = (op & 7) as usize;
             let disp = self.fetch_word_signed();
-            self.push_long(self.rf.a[n]);
-            self.rf.a[n] = self.rf.a[7];
-            self.rf.a[7] = (self.rf.a[7].wrapping_add(disp as u32)) & ADDR_MASK;
+            self.push_long(self.rf.read_an(n));
+            self.rf.write_an(n, self.rf.read_an(7), 4);
+            let sp = self.rf.read_an(7).wrapping_add(disp as u32) & ADDR_MASK;
+            self.rf.write_an(7, sp, 4);
             return;
         }
 
         // UNLK An: 0x4E58–0x4E5F
         if (0x4E58..=0x4E5F).contains(&op) {
             let n = (op & 7) as usize;
-            self.rf.a[7] = self.rf.a[n];
-            self.rf.a[n] = self.pop_long();
+            self.rf.write_an(7, self.rf.read_an(n), 4);
+            let value = self.pop_long();
+            self.rf.write_an(n, value, 4);
             return;
         }
 
         // SWAP Dn: 0x4840–0x4847
         if (0x4840..=0x4847).contains(&op) {
             let n = (op & 7) as usize;
-            let val = self.rf.d[n];
+            let val = self.rf.read_dn(n, 4);
             let swapped = ((val >> 16) | ((val & WORD_MASK) << 16)) & LONG_MASK;
-            self.rf.d[n] = swapped;
+            self.rf.write_dn(n, swapped, 4);
             let r = or32(swapped, 0); // compute N/Z only
             self.apply_logic(&r);
             return;
@@ -964,7 +1036,7 @@ impl Cpu68K {
         // EXT.W Dn: 0x4880–0x4887
         if (0x4880..=0x4887).contains(&op) {
             let n = (op & 7) as usize;
-            let b = self.rf.d[n] as u8;
+            let b = self.rf.read_dn(n, 4) as u8;
             let w = (b as i8) as i16 as u16 as u32;
             self.rf.write_dn(n, w, 2);
             let r = and16(w as u16, 0xFFFF); // compute N/Z (AND with self = identity)
@@ -976,9 +1048,9 @@ impl Cpu68K {
         // EXT.L Dn: 0x48C0–0x48C7
         if (0x48C0..=0x48C7).contains(&op) {
             let n = (op & 7) as usize;
-            let w = self.rf.d[n] as u16;
+            let w = self.rf.read_dn(n, 4) as u16;
             let lw = (w as i16) as i32 as u32;
-            self.rf.d[n] = lw;
+            self.rf.write_dn(n, lw, 4);
             let r2 = AluResult68K {
                 result: lw,
                 flag_n: ((lw >> 31) & 1) as u8,
@@ -1022,7 +1094,7 @@ impl Cpu68K {
         // NEGX.sz <ea>: 0100 0000 ss ea
         if (op & 0xFF00) == 0x4000 && sz_code <= 2 {
             let sz = arith_sz(sz_code).unwrap_or_else(|| {
-                self.halted = true;
+                self.clock_halted(true);
                 1
             });
             let x = self.rf.flag_x();
@@ -1053,7 +1125,7 @@ impl Cpu68K {
         // CLR.sz <ea>: 0100 0010 ss ea
         if (op & 0xFF00) == 0x4200 && sz_code <= 2 {
             let sz = arith_sz(sz_code).unwrap_or_else(|| {
-                self.halted = true;
+                self.clock_halted(true);
                 1
             });
             self.ea_write(mode, reg, sz, 0);
@@ -1065,7 +1137,7 @@ impl Cpu68K {
         // NEG.sz <ea>: 0100 0100 ss ea
         if (op & 0xFF00) == 0x4400 && sz_code <= 2 {
             let sz = arith_sz(sz_code).unwrap_or_else(|| {
-                self.halted = true;
+                self.clock_halted(true);
                 1
             });
             let src = self.ea_read(mode, reg, sz);
@@ -1082,7 +1154,7 @@ impl Cpu68K {
         // NOT.sz <ea>: 0100 0110 ss ea
         if (op & 0xFF00) == 0x4600 && sz_code <= 2 {
             let sz = arith_sz(sz_code).unwrap_or_else(|| {
-                self.halted = true;
+                self.clock_halted(true);
                 1
             });
             let val = self.ea_read(mode, reg, sz);
@@ -1099,7 +1171,7 @@ impl Cpu68K {
         // TST.sz <ea>: 0100 1010 ss ea
         if (op & 0xFF00) == 0x4A00 && sz_code <= 2 {
             let sz = arith_sz(sz_code).unwrap_or_else(|| {
-                self.halted = true;
+                self.clock_halted(true);
                 1
             });
             let val = self.ea_read(mode, reg, sz) & sz_mask(sz);
@@ -1124,26 +1196,26 @@ impl Cpu68K {
         {
             let an = ((op >> 9) & 7) as usize;
             let addr = self.ea_address(mode, reg, 4);
-            self.rf.a[an] = addr & LONG_MASK;
+            self.rf.write_an(an, addr & LONG_MASK, 4);
             return;
         }
 
         // JSR <ea>: 0100 1110 10 mm rrr
         if (op & 0xFFC0) == 0x4E80 {
             let target = self.ea_address(mode, reg, 4);
-            self.push_long(self.rf.pc);
-            self.rf.pc = target & ADDR_MASK;
+            self.push_long(self.rf.read_pc());
+            self.rf.write_pc(target & ADDR_MASK);
             return;
         }
 
         // JMP <ea>: 0100 1110 11 mm rrr
         if (op & 0xFFC0) == 0x4EC0 {
             let target = self.ea_address(mode, reg, 4);
-            self.rf.pc = target & ADDR_MASK;
+            self.rf.write_pc(target & ADDR_MASK);
             return;
         }
 
-        self.halted = true;
+        self.clock_halted(true);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -1160,15 +1232,15 @@ impl Cpu68K {
         // DBcc Dn, #disp: sz_code=3, mode=001
         if sz_code == 3 && mode == 1 {
             let cc = ((op >> 8) & 0xF) as u8;
-            let pc_before_ext = self.rf.pc;
+            let pc_before_ext = self.rf.read_pc();
             let disp = self.fetch_word_signed();
             let target = (pc_before_ext.wrapping_add(disp as u32)) & ADDR_MASK;
             if !self.rf.test_cc(cc) {
                 let n = reg as usize;
-                let count = (self.rf.d[n] as u16).wrapping_sub(1);
+                let count = (self.rf.read_dn(n, 4) as u16).wrapping_sub(1);
                 self.rf.write_dn(n, count as u32, 2);
                 if count != 0xFFFF {
-                    self.rf.pc = target;
+                    self.rf.write_pc(target);
                 }
             }
             return;
@@ -1185,7 +1257,7 @@ impl Cpu68K {
         let sz = match arith_sz(sz_code) {
             Some(s) => s,
             None => {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
         };
@@ -1194,7 +1266,8 @@ impl Cpu68K {
         if sub == 0 {
             // ADDQ
             if mode == 1 {
-                self.rf.a[reg as usize] = (self.rf.a[reg as usize] + imm) & LONG_MASK;
+                let value = self.rf.read_an(reg as usize).wrapping_add(imm) & LONG_MASK;
+                self.rf.write_an(reg as usize, value, 4);
                 return;
             }
             let a = self.ea_read(mode, reg, sz);
@@ -1203,7 +1276,8 @@ impl Cpu68K {
         } else {
             // SUBQ
             if mode == 1 {
-                self.rf.a[reg as usize] = (self.rf.a[reg as usize].wrapping_sub(imm)) & LONG_MASK;
+                let value = self.rf.read_an(reg as usize).wrapping_sub(imm) & LONG_MASK;
+                self.rf.write_an(reg as usize, value, 4);
                 return;
             }
             let a = self.ea_read(mode, reg, sz);
@@ -1219,7 +1293,7 @@ impl Cpu68K {
     fn exec_line6(&mut self, op: u16) {
         let cc = ((op >> 8) & 0xF) as u8;
         let disp8 = op & 0xFF;
-        let pc_base = self.rf.pc;
+        let pc_base = self.rf.read_pc();
 
         let disp: i32 = if disp8 == 0 {
             self.fetch_word_signed()
@@ -1231,15 +1305,15 @@ impl Cpu68K {
 
         if cc == 0 {
             // BRA
-            self.rf.pc = target;
+            self.rf.write_pc(target);
         } else if cc == 1 {
             // BSR
-            self.push_long(self.rf.pc);
-            self.rf.pc = target;
+            self.push_long(self.rf.read_pc());
+            self.rf.write_pc(target);
         } else {
             // Bcc
             if self.rf.test_cc(cc) {
-                self.rf.pc = target;
+                self.rf.write_pc(target);
             }
         }
     }
@@ -1250,12 +1324,12 @@ impl Cpu68K {
 
     fn exec_moveq(&mut self, op: u16) {
         if op & 0x0100 != 0 {
-            self.halted = true;
+            self.clock_halted(true);
             return;
         }
         let dn = ((op >> 9) & 7) as usize;
         let imm = sign_extend_8(op as u32 & 0xFF);
-        self.rf.d[dn] = imm & LONG_MASK;
+        self.rf.write_dn(dn, imm & LONG_MASK, 4);
         let n = ((imm & 0x8000_0000) != 0) as u8;
         let z = (imm == 0) as u8;
         self.rf.set_nz_clear_vc(n, z);
@@ -1276,10 +1350,10 @@ impl Cpu68K {
         if sz_code == 3 && dir_bit == 0 {
             let divisor = self.ea_read(mode, reg, 2) & WORD_MASK;
             if divisor == 0 {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
-            let dividend = self.rf.d[dn as usize];
+            let dividend = self.rf.read_dn(dn as usize, 4);
             let (quotient, remainder) =
                 gate_divu32_16(dividend, divisor as u16).expect("non-zero divisor");
             if quotient > WORD_MASK {
@@ -1288,7 +1362,11 @@ impl Cpu68K {
                 self.rf.set_ccr(old_x, 0, 0, 1, 0);
                 return;
             }
-            self.rf.d[dn as usize] = (u32::from(remainder) << 16) | (quotient & WORD_MASK);
+            self.rf.write_dn(
+                dn as usize,
+                (u32::from(remainder) << 16) | (quotient & WORD_MASK),
+                4,
+            );
             let n = ((quotient & 0x8000) != 0) as u8;
             let z = (quotient == 0) as u8;
             self.rf.set_nz_clear_vc(n, z);
@@ -1299,10 +1377,10 @@ impl Cpu68K {
         if sz_code == 3 && dir_bit == 1 {
             let divisor = (self.ea_read(mode, reg, 2) & WORD_MASK) as u16;
             if divisor == 0 {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
-            let dividend = self.rf.d[dn as usize];
+            let dividend = self.rf.read_dn(dn as usize, 4);
             let (quotient, remainder, overflow) =
                 gate_divs32_16(dividend, divisor).expect("non-zero divisor");
             if overflow {
@@ -1312,7 +1390,7 @@ impl Cpu68K {
             }
             let q = u32::from(quotient);
             let r = u32::from(remainder);
-            self.rf.d[dn as usize] = (r << 16) | q;
+            self.rf.write_dn(dn as usize, (r << 16) | q, 4);
             let n = ((q & 0x8000) != 0) as u8;
             let z = (q == 0) as u8;
             self.rf.set_nz_clear_vc(n, z);
@@ -1323,17 +1401,17 @@ impl Cpu68K {
         let sz = match arith_sz(sz_code) {
             Some(s) => s,
             None => {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
         };
         if dir_bit == 0 {
             let b = self.ea_read(mode, reg, sz);
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             let result = self.do_or(a, b, sz);
             self.rf.write_dn(dn as usize, result, sz);
         } else {
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             let (val, addr) = self.ea_read_addr(mode, reg, sz);
             let result = self.do_or(val, a, sz);
             self.mem_write(addr, sz, result);
@@ -1355,20 +1433,22 @@ impl Cpu68K {
         if sz_code == 3 && dir_bit == 0 {
             let src = self.ea_read(mode, reg, 2);
             let src = sign_extend_16(src & WORD_MASK);
-            self.rf.a[dn as usize] = (self.rf.a[dn as usize].wrapping_sub(src)) & LONG_MASK;
+            let value = self.rf.read_an(dn as usize).wrapping_sub(src) & LONG_MASK;
+            self.rf.write_an(dn as usize, value, 4);
             return;
         }
         // SUBA.L: sz_code=3, dir_bit=1
         if sz_code == 3 && dir_bit == 1 {
             let src = self.ea_read(mode, reg, 4);
-            self.rf.a[dn as usize] = (self.rf.a[dn as usize].wrapping_sub(src)) & LONG_MASK;
+            let value = self.rf.read_an(dn as usize).wrapping_sub(src) & LONG_MASK;
+            self.rf.write_an(dn as usize, value, 4);
             return;
         }
 
         let sz = match arith_sz(sz_code) {
             Some(s) => s,
             None => {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
         };
@@ -1376,8 +1456,8 @@ impl Cpu68K {
         // SUBX: dir_bit=1, mode=0 (register form)
         if dir_bit == 1 && mode == 0 {
             let x = self.rf.flag_x();
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
-            let b = self.rf.d[reg as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
+            let b = self.rf.read_dn(reg as usize, sz);
             let r = match sz {
                 1 => sub8(a as u8, b as u8, x),
                 2 => sub16(a as u16, b as u16, x),
@@ -1395,12 +1475,12 @@ impl Cpu68K {
         if dir_bit == 0 {
             // SUB <ea>, Dn
             let b = self.ea_read(mode, reg, sz);
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             let result = self.do_sub(a, b, sz);
             self.rf.write_dn(dn as usize, result, sz);
         } else {
             // SUB Dn, <ea>
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             let (val, addr) = self.ea_read_addr(mode, reg, sz);
             let result = self.do_sub(val, a, sz);
             self.mem_write(addr, sz, result);
@@ -1422,7 +1502,7 @@ impl Cpu68K {
         if sz_code == 3 && dir_bit == 0 {
             let src = self.ea_read(mode, reg, 2);
             let src = sign_extend_16(src & WORD_MASK);
-            let a = self.rf.a[dn as usize] & LONG_MASK;
+            let a = self.rf.read_an(dn as usize) & LONG_MASK;
             let r = cmp32(a, src);
             self.apply_cmp(&r);
             return;
@@ -1430,7 +1510,7 @@ impl Cpu68K {
         // CMPA.L: sz_code=3, dir_bit=1
         if sz_code == 3 && dir_bit == 1 {
             let src = self.ea_read(mode, reg, 4);
-            let a = self.rf.a[dn as usize] & LONG_MASK;
+            let a = self.rf.read_an(dn as usize) & LONG_MASK;
             let r = cmp32(a, src);
             self.apply_cmp(&r);
             return;
@@ -1439,7 +1519,7 @@ impl Cpu68K {
         let sz = match arith_sz(sz_code) {
             Some(s) => s,
             None => {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
         };
@@ -1447,13 +1527,13 @@ impl Cpu68K {
         if dir_bit == 0 {
             // CMP <ea>, Dn
             let b = self.ea_read(mode, reg, sz);
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             self.do_cmp(a, b, sz);
         } else {
             // EOR Dn, <ea>
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             if mode == 0 {
-                let val = self.rf.d[reg as usize] & sz_mask(sz);
+                let val = self.rf.read_dn(reg as usize, sz);
                 let result = self.do_xor(val, a, sz);
                 self.rf.write_dn(reg as usize, result, sz);
             } else {
@@ -1477,30 +1557,36 @@ impl Cpu68K {
 
         // EXG
         if (op & 0xF1F8) == 0xC140 {
-            let (a, b) = (self.rf.d[dn as usize], self.rf.d[reg as usize]);
-            self.rf.d[dn as usize] = b;
-            self.rf.d[reg as usize] = a;
+            let (a, b) = (
+                self.rf.read_dn(dn as usize, 4),
+                self.rf.read_dn(reg as usize, 4),
+            );
+            self.rf.write_dn(dn as usize, b, 4);
+            self.rf.write_dn(reg as usize, a, 4);
             return;
         }
         if (op & 0xF1F8) == 0xC148 {
-            let (a, b) = (self.rf.a[dn as usize], self.rf.a[reg as usize]);
-            self.rf.a[dn as usize] = b;
-            self.rf.a[reg as usize] = a;
+            let (a, b) = (self.rf.read_an(dn as usize), self.rf.read_an(reg as usize));
+            self.rf.write_an(dn as usize, b, 4);
+            self.rf.write_an(reg as usize, a, 4);
             return;
         }
         if (op & 0xF1F8) == 0xC188 {
-            let (a, b) = (self.rf.d[dn as usize], self.rf.a[reg as usize]);
-            self.rf.d[dn as usize] = b;
-            self.rf.a[reg as usize] = a;
+            let (a, b) = (
+                self.rf.read_dn(dn as usize, 4),
+                self.rf.read_an(reg as usize),
+            );
+            self.rf.write_dn(dn as usize, b, 4);
+            self.rf.write_an(reg as usize, a, 4);
             return;
         }
 
         // MULU.W <ea>, Dn: sz_code=3, dir_bit=0
         if sz_code == 3 && dir_bit == 0 {
             let b = self.ea_read(mode, reg, 2) & WORD_MASK;
-            let a = self.rf.d[dn as usize] & WORD_MASK;
+            let a = self.rf.read_dn(dn as usize, 2);
             let result = gate_mulu16(a as u16, b as u16);
-            self.rf.d[dn as usize] = result;
+            self.rf.write_dn(dn as usize, result, 4);
             let n = ((result >> 31) & 1) as u8;
             let z = (result == 0) as u8;
             self.rf.set_nz_clear_vc(n, z);
@@ -1510,9 +1596,9 @@ impl Cpu68K {
         // MULS.W <ea>, Dn: sz_code=3, dir_bit=1
         if sz_code == 3 && dir_bit == 1 {
             let b = self.ea_read(mode, reg, 2) as u16;
-            let a = self.rf.d[dn as usize] as u16;
+            let a = self.rf.read_dn(dn as usize, 2) as u16;
             let result = gate_muls16(a, b);
-            self.rf.d[dn as usize] = result;
+            self.rf.write_dn(dn as usize, result, 4);
             let n = ((result >> 31) & 1) as u8;
             let z = (result == 0) as u8;
             self.rf.set_nz_clear_vc(n, z);
@@ -1523,17 +1609,17 @@ impl Cpu68K {
         let sz = match arith_sz(sz_code) {
             Some(s) => s,
             None => {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
         };
         if dir_bit == 0 {
             let b = self.ea_read(mode, reg, sz);
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             let result = self.do_and(a, b, sz);
             self.rf.write_dn(dn as usize, result, sz);
         } else {
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             let (val, addr) = self.ea_read_addr(mode, reg, sz);
             let result = self.do_and(val, a, sz);
             self.mem_write(addr, sz, result);
@@ -1555,20 +1641,22 @@ impl Cpu68K {
         if sz_code == 3 && dir_bit == 0 {
             let src = self.ea_read(mode, reg, 2);
             let src = sign_extend_16(src & WORD_MASK);
-            self.rf.a[dn as usize] = (self.rf.a[dn as usize] + src) & LONG_MASK;
+            let value = self.rf.read_an(dn as usize).wrapping_add(src) & LONG_MASK;
+            self.rf.write_an(dn as usize, value, 4);
             return;
         }
         // ADDA.L: sz_code=3, dir_bit=1
         if sz_code == 3 && dir_bit == 1 {
             let src = self.ea_read(mode, reg, 4);
-            self.rf.a[dn as usize] = (self.rf.a[dn as usize].wrapping_add(src)) & LONG_MASK;
+            let value = self.rf.read_an(dn as usize).wrapping_add(src) & LONG_MASK;
+            self.rf.write_an(dn as usize, value, 4);
             return;
         }
 
         let sz = match arith_sz(sz_code) {
             Some(s) => s,
             None => {
-                self.halted = true;
+                self.clock_halted(true);
                 return;
             }
         };
@@ -1576,8 +1664,8 @@ impl Cpu68K {
         // ADDX: dir_bit=1, mode=0 (register form)
         if dir_bit == 1 && mode == 0 {
             let x = self.rf.flag_x();
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
-            let b = self.rf.d[reg as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
+            let b = self.rf.read_dn(reg as usize, sz);
             let r = match sz {
                 1 => add8(a as u8, b as u8, x),
                 2 => add16(a as u16, b as u16, x),
@@ -1594,12 +1682,12 @@ impl Cpu68K {
         if dir_bit == 0 {
             // ADD <ea>, Dn
             let b = self.ea_read(mode, reg, sz);
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             let result = self.do_add(a, b, sz);
             self.rf.write_dn(dn as usize, result, sz);
         } else {
             // ADD Dn, <ea>
-            let a = self.rf.d[dn as usize] & sz_mask(sz);
+            let a = self.rf.read_dn(dn as usize, sz);
             let (val, addr) = self.ea_read_addr(mode, reg, sz);
             let result = self.do_add(val, a, sz);
             self.mem_write(addr, sz, result);
@@ -1638,7 +1726,7 @@ impl Cpu68K {
         let cnt_field = ((op >> 9) & 7) as usize;
 
         let count = if reg_count {
-            self.rf.d[cnt_field] % 64
+            self.rf.read_dn(cnt_field, 4) % 64
         } else {
             if cnt_field == 0 {
                 8
@@ -1647,7 +1735,7 @@ impl Cpu68K {
             }
         };
 
-        let val = self.rf.d[dn] & sz_mask(sz);
+        let val = self.rf.read_dn(dn, sz);
         let x_in = self.rf.flag_x();
         let bits = (sz * 8) as u32;
         let sr = shift_op(val, count, direction, shift_type, bits, x_in);
@@ -1706,14 +1794,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn persistent_register_and_halt_latches_match_public_wires() {
+    fn persistent_register_and_halt_q_match_power_on_observers() {
         let cpu = Cpu68K::new();
-        let (d, a, pc, sr) = cpu.rf.latched_values();
-        assert_eq!(d, cpu.rf.d);
-        assert_eq!(a, cpu.rf.a);
-        assert_eq!(pc, cpu.rf.pc);
-        assert_eq!(sr, cpu.rf.sr);
-        assert_eq!(cpu.halt_state.read(), u32::from(cpu.halted));
+        assert_eq!(cpu.rf.data_snapshot(), cpu.rf.d);
+        assert_eq!(cpu.rf.address_snapshot(), cpu.rf.a);
+        assert_eq!(cpu.rf.read_pc(), cpu.rf.pc);
+        assert_eq!(cpu.rf.read_sr(), cpu.rf.sr);
+        assert_eq!(cpu.halted(), cpu.halted);
     }
 
     #[test]
@@ -1780,7 +1867,7 @@ mod tests {
         cpu.reset();
         // Manually: write 0x42 to memory at 0x2000, then MOVE.B (A0), D0
         cpu.mem[0x2000] = 0x42;
-        cpu.rf.a[0] = 0x2000;
+        cpu.rf.write_an(0, 0x2000, 4);
         // MOVE.B (A0), D0: opcode 1000 0000 0001 0000 = 0x1010
         cpu.mem[LOAD_ADDR] = 0x10; // MOVE.B (A0), D0
         cpu.mem[LOAD_ADDR + 1] = 0x10;
@@ -1788,7 +1875,7 @@ mod tests {
         cpu.mem[LOAD_ADDR + 3] = 0x72;
         cpu.mem[LOAD_ADDR + 4] = 0x27;
         cpu.mem[LOAD_ADDR + 5] = 0x00;
-        cpu.rf.pc = LOAD_ADDR as u32;
+        cpu.rf.write_pc(LOAD_ADDR as u32);
         cpu.step();
         assert_eq!(cpu.rf.d[0] & 0xFF, 0x42);
     }
@@ -1899,14 +1986,14 @@ mod tests {
         let mut cpu = Cpu68K::new();
         // Load D2=0x00010002, SWAP D2 → 0x00020001
         cpu.reset();
-        cpu.rf.d[2] = 0x0001_0002;
+        cpu.rf.write_dn(2, 0x0001_0002, 4);
         cpu.mem[LOAD_ADDR] = 0x48; // SWAP D2
         cpu.mem[LOAD_ADDR + 1] = 0x42;
         cpu.mem[LOAD_ADDR + 2] = 0x4E; // STOP
         cpu.mem[LOAD_ADDR + 3] = 0x72;
         cpu.mem[LOAD_ADDR + 4] = 0x27;
         cpu.mem[LOAD_ADDR + 5] = 0x00;
-        cpu.rf.pc = LOAD_ADDR as u32;
+        cpu.rf.write_pc(LOAD_ADDR as u32);
         cpu.step();
         assert_eq!(cpu.rf.d[2], 0x0002_0001);
     }
@@ -1916,14 +2003,14 @@ mod tests {
         let mut cpu = Cpu68K::new();
         // EXT.W D0 with D0=0x000000FF → sign-extend byte to word
         cpu.reset();
-        cpu.rf.d[0] = 0x0000_00FF; // low byte = -1 as signed
+        cpu.rf.write_dn(0, 0x0000_00FF, 4); // low byte = -1 as signed
         cpu.mem[LOAD_ADDR] = 0x48; // EXT.W D0
         cpu.mem[LOAD_ADDR + 1] = 0x80;
         cpu.mem[LOAD_ADDR + 2] = 0x4E; // STOP
         cpu.mem[LOAD_ADDR + 3] = 0x72;
         cpu.mem[LOAD_ADDR + 4] = 0x27;
         cpu.mem[LOAD_ADDR + 5] = 0x00;
-        cpu.rf.pc = LOAD_ADDR as u32;
+        cpu.rf.write_pc(LOAD_ADDR as u32);
         cpu.step();
         // 0xFF as i8 = -1, sign-extended to word = 0xFFFF
         assert_eq!(cpu.rf.d[0] & 0xFFFF, 0xFFFF);
@@ -1951,7 +2038,7 @@ mod tests {
         let mut cpu = Cpu68K::new();
         // MOVEQ #0x10, D0; LSR.B #1, D0 → D0.byte = 0x08
         cpu.reset();
-        cpu.rf.d[0] = 0x10;
+        cpu.rf.write_dn(0, 0x10, 4);
         // LSR.B #1, D0: encoding 1110 0010 0000 1000 = 0xE208
         // bit 8 = 0 (right), bit 7-6 = 00 (byte), bit 5 = 0 (imm), bit 4-3 = 01 (LS), bit 2-0 = 000 (D0)
         cpu.mem[LOAD_ADDR] = 0xE2;
@@ -1960,7 +2047,7 @@ mod tests {
         cpu.mem[LOAD_ADDR + 3] = 0x72;
         cpu.mem[LOAD_ADDR + 4] = 0x27;
         cpu.mem[LOAD_ADDR + 5] = 0x00;
-        cpu.rf.pc = LOAD_ADDR as u32;
+        cpu.rf.write_pc(LOAD_ADDR as u32);
         cpu.step();
         assert_eq!(cpu.rf.d[0] & 0xFF, 0x08);
         assert_eq!(cpu.rf.flag_c(), 0);
@@ -1971,7 +2058,7 @@ mod tests {
         let mut cpu = Cpu68K::new();
         // ASL.W #1, D0 with D0.word = 0x4000 → 0x8000, V=1 (sign bit changed)
         cpu.reset();
-        cpu.rf.d[0] = 0x4000;
+        cpu.rf.write_dn(0, 0x4000, 4);
         // ASL.W #1, D0: encoding 1110 0011 0100 0000 = 0xE340
         cpu.mem[LOAD_ADDR] = 0xE3;
         cpu.mem[LOAD_ADDR + 1] = 0x40;
@@ -1979,7 +2066,7 @@ mod tests {
         cpu.mem[LOAD_ADDR + 3] = 0x72;
         cpu.mem[LOAD_ADDR + 4] = 0x27;
         cpu.mem[LOAD_ADDR + 5] = 0x00;
-        cpu.rf.pc = LOAD_ADDR as u32;
+        cpu.rf.write_pc(LOAD_ADDR as u32);
         cpu.step();
         assert_eq!(cpu.rf.d[0] & 0xFFFF, 0x8000);
         assert_eq!(cpu.rf.flag_v(), 1); // sign bit changed
@@ -2023,8 +2110,8 @@ mod tests {
         let mut cpu = Cpu68K::new();
         cpu.reset();
         cpu.mem[0x2000] = 0x0F;
-        cpu.rf.a[0] = 0x2000;
-        cpu.rf.d[0] = 0xF0;
+        cpu.rf.write_an(0, 0x2000, 4);
+        cpu.rf.write_dn(0, 0xF0, 4);
         // OR.B D0, (A0): 0x8110
         cpu.mem[LOAD_ADDR] = 0x81;
         cpu.mem[LOAD_ADDR + 1] = 0x10;
@@ -2032,7 +2119,7 @@ mod tests {
         cpu.mem[LOAD_ADDR + 3] = 0x72;
         cpu.mem[LOAD_ADDR + 4] = 0x27;
         cpu.mem[LOAD_ADDR + 5] = 0x00;
-        cpu.rf.pc = LOAD_ADDR as u32;
+        cpu.rf.write_pc(LOAD_ADDR as u32);
         cpu.step();
         assert_eq!(cpu.mem[0x2000], 0xFF);
     }
@@ -2104,7 +2191,7 @@ mod tests {
         cpu.mem[LOAD_ADDR + 5] = 0x72;
         cpu.mem[LOAD_ADDR + 6] = 0x27;
         cpu.mem[LOAD_ADDR + 7] = 0x00;
-        cpu.rf.pc = LOAD_ADDR as u32;
+        cpu.rf.write_pc(LOAD_ADDR as u32);
         cpu.step();
         assert_eq!(cpu.rf.a[0], 0xFFFF_8000);
     }
@@ -2114,7 +2201,7 @@ mod tests {
         let mut cpu = Cpu68K::new();
         // ADDQ #4, A1 should NOT set flags
         cpu.reset();
-        cpu.rf.a[1] = 0x1000;
+        cpu.rf.write_an(1, 0x1000, 4);
         cpu.rf.set_ccr(0, 0, 1, 0, 0); // set Z=1 before
                                        // ADDQ.L #4, A1: 0101 1000 1000 1001 = 0x5889
                                        // count=4(100), sub=0(ADDQ), sz=10(long), mode=001(An), reg=001(A1)
@@ -2124,7 +2211,7 @@ mod tests {
         cpu.mem[LOAD_ADDR + 3] = 0x72;
         cpu.mem[LOAD_ADDR + 4] = 0x27;
         cpu.mem[LOAD_ADDR + 5] = 0x00;
-        cpu.rf.pc = LOAD_ADDR as u32;
+        cpu.rf.write_pc(LOAD_ADDR as u32);
         cpu.step();
         assert_eq!(cpu.rf.a[1], 0x1004);
         assert_eq!(cpu.rf.flag_z(), 1); // Z unchanged

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C236-haipa",
+  "pathSegment": "ZH-PATH-236-ODD236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-236-ODD236",
+      "order": 3
+    }
+  ]
+}

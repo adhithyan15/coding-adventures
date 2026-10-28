@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C122-shikebiao",
+    "language": "chinese",
+    "chapter": 122,
+    "sequence": 9210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36bf7aaf22ec752d"
+  },
+  "findings": []
+}

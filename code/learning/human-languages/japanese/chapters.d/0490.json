@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Fishing Boats",
+  "label": "ch:ja-fishing-boats",
+  "canDo": "I can talk about the people who fish for a living.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C490-haneru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about the people who fish for a living.",
+    "assesses": [
+      "JA-LEX-C490-SEA490-03",
+      "JA-LEX-C490-SEA490-04",
+      "JA-LEX-C490-SEA490-05"
+    ]
+  }
+}

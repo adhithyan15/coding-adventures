@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-394-SAKAMICHI394",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-394-SAKAMICHI394"
+  ],
+  "after": []
+}

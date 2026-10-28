@@ -1,5 +1,95 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18432 — a module sees only what its imports export
+
+### Fixed
+
+- **A bare call could reach another module's private function.**  Phase 3
+  registered *every* function name of *every* module as an extern of every
+  module, and no `IIRImport`s were emitted, so `(helper)` compiled in a
+  module that never imported anything called `helper`, and the linker bound
+  it to whichever module's private `helper` came first.  Each module's
+  externs are now the exported functions of its **direct** imports
+  (`visible_imports`), so any other name is a compile error (`unbound
+  name …`, with a source position).  Each visible name the module does not
+  define itself is also appended to its `IIRModule::imports`, so
+  `iir-linker` resolves it to the exporting module and rejects any other
+  cross-module reference (`LinkError::UndeclaredCall`).
+- **A local value could be hijacked by another module's function.**  With
+  every name in the tree registered as a function, a root's
+  `(define helper 5)` compiled `helper` as a closure over a library's
+  private `helper` function.  It now evaluates to 5.
+
+### Changed
+
+- **Exports of indirect imports are no longer visible.**  If `main`
+  imports `lib_a` and `lib_a` imports `lib_b`, `main` must import `lib_b`
+  to call its functions.  The type checker (Phase 3.5) already worked this
+  way; the IR compiler now agrees with it.
+- **A module's own definition shadows an imported name.**  This was already
+  the behaviour; it is now deliberate: no `IIRImport` is emitted for a name
+  the module defines, because the linker would let the import win.
+- Phase 3's name collection moved into `defined_function_names`, joined by
+  `library_exports` (export list ∩ defined functions, minus a library's
+  `main`).
+- Module docs, the Phase 3 / 4 / 5 comments, the `ModuleDriverError::Link`
+  doc and the README describe the new visibility rules.
+
+### Added
+
+- `a_bare_call_cannot_reach_another_modules_private_function` (the issue's
+  example), `a_function_value_cannot_name_another_modules_private_function`,
+  `exports_of_indirect_imports_are_not_visible`,
+  `a_local_value_is_not_hijacked_by_another_modules_function` — all four
+  fail on the previous driver — and the regression guard
+  `a_modules_own_definition_shadows_an_imported_name`.
+
+## Unreleased — #18429 — duplicate exports are a link error
+
+### Changed
+
+- **Library modules no longer export their `main`.**  When Phase 4 clears a
+  library's `entry_point`, it now also drops the export whose public name
+  is that entry point.  `iir-linker` now rejects two modules exporting the
+  same name (`LinkError::ConflictingExport`), and the TW05 self-compile
+  tests link a root that exports `main` against `compiler/main.tw`, which
+  exports `main` too.  Nothing could call a library's `main` by that name
+  anyway (a bare `main` in the root means the root's own); the function is
+  kept as a private, renamed `<library>::main`, and the library's own
+  references to `main` now reach it instead of the root's.
+- **Same-stem files get distinct module names.**  Module names are file
+  stems, so `a/util.tw` and `b/util.tw` were both `util`.  The linker now
+  rejects duplicate module names (`LinkError::DuplicateModuleName`), so
+  Phase 1 runs each derived name through the new `unique_module_name`,
+  which suffixes repeats in discovery order (`util~2`, `util~3`, …).
+- The Phase 5 comment and the `ModuleDriverError::Link` doc now describe
+  what the linker actually rejects (the old comment claimed `link` already
+  failed on duplicate public names; it did not).
+
+### Added
+
+- `two_libraries_exporting_the_same_name_is_a_link_error` — two libraries
+  both export `foo`; previously the link succeeded.
+- `library_exporting_main_does_not_clash_with_the_root_main` — root and
+  library both export `main`; the link succeeds, exactly one function is
+  named `main`, and the root's runs (107).
+- `files_with_the_same_stem_get_distinct_module_names` — `a/util.tw` and
+  `b/util.tw` link and run (21), each calling its own private `helper`.
+- `unique_module_name_suffixes_repeats` — unit test for the suffixing.
+
+## Unreleased — #18421 regression tests for cross-module lambdas
+
+### Added
+
+- Two end-to-end tests that link several modules which each define a
+  `lambda` (so each emits its own `__lambda_0`) and run them on twig-vm:
+  `lambdas_from_different_modules_keep_their_own_bodies` (three libraries,
+  1- and 2-capture closures; previously failed with "arity mismatch on call
+  to `__lambda_0`: expected 2, got 3") and
+  `same_arity_lambdas_from_different_modules_do_not_alias` (previously
+  returned 1016 instead of 1006 because the second module's closure ran the
+  first module's body).  The fix itself is in `iir-linker`.
+
 ## 0.15.0 - Unreleased - LANG84: hand the IIR compiler the parse tree
 
 ### Changed

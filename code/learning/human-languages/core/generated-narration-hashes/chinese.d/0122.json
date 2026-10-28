@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:1d342c861f37ba4d",
+  "lessonIds": [
+    "ZH-C122-yingye",
+    "ZH-C122-kaishi",
+    "ZH-C122-jieshu",
+    "ZH-C122-shikebiao",
+    "ZH-C122-dazhe",
+    "ZH-R122-review-117-122",
+    "ZH-R122-review-final-122"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch122.txt",
+  "json": "chinese/narration/ch122.json",
+  "textHash": "fnv1a64:da679d69956400a4",
+  "jsonHash": "fnv1a64:78794059b01eba6f",
+  "findings": []
+}

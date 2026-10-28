@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:15f0ca0f28ee3cc6",
+  "lessonIds": [
+    "SA-C359-tyagah",
+    "SA-C359-paropakarah",
+    "SA-C359-svarthah",
+    "SA-C359-trsna",
+    "SA-C359-samarpayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch359-giving-up-for-others.tex"
+}

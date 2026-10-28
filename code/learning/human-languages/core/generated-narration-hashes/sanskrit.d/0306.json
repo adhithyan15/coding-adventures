@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:2ee54c6ee02135e8",
+  "lessonIds": [
+    "SA-C306-sibiram",
+    "SA-C306-asrayah",
+    "SA-C306-danam",
+    "SA-C306-saranarthi",
+    "SA-C306-santvayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch306.txt",
+  "json": "sanskrit/narration/ch306.json",
+  "textHash": "fnv1a64:8074df1a1183d364",
+  "jsonHash": "fnv1a64:eab43aad6521eec9",
+  "findings": []
+}

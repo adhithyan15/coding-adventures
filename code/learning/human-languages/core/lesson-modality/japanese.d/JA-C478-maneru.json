@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C478-maneru",
+    "language": "japanese",
+    "chapter": 478,
+    "sequence": 27720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31d2a0572e4cda49"
+  },
+  "findings": []
+}

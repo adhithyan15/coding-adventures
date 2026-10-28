@@ -1,0 +1,11 @@
+{
+  "id": "SA-C359-paropakarah",
+  "pathSegment": "SA-PATH-359-TYAGA359",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-359-TYAGA359",
+      "order": 1
+    }
+  ]
+}

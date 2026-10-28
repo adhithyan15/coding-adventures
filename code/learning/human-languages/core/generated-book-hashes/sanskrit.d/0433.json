@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:dd4a9273f2e3f554",
+  "lessonIds": [
+    "SA-C433-ayah",
+    "SA-C433-muladhanam",
+    "SA-C433-amsah",
+    "SA-C433-bhagah",
+    "SA-C433-pratibhuh",
+    "SA-R433-review-426-433"
+  ],
+  "tex": "sanskrit/book/chapters/ch433-income-and-shares.tex"
+}

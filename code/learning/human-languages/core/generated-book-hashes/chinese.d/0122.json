@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:0cb198b687947e9d",
+  "lessonIds": [
+    "ZH-C122-yingye",
+    "ZH-C122-kaishi",
+    "ZH-C122-jieshu",
+    "ZH-C122-shikebiao",
+    "ZH-C122-dazhe",
+    "ZH-R122-review-117-122",
+    "ZH-R122-review-final-122"
+  ],
+  "tex": "chinese/book/chapters/ch122-opening-hours.tex"
+}

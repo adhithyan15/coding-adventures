@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 406,
+  "title": "Getting On and Off",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6983dc2581c253c9",
+  "lessons": [
+    {
+      "id": "SA-C406-adhirohati",
+      "sequence": 23610,
+      "title": "अधिरोहति (adhirohati) — gets on; mounts",
+      "headword": "अधिरोहति",
+      "romanization": "adhirohati",
+      "gloss": "gets on; mounts",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4aac8902f5a42679",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for last, then the Sanskrit for arrives."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अधिरोहति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधिरोहति — adhirohati — \"gets on; mounts\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्री लोकयानम् अधिरोहति। yātrī lokayānam adhirohati. The passenger gets on the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः लोकयानम् अधिरूढवान्, saḥ lokayānam adhirūḍhavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अधिरोहति (adhirohati) is built from adhi, \"over, onto\", and the root √ruh, \"to rise\", which also gives rohati, \"grows\"; MW gives adhi-ruh as to rise above, ascend or mount, and getting on a bus or a train is that sense in modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhirohati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhirohati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhirohati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhirohati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrī lokayānam adhirohati. — The passenger gets on the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrī lokayānam adhirohati.* — The passenger gets on the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for last, then the Sanskrit for arrives, then say adhirohati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for last, then the Sanskrit for arrives, then say *adhirohati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अधिरोहति (adhirohati) mean? (\"Gets on; mounts\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C406-avatarati",
+      "sequence": 23620,
+      "title": "अवतरति (avatarati) — gets off; alights",
+      "headword": "अवतरति",
+      "romanization": "avatarati",
+      "gloss": "gets off; alights",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7156f8db8bd7cacb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for arrives, then the Sanskrit for gets on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवतरति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवतरति — avatarati — \"gets off; alights\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्री स्थानके अवतरति। yātrī sthānake avatarati. The passenger gets off at the station."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः स्थानके अवतीर्णवान्, saḥ sthānake avatīrṇavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवतरति (avatarati) is built from ava, \"down\", and the root √tṝ, \"to cross\"; MW gives ava-tṝ as to descend or alight, with the participle avatīrṇa, \"alighted\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avatarati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avatarati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avatarati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avatarati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrī sthānake avatarati. — The passenger gets off at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrī sthānake avatarati.* — The passenger gets off at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for arrives, then the Sanskrit for gets on, then say avatarati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for arrives, then the Sanskrit for gets on, then say *avatarati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवतरति (avatarati) mean? (\"Gets off; alights\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C406-sammardah",
+      "sequence": 23630,
+      "title": "सम्मर्दः (sammardaḥ) — a crush of people",
+      "headword": "सम्मर्दः",
+      "romanization": "sammardaḥ",
+      "gloss": "a crush of people",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e49bfee398222d51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for gets on, then the Sanskrit for gets off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सम्मर्दः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्मर्दः — sammardaḥ — \"a crush of people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रातः लोकयाने महान् सम्मर्दः भवति। prātaḥ lokayāne mahān sammardaḥ bhavati. In the morning there is a great crush in the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्मर्दः (sammardaḥ) is built from sam, \"together\", and the root √mṛd, \"to press, to crush\"; MW gives sam-marda as pressing together and trampling, and jana-sammarda as a throng of people; the crush in a bus is that sense in modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sammardaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sammardaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sammardaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sammardaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prātaḥ lokayāne mahān sammardaḥ bhavati. — In the morning there is a great crush in the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prātaḥ lokayāne mahān sammardaḥ bhavati.* — In the morning there is a great crush in the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for gets on, then the Sanskrit for gets off, then say sammardaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for gets on, then the Sanskrit for gets off, then say *sammardaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सम्मर्दः (sammardaḥ) mean? (\"A crush of people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C406-panktih",
+      "sequence": 23640,
+      "title": "पंक्तिः (paṅktiḥ) — a queue; a line of people",
+      "headword": "पंक्तिः",
+      "romanization": "paṅktiḥ",
+      "gloss": "a queue; a line of people",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31af13b52cb1bd74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for gets off, then the Sanskrit for a crush of people."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पंक्तिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पंक्तिः — paṅktiḥ — \"a queue; a line of people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जनाः यानपत्राय पंक्तौ तिष्ठन्ति। janāḥ yānapatrāya paṅktau tiṣṭhanti. People stand in a queue for tickets."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पंक्तिः (paṅktiḥ) is built on pañcan, \"five\": MW gives paṅkti first as a set of five, then as a row, a line, a series; a queue is the row in modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅktiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅktiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṅktiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṅktiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janāḥ yānapatrāya paṅktau tiṣṭhanti. — People stand in a queue for tickets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janāḥ yānapatrāya paṅktau tiṣṭhanti.* — People stand in a queue for tickets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for gets off, then the Sanskrit for a crush of people, then say paṅktiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for gets off, then the Sanskrit for a crush of people, then say *paṅktiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पंक्तिः (paṅktiḥ) mean? (\"A queue; a line of people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C406-avakasah",
+      "sequence": 23650,
+      "title": "अवकाशः (avakāśaḥ) — room; free space",
+      "headword": "अवकाशः",
+      "romanization": "avakāśaḥ",
+      "gloss": "room; free space",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2864171e5848d0cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a crush of people, then the Sanskrit for a queue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवकाशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवकाशः — avakāśaḥ — \"room; free space\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोकयाने अवकाशः न अस्ति। lokayāne avakāśaḥ na asti. There is no room in the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवकाशः (avakāśaḥ) is built from ava and the root √kāś, \"to appear, to shine\"; MW gives avakāśa as place, space, room, and also an occasion or opportunity (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avakāśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avakāśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avakāśaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avakāśaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lokayāne avakāśaḥ na asti. — There is no room in the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lokayāne avakāśaḥ na asti.* — There is no room in the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a crush of people, then the Sanskrit for a queue, then say avakāśaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a crush of people, then the Sanskrit for a queue, then say *avakāśaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवकाशः (avakāśaḥ) mean? (\"Room; free space\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

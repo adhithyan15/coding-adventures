@@ -1,0 +1,11 @@
+{
+  "id": "JA-C516-zenryoku",
+  "pathSegment": "JA-PATH-516-AHEAD516",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-516-AHEAD516",
+      "order": 2
+    }
+  ]
+}

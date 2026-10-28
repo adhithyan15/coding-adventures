@@ -1,0 +1,11 @@
+{
+  "id": "SA-C485-upasamah",
+  "pathSegment": "SA-PATH-485-SUSRUSA485",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-485-SUSRUSA485",
+      "order": 3
+    }
+  ]
+}

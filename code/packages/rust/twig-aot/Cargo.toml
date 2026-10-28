@@ -40,3 +40,9 @@ cc = "1"
 # `pub const`s and constructors, so the two implementations cannot silently
 # drift.  Dev-only — the AOT binary itself never links the Rust crate.
 dynval-runtime    = { path = "../dynval-runtime" }
+
+# The `dynval_runtime_golden` fail-closed test re-runs itself as a child that
+# aborts on purpose; the child sets `RLIMIT_CORE` to 0 first (via libc's
+# `setrlimit`) so no core file is written per case. Unix-only, like the test.
+[target.'cfg(unix)'.dev-dependencies]
+libc = "0.2"

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:1aa8c6aa432cac5e",
+  "lessonIds": [
+    "SA-C397-jvalayati",
+    "SA-C397-dipasikha",
+    "SA-C397-karpurah",
+    "SA-C397-stotram",
+    "SA-C397-stauti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch397.txt",
+  "json": "sanskrit/narration/ch397.json",
+  "textHash": "fnv1a64:d29cf2c7162f9174",
+  "jsonHash": "fnv1a64:5ccbedb134549fab",
+  "findings": []
+}

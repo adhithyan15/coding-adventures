@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:0ae482f69638c7d5",
+  "lessonIds": [
+    "ZH-C266-daren",
+    "ZH-C266-baobao",
+    "ZH-C266-nanhai",
+    "ZH-C266-nuhai",
+    "ZH-C266-zhongnian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch266.txt",
+  "json": "chinese/narration/ch266.json",
+  "textHash": "fnv1a64:3508c01d7b214c22",
+  "jsonHash": "fnv1a64:258e469e0932b317",
+  "findings": []
+}

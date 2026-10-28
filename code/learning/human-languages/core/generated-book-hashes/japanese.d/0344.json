@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:248a2738462b62f2",
+  "lessonIds": [
+    "JA-C344-keikaku",
+    "JA-C344-youi-suru",
+    "JA-C344-youji",
+    "JA-C344-nittei",
+    "JA-C344-junchou"
+  ],
+  "tex": "japanese/book/chapters/ch344-making-plans.tex"
+}

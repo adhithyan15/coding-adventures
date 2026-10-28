@@ -1,0 +1,11 @@
+{
+  "id": "JA-C304-ongaeshi",
+  "pathSegment": "JA-PATH-304-ONGAESHI304",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-304-ONGAESHI304",
+      "order": 1
+    }
+  ]
+}

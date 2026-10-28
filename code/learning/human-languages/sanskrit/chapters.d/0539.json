@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Being Careful",
+  "label": "ch:sa-being-careful",
+  "canDo": "I can warn someone and say what happens if they are careless.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C539-samraksati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can warn someone and say what happens if they are careless.",
+    "assesses": [
+      "SA-LEX-C539-AVAHITA539-03",
+      "SA-LEX-C539-AVAHITA539-04",
+      "SA-LEX-C539-AVAHITA539-05"
+    ]
+  }
+}

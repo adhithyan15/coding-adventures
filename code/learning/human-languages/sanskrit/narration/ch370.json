@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 370,
+  "title": "As Things Stand",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0bb591cb8e9dea2f",
+  "lessons": [
+    {
+      "id": "SA-C370-sthitih",
+      "sequence": 21530,
+      "title": "स्थितिः (sthitiḥ) — a situation",
+      "headword": "स्थितिः",
+      "romanization": "sthitiḥ",
+      "gloss": "a situation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03fd6f1128899971",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for comes by, then the Sanskrit for a likelihood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्थितिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्थितिः — sthitiḥ — \"a situation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि स्थितिः कठिना भवति, तर्हि अहं साहाय्यं करिष्यामि। yadi sthitiḥ kaṭhinā bhavati, tarhi ahaṃ sāhāyyaṃ kariṣyāmi. If the situation becomes hard, I will help."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्थितिः (sthitiḥ) comes from the root √sthā, \"to stand\"; MW gives sthiti \"staying or being in any state or condition\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthitiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthitiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthitiḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthitiḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi sthitiḥ kaṭhinā bhavati, tarhi ahaṃ sāhāyyaṃ kariṣyāmi. — If the situation becomes hard, I will help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi sthitiḥ kaṭhinā bhavati, tarhi ahaṃ sāhāyyaṃ kariṣyāmi.* — If the situation becomes hard, I will help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for comes by, then the Sanskrit for a likelihood, then say sthitiḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for comes by, then the Sanskrit for a likelihood, then say *sthitiḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्थितिः (sthitiḥ) mean? (\"A situation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C370-avastha",
+      "sequence": 21540,
+      "title": "अवस्था (avasthā) — a state; a condition",
+      "headword": "अवस्था",
+      "romanization": "avasthā",
+      "gloss": "a state; a condition",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40f526095030fe26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a likelihood, then the Sanskrit for a situation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवस्था",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवस्था — avasthā — \"a state; a condition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वृद्धस्य अवस्था उत्तमा, तर्हि सः श्वः गमिष्यति। yadi vṛddhasya avasthā uttamā, tarhi saḥ śvaḥ gamiṣyati. If the old man's condition is good, he will go tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवस्था (avasthā) is built on ava, \"down\", and the root √sthā, \"to stand\"; MW gives ava-sthā \"state, condition, situation\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avasthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avasthā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avasthā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avasthā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vṛddhasya avasthā uttamā, tarhi saḥ śvaḥ gamiṣyati. — If the old man's condition is good, he will go tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vṛddhasya avasthā uttamā, tarhi saḥ śvaḥ gamiṣyati.* — If the old man's condition is good, he will go tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a likelihood, then the Sanskrit for a situation, then say avasthā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a likelihood, then the Sanskrit for a situation, then say *avasthā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवस्था (avasthā) mean? (\"A state; a condition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C370-parinamati",
+      "sequence": 21550,
+      "title": "परिणमति (pariṇamati) — turns into; changes into",
+      "headword": "परिणमति",
+      "romanization": "pariṇamati",
+      "gloss": "turns into; changes into",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b82a89ed07d0b4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a situation, then the Sanskrit for a state of things."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परिणमति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिणमति — pariṇamati — \"turns into; changes into\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि शीतं भवति, तर्हि जलं हिमेन परिणमति। yadi śītaṃ bhavati, tarhi jalaṃ himena pariṇamati. If it is cold, water turns into ice."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): जलं हिमेन परिणतवत्, jalaṃ himena pariṇatavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परिणमति (pariṇamati) is built on pari, \"around\", and the root √nam, \"to bend\"; MW gives pari-√ṇam \"to bend aside\" and \"to change or be transformed into\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariṇamati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariṇamati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pariṇamati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pariṇamati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi śītaṃ bhavati, tarhi jalaṃ himena pariṇamati. — If it is cold, water turns into ice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi śītaṃ bhavati, tarhi jalaṃ himena pariṇamati.* — If it is cold, water turns into ice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a situation, then the Sanskrit for a state of things, then say pariṇamati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a situation, then the Sanskrit for a state of things, then say *pariṇamati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परिणमति (pariṇamati) mean? (\"Turns into; changes into\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C370-anukulah",
+      "sequence": 21560,
+      "title": "अनुकूलः (anukūlaḥ) — favourable",
+      "headword": "अनुकूलः",
+      "romanization": "anukūlaḥ",
+      "gloss": "favourable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0355a6662156a52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a state of things, then the Sanskrit for turns into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुकूलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुकूलः — anukūlaḥ — \"favourable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वायुः अनुकूलः, तर्हि नौका शीघ्रं गमिष्यति। yadi vāyuḥ anukūlaḥ, tarhi naukā śīghraṃ gamiṣyati. If the wind is favourable, the boat will go fast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुकूलः (anukūlaḥ) is built from anu, \"along\", and kūla, \"a slope, a bank\"; MW gives anu-kūla \"favourable, agreeable\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anukūlaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anukūlaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anukūlaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anukūlaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vāyuḥ anukūlaḥ, tarhi naukā śīghraṃ gamiṣyati. — If the wind is favourable, the boat will go fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vāyuḥ anukūlaḥ, tarhi naukā śīghraṃ gamiṣyati.* — If the wind is favourable, the boat will go fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a state of things, then the Sanskrit for turns into, then say anukūlaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a state of things, then the Sanskrit for turns into, then say *anukūlaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुकूलः (anukūlaḥ) mean? (\"Favourable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C370-pratikulah",
+      "sequence": 21570,
+      "title": "प्रतिकूलः (pratikūlaḥ) — adverse; unfavourable",
+      "headword": "प्रतिकूलः",
+      "romanization": "pratikūlaḥ",
+      "gloss": "adverse; unfavourable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:decafb264a7578b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for turns into, then the Sanskrit for favourable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिकूलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिकूलः — pratikūlaḥ — \"adverse; unfavourable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वायुः प्रतिकूलः, तर्हि नौका न गमिष्यति। yadi vāyuḥ pratikūlaḥ, tarhi naukā na gamiṣyati. If the wind is against us, the boat will not go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिकूलः (pratikūlaḥ) is built from prati, \"against\", and kūla, \"a bank\"; MW glosses it as \"against the bank\" and gives \"contrary, adverse, opposite\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikūlaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikūlaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratikūlaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratikūlaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vāyuḥ pratikūlaḥ, tarhi naukā na gamiṣyati. — If the wind is against us, the boat will not go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vāyuḥ pratikūlaḥ, tarhi naukā na gamiṣyati.* — If the wind is against us, the boat will not go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for turns into, then the Sanskrit for favourable, then say pratikūlaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for turns into, then the Sanskrit for favourable, then say *pratikūlaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिकूलः (pratikūlaḥ) mean? (\"Adverse; unfavourable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

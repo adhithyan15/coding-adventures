@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:5f0113a712e1e6df",
+  "lessonIds": [
+    "JA-C531-wazato",
+    "JA-C531-tsui",
+    "JA-C531-muyamini",
+    "JA-C531-nozomashii",
+    "JA-C531-nantonaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch531.txt",
+  "json": "japanese/narration/ch531.json",
+  "textHash": "fnv1a64:2f8592baf3a3ec05",
+  "jsonHash": "fnv1a64:c152f29759393da4",
+  "findings": []
+}

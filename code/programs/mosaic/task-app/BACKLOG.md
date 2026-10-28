@@ -69,11 +69,20 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18264 — publish and audit the v0.5.12 Qt rail checkpoint.**
+**Next: #18334 — publish and audit v0.5.13.**
+The timeline-label floor #18305 merged in #18306 with all payload validation
+passing in run 40280477318. Prepare its compatible patch together with the
+authoritative toolkit-pin change, publish only after preparation merges, then
+audit immutable provenance, inventory, and checksums. Preparation is not publication.
+Feature composition and signing remain outside scope; artifact coverage is unchanged.
+
+**Published and audited: #18264 — v0.5.12 Qt rail checkpoint.**
+Run 40269564825 passed all payloads and publication. The immutable source is
+`d75d061afe34c7f3764636dbf879181eb4dceb33`; 13 assets, 12 checksum entries,
+and 11 manifest payloads were audited. Artifact coverage is unchanged.
 The rail repair #18250 merged in #18251 with all payload validations passing
-in run 40230057835. Prepare its compatible patch, then publish only after
-preparation merges and audit immutable provenance, assets, and checksums.
-Preparation is not publication; artifact and unsigned-platform limits stay unchanged.
+in run 40230057835. Its compatible patch is now published with audited immutable
+provenance, assets, and checksums; unsigned-platform limits stay unchanged.
 
 **Completed fidelity slice: #18250 — Qt fixed non-shrinking rail geometry.**
 The v0.5.11 checkpoint (#18238) is published and audited: run 40225950352,

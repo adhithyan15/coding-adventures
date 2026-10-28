@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Passport and Customs",
+  "label": "ch:ja-passport-and-customs",
+  "canDo": "I can get through passport control and customs.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C386-toridasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can get through passport control and customs.",
+    "assesses": [
+      "JA-LEX-C386-ZEIKAN386-03",
+      "JA-LEX-C386-ZEIKAN386-04",
+      "JA-LEX-C386-ZEIKAN386-05"
+    ]
+  }
+}

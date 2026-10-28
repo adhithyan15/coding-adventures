@@ -1,0 +1,11 @@
+{
+  "id": "SA-C378-manak",
+  "pathSegment": "SA-PATH-378-LESHA378",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-378-LESHA378",
+      "order": 1
+    }
+  ]
+}

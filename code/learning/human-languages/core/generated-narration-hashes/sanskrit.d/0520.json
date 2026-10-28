@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:e840247a52d973e4",
+  "lessonIds": [
+    "SA-C520-svarah",
+    "SA-C520-ragah",
+    "SA-C520-layah",
+    "SA-C520-ganam",
+    "SA-C520-vadayati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch520.txt",
+  "json": "sanskrit/narration/ch520.json",
+  "textHash": "fnv1a64:6bd8140e835877ae",
+  "jsonHash": "fnv1a64:4991a5402cecab9e",
+  "findings": []
+}

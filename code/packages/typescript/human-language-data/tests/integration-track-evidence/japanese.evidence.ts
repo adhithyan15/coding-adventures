@@ -41,11 +41,22 @@ export const integrationTrackEvidence: IntegrationTrackEvidence = {
     // 837 -> 840: chapters 143-145, the three A1 writing stages.
     // 840 -> 1384: chapters 146-249, the A2 vocabulary: 520 headwords (210
     // verbs), one word per lesson, plus 24 review lessons, six per tranche.
-    expect(japanese).toHaveLength(1384);
+    // 1384 -> 1446: chapters 250-261, the B1 core: 23 grammar lessons (the
+    // plain past and its sound changes, the future, the plain negative, -te,
+    // -te kara, -te imasu, to omoimasu, kara / node, -ta hō ga ii, travel,
+    // -katta, -ta koto ga aru, yori, -tara, ni yorimasu, "would"), 19 word
+    // lessons, six copy-only kanji lessons (月 年 出 人 中 今, each right
+    // after its anchor word), one reading, one six-line writing task and
+    // twelve reviews. Each carries exactly one activity.
+    // 1446 -> 2858: chapters 262-533, the B1 vocabulary: 1,360 headwords (439
+    // verbs), one word per lesson, plus 52 review lessons (11, 11, 10, 10 and
+    // 10 in the five tranches).
+    expect(japanese).toHaveLength(2858);
     // 142 -> 145: the same three writing chapters, one lesson each.
-    // 145 -> 249: the A2 vocabulary chapters.
+    // 145 -> 249: the A2 vocabulary chapters. 249 -> 261: the B1 core.
+    // 261 -> 533: the B1 vocabulary chapters.
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter)))
-      .toEqual(new Set(Array.from({ length: 249 }, (_, index) => index + 1)));
+      .toEqual(new Set(Array.from({ length: 533 }, (_, index) => index + 1)));
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.map((lesson) => [
       lesson.realization.lessonId,

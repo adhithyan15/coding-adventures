@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Free Time",
+  "label": "ch:sa-free-time",
+  "canDo": "I can talk about what I do in my free time.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C516-rucih",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about what I do in my free time.",
+    "assesses": [
+      "SA-LEX-C516-AVAKASA516-03",
+      "SA-LEX-C516-AVAKASA516-04",
+      "SA-LEX-C516-AVAKASA516-05"
+    ]
+  }
+}

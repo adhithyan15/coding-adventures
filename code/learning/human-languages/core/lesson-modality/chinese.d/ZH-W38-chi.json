@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W38-chi",
+    "language": "chinese",
+    "chapter": 38,
+    "sequence": 3365,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:392003e360278cbe",
+    "detachableSegments": [
+      "Script — a mouth, then three strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

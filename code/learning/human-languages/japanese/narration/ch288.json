@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 288,
+  "title": "Starting School",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fd8cc1bf07818c9e",
+  "lessons": [
+    {
+      "id": "JA-C288-nyuugaku",
+      "sequence": 17340,
+      "title": "にゅうがく (nyūgaku) — entering school",
+      "headword": "にゅうがく",
+      "romanization": "nyūgaku",
+      "gloss": "entering school",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4142d27cb1333163",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a relative, then the Japanese for to grow up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にゅうがく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にゅうがく — nyūgaku — \"entering school\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとうとは らいねん にゅうがくします。 — otōto wa rainen nyūgaku shimasu — \"My little brother starts school next year.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にゅうがく (nyūgaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nyū, \"enter\" (Middle Chinese nyip) and gaku, \"learning\" (haewk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyūgaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyūgaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyūgaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyūgaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otōto wa rainen nyūgaku shimasu — My little brother starts school next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otōto wa rainen nyūgaku shimasu* — My little brother starts school next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a relative, then the Japanese for to grow up, then say nyūgaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a relative, then the Japanese for to grow up, then say *nyūgaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にゅうがく (nyūgaku) mean? (\"Entering school\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C288-nyuugaku-type",
+              "prompt": "Say the Japanese for 'entering school'.",
+              "assesses": [
+                "JA-LEX-C288-NYUUGAKU288-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にゅうがく",
+                "nyūgaku",
+                "nyuugaku",
+                "nyugaku"
+              ],
+              "feedback": {
+                "correct": "Right: にゅうがく (nyūgaku) is 'entering school'.",
+                "incorrect": "'Entering school' is にゅうがく (nyūgaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C288-shiki",
+      "sequence": 17350,
+      "title": "しき (shiki) — a ceremony",
+      "headword": "しき",
+      "romanization": "shiki",
+      "gloss": "a ceremony",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e62c468064951815",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to grow up, then the Japanese for entering school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しき — shiki — \"a ceremony\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がっこうで しきが ありました。 — gakkō de shiki ga arimashita — \"There was a ceremony at the school.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しき (shiki) is Sino-Japanese (kango): one Chinese character read with its on'yomi, a reading borrowed from Chinese. It is shiki, \"ceremony\" (Middle Chinese syik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakkō de shiki ga arimashita — There was a ceremony at the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakkō de shiki ga arimashita* — There was a ceremony at the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to grow up, then the Japanese for entering school, then say shiki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to grow up, then the Japanese for entering school, then say *shiki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しき (shiki) mean? (\"A ceremony\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C288-shiki-type",
+              "prompt": "Say the Japanese for 'a ceremony'.",
+              "assesses": [
+                "JA-LEX-C288-NYUUGAKU288-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しき",
+                "shiki"
+              ],
+              "feedback": {
+                "correct": "Right: しき (shiki) is 'a ceremony'.",
+                "incorrect": "'A ceremony' is しき (shiki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C288-shusseki-suru",
+      "sequence": 17360,
+      "title": "しゅっせきする (shusseki suru) — to attend; to be present",
+      "headword": "しゅっせきする",
+      "romanization": "shusseki suru",
+      "gloss": "to attend; to be present",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9daa50d83a72eaf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for entering school, then the Japanese for a ceremony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅっせきする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっせきする — shusseki suru — \"to attend; to be present\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははも しきに しゅっせきします。 — haha mo shiki ni shusseki shimasu — \"My mother is going to the ceremony too.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しゅっせきします, shussekishimasu; a する verb. Past (polite): ちちが しきに しゅっせきしました。, chichi ga shiki ni shusseki shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっせきする (shusseki suru) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shutsu, \"exit\" (Middle Chinese tsyhwit) and seki, \"seat\" (zjek) (KANJIDIC2; Middle Chinese in Baxter's transcription). The first is shortened from shutsu to shus- before seki. The native verb suru, \"to do\", makes it a verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shusseki suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shusseki suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shusseki suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shusseki suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha mo shiki ni shusseki shimasu — My mother is going to the ceremony too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha mo shiki ni shusseki shimasu* — My mother is going to the ceremony too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for entering school, then the Japanese for a ceremony, then say shusseki suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for entering school, then the Japanese for a ceremony, then say *shusseki suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅっせきする (shusseki suru) mean? (\"To attend; to be present\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C288-shusseki-suru-type",
+              "prompt": "Say the Japanese for 'to attend'.",
+              "assesses": [
+                "JA-LEX-C288-NYUUGAKU288-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅっせきする",
+                "shusseki suru"
+              ],
+              "feedback": {
+                "correct": "Right: しゅっせきする (shusseki suru) is 'to attend; to be present'.",
+                "incorrect": "'To attend' is しゅっせきする (shusseki suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C288-nigiyaka",
+      "sequence": 17370,
+      "title": "にぎやか (nigiyaka) — lively; bustling",
+      "headword": "にぎやか",
+      "romanization": "nigiyaka",
+      "gloss": "lively; bustling",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:194cfe3632076bdc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a ceremony, then the Japanese for to attend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にぎやか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にぎやか — nigiyaka — \"lively; bustling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この まちは 年じゅう にぎやかです。 — kono machi wa nenjū nigiyaka desu — \"This town is lively all year round.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にぎやか (nigiyaka) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigiyaka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigiyaka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nigiyaka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nigiyaka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono machi wa nenjū nigiyaka desu — This town is lively all year round.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono machi wa nenjū nigiyaka desu* — This town is lively all year round.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a ceremony, then the Japanese for to attend, then say nigiyaka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a ceremony, then the Japanese for to attend, then say *nigiyaka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にぎやか (nigiyaka) mean? (\"Lively; bustling\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C288-nigiyaka-type",
+              "prompt": "Say the Japanese for 'lively'.",
+              "assesses": [
+                "JA-LEX-C288-NYUUGAKU288-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にぎやか",
+                "nigiyaka"
+              ],
+              "feedback": {
+                "correct": "Right: にぎやか (nigiyaka) is 'lively; bustling'.",
+                "incorrect": "'Lively' is にぎやか (nigiyaka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C288-oiwai",
+      "sequence": 17380,
+      "title": "おいわい (oiwai) — a celebration; a present for a happy occasion",
+      "headword": "おいわい",
+      "romanization": "oiwai",
+      "gloss": "a celebration; a present for a happy occasion",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0dc93ce7e58cc09b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to attend, then the Japanese for lively."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おいわい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいわい — oiwai — \"a celebration; a present for a happy occasion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おいわいに みんなで しょくじを しました。 — oiwai ni minna de shokuji o shimashita — \"We all had a meal to celebrate.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいわい (oiwai) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from o-, \"the polite prefix\", and iwai, \"celebrating\" (from iwau) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oiwai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oiwai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oiwai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oiwai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oiwai ni minna de shokuji o shimashita — We all had a meal to celebrate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oiwai ni minna de shokuji o shimashita* — We all had a meal to celebrate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to attend, then the Japanese for lively, then say oiwai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to attend, then the Japanese for lively, then say *oiwai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おいわい (oiwai) mean? (\"A celebration; a present for a happy occasion\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C288-oiwai-type",
+              "prompt": "Say the Japanese for 'a celebration'.",
+              "assesses": [
+                "JA-LEX-C288-NYUUGAKU288-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おいわい",
+                "oiwai"
+              ],
+              "feedback": {
+                "correct": "Right: おいわい (oiwai) is 'a celebration; a present for a happy occasion'.",
+                "incorrect": "'A celebration' is おいわい (oiwai)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

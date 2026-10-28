@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:36967e369abf8ead",
+  "lessonIds": [
+    "SA-C414-digbhramah",
+    "SA-C414-bhrantah",
+    "SA-C414-pratipadyate",
+    "SA-C414-aparicitah",
+    "SA-C414-agantukah"
+  ],
+  "tex": "sanskrit/book/chapters/ch414-losing-the-way.tex"
+}

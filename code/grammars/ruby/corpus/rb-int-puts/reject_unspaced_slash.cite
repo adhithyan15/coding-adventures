@@ -1,0 +1,4 @@
+oracle: host ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+command: ruby reject_unspaced_slash.rb
+ruby: exit 0, stdout '3\n' (Ruby accepts it: after a number `/` is division)
+rb-int-puts: rejected with Lex: `/` with no whitespace after it is refused in every mode, because after a method name Ruby reads it as a regexp (LANG84 R1b, over-refusal)

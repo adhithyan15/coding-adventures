@@ -1,5 +1,81 @@
 # Changelog
 
+## 2026-10-26 — Mosaic manifest dependencies and repository-wide Mosaic guards
+
+- The resolver reads `mosaic-package.toml` for language-`mosaic` packages
+  (`code/packages/mosaic/*`, `code/programs/mosaic/*`). Keys of the root
+  `[dependencies]` table
+  resolve within the Mosaic scope by directory basename or `[package].name`
+  (each name owned by exactly one package). Before this, Mosaic packages had no edges,
+  so bumping or editing `mosaic-pkg-toolkit` never re-ran task-app, engram-app,
+  journal-app or the packages built on it. Requirement strings, comments,
+  `[components]` exports, `[host_assets].dependencies` third-party
+  coordinates, external names and self-references never create edges;
+  multi-line values are tracked by bracket depth (`internal/resolver/mosaic.go`).
+- The Mosaic reader fails closed (`MosaicManifestError`), because a dropped
+  edge silently skips a dependent's tests on every later PR. It reads only a
+  plain subset: one-part headers from a fixed list (`[package]`,
+  `[dependencies]`, `[components]`, `[kernel]`, `[styles]`, `[app]`,
+  `[host_assets]`, `[host_effects]` — every table the repository uses), and
+  bare keys with one-line string values in `[package]` and `[dependencies]`.
+  Refused with an error: any other header (`[package.meta]`, dotted, quoted,
+  `[[...]]`), any root-level key or inline table (`package.name = ...`), a multi-line string, any backslash
+  escape (keys, headers and `[package].name` alike), a manifest that is not a
+  regular file or exceeds 1 MiB, and two Mosaic packages claiming one name —
+  including a library taking an app's name (`checkMosaicNameCollisions`) — all
+  stop `ResolveDependencies` with an error. None occurs in the repository. A
+  leading UTF-8 byte-order mark is stripped, as `toml_edit` does. A
+  dependency key without the `mosaic-pkg-` prefix also depends on
+  `mosaic-pkg-<key>`, as the resolver's directory locator tries that first.
+- New `repository_inputs.go`: a table of *repository input consumers*,
+  packages whose tests walk the whole tree. Its first entry selects
+  `rust/mosaic-package-resolver` (`every_repository_requirement_is_satisfied`
+  and the layout-binding guard) for any changed `mosaic-package.toml`,
+  `.mil`, `.mll` or `.msl` under `code/`. Both the dry-run/build path and
+  every per-platform plan add the consumer and its prerequisites but not its
+  dependents; seeding it as a changed package instead measured 72 affected
+  packages for a one-line `.mll` edit. Raw Git paths, no stat (deletions
+  select), `-language` honored, and a missing consumer fails the plan.
+- Measured on the repository with `-dry-run -diff-base origin/main`: a
+  toolkit version bump went from 1 to 35 affected packages, an app `.mll`
+  edit from 1 to 19, both now including the guard and neither including the
+  guard's dependents (artifact builder, emitters); a Python/Go-only change is
+  identical (168 → 168). Mosaic-only changes now also request the Rust
+  toolchain in the plan, because the guard is a Rust crate.
+
+## 2026-10-24 — BUILD_windows PowerShell and batch lines are rejected
+
+- `validateWindowsBuildLines` rejects `BUILD_windows` lines that only work in
+  PowerShell (`$env:X = ...`, `$ErrorActionPreference`, `Set-Location`,
+  `Push-Location`/`Pop-Location`, `Write-Host`/`Write-Output`,
+  `if (-not ...)`/`if ($...)`) or inside a batch file (`%~dp0`). Every
+  non-comment line runs as its own `cmd /C` from the package directory, so
+  such a line fails, but only when Windows CI happens to rebuild that package.
+  The check reads `BUILD_windows` directly, so Linux and macOS runs catch it
+  too. It sits beside `validateWindowsEnvAssignments` (#16437), which covers
+  POSIX `VAR=value` assignments. Each line is checked command by command
+  (split at the `&&`, `||`, `&` and `|` outside double quotes). A command
+  that hands off to another shell (`powershell`, `pwsh`, `bash`, `sh`) is
+  exempt, so the site BUILD files' `&& powershell -Command "..."` stays
+  valid, but every other command is checked, including one after such a
+  hand-off. It flags capitalised Verb-Noun cmdlets (`Remove-Item`), PowerShell
+  variables braced or not (`$env:`, `${env:}`, `$LASTEXITCODE`, `$null`,
+  `$global:`, `$script:`, `$PSScriptRoot`, `$true`/`$false`), a PowerShell
+  `if (` or cmdlet after a `;` outside quotes (cmd has no `;` separator; a
+  `$` or `exit` there is left alone because POSIX shell lines use them too),
+  an unclosed `"`, a leading `[`, a `.ps1` run directly, and the batch
+  self-references `%0`/`%~f0`/`%~dpnx0`. A leading UTF-8 byte-order
+  mark is stripped first, and a symlinked, non-regular, oversized (over
+  1 MiB) or unreadable BUILD_windows is reported instead of passing unseen.
+  Harmless leftovers (`rem`, `@echo off`, `if errorlevel`) stay allowed.
+
+## 2026-10-25 — G2D02 .NET fixture selection
+
+- Route the exact Bezier flattening fixture to both C# and F# native consumers
+  without forcing unrelated packages or toolchains.
+- Preserve language filtering, source unions, deletion/rename-old paths, and
+  atomic plan publication when a declared reader is missing.
+
 ## 2026-10-24 — TE04 extension fixture selection
 
 - Route the exact portable GFM extension corpus to the TypeScript parser and

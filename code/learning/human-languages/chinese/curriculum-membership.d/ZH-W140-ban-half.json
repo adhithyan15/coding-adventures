@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W140-ban-half",
+  "pathSegment": "ZH-PATH-140-ORDER140",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-140-ORDER140",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:c35b3dcceeea407e",
+  "lessonIds": [
+    "ZH-C78-duoda",
+    "ZH-C78-zhangda",
+    "ZH-C78-qian",
+    "ZH-W78-qian-before",
+    "ZH-C78-nianji",
+    "ZH-C78-xiaoshihou"
+  ],
+  "tex": "chinese/book/chapters/ch78-age-and-growing-up.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Honest and False",
+  "label": "ch:sa-honest-and-false",
+  "canDo": "I can say whether someone can be trusted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C462-visvasaghatah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can say whether someone can be trusted.",
+    "assesses": [
+      "SA-LEX-C462-SATHA462-03",
+      "SA-LEX-C462-SATHA462-04",
+      "SA-LEX-C462-SATHA462-05"
+    ]
+  }
+}

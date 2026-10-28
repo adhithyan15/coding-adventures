@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Le — Finished, and Changed",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cbb14f992c573a64",
+  "sourceHash": "fnv1a64:d73d04892b39f9a8",
   "lessons": [
     {
       "id": "ZH-W25-le",
@@ -757,7 +757,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:886e2d9aa58b8d05",
+      "sourceHash": "fnv1a64:141d93618a7b12fd",
       "notice": null,
       "blocks": [
         {
@@ -796,11 +796,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say shíyī èrshí jiúshíjiǔ yìbǎi — R3, durable, twenty to sixty lessons back",
+              "instruction": "say shíyī èrshí jiǔshíjiǔ yìbǎi — R3, durable, twenty to sixty lessons back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *shíyī èrshí jiúshíjiǔ yìbǎi* — **R3**, durable, twenty to sixty lessons back]"
+              "source": "[YOU RECALL: say *shíyī èrshí jiǔshíjiǔ yìbǎi* — **R3**, durable, twenty to sixty lessons back]"
             },
             {
               "kind": "prompt",

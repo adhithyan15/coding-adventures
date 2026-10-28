@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:69a28a5e94ed59b7",
+  "lessonIds": [
+    "JA-C521-shidaini",
+    "JA-C521-dandan",
+    "JA-C521-jojoni",
+    "JA-C521-youyaku",
+    "JA-C521-zuibun",
+    "JA-R521-review-516-521"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch521.txt",
+  "json": "japanese/narration/ch521.json",
+  "textHash": "fnv1a64:0d435ca106b1fb05",
+  "jsonHash": "fnv1a64:2b476aceab2f321e",
+  "findings": []
+}

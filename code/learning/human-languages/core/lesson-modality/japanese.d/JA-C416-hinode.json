@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C416-hinode",
+    "language": "japanese",
+    "chapter": 416,
+    "sequence": 24280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a1feb8ce04bd5f5"
+  },
+  "findings": []
+}

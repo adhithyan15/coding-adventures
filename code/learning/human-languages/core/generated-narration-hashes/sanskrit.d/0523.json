@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:2c8f3261727e40cb",
+  "lessonIds": [
+    "SA-C523-natah",
+    "SA-C523-abhinayati",
+    "SA-C523-vidusakah",
+    "SA-C523-nepathyam",
+    "SA-C523-abhinayah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch523.txt",
+  "json": "sanskrit/narration/ch523.json",
+  "textHash": "fnv1a64:63a9dad3e272f973",
+  "jsonHash": "fnv1a64:59cfb46bdea48f3d",
+  "findings": []
+}

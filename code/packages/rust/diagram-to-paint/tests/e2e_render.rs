@@ -89,6 +89,30 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/treeview-11.16.1-visual-corpus.json"
     ));
+    const C4_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-accessibility-11.16.1-corpus.json"
+    ));
+    const C4_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
+    ));
+    const C4_RELATIONSHIP_ARROWS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-corpus.json"
+    ));
+    const C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
+    ));
+    const C4_ELEMENT_COLORS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-element-colors-11.16.1-corpus.json"
+    ));
+    const C4_ELEMENT_COLORS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-element-colors-11.16.1-visual-corpus.json"
+    ));
     const SWIMLANE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -177,6 +201,22 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-frontmatter-title-11.16.1-visual-corpus.json"
     ));
+    const ER_USE_MAX_WIDTH_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-use-max-width-11.16.1-corpus.json"
+    ));
+    const ER_USE_MAX_WIDTH_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-use-max-width-11.16.1-visual-corpus.json"
+    ));
+    const ER_HTML_LABELS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-html-labels-11.16.1-corpus.json"
+    ));
+    const ER_HTML_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-html-labels-11.16.1-visual-corpus.json"
+    ));
     const ER_VARIABLE_NODE_WIDTHS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-variable-node-widths-11.16.1-corpus.json"
@@ -256,6 +296,14 @@ mod apple {
     const ER_ALIAS_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-alias-line-breaks-11.16.1-visual-corpus.json"
+    ));
+    const ER_TITLE_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-title-line-breaks-11.16.1-corpus.json"
+    ));
+    const ER_TITLE_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-title-line-breaks-11.16.1-visual-corpus.json"
     ));
     const ER_UNICODE_SYMBOLS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -2732,6 +2780,98 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_pinned_mermaid_er_use_max_width_to_png() {
+        let syntax: Value = serde_json::from_str(ER_USE_MAX_WIDTH_CORPUS)
+            .expect("ER useMaxWidth corpus JSON");
+        let visual: Value = serde_json::from_str(ER_USE_MAX_WIDTH_VISUAL_CORPUS)
+            .expect("ER useMaxWidth visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let mut dimensions = Vec::new();
+
+        for (index, fixture) in syntax["fixtures"].as_array().expect("ER fixtures").iter().enumerate() {
+            assert_eq!(visual["fixtures"][index], fixture["name"]);
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER source"))
+                .expect("configured ER fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let expected = fixture["use_max_width"].as_bool().expect("useMaxWidth expectation");
+            assert_eq!(
+                scene.metadata.as_ref().and_then(|metadata| metadata.get("er.useMaxWidth")),
+                Some(&expected.to_string())
+            );
+            dimensions.push((scene.width, scene.height));
+            if !expected {
+                let pixels = render(&scene);
+                write_png(&pixels, "/tmp/mermaid_er_use_max_width_false_e2e.png")
+                    .expect("ER useMaxWidth PNG write failed");
+                assert!(pixels.width > 0 && pixels.height > 0);
+            }
+        }
+
+        assert!(dimensions.windows(2).all(|pair| pair[0] == pair[1]));
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_html_labels_to_png() {
+        let syntax: Value = serde_json::from_str(ER_HTML_LABELS_CORPUS)
+            .expect("ER htmlLabels corpus JSON");
+        let visual: Value = serde_json::from_str(ER_HTML_LABELS_VISUAL_CORPUS)
+            .expect("ER htmlLabels visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let mut dimensions = Vec::new();
+
+        for (index, fixture) in syntax["fixtures"].as_array().expect("ER fixtures").iter().enumerate() {
+            assert_eq!(visual["fixtures"][index], fixture["name"]);
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER source"))
+                .expect("configured ER fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let expected = fixture["html_labels"].as_bool().expect("htmlLabels expectation");
+            assert_eq!(
+                scene.metadata.as_ref().and_then(|metadata| metadata.get("flowchart.htmlLabels")),
+                Some(&expected.to_string())
+            );
+            dimensions.push((scene.width, scene.height));
+            if fixture["name"] == "upstream-html-labels-false-frontmatter" {
+                let pixels = render(&scene);
+                write_png(&pixels, "/tmp/mermaid_er_html_labels_false_e2e.png")
+                    .expect("ER htmlLabels PNG write failed");
+                assert!(pixels.width > 0 && pixels.height > 0);
+            }
+        }
+
+        assert!(dimensions.windows(2).all(|pair| pair[0] == pair[1]));
+    }
+
+    #[test]
     fn render_pinned_mermaid_er_variable_node_widths_to_png() {
         let syntax: Value = serde_json::from_str(ER_VARIABLE_NODE_WIDTHS_CORPUS)
             .expect("ER variable node widths corpus JSON");
@@ -3137,6 +3277,44 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_er_alias_line_breaks_e2e.png")
             .expect("ER alias line-break PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_title_line_breaks_to_png() {
+        let syntax: Value = serde_json::from_str(ER_TITLE_LINE_BREAKS_CORPUS)
+            .expect("ER title line-break corpus JSON");
+        let visual: Value = serde_json::from_str(ER_TITLE_LINE_BREAKS_VISUAL_CORPUS)
+            .expect("ER title line-break visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER title line-break source"),
+        )
+        .expect("ER title line-break fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert!(layout.nodes[0].y > 120.0);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(!scene.instructions.is_empty());
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_title_line_breaks_e2e.png")
+            .expect("ER title line-break PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
@@ -4576,6 +4754,157 @@ line "Target" [35, 50, 68, 82]"##,
             instruction,
             paint_instructions::PaintInstruction::Rect(rect) if rect.stroke_dash.is_some()
         )));
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_accessibility_to_png() {
+        let syntax: Value = serde_json::from_str(C4_ACCESSIBILITY_CORPUS)
+            .expect("C4 accessibility corpus JSON");
+        let visual: Value = serde_json::from_str(C4_ACCESSIBILITY_VISUAL_CORPUS)
+            .expect("C4 accessibility visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("C4 accessibility fixtures");
+        let visual_names = visual["fixtures"].as_array().expect("C4 accessibility visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual_names[index], fixture["name"]);
+            let diagram = parse_c4_diagram(
+                fixture["source"].as_str().expect("C4 accessibility source"),
+            )
+            .expect("C4 accessibility fixture must parse");
+            let expected_title = diagram.accessibility_title.clone().expect("accessibility title");
+            let expected_description =
+                diagram.accessibility_description.clone().expect("accessibility description");
+            let layout = layout_structural_diagram(&diagram);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let metadata = scene.metadata.as_ref().expect("C4 accessibility scene metadata");
+            assert_eq!(metadata.get("accessibility.title"), Some(&expected_title));
+            assert_eq!(
+                metadata.get("accessibility.description"),
+                Some(&expected_description)
+            );
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_accessibility_{index}_e2e.png");
+            write_png(&pixels, &path).expect("C4 accessibility PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_relationship_arrows_to_png() {
+        let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_ARROWS_CORPUS)
+            .expect("C4 relationship arrow corpus JSON");
+        let visual: Value = serde_json::from_str(C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS)
+            .expect("C4 relationship arrow visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("C4 relationship arrow fixtures");
+        let visual_names = visual["fixtures"]
+            .as_array()
+            .expect("C4 relationship arrow visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual_names[index], fixture["name"]);
+            let diagram = parse_c4_diagram(
+                fixture["source"].as_str().expect("C4 relationship arrow source"),
+            )
+            .expect("C4 relationship arrow fixture must parse");
+            let expected_arrowheads = usize::from(diagram.relationships[0].start_arrow)
+                + usize::from(diagram.relationships[0].end_arrow);
+            let layout = layout_structural_diagram(&diagram);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert_eq!(
+                scene
+                    .instructions
+                    .iter()
+                    .filter(|instruction| matches!(
+                        instruction,
+                        PaintInstruction::Path(path) if path.fill.as_deref() == Some("#6b7280")
+                    ))
+                    .count(),
+                expected_arrowheads
+            );
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_relationship_arrows_{index}_e2e.png");
+            write_png(&pixels, &path).expect("C4 relationship arrow PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_element_colors_to_png() {
+        let syntax: Value = serde_json::from_str(C4_ELEMENT_COLORS_CORPUS)
+            .expect("C4 element color corpus JSON");
+        let visual: Value = serde_json::from_str(C4_ELEMENT_COLORS_VISUAL_CORPUS)
+            .expect("C4 element color visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("C4 element color fixtures");
+        let visual_names = visual["fixtures"].as_array().expect("C4 element color visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual_names[index], fixture["name"]);
+            let diagram = parse_c4_diagram(
+                fixture["source"].as_str().expect("C4 element color source"),
+            )
+            .expect("C4 element color fixture must parse");
+            let style = diagram.nodes[0].style.clone().expect("C4 element style");
+            let layout = layout_structural_diagram(&diagram);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Rect(rect)
+                    if rect.fill.as_ref() == style.fill.as_ref()
+                        && rect.stroke.as_ref() == style.stroke.as_ref()
+            )));
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_element_colors_{index}_e2e.png");
+            write_png(&pixels, &path).expect("C4 element color PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
     }
 
     #[test]

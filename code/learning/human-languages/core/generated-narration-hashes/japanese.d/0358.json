@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:2cb064e6b6fca75d",
+  "lessonIds": [
+    "JA-C358-yachin",
+    "JA-C358-ouya",
+    "JA-C358-kouza",
+    "JA-C358-furikomu",
+    "JA-C358-zandaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch358.txt",
+  "json": "japanese/narration/ch358.json",
+  "textHash": "fnv1a64:bb6a8b4e67fe6047",
+  "jsonHash": "fnv1a64:7fd8ea9b6efe8c37",
+  "findings": []
+}

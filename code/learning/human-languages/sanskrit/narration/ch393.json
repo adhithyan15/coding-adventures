@@ -1,0 +1,907 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 393,
+  "title": "What It Takes",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:f271277062ca8381",
+  "lessons": [
+    {
+      "id": "SA-C393-vijayate",
+      "sequence": 22710,
+      "title": "विजयते (vijayate) — triumphs; wins through",
+      "headword": "विजयते",
+      "romanization": "vijayate",
+      "gloss": "triumphs; wins through",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da027367ebe63448",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for co-operation, then the Sanskrit for a kindness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विजयते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विजयते — vijayate — \"triumphs; wins through\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि धैर्यम् अस्ति, तर्हि सः अवश्यं विजयते। yadi dhairyam asti, tarhi saḥ avaśyaṃ vijayate. If he has courage, he will surely win through."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः शत्रुं विजितवान्, saḥ śatruṃ vijitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विजयते (vijayate) is built on vi and the root √ji, \"to win\"; MW gives vi-√ji \"to conquer, to be victorious\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijayate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijayate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijayate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijayate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi dhairyam asti, tarhi saḥ avaśyaṃ vijayate. — If he has courage, he will surely win through.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi dhairyam asti, tarhi saḥ avaśyaṃ vijayate.* — If he has courage, he will surely win through.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for co-operation, then the Sanskrit for a kindness, then say vijayate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for co-operation, then the Sanskrit for a kindness, then say *vijayate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विजयते (vijayate) mean? (\"Triumphs; wins through\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C393-avicalah",
+      "sequence": 22720,
+      "title": "अविचलः (avicalaḥ) — unshakable; steady",
+      "headword": "अविचलः",
+      "romanization": "avicalaḥ",
+      "gloss": "unshakable; steady",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91881fe98f36bf54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a kindness, then the Sanskrit for triumphs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अविचलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अविचलः — avicalaḥ — \"unshakable; steady\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि मनः अविचलम्, तर्हि भयं न भवति। yadi manaḥ avicalam, tarhi bhayaṃ na bhavati. If the mind is unshakable, there is no fear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अविचलः (avicalaḥ) is built from a-, \"not\", and vi-cala, \"moving about\", from the root √cal, \"to move\"; MW gives a-vicala \"immovable, steady, firm\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avicalaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avicalaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avicalaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avicalaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi manaḥ avicalam, tarhi bhayaṃ na bhavati. — If the mind is unshakable, there is no fear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi manaḥ avicalam, tarhi bhayaṃ na bhavati.* — If the mind is unshakable, there is no fear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a kindness, then the Sanskrit for triumphs, then say avicalaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a kindness, then the Sanskrit for triumphs, then say *avicalaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अविचलः (avicalaḥ) mean? (\"Unshakable; steady\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C393-nirantaram",
+      "sequence": 22730,
+      "title": "निरन्तरम् (nirantaram) — without a break; constantly",
+      "headword": "निरन्तरम्",
+      "romanization": "nirantaram",
+      "gloss": "without a break; constantly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8aae210cc9a03cb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for triumphs, then the Sanskrit for unshakable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निरन्तरम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निरन्तरम् — nirantaram — \"without a break; constantly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् निरन्तरं पठति, तर्हि परीक्षायाम् उत्तमः भविष्यति। yadi bhavān nirantaraṃ paṭhati, tarhi parīkṣāyām uttamaḥ bhaviṣyati. If you study without a break, you will do well in the exam."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निरन्तरम् (nirantaram) is built from nir, \"without\", and antara, \"an interval\"; MW gives nir-antaram \"closely\" and \"constantly, continually\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirantaram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirantaram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirantaram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirantaram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān nirantaraṃ paṭhati, tarhi parīkṣāyām uttamaḥ bhaviṣyati. — If you study without a break, you will do well in the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān nirantaraṃ paṭhati, tarhi parīkṣāyām uttamaḥ bhaviṣyati.* — If you study without a break, you will do well in the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for triumphs, then the Sanskrit for unshakable, then say nirantaram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for triumphs, then the Sanskrit for unshakable, then say *nirantaram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निरन्तरम् (nirantaram) mean? (\"Without a break; constantly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C393-tatparah",
+      "sequence": 22740,
+      "title": "तत्परः (tatparaḥ) — intent on; fully engaged",
+      "headword": "तत्परः",
+      "romanization": "tatparaḥ",
+      "gloss": "intent on; fully engaged",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3df8148fe4b63958",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for unshakable, then the Sanskrit for without a break."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तत्परः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तत्परः — tatparaḥ — \"intent on; fully engaged\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि छात्रः अध्ययने तत्परः, तर्हि सः सफलतां प्राप्नोति। yadi chātraḥ adhyayane tatparaḥ, tarhi saḥ saphalatāṃ prāpnoti. If a student is intent on study, he succeeds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तत्परः (tatparaḥ) is built from tat, \"that\", and para, \"highest\"; MW gives tat-para \"having that as one's highest object, totally devoted to, eagerly engaged in\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatparaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatparaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatparaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatparaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi chātraḥ adhyayane tatparaḥ, tarhi saḥ saphalatāṃ prāpnoti. — If a student is intent on study, he succeeds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi chātraḥ adhyayane tatparaḥ, tarhi saḥ saphalatāṃ prāpnoti.* — If a student is intent on study, he succeeds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for unshakable, then the Sanskrit for without a break, then say tatparaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for unshakable, then the Sanskrit for without a break, then say *tatparaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तत्परः (tatparaḥ) mean? (\"Intent on; fully engaged\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C393-krtakrtyah",
+      "sequence": 22750,
+      "title": "कृतकृत्यः (kṛtakṛtyaḥ) — fulfilled; content with what one has done",
+      "headword": "कृतकृत्यः",
+      "romanization": "kṛtakṛtyaḥ",
+      "gloss": "fulfilled; content with what one has done",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69645238f35c4405",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for without a break, then the Sanskrit for intent on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कृतकृत्यः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृतकृत्यः — kṛtakṛtyaḥ — \"fulfilled; content with what one has done\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः लक्ष्यं प्राप्नोति, तर्हि कृतकृत्यः भविष्यति। yadi saḥ lakṣyaṃ prāpnoti, tarhi kṛtakṛtyaḥ bhaviṣyati. If he reaches his goal, he will feel fulfilled."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृतकृत्यः (kṛtakṛtyaḥ) is built from kṛta, \"done\", and kṛtya, \"what is to be done\", both from the root √kṛ; MW gives kṛta-kṛtya \"one who has done his duty\" and \"contented, satisfied\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛtakṛtyaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛtakṛtyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛtakṛtyaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛtakṛtyaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ lakṣyaṃ prāpnoti, tarhi kṛtakṛtyaḥ bhaviṣyati. — If he reaches his goal, he will feel fulfilled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ lakṣyaṃ prāpnoti, tarhi kṛtakṛtyaḥ bhaviṣyati.* — If he reaches his goal, he will feel fulfilled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for without a break, then the Sanskrit for intent on, then say kṛtakṛtyaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for without a break, then the Sanskrit for intent on, then say *kṛtakṛtyaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कृतकृत्यः (kṛtakṛtyaḥ) mean? (\"Fulfilled; content with what one has done\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R393-review-387-393",
+      "sequence": 22760,
+      "title": "Looking back: from Getting Better to What It Takes",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Getting Better to What It Takes",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f26dda3d3f4c938",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for advancement and development."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "advancement, development, hard times, refines, growth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: advancement, development, hard times, refines, growth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deals with people, neglects, mild-mannered, in vain, an ideal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: deals with people, neglects, mild-mannered, in vain, an ideal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "possible, achievable, imagines, imagination, true to fact",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: possible, achievable, imagines, imagination, true to fact]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sign of something to come, an expectation, useless, worthwhile, experiences",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sign of something to come, an expectation, useless, worthwhile, experiences]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "supreme, inferior, in keeping with, suitable, spoils",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: supreme, inferior, in keeping with, suitable, spoils]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "requests, an assistant, reassures, co-operation, a kindness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: requests, an assistant, reassures, co-operation, a kindness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "triumphs, unshakable, without a break, intent on, fulfilled",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: triumphs, unshakable, without a break, intent on, fulfilled]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Advancement? (उन्नतिः, unnatiḥ.) Development? (विकासः, vikāsaḥ.) Hard times? (दुर्गतिः, durgatiḥ.) Refines? (संस्करोति, saṃskaroti.) Growth? (वृद्धिः, vṛddhiḥ.) Deals with people? (व्यवहरति, vyavaharati.) Neglects? (उपेक्षते, upekṣate.) Mild-mannered? (सौम्यः, saumyaḥ.) In vain? (वृथा, vṛthā.) An ideal? (आदर्शः, ādarśaḥ.) Possible? (शक्यः, śakyaḥ.) Achievable? (साध्यः, sādhyaḥ.) Imagines? (कल्पयति, kalpayati.) Imagination? (कल्पना, kalpanā.) True to fact? (यथार्थः, yathārthaḥ.) A sign of something to come? (लक्षणम्, lakṣaṇam.) An expectation? (प्रत्याशा, pratyāśā.) Useless? (व्यर्थः, vyarthaḥ.) Worthwhile? (सार्थकः, sārthakaḥ.) Experiences? (अनुभवति, anubhavati.) Supreme? (परमः, paramaḥ.) Inferior? (निकृष्टः, nikṛṣṭaḥ.) In keeping with? (अनुरूपः, anurūpaḥ.) Suitable? (उपयुक्तः, upayuktaḥ.) Spoils? (दूषयति, dūṣayati.) Requests? (अभ्यर्थयते, abhyarthayate.) An assistant? (सहायकः, sahāyakaḥ.) Reassures? (आश्वासयति, āśvāsayati.) Co-operation? (सहकारः, sahakāraḥ.) A kindness? (अनुग्रहः, anugrahaḥ.) Triumphs? (विजयते, vijayate.) Unshakable? (अविचलः, avicalaḥ.) Without a break? (निरन्तरम्, nirantaram.) Intent on? (तत्परः, tatparaḥ.) Fulfilled? (कृतकृत्यः, kṛtakṛtyaḥ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R393-review-final-393",
+      "sequence": 22770,
+      "title": "What It Takes — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e31a8e532fe1bad4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for triumphs and unshakable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "triumphs, unshakable, without a break, intent on, fulfilled",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: triumphs, unshakable, without a break, intent on, fulfilled]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Triumphs? (विजयते, vijayate.) Unshakable? (अविचलः, avicalaḥ.) Without a break? (निरन्तरम्, nirantaram.) Intent on? (तत्परः, tatparaḥ.) Fulfilled? (कृतकृत्यः, kṛtakṛtyaḥ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

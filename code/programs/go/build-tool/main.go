@@ -564,20 +564,32 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed[closureProvenanceConsumer] = true
 	}
-	// Only the committed Go native reader consumes this exact external corpus.
-	// Seed before the ordinary fixture early return, including deleted old paths.
-	if containsPath(changedFiles, "code/specs/fixtures/starlark-opcode-provider-v1/cases.json") && (language == "all" || language == "go") {
-		found := false
-		for _, pkg := range packages {
-			if pkg.Name == "go/starlark-compiler" && pkg.Language == "go" {
-				found = true
-				break
+	// The committed Go and Haskell native readers consume this exact external
+	// corpus. Seed before the ordinary fixture early return, including deleted
+	// old paths, while preserving an explicitly single-language invocation.
+	if containsPath(changedFiles, "code/specs/fixtures/starlark-opcode-provider-v1/cases.json") {
+		consumers := []struct {
+			name, language string
+		}{
+			{"go/starlark-compiler", "go"},
+			{"haskell/starlark-compiler", "haskell"},
+		}
+		for _, consumer := range consumers {
+			if language != "all" && language != consumer.language {
+				continue
 			}
+			found := false
+			for _, pkg := range packages {
+				if pkg.Name == consumer.name && pkg.Language == consumer.language {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return nil, fmt.Errorf("STP01 fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
 		}
-		if !found {
-			return nil, fmt.Errorf("STP01 fixture consumer %q is missing from discovered packages", "go/starlark-compiler")
-		}
-		changed["go/starlark-compiler"] = true
 	}
 	// BF03's native Go reader lives outside the shared fixture directory. Seed
 	// its real package before external-fixture early return, including deletion
@@ -612,6 +624,30 @@ func changedPackageRootsForPlatformAndLanguage(
 			return nil, fmt.Errorf("TE04 fenced fixture consumer %q is missing from discovered packages", "typescript/gfm-parser")
 		}
 		changed["typescript/gfm-parser"] = true
+	}
+	// G2D02's bounded flattening corpus is consumed directly by both .NET
+	// implementations. Seed the exact readers before the external-fixture early
+	// return; deletion and rename-old paths must still exercise their tests.
+	if containsPath(changedFiles, "code/specs/fixtures/bezier2d-flattening-v1/cases.json") {
+		for _, consumer := range []struct{ name, language string }{
+			{name: "csharp/bezier2d", language: "csharp"},
+			{name: "fsharp/bezier2d", language: "fsharp"},
+		} {
+			if language != "all" && language != consumer.language {
+				continue
+			}
+			found := false
+			for _, pkg := range packages {
+				if pkg.Name == consumer.name && pkg.Language == consumer.language {
+					found = true
+					break
+				}
+			}
+			if !found {
+				return nil, fmt.Errorf("G2D02 fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
 	}
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
@@ -851,6 +887,7 @@ func affectedListFromSet(affectedSet map[string]bool) []string {
 	for name := range affectedSet {
 		affected = append(affected, name)
 	}
+	sort.Strings(affected)
 	return affected
 }
 
@@ -1230,9 +1267,21 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 						return 1
 					}
 					changedPackageRoots = changedPkgs
-					if len(changedPkgs) > 0 {
+					// Repository-wide guards whose inputs changed are added
+					// without their dependents (see repository_inputs.go).
+					inputConsumers, consumerErr := repositoryInputConsumersForChange(changedFiles, packages, *language)
+					if consumerErr != nil {
+						fmt.Fprintf(os.Stderr, "Error selecting repository input consumers: %v\n", consumerErr)
+						return 1
+					}
+					if len(changedPkgs) > 0 || len(inputConsumers) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
 						affectedSet = expandAffectedSetWithPrereqs(graph, affectedSet)
+						affectedSet = withRepositoryInputConsumers(graph, affectedSet, inputConsumers)
+						if len(inputConsumers) > 0 {
+							fmt.Printf("Git diff: repository-wide inputs changed — also selecting %s\n",
+								strings.Join(sortedConsumerNames(inputConsumers), ", "))
+						}
 						fmt.Printf("Git diff: %d packages changed, %d affected (including dependents and prerequisites)\n",
 							len(changedPkgs), len(affectedSet))
 					} else {
@@ -1587,11 +1636,20 @@ func emitBuildPlan(
 			fmt.Fprintf(os.Stderr, "Error selecting %s native fixture consumers: %v\n", goos, selectionErr)
 			return 1
 		}
-		platformAffected := affectedForGraph(
+		platformConsumers, consumerErr := repositoryInputConsumersForChange(changedFiles, platformPackages, language)
+		if consumerErr != nil {
+			fmt.Fprintf(os.Stderr, "Error selecting %s repository input consumers: %v\n", goos, consumerErr)
+			return 1
+		}
+		platformAffected := withRepositoryInputConsumers(
 			platformGraph,
-			platformChanged,
-			affectedSet,
-			force,
+			affectedForGraph(
+				platformGraph,
+				platformChanged,
+				affectedSet,
+				force,
+			),
+			platformConsumers,
 		)
 		platformOverrides[goos] = plan.PlatformState{
 			DependencyEdges:  graphEdges(platformGraph),

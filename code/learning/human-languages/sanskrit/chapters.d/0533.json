@@ -1,0 +1,21 @@
+{
+  "chapter": 533,
+  "title": "Something in the Way",
+  "label": "ch:sa-something-in-the-way",
+  "canDo": "I can say what will get in the way and what we can do.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R533-review-526-533",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can say what will get in the way and what we can do.",
+    "assesses": [
+      "SA-LEX-C533-ANTARAYA533-01",
+      "SA-LEX-C533-ANTARAYA533-02",
+      "SA-LEX-C533-ANTARAYA533-03",
+      "SA-LEX-C533-ANTARAYA533-04",
+      "SA-LEX-C533-ANTARAYA533-05"
+    ]
+  }
+}

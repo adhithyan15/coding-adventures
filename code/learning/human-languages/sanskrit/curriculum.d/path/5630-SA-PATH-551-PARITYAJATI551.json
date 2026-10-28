@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-551-PARITYAJATI551",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "SA-EXT-551-PARITYAJATI551"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C222-dapenti",
+  "pathSegment": "ZH-PATH-222-CHILL222",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-222-CHILL222",
+      "order": 3
+    }
+  ]
+}

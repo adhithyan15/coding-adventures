@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:2335a53d056be800",
+  "lessonIds": [
+    "SA-C413-unnayati",
+    "SA-C413-sannahyati",
+    "SA-C413-goni",
+    "SA-C413-prapayati",
+    "SA-C413-sampadayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch413-packing-for-the-road.tex"
+}

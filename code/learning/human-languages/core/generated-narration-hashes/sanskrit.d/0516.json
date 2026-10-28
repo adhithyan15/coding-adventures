@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:9716485f560a104d",
+  "lessonIds": [
+    "SA-C516-manoranjanam",
+    "SA-C516-hasyam",
+    "SA-C516-vinodayati",
+    "SA-C516-sangrahah",
+    "SA-C516-rucih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch516.txt",
+  "json": "sanskrit/narration/ch516.json",
+  "textHash": "fnv1a64:fdf6db5da3055f3f",
+  "jsonHash": "fnv1a64:780295d7df5b5d97",
+  "findings": []
+}

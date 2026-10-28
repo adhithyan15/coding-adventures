@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C380-madhyamah",
+    "language": "sanskrit",
+    "chapter": 380,
+    "sequence": 22070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83b3dd1bcc88f429"
+  },
+  "findings": []
+}

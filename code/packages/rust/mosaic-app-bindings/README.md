@@ -98,8 +98,25 @@ already saved) changed nothing the app saves, so it writes nothing -- a window
 drag costs no disk writes -- unless an earlier save failed: while a `persistenceWarning` is
 pending, each ignored report retries the save (UI48 §7.12). Writes use a same-directory temporary file plus the platform's atomic
 replacement facility. Invalid JSON and runtime-incompatible snapshots are moved
-to `mosaic-state.v1.json.corrupt`; the app starts clean and exposes a
+to the first free quarantine name -- `mosaic-state.v1.json.corrupt`, then
+`.corrupt.1` to `.corrupt.9` -- and the app starts clean and exposes a
 `persistenceWarning` (or native status warning) instead of becoming unusable.
+A quarantine is never replaced or deleted, since it may hold the user's real
+data. A name is taken when anything is there: a file, a directory, or a link,
+even a dangling one. Taken names are skipped, and the step that takes a name
+refuses an existing target. XAML uses `File.Move(..., overwrite: false)`, which
+is atomic on Windows. Flutter, Qt, Compose and SwiftUI claim the name first with
+an exclusive create (`createSync(exclusive: true)`, `QIODevice::NewOnly`,
+`Files.createFile`, `open(O_CREAT | O_EXCL)`) and then rename atomically onto
+that empty placeholder. They cannot use a plain move: `dart:io`'s rename
+replaces, `QFile::rename` falls back to a truncating copy, and on POSIX the
+JDK's `Files.move` and Foundation's `moveItem` check and then rename(2), which
+replaces whatever appeared in between. When the exclusive step fails, the host
+looks at the name again and moves on if something is now there; it never
+decides that from the error, because Windows reports a directory in the way as
+access denied rather than "exists". If the move fails or all ten names are taken, the rejected file is
+still at the live path, so the host saves nothing for the rest of the session
+and its warning ends "This session will not be saved."
 Set `MOSAIC_APP_STATE_PATH` to an explicit file for tests or portable launches.
 Otherwise the generated application id selects these per-user locations:
 
@@ -186,6 +203,14 @@ props together. The runtime ends the batch on setter failure too; this is not
 a rollback of props already assigned. Handwritten components without the
 interface keep immediate assignment behavior.
 
+For `IReadOnlyList<T>` props with string, double or bool leaves (including nested
+lists), the host reuses the live property value when converted contents match.
+Setters still run, but unchanged dependency-property list references no longer
+force binding invalidation. Changed contents and local mutations are replaced by
+runtime values. Arrays and custom object lists keep normal conversion/assignment;
+unreadable or throwing getters fall back to the converted value. This preserves
+identity, not a guarantee of zero conversion allocation or a latency threshold.
+
 Set `MOSAIC_PROFILE_PATH` to a writable JSONL file before launching a generated
 XAML app. The host buffers up to 4096 timing samples and appends them on normal
 process exit; no log files are written on the click path. Unset the variable to
@@ -217,7 +242,10 @@ the existing synchronous save behavior and never record paths or workbook data.
 
 Apply-props attribution now includes `apply-props-convert` per converted property,
 `apply-props-set` per assigned property, and `apply-props-notify` around batch
-completion. These fixed names omit property names and values. Sum repeated
+completion. Conversion/setter records include an optional `property` label from
+compiled component metadata, capped at 128 characters. They never include runtime
+JSON keys or workbook values. Interaction-only records keep their existing shape.
+Sum repeated
 conversion/setter samples within an apply-props interval; each consumes one slot
 in the shared 4096-sample cap. Notification time includes synchronous bindings,
 not subsequent layout or compositor presentation.

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:601b8cc5014a62ea",
+  "lessonIds": [
+    "SA-C323-stupah",
+    "SA-C323-praciram",
+    "SA-C323-atitam",
+    "SA-C323-utkhanati",
+    "SA-C323-aviskaroti"
+  ],
+  "tex": "sanskrit/book/chapters/ch323-ruins-of-the-past.tex"
+}

@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — tests: Twig name resolution runs end to end (#18456)
+
+Test-only; the emitted JavaScript is unchanged.
+
+`tests/twig_name_resolution.rs` drives 19 Twig programs through
+`twig-to-semantic-ir` and this backend under `node`.  In each, a
+builtin's name is shadowed by a top-level function, a top-level value,
+a parameter, a `let` / `let*` binding, a lambda parameter or a capture.
+The test checks the program prints the shadowing definition's answer.
+For example, `(define (car p) 42) (print (car (cons 1 2)))` prints `42`;
+before the frontend fix it printed the builtin's `1`.  The test declares
+`Feature::Pairs` on each module before compiling, because the Twig
+frontend does not yet declare it (a separate, pre-existing gap).
+Without `node` the test still lowers and compiles every program.
+
 ## 0.54.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

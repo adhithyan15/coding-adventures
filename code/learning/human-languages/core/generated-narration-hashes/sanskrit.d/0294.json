@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:2b76e9e084377d1f",
+  "lessonIds": [
+    "SA-C294-sanghattah",
+    "SA-C294-ghatah",
+    "SA-C294-skhalati",
+    "SA-C294-ahatah",
+    "SA-C294-murchati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch294.txt",
+  "json": "sanskrit/narration/ch294.json",
+  "textHash": "fnv1a64:7645e85563b6f390",
+  "jsonHash": "fnv1a64:9c7368f9d0718ece",
+  "findings": []
+}

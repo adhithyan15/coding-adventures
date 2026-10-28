@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:19d80a5071a87ff8",
+  "lessonIds": [
+    "ZH-C90-hui",
+    "ZH-C90-neng",
+    "ZH-W90-neng",
+    "ZH-C90-keyi",
+    "ZH-C90-youyong",
+    "ZH-C90-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch90.txt",
+  "json": "chinese/narration/ch90.json",
+  "textHash": "fnv1a64:7cba761a5bf51b25",
+  "jsonHash": "fnv1a64:6827139fe445b5f9",
+  "findings": []
+}

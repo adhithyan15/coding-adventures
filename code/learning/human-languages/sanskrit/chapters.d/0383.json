@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Setting a Goal",
+  "label": "ch:sa-setting-a-goal",
+  "canDo": "I can say what I mean to achieve and what it will take.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C383-uttarottaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say what I mean to achieve and what it will take.",
+    "assesses": [
+      "SA-LEX-C383-SANKALPA383-03",
+      "SA-LEX-C383-SANKALPA383-04",
+      "SA-LEX-C383-SANKALPA383-05"
+    ]
+  }
+}

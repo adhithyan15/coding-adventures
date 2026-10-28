@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C337-pratijanite",
+    "language": "sanskrit",
+    "chapter": 337,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0384780b8bd688a8"
+  },
+  "findings": []
+}

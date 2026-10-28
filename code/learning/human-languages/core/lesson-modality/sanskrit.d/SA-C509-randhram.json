@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C509-randhram",
+    "language": "sanskrit",
+    "chapter": 509,
+    "sequence": 29370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:755bacdaf8fcb9c3"
+  },
+  "findings": []
+}

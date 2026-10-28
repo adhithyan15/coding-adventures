@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C456-ksubhyati",
+    "language": "sanskrit",
+    "chapter": 456,
+    "sequence": 26410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46789135b9df5969"
+  },
+  "findings": []
+}

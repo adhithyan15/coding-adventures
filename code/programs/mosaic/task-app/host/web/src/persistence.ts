@@ -43,8 +43,27 @@ export const WORKSPACE_STORE = "workspace";
 /** The key of the (currently only) workspace record. */
 export const WORKSPACE_KEY = "web";
 
-/** Fixed recovery key used to preserve the most recently rejected web record. */
+/**
+ * The first recovery key for a rejected web record. Later rejections use the
+ * next free key, so an earlier copy (which may be the real workspace: startup
+ * rejects it, then a later launch rejects something else) is never replaced:
+ *
+ *   first rejection    workspace/web-corrupt
+ *   second             workspace/web-corrupt.1
+ *   ...                ...
+ *   tenth              workspace/web-corrupt.9
+ *
+ * The same sequence the native hosts use for `<state>.corrupt` files.
+ */
 export const RECOVERY_WORKSPACE_KEY = "web-corrupt";
+
+/** How many rejected records can be kept before saving must stop. */
+export const MAX_RECOVERY_WORKSPACES = 10;
+
+/** The `index`th recovery key: `web-corrupt`, then `web-corrupt.1` … `.9`. */
+export function recoveryWorkspaceKey(index: number): string {
+  return index === 0 ? RECOVERY_WORKSPACE_KEY : `${RECOVERY_WORKSPACE_KEY}.${index}`;
+}
 
 /** The persisted shape: the engine snapshot plus the host-owned session state. */
 export interface WorkspaceRecord {
@@ -117,15 +136,45 @@ export function loadWorkspace(storage: KVStorage): Promise<WorkspaceRecord | und
   return storage.get<WorkspaceRecord>(WORKSPACE_STORE, WORKSPACE_KEY);
 }
 
-/** Preserve a rejected record before normal saves can replace the live key. */
-export function preserveRejectedWorkspace(
+/** The record's content, ignoring which key it is stored under. */
+function recordContent(record: WorkspaceRecord): string {
+  const { id: _id, ...content } = record;
+  return JSON.stringify(content);
+}
+
+/**
+ * Preserve a rejected record before normal saves can replace the live key, and
+ * return the recovery key it is kept under.
+ *
+ * It goes to the first free key of {@link recoveryWorkspaceKey}, and never over
+ * a record already kept there. A record that is already kept (the same content
+ * under any recovery key) is not copied again: the live key still holds the
+ * rejected record until the first save, so a reload before any edit rejects
+ * the same record a second time.
+ *
+ * Throws when every recovery key is taken, or when storage fails. Either way
+ * the rejected record is still at the live key, and the caller must stop
+ * saving so that nothing writes over it.
+ */
+export async function preserveRejectedWorkspace(
   storage: KVStorage,
   record: WorkspaceRecord,
-): Promise<void> {
-  return storage.put(WORKSPACE_STORE, {
-    ...record,
-    id: RECOVERY_WORKSPACE_KEY,
-  });
+): Promise<string> {
+  const content = recordContent(record);
+  for (let index = 0; index < MAX_RECOVERY_WORKSPACES; index += 1) {
+    const id = recoveryWorkspaceKey(index);
+    const kept = await storage.get<WorkspaceRecord>(WORKSPACE_STORE, id);
+    if (kept !== undefined) {
+      if (recordContent(kept) === content) return id;
+      continue;
+    }
+    await storage.put(WORKSPACE_STORE, { ...record, id });
+    return id;
+  }
+  throw new Error(
+    `all ${MAX_RECOVERY_WORKSPACES} recovery records (workspace/${RECOVERY_WORKSPACE_KEY} ` +
+      `to workspace/${recoveryWorkspaceKey(MAX_RECOVERY_WORKSPACES - 1)}) are already in use`,
+  );
 }
 
 /**

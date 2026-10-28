@@ -1,0 +1,11 @@
+{
+  "id": "SA-C275-pathisyati",
+  "pathSegment": "SA-PATH-275-FUTURE275",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-275-FUTURE275",
+      "order": 1
+    }
+  ]
+}

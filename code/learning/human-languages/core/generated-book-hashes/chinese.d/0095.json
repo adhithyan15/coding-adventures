@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:6981c0a567ac9e97",
+  "lessonIds": [
+    "ZH-C95-weishenme",
+    "ZH-W95-wei",
+    "ZH-C95-youshi",
+    "ZH-C95-duche",
+    "ZH-C95-wang",
+    "ZH-C95-practice"
+  ],
+  "tex": "chinese/book/chapters/ch95-why.tex"
+}

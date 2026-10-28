@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C423-nirgamah",
+    "language": "sanskrit",
+    "chapter": 423,
+    "sequence": 24490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fd19b25403c07f1"
+  },
+  "findings": []
+}

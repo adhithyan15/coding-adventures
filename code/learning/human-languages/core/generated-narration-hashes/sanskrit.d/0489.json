@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:15861c8318e6236e",
+  "lessonIds": [
+    "SA-C489-vyasanam",
+    "SA-C489-samyamah",
+    "SA-C489-dhumapanam",
+    "SA-C489-parityajati",
+    "SA-C489-madyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch489.txt",
+  "json": "sanskrit/narration/ch489.json",
+  "textHash": "fnv1a64:1bfd8b92ce30d135",
+  "jsonHash": "fnv1a64:9686725933373280",
+  "findings": []
+}

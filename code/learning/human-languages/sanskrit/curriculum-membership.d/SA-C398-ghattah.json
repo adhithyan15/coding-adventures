@@ -1,0 +1,11 @@
+{
+  "id": "SA-C398-ghattah",
+  "pathSegment": "SA-PATH-398-GHATTA398",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-398-GHATTA398",
+      "order": 0
+    }
+  ]
+}

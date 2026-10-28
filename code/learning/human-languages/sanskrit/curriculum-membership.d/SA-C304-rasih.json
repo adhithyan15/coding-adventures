@@ -1,0 +1,11 @@
+{
+  "id": "SA-C304-rasih",
+  "pathSegment": "SA-PATH-304-RASHI304",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-304-RASHI304",
+      "order": 0
+    }
+  ]
+}

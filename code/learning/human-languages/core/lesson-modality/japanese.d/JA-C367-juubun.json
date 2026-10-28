@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C367-juubun",
+    "language": "japanese",
+    "chapter": 367,
+    "sequence": 21610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa8b7050504b8d3a"
+  },
+  "findings": []
+}

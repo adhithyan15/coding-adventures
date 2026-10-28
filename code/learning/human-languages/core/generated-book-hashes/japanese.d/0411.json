@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:e079931167f30786",
+  "lessonIds": [
+    "JA-C411-ogawa",
+    "JA-C411-izumi",
+    "JA-C411-nigoru",
+    "JA-C411-kakomu",
+    "JA-C411-sukuu"
+  ],
+  "tex": "japanese/book/chapters/ch411-streams-and-springs.tex"
+}

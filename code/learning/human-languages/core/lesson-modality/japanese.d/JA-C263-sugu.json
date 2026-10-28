@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C263-sugu",
+    "language": "japanese",
+    "chapter": 263,
+    "sequence": 16090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f607475f1fec9703"
+  },
+  "findings": []
+}

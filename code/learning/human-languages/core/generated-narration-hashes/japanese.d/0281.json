@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:bf19184aed968cbb",
+  "lessonIds": [
+    "JA-C281-uwasa",
+    "JA-C281-tsutawaru",
+    "JA-C281-hiromaru",
+    "JA-C281-wadai",
+    "JA-C281-ousawagi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch281.txt",
+  "json": "japanese/narration/ch281.json",
+  "textHash": "fnv1a64:60262a64a03c73f4",
+  "jsonHash": "fnv1a64:b2df0702cafaca39",
+  "findings": []
+}

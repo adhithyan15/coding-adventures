@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:14ec7e2acec8f7e6",
+  "lessonIds": [
+    "SA-C361-sraddha",
+    "SA-C361-nistha",
+    "SA-C361-dambhah",
+    "SA-C361-krtaghnah",
+    "SA-C361-pratisrnoti"
+  ],
+  "tex": "sanskrit/book/chapters/ch361-faith-and-loyalty.tex"
+}

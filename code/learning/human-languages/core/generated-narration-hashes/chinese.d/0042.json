@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:fdf00f825e069da2",
+  "lessonIds": [
+    "ZH-C42-dongxi",
+    "ZH-C42-mai-sell",
+    "ZH-C42-shangdian",
+    "ZH-C42-pianyi",
+    "ZH-C42-gui",
+    "ZH-R42-review-37-42"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch42.txt",
+  "json": "chinese/narration/ch42.json",
+  "textHash": "fnv1a64:5cc14f0b7e7923a7",
+  "jsonHash": "fnv1a64:c929021ef039f479",
+  "findings": []
+}

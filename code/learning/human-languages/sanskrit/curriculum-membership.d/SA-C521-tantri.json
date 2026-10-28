@@ -1,0 +1,11 @@
+{
+  "id": "SA-C521-tantri",
+  "pathSegment": "SA-PATH-521-VADAKA521",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-521-VADAKA521",
+      "order": 1
+    }
+  ]
+}

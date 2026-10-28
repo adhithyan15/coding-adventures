@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 418,
+  "title": "Filling In a Form",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:7c7cde8da933e85b",
+  "lessons": [
+    {
+      "id": "JA-C418-shomei",
+      "sequence": 24370,
+      "title": "しょめい (shomei) — a signature",
+      "headword": "しょめい",
+      "romanization": "shomei",
+      "gloss": "a signature",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b1a1b7daaca336e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to carry in one's arms, then the Japanese for to wheel along."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょめい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょめい — shomei — \"a signature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ここに しょめいを おねがいします。 — koko ni shomei o onegai shimasu — \"Your signature here, please.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょめい (shomei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sho, \"signature\" (Middle Chinese dzyoH) and mei, \"name\" (mjieng) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shomei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shomei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shomei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shomei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koko ni shomei o onegai shimasu — Your signature here, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koko ni shomei o onegai shimasu* — Your signature here, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to carry in one's arms, then the Japanese for to wheel along, then say shomei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to carry in one's arms, then the Japanese for to wheel along, then say *shomei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょめい (shomei) mean? (\"A signature\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C418-shomei-type",
+              "prompt": "Say the Japanese for 'a signature'.",
+              "assesses": [
+                "JA-LEX-C418-SHOMEI418-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょめい",
+                "shomei"
+              ],
+              "feedback": {
+                "correct": "Right: しょめい (shomei) is 'a signature'.",
+                "incorrect": "'A signature' is しょめい (shomei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C418-youshi",
+      "sequence": 24380,
+      "title": "ようし (yōshi) — a blank form",
+      "headword": "ようし",
+      "romanization": "yōshi",
+      "gloss": "a blank form",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b29fe5d399496acd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wheel along, then the Japanese for a signature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ようし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようし — yōshi — \"a blank form\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まどぐちで ようしを うけとりました。 — madoguchi de yōshi o uketorimashita — \"I got a form at the counter.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようし (yōshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yō, \"use\" (Middle Chinese yowngH) and shi, \"paper\" (tsyeX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madoguchi de yōshi o uketorimashita — I got a form at the counter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madoguchi de yōshi o uketorimashita* — I got a form at the counter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wheel along, then the Japanese for a signature, then say yōshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wheel along, then the Japanese for a signature, then say *yōshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ようし (yōshi) mean? (\"A blank form\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C418-youshi-type",
+              "prompt": "Say the Japanese for 'a blank form'.",
+              "assesses": [
+                "JA-LEX-C418-SHOMEI418-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ようし",
+                "yōshi",
+                "youshi",
+                "yooshi",
+                "yoshi"
+              ],
+              "feedback": {
+                "correct": "Right: ようし (yōshi) is 'a blank form'.",
+                "incorrect": "'A blank form' is ようし (yōshi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C418-kinyuu",
+      "sequence": 24390,
+      "title": "きにゅう (kinyū) — filling in a form; an entry",
+      "headword": "きにゅう",
+      "romanization": "kinyū",
+      "gloss": "filling in a form; an entry",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0a6e7f3be71d85e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a signature, then the Japanese for a blank form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きにゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きにゅう — kinyū — \"filling in a form; an entry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ようしに じゅうしょを きにゅうして ください。 — yōshi ni jūsho o kinyū shite kudasai — \"Please fill in your address on the form.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きにゅう (kinyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ki, \"account\" (Middle Chinese kiH) and nyū, \"enter\" (nyip) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōshi ni jūsho o kinyū shite kudasai — Please fill in your address on the form.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōshi ni jūsho o kinyū shite kudasai* — Please fill in your address on the form.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a signature, then the Japanese for a blank form, then say kinyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a signature, then the Japanese for a blank form, then say *kinyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きにゅう (kinyū) mean? (\"Filling in a form; an entry\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C418-kinyuu-type",
+              "prompt": "Say the Japanese for 'filling in a form'.",
+              "assesses": [
+                "JA-LEX-C418-SHOMEI418-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きにゅう",
+                "kinyū",
+                "kinyuu",
+                "kinyu"
+              ],
+              "feedback": {
+                "correct": "Right: きにゅう (kinyū) is 'filling in a form; an entry'.",
+                "incorrect": "'Filling in a form' is きにゅう (kinyū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C418-ran",
+      "sequence": 24400,
+      "title": "らん (ran) — a box on a form; a column",
+      "headword": "らん",
+      "romanization": "ran",
+      "gloss": "a box on a form; a column",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:911eb7713017d981",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a blank form, then the Japanese for filling in a form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: らん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "らん — ran — \"a box on a form; a column\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この らんに なまえを かいて ください。 — kono ran ni namae o kaite kudasai — \"Please put your name in this box.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "らん (ran) is Sino-Japanese (kango): one Chinese character read with its on'yomi, a reading borrowed from Chinese: ran, \"column\" (Middle Chinese lan) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono ran ni namae o kaite kudasai — Please put your name in this box.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono ran ni namae o kaite kudasai* — Please put your name in this box.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a blank form, then the Japanese for filling in a form, then say ran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a blank form, then the Japanese for filling in a form, then say *ran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does らん (ran) mean? (\"A box on a form; a column\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C418-ran-type",
+              "prompt": "Say the Japanese for 'a box on a form'.",
+              "assesses": [
+                "JA-LEX-C418-SHOMEI418-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "らん",
+                "ran"
+              ],
+              "feedback": {
+                "correct": "Right: らん (ran) is 'a box on a form; a column'.",
+                "incorrect": "'A box on a form' is らん (ran)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C418-hinichi",
+      "sequence": 24410,
+      "title": "ひにち (hinichi) — a date (for something planned)",
+      "headword": "ひにち",
+      "romanization": "hinichi",
+      "gloss": "a date (for something planned)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e2b13eb7bcd4aa9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for filling in a form, then the Japanese for a box on a form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひにち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひにち — hinichi — \"a date (for something planned)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "よやくの ひにちを きめました。 — yoyaku no hinichi o kimemashita — \"We decided on the date of the booking.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひにち (hinichi) is built from both layers of the vocabulary: the native Japanese (wago) hi, \"day\", inherited rather than borrowed, and the Sino-Japanese nichi, \"day\" (Middle Chinese nyit), an on'yomi borrowed from Chinese (JMdict; KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hinichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hinichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hinichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hinichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoyaku no hinichi o kimemashita — We decided on the date of the booking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoyaku no hinichi o kimemashita* — We decided on the date of the booking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for filling in a form, then the Japanese for a box on a form, then say hinichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for filling in a form, then the Japanese for a box on a form, then say *hinichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひにち (hinichi) mean? (\"A date (for something planned)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C418-hinichi-type",
+              "prompt": "Say the Japanese for 'a date'.",
+              "assesses": [
+                "JA-LEX-C418-SHOMEI418-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひにち",
+                "hinichi"
+              ],
+              "feedback": {
+                "correct": "Right: ひにち (hinichi) is 'a date (for something planned)'.",
+                "incorrect": "'A date' is ひにち (hinichi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

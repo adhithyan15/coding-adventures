@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C381-kogu",
+    "language": "japanese",
+    "chapter": 381,
+    "sequence": 22490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bac1f9943f4c86db"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:5662cf864e04114d",
+  "lessonIds": [
+    "SA-C551-jahati",
+    "SA-C551-anusocati",
+    "SA-C551-pascattapah",
+    "SA-C551-viraktah",
+    "SA-C551-utsrjati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch551.txt",
+  "json": "sanskrit/narration/ch551.json",
+  "textHash": "fnv1a64:d35431ee91318bfd",
+  "jsonHash": "fnv1a64:f5e0d5e91dce5630",
+  "findings": []
+}

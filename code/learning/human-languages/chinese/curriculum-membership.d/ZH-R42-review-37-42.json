@@ -1,0 +1,11 @@
+{
+  "id": "ZH-R42-review-37-42",
+  "pathSegment": "ZH-PATH-42-SHOP42",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-42-SHOP42",
+      "order": 5
+    }
+  ]
+}

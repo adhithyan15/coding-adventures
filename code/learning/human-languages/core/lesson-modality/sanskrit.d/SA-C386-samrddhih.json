@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C386-samrddhih",
+    "language": "sanskrit",
+    "chapter": 386,
+    "sequence": 22390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e1b2bc4f0268f03"
+  },
+  "findings": []
+}

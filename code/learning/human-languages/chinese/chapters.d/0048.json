@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Telling the Time",
+  "label": "ch:zh-telling-the-time",
+  "canDo": "I can ask the time and say it to the half hour and the minute.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C48-deng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: I can ask the time and say it to the half hour and the minute.",
+    "assesses": [
+      "ZH-LEX-C48-CLOCK48-03",
+      "ZH-LEX-C48-CLOCK48-04",
+      "ZH-LEX-C48-CLOCK48-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:f851b57180f1cb6a",
+  "lessonIds": [
+    "JA-C337-setsuyaku-suru",
+    "JA-C337-denryoku",
+    "JA-C337-nenryou",
+    "JA-C337-sekiyu",
+    "JA-C337-mottainai"
+  ],
+  "tex": "japanese/book/chapters/ch337-saving-energy.tex"
+}

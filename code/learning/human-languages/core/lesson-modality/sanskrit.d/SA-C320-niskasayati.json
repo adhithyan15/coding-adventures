@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C320-niskasayati",
+    "language": "sanskrit",
+    "chapter": 320,
+    "sequence": 18770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7a90ad68d9af19e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 455,
+  "title": "Fondness and Attachment",
+  "label": "ch:sa-fondness-and-attachment",
+  "canDo": "I can say what someone is fond of.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-R455-review-448-455",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can say what someone is fond of.",
+    "assesses": [
+      "SA-LEX-C455-ANURAGA455-01",
+      "SA-LEX-C455-ANURAGA455-02",
+      "SA-LEX-C455-ANURAGA455-03",
+      "SA-LEX-C455-ANURAGA455-04",
+      "SA-LEX-C455-ANURAGA455-05"
+    ]
+  }
+}

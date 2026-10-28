@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C531-aradhayati",
+    "language": "sanskrit",
+    "chapter": 531,
+    "sequence": 30500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed00f13ed31a7c27"
+  },
+  "findings": []
+}

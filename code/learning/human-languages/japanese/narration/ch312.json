@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 312,
+  "title": "History",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cd4d5997c47f5ea9",
+  "lessons": [
+    {
+      "id": "JA-C312-rekishi",
+      "sequence": 18590,
+      "title": "れきし (rekishi) — history",
+      "headword": "れきし",
+      "romanization": "rekishi",
+      "gloss": "history",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3bd7c7a469949a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to lose for good, then the Japanese for to look back (on)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: れきし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れきし — rekishi — \"history\"."
+            },
+            {
+              "kind": "speech",
+              "text": "日本の れきしを ならっています。 — nihon no rekishi o naratte imasu — \"I am learning Japanese history.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "れきし (rekishi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are reki, \"passage of time\" (Middle Chinese lek) and shi, \"history\" (sriX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rekishi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rekishi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rekishi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rekishi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nihon no rekishi o naratte imasu — I am learning Japanese history.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nihon no rekishi o naratte imasu* — I am learning Japanese history.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to lose for good, then the Japanese for to look back (on), then say rekishi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to lose for good, then the Japanese for to look back (on), then say *rekishi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does れきし (rekishi) mean? (\"History\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C312-rekishi-type",
+              "prompt": "Say the Japanese for 'history'.",
+              "assesses": [
+                "JA-LEX-C312-REKISHI312-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "れきし",
+                "rekishi"
+              ],
+              "feedback": {
+                "correct": "Right: れきし (rekishi) is 'history'.",
+                "incorrect": "'History' is れきし (rekishi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C312-jidai",
+      "sequence": 18600,
+      "title": "じだい (jidai) — an era; a period",
+      "headword": "じだい",
+      "romanization": "jidai",
+      "gloss": "an era; a period",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a76f269a44aeba96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to look back (on), then the Japanese for history."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じだい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じだい — jidai — \"an era; a period\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さむらいの じだいは ながかったです。 — samurai no jidai wa nagakatta desu — \"The age of the samurai was long.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じだい (jidai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"time\" (Middle Chinese dzyi) and dai, \"age\" (dojH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jidai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jidai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jidai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jidai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samurai no jidai wa nagakatta desu — The age of the samurai was long.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samurai no jidai wa nagakatta desu* — The age of the samurai was long.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to look back (on), then the Japanese for history, then say jidai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to look back (on), then the Japanese for history, then say *jidai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じだい (jidai) mean? (\"An era; a period\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C312-jidai-type",
+              "prompt": "Say the Japanese for 'an era'.",
+              "assesses": [
+                "JA-LEX-C312-REKISHI312-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じだい",
+                "jidai"
+              ],
+              "feedback": {
+                "correct": "Right: じだい (jidai) is 'an era; a period'.",
+                "incorrect": "'An era' is じだい (jidai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C312-kako",
+      "sequence": 18610,
+      "title": "かこ (kako) — the past",
+      "headword": "かこ",
+      "romanization": "kako",
+      "gloss": "the past",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9df3cdcc7fe002bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for history, then the Japanese for an era."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かこ — kako — \"the past\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かこの じけんを しらべました。 — kako no jiken o shirabemashita — \"I looked into incidents from the past.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かこ (kako) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"go beyond\" (Middle Chinese kwaH) and ko, \"past\" (khjoH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kako",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kako*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kako, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kako*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kako no jiken o shirabemashita — I looked into incidents from the past.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kako no jiken o shirabemashita* — I looked into incidents from the past.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for history, then the Japanese for an era, then say kako again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for history, then the Japanese for an era, then say *kako* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かこ (kako) mean? (\"The past\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C312-kako-type",
+              "prompt": "Say the Japanese for 'the past'.",
+              "assesses": [
+                "JA-LEX-C312-REKISHI312-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かこ",
+                "kako"
+              ],
+              "feedback": {
+                "correct": "Right: かこ (kako) is 'the past'.",
+                "incorrect": "'The past' is かこ (kako)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C312-izen",
+      "sequence": 18620,
+      "title": "いぜん (izen) — formerly; in the past",
+      "headword": "いぜん",
+      "romanization": "izen",
+      "gloss": "formerly; in the past",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:754b4ee5b2cc72b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an era, then the Japanese for the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いぜん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いぜん — izen — \"formerly; in the past\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いぜん、ここに がっこうが ありました。 — izen, koko ni gakkō ga arimashita — \"There used to be a school here.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いぜん (izen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are i, \"by means of\" (Middle Chinese yiX) and zen, \"before\" (dzen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izen, koko ni gakkō ga arimashita — There used to be a school here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izen, koko ni gakkō ga arimashita* — There used to be a school here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an era, then the Japanese for the past, then say izen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an era, then the Japanese for the past, then say *izen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いぜん (izen) mean? (\"Formerly; in the past\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C312-izen-type",
+              "prompt": "Say the Japanese for 'formerly'.",
+              "assesses": [
+                "JA-LEX-C312-REKISHI312-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いぜん",
+                "izen"
+              ],
+              "feedback": {
+                "correct": "Right: いぜん (izen) is 'formerly; in the past'.",
+                "incorrect": "'Formerly' is いぜん (izen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C312-touji",
+      "sequence": 18630,
+      "title": "とうじ (tōji) — at that time; in those days",
+      "headword": "とうじ",
+      "romanization": "tōji",
+      "gloss": "at that time; in those days",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e79f4e6d4380dbb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the past, then the Japanese for formerly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とうじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうじ — tōji — \"at that time; in those days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とうじ、ちちは まだ がくせいでした。 — tōji, chichi wa mada gakusei deshita — \"In those days my father was still a student.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうじ (tōji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tō, \"right\" (Middle Chinese tang) and ji, \"time\" (dzyi) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōji, chichi wa mada gakusei deshita — In those days my father was still a student.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōji, chichi wa mada gakusei deshita* — In those days my father was still a student.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the past, then the Japanese for formerly, then say tōji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the past, then the Japanese for formerly, then say *tōji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とうじ (tōji) mean? (\"At that time; in those days\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C312-touji-type",
+              "prompt": "Say the Japanese for 'at that time'.",
+              "assesses": [
+                "JA-LEX-C312-REKISHI312-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とうじ",
+                "tōji",
+                "touji",
+                "tooji",
+                "toji"
+              ],
+              "feedback": {
+                "correct": "Right: とうじ (tōji) is 'at that time; in those days'.",
+                "incorrect": "'At that time' is とうじ (tōji)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

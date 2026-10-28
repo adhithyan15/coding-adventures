@@ -1,0 +1,11 @@
+{
+  "id": "SA-C429-ghatika",
+  "pathSegment": "SA-PATH-429-UDGHATANA429",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-429-UDGHATANA429",
+      "order": 1
+    }
+  ]
+}

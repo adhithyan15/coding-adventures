@@ -37,6 +37,24 @@
 
 % Inline Japanese snippet within English text. The generated chapters emit one
 % \ja{...} per run of hiragana, katakana, or Han characters.
+%
+% Inside a snippet, a line may break between two kana or kanji, as Japanese
+% typesetting allows, and not only at the spaces the lessons put between words.
+% Without this a long kana word (きょうりょくしました) is one unbreakable box,
+% and a justified line that ends just before it has to stretch its few spaces:
+% the B1 vocabulary's verb notes set 8 to 19 such lines underfull. XeTeX's ICU
+% line breaker for the "ja" locale follows the Japanese rules (kinsoku): no break
+% before a small kana, the long-vowel mark ー or a closing 。、, and none after an
+% opening bracket. \XeTeXlinebreakskip is the glue put at each such break point;
+% a little stretch lets a justified line share its slack among them. Both settings
+% are local to the snippet's group, so English text and romanization are untouched.
+% The settings ride on \japanesefont itself, so \ja keeps the one-line
+% {{\japanesefont #1}} shape the glyph-coverage gate reads to learn which font
+% renders a snippet.
+\NewCommandCopy\hljapanesefontbase\japanesefont
+\RenewDocumentCommand\japanesefont{}{%
+  \hljapanesefontbase
+  \XeTeXlinebreaklocale "ja"\XeTeXlinebreakskip=0pt plus 1pt\relax}
 \newcommand{\ja}[1]{{\japanesefont #1}}
 
 \pdfstringdefDisableCommands{%
@@ -253,6 +271,15 @@
 % where the last word ended. Block callouts set ragged right is ordinary
 % typography, and it is what \chapteropening already does above.
 \tcbset{before upper=\raggedright}
+% HL-C88: a quote environment (the B1 core's model lines and its reading are
+% blockquotes, with a romanization and an English gloss each) is set justified
+% by default, and its narrow measure leaves the same few interword spaces to
+% stretch, so a long gloss line reports an underfull hbox. Ragged right is the
+% same remedy as for the callouts above: the line ends where its last word
+% ends. \hbadness and \hfuzz stay at their defaults, so the CI log scanner still
+% sees every box that remains.
+\let\hlorigquote\quote
+\def\quote{\hlorigquote\raggedright}
 \emergencystretch=2em
 
 % ---------------------------------------------------------------------------

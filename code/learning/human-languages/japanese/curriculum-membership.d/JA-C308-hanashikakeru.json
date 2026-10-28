@@ -1,0 +1,11 @@
+{
+  "id": "JA-C308-hanashikakeru",
+  "pathSegment": "JA-PATH-308-MACHIGAI308",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-308-MACHIGAI308",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-488-PRATIBODHA488",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "SA-EXT-488-PRATIBODHA488"
+  ],
+  "after": []
+}

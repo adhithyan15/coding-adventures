@@ -1,0 +1,11 @@
+{
+  "id": "SA-C509-syandate",
+  "pathSegment": "SA-PATH-509-JARJARA509",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-509-JARJARA509",
+      "order": 3
+    }
+  ]
+}

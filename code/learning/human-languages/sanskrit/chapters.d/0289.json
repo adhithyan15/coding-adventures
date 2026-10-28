@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "What the Witness Saw",
+  "label": "ch:sa-what-the-witness-saw",
+  "canDo": "I can say what I saw and what would have been different.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C289-pratyaksam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say what I saw and what would have been different.",
+    "assesses": [
+      "SA-LEX-C289-SAKSHYA289-03",
+      "SA-LEX-C289-SAKSHYA289-04",
+      "SA-LEX-C289-SAKSHYA289-05"
+    ]
+  }
+}

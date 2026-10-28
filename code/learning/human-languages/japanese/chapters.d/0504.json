@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Books and Art",
+  "label": "ch:ja-books-and-art",
+  "canDo": "I can talk about literature and the people who make art.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C504-ehon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about literature and the people who make art.",
+    "assesses": [
+      "JA-LEX-C504-ART504-03",
+      "JA-LEX-C504-ART504-04",
+      "JA-LEX-C504-ART504-05"
+    ]
+  }
+}

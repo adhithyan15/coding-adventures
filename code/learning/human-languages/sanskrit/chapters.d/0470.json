@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Inside the Body",
+  "label": "ch:sa-inside-the-body",
+  "canDo": "I can name some organs inside the body.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C470-svasiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can name some organs inside the body.",
+    "assesses": [
+      "SA-LEX-C470-PHUPPHUSA470-03",
+      "SA-LEX-C470-PHUPPHUSA470-04",
+      "SA-LEX-C470-PHUPPHUSA470-05"
+    ]
+  }
+}
