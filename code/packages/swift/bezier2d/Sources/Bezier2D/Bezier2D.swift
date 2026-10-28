@@ -37,6 +37,67 @@
 import Trig
 import Point2D
 
+/// Deterministic failures from the bounded G2D02 flattening contract.
+public enum FlatteningError: Error, Equatable {
+    case invalidTolerance
+    case nonFiniteControlPoint
+    case nonFiniteGeometry
+    case budgetExceeded
+}
+
+private enum Flattening {
+    static let maxDepth = 32
+    static let maxSubdivisions = 65_535
+
+    static func validate(tolerance: Double, points: [Point]) throws {
+        guard tolerance.isFinite, tolerance > 0 else {
+            throw FlatteningError.invalidTolerance
+        }
+        guard points.allSatisfy({ $0.x.isFinite && $0.y.isFinite }) else {
+            throw FlatteningError.nonFiniteControlPoint
+        }
+    }
+
+    /// Distance to the finite endpoint segment. Normalising by the largest
+    /// delta avoids overflow and underflow in the squared-length calculation.
+    static func distanceToSegment(_ point: Point, _ start: Point, _ end: Point) throws -> Double {
+        let dx = try finite(end.x - start.x)
+        let dy = try finite(end.y - start.y)
+        let scale = max(Swift.abs(dx), Swift.abs(dy))
+        if scale == 0 { return try distance(point, start) }
+
+        let nx = dx / scale
+        let ny = dy / scale
+        let lengthSquared = try finite(nx * nx + ny * ny)
+        let offsetX = try finite(point.x - start.x)
+        let offsetY = try finite(point.y - start.y)
+        let normalizedOffsetX = try finite(offsetX / scale)
+        let normalizedOffsetY = try finite(offsetY / scale)
+        let projection = try finite(
+            (normalizedOffsetX * nx + normalizedOffsetY * ny) / lengthSquared)
+        let boundedProjection = min(1, max(0, projection))
+        let nearest = Point(
+            try finite(start.x + boundedProjection * dx),
+            try finite(start.y + boundedProjection * dy))
+        return try distance(point, nearest)
+    }
+
+    private static func distance(_ left: Point, _ right: Point) throws -> Double {
+        let dx = try finite(left.x - right.x)
+        let dy = try finite(left.y - right.y)
+        let scale = max(Swift.abs(dx), Swift.abs(dy))
+        if scale == 0 { return 0 }
+        let nx = dx / scale
+        let ny = dy / scale
+        return try finite(scale * Trig.sqrt(try finite(nx * nx + ny * ny)))
+    }
+
+    private static func finite(_ value: Double) throws -> Double {
+        guard value.isFinite else { throw FlatteningError.nonFiniteGeometry }
+        return value
+    }
+}
+
 // ============================================================================
 // Internal helper — find t values where a scalar cubic derivative is zero
 // ============================================================================
@@ -137,30 +198,31 @@ public struct QuadraticBezier {
     // Adaptive polyline
     // -------------------------------------------------------------------------
 
-    /// Recursively subdivide until the chord error is below `tolerance`.
-    ///
-    /// The chord midpoint approximation: for a segment from A to B, the
-    /// midpoint of the chord is (A+B)/2. We compare this to the true curve
-    /// midpoint B(0.5). If the distance is within `tolerance`, we treat the
-    /// segment as flat and stop subdividing.
-    public func polyline(tolerance: Double = 0.5) -> [Point] {
-        var pts: [Point] = [p0]
-        subdivide(tolerance: tolerance, pts: &pts)
-        return pts
-    }
+    /// Iteratively subdivide until every control point is within `tolerance`
+    /// of its finite endpoint segment, or fail without returning partial data.
+    public func polyline(tolerance: Double = 0.5) throws -> [Point] {
+        try Flattening.validate(tolerance: tolerance, points: [p0, p1, p2])
+        var points = [p0]
+        var pending: [(curve: QuadraticBezier, depth: Int)] = [(self, 0)]
+        var subdivisions = 0
 
-    private func subdivide(tolerance: Double, pts: inout [Point]) {
-        let start = p0
-        let end   = p2
-        let mid   = eval(0.5)
-        let chordMid = Point((start.x+end.x)/2, (start.y+end.y)/2)
-        if mid.distance(to: chordMid) <= tolerance {
-            pts.append(end)
-        } else {
-            let (left, right) = split(0.5)
-            left.subdivide(tolerance: tolerance, pts: &pts)
-            right.subdivide(tolerance: tolerance, pts: &pts)
+        while let item = pending.popLast() {
+            let error = try Flattening.distanceToSegment(
+                item.curve.p1, item.curve.p0, item.curve.p2)
+            if error <= tolerance {
+                points.append(item.curve.p2)
+                continue
+            }
+            guard item.depth < Flattening.maxDepth,
+                  subdivisions < Flattening.maxSubdivisions else {
+                throw FlatteningError.budgetExceeded
+            }
+            subdivisions += 1
+            let (left, right) = item.curve.split(0.5)
+            pending.append((right, item.depth + 1))
+            pending.append((left, item.depth + 1))
         }
+        return points
     }
 
     // -------------------------------------------------------------------------
@@ -287,23 +349,32 @@ public struct CubicBezier {
     // Adaptive polyline
     // -------------------------------------------------------------------------
 
-    /// Recursively subdivide until chord error ≤ tolerance.
-    public func polyline(tolerance: Double = 0.5) -> [Point] {
-        var pts: [Point] = [p0]
-        subdivide(tolerance: tolerance, pts: &pts)
-        return pts
-    }
+    /// Apply the same conservative, finite-segment contract to a cubic.
+    public func polyline(tolerance: Double = 0.5) throws -> [Point] {
+        try Flattening.validate(tolerance: tolerance, points: [p0, p1, p2, p3])
+        var points = [p0]
+        var pending: [(curve: CubicBezier, depth: Int)] = [(self, 0)]
+        var subdivisions = 0
 
-    private func subdivide(tolerance: Double, pts: inout [Point]) {
-        let mid      = eval(0.5)
-        let chordMid = Point((p0.x+p3.x)/2, (p0.y+p3.y)/2)
-        if mid.distance(to: chordMid) <= tolerance {
-            pts.append(p3)
-        } else {
-            let (left, right) = split(0.5)
-            left.subdivide(tolerance: tolerance, pts: &pts)
-            right.subdivide(tolerance: tolerance, pts: &pts)
+        while let item = pending.popLast() {
+            let firstError = try Flattening.distanceToSegment(
+                item.curve.p1, item.curve.p0, item.curve.p3)
+            let secondError = try Flattening.distanceToSegment(
+                item.curve.p2, item.curve.p0, item.curve.p3)
+            if max(firstError, secondError) <= tolerance {
+                points.append(item.curve.p3)
+                continue
+            }
+            guard item.depth < Flattening.maxDepth,
+                  subdivisions < Flattening.maxSubdivisions else {
+                throw FlatteningError.budgetExceeded
+            }
+            subdivisions += 1
+            let (left, right) = item.curve.split(0.5)
+            pending.append((right, item.depth + 1))
+            pending.append((left, item.depth + 1))
         }
+        return points
     }
 
     // -------------------------------------------------------------------------

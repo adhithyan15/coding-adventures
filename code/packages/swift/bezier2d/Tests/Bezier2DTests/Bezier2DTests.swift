@@ -51,9 +51,9 @@ final class Bezier2DTests: XCTestCase {
         XCTAssert(ptEq(left.p2, q.eval(0.5)))
     }
 
-    func testQuadPolylineIncludes() {
+    func testQuadPolylineIncludes() throws {
         let q = QuadraticBezier(Point(0,0), Point(1,1), Point(2,0))
-        let pts = q.polyline(tolerance: 0.1)
+        let pts = try q.polyline(tolerance: 0.1)
         XCTAssert(pts.count >= 2)
         XCTAssert(ptEq(pts.first!, q.p0))
         XCTAssert(ptEq(pts.last!, q.p2))
@@ -75,6 +75,13 @@ final class Bezier2DTests: XCTestCase {
         let bb = q.boundingBox
         XCTAssertEqual(bb.y, 0, accuracy: eps)
         XCTAssertEqual(bb.height, 1, accuracy: eps)  // y at t=0.5 is 1
+    }
+
+    func testQuadBboxIncludesInteriorXExtremum() {
+        let q = QuadraticBezier(Point(0,0), Point(10,0), Point(0,1))
+        let bb = q.boundingBox
+        XCTAssertEqual(bb.x, 0, accuracy: eps)
+        XCTAssertEqual(bb.width, 5, accuracy: eps)
     }
 
     func testQuadElevate() {
@@ -127,12 +134,22 @@ final class Bezier2DTests: XCTestCase {
         XCTAssert(ptEq(left.p3, c.eval(0.5), 1e-9))
     }
 
-    func testCubicPolylineIncludes() {
+    func testCubicPolylineIncludes() throws {
         let c = CubicBezier(Point(0,0), Point(0,4), Point(4,4), Point(4,0))
-        let pts = c.polyline(tolerance: 0.1)
+        let pts = try c.polyline(tolerance: 0.1)
         XCTAssert(pts.count >= 2)
         XCTAssert(ptEq(pts.first!, c.p0))
         XCTAssert(ptEq(pts.last!, c.p3))
+    }
+
+    func testCubicSymmetricSRequiresSubdivision() throws {
+        let curve = CubicBezier(Point(0,0), Point(0,1), Point(0,-1), Point(0,0))
+        XCTAssertGreaterThan(try curve.polyline(tolerance: 0.1).count, 2)
+    }
+
+    func testInvalidToleranceFailsBeforeSubdivision() {
+        let curve = QuadraticBezier(Point(0,0), Point(0.5,0), Point(1,0))
+        XCTAssertThrowsError(try curve.polyline(tolerance: 0))
     }
 
     func testCubicBboxLine() {
@@ -141,5 +158,14 @@ final class Bezier2DTests: XCTestCase {
         XCTAssertEqual(bb.x, 0, accuracy: eps)
         XCTAssertEqual(bb.width, 3, accuracy: eps)
         XCTAssertEqual(bb.height, 0, accuracy: eps)
+    }
+
+    func testCubicBboxIncludesBothInteriorExtrema() {
+        let c = CubicBezier(Point(0,0), Point(10,10), Point(-10,-10), Point(0,0))
+        let bb = c.boundingBox
+        XCTAssertLessThan(bb.x, -2.8)
+        XCTAssertGreaterThan(bb.x + bb.width, 2.8)
+        XCTAssertLessThan(bb.y, -2.8)
+        XCTAssertGreaterThan(bb.y + bb.height, 2.8)
     }
 }
