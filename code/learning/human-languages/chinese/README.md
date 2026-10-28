@@ -26,6 +26,15 @@ components, and strokes in one lesson would create a cliff with a gentle label o
 it. Later chapters keep the same rule: oral meaning first when a new written form
 would otherwise overload the learner, then staged handwriting and active recall.
 
+## A1 assessment boundary
+
+The [A1 task inventory](./task-shapes/a1.json) defines this project's short
+reading, listening, independent writing, and individual speaking tasks. It is a
+four-skill companion assessment, not an official HSK 3.0 Level 1 paper or a CEFR
+equivalence. The [assessment specification](./assessment-spec.md) separates the
+currently displayed CTI listening/reading structure from the project's added
+productive skills. Both A1 mock forms are still to be authored and reviewed.
+
 ## Why this track exists
 
 Mandarin was added as a **scale test** after the registry had already crossed
