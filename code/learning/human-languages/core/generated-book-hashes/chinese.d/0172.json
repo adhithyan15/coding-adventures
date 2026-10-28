@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:f180dea54d916f1b",
+  "lessonIds": [
+    "ZH-C172-weidao",
+    "ZH-C172-suan",
+    "ZH-C172-ku",
+    "ZH-C172-xiang",
+    "ZH-C172-dan"
+  ],
+  "tex": "chinese/book/chapters/ch172-sweet-and-sour.tex"
+}

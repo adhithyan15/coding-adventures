@@ -405,18 +405,28 @@ pub fn lower_heap_function(fn_: &mut IIRFunction) {
 /// Lower all heap `call_builtin` instructions across the entire module.
 ///
 /// Called from `lib.rs::lower_builtins()` after numeric lowering.
-/// Returns no errors — malformed instructions are left for the backend.
-pub fn lower_heap_builtins(module: &mut interpreter_ir::IIRModule) {
+/// Malformed instructions are left for the backend.
+///
+/// # Errors
+///
+/// [`crate::helper_names::HelperNameError`] from
+/// [`crate::list_ops::lower_list_ops`], before anything is rewritten: the
+/// module uses a list operation and already defines a different function
+/// under the name of that operation's helper.
+pub fn lower_heap_builtins(
+    module: &mut interpreter_ir::IIRModule,
+) -> Result<(), crate::helper_names::HelperNameError> {
     // E6d-3b: rewrite list *operations* (`length`, …) to calls to a synthesized
     // cons-walk helper injected into the module — BEFORE the per-function heap
     // lowering, so the helper's `null?`/`cdr` are lowered by the same pass.
-    crate::list_ops::lower_list_ops(module);
+    crate::list_ops::lower_list_ops(module)?;
     for fn_ in &mut module.functions {
         // E6d-3a: expand `list` → `cons` chain first, so the structural cons
         // lowering below turns the whole thing into alloc/field_store cells.
         desugar_list_in_function(fn_);
         lower_heap_function(fn_);
     }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -560,16 +570,24 @@ pub fn lower_heap_function_runtime(fn_: &mut IIRFunction) {
 /// [`lower_heap_builtins`] so the native pipeline routes cons cells through
 /// the linked C lisp runtime rather than inline `alloc`/`field_*`.  The
 /// managed `iir-to-*` backends keep calling [`lower_heap_builtins`].
-pub fn lower_heap_builtins_runtime(module: &mut interpreter_ir::IIRModule) {
+///
+/// # Errors
+///
+/// As [`lower_heap_builtins`]: a module whose own function carries a list
+/// helper's name is refused before anything is rewritten.
+pub fn lower_heap_builtins_runtime(
+    module: &mut interpreter_ir::IIRModule,
+) -> Result<(), crate::helper_names::HelperNameError> {
     // E6d-3b: inject + rewrite the cons-walk helper (`length`, …) before the
     // per-function runtime rename, so its `cdr`/`null?` route to the runtime too.
-    crate::list_ops::lower_list_ops(module);
+    crate::list_ops::lower_list_ops(module)?;
     for fn_ in &mut module.functions {
         // E6d-3a: expand `list` → `cons` chain first, so the runtime rename
         // below turns each `cons` into a `dyn_pair_new` runtime call.
         desugar_list_in_function(fn_);
         lower_heap_function_runtime(fn_);
     }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -612,7 +630,7 @@ mod tests {
     #[test]
     fn cons_expands_to_three_instructions() {
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         // one alloc + two field_stores = 3
         assert_eq!(m.functions[0].instructions.len(), 3);
     }
@@ -620,7 +638,7 @@ mod tests {
     #[test]
     fn cons_first_instruction_is_alloc() {
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[0].op, "alloc");
     }
 
@@ -628,7 +646,7 @@ mod tests {
     fn cons_alloc_gets_original_dest() {
         // The alloc instruction must receive the original dest (%cell).
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(
             m.functions[0].instructions[0].dest.as_deref(),
             Some("%cell"),
@@ -639,14 +657,14 @@ mod tests {
     fn cons_alloc_has_may_alloc_true() {
         // alloc triggers heap allocation → GC needs to know.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert!(m.functions[0].instructions[0].may_alloc);
     }
 
     #[test]
     fn cons_alloc_type_hint_is_ref_lispy_pair() {
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[0].type_hint, "ref<LispyPair>");
     }
 
@@ -654,21 +672,21 @@ mod tests {
     fn cons_alloc_has_no_srcs() {
         // alloc takes no source operands; size is encoded in the type_hint.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert!(m.functions[0].instructions[0].srcs.is_empty());
     }
 
     #[test]
     fn cons_second_instruction_is_field_store() {
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[1].op, "field_store");
     }
 
     #[test]
     fn cons_third_instruction_is_field_store() {
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[2].op, "field_store");
     }
 
@@ -676,14 +694,14 @@ mod tests {
     fn cons_field_store_head_dest_is_none() {
         // field_store (write op) never produces a value.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert!(m.functions[0].instructions[1].dest.is_none());
     }
 
     #[test]
     fn cons_field_store_tail_dest_is_none() {
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert!(m.functions[0].instructions[2].dest.is_none());
     }
 
@@ -691,7 +709,7 @@ mod tests {
     fn cons_field_store_head_pair_ptr_is_first_src() {
         // field_store srcs[0] must be the cell pointer (%cell).
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let instr = &m.functions[0].instructions[1];
         assert_eq!(instr.srcs[0], Operand::Var("%cell".into()));
     }
@@ -700,7 +718,7 @@ mod tests {
     fn cons_field_store_head_field_index_is_zero() {
         // srcs[1] is the field index: 0 for the head (car) slot.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let instr = &m.functions[0].instructions[1];
         assert_eq!(instr.srcs[1], Operand::Int(0));
     }
@@ -709,7 +727,7 @@ mod tests {
     fn cons_field_store_head_value_is_head_var() {
         // srcs[2] is the value: the head variable.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let instr = &m.functions[0].instructions[1];
         assert_eq!(instr.srcs[2], Operand::Var("%h".into()));
     }
@@ -718,7 +736,7 @@ mod tests {
     fn cons_field_store_tail_field_index_is_one() {
         // srcs[1] is the field index: 1 for the tail (cdr) slot.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let instr = &m.functions[0].instructions[2];
         assert_eq!(instr.srcs[1], Operand::Int(1));
     }
@@ -726,7 +744,7 @@ mod tests {
     #[test]
     fn cons_field_store_tail_value_is_tail_var() {
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let instr = &m.functions[0].instructions[2];
         assert_eq!(instr.srcs[2], Operand::Var("%t".into()));
     }
@@ -740,7 +758,7 @@ mod tests {
             "ref<any>",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions.len(), 1);
         assert_eq!(m.functions[0].instructions[0].op, "field_load");
     }
@@ -754,7 +772,7 @@ mod tests {
             "ref<any>",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let load = &m.functions[0].instructions[0];
         assert_eq!(load.srcs[1], Operand::Int(0));
     }
@@ -768,7 +786,7 @@ mod tests {
             "ref<any>",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[0].op, "field_load");
     }
 
@@ -781,7 +799,7 @@ mod tests {
             "ref<any>",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let load = &m.functions[0].instructions[0];
         assert_eq!(load.srcs[1], Operand::Int(1));
     }
@@ -795,7 +813,7 @@ mod tests {
             "bool",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[0].op, "is_null");
     }
 
@@ -808,7 +826,7 @@ mod tests {
             "bool",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[0].type_hint, "bool");
     }
 
@@ -821,7 +839,7 @@ mod tests {
             "ref<LispyPair>",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let lowered = &m.functions[0].instructions[0];
         assert_eq!(lowered.op, "const");
         assert_eq!(lowered.srcs[0], Operand::Int(0));
@@ -836,7 +854,7 @@ mod tests {
             "ref<LispyPair>",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[0].type_hint, "ref<LispyPair>");
     }
 
@@ -851,7 +869,7 @@ mod tests {
             "bool",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[0].op, "call_builtin");
     }
 
@@ -865,7 +883,7 @@ mod tests {
             "any",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions[0].op, "call_builtin");
     }
 
@@ -877,7 +895,7 @@ mod tests {
             cons_call("%h2", "%t2"),
         ];
         let mut m = make_module(instrs);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         // 2 × 3 = 6 instructions
         assert_eq!(m.functions[0].instructions.len(), 6);
         // The two alloc dests should be distinct (their original dests are
@@ -908,7 +926,7 @@ mod tests {
             ),
         ];
         let mut m = make_module(instrs);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
 
         // cons → 3, car → 1, null? → 1 = 5 instructions
         assert_eq!(m.functions[0].instructions.len(), 5);
@@ -934,7 +952,7 @@ mod tests {
         // The runtime lowering does NOT expand cons to alloc+field_store —
         // it stays a single `call_builtin`, just renamed to `dyn_pair_new`.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions.len(), 1, "cons must stay one instr");
         let instr = &m.functions[0].instructions[0];
         assert_eq!(instr.op, "call_builtin");
@@ -945,7 +963,7 @@ mod tests {
     fn runtime_cons_preserves_dest_and_args() {
         // The rename must keep the dest (%cell) and the head/tail operands.
         let mut m = make_module(vec![cons_call("%h", "%t")]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         let instr = &m.functions[0].instructions[0];
         assert_eq!(instr.dest.as_deref(), Some("%cell"));
         // srcs = [Var("dyn_pair_new"), Var("%h"), Var("%t")] — args unchanged.
@@ -968,7 +986,7 @@ mod tests {
             "any",
         );
         let mut m = make_module(vec![car, cdr]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         assert_eq!(builtin_name(&m.functions[0].instructions[0]), "dyn_pair_first");
         assert_eq!(builtin_name(&m.functions[0].instructions[1]), "dyn_pair_rest");
         // car/cdr stay 1-arg, dest preserved.
@@ -992,7 +1010,7 @@ mod tests {
             "any",
         );
         let mut m = make_module(vec![cons_call("%h", "%t"), car]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         for instr in &m.functions[0].instructions {
             assert_eq!(
                 instr.type_hint, "ref<any>",
@@ -1017,7 +1035,7 @@ mod tests {
             "any",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         assert_eq!(builtin_name(&m.functions[0].instructions[0]), "dyn_is_pair");
     }
 
@@ -1033,7 +1051,7 @@ mod tests {
             "any",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         let out = &m.functions[0].instructions[0];
         assert_eq!(builtin_name(out), "equal?");
         assert_eq!(out.type_hint, "ref<any>");
@@ -1051,7 +1069,7 @@ mod tests {
             "bool",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         assert_eq!(builtin_name(&m.functions[0].instructions[0]), "not");
     }
 
@@ -1069,7 +1087,7 @@ mod tests {
                 "any",
             );
             let mut m = make_module(vec![instr]);
-            lower_heap_builtins_runtime(&mut m);
+            lower_heap_builtins_runtime(&mut m).unwrap();
             assert_eq!(
                 builtin_name(&m.functions[0].instructions[0]), name,
                 "{name} must be left as it is, not renamed",
@@ -1091,7 +1109,7 @@ mod tests {
             "bool",
         );
         let mut m = make_module(vec![instr]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         assert_eq!(builtin_name(&m.functions[0].instructions[0]), "dyn_is_nil");
     }
 
@@ -1148,7 +1166,7 @@ mod tests {
         // Through the full managed lowering, (list a b) becomes 2 cons cells =
         // 2 × (alloc + 2 field_store) = 6 heap ops, plus the nil const = 7.
         let mut m = make_module(vec![list_call("%r", &["%a", "%b"])]);
-        lower_heap_builtins(&mut m);
+        lower_heap_builtins(&mut m).unwrap();
         let ops: Vec<&str> = m.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
         assert_eq!(ops.iter().filter(|o| **o == "alloc").count(), 2, "two cons cells");
         assert_eq!(ops.iter().filter(|o| **o == "field_store").count(), 4);
@@ -1160,7 +1178,7 @@ mod tests {
         // On the native/LLVM runtime path, (list a b) desugars then renames each
         // cons to dyn_pair_new — so two dyn_pair_new calls survive, no `list`.
         let mut m = make_module(vec![list_call("%r", &["%a", "%b"])]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         let dyn_pair_new = m.functions[0].instructions.iter()
             .filter(|i| builtin_name(i) == "dyn_pair_new").count();
         assert_eq!(dyn_pair_new, 2, "two cons cells → two dyn_pair_new runtime calls");
@@ -1178,7 +1196,7 @@ mod tests {
             "i64",
         );
         let mut m = make_module(vec![arith.clone()]);
-        lower_heap_builtins_runtime(&mut m);
+        lower_heap_builtins_runtime(&mut m).unwrap();
         assert_eq!(m.functions[0].instructions.len(), 1);
         assert_eq!(m.functions[0].instructions[0].op, "add");
     }

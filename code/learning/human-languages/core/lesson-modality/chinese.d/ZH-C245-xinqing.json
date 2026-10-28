@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C245-xinqing",
+    "language": "chinese",
+    "chapter": 245,
+    "sequence": 18420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfd0be942d25b408"
+  },
+  "findings": []
+}

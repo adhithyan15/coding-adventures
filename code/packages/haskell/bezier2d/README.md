@@ -12,15 +12,19 @@ algorithm for numerically stable curve evaluation and subdivision.
 - `derivativeQuadratic` and `derivativeCubic` return unnormalized tangent
   vectors.
 - `splitQuadratic` and `splitCubic` produce exact left and right sub-curves.
-- `toPolylineQuadratic` and `toPolylineCubic` adaptively flatten curves using
-  the G2D02 midpoint error criterion.
+- `toPolylineQuadratic` and `toPolylineCubic` return
+  `Either FlatteningError [Point]`. They iteratively subdivide until every
+  control point is within the requested tolerance of the finite endpoint
+  segment, preserving parameter order without duplicate joins.
 - `boundingBoxQuadratic` and `boundingBoxCubic` compute tight bounds from
   interior derivative roots as well as endpoints.
 - `elevate` converts a quadratic exactly into an equivalent cubic.
 
-All computations are pure. The only package dependency is `point2d`; square
-roots needed by cubic bounding boxes use Haskell's standard floating-point
-arithmetic.
+Flattening accepts only finite controls and a finite, positive tolerance. It
+fails atomically after at most depth 32 or 65,535 subdivisions, or whenever
+finite inputs produce non-finite intermediate geometry. All computations are
+pure. The only library dependency is `point2d`; square roots needed by cubic
+bounding boxes use Haskell's standard floating-point arithmetic.
 
 ## Development
 

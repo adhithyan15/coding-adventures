@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:58c76f52da02d6b9",
+  "lessonIds": [
+    "ZH-C206-lou",
+    "ZH-C206-ceng",
+    "ZH-C206-shanglou",
+    "ZH-C206-bangongshi",
+    "ZH-C206-qiantai"
+  ],
+  "tex": "chinese/book/chapters/ch206-upstairs.tex"
+}

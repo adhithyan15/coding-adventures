@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:0b2369cf38b1928a",
+  "lessonIds": [
+    "ZH-C262-wangqiu",
+    "ZH-C262-pingpangqiu",
+    "ZH-C262-duishou",
+    "ZH-C262-dabai",
+    "ZH-C262-jiayou"
+  ],
+  "tex": "chinese/book/chapters/ch262-win-or-lose.tex"
+}

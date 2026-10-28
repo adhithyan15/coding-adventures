@@ -636,3 +636,191 @@ fn only_the_effective_entry_point_is_checked() {
     let merged = link(&[app, lib]).unwrap();
     assert_eq!(merged.entry_point.as_deref(), Some("main"));
 }
+
+// ---------------------------------------------------------------------------
+// Issue #18432 — private means private; crafted aliases cannot panic
+// ---------------------------------------------------------------------------
+//
+// A function-name operand (`call` callee, `alloc_closure` body, spawn
+// target) may only name a function its own module defines or the local
+// name of one of its imports.  Anything else used to stay bare and bind to
+// whichever function owned that name after merging — possibly another
+// module's *private* function.
+
+/// A library `module` with a private `helper` and an exported `<module>_val`
+/// that calls it.
+fn library_with_private_helper(module: &str) -> IIRModule {
+    let mut m = IIRModule::new(module, "twig");
+    m.entry_point = None;
+    m.add_or_replace(make_fn("helper", vec![], "any"));
+    let public = format!("{module}_val");
+    m.add_or_replace(make_fn_calling(&public, "helper"));
+    m.exports.push(IIRExport::new(public));
+    m
+}
+
+#[test]
+fn a_call_to_another_modules_private_function_is_rejected() {
+    // `lib_a` and `lib_b` each have a private `helper`.  `app` calls
+    // `(helper)` without importing anything called `helper`.  Before #18432
+    // the call bound to lib_a's helper (the first to claim the bare name).
+    let mut app = IIRModule::new("app", "twig");
+    app.add_or_replace(make_fn_calling("main", "helper"));
+
+    let errs = link(&[
+        library_with_private_helper("lib_a"),
+        library_with_private_helper("lib_b"),
+        app,
+    ])
+    .unwrap_err();
+    assert_eq!(
+        errs,
+        vec![LinkError::UndeclaredCall {
+            in_module: "app".into(),
+            in_function: "main".into(),
+            callee: "helper".into(),
+        }],
+    );
+}
+
+#[test]
+fn a_closure_over_another_modules_private_function_is_rejected() {
+    // Taking a function *value* is a reference too: `alloc_closure` names
+    // its body with an `Operand::Str`.
+    let mut app = IIRModule::new("app", "twig");
+    app.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "any",
+        vec![
+            IIRInstr::new(
+                "alloc_closure",
+                Some("c".into()),
+                vec![Operand::Str("helper".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "any"),
+        ],
+    ));
+
+    let errs = link(&[library_with_private_helper("lib"), app]).unwrap_err();
+    assert!(
+        errs.iter().any(|e| matches!(
+            e,
+            LinkError::UndeclaredCall { in_module, callee, .. }
+                if in_module == "app" && callee == "helper"
+        )),
+        "got {errs:?}",
+    );
+}
+
+#[test]
+fn spawn_targets_are_checked_like_calls() {
+    let spawn = |op: &str, srcs: Vec<Operand>| {
+        IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                IIRInstr::new(op, Some("t".into()), srcs, "any"),
+                IIRInstr::new("ret", None, vec![Operand::Var("t".into())], "any"),
+            ],
+        )
+    };
+    let mut task = IIRModule::new("app", "twig");
+    task.add_or_replace(spawn("task_spawn", vec![Operand::Var("helper".into())]));
+    let errs = link(&[library_with_private_helper("lib"), task]).unwrap_err();
+    assert!(errs.iter().any(|e| matches!(e, LinkError::UndeclaredCall { .. })), "got {errs:?}");
+
+    let mut group = IIRModule::new("app", "twig");
+    group.add_or_replace(spawn(
+        "group_spawn",
+        vec![Operand::Var("g".into()), Operand::Var("helper".into())],
+    ));
+    let errs = link(&[library_with_private_helper("lib"), group]).unwrap_err();
+    assert!(errs.iter().any(|e| matches!(e, LinkError::UndeclaredCall { .. })), "got {errs:?}");
+}
+
+#[test]
+fn each_undeclared_reference_is_reported_once_per_function() {
+    // Two calls to the same missing name in one function are one problem.
+    let mut app = IIRModule::new("app", "twig");
+    app.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("call", Some("a".into()), vec![Operand::Var("nope".into())], "any"),
+            IIRInstr::new("call", Some("b".into()), vec![Operand::Var("nope".into())], "any"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    ));
+    let errs = link(&[app]).unwrap_err();
+    assert_eq!(errs.len(), 1, "got {errs:?}");
+}
+
+#[test]
+fn own_imported_and_aliased_references_still_link() {
+    // Every legitimate kind of reference: a module's own function, an
+    // import by its public name, and an import under a local alias.
+    let mut app = IIRModule::new("app", "twig");
+    app.add_or_replace(make_fn("own", vec![], "void"));
+    app.add_or_replace(IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("call", Some("a".into()), vec![Operand::Var("own".into())], "any"),
+            IIRInstr::new("call", Some("b".into()), vec![Operand::Var("lib_val".into())], "any"),
+            IIRInstr::new(
+                "alloc_closure",
+                Some("c".into()),
+                vec![Operand::Str("aliased".into())],
+                "closure",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    ));
+    app.imports.push(IIRImport::new("lib", "lib_val", "any"));
+    app.imports.push(IIRImport::new("lib", "lib_val", "any").with_local_alias("aliased"));
+
+    let merged = link(&[library_with_private_helper("lib"), app]).unwrap();
+    let main = merged.get_function("main").unwrap();
+    assert_eq!(main.instructions[1].srcs[0], Operand::Var("lib_val".into()));
+    assert_eq!(main.instructions[2].srcs[0], Operand::Str("lib_val".into()));
+}
+
+#[test]
+fn crafted_export_aliases_cannot_panic_the_renamer() {
+    // `a` exports one function under the public names `c`, `b::c`, and
+    // `b::c$0` … `b::c$9`.  `b`'s private `c` then collides with `c`, its
+    // prefixed name `b::c`, and every counter suffix the old bound allowed
+    // (total functions + 1 = 4), so the old `assert!` panicked: the bound
+    // counted functions, but export aliases claim names too.  The renamer
+    // must instead keep counting until it finds a free name.
+    let mut a = IIRModule::new("a", "twig");
+    a.entry_point = None;
+    a.add_or_replace(make_fn("f", vec![], "void"));
+    a.exports.push(IIRExport::new("f").with_alias("c"));
+    a.exports.push(IIRExport::new("f").with_alias("b::c"));
+    for n in 0..10 {
+        a.exports.push(IIRExport::new("f").with_alias(format!("b::c${n}")));
+    }
+
+    let mut b = IIRModule::new("b", "twig");
+    b.entry_point = None;
+    b.add_or_replace(make_fn("c", vec![], "user"));
+    b.add_or_replace(make_fn_calling("run_b", "c"));
+
+    let merged = link(&[a, b]).expect("crafted aliases must link, not panic");
+    let renamed = merged.get_function("b::c$10").expect("b's `c` takes the first free suffix");
+    assert_eq!(renamed.return_type, "user");
+    // b's own call follows the rename.
+    let run_b = merged.get_function("run_b").unwrap();
+    assert_eq!(run_b.instructions[0].srcs[0], Operand::Var("b::c$10".into()));
+    // No two functions share a name.
+    let mut names: Vec<&str> = merged.functions.iter().map(|f| f.name.as_str()).collect();
+    names.sort_unstable();
+    names.dedup();
+    assert_eq!(names.len(), merged.functions.len());
+}

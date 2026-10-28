@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "A Day at the Sea",
+  "label": "ch:zh-a-day-at-the-sea",
+  "canDo": "I can tell about a day at the seaside: the boat, being seasick, the beach and who I ran into.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C227-yudao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can tell about a day at the seaside: the boat, being seasick, the beach and who I ran into.",
+    "assesses": [
+      "ZH-LEX-C227-SEA227-03",
+      "ZH-LEX-C227-SEA227-04",
+      "ZH-LEX-C227-SEA227-05"
+    ]
+  }
+}

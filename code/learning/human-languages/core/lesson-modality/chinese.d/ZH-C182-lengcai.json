@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C182-lengcai",
+    "language": "chinese",
+    "chapter": 182,
+    "sequence": 14250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ef15d4598a37ce9"
+  },
+  "findings": []
+}

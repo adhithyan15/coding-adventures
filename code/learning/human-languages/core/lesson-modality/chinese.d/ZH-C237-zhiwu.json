@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C237-zhiwu",
+    "language": "chinese",
+    "chapter": 237,
+    "sequence": 17980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:645e1019e98d5bd1"
+  },
+  "findings": []
+}

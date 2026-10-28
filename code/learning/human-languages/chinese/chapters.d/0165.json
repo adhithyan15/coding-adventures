@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Coats and Scarves",
+  "label": "ch:zh-coats-and-scarves",
+  "canDo": "I can name a coat, a sweater, a skirt and a scarf, and count them.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C165-weijin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can name a coat, a sweater, a skirt and a scarf, and count them.",
+    "assesses": [
+      "ZH-LEX-C165-COAT165-03",
+      "ZH-LEX-C165-COAT165-04",
+      "ZH-LEX-C165-COAT165-05"
+    ]
+  }
+}

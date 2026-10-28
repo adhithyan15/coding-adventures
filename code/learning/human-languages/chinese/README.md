@@ -26,6 +26,15 @@ components, and strokes in one lesson would create a cliff with a gentle label o
 it. Later chapters keep the same rule: oral meaning first when a new written form
 would otherwise overload the learner, then staged handwriting and active recall.
 
+## A1 assessment boundary
+
+The [A1 task inventory](./task-shapes/a1.json) defines this project's short
+reading, listening, independent writing, and individual speaking tasks. It is a
+four-skill companion assessment, not an official HSK 3.0 Level 1 paper or a CEFR
+equivalence. The [assessment specification](./assessment-spec.md) separates the
+currently displayed CTI listening/reading structure from the project's added
+productive skills. Both A1 mock forms are still to be authored and reviewed.
+
 ## Why this track exists
 
 Mandarin was added as a **scale test** after the registry had already crossed
@@ -201,6 +210,15 @@ writes a reply of four to six connected lines to the friend who sent the message
 subject and 因为) and reviews the whole core. All five A2 spine nodes are realized
 and the A2 writing stage is proved; A2 is not attained yet, because the level gate
 asks for 1,200 headwords at or below A2 and the core brings the track to 690.
+
+**Chapters 158-277** are the A2 vocabulary: 600 words (218 verbs), five a chapter, on
+the A1 and A2 nodes, in four reviewed tranches: home, food, clothes and the daily round
+(158-187); money, shops, dates, roads, tickets and services (188-217); weather,
+nature, the body and seeing a doctor (218-247); and school, work, family, feelings
+and opinions (248-277). Forty-eight more characters are written, each right after the
+word that first shows it (房 米 衣 茶 事 觉 杯 候 面 常 间 冷, 钱 号 店 回 路 票 找 关 东 离 公 地,
+风 云 雪 花 草 头 疼 身 体 医 西 现, 校 高 读 作 写 孩 工 热 假 笑 先 老), 211 in all. With them
+Chinese attains A2 on the level gate: 1,290 headwords and 403 verbs at or below A2.
 
 ## Read and practise
 

@@ -217,7 +217,7 @@ pub struct VMCore {
     ///
     /// This is a **security-relevant cap input**, not just a metric:
     /// `gc_field_load`/`gc_field_store` bounds-check against
-    /// `FlatHeap::payload_size`, which is O(live object count) (it walks the
+    /// `FlatHeap::payload_size_at_base`, which is O(live object count) (it walks the
     /// block list — the same cost `kind_of`'s own docs already flag as
     /// unsuitable for a hot per-instruction loop). Without a cap on how many
     /// objects can be live at once, a program could allocate N objects then
@@ -230,7 +230,7 @@ pub struct VMCore {
     /// `ctx.arrays.len()`. Tracked in O(1) precisely *because* `FlatHeap`
     /// itself doesn't expose an O(1) live-object counter (only `live_bytes`,
     /// which bounds total payload size, not object *count* — the actual
-    /// driver of `payload_size`'s O(n) cost).
+    /// driver of `payload_size_at_base`'s O(n) cost).
     gc_object_count: usize,
 
     /// JIT handler registry.  When a `call` instruction names a function

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C183-jinlai",
+    "language": "chinese",
+    "chapter": 183,
+    "sequence": 14300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5ac39402c88fd18"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:baf0797bf00d0524",
+  "lessonIds": [
+    "ZH-C197-wenlu",
+    "ZH-C197-zhaodao",
+    "ZH-W197-zhao-seek",
+    "ZH-C197-milu",
+    "ZH-C197-yizhi",
+    "ZH-C197-luxian"
+  ],
+  "tex": "chinese/book/chapters/ch197-finding-the-way.tex"
+}

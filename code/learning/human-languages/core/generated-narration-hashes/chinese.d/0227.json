@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:f64838a25f84f319",
+  "lessonIds": [
+    "ZH-C227-haibian",
+    "ZH-C227-chuan",
+    "ZH-C227-yunchuan",
+    "ZH-C227-shatan",
+    "ZH-C227-yudao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch227.txt",
+  "json": "chinese/narration/ch227.json",
+  "textHash": "fnv1a64:eac5c831a2353e0d",
+  "jsonHash": "fnv1a64:f45389565b2bb107",
+  "findings": []
+}

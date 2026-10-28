@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C203-hetong",
+  "pathSegment": "ZH-PATH-203-RENT203",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-203-RENT203",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 273,
+  "title": "Honest and Careful",
+  "label": "ch:zh-honest-and-careful",
+  "canDo": "I can say that someone is honest, hospitable, careless, or careful and attentive.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C273-xixin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 273: I can say that someone is honest, hospitable, careless, or careful and attentive.",
+    "assesses": [
+      "ZH-LEX-C273-CHAR273-03",
+      "ZH-LEX-C273-CHAR273-04",
+      "ZH-LEX-C273-CHAR273-05"
+    ]
+  }
+}

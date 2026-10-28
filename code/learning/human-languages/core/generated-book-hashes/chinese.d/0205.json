@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:0934927e681d37b3",
+  "lessonIds": [
+    "ZH-C205-li",
+    "ZH-W205-li-apart",
+    "ZH-C205-gongli",
+    "ZH-W205-gong-public",
+    "ZH-C205-zuoyou",
+    "ZH-C205-chabuduo",
+    "ZH-C205-juli",
+    "ZH-R205-review-200-205"
+  ],
+  "tex": "chinese/book/chapters/ch205-how-far-is-it.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:266f2a1e312f345a",
+  "lessonIds": [
+    "ZH-C196-chepiao",
+    "ZH-W196-piao-ticket",
+    "ZH-C196-jipiao",
+    "ZH-C196-hangban",
+    "ZH-C196-qifei",
+    "ZH-C196-daoda"
+  ],
+  "tex": "chinese/book/chapters/ch196-tickets-and-flights.tex"
+}
