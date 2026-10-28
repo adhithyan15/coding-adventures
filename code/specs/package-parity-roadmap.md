@@ -19241,3 +19241,13 @@ bounded caller-controlled level generation, package-native tests, native build
 fronts, documentation, and empty capabilities. Keep the branch local until
 Bloom's terminal lifecycle is reconciled from main and exact-head review
 passes.
+
+The implementation audit discovers a separate existing-lane gap:
+`skip-list-existing-lanes-dt20-contract-reconciliation`. DT20's one-based and
+`-1` prose conflicts with the zero-based optional behavior used by Python,
+Rust, and TypeScript; Rust and TypeScript are façades rather than skip-list
+towers, Go scans rank/select/range without spans, and Python consumes ambient
+randomness. Keep that neutral reconciliation pending and require it before any
+whole-family DT20 conformance claim. It does not block the selected Swift lane,
+which explicitly pins zero-based optional rank/select, a real span-augmented
+tower, injected level generation, and finite resource ceilings.

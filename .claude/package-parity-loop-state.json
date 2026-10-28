@@ -16891,6 +16891,19 @@
       "notes": "Discovered from non-parity PR #16296, which merged as 222ce7975e and added the TypeScript-only forme-plugin-runner-ts identity. PR #16323 later merged as f8494ae9bcd798b827c3096f4f6565ab1be567b0 and added the collision-free TypeScript forme-plugin-runner-conformance identity. The exact-main a960adc4 schema-3 refresh absorbs both singletons into this owner without collision or unowned debt. Inventory the runner with the existing Forme family and freeze only its process-free wire codec and framing, JSON-RPC identifier, bounded lifecycle/state-transition, stream-envelope, cancellation-projection, and pure SDK projection behavior. Keep stdin/stdout, argv, signals, timers, filesystem, network, storage, shell execution, native limits, sandbox, trust, and installation authority outside this owner. The overlap block is now cleared; normal dependencies and the one-active-PR rule still govern selection."
     },
     {
+      "id": "skip-list-existing-lanes-dt20-contract-reconciliation",
+      "title": "Reconcile DT20 rank semantics and actual span towers across existing lanes",
+      "status": "pending",
+      "selection_blocked": false,
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "discovered_at": "2026-10-28T19:09:22Z",
+      "discovered_revision": "814c3abcc2db89cd952c9b68c3d6840b94d249f4",
+      "notes": "Resolve DT20's one-based/-1 prose against the de facto zero-based optional contract in Python, Rust, and TypeScript; inventory every established lane for real span-augmented skip-list structure, caller-controlled level generation, bounded resources, nullable-value presence, and logarithmic rank/select. Rust and TypeScript currently use ordered-map/array facades, Go has a tower but scans rank/select/range without spans, and Python uses ambient global randomness. Ratify a neutral contract and derive bounded existing-lane remediations without blocking the separately truthful Swift implementation.",
+      "selection_notes": "Discovered during the exact-main Swift DT20 implementation audit. Keep pending while the already-selected Swift lane closes one real missing high-consensus package with an explicit zero-based optional profile and actual span tower; prioritize the reconciliation before claiming whole-family DT20 conformance or selecting façade remediation children."
+    },
+    {
       "id": "swift-skip-list-lane-parity",
       "title": "Implement DT20 skip-list in Swift",
       "status": "in_progress",
