@@ -16,16 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18525,
+  "active_pr": 18511,
   "active_prs": [
-    18511,
-    18525
+    18511
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T13:44:36Z",
-    "pr_number": 18525,
-    "head_revision": "16a89f287a210f4262dc8af2dddbf16b3db60d8c",
-    "action": "Opened non-draft Swift hash-set PR #18525 from the clean, exact-current-main, independently reviewed publication head. The publication ceiling now contains #18511 and #18525. Guarded auto-merge remains disabled until every hosted check for the final exact head is terminal and acceptable and GitHub reports a clean merge state.",
+    "observed_at": "2026-10-28T14:18:26Z",
+    "pr_number": 18511,
+    "head_revision": "0c16851ff80f782a65e6bb71a4e71356449010c8",
+    "action": "Swift hash-set PR #18525 completed every exact-head check acceptably and merged through guarded squash auto-merge from d3884fb31e50c2dc17c9b4ccc51820d227d96dc8 as f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc at 2026-10-28T14:18:43Z; the receipt is current origin/main and its clean worktree and local branch were removed. Haskell/Swift Bezier PR #18511 failed only on the macOS affine2d root because that independently selected Cabal front lacked the established CLT linker routing. Add the bounded front repair and a regression lesson, validate the complete closure, then publish a normal current-main merge and require a fresh exact-head matrix.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15202,7 +15201,7 @@
     {
       "id": "swift-hash-set-lane-parity",
       "title": "Implement DT19 hash-set in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "swift-hash-functions-lane-parity",
         "swift-hash-map-lane-parity"
@@ -15211,8 +15210,12 @@
       "pr_number": 18525,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18525",
       "pr_opened_at": "2026-10-28T13:44:36Z",
-      "publication_head": "16a89f287a210f4262dc8af2dddbf16b3db60d8c",
-      "publication_notes": "PR #18525 opened non-draft from exact current main after package validation and independent security review passed. The final lifecycle receipt commit must receive a completely fresh hosted matrix; do not enable guarded auto-merge until every exact-head check is terminal and acceptable and the PR is conflict-free.",
+      "publication_head": "d3884fb31e50c2dc17c9b4ccc51820d227d96dc8",
+      "publication_notes": "PR #18525 completed every exact-head hosted check acceptably and merged through guarded squash auto-merge from exact lifecycle receipt head d3884fb31e50c2dc17c9b4ccc51820d227d96dc8.",
+      "merged_head_revision": "d3884fb31e50c2dc17c9b4ccc51820d227d96dc8",
+      "merged_at": "2026-10-28T14:18:43Z",
+      "merge_revision": "f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "started_at": "2026-10-28T12:20:55Z",
       "selected_main_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
       "reconciled_main_revision": "7bb2f044fed05e25d8c1cfb330ccfd3c286e1550",
@@ -20949,10 +20952,82 @@
       "pr_number": 18511,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18511",
       "pr_opened_at": "2026-10-28T09:20:52Z",
-      "publication_head": "2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a",
-      "publication_notes": "PR #18511 is open and non-draft at exact lifecycle head 2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a. Dynamic Bezier PR #18506 advanced main and made that head conflicting, so exact current main must be merged normally without rewriting history before replacement exact-head CI.",
-      "reconciled_main_revision": "98eac40cc0ebba14b6c4a22eebfd60419ea28777",
-      "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all."
+      "publication_head": "0c16851ff80f782a65e6bb71a4e71356449010c8",
+      "publication_notes": "PR #18511 is open and non-draft at exact remote head 0c16851ff80f782a65e6bb71a4e71356449010c8. Every hosted check except the macOS affine2d root and its aggregate gate passed at that head. The bounded affine2d CommandLineTools linker repair and the normal merge of exact current main are locally validated and await exact-final-head independent review before publication; guarded auto-merge remains disabled until a completely fresh exact-head hosted matrix is terminal acceptable.",
+      "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all.",
+      "selection_notes": "Selected from current main after independent review rejected the unpublished TypeScript Arc2D build candidate: the production runner already starts every BUILD line in the package directory, while the proposed POSIX identity guard would fail under the Windows fallback. That non-defect branch was retired rather than published. All three publication slots remain occupied; the ready C#/F# tranche stays first in the publication queue, while Python/Ruby/Perl and TypeScript/Elixir/Lua remain sequenced behind shared selector integration. Haskell/Swift is the highest independent implementation owner because it advances two non-Rust lanes, depends only on the already-merged neutral contract, and has no changed-path overlap with the active or prepared tranches. Keep scope to deterministic safe flattening APIs, all nine neutral fixture cases, native Bezier2D and Arc2D regressions, package docs/changelogs, and lifecycle receipts; Go/Rust, the aggregate owner, and build-selector integration remain separate.",
+      "started_at": "2026-10-25T20:56:00-07:00",
+      "reconciled_main_revision": "f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc",
+      "current_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc after Swift hash-set PR #18525 merged from exact lifecycle head d3884fb31e50c2dc17c9b4ccc51820d227d96dc8. The merge preserved every prior parity receipt, the complete Haskell/Swift implementation and review history, and all three bounded hosted-macOS linker repairs. The Haskell/Swift production package delta remains unchanged from exact reviewed head 2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a apart from those BUILD-front fixes. PR #18511 is the only live parity publication; replacement exact-head checks remain mandatory.",
+      "implementation_revision": "b77bc12a78ea02fe560b9cea38aeb06018b53d22",
+      "package_paths": [
+        "code/packages/haskell/affine2d",
+        "code/packages/haskell/bezier2d",
+        "code/packages/swift/bezier2d"
+      ],
+      "validation_notes": "Local implementation is complete. Haskell dynamically consumes all nine neutral rows and passes 29 Bezier2D examples; its explicit downstream Arc2D Cabal run also passes 25 Arc2D, 29 Bezier2D, 27 Point2D, and 19 Trig examples. Swift dynamically consumes all nine neutral rows and passes all 27 Bezier2D tests; its downstream Arc2D BUILD passes all 13 tests. Both lanes reject invalid tolerance, non-finite controls and derived geometry, and subnormal geometry that would otherwise underflow into a false chord; they preserve atomic failure under the pinned depth and 65,535-subdivision budgets. After normally merging exact current main fe057f18c6e8b62cae9921fee2538c091fae1bbb, the complete Haskell Bezier2D and Arc2D closures pass again, including 29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples; Swift Bezier2D passes all 27 tests and downstream Arc2D passes all 13. The production delta is unchanged from prepared reviewed head b48a6da1880522ff003959ab31bf8ca473d06b22 apart from the bounded trig BUILD repair. Fresh exact-head hosted checks remain the publication gate.",
+      "post_hash_map_merge_validation_notes": "After normally merging exact current main 031553c39dda7b68b9aa43d4abb4ab688ceff3a0, the complete Haskell Bezier2D and Arc2D closures pass again, including 29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples; Swift Bezier2D passes all 27 tests and downstream Arc2D passes all 13. The production delta remains unchanged from the reviewed implementation apart from the bounded BUILD-front fixes. Fresh exact-head hosted checks remain mandatory before guarded auto-merge.",
+      "post_fenced_block_merge_validation_notes": "After normally merging exact current main 7bb2f044fed05e25d8c1cfb330ccfd3c286e1550, the complete Haskell Bezier2D and Arc2D closures pass again, including 29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples; Swift Bezier2D passes all 27 tests and downstream Arc2D passes all 13. The production delta remains unchanged from the reviewed implementation apart from the bounded BUILD-front fixes. Fresh exact-head hosted checks remain mandatory before guarded auto-merge.",
+      "macos_affine2d_failure_notes": "Exact head 0c16851ff80f782a65e6bb71a4e71356449010c8 passed Linux, Windows, metadata, CodeQL, and all other checks, but macOS selected haskell/affine2d directly. Cabal therefore built trig and point2d under affine2d's process, where the unchanged root front had not selected the CLT linker and GHC 9.4.8 could not parse the newer arm64e.x1 SDK stubs. Commit e8734341366355d66757431e445266e0e154f25a scopes the established Command Line Tools DEVELOPER_DIR to affine2d's Cabal process and records the independently selectable-root lesson.",
+      "post_hash_set_merge_validation_notes": "After normally merging exact current main f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc, the repaired Affine2D root passes all 22 Affine2D, 27 Point2D, and 19 Trig examples; the complete Haskell Bezier2D and Arc2D closures pass again, including 29 Bezier2D and 25 Arc2D examples; Swift Bezier2D passes all 27 tests and downstream Arc2D passes all 13. The production implementation remains unchanged from the reviewed head; only the bounded affine2d BUILD front and its regression lesson are new. Fresh exact-head hosted checks remain mandatory before guarded auto-merge.",
+      "final_review_revision": "ac67ca81e00f470e2cb095c8b68fe43f923d92df",
+      "final_review_notes": "Exact merge-head review confirms the Haskell and Swift production package delta is unchanged from prepared reviewed head b48a6da1880522ff003959ab31bf8ca473d06b22. Fresh post-merge native and downstream suites pass, the 15-path branch diff is clean, the lifecycle state parses as strict JSON, and no live open PR overlaps either package root."
+    },
+    {
+      "id": "haskell-trig-macos-clt-linker-selection",
+      "title": "Select the matching CLT linker for Haskell trig on macOS",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
+      "pr_number": 18511,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18511",
+      "discovered_at": "2026-10-28T11:05:56Z",
+      "discovered_revision": "cd46abd9c493004912415a69ae6df75e5ee67c9d",
+      "package_paths": [
+        "code/packages/haskell/trig"
+      ],
+      "implementation_revision": "77107207763aec5fc8302eb8b55c9abb13dd2deb",
+      "validation_revision": "77107207763aec5fc8302eb8b55c9abb13dd2deb",
+      "selection_notes": "Fresh exact-head CI triage reprioritized this bounded repair ahead of every independent backlog item because it is the direct blocker for an already-published two-language parity tranche, requires no new API or product scope, and has no open-PR overlap. The hosted macOS failure occurs while linking the first Haskell dependency, before Bezier2D tests, and exactly matches the repository's reviewed Haskell Starlark repair and linker lesson. Keep the fix to Darwin-only DEVELOPER_DIR selection inside the trig BUILD front; leave Linux, Windows, package source, and all other backlog owners unchanged.",
+      "notes": "Hosted macOS job 122763808355 in run 40668092481 uses GHC 9.4.8, whose bindist hardcodes the CommandLineTools SDK. Cabal inherited the Xcode linker and rejected arm64e.x1 TAPI stubs before trig dependencies could build. The repair scopes DEVELOPER_DIR=/Library/Developer/CommandLineTools to Cabal and its children on Darwin, matching the already-merged Haskell Starlark precedent. On local macOS, the native trig BUILD selects that route and passes all 19 examples; the Haskell Bezier2D BUILD then passes all 19 Trig, 27 Point2D, and 29 Bezier2D examples. A fresh exact-head hosted matrix remains mandatory before guarded auto-merge."
+    },
+    {
+      "id": "haskell-bezier-reverse-closure-macos-clt-linker-selection",
+      "title": "Select the matching CLT linker across the Haskell Bezier reverse closure",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
+      "pr_number": 18511,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18511",
+      "discovered_at": "2026-10-28T11:47:55Z",
+      "discovered_revision": "d7277e638d7aea6a9a729708f6e9c43ef810385f",
+      "package_paths": [
+        "code/packages/haskell/point2d",
+        "code/packages/haskell/wave",
+        "code/packages/haskell/bezier2d"
+      ],
+      "implementation_revision": "b6248dcddd0f45a199a6d086950c71cc17eb53bc",
+      "validation_revision": "b6248dcddd0f45a199a6d086950c71cc17eb53bc",
+      "selection_notes": "The fresh hosted failure invalidated the earlier direct-package assumption: changing trig selects its reverse dependencies, and every selected package launches an independent BUILD process. Reprioritize this closure repair ahead of all independent work because it is the exact blocker on an already-published two-language PR, Ubuntu and Windows are green, and the required Darwin-only Cabal wrapper is the same reviewed repository pattern. Keep scope to point2d, wave, and Bezier2D BUILD fronts; package sources, Linux, Windows, unrelated Haskell packages, and the separate fleet-wide cleanup remain unchanged.",
+      "notes": "Hosted macOS job 122783571620 in run 40678136914 failed haskell/point2d and haskell/wave with the same arm64e.x1 TAPI error after the direct trig BUILD fix. Bezier2D was dependency-skipped and would launch its own Cabal process next. The repair applies the matching CommandLineTools selection to all three independent BUILD fronts. Local macOS validation passes 19 Trig plus 27 Point2D examples through point2d, 19 Trig plus 21 Wave examples through wave, 19 Trig plus 27 Point2D plus 29 Bezier2D examples through Bezier2D, and the downstream Arc2D closure with 25 Arc2D examples. A completely fresh exact-head hosted matrix remains mandatory."
+    },
+    {
+      "id": "haskell-affine2d-macos-clt-linker-selection",
+      "title": "Select the matching CLT linker for Haskell affine2d on macOS",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
+      "pr_number": 18511,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18511",
+      "discovered_at": "2026-10-28T14:18:26Z",
+      "discovered_revision": "0c16851ff80f782a65e6bb71a4e71356449010c8",
+      "package_paths": [
+        "code/packages/haskell/affine2d"
+      ],
+      "implementation_revision": "e8734341366355d66757431e445266e0e154f25a",
+      "validation_revision": "e8734341366355d66757431e445266e0e154f25a",
+      "selection_notes": "The exact-head macOS failure reprioritized this bounded root repair ahead of every independent backlog item because it is the sole failed check on an already-published parity tranche. Linux, Windows, metadata, CodeQL, and every other check passed. Keep scope to affine2d's Darwin-only Cabal wrapper and the reusable independently-selectable-root lesson; package source, public API, Linux, Windows, and unrelated Haskell roots remain unchanged.",
+      "notes": "Hosted macOS job 122851244136 in run 40697356133 selected haskell/affine2d directly. Cabal built trig and point2d under affine2d's process, where leaf BUILD fixes could not apply; GHC 9.4.8 then invoked a linker that rejected arm64e.x1 TAPI stubs. The repair scopes DEVELOPER_DIR=/Library/Developer/CommandLineTools to affine2d's Cabal process on Darwin. Local validation passes all 22 Affine2D, 27 Point2D, and 19 Trig examples, plus the complete Haskell Bezier2D and Arc2D and Swift Bezier2D and Arc2D closures after merging current main. A fresh exact-head hosted matrix remains mandatory."
     },
     {
       "id": "geometry-bezier2d-flattening-typescript-elixir-lua",
@@ -26244,7 +26319,7 @@
     {
       "id": "gfm-fenced-block-swift-contract-adoption",
       "title": "Adopt the source-preserving fenced-block contract in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "gfm-language-neutral-conformance-fixture"
       ],
@@ -26252,8 +26327,12 @@
       "pr_number": 18516,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18516",
       "pr_opened_at": "2026-10-28T10:30:33Z",
-      "publication_head": "af66b66094b0a62248189f542a5b8bedede9c18f",
-      "publication_notes": "PR #18516 is open and non-draft. Swift hash-map PR #18517 advanced main after exact reconciliation head 4858782cc6ec82230530ab56e810801dd265a730, so preserve the published history through a normal exact-main merge, re-run all six affected native suites, and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
+      "publication_head": "8a9ac79a9308df20e88c1def222967a51f3a1abb",
+      "publication_notes": "PR #18516 completed every exact-head hosted check acceptably and merged through guarded squash auto-merge from exact reconciliation head 8a9ac79a9308df20e88c1def222967a51f3a1abb.",
+      "merged_head_revision": "8a9ac79a9308df20e88c1def222967a51f3a1abb",
+      "merged_at": "2026-10-28T13:29:40Z",
+      "merge_revision": "7bb2f044fed05e25d8c1cfb330ccfd3c286e1550",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "delivery_class": "portable-lane-reconciliation",
       "selection_blocked": false,
       "registered_at": "2026-10-24T19:17:58Z",
@@ -26708,7 +26787,7 @@
       "merged_head_revision": "9fe978f402d6ee29915d212fb9f33aec35045b24",
       "merged_at": "2026-10-26T04:30:17Z",
       "merge_revision": "bfc66cbaac24fea43af893c4a4a9cac5553ef115",
-      "merge_notes": "PR #18259 completed guarded squash auto-merge after its exact reviewed head passed the required checks and GitHub reported no merge conflict. This receipt closes the stale in-progress lifecycle entry."
+      "merge_notes": "PR #18259 completed guarded squash auto-merge after its exact reviewed head passed the required checks and GitHub reported no merge conflict. This receipt closes the stale in-progress lifecycle entry discovered during independent review of the Haskell/Swift Bezier tranche."
     }
   ],
   "postmerge_refresh": {
