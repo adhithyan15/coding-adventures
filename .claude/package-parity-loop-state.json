@@ -16899,7 +16899,7 @@
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-28T19:09:22Z",
-      "discovered_revision": "814c3abcc2db89cd952c9b68c3d6840b94d249f4",
+      "discovered_revision": "814c3abcc2d305b4e631e09c6060fbcf9d1a9325",
       "notes": "Resolve DT20's one-based/-1 prose against the de facto zero-based optional contract in Python, Rust, and TypeScript; inventory every established lane for real span-augmented skip-list structure, caller-controlled level generation, bounded resources, nullable-value presence, and logarithmic rank/select. Rust and TypeScript currently use ordered-map/array facades, Go has a tower but scans rank/select/range without spans, and Python uses ambient global randomness. Ratify a neutral contract and derive bounded existing-lane remediations without blocking the separately truthful Swift implementation.",
       "selection_notes": "Discovered during the exact-main Swift DT20 implementation audit. Keep pending while the already-selected Swift lane closes one real missing high-consensus package with an explicit zero-based optional profile and actual span tower; prioritize the reconciliation before claiming whole-family DT20 conformance or selecting façade remediation children."
     },
