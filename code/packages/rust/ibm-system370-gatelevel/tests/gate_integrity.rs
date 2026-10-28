@@ -8,9 +8,9 @@ const LIB_LOCK: u64 = 0x527e_0048_c4bf_262b;
 const ENGINE_LOCK: u64 = 0x5611_2a13_2c0b_238d;
 const GATES_LOCK: u64 = 0x6b10_8fb1_b7a0_9416;
 const ALLOCATION_LOCK: u64 = 0x3f36_1e28_b86a_11b3;
-const SYSTEM360_LIB_LOCK: u64 = 0xda70_9b50_b74a_b1d5;
-const SYSTEM360_EXECUTOR_LOCK: u64 = 0x1f15_f8b4_d89f_a475;
-const SYSTEM360_GATES_LOCK: u64 = 0xf259_ae68_cdaf_fa3a;
+const SYSTEM360_LIB_LOCK: u64 = 0xcce4_d4a8_a5ef_75ab;
+const SYSTEM360_EXECUTOR_LOCK: u64 = 0xab0a_5f9e_c7cb_57f7;
+const SYSTEM360_GATES_LOCK: u64 = 0x40ac_678d_18ec_7f7e;
 const SYSTEM360_HFP_LOCK: u64 = 0xd47e_243c_d4f6_e080;
 const SYSTEM360_STATE_LOCK: u64 = 0x3818_2c9d_9d0b_a82f;
 
@@ -236,7 +236,7 @@ fn every_complete_compiler_valid_hostile_crate_is_rejected() {
         ("src/gates.rs", "\nconst EXPECTATION_SHADOW: [u8; 5] = [1, 0, 0, 0, 0];\n"),
         ("src/allocation.rs", "\nfn bypass_allocation_preflight() -> bool { true }\n"),
         ("system360/src/lib.rs", "\nstruct PackedHostMirror(System360State);\n"),
-        ("system360/src/executor.rs", "\nfn duplicate_inherited_executor(before: &System360State, trace: &StepTrace) -> Result<System360State, System360Error> { execute(before, trace) }\n"),
+        ("system360/src/executor.rs", "\nfn duplicate_inherited_executor(before: &System360State, trace: &StepTrace) -> Result<System360State, System360Error> { let authority = DecodeAuthority::new(trace.raw[0])?; execute(before, trace, &authority) }\n"),
     ];
     for (file, mutation) in mutations {
         let hostile = TempCrate::new();
@@ -261,7 +261,7 @@ fn every_complete_compiler_valid_hostile_crate_is_rejected() {
         ),
         (
             "system360/src/lib.rs",
-            "let gate_next = executor::execute(&before, &trace)?;",
+            "let gate_next = executor::execute(&before, &trace, &authority)?;",
             "let gate_next = oracle_next.clone();",
         ),
         (
