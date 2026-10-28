@@ -5,6 +5,7 @@
 
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { defaultCurriculumRoot, loadEverything } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
@@ -19,6 +20,7 @@ import {
   type CefrLevel,
 } from "../src/levels.js";
 import type { CurriculumSpine, LanguageCurriculum } from "../src/types.js";
+import { loadLevelProgressOwners } from "./level-gate-attainment-pins.js";
 
 function lesson(id: string, language = "spanish") {
   return parseLesson(
@@ -158,6 +160,10 @@ describe("rolling up", () => {
 // Real-corpus assertions share one read-only load. Re-reading all curriculum
 // owners and lessons inside each timed assertion exhausts the Windows budget.
 const REAL_EVERYTHING = loadEverything();
+const LEVEL_PROGRESS = loadLevelProgressOwners(
+  fileURLToPath(new URL("./level-gate-attainment/", import.meta.url)),
+  REAL_EVERYTHING.registry.languages.map((language) => language.id),
+);
 
 describe("exam alignment", () => {
   // The owner's instruction: do not leave things unmapped. A track with no mapping
@@ -265,105 +271,14 @@ describe("corpus level summary", () => {
       expect(readdirSync(join(root, "core", entry.name)), entry.name).toEqual([]);
     }
   });
-  it("shows eight tracks have reached A2, and every track has now reached A1", () => {
+  it("matches every track's directly owned reach pin", () => {
     const { lessons, curricula: paths, spine } = REAL_EVERYTHING;
     const summary = summarizeLevels(lessons, paths, spine);
-    // `reach` is the highest level a track has ANY lesson at, so this names the tracks
-    // rather than counting them — "no track is at A2" has become a list, and listing it
-    // keeps the assertion as tight as the original. Spanish has now left this list --
-    // it reaches B1. Marwadi now joins the A2 list through its first connected
-    // writing chapter, so the list is 21 and the ceiling for everyone else is A2.
-    // Japanese joins with chapters 138-142, one chapter per A2 spine node, so
-    // the list is 22: every track but Spanish reaches A2 and stops there.
-    // Italian leaves it with chapters 263-272, which realize the five B1 spine
-    // nodes, so the list is 21. `reach` only touches B1; attained stays A2.
-    // Portuguese leaves it with chapters 259-268, which realize the five B1
-    // spine nodes, so the list is 20. French leaves it with chapters 258-267,
-    // the same five nodes, so the list is 19. German leaves it with chapters
-    // 252-261, the same five nodes, so the list is 18. Latin leaves it with
-    // chapters 281-290, the same five nodes, so the list is 17. Russian leaves
-    // it with chapters 261-270, the same five nodes, so the list is 16. Persian
-    // leaves it with chapters 290-299, the same five nodes, so the list is 15.
-    // Arabic leaves it with chapters 283-292, Malayalam with chapters 339-348,
-    // Telugu with chapters 316-325, Kannada with chapters 309-318 and Tamil
-    // with chapters 284-293, the same five nodes each, so the list is 10.
-    // Marathi leaves it with chapters 278-287, the same five nodes (276-277
-    // bridge the A2 past and future first), so the list is 9. Bengali leaves
-    // it with chapters 266-275, the same five nodes (264-265 bridge the A2
-    // past and future first), so the list is 8. Hindi leaves it with chapters
-    // 278-287, the same five nodes (276-277 bridge the perfective with ne and
-    // the full future first), so the list is 7. Gujarati leaves it with
-    // chapters 275-284, the same five nodes (273-274 bridge the A2 past and
-    // future first), so the list is 6. Urdu leaves it with chapters 266-275,
-    // the same five nodes (264-265 bridge the A2 past and future first), so
-    // the list is 5. Sanskrit leaves it with chapters 276-285, the same five
-    // nodes (275 bridges the A2 future first), so the list is 4. Japanese
-    // leaves it with chapters 252-261, the same five nodes (250-251 bridge the
-    // A2 past and future first: the plain past and the plain negative), so the
-    // list is 3.
-    expect(
-      summary.tracks.filter((track) => track.reach === "A2").map((track) => track.language),
-    ).toEqual([
-      // Chinese joins the list with the 了 and 呢/对 chapters: an aspect particle
-      // realizing SPINE-TALK-ABOUT-PAST and a follow-up particle on
-      // SPINE-NEGATE-AND-ASK, which are the two A2 grammar nodes this track had
-      // never reached. Both are one character each. Its A2 core, chapters
-      // 147-157, realized all five A2 nodes, and its A2 vocabulary, chapters
-      // 158-277, took attained to A2; it stays on this list until a B1 core
-      // takes `reach` past A2.
-      "chinese",
-      // Japanese joined with chapters 138-142 (what I do, negation and
-      // questions, the past, the future and practical texts, the five A2 spine
-      // nodes), and its A2 vocabulary, chapters 146-249, took attained to A2.
-      // Its B1 core, chapters 250-261, now takes `reach` past A2, so it has
-      // left this list, and its B1 vocabulary, chapters 262-533, took attained
-      // to B1.
-      "marwadi",
-      "punjabi",
-    ]);
-    // Twenty tracks now exceed A2, and naming them is stronger than a blanket
-    // "nothing does" -- it says which rung was climbed and by whom. Italian joins
-    // Spanish with its B1 core, chapters 263-272, Portuguese with its B1
-    // core, chapters 259-268, French with its B1 core, chapters 258-267,
-    // German with its B1 core, chapters 252-261, Latin with its B1 core,
-    // chapters 281-290, Russian with its B1 core, chapters 261-270,
-    // Persian with its B1 core, chapters 290-299, Arabic with its B1 core,
-    // chapters 283-292, Malayalam with its B1 core, chapters 339-348, Telugu
-    // with its B1 core, chapters 316-325, Kannada with its B1 core, chapters
-    // 309-318, Tamil with its B1 core, chapters 284-293, Marathi with its
-    // B1 core, chapters 276-287, Bengali with its B1 core, chapters 264-275,
-    // Hindi with its B1 core, chapters 276-287, Gujarati with its B1 core,
-    // chapters 273-284, Urdu with its B1 core, chapters 264-275, Sanskrit
-    // with its B1 core, chapters 275-285, and Japanese with its B1 core,
-    // chapters 250-261.
-    expect(
-      summary.tracks.filter((track) => track.reach !== null && levelRank(track.reach) > levelRank("A2"))
-        .map((track) => track.language),
-    ).toEqual(["arabic", "bengali", "french", "german", "gujarati", "hindi", "italian", "japanese", "kannada", "latin", "malayalam", "marathi", "persian", "portuguese", "russian", "sanskrit", "spanish", "tamil", "telugu", "urdu"]);
-    expect(
-      summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
-      // HL-C230: chinese leaves this list. Its numerals chapter realizes
-      // SPINE-COUNT-ONE-TO-FIVE, an A1 node, so its `reach` is now A1 -- while the
-      // track still holds twenty-five lessons and can say hello and count to five. The
-      // metric is honest about what it measures and misleading about what it implies,
-      // which is worth writing down here rather than celebrating in a changelog.
-      //
-      // HL-C350: marwadi leaves it for exactly the same reason and with exactly the
-      // same caveat. Chapters 32-33 teach one to ten and realize
-      // SPINE-COUNT-ONE-TO-FIVE, so `reach` moves to A1 on the strength of TWO
-      // chapters out of thirty-six. Everything else the track holds is still pre-A1,
-      // `attained` has not moved, and the number below is the one that means
-      // something. One node realized is not a level reached.
-      //
-      // HL-C360: japanese leaves it too, and the list is now EMPTY. Chapters 14-15
-      // teach the cardinals one to ten and JA-C14-yon realizes
-      // SPINE-COUNT-ONE-TO-FIVE, so `reach` moves to A1 on the strength of two
-      // chapters out of fifteen. The same caveat as chinese and marwadi applies
-      // word for word: everything else the track holds is still pre-A1, `attained`
-      // has not moved, and one node realized is not a level reached. What HAS
-      // changed is that no track in the corpus is now stuck below A1 by a missing
-      // count.
-    ).toEqual([]);
+    for (const track of summary.tracks) {
+      expect(track.reach, `${track.language} reach owner`).toBe(
+        LEVEL_PROGRESS[track.language]!.reach,
+      );
+    }
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {

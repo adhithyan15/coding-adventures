@@ -1,9 +1,6 @@
 // HL09 §3.1 — what it takes to CLAIM a level. See src/level-gate.ts for why.
 
 import { describe, expect, it, vi } from "vitest";
-import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEverything, loadChapterPolicy, loadTrackChapters } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
@@ -23,7 +20,10 @@ import { CONTENT_TYPES } from "../src/constants.js";
 import { measureContinuity } from "../src/continuity.js";
 import type { ContinuityReport } from "../src/continuity.js";
 import type { WritingStageReport } from "../src/writing-stages.js";
-import { loadLevelGateAttainmentPins } from "./level-gate-attainment-pins.js";
+import {
+  assertLevelProgressOwners,
+  loadLevelProgressOwners,
+} from "./level-gate-attainment-pins.js";
 
 // Several assertions intentionally rebuild or remeasure the full curriculum.
 // The corpus keeps growing, so give this integration-heavy file one explicit
@@ -31,9 +31,13 @@ import { loadLevelGateAttainmentPins } from "./level-gate-attainment-pins.js";
 vi.setConfig({ testTimeout: 60_000 });
 
 const ATTAINMENT_DIR = fileURLToPath(new URL("./level-gate-attainment/", import.meta.url));
-const ATTAINMENT = loadLevelGateAttainmentPins(ATTAINMENT_DIR);
-const HELD = Object.fromEntries(
-  Object.entries(ATTAINMENT).filter((entry): entry is [string, CefrLevel] => entry[1] !== null),
+const REAL_EVERYTHING = loadEverything();
+const LEVEL_PROGRESS = loadLevelProgressOwners(
+  ATTAINMENT_DIR,
+  REAL_EVERYTHING.registry.languages.map((language) => language.id),
+);
+const ATTAINMENT = Object.fromEntries(
+  Object.entries(LEVEL_PROGRESS).map(([language, owner]) => [language, owner.attained]),
 );
 
 // Built ONCE for the file, not once per test. The gap report now walks continuity
@@ -47,7 +51,6 @@ const HELD = Object.fromEntries(
 // away from its 30s limit. Import time carries no per-test budget.
 // The parsed corpus itself is kept too, so a test that runs the gate on its own
 // inputs reads this parse instead of paying for another one in its body.
-const REAL_EVERYTHING = loadEverything();
 const REAL_REPORT = (() => {
   const e = REAL_EVERYTHING;
   return buildCurriculumGapReport({
@@ -96,72 +99,6 @@ const SYNTHETIC_WITNESS = (() => {
   const gate = runLevelGate({ ...inputs, ramp: { ...inputs.ramp, lessons: [...inputs.ramp.lessons, overBudget] } });
   return { track, lesson, baseline: baseline.tracks.find((t) => t.language === track)!, gate };
 })();
-
-describe("level-gate attainment owner discovery", () => {
-  function fixture(): string {
-    return mkdtempSync(join(tmpdir(), "level-gate-attainment-"));
-  }
-
-  it("rejects empty, unsafe, nested, and malformed owner sets", () => {
-    const root = fixture();
-    try {
-      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/must not be empty/);
-      writeFileSync(join(root, "bad.txt"), "{}\n");
-      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/unsafe/);
-      rmSync(join(root, "bad.txt"));
-
-      mkdirSync(join(root, "nested.json"));
-      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/real file/);
-      rmSync(join(root, "nested.json"), { recursive: true });
-
-      writeFileSync(join(root, "toy.json"), '{"attained":"A3"}\n');
-      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/unsafe attained level/);
-      writeFileSync(join(root, "toy.json"), '{"attained":null,"extra":true}\n');
-      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/exactly one/);
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-    }
-  });
-
-  it("rejects uppercase and case-fold-colliding owner names", () => {
-    const root = fixture();
-    try {
-      writeFileSync(join(root, "Toy.json"), '{"attained":null}\n');
-      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/use lowercase/);
-      try {
-        writeFileSync(join(root, "toy.json"), '{"attained":null}\n', { flag: "wx" });
-      } catch {
-        // A case-insensitive filesystem has already enforced the stronger rule.
-        return;
-      }
-      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/case-fold/);
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-    }
-  });
-
-  it("rejects a symlink owner without opening its target", (ctx) => {
-    const root = fixture();
-    const outside = fixture();
-    const target = join(outside, "target.json");
-    writeFileSync(target, '{"attained":null}\n');
-    try {
-      try {
-        symlinkSync(target, join(root, "toy.json"), "file");
-      } catch (error) {
-        if (process.platform !== "win32" || (error as NodeJS.ErrnoException).code !== "EPERM") throw error;
-        ctx.skip();
-        // Windows without Developer Mode cannot create file symlinks. The
-        // reader's lstat guard is still exercised on every platform that can.
-        return;
-      }
-      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/real file/);
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-      rmSync(outside, { recursive: true, force: true });
-    }
-  });
-});
 
 describe("the gate that would have caught the A2 claim", () => {
   // Explicit budget: `realReport()` builds the entire gap report over the whole corpus.
@@ -229,242 +166,28 @@ describe("the gate that would have caught the A2 claim", () => {
           (track.attained === null || levelRank(track.touches) > levelRank(track.attained)),
       ).length,
     );
-    // `tracksWithAnyLevel` was pinned at 0, and it stayed 0 for every track from the
-    // day this gate was written. It is 1 now: Spanish closed the last of its pre-A1
-    // criteria, and has since closed A1 as well. The finding this test names is
-    // unaffected — overstating is a track touching HIGHER than it has attained, not a
-    // track having attained nothing — so the 23 stands and the zero does not.
-    // 1 -> 2: Telugu closed its last pre-A1 criterion (vocabulary, 300 headwords)
-    // with chapters 92-99, the second track to attain any level. 2 -> 3: Hindi
-    // closed the same criterion with chapters 106-127. 3 -> 4: Tamil, with chapters
-    // 87-108 and the split of its one over-budget script lesson. 4 -> 5: Kannada,
-    // with chapters 82-106 (125 headwords) after its one over-budget please-lesson
-    // moved a script atom to ombattu. 5 -> 6: Malayalam, with chapters 115-141
-    // (135 headwords), its budget already cleared by the same kind of move.
-    // 6 -> 7: Sanskrit, with chapters 66-89 (120 headwords, seventeen verbs).
-    // 7 -> 8: Gujarati, with chapters 46-91 (230 headwords, nineteen verbs).
-    // 8 -> 9: Latin, with chapters 63-108 (230 headwords, thirty-three verbs).
-    // 9 -> 10: Russian, with chapters 29-80 (260 headwords, twenty-three verbs).
-    // 10 -> 11: Portuguese, with chapters 30-81 (260 headwords, thirty-five
-    // verbs), which also give SPINE-RESPOND-BASIC its first Portuguese segments.
-    // 11 -> 12: Italian, with chapters 37-84 (240 headwords, twenty-five verbs)
-    // after its three over-budget lessons were split.
-    // 12 -> 13: French, with chapters 49-105 (285 headwords, thirty-seven verbs)
-    // after its six over-budget lessons were split.
-    // 13 -> 14: German, with chapters 56-103 (240 headwords, twenty-eight verbs)
-    // after its eight over-budget lessons were split.
-    // 14 -> 15: Urdu, with chapters 38-87 (250 headwords, thirty-seven verbs)
-    // after its three over-budget lessons were split.
-    // 15 -> 16: Punjabi, with chapters 49-98 (250 headwords, thirty-six verbs).
-    // 16 -> 17: Marathi, with chapters 70-120 (255 headwords, thirty-six verbs).
-    // 17 -> 18: Marwadi, with chapters 44-89 (230 headwords, thirty-eight verbs).
-    // 18 -> 19: Bengali, with chapters 42-89 (240 headwords, thirty-six verbs).
-    // 19 -> 20: Arabic, with chapters 50-99 (250 headwords, forty-three verbs).
-    // 20 -> 21: Persian, with chapters 27-78 (260 headwords, twenty-seven verbs)
-    // after its two over-budget lessons were split.
-    // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
-    // only with glyphs the script lessons have taught).
-    // 22 -> 23: Chinese, with chapter 30 (the wellbeing node, the last pre-A1
-    // spine node it lacked) and chapters 31-84 (324 headwords, 71 verbs; a word
-    // whose characters the reader has not written yet is taught by ear with a
-    // pinyin headword; 55 characters written, 很 and the 54 of chapters 31-84).
-    // Chinese then climbed its second rung with chapters 85-98 (the A1 core: all
-    // twelve A1 spine nodes and both A1 writing stages) and chapters 99-146 (the
-    // A1 vocabulary), 641 headwords and 172 verbs at or below A1, and 37 more
-    // characters written (13 in the core, 24 in the vocabulary), which moved it
-    // from the pre-A1 row of HELD to A1.
-    // The count stays put when a track climbs a second rung: Hindi was the first to
-    // attain A2, with chapters 166-275 (the practical-reading node, 540 headwords,
-    // sixty verbs), which moved it from the A1 row of HELD to the A2 row.
-    // German followed as the second, with
-    // chapters 142-251 (the future and practical-reading nodes, 540 headwords,
-    // fifty verbs), which moved it from the A1 row of HELD to the A2 row.
-    // Sanskrit followed as the third, with chapters 139-257 (the future and
-    // practical-reading nodes, 595 headwords, ninety-five verbs), which moved it
-    // from the A1 row of HELD to the A2 row.
-    // Italian followed as the fourth, with chapters 137-259 (the past, future
-    // and practical-reading nodes, 615 headwords, 215 verbs), which moved it
-    // from the A1 row of HELD to the A2 row.
-    // French followed as the fifth, with chapters 139-257 (the negation, past,
-    // future and practical-reading nodes, 595 headwords, 205 verbs), which moved
-    // it from the A1 row of HELD to the A2 row.
-    // Portuguese followed as the sixth, with chapters 134-255 (the negation,
-    // past, future and practical-reading nodes, 610 headwords, 188 verbs), which
-    // moved it from the A1 row of HELD to the A2 row.
-    // Latin followed as the seventh, with chapters 161-280 (the negation, past,
-    // future and practical-reading nodes, 600 headwords, 153 verbs), which moved
-    // it from the A1 row of HELD to the A2 row.
-    // Marathi followed as the eighth, with chapters 159-275 (the past, future
-    // and practical-reading nodes, 585 headwords, 132 verbs), which moved it from
-    // the A1 row of HELD to the A2 row.
-    // Russian followed as the ninth, with chapters 136-257 (the negation, past,
-    // future and practical-reading nodes, 610 headwords, 128 verbs), which moved
-    // it from the A1 row of HELD to the A2 row.
-    // Bengali followed as the tenth, with chapters 145-262 (the past, future
-    // and practical-reading nodes, 590 headwords, 123 verbs), which moved it from
-    // the A1 row of HELD to the A2 row.
-    // Urdu followed as the eleventh, with chapters 144-263 (the past, future
-    // and practical-reading nodes, 600 headwords, 92 verbs), which moved it from
-    // the A1 row of HELD to the A2 row.
-    // Spanish followed as the twelfth. Its A2 spine was already realized; what
-    // held it was verbs and vocabulary. 86 verbs taught at or below A2 were
-    // re-tagged as verbs, and chapters 475-511 added 185 A2 headwords on
-    // SPINE-READ-PRACTICAL-TEXTS, which moved it from the A1 row of HELD to the
-    // A2 row.
-    // Tamil followed as the thirteenth, with chapters 158-280 (the past, future
-    // and practical-reading nodes, 615 headwords, 148 verbs), which moved it from
-    // the A1 row of HELD to the A2 row.
-    // Arabic followed as the fourteenth, with chapters 156-282 (the past,
-    // future and practical-reading nodes, 635 headwords, 168 verbs), which moved
-    // it from the A1 row of HELD to the A2 row.
-    // Persian followed as the fifteenth, with chapters 136-252 (the negation
-    // and questions, past, future and practical-reading nodes, 585 headwords,
-    // Kannada followed as the sixteenth, with chapters 154-271 (the negation
-    // and questions, past, future and practical-reading nodes, 590 headwords,
-    // 153 verbs), which moved it from the A1 row of HELD to the A2 row.
-    // Malayalam followed as the seventeenth, with chapters 177-301 (the
-    // negation and questions, past, future and practical-reading nodes, 625
-    // headwords, 158 verbs), which moved it from the A1 row of HELD to the A2
-    // row.
-    // Telugu followed as the eighteenth, with chapters 153-277 (the negation
-    // and questions, past, future and practical-reading nodes, 625 headwords,
-    // 153 verbs), which moved it from the A1 row of HELD to the A2 row.
-    // Japanese followed, with chapters 146-249 (520 hiragana headwords, 210
-    // verbs, on its already-realized A2 spine nodes), which moved it from the
-    // A1 row of HELD to the A2 row.
-    // Gujarati followed, with chapters 145-152 (the negation and questions,
-    // past, future and practical-reading nodes, plus the letters ઓ ડ ઊ) and
-    // chapters 153-272 (600 headwords, 234 verbs), which moved it from the A1
-    // row of HELD to the A2 row.
-    // Chinese followed, with chapters 147-157 (the A2 core: the future with 要 and
-    // 会, practical texts and the A2 grammar, realizing all five A2 nodes, plus
-    // ten written characters) and chapters 158-277 (600 headwords, 48 more
-    // characters written; 1,290 headwords and 403 verbs at or below A2), which
-    // moved it from the A1 row of HELD to the A2 row.
-    expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
-    // Which rungs, and only those. Checking every level is the point: pinning one
-    // level's count alone would pass on a gate that had also handed out a spurious
-    // C2. The tracks that hold a rung are pinned by name, and the per-level counts
-    // are derived from that map, so a track climbing a rung edits one entry here
-    // and the anti-spurious sweep stays intact.
+    // Track-specific verdicts and provenance live in direct owners. This shared
+    // test states only cross-track relations and derives every count from those
+    // owners, so advancing one language never edits this file.
+    const measured = Object.fromEntries(
+      gate.tracks.map((track) => [
+        track.language,
+        { attained: track.attained, reach: track.touches },
+      ]),
+    );
+    assertLevelProgressOwners(LEVEL_PROGRESS, measured);
+    expect(gate.summary.tracksWithAnyLevel).toBe(
+      Object.values(LEVEL_PROGRESS).filter((owner) => owner.attained !== null).length,
+    );
     const expectedByLevel = new Map<string, number>();
-    // Spanish was the first track to attain B1, with chapters 512-777 (1,330
-    // headwords on the five B1 spine nodes, 390 verbs) and three consolidation
-    // reviews for the older B1 atoms, which moved it from the A2 row of HELD to B1.
-    // Italian followed as the second, with chapters 263-272 (the B1 core: the
-    // imperfetto, reasons, travel, experience and the condizionale, realizing all
-    // five B1 nodes) and chapters 273-536 (1,320 headwords, 389 verbs).
-    // Portuguese followed as the third, with chapters 259-268 (the B1 core: the
-    // imperfeito, reasons, travel, experience and the condicional, realizing all
-    // five B1 nodes) and chapters 269-532 (1,320 headwords, 363 verbs).
-    // French followed as the fourth, with chapters 258-267 (the B1 core: the
-    // imparfait, reasons, travel, experience and the conditionnel, realizing all
-    // five B1 nodes) and chapters 268-531 (1,320 headwords, 388 verbs).
-    // German followed as the fifth, with chapters 252-261 (the B1 core: the
-    // Präteritum, reasons, travel, experience and the Konjunktiv II, realizing
-    // all five B1 nodes) and chapters 262-533 (1,360 headwords, 485 verbs).
-    // Latin followed as the sixth, with chapters 281-290 (the B1 core: both
-    // pasts, reasons, travel, experience and the subjunctive, realizing all
-    // five B1 nodes) and chapters 291-554 (1,320 headwords, 403 verbs).
-    // Russian followed as the seventh, with chapters 261-270 (the B1 core:
-    // aspect in the past, reasons, travel, experience and бы, realizing all five
-    // B1 nodes, plus the letter ъ) and chapters 271-534 (1,320 headwords, 456
-    // verbs).
-    // Persian followed as the eighth, with chapters 290-299 (the B1 core: the
-    // present and past stems, the mi- past, reasons, travel, experience, the
-    // subjunctive and the unreal condition, realizing all five B1 nodes, plus
-    // letter lessons for ع غ ژ ث ذ ض ئ) and chapters 300-539 (1,200 headwords,
-    // 358 verbs).
-    // Arabic followed as the ninth, with chapters 283-292 (the B1 core: the past
-    // and present for every person, kāna + imperfect, the subjunctive after an,
-    // the future, comparison, idhā and law, realizing all five B1 nodes, plus
-    // letter lessons for ؤ and ئ) and chapters 293-552 (1,300 headwords, 507
-    // verbs).
-    // Malayalam followed as the tenth, with chapters 339-348 (the B1 core: narrating with
-    // the past and -ഉമായിരുന്നു, reasons with കൊണ്ട് and കാരണം, travel, comparison
-    // with -ഏക്കാൾ, and the conditional -ആൽ / എങ്കിൽ, realizing all five B1 nodes,
-    // plus letter lessons for ഈ ഐ ഔ ഋ ഡ ഘ ൗ ഃ) and chapters 349-572 (1,120
-    // headwords).
-    // Telugu followed as the eleventh, with chapters 316-325 (the B1 core: the plain past
-    // and the habitual -ఏవాడిని, reasons with కాబట్టి and అందుకే, the obligative
-    // -ఆలి, travel, comparison with కంటే, and the conditional -తే with the unreal
-    // -ఇ ఉంటే, realizing all five B1 nodes, plus letter lessons for ఈ ఓ ఊ ఔ ః)
-    // and chapters 326-549 (1,120 headwords, 388 verbs).
-    // Kannada followed as the twelfth, with chapters 309-318 (the B1 core: the
-    // past by person and -ುತ್ತಿದ್ದೆ, reasons, travel, experience, -ದರೆ and the
-    // unreal -ಇದ್ದರೆ … -ುತ್ತಿದ್ದೆ, realizing all five B1 nodes, plus letter
-    // lessons for ಛ and ಔ) and chapters 319-546 (1,140 headwords, 348 verbs),
-    // which moved it from the A2 row of HELD to B1.
-    // Tamil followed as the thirteenth, with chapters 284-293 (the B1 core: the
-    // past by person and -கொண்டிருந்தேன், reasons, travel, experience, -ஆல்
-    // and the unreal -இருந்தால் … -இருப்பேன், realizing all five B1 nodes,
-    // plus a letter lesson for ஈ) and chapters 294-558 (1,325 headwords, 399
-    // verbs), which moved it from the A2 row of HELD to B1.
-    // Marathi followed as the fourteenth, with chapters 276-287 (the B1 core: the
-    // past with the ergative -ने, the future, -त होतो and -ायचो, reasons,
-    // travel, comparison with -पेक्षा, and जर … तर / -ल्यास with the unreal
-    // past + असतो, realizing all five B1 nodes, plus letter lessons for ऋ and
-    // ञ) and chapters 288-557 (1,350 headwords, 408 verbs), which moved it from
-    // the A2 row of HELD to B1.
-    // Bengali followed as the fifteenth, with chapters 264-275 (the B1 core: the
-    // past by person with its changed stems, the future -ব / -বে / -বেন, -ছি and
-    // -ছিলাম, the -এ form, reasons with কারণ / উচিত / -তে হবে / তাই, travel,
-    // feelings with the genitive and -এর চেয়ে / সবচেয়ে, and যদি … তাহলে / -লে /
-    // -তাম, realizing all five B1 nodes, plus twelve letter and sign lessons
-    // from ঘ to ঙ) and chapters 276-545 (1,350 headwords, 380 verbs), which
-    // moved it from the A2 row of HELD to B1.
-    // Hindi followed as the sixteenth, with chapters 276-287 (the B1 core: the
-    // perfective with ने and the verb agreeing with its object, the full future,
-    // -रहा था and -कर, reasons with की वजह से / चाहिए / -ना पड़ता है / इसलिए,
-    // travel, feelings with को and से ज़्यादा / सबसे, and अगर … तो / वरना / the
-    // -ता counterfactual, realizing all five B1 nodes, plus letter lessons for ऐ
-    // and ः) and chapters 288-559 (1,360 headwords, 368 verbs), which moved it
-    // from the A2 row of HELD to B1.
-    // Gujarati followed as the seventeenth, with chapters 273-284 (the B1 core:
-    // the noun agent -એ with the verb following its object, the perfect, the
-    // negative future and -વાનો હતો, -તો હતો and the -ઈને form, reasons with
-    // કારણ કે / -ને લીધે / -વું જોઈએ / -વું પડે / એટલે, travel, feelings and
-    // કરતાં / સૌથી, and જો … તો / નહીંતર / the -ત counterfactual, realizing all
-    // five B1 nodes, plus letter lessons for ઝ, ઃ, ઇ, ૌ and ઋ) and chapters
-    // 285-554 (1,350 headwords, 351 verbs), which moved it from the A2 row of
-    // HELD to B1.
-    // Urdu followed as the eighteenth, with chapters 264-275 (the B1 core: the
-    // perfective and تھا, the agent نے with the verb agreeing with its object,
-    // the full future, رہا تھا and -کر, reasons with لگتا ہے / کی وجہ سے /
-    // چاہیے / -نا پڑنا / اس لیے, travel with the polite -یے, feelings and
-    // سے بڑا / سب سے, and اگر … تو / … پر منحصر ہے / the -تا counterfactual,
-    // realizing all five B1 nodes, plus letter lessons for ؤ ع غ ذ ث ڈ ص) and
-    // chapters 276-547 (1,360 headwords, 370 verbs), which moved it from the A2
-    // row of HELD to B1.
-    // Sanskrit followed as the nineteenth, with chapters 275-285 (the B1 core:
-    // the full future, the -tavat past and the present with स्म, -त्वा / -य,
-    // reasons with मम मतेन / यतः / कारणात्, the optative of advice, travel with
-    // the polite -तु, feelings and -अपेक्षया / -तर, and यदि … तर्हि / अन्यथा /
-    // the conditional, realizing all five B1 nodes, plus letter lessons for
-    // घ ढ औ ई) and chapters 286-555 (1,350 headwords, 394 verbs), which moved
-    // it from the A2 row of HELD to B1.
-    // Japanese followed as the twentieth, with chapters 250-261 (the B1 core:
-    // the plain past -た and its sound changes, the plain negative -ない, -て and
-    // -てから, -ています, と おもいます, から / ので after a plain clause, -た
-    // ほうが いい, travel, -かった, -た ことが ある, より / いちばん, and もし …
-    // -たら / に よります / -たら … でしょう, realizing all five B1 nodes, plus
-    // six copy-only kanji 月 年 出 人 中 今) and chapters 262-533 (1,360
-    // headwords, 439 verbs), which moved it from the A2 row of HELD to B1.
-    for (const level of Object.values(HELD)) {
-      expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
+    for (const owner of Object.values(LEVEL_PROGRESS)) {
+      if (owner.attained !== null) {
+        expectedByLevel.set(owner.attained, (expectedByLevel.get(owner.attained) ?? 0) + 1);
+      }
     }
     for (const [level, count] of Object.entries(gate.summary.attainedByLevel)) {
       expect(count, level).toBe(expectedByLevel.get(level) ?? 0);
     }
-    // Anti-vacuity: every pinned rung must be one the summary actually counts, or
-    // the sweep above would read 0 for it and check nothing.
-    for (const level of Object.values(HELD)) {
-      expect(Object.keys(gate.summary.attainedByLevel)).toContain(level);
-    }
-    // And the summary agrees with the tracks it is a count OF — it is derived from
-    // `tracks`, so a summary that drifts from it is the bug this would catch.
-    const attained = Object.fromEntries(gate.tracks.map((track) => [track.language, track.attained]));
-    expect(attained).toEqual(ATTAINMENT);
   });
 
   it("names which criterion failed and by how much, not just that one did", () => {

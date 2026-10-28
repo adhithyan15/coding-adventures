@@ -77,7 +77,12 @@ describe("per-track level-progress owners", () => {
     });
     inTemporaryDirectory((root) => {
       writeFileSync(join(root, "spanish.json"), owner("A1", "A1"));
-      writeFileSync(join(root, "SPANISH.json"), owner("A1", "A1"));
+      try {
+        writeFileSync(join(root, "SPANISH.json"), owner("A1", "A1"), { flag: "wx" });
+      } catch {
+        // A case-insensitive filesystem has already enforced the stronger rule.
+        return;
+      }
       expect(() => loadLevelProgressOwners(root, ["spanish"])).toThrow(/case-fold/i);
     });
   });
