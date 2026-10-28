@@ -1,6 +1,6 @@
+import HashMap
 import XCTest
 
-import HashMap
 @testable import HashSet
 
 final class HashSetTests: XCTestCase {

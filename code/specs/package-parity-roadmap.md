@@ -18905,3 +18905,19 @@ Bezier PR #18511. Keep scope to DT19 membership, deterministic set algebra,
 persistent value semantics, native build fronts, docs, empty capabilities,
 and lifecycle receipts. Do not publish hash-set until implementation,
 validation, and exact-head review are complete.
+
+The package implementation now passes 10 native tests and a production release
+build with 100% production-source region, function, and line coverage. The real
+build tool discovers and successfully builds the exact three-package Swift
+closure: hash-functions, hash-map, and hash-set. Independent security review
+found no implementation or authority defect and confirmed an external
+HashSet-only consumer compiles. Its hygiene findings are resolved before
+publication: imports are strictly ordered, a root changelog shard and lifecycle
+receipt are present, and generated artifacts are cleaned.
+
+The older Haskell ITF Windows-front branch is truthfully reclassified as a
+pending local preparation at `fa152d9eb70c3e95ad2b3529da63607a84f4305b`,
+not a second selected owner. It remains 112 main revisions behind and must wait
+for a future prioritization, current-main reconciliation, validation, and
+review. Swift hash-set is the sole selected local owner; PR #18511 remains the
+sole live parity publication.
