@@ -1467,13 +1467,18 @@ public static class MosaicRuntimeHost
         ///   tenth       mosaic-state.v1.json.corrupt.9
         /// </code>
         ///
-        /// A name is skipped when anything is there, file or directory, and
+        /// A name is skipped when anything is there
+        /// (<see cref="QuarantineNameTaken"/>), and
         /// <c>File.Move(..., overwrite: false)</c> throws rather than replace
         /// one that is already there: atomically on Windows, and through
         /// link/unlink on Unix (a file system without hard links falls back to
         /// check-then-rename, where a second instance quarantining at the same
-        /// moment could replace one rejected file with another). Nothing is
-        /// deleted first, so a move that fails halfway loses nothing either.
+        /// moment could replace one rejected file with another). When the move
+        /// throws and the name is now taken, something got there after the
+        /// check, and the next name is tried. That is decided by looking again,
+        /// not from the exception, which differs by what is there and by
+        /// platform. Nothing is deleted first, so a move that fails halfway
+        /// loses nothing either.
         ///
         /// If the move fails, or all ten names are taken, the rejected file is
         /// still at the live path, and the next save would write over it. So
@@ -1505,7 +1510,7 @@ public static class MosaicRuntimeHost
             for (var index = 0; index < MaxQuarantinedStates; index++)
             {
                 var candidate = index == 0 ? path + ".corrupt" : $"{path}.corrupt.{index}";
-                if (File.Exists(candidate) || Directory.Exists(candidate)) continue;
+                if (QuarantineNameTaken(candidate)) continue;
                 try
                 {
                     File.Move(path, candidate, overwrite: false);
@@ -1513,11 +1518,38 @@ public static class MosaicRuntimeHost
                 }
                 catch (Exception moveError)
                 {
+                    if (QuarantineNameTaken(candidate)) continue;
                     // TrimEnd: the warning adds its own full stop after this.
                     return $"Could not move it aside to {candidate}: {moveError.Message.TrimEnd('.')}";
                 }
             }
             return $"All {MaxQuarantinedStates} quarantine names beside it are taken; move them away to save again";
+        }
+
+        /// <summary>
+        /// Whether anything is at <paramref name="candidate"/>: a file, a
+        /// directory, or a symbolic link or junction, even one whose target
+        /// is gone.
+        /// </summary>
+        /// <remarks>
+        /// <c>File.Exists</c> and <c>Directory.Exists</c> cover a file and a
+        /// directory everywhere, but whether they see a dangling link depends
+        /// on the platform, so <c>LinkTarget</c>, which reads the link itself,
+        /// settles that. A name that cannot even be inspected counts as taken:
+        /// skipping it never overwrites anything.
+        /// </remarks>
+        private static bool QuarantineNameTaken(string candidate)
+        {
+            try
+            {
+                return File.Exists(candidate)
+                    || Directory.Exists(candidate)
+                    || new FileInfo(candidate).LinkTarget is not null;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
         }
 
         private void PersistSnapshot()

@@ -555,14 +555,16 @@ internal static class Driver
 
     /// A state file the runtime rejects moves to the first FREE quarantine
     /// name, never over an earlier quarantine, which may be someone's real
-    /// data. With all ten names taken it stays where it is, and nothing is
-    /// saved over it.
+    /// data. A directory takes a name as surely as a file does (Windows
+    /// refuses a move onto one as access denied, not as "exists"). With all
+    /// ten names taken the file stays where it is, and nothing is saved over
+    /// it.
     ///
     /// <code>
-    ///   launch | before                        | afterwards
-    ///   -------+-------------------------------+------------------------------
-    ///   first  | `{}`, `.corrupt` held         | `{}` in `.corrupt.1`, saving
-    ///   second | `{}`, `.corrupt` to `.9` held | `{}` still live, not saving
+    ///   launch | before                                  | afterwards
+    ///   -------+-----------------------------------------+------------------------------
+    ///   first  | `{}`, `.corrupt` file, `.corrupt.1` dir | `{}` in `.corrupt.2`, saving
+    ///   second | `{}`, `.corrupt` to `.9` held           | `{}` still live, not saving
     /// </code>
     ///
     /// Each launch is a <c>LoadRequired</c> after a <c>Close</c>, the startup
@@ -580,13 +582,18 @@ internal static class Driver
         // `{}` parses, so it reaches the runtime, which refuses it: no schema.
         const string rejected = "{}";
         File.WriteAllText(path + ".corrupt", "earlier");
+        Directory.CreateDirectory(path + ".corrupt.1");
         File.WriteAllText(path, rejected);
 
         MosaicRuntimeHost.LoadRequired();
         var moved = MosaicRuntimeHost.ApplyProps(new EffectComponent()) ?? string.Empty;
         Check(File.ReadAllText(path + ".corrupt") == "earlier", "an earlier quarantine is never replaced");
         Check(
-            File.Exists(path + ".corrupt.1") && File.ReadAllText(path + ".corrupt.1") == rejected,
+            Directory.Exists(path + ".corrupt.1")
+                && Directory.GetFileSystemEntries(path + ".corrupt.1").Length == 0,
+            "a directory at a quarantine name is skipped");
+        Check(
+            File.Exists(path + ".corrupt.2") && File.ReadAllText(path + ".corrupt.2") == rejected,
             "a rejected file moves to the first free name");
         Check(
             moved.Contains("rejected persisted state", StringComparison.Ordinal)
@@ -598,7 +605,7 @@ internal static class Driver
             "fresh state is saved once the rejected file is aside");
 
         MosaicRuntimeHost.Close();
-        for (var index = 2; index < 10; index++)
+        for (var index = 3; index < 10; index++)
             File.WriteAllText($"{path}.corrupt.{index}", $"taken {index}");
         File.WriteAllText(path, rejected);
         MosaicRuntimeHost.LoadRequired();
@@ -613,7 +620,8 @@ internal static class Driver
             "the warning stays showing after an event");
         Check(
             File.ReadAllText(path + ".corrupt") == "earlier"
-                && File.ReadAllText(path + ".corrupt.1") == rejected
+                && Directory.Exists(path + ".corrupt.1")
+                && File.ReadAllText(path + ".corrupt.2") == rejected
                 && File.ReadAllText(path + ".corrupt.9") == "taken 9",
             "no quarantine was replaced");
     }

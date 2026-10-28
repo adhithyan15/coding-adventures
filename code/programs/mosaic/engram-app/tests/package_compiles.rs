@@ -2950,6 +2950,12 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "path + \".corrupt\"");
     assert_contains(&xaml_host, "$\"{path}.corrupt.{index}\"");
     assert_contains(&xaml_host, "File.Copy(path, corrupt, overwrite: false);");
+    // A name is taken when anything is there, a dangling link included, and
+    // a refused copy is a taken name only if something is now there: Windows
+    // reports a directory in the way as access denied, not "already exists".
+    assert_contains(&xaml_host, "|| new FileInfo(corrupt).LinkTarget is not null;");
+    let copy = xaml_host.find("File.Copy(path, corrupt, overwrite: false);").unwrap();
+    assert_contains(&xaml_host[copy..], "if (QuarantineNameTaken(corrupt))");
     assert_contains(&xaml_host, "private const int MaxQuarantinedSnapshots = 10;");
     assert_contains(&xaml_host, "PersistenceDisabled = true;");
     // The react backend's TypeScript web host mirrors engram-host.mjs, whose

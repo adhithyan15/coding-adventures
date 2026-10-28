@@ -241,6 +241,7 @@ fn the_emitted_xaml_host_answers_effects() {
         "an answer inside the handler raises no props-changed",
         "state cannot be persisted while a deferred effect is outstanding",
         "an earlier quarantine is never replaced",
+        "a directory at a quarantine name is skipped",
         "a rejected file moves to the first free name",
         "a file moved aside leaves saving on",
         "fresh state is saved once the rejected file is aside",
