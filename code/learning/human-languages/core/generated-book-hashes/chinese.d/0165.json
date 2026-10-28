@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:c8092733f9f524c6",
+  "lessonIds": [
+    "ZH-C165-dayi",
+    "ZH-W165-yi-clothes",
+    "ZH-C165-maoyi",
+    "ZH-C165-tiao",
+    "ZH-C165-qunzi",
+    "ZH-C165-weijin"
+  ],
+  "tex": "chinese/book/chapters/ch165-coats-and-scarves.tex"
+}

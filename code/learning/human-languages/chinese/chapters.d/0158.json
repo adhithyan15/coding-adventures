@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Waking Up",
+  "label": "ch:zh-waking-up",
+  "canDo": "I can say who wakes me, when I fall asleep, what I dream and what I am used to.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C158-xiguan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can say who wakes me, when I fall asleep, what I dream and what I am used to.",
+    "assesses": [
+      "ZH-LEX-C158-WAKE158-03",
+      "ZH-LEX-C158-WAKE158-04",
+      "ZH-LEX-C158-WAKE158-05"
+    ]
+  }
+}

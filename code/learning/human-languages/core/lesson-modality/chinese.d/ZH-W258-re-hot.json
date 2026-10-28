@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W258-re-hot",
+    "language": "chinese",
+    "chapter": 258,
+    "sequence": 19525,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:988ba5bfcbebc1ab",
+    "detachableSegments": [
+      "Script — the hand piece and a hooked bend, over four dots"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C268-jieshi",
+    "language": "chinese",
+    "chapter": 268,
+    "sequence": 20070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c86d11643e448a47"
+  },
+  "findings": []
+}

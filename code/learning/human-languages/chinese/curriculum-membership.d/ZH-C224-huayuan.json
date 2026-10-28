@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C224-huayuan",
+  "pathSegment": "ZH-PATH-224-BLOOM224",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-224-BLOOM224",
+      "order": 3
+    }
+  ]
+}

@@ -312,61 +312,37 @@ fn thunk_name(name: &str) -> String {
 
 /// The set of function names referenced by a `MakeClosure` anywhere in the
 /// module — exactly the functions that need a thunk.  Sorted for determinism.
+///
+/// This uses the shared [`semantic_ir::Visitor`] walk, so it reaches a
+/// `MakeClosure` wherever the emitter can meet one.  An earlier hand-written
+/// walk skipped some places: the *target* of an `IndirectCall`, loop bodies,
+/// and most other expression kinds.  A closure built there was emitted as
+/// `_sir_make_closure(_sir_thunk_f, ...)` with no `_sir_thunk_f` defined, so
+/// the C did not compile.  The Python frontend builds exactly such a closure
+/// for a recursive call to a capturing nested `def`:
+///
+/// ```text
+///   go(x - 1)   ⇒   IndirectCall(MakeClosure(go, [n]), [x - 1])
+/// ```
+///
+/// Every `MakeClosure` the walk finds is one the emitter writes out, so each
+/// thunk collected here is used.
 fn collect_closure_targets(m: &Module) -> Vec<String> {
-    let mut set = std::collections::BTreeSet::new();
-    for f in &m.functions {
-        collect_targets_block(&f.body, &mut set);
-    }
-    set.into_iter().collect()
-}
+    use semantic_ir::Visitor;
 
-fn collect_targets_block(b: &Block, set: &mut std::collections::BTreeSet<String>) {
-    for s in &b.stmts {
-        collect_targets_stmt(s, set);
-    }
-    collect_targets_expr(&b.value, set);
-}
-
-fn collect_targets_stmt(s: &Stmt, set: &mut std::collections::BTreeSet<String>) {
-    match s {
-        Stmt::LetBinding { value, .. }
-        | Stmt::LetStarBinding { value, .. }
-        | Stmt::ExprStmt { expr: value, .. }
-        | Stmt::Assign { value, .. } => collect_targets_expr(value, set),
-        _ => {}
-    }
-}
-
-fn collect_targets_expr(e: &Expr, set: &mut std::collections::BTreeSet<String>) {
-    match e {
-        Expr::MakeClosure {
-            fn_name, captures, ..
-        } => {
-            set.insert(fn_name.clone());
-            for c in captures {
-                collect_targets_expr(&c.value, set);
+    struct Targets(std::collections::BTreeSet<String>);
+    impl Visitor for Targets {
+        fn visit_expr(&mut self, e: &Expr, depth: usize) {
+            if let Expr::MakeClosure { fn_name, .. } = e {
+                self.0.insert(fn_name.clone());
             }
+            semantic_ir::walker::walk_expr_default(self, e, depth);
         }
-        Expr::If {
-            cond,
-            then_branch,
-            else_branch,
-            ..
-        } => {
-            collect_targets_expr(cond, set);
-            collect_targets_block(then_branch, set);
-            collect_targets_block(else_branch, set);
-        }
-        Expr::Block(b) => collect_targets_block(b, set),
-        Expr::DirectCall { args, .. }
-        | Expr::IndirectCall { args, .. }
-        | Expr::BuiltinCall { args, .. } => {
-            for a in args {
-                collect_targets_expr(a, set);
-            }
-        }
-        _ => {}
     }
+
+    let mut targets = Targets(std::collections::BTreeSet::new());
+    targets.visit_module(m);
+    targets.0.into_iter().collect()
 }
 
 // ---------------------------------------------------------------------------

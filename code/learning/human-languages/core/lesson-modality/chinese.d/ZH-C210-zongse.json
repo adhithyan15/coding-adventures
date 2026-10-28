@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C210-zongse",
+    "language": "chinese",
+    "chapter": 210,
+    "sequence": 16140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ced3f0c26a850e04"
+  },
+  "findings": []
+}

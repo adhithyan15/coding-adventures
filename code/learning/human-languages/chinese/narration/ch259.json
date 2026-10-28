@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 259,
+  "title": "What Do You Do?",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2524b38cf689e653",
+  "lessons": [
+    {
+      "id": "ZH-C259-zhiye",
+      "sequence": 19560,
+      "title": "zhíyè — occupation; profession",
+      "headword": "zhíyè",
+      "romanization": "zhíyè",
+      "gloss": "occupation; profession",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4da72dbdcadd4a27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for witty, then the Mandarin for personality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhíyè",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhíyè — \"occupation; profession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ de zhíyè shì shénme — What do you do for a living?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhíyè is built from zhí 'a duty' and yè 'a task', both inherited from Middle Chinese, tsyik and ngjaep (Guangyun, in Baxter's transcription), which quotes two older dictionaries for the first: 'to be in charge' and 'work'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhíyè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhíyè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhíyè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhíyè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ de zhíyè shì shénme — What do you do for a living?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ de zhíyè shì shénme* — What do you do for a living?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for witty, then the Mandarin for personality, then say zhíyè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for witty, then the Mandarin for personality, then say *zhíyè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhíyè mean? (\"Occupation; profession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C259-zuojia",
+      "sequence": 19570,
+      "title": "作家 (zuòjiā) — writer; author",
+      "headword": "作家",
+      "romanization": "zuòjiā",
+      "gloss": "writer; author",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c0b5d1571bf8d89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for personality, then the Mandarin for an occupation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 作家",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "作家 — zuòjiā — \"writer; author\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他是作家写了十本书 tā shì zuòjiā xiěle shí běn shū — He's an author and has written ten books."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "作家 (zuòjiā) is built from 作 'to make' and 家, both inherited from Middle Chinese, tsak and kae (Guangyun, in Baxter's transcription), which glosses the second 'a dwelling'. 家 also names a master of a craft, a sense the dictionary does not give, so how it came is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuòjiā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuòjiā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuòjiā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuòjiā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shì zuòjiā xiěle shí běn shū — He's an author and has written ten books.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shì zuòjiā xiěle shí běn shū* — He's an author and has written ten books.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for personality, then the Mandarin for an occupation, then say zuòjiā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for personality, then the Mandarin for an occupation, then say *zuòjiā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 作家 (zuòjiā) mean? (\"Writer; author\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C259-lushi",
+      "sequence": 19580,
+      "title": "lǜshī — lawyer",
+      "headword": "lǜshī",
+      "romanization": "lǜshī",
+      "gloss": "lawyer",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d595b6bfd6263aef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an occupation, then the Mandarin for an author."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lǜshī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǜshī — \"lawyer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ jiějie shì lǜshī — My sister is a lawyer."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǜshī is built from lǜ 'the law' and shī 'a master', both inherited from Middle Chinese, lwit and srij (Guangyun, in Baxter's transcription), which glosses the first 'the law' and the second 'a model'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǜshī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǜshī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǜshī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǜshī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ jiějie shì lǜshī — My sister is a lawyer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ jiějie shì lǜshī* — My sister is a lawyer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an occupation, then the Mandarin for an author, then say lǜshī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an occupation, then the Mandarin for an author, then say *lǜshī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lǜshī mean? (\"Lawyer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C259-jizhe",
+      "sequence": 19590,
+      "title": "jìzhě — journalist; reporter",
+      "headword": "jìzhě",
+      "romanization": "jìzhě",
+      "gloss": "journalist; reporter",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:807aac209bd64c3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an author, then the Mandarin for a lawyer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jìzhě",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jìzhě — \"journalist; reporter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā shì yí ge jìzhě — He's a journalist."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jìzhě is built from jì 'to record' and zhě 'one who', both inherited from Middle Chinese, kiH and tsyaeX (Guangyun, in Baxter's transcription), which glosses the first 'to note down' and calls the second a particle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìzhě",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìzhě*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìzhě, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìzhě*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shì yí ge jìzhě — He's a journalist.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shì yí ge jìzhě* — He's a journalist.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an author, then the Mandarin for a lawyer, then say jìzhě again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an author, then the Mandarin for a lawyer, then say *jìzhě* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jìzhě mean? (\"Journalist; reporter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C259-diangong",
+      "sequence": 19600,
+      "title": "电工 (diàngōng) — electrician",
+      "headword": "电工",
+      "romanization": "diàngōng",
+      "gloss": "electrician",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b347a050cb0b7377",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a lawyer, then the Mandarin for a journalist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 电工",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "电工 — diàngōng — \"electrician\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他是电工 tā shì diàngōng — He's an electrician."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "电工 (diàngōng) is built from 电 'electricity' and 工 'a worker', both inherited from Middle Chinese, denH and kuwng (Guangyun, in Baxter's transcription), which glosses the first 'lightning'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what I do."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diàngōng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diàngōng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diàngōng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diàngōng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shì diàngōng — He's an electrician.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shì diàngōng* — He's an electrician.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a lawyer, then the Mandarin for a journalist, then say diàngōng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a lawyer, then the Mandarin for a journalist, then say *diàngōng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 电工 (diàngōng) mean? (\"Electrician\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R259-review-254-259",
+      "sequence": 19610,
+      "title": "Looking back: from Born and Married to What Do You Do?",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Born and Married to What Do You Do?",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eebfc920eede1e32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to be born and to get married."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be born, to get married, to graduate, a wedding, daily life",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be born, to get married, to graduate, a wedding, daily life]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to work part-time, wages, a colleague, to work overtime, the boss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to work part-time, wages, a colleague, to work overtime, the boss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hold a view, a point of view, it looks as if, it may be that, different",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hold a view, a point of view, it looks as if, it may be that, different]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a musical instrument, to play the drums, to perform on stage, a singer, to applaud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a musical instrument, to play the drums, to perform on stage, a singer, to applaud]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "friendly, eager to help, patient with people, witty, personality",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: friendly, eager to help, patient with people, witty, personality]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an occupation, an author, a lawyer, a journalist, an electrician",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an occupation, an author, a lawyer, a journalist, an electrician]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "工 热 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 工 热 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To be born? (出生, chūshēng.) To get married? (jiéhūn.) To graduate? (bìyè.) A wedding? (hūnlǐ.) Daily life? (shēnghuó.) To work part-time? (打工, dǎgōng.) Wages? (gōngzī.) A colleague? (同事, tóngshì.) To work overtime? (jiābān.) The boss? (lǎobǎn.) To hold a view? (rènwéi.) A point of view? (kànfǎ.) It looks as if? (看来, kànlai.) It may be that? (yěxǔ.) Different? (不同, bùtóng.) A musical instrument? (yuèqì.) To play the drums? (dǎgǔ.) To perform on stage? (yǎnchū.) A singer? (gēshǒu.) To applaud? (gǔzhǎng.) Friendly? (yǒuhǎo.) Eager to help? (热心, rèxīn.) Patient with people? (nàixīn.) Witty? (yōumò.) Personality? (xìnggé.) An occupation? (zhíyè.) An author? (作家, zuòjiā.) A lawyer? (lǜshī.) A journalist? (jìzhě.) An electrician? (电工, diàngōng.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

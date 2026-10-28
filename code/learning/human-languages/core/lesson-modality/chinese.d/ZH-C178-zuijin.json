@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C178-zuijin",
+    "language": "chinese",
+    "chapter": 178,
+    "sequence": 14060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5c44a8d3368a2b2"
+  },
+  "findings": []
+}

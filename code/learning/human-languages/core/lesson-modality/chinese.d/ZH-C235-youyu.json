@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C235-youyu",
+    "language": "chinese",
+    "chapter": 235,
+    "sequence": 17880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d2875685917ec74"
+  },
+  "findings": []
+}

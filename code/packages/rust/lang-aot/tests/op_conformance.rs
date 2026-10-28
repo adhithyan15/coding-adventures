@@ -2660,7 +2660,8 @@ fn pr7f2_lisp_rules_are_module_code_over_the_primitives() {
     // `__lisp_exit_code` and calls no runtime rule.
     let ll = lang_aot::compile_iir_to_llvm(case.module(), "opconf", "x86_64-unknown-linux-gnu").expect("llvm");
     for defined in ["@__lisp_equal(", "@__lisp_exit_code("] {
-        assert!(ll.contains(&format!("define i64 {defined}")), "{defined} is defined in the module");
+        // `internal`: only the entry point is exported (#18416).
+        assert!(ll.contains(&format!("define internal i64 {defined}")), "{defined} is defined in the module");
     }
     for gone in ["__dyn_truthy", "__dyn_not", "__dyn_equal", "__dyn_to_exit_code"] {
         assert!(!ll.contains(gone), "{gone} is no longer a runtime call");

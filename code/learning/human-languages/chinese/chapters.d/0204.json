@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Online",
+  "label": "ch:zh-online",
+  "canDo": "I can talk about websites, logging in, clicking, videos and typing.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C204-dazi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can talk about websites, logging in, clicking, videos and typing.",
+    "assesses": [
+      "ZH-LEX-C204-ONLINE204-03",
+      "ZH-LEX-C204-ONLINE204-04",
+      "ZH-LEX-C204-ONLINE204-05"
+    ]
+  }
+}

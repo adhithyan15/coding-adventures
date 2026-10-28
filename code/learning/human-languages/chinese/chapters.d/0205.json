@@ -1,0 +1,23 @@
+{
+  "chapter": 205,
+  "title": "How Far Is It?",
+  "label": "ch:zh-how-far-is-it",
+  "canDo": "I can say how far away a place is in kilometres, talk about distance and give a rough figure.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R205-review-200-205",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say how far away a place is in kilometres, talk about distance and give a rough figure.",
+    "assesses": [
+      "ZH-LEX-C205-FAR205-01",
+      "ZH-LEX-C205-FAR205-02",
+      "ZH-LEX-C205-FAR205-03",
+      "ZH-LEX-C205-FAR205-04",
+      "ZH-LEX-C205-FAR205-05",
+      "ZH-SCRIPT-LI-APART-01",
+      "ZH-SCRIPT-GONG-PUBLIC-01"
+    ]
+  }
+}

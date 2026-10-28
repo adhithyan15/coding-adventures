@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:9582709ec0baf04b",
+  "lessonIds": [
+    "ZH-C160-saodi",
+    "ZH-C160-xiwan",
+    "ZH-C160-puchuang",
+    "ZH-C160-ganhuo",
+    "ZH-C160-zhaogu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch160.txt",
+  "json": "chinese/narration/ch160.json",
+  "textHash": "fnv1a64:767903cbd19da8a8",
+  "jsonHash": "fnv1a64:1f27b1378410f868",
+  "findings": []
+}

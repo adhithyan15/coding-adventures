@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C194-malu",
+    "language": "chinese",
+    "chapter": 194,
+    "sequence": 15310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2da4b6d5e47b160"
+  },
+  "findings": []
+}

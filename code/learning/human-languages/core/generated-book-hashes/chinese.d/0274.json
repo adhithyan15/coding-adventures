@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:c671d9f8bb51ff39",
+  "lessonIds": [
+    "ZH-C274-huabing",
+    "ZH-C274-shouji",
+    "ZH-C274-remen",
+    "ZH-C274-shougong",
+    "ZH-C274-qiumi"
+  ],
+  "tex": "chinese/book/chapters/ch274-free-time.tex"
+}

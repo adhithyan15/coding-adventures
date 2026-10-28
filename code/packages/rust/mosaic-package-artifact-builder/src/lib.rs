@@ -11989,14 +11989,14 @@ version = "1"
         refused(
             result,
             "mosaic-pkg-accent",
-            &ws.path().join("mosaic-pkg-shell/mosaic-package.toml"),
+            &ws.path().join("mosaic-pkg-shell").join("mosaic-package.toml"),
         );
 
         let (ws, result) = build(&accent, &[]);
         refused(
             result,
             "mosaic-pkg-dot",
-            &ws.path().join("mosaic-pkg-accent/mosaic-package.toml"),
+            &ws.path().join("mosaic-pkg-accent").join("mosaic-package.toml"),
         );
 
         // The same consumer as a loose triple: no manifest, so only the

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C165-qunzi",
+    "language": "chinese",
+    "chapter": 165,
+    "sequence": 13390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67d6c69bf26b1f1c"
+  },
+  "findings": []
+}

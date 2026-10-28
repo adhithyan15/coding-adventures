@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:f8747387f8d6b224",
+  "lessonIds": [
+    "ZH-C233-yangzi",
+    "ZH-C233-yanjing",
+    "ZH-C233-huzi",
+    "ZH-C233-miaotiao",
+    "ZH-C233-pifu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch233.txt",
+  "json": "chinese/narration/ch233.json",
+  "textHash": "fnv1a64:c52fd4d26c82a946",
+  "jsonHash": "fnv1a64:82e4e4973e0f29ab",
+  "findings": []
+}
