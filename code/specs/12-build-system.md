@@ -143,8 +143,26 @@ The build system parses language-specific metadata files to discover inter-packa
 | TypeScript | `package.json` | `@coding-adventures/`       |
 | Rust     | `Cargo.toml`     | workspace member path       |
 | Elixir   | `mix.exs`        | `:coding_adventures_`       |
+| Mosaic   | `mosaic-package.toml` | `[dependencies]` key = directory basename or `[package].name` |
 
-Dependencies on external packages (not in the monorepo) are silently ignored. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
+Dependencies on external packages (not in the monorepo) are silently ignored.
+
+Mosaic is a domain language, not an implementation lane, so only the Go
+reference tool resolves it (the conformance contract does not require the
+other build-tool implementations to). Only the keys of the root
+`[dependencies]` table are
+candidates; the requirement string is version data. Lookup is scoped to
+Mosaic packages, and
+self-references are dropped. A key without the `mosaic-pkg-` prefix also
+depends on `mosaic-pkg-<key>`, matching the resolver's directory locator. Because a
+missed edge silently skips a dependent's tests, the reader fails closed: a
+manifest outside the plain subset it reads (any root-level key; any table
+header other than a one-part `[package]`, `[dependencies]`, `[components]`,
+`[kernel]`, `[styles]`, `[app]`, `[host_assets]` or `[host_effects]`; a
+quoted or dotted key, or a non-string value, in `[package]` or
+`[dependencies]`; a multi-line string; any backslash), a manifest that is not a regular file or exceeds 1 MiB, and two Mosaic
+packages (libraries or apps) claiming one name are errors that stop the plan.
+A leading UTF-8 byte-order mark is stripped, as TOML allows. The resolver builds a directed graph where an edge from A to B means "B depends on A" (A must build before B).
 
 ## BUILD Validation
 
@@ -210,6 +228,22 @@ git diff --name-only <base>...HEAD
 ```
 
 This produces the list of files that changed relative to the base branch (typically `origin/main`). Changed files are mapped to packages by path prefix matching. The dependency graph is then used to find all affected packages — both directly changed packages and their transitive dependents.
+
+#### Repository input consumers
+
+A few packages hold *repository-wide guards*: tests that walk the whole
+`code/` tree rather than their own directory, so prefix matching never maps
+their inputs to them. The Go tool keeps an explicit table of such consumers,
+each with a predicate over raw Git paths. When a changed path matches, the
+consumer is added to the affected set together with its prerequisites but
+**not** its transitive dependents — only the data it reads changed, not its
+code. Matching uses raw, uncleaned Git paths and never stats them (a deleted
+input still selects), honors a single-language invocation, and fails the
+plan if the consumer is missing from discovery.
+
+| Consumer | Selected by |
+|---|---|
+| `rust/mosaic-package-resolver` | any `mosaic-package.toml`, `.mil`, `.mll`, or `.msl` under `code/` |
 
 ### Hash-Based Fallback
 

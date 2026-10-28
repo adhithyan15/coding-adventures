@@ -1,0 +1,11 @@
+{
+  "id": "JA-C529-tokorode",
+  "pathSegment": "JA-PATH-529-ANYWAY529",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-529-ANYWAY529",
+      "order": 1
+    }
+  ]
+}

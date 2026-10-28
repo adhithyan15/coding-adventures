@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C260-gaoshou",
+  "pathSegment": "ZH-PATH-260-SKILL260",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-260-SKILL260",
+      "order": 2
+    }
+  ]
+}

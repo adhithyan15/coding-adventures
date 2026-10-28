@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C423-gochisou",
+    "language": "japanese",
+    "chapter": 423,
+    "sequence": 24630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2c2321bee14085b"
+  },
+  "findings": []
+}

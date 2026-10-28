@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:933d94f4021a3dea",
+  "lessonIds": [
+    "ZH-C223-dongwu",
+    "ZH-C223-xiongmao",
+    "ZH-C223-laohu",
+    "ZH-C223-houzi",
+    "ZH-C223-tuzi",
+    "ZH-R223-review-218-223"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch223.txt",
+  "json": "chinese/narration/ch223.json",
+  "textHash": "fnv1a64:bf6c197eb58c0d7d",
+  "jsonHash": "fnv1a64:8010d3ab3db52f5d",
+  "findings": []
+}

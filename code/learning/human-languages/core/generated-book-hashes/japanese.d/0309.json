@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:c80ec734b9a16043",
+  "lessonIds": [
+    "JA-C309-kureru",
+    "JA-C309-ageru",
+    "JA-C309-okaeshi",
+    "JA-C309-hito",
+    "JA-C309-uchiakeru"
+  ],
+  "tex": "japanese/book/chapters/ch309-presents-in-the-post.tex"
+}

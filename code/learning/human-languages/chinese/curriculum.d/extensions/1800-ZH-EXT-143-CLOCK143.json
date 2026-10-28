@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-143-CLOCK143",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say seconds and minutes, the minutes before the hour, and when things begin and end.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C372-baiten",
+  "pathSegment": "JA-PATH-372-EKIMAE372",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-372-EKIMAE372",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C126-changchang",
+    "language": "chinese",
+    "chapter": 126,
+    "sequence": 10150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9acd0e149b07600a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C101-dao",
+  "pathSegment": "ZH-PATH-101-KITCHEN101",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-101-KITCHEN101",
+      "order": 5
+    }
+  ]
+}

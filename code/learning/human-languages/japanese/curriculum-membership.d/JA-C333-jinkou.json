@@ -1,0 +1,11 @@
+{
+  "id": "JA-C333-jinkou",
+  "pathSegment": "JA-PATH-333-WAKAMONO333",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-333-WAKAMONO333",
+      "order": 2
+    }
+  ]
+}

@@ -58,9 +58,28 @@ fn main() {
     println!("cargo:rerun-if-changed=runtime/twig_runtime.c");
     println!("cargo:rerun-if-changed=runtime/dynval_runtime.c");
     // twig_gc.c has been retired (#118b-2b): the GC now comes from the
-    // gc-core-capi crate. Re-run if its C-ABI source changes so the embedded
-    // gc archive stays fresh.
-    println!("cargo:rerun-if-changed=../gc-core-capi/src");
+    // gc-core-capi crate, built below by a nested `cargo build` whose archive is
+    // embedded in the twig-aot binary. Cargo only knows to re-run *this* script
+    // for the paths listed here, so the list must cover everything that archive
+    // is compiled from, or an edit leaves a stale collector baked in:
+    //
+    // | path                      | why                                         |
+    // |---------------------------|---------------------------------------------|
+    // | ../gc-core-capi/src       | the C-ABI shim itself                        |
+    // | ../gc-core-capi/Cargo.toml| its features, dependencies, version          |
+    // | ../gc-core/src            | the collector the shim links in              |
+    // | ../gc-core/Cargo.toml     | the collector's own manifest                 |
+    //
+    // (gc-core has no further path dependencies; extend this table if it grows
+    // one.)
+    for path in [
+        "../gc-core-capi/src",
+        "../gc-core-capi/Cargo.toml",
+        "../gc-core/src",
+        "../gc-core/Cargo.toml",
+    ] {
+        println!("cargo:rerun-if-changed={path}");
+    }
 
     let out_dir: PathBuf = std::env::var("OUT_DIR")
         .expect("OUT_DIR not set by cargo")
@@ -159,15 +178,60 @@ fn main() {
     if host_key.is_some() {
         let cargo = std::env::var("CARGO").unwrap_or_else(|_| "cargo".into());
         let gc_target = out_dir.join("gc-core-capi-build");
+        // The precise collector walks the `[fp] = caller fp, [fp + 8] = return
+        // address` chain from its own entry point into the compiled Twig frames,
+        // whose stack maps name their exact reference slots. The walk's *anchor*
+        // no longer depends on compiler flags: every precise entry point is a
+        // naked trampoline that pushes its own frame record (gc-core-capi
+        // `stack_scan.rs`, section 2b), which also covers Windows x64, where LLVM
+        // sets `rbp` with `lea rbp, [rsp+N]` and `[rbp]` is never a saved-rbp
+        // record. `-Cforce-frame-pointers=yes` is still passed: it keeps the
+        // classic chain in every *other* function of the archive, so any frame
+        // between the trampoline's caller and the Twig code stays walkable
+        // instead of ending the chain early (which would only cost precision:
+        // the walk treats what it cannot follow conservatively).
+        //
+        // The flag is appended to the outer build's own encoded rustflags (cargo
+        // hands them to build scripts as `CARGO_ENCODED_RUSTFLAGS`, separated by
+        // 0x1f), so a caller's flags still reach the nested build. They are kept
+        // as an `OsString`: a non-UTF-8 flag (a path) must pass through, not
+        // make `env::var` fail and drop every outer flag.
+        let mut rustflags = std::env::var_os("CARGO_ENCODED_RUSTFLAGS").unwrap_or_default();
+        if !rustflags.is_empty() {
+            rustflags.push("\x1f");
+        }
+        rustflags.push("-Cforce-frame-pointers=yes");
+
+        // Build the archive for the same target as twig-aot itself. `host_key`
+        // (and the C runtime `cc` compiled above) follow `TARGET`, but a bare
+        // nested `cargo build` would compile for the *build host* (or for
+        // whatever an inherited `CARGO_BUILD_TARGET` says), so a cross build
+        // would embed a collector for the wrong machine. Passing `--target`
+        // always, even when it equals the host, pins the archive to `TARGET`
+        // and makes its location predictable:
+        //
+        // ```text
+        //   <gc_target>/<TARGET>/release/libgc_core_capi.a
+        // ```
+        //
+        // instead of `<gc_target>/release/...` in one case and the target
+        // subdirectory in the other. A cross target whose standard library is
+        // not installed fails here, with the message below naming it.
+        let target = std::env::var("TARGET").expect("TARGET not set by cargo");
         let status = std::process::Command::new(&cargo)
-            .args(["build", "--release", "-p", "gc-core-capi", "--target-dir"])
+            .args(["build", "--release", "-p", "gc-core-capi", "--target", &target, "--target-dir"])
             .arg(&gc_target)
             // Do not inherit the outer build's CARGO_TARGET_DIR — that would
             // point the nested build back at the locked outer target dir.
             .env_remove("CARGO_TARGET_DIR")
+            .env("CARGO_ENCODED_RUSTFLAGS", rustflags)
             .status()
             .expect("spawn nested cargo build for gc-core-capi staticlib");
-        assert!(status.success(), "gc-core-capi staticlib build failed");
+        assert!(
+            status.success(),
+            "gc-core-capi staticlib build for target `{target}` failed (for a cross \
+             build, install that target's standard library: `rustup target add {target}`)"
+        );
 
         // Staticlib artifact naming follows the same convention as the runtime
         // archive above: MSVC emits `<name>.lib`, every other toolchain emits
@@ -179,7 +243,7 @@ fn main() {
         } else {
             "libgc_core_capi.a"
         };
-        let gc_archive_src = gc_target.join("release").join(gc_staticlib_basename);
+        let gc_archive_src = gc_target.join(&target).join("release").join(gc_staticlib_basename);
         fs::copy(&gc_archive_src, &gc_archive_dst)
             .unwrap_or_else(|e| panic!("copy {} -> {}: {e}",
                                        gc_archive_src.display(),

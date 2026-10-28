@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 256,
+  "sourceHash": "fnv1a64:2fe4e5e50e493993",
+  "lessonIds": [
+    "ZH-C256-renwei",
+    "ZH-C256-kanfa",
+    "ZH-C256-kanlai",
+    "ZH-C256-yexu",
+    "ZH-C256-butong"
+  ],
+  "tex": "chinese/book/chapters/ch256-what-do-you-think.tex"
+}

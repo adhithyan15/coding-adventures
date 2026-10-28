@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C425-juuden",
+    "language": "japanese",
+    "chapter": 425,
+    "sequence": 24770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4e4c82c64ea395b"
+  },
+  "findings": []
+}

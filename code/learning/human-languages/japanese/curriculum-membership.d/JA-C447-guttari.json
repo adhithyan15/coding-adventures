@@ -1,0 +1,11 @@
+{
+  "id": "JA-C447-guttari",
+  "pathSegment": "JA-PATH-447-TIRED447",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-447-TIRED447",
+      "order": 3
+    }
+  ]
+}

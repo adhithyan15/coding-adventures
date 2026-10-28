@@ -1,0 +1,11 @@
+{
+  "id": "JA-C344-youi-suru",
+  "pathSegment": "JA-PATH-344-KEIKAKU344",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-344-KEIKAKU344",
+      "order": 1
+    }
+  ]
+}

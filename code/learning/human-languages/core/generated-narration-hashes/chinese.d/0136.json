@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:597c1c9b96e054f4",
+  "lessonIds": [
+    "ZH-C136-qingtian",
+    "ZH-C136-yintian",
+    "ZH-C136-guafeng",
+    "ZH-C136-dalei",
+    "ZH-C136-liangkuai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch136.txt",
+  "json": "chinese/narration/ch136.json",
+  "textHash": "fnv1a64:e7fee93d903392ff",
+  "jsonHash": "fnv1a64:9d460e98cecaeb9e",
+  "findings": []
+}

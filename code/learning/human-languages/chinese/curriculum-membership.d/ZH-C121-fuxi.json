@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C121-fuxi",
+  "pathSegment": "ZH-PATH-121-LEARN121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-121-LEARN121",
+      "order": 3
+    }
+  ]
+}

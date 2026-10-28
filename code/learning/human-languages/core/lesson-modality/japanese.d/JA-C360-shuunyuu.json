@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C360-shuunyuu",
+    "language": "japanese",
+    "chapter": 360,
+    "sequence": 21220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c76b01b2531f4af7"
+  },
+  "findings": []
+}

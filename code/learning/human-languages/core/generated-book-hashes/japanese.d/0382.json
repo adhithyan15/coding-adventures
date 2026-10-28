@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:55caa6a04f6decb2",
+  "lessonIds": [
+    "JA-C382-kaigan",
+    "JA-C382-sunahama",
+    "JA-C382-misaki",
+    "JA-C382-suiheisen",
+    "JA-C382-kagayaku"
+  ],
+  "tex": "japanese/book/chapters/ch382-down-to-the-coast.tex"
+}

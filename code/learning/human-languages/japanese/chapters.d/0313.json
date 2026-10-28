@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "What Remains",
+  "label": "ch:ja-what-remains",
+  "canDo": "I can say what has come down to us from the past.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C313-iseki",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can say what has come down to us from the past.",
+    "assesses": [
+      "JA-LEX-C313-KIROKU313-03",
+      "JA-LEX-C313-KIROKU313-04",
+      "JA-LEX-C313-KIROKU313-05"
+    ]
+  }
+}

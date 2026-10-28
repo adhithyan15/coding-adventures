@@ -1,0 +1,11 @@
+{
+  "id": "JA-C465-bijutsu",
+  "pathSegment": "JA-PATH-465-PAINT465",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-465-PAINT465",
+      "order": 4
+    }
+  ]
+}

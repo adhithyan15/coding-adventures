@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:c85d18f16efd8f04",
+  "lessonIds": [
+    "JA-C354-doshaburi",
+    "JA-C354-kanpa",
+    "JA-C354-shikke",
+    "JA-C354-higasa",
+    "JA-C354-arakajime"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch354.txt",
+  "json": "japanese/narration/ch354.json",
+  "textHash": "fnv1a64:2be0d13e8e771c82",
+  "jsonHash": "fnv1a64:b06ca9cf7d7d2ccf",
+  "findings": []
+}

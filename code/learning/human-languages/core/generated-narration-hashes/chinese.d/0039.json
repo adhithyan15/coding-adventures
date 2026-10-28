@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:9dfb67dc73fd91d2",
+  "lessonIds": [
+    "ZH-C39-he",
+    "ZH-W39-he-drink",
+    "ZH-C39-shui",
+    "ZH-W39-shui",
+    "ZH-C39-ke",
+    "ZH-C39-niunai",
+    "ZH-C39-cha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch39.txt",
+  "json": "chinese/narration/ch39.json",
+  "textHash": "fnv1a64:7653596d95187e45",
+  "jsonHash": "fnv1a64:e64dc4bf367a43bb",
+  "findings": []
+}

@@ -1,0 +1,796 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 528,
+  "title": "This or That",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:16b8a386fa710377",
+  "lessons": [
+    {
+      "id": "JA-C528-aruiwa",
+      "sequence": 30480,
+      "title": "あるいは (aruiwa) — or perhaps; or",
+      "headword": "あるいは",
+      "romanization": "aruiwa",
+      "gloss": "or perhaps; or",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da5366176f525e99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for from now on, then the Japanese for the present day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あるいは",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あるいは — aruiwa — \"or perhaps; or\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あした さむく なったら、あめ あるいは ゆきでしょう。 — ashita samuku nattara, ame aruiwa yuki deshō — \"If it gets cold tomorrow, there will be rain or snow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あるいは (aruiwa) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruiwa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruiwa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aruiwa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aruiwa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita samuku nattara, ame aruiwa yuki deshō — If it gets cold tomorrow, there will be rain or snow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita samuku nattara, ame aruiwa yuki deshō* — If it gets cold tomorrow, there will be rain or snow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for from now on, then the Japanese for the present day, then say aruiwa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for from now on, then the Japanese for the present day, then say *aruiwa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あるいは (aruiwa) mean? (\"Or perhaps; or\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C528-aruiwa-type",
+              "prompt": "Say the Japanese for 'or perhaps'.",
+              "assesses": [
+                "JA-LEX-C528-OR528-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あるいは",
+                "aruiwa"
+              ],
+              "feedback": {
+                "correct": "Right: あるいは (aruiwa) is 'or perhaps; or'.",
+                "incorrect": "'Or perhaps' is あるいは (aruiwa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C528-matawa",
+      "sequence": 30490,
+      "title": "または (matawa) — or; or else",
+      "headword": "または",
+      "romanization": "matawa",
+      "gloss": "or; or else",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea20836a950382f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the present day, then the Japanese for or perhaps."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: または",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "または — matawa — \"or; or else\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし あめが ふったら、でんしゃ または くるまで いきます。 — moshi ame ga futtara, densha matawa kuruma de ikimasu — \"If it rains, I will go by train or by car.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "または (matawa) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matawa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matawa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matawa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *matawa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ame ga futtara, densha matawa kuruma de ikimasu — If it rains, I will go by train or by car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ame ga futtara, densha matawa kuruma de ikimasu* — If it rains, I will go by train or by car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the present day, then the Japanese for or perhaps, then say matawa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the present day, then the Japanese for or perhaps, then say *matawa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does または (matawa) mean? (\"Or; or else\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C528-matawa-type",
+              "prompt": "Say the Japanese for 'or'.",
+              "assesses": [
+                "JA-LEX-C528-OR528-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "または",
+                "matawa"
+              ],
+              "feedback": {
+                "correct": "Right: または (matawa) is 'or; or else'.",
+                "incorrect": "'Or' is または (matawa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C528-soretomo",
+      "sequence": 30500,
+      "title": "それとも (soretomo) — or (in a question)",
+      "headword": "それとも",
+      "romanization": "soretomo",
+      "gloss": "or (in a question)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:464536d84e34d92b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for or perhaps, then the Japanese for or."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: それとも",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "それとも — soretomo — \"or (in a question)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふったら、えいがに しますか、それとも うちに いますか。 — ame ga futtara, eiga ni shimasu ka, soretomo uchi ni imasu ka — \"If it rains, shall we see a film, or stay at home?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "それとも (soretomo) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soretomo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soretomo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soretomo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soretomo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame ga futtara, eiga ni shimasu ka, soretomo uchi ni imasu ka — If it rains, shall we see a film, or stay at home?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame ga futtara, eiga ni shimasu ka, soretomo uchi ni imasu ka* — If it rains, shall we see a film, or stay at home?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for or perhaps, then the Japanese for or, then say soretomo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for or perhaps, then the Japanese for or, then say *soretomo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does それとも (soretomo) mean? (\"Or (in a question)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C528-soretomo-type",
+              "prompt": "Say the Japanese for 'or (in a question)'.",
+              "assesses": [
+                "JA-LEX-C528-OR528-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "それとも",
+                "soretomo"
+              ],
+              "feedback": {
+                "correct": "Right: それとも (soretomo) is 'or (in a question)'.",
+                "incorrect": "'Or (in a question)' is それとも (soretomo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C528-moshikuwa",
+      "sequence": 30510,
+      "title": "もしくは (moshikuwa) — or else; or",
+      "headword": "もしくは",
+      "romanization": "moshikuwa",
+      "gloss": "or else; or",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6eb9f7d74d44a85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for or, then the Japanese for or (in a question)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もしくは",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もしくは — moshikuwa — \"or else; or\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし あめが ふったら、しあいは げつようび もしくは かようびです。 — moshi ame ga futtara, shiai wa getsuyōbi moshikuwa kayōbi desu — \"If it rains, the match will be on Monday or Tuesday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もしくは (moshikuwa) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana; its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshikuwa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshikuwa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshikuwa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshikuwa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi ame ga futtara, shiai wa getsuyōbi moshikuwa kayōbi desu — If it rains, the match will be on Monday or Tuesday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi ame ga futtara, shiai wa getsuyōbi moshikuwa kayōbi desu* — If it rains, the match will be on Monday or Tuesday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for or, then the Japanese for or (in a question), then say moshikuwa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for or, then the Japanese for or (in a question), then say *moshikuwa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もしくは (moshikuwa) mean? (\"Or else; or\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C528-moshikuwa-type",
+              "prompt": "Say the Japanese for 'or else'.",
+              "assesses": [
+                "JA-LEX-C528-OR528-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もしくは",
+                "moshikuwa"
+              ],
+              "feedback": {
+                "correct": "Right: もしくは (moshikuwa) is 'or else; or'.",
+                "incorrect": "'Or else' is もしくは (moshikuwa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C528-izureka",
+      "sequence": 30520,
+      "title": "いずれか (izureka) — either one; one of them",
+      "headword": "いずれか",
+      "romanization": "izureka",
+      "gloss": "either one; one of them",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:066a31952a7b0c99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for or (in a question), then the Japanese for or else."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いずれか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いずれか — izureka — \"either one; one of them\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし じかんが あったら、いずれかの しあいに きて ください。 — moshi jikan ga attara, izureka no shiai ni kite kudasai — \"If you have time, please come to one of the matches.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いずれか (izureka) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and usually written in kana: built from izure, \"which\", and the particle ka (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izureka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izureka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izureka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izureka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi jikan ga attara, izureka no shiai ni kite kudasai — If you have time, please come to one of the matches.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi jikan ga attara, izureka no shiai ni kite kudasai* — If you have time, please come to one of the matches.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for or (in a question), then the Japanese for or else, then say izureka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for or (in a question), then the Japanese for or else, then say *izureka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いずれか (izureka) mean? (\"Either one; one of them\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C528-izureka-type",
+              "prompt": "Say the Japanese for 'either one'.",
+              "assesses": [
+                "JA-LEX-C528-OR528-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いずれか",
+                "izureka"
+              ],
+              "feedback": {
+                "correct": "Right: いずれか (izureka) is 'either one; one of them'.",
+                "incorrect": "'Either one' is いずれか (izureka)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

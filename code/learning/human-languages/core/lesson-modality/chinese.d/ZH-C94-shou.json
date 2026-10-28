@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C94-shou",
+    "language": "chinese",
+    "chapter": 94,
+    "sequence": 7640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06fb8c029d8c6979"
+  },
+  "findings": []
+}

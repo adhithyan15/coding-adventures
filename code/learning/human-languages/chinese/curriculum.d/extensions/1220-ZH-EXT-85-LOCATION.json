@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-85-LOCATION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say where people and things are, and write 在.",
+  "prerequisites": []
+}

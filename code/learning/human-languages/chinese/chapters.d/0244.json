@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "A Storm Coming",
+  "label": "ch:zh-a-storm-coming",
+  "canDo": "I can talk about plans when a typhoon or showers may come: who knows, in case, and carrying on.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C244-jixu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can talk about plans when a typhoon or showers may come: who knows, in case, and carrying on.",
+    "assesses": [
+      "ZH-LEX-C244-STORM244-03",
+      "ZH-LEX-C244-STORM244-04",
+      "ZH-LEX-C244-STORM244-05"
+    ]
+  }
+}

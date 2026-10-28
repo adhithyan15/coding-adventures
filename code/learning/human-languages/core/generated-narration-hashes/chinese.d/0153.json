@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:55c76d9cfe141cb5",
+  "lessonIds": [
+    "ZH-C153-bi",
+    "ZH-W153-bi-compare",
+    "ZH-C153-bi-grammar",
+    "ZH-C153-geng",
+    "ZH-C153-gen",
+    "ZH-C153-name",
+    "ZH-C153-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch153.txt",
+  "json": "chinese/narration/ch153.json",
+  "textHash": "fnv1a64:bc59e073a9eb73f8",
+  "jsonHash": "fnv1a64:5e9238ea924c0138",
+  "findings": []
+}

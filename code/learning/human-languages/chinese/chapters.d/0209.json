@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Rules and Notices",
+  "label": "ch:zh-rules-and-notices",
+  "canDo": "I can read the rules on a notice: what is safe, keeping quiet, not disturbing, and what is not allowed.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C209-yunxu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can read the rules on a notice: what is safe, keeping quiet, not disturbing, and what is not allowed.",
+    "assesses": [
+      "ZH-LEX-C209-RULE209-03",
+      "ZH-LEX-C209-RULE209-04",
+      "ZH-LEX-C209-RULE209-05"
+    ]
+  }
+}

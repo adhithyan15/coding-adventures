@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C442-kansetsu",
+    "language": "japanese",
+    "chapter": 442,
+    "sequence": 25860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a24b6d068c71f35"
+  },
+  "findings": []
+}

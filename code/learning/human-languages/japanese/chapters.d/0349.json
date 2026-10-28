@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Expecting the Unexpected",
+  "label": "ch:ja-expecting-the-unexpected",
+  "canDo": "I can say what we will do if things turn out differently.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C349-sekkaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say what we will do if things turn out differently.",
+    "assesses": [
+      "JA-LEX-C349-YOSOU349-03",
+      "JA-LEX-C349-YOSOU349-04",
+      "JA-LEX-C349-YOSOU349-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-73-STATION73",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-73-STATION73"
+  ],
+  "after": []
+}

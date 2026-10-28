@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 396,
+  "title": "Where Are You Headed?",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:12ee5ca3dfc39042",
+  "lessons": [
+    {
+      "id": "JA-C396-yukisaki",
+      "sequence": 23240,
+      "title": "ゆきさき (yukisaki) — a destination",
+      "headword": "ゆきさき",
+      "romanization": "yukisaki",
+      "gloss": "a destination",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2a75f7691e1ddb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to loosen, then the Japanese for to go past one's turning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆきさき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆきさき — yukisaki — \"a destination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃの ゆきさきを たしかめました。 — densha no yukisaki o tashikamemashita — \"I made sure of the train's destination.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆきさき (yukisaki) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from yuki, \"going\" (from yuku, another form of iku) and saki, \"ahead\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukisaki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukisaki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukisaki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukisaki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha no yukisaki o tashikamemashita — I made sure of the train's destination.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha no yukisaki o tashikamemashita* — I made sure of the train's destination.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to loosen, then the Japanese for to go past one's turning, then say yukisaki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to loosen, then the Japanese for to go past one's turning, then say *yukisaki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆきさき (yukisaki) mean? (\"A destination\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C396-yukisaki-type",
+              "prompt": "Say the Japanese for 'a destination'.",
+              "assesses": [
+                "JA-LEX-C396-YUKISAKI396-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆきさき",
+                "yukisaki"
+              ],
+              "feedback": {
+                "correct": "Right: ゆきさき (yukisaki) is 'a destination'.",
+                "incorrect": "'A destination' is ゆきさき (yukisaki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C396-samayou",
+      "sequence": 23250,
+      "title": "さまよう (samayou) — to wander about",
+      "headword": "さまよう",
+      "romanization": "samayou",
+      "gloss": "to wander about",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ebb032956eccb8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to go past one's turning, then the Japanese for a destination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さまよう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さまよう — samayou — \"to wander about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちずを なくして、まちを さまよいました。 — chizu o nakushite, machi o samayoimashita — \"I lost my map and wandered about the town.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さまよいます, samayoimasu; a godan verb. Past (polite): あにが まちを さまよいました。, ani ga machi o samayoimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さまよう (samayou) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samayou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samayou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chizu o nakushite, machi o samayoimashita — I lost my map and wandered about the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chizu o nakushite, machi o samayoimashita* — I lost my map and wandered about the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to go past one's turning, then the Japanese for a destination, then say samayou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to go past one's turning, then the Japanese for a destination, then say *samayou* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さまよう (samayou) mean? (\"To wander about\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C396-samayou-type",
+              "prompt": "Say the Japanese for 'to wander about'.",
+              "assesses": [
+                "JA-LEX-C396-YUKISAKI396-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さまよう",
+                "samayou"
+              ],
+              "feedback": {
+                "correct": "Right: さまよう (samayou) is 'to wander about'.",
+                "incorrect": "'To wander about' is さまよう (samayou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C396-tadoritsuku",
+      "sequence": 23260,
+      "title": "たどりつく (tadoritsuku) — to finally reach",
+      "headword": "たどりつく",
+      "romanization": "tadoritsuku",
+      "gloss": "to finally reach",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c40a5de0e660e12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a destination, then the Japanese for to wander about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たどりつく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たどりつく — tadoritsuku — \"to finally reach\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ばんに やどに たどりつきました。 — ban ni yado ni tadoritsukimashita — \"We finally reached the inn in the evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite たどりつきます, tadoritsukimasu; a godan verb. Past (polite): ふねが しまに たどりつきました。, fune ga shima ni tadoritsukimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たどりつく (tadoritsuku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from tadori, \"following a path\" (from tadoru) and tsuku, \"to arrive\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadoritsuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadoritsuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadoritsuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadoritsuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ban ni yado ni tadoritsukimashita — We finally reached the inn in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ban ni yado ni tadoritsukimashita* — We finally reached the inn in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a destination, then the Japanese for to wander about, then say tadoritsuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a destination, then the Japanese for to wander about, then say *tadoritsuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たどりつく (tadoritsuku) mean? (\"To finally reach\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C396-tadoritsuku-type",
+              "prompt": "Say the Japanese for 'to finally reach'.",
+              "assesses": [
+                "JA-LEX-C396-YUKISAKI396-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たどりつく",
+                "tadoritsuku"
+              ],
+              "feedback": {
+                "correct": "Right: たどりつく (tadoritsuku) is 'to finally reach'.",
+                "incorrect": "'To finally reach' is たどりつく (tadoritsuku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C396-burabura",
+      "sequence": 23270,
+      "title": "ぶらぶら (burabura) — strolling; aimlessly",
+      "headword": "ぶらぶら",
+      "romanization": "burabura",
+      "gloss": "strolling; aimlessly",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13abfc859c1f9819",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wander about, then the Japanese for to finally reach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶらぶら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶらぶら — burabura — \"strolling; aimlessly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅうまつは まちを ぶらぶら あるきました。 — shūmatsu wa machi o burabura arukimashita — \"At the weekend I strolled around the town.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶらぶら (burabura) is a native mimetic word that pictures an easy, aimless stroll: an imitative Japanese form, inherited rather than borrowed, whose older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "burabura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *burabura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "burabura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *burabura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūmatsu wa machi o burabura arukimashita — At the weekend I strolled around the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūmatsu wa machi o burabura arukimashita* — At the weekend I strolled around the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wander about, then the Japanese for to finally reach, then say burabura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wander about, then the Japanese for to finally reach, then say *burabura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶらぶら (burabura) mean? (\"Strolling; aimlessly\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C396-burabura-type",
+              "prompt": "Say the Japanese for 'strolling'.",
+              "assesses": [
+                "JA-LEX-C396-YUKISAKI396-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶらぶら",
+                "burabura"
+              ],
+              "feedback": {
+                "correct": "Right: ぶらぶら (burabura) is 'strolling; aimlessly'.",
+                "incorrect": "'Strolling' is ぶらぶら (burabura)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C396-urouro",
+      "sequence": 23280,
+      "title": "うろうろ (urōro) — wandering restlessly",
+      "headword": "うろうろ",
+      "romanization": "urōro",
+      "gloss": "wandering restlessly",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6625cd0bf3dfdb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to finally reach, then the Japanese for strolling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うろうろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うろうろ — urōro — \"wandering restlessly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきの まえで うろうろしていました。 — eki no mae de urōro shite imashita — \"I was hanging about in front of the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うろうろ (urōro) is a native mimetic word that pictures restless, back-and-forth wandering: an imitative Japanese form, inherited rather than borrowed, whose older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urōro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urōro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urōro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urōro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eki no mae de urōro shite imashita — I was hanging about in front of the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eki no mae de urōro shite imashita* — I was hanging about in front of the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to finally reach, then the Japanese for strolling, then say urōro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to finally reach, then the Japanese for strolling, then say *urōro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うろうろ (urōro) mean? (\"Wandering restlessly\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C396-urouro-type",
+              "prompt": "Say the Japanese for 'wandering restlessly'.",
+              "assesses": [
+                "JA-LEX-C396-YUKISAKI396-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うろうろ",
+                "urōro",
+                "urouro",
+                "urooro",
+                "uroro"
+              ],
+              "feedback": {
+                "correct": "Right: うろうろ (urōro) is 'wandering restlessly'.",
+                "incorrect": "'Wandering restlessly' is うろうろ (urōro)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

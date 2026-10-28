@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:beae2b71f7590126",
+  "lessonIds": [
+    "ZH-C176-qiaomen",
+    "ZH-C176-linju",
+    "ZH-C176-chaojia",
+    "ZH-C176-dao-topple",
+    "ZH-C176-zhaohuo"
+  ],
+  "tex": "chinese/book/chapters/ch176-a-knock-at-the-door.tex"
+}

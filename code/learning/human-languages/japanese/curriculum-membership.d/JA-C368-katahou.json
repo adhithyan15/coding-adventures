@@ -1,0 +1,11 @@
+{
+  "id": "JA-C368-katahou",
+  "pathSegment": "JA-PATH-368-ZENTAI368",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-368-ZENTAI368",
+      "order": 3
+    }
+  ]
+}

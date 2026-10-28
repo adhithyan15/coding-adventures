@@ -1,0 +1,11 @@
+{
+  "id": "JA-C481-bukiyou",
+  "pathSegment": "JA-PATH-481-SKILL481",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-481-SKILL481",
+      "order": 1
+    }
+  ]
+}

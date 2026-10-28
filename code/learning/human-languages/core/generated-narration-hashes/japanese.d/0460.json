@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:06010b37627fffa5",
+  "lessonIds": [
+    "JA-C460-mokuhyou",
+    "JA-C460-seikou-suru",
+    "JA-C460-jitsuryoku",
+    "JA-C460-chousen-suru",
+    "JA-C460-tenshoku-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch460.txt",
+  "json": "japanese/narration/ch460.json",
+  "textHash": "fnv1a64:8c535f0c205e2966",
+  "jsonHash": "fnv1a64:04d6a7eba0636067",
+  "findings": []
+}

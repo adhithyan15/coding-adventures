@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Wind and Warm Days",
+  "label": "ch:zh-wind-and-warm-days",
+  "canDo": "I can talk about a windbreaker, a mild day, muggy heat, dry air and damp.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C218-chaoshi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can talk about a windbreaker, a mild day, muggy heat, dry air and damp.",
+    "assesses": [
+      "ZH-LEX-C218-WIND218-03",
+      "ZH-LEX-C218-WIND218-04",
+      "ZH-LEX-C218-WIND218-05"
+    ]
+  }
+}

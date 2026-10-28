@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:b0901464637e6a20",
+  "lessonIds": [
+    "JA-C413-heiya",
+    "JA-C413-bonchi",
+    "JA-C413-hantou",
+    "JA-C413-tairiku",
+    "JA-C413-sabaku",
+    "JA-R413-review-408-413"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch413.txt",
+  "json": "japanese/narration/ch413.json",
+  "textHash": "fnv1a64:9530186ab912f62d",
+  "jsonHash": "fnv1a64:5f2962a03f09c73d",
+  "findings": []
+}

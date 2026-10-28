@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "A Crowded Carriage",
+  "label": "ch:ja-a-crowded-carriage",
+  "canDo": "I can describe a crowded train.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C378-tachiagaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can describe a crowded train.",
+    "assesses": [
+      "JA-LEX-C378-MANIN378-03",
+      "JA-LEX-C378-MANIN378-04",
+      "JA-LEX-C378-MANIN378-05"
+    ]
+  }
+}

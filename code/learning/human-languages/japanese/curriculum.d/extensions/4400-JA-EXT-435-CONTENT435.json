@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-435-CONTENT435",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether I am satisfied or bored.",
+  "prerequisites": []
+}

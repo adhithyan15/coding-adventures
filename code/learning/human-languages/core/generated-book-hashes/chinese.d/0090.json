@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:0f457a5d00a8032a",
+  "lessonIds": [
+    "ZH-C90-hui",
+    "ZH-C90-neng",
+    "ZH-W90-neng",
+    "ZH-C90-keyi",
+    "ZH-C90-youyong",
+    "ZH-C90-practice"
+  ],
+  "tex": "chinese/book/chapters/ch90-what-i-can-do.tex"
+}

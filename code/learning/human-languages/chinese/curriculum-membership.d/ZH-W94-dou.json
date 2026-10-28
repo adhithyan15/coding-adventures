@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W94-dou",
+  "pathSegment": "ZH-PATH-94-ALL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-94-ALL",
+      "order": 1
+    }
+  ]
+}

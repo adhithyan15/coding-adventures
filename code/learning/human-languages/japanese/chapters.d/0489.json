@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Fields and Harvests",
+  "label": "ch:ja-fields-and-harvests",
+  "canDo": "I can talk about farming through the year.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C489-komugi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about farming through the year.",
+    "assesses": [
+      "JA-LEX-C489-FARM489-03",
+      "JA-LEX-C489-FARM489-04",
+      "JA-LEX-C489-FARM489-05"
+    ]
+  }
+}

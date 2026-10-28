@@ -5,8 +5,8 @@
 //! directions (a pin that stops occurring fails too, so it cannot become a
 //! licence). Both themes are measured.
 //!
-//! The app composes RecordList and DraftEditor, so their pinned drops show
-//! up here too; the list is measured, and each pin is checked both ways.
+//! The app composes Card, RecordList and DraftEditor, so their drops show up
+//! here too; the lists are measured, and each pin is checked both ways.
 
 use mosaic_package_artifact_builder::{
     analyze_package_degradations, Backend, BuildOptions, BuildProfile,
@@ -43,6 +43,55 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // fields is implemented by #16944. Keep this list limited to properties
     // the current emitters still lose, so it cannot license that regression.
 ];
+
+/// The scroll container each native backend must emit around the pane (JO-5,
+/// journal-mosaic-app.md "The pane scrolls"), as a marker in its generated
+/// source. Before JO-5 none of these appeared anywhere in Journal's output, so
+/// a pane with no way to reach older entries passed every other check here.
+const PANE_SCROLL_MARKERS: &[(Backend, &str, &str)] = &[
+    (Backend::SwiftUI, "swiftui/JournalApp.swift", "ScrollView {"),
+    (Backend::Qt, "qt/JournalApp.qml", "ScrollView {"),
+    (Backend::Xaml, "xaml/JournalApp.xaml", "<ScrollViewer"),
+    (Backend::Flutter, "flutter/JournalApp.dart", "SingleChildScrollView("),
+    (Backend::Compose, "compose/JournalApp.kt", ".verticalScroll(rememberScrollState())"),
+];
+
+/// Style properties `mosaic-pkg-card`'s own stylesheet loses, by backend
+/// (misfit M2 in journal-component-demand-audit-v1.md, "Card as the timeline
+/// row"). Journal is Card's first consumer and Card has no native gate of its
+/// own, so this is where they were first measured.
+///
+/// These pins match ONLY a drop on one of Card's parts (`$style.card-…`, which
+/// includes the second mount's `-m2` parts), so a Card pin can never license
+/// the same property being dropped from one of Journal's own parts.
+///
+///   * `border-style: solid` on `card-root`: most native backends draw a
+///     border from its width and colour and have no separate style to set.
+///   * `padding-bottom` on `card-title` / `card-body`: Qt and Flutter do not
+///     pad these `Box` regions.
+///   * `font-size` / `font-weight` on the regions: Card styles its text through
+///     the `Box` around each `Text`, and Flutter does not carry a container's
+///     text style down to the `Text`, so there a card's title is neither
+///     larger nor bold.
+///
+/// The fix belongs in Card (style the Text, drop `border-style`), against
+/// this evidence; when it lands, the inverse ratchet below fails until these
+/// pins are removed.
+const CARD_STYLE_DROPS: &[(Backend, &str)] = &[
+    (Backend::SwiftUI, "border-style"),
+    (Backend::Qt, "border-style"),
+    (Backend::Flutter, "border-style"),
+    (Backend::Xaml, "border-style"),
+    (Backend::Qt, "padding-bottom"),
+    (Backend::Flutter, "padding-bottom"),
+    (Backend::Flutter, "font-size"),
+    (Backend::Flutter, "font-weight"),
+];
+
+/// Whether a style drop happened on one of Card's parts.
+fn on_a_card_part(layout_path: &str) -> bool {
+    layout_path.starts_with("$style.card-")
+}
 
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -122,9 +171,11 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
                 // against the list, so it stays unexpected rather than
                 // slipping through.
                 let allowed = entry.primitive.as_deref().is_some_and(|property| {
-                    ALLOWED_STYLE_DROPS
-                        .iter()
-                        .any(|(b, p)| *b == backend && *p == property)
+                    let pinned = |list: &[(Backend, &str)]| {
+                        list.iter().any(|(b, p)| *b == backend && *p == property)
+                    };
+                    pinned(ALLOWED_STYLE_DROPS)
+                        || (on_a_card_part(&entry.layout_path) && pinned(CARD_STYLE_DROPS))
                 });
                 if !allowed {
                     unexpected.push(format!(
@@ -161,25 +212,31 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
 /// list licenses nothing, so there is nothing to go stale.
 #[test]
 fn no_pinned_style_drop_has_silently_been_fixed() {
-    let mut observed: Vec<(Backend, String)> = Vec::new();
+    // (backend, property, whether it was on one of Card's parts)
+    let mut observed: Vec<(Backend, String, bool)> = Vec::new();
     for &backend in NATIVE_BACKENDS {
         for &theme in THEMES {
             for entry in &report_for(backend, theme).style_degradations {
                 if let Some(property) = entry.primitive.as_deref() {
-                    observed.push((backend, property.to_string()));
+                    observed.push((backend, property.to_string(), on_a_card_part(&entry.layout_path)));
                 }
             }
         }
     }
 
+    let seen = |backend: &Backend, property: &str, card_only: bool| {
+        observed.iter().any(|(b, p, on_card)| b == backend && p == property && (*on_card || !card_only))
+    };
     let stale: Vec<String> = ALLOWED_STYLE_DROPS
         .iter()
-        .filter(|(backend, property)| {
-            !observed
-                .iter()
-                .any(|(seen, seen_property)| seen == backend && seen_property == property)
-        })
+        .filter(|(backend, property)| !seen(backend, property, false))
         .map(|(backend, property)| format!("  {backend:?}: {property}"))
+        .chain(
+            CARD_STYLE_DROPS
+                .iter()
+                .filter(|(backend, property)| !seen(backend, property, true))
+                .map(|(backend, property)| format!("  {backend:?}: {property} (on a Card part)")),
+        )
         .collect();
 
     assert!(
@@ -190,4 +247,43 @@ fn no_pinned_style_drop_has_silently_been_fixed() {
         stale.len(),
         stale.join("\n")
     );
+}
+
+/// Every native backend wraps the pane in its scroll container (JO-5).
+///
+/// The marker must open before the pane's first control, the *New entry*
+/// button, so it is the pane that scrolls and not something further in. The
+/// table must also cover every native backend, so a backend added to Mosaic
+/// cannot skip this check.
+#[test]
+fn every_native_backend_scrolls_the_pane() {
+    for &backend in NATIVE_BACKENDS {
+        assert!(
+            PANE_SCROLL_MARKERS.iter().any(|(b, _, _)| *b == backend),
+            "{backend:?} has no pane-scroll marker in PANE_SCROLL_MARKERS"
+        );
+    }
+    for &(backend, file, marker) in PANE_SCROLL_MARKERS {
+        let out = TempDir::new().expect("temp dir");
+        mosaic_package_artifact_builder::build_package(&BuildOptions {
+            package_root: package_root(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_or_else(|e| panic!("{backend:?} build failed: {e}"));
+        let source = std::fs::read_to_string(out.path().join(file))
+            .unwrap_or_else(|e| panic!("{backend:?}: cannot read {file}: {e}"));
+        let scroll = source
+            .find(marker)
+            .unwrap_or_else(|| panic!("{backend:?}: {file} has no `{marker}`: the pane does not scroll"));
+        let first_control = source
+            .find("New entry")
+            .unwrap_or_else(|| panic!("{backend:?}: {file} has no New entry button"));
+        assert!(
+            scroll < first_control,
+            "{backend:?}: `{marker}` opens after the pane's first control, so it does not wrap the pane"
+        );
+    }
 }

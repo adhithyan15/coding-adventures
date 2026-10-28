@@ -1,0 +1,11 @@
+{
+  "id": "JA-C373-teikiken",
+  "pathSegment": "JA-PATH-373-KAISATSU373",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-373-KAISATSU373",
+      "order": 1
+    }
+  ]
+}

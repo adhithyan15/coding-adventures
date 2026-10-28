@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:e55b41aa1d31d390",
+  "lessonIds": [
+    "JA-C510-guuzen",
+    "JA-C510-kikkake",
+    "JA-C510-futo",
+    "JA-C510-ikasu",
+    "JA-C510-megumareru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch510.txt",
+  "json": "japanese/narration/ch510.json",
+  "textHash": "fnv1a64:bea155ee0e5df936",
+  "jsonHash": "fnv1a64:61142a0292e195f0",
+  "findings": []
+}

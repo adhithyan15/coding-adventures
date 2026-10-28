@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W249-du-read",
+    "language": "chinese",
+    "chapter": 249,
+    "sequence": 19075,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7fc8977c2e4f4d86",
+    "detachableSegments": [
+      "Script — the speech piece, then 十 over 买"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

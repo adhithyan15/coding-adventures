@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Teaching and Practising",
+  "label": "ch:zh-teaching-and-practising",
+  "canDo": "I can say teach, practise, answer and revise, and say something is wrong.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C121-cuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: I can say teach, practise, answer and revise, and say something is wrong.",
+    "assesses": [
+      "ZH-LEX-C121-LEARN121-03",
+      "ZH-LEX-C121-LEARN121-04",
+      "ZH-LEX-C121-LEARN121-05"
+    ]
+  }
+}

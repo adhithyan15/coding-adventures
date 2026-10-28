@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C328-koukyou",
+    "language": "japanese",
+    "chapter": 328,
+    "sequence": 19560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da832c66ef6b36b7"
+  },
+  "findings": []
+}

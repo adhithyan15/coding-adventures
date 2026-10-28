@@ -17,6 +17,20 @@ private let mosaicStateFileName = "mosaic-state.v1.json"
 /// begins this way: an app error begins "Mosaic application error".
 private let mosaicInvalidEnvironment = "__MOSAIC_INVALID_ENVIRONMENT__"
 
+/// Claim a quarantine name by creating an empty file there, exclusively
+/// (`O_CREAT | O_EXCL`): the open fails rather than touch anything already at
+/// the name, a file, a directory, or a symbolic link, even a dangling one.
+/// Nil once the name is ours; otherwise the `errno` of the refusal.
+///
+/// At file scope because `MosaicRuntimeHost` has a `close()` of its own, which
+/// would shadow the C function inside the class.
+private func mosaicClaimQuarantineName(_ path: String) -> Int32? {
+  let descriptor = open(path, O_WRONLY | O_CREAT | O_EXCL, 0o600)
+  guard descriptor >= 0 else { return errno }
+  close(descriptor)
+  return nil
+}
+
 private enum MosaicRuntimeError: LocalizedError {
   case unavailable(String)
   case protocolFailure(mosaic_binding_status, String)
@@ -45,6 +59,12 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   private var lastRefusedEnvironment: NSDictionary?
   private var propsChangedHandler: (() -> Void)?
   private var persistenceWarning: String?
+  /// Set when a state file the runtime rejected could not be moved aside (see
+  /// `quarantinePersistedState`), so it still sits at the live path. Every
+  /// save is skipped from then on, because the next one would write over it.
+  /// Sticky, unlike `persistenceWarning`, which a successful write clears:
+  /// here no write is attempted, so the warning saying why stays showing.
+  private let persistenceDisabled: Bool
   /// The revision the state file was last saved at by an answer, so an answer
   /// at that same revision skips the write. Nil until the first save: the
   /// first answer after launch always writes, so a fresh install has its
@@ -103,11 +123,13 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     runtime: OpaquePointer,
     app: mosaic_binding_app,
     update: [String: Any],
-    persistenceWarning: String?
+    persistenceWarning: String?,
+    persistenceDisabled: Bool
   ) {
     self.runtime = runtime
     self.app = app
     self.persistenceWarning = persistenceWarning
+    self.persistenceDisabled = persistenceDisabled
     self.latestUpdate = Self.withPersistenceWarning(update, persistenceWarning)
     super.init()
   }
@@ -151,6 +173,7 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     var app: mosaic_binding_app?
     let persisted = loadPersistedSnapshot()
     var persistenceWarning = persisted.warning
+    var persistenceDisabled = persisted.persistenceDisabled
     func create(_ snapshot: Any?) throws -> [String: Any] {
       var start: [String: Any] = [
         "protocolVersion": mosaicProtocolVersion,
@@ -177,9 +200,11 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
       } catch where persisted.snapshot != nil {
         if let app { mosaic_binding_destroy(runtime, app) }
         app = nil
-        persistenceWarning = quarantinePersistedState(
+        let quarantine = quarantinePersistedState(
           "Mosaic runtime rejected persisted state: \(error.localizedDescription)"
         )
+        persistenceWarning = quarantine.warning
+        persistenceDisabled = quarantine.persistenceDisabled
         update = try create(nil)
       }
       guard let app else {
@@ -189,7 +214,8 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         runtime: runtime,
         app: app,
         update: update,
-        persistenceWarning: persistenceWarning
+        persistenceWarning: persistenceWarning,
+        persistenceDisabled: persistenceDisabled
       )
     } catch {
       fputs("Mosaic Rust runtime unavailable: \(error.localizedDescription)\n", stderr)
@@ -669,6 +695,9 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
   deinit { close() }
 
   private func persistSnapshot() {
+    // The rejected file is still at the live path: writing, or removing it for
+    // a null snapshot, would destroy it.
+    guard !persistenceDisabled else { return }
     guard let runtime, let app, let url = Self.stateURL() else { return }
     do {
       let value = try Self.invokeValue(runtime: runtime) { output in
@@ -692,9 +721,11 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     }
   }
 
-  private static func loadPersistedSnapshot() -> (snapshot: Any?, warning: String?) {
+  private static func loadPersistedSnapshot()
+    -> (snapshot: Any?, warning: String?, persistenceDisabled: Bool)
+  {
     guard let url = stateURL(), FileManager.default.fileExists(atPath: url.path) else {
-      return (nil, nil)
+      return (nil, nil, false)
     }
     do {
       let data = try Data(contentsOf: url)
@@ -702,25 +733,96 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
       guard snapshot is [String: Any] else {
         throw MosaicRuntimeError.invalidResponse("persisted Mosaic state is not a JSON object")
       }
-      return (snapshot, nil)
+      return (snapshot, nil, false)
     } catch {
-      let warning = quarantinePersistedState(
+      let quarantine = quarantinePersistedState(
         "Ignored invalid Mosaic state: \(error.localizedDescription)"
       )
-      return (nil, warning)
+      return (nil, quarantine.warning, quarantine.persistenceDisabled)
     }
   }
 
-  private static func quarantinePersistedState(_ reason: String) -> String {
-    guard let url = stateURL() else { return reason }
-    let corrupt = url.appendingPathExtension("corrupt")
-    try? FileManager.default.removeItem(at: corrupt)
-    if FileManager.default.fileExists(atPath: url.path) {
-      try? FileManager.default.moveItem(at: url, to: corrupt)
+  /// How many names a rejected state file can be moved to.
+  private static let maxQuarantinedStates = 10
+
+  /// Move a state file the runtime rejected out of the way, without ever
+  /// replacing an earlier one.
+  ///
+  /// A rejected file may be the user's only copy of their data, and so may the
+  /// file an earlier rejection moved aside: startup rejects the real state,
+  /// then a later rejection (the next launch, say) must not destroy it. Each
+  /// rejection takes the first free name:
+  ///
+  ///     rejection   moved to
+  ///     ---------   -----------------------------------
+  ///     first       mosaic-state.v1.json.corrupt     (the name release gates compare)
+  ///     second      mosaic-state.v1.json.corrupt.1
+  ///     ...         ...
+  ///     tenth       mosaic-state.v1.json.corrupt.9
+  ///
+  /// Nothing is deleted first, so a move that fails halfway loses nothing
+  /// either. If the move fails, or all ten names are taken, the rejected file
+  /// is still at the live path, and the next save would write over it: the
+  /// answer then switches saving off for the session, and the warning says so.
+  /// An unsaved session is recoverable; an overwritten file is not.
+  private static func quarantinePersistedState(_ reason: String)
+    -> (warning: String, persistenceDisabled: Bool)
+  {
+    guard let url = stateURL() else { return (reason, false) }
+    var warning = "\(reason) (\(url.path))"
+    var persistenceDisabled = false
+    if FileManager.default.fileExists(atPath: url.path), let failure = moveStateAside(url) {
+      persistenceDisabled = true
+      warning += ". \(failure). This session will not be saved."
     }
-    let warning = "\(reason) (\(url.path))"
     fputs("\(warning)\n", stderr)
-    return warning
+    return (warning, persistenceDisabled)
+  }
+
+  /// Move `url` to its first free quarantine name: nil when it moved,
+  /// otherwise why it did not.
+  ///
+  /// `FileManager.moveItem` is NOT used for the move. It refuses an item
+  /// already at its destination only by checking first and then calling
+  /// rename(2), which replaces whatever another process put at the name in
+  /// between. So, as the Qt and Flutter hosts do, the name is claimed first
+  /// and the file is moved onto the claim:
+  ///
+  ///   1. skip a name if anything is there. `attributesOfItem` does not
+  ///      follow a final symbolic link, so it sees a file, a directory, and a
+  ///      link, even a dangling one, where `fileExists` would follow the link
+  ///      and report nothing. This check is only advisory; step 2 refuses;
+  ///   2. `mosaicClaimQuarantineName` creates an empty file there with
+  ///      `O_CREAT | O_EXCL`, failing if anything got there first. If it fails
+  ///      and the name is now taken, move on (decided by looking again, not
+  ///      from `errno`). Any other failure stops here;
+  ///   3. rename(2) moves the rejected file onto that placeholder, an atomic
+  ///      replace whose only victim is the empty file this host just made.
+  ///      The rejected bytes are never copied, so they cannot arrive
+  ///      truncated.
+  ///
+  /// If step 3 fails the rejected file has not moved; the placeholder, still
+  /// empty, is removed so it does not use up a name.
+  private static func moveStateAside(_ url: URL) -> String? {
+    let manager = FileManager.default
+    func taken(_ candidate: URL) -> Bool {
+      (try? manager.attributesOfItem(atPath: candidate.path)) != nil
+    }
+    for index in 0..<maxQuarantinedStates {
+      let name = url.lastPathComponent + (index == 0 ? ".corrupt" : ".corrupt.\(index)")
+      let candidate = url.deletingLastPathComponent().appendingPathComponent(name)
+      if taken(candidate) { continue }
+      if let refused = mosaicClaimQuarantineName(candidate.path) {
+        if taken(candidate) { continue }
+        return "Could not move it aside to \(candidate.path): \(String(cString: strerror(refused)))"
+      }
+      if rename(url.path, candidate.path) == 0 { return nil }
+      let failure = String(cString: strerror(errno))
+      let size = (try? manager.attributesOfItem(atPath: candidate.path))?[.size] as? NSNumber
+      if size?.intValue == 0 { try? manager.removeItem(at: candidate) }
+      return "Could not move it aside to \(candidate.path): \(failure)"
+    }
+    return "All \(maxQuarantinedStates) quarantine names beside it are taken; move them away to save again"
   }
 
   private static func stateURL() -> URL? {

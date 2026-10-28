@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:fb70127bc3699cbf",
+  "lessonIds": [
+    "JA-C532-kagiru",
+    "JA-C532-seigen",
+    "JA-C532-yobun",
+    "JA-C532-yuuri",
+    "JA-C532-igai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch532.txt",
+  "json": "japanese/narration/ch532.json",
+  "textHash": "fnv1a64:f41929b5227b600a",
+  "jsonHash": "fnv1a64:8062d35c2d0c5e3b",
+  "findings": []
+}

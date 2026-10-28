@@ -1,0 +1,20 @@
+{
+  "chapter": 53,
+  "title": "Speaking and Hearing",
+  "label": "ch:zh-speaking-and-hearing",
+  "canDo": "I can say that I understand or not, and ask somebody to speak slowly.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ZH-C53-man",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: I can say that I understand or not, and ask somebody to speak slowly.",
+    "assesses": [
+      "ZH-LEX-C53-SPEAK53-01",
+      "ZH-LEX-C53-SPEAK53-03",
+      "ZH-LEX-C53-SPEAK53-04",
+      "ZH-LEX-C53-SPEAK53-05"
+    ]
+  }
+}

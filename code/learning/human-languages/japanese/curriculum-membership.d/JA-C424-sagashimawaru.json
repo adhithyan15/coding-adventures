@@ -1,0 +1,11 @@
+{
+  "id": "JA-C424-sagashimawaru",
+  "pathSegment": "JA-PATH-424-OTOSHIMONO424",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-424-OTOSHIMONO424",
+      "order": 3
+    }
+  ]
+}

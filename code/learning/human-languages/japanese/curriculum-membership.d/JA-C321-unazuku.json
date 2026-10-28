@@ -1,0 +1,11 @@
+{
+  "id": "JA-C321-unazuku",
+  "pathSegment": "JA-PATH-321-ZETTAI321",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-321-ZETTAI321",
+      "order": 4
+    }
+  ]
+}

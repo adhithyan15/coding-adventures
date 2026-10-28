@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:8d93284bfa1e734a",
+  "lessonIds": [
+    "JA-C377-chien",
+    "JA-C377-unkyuu",
+    "JA-C377-jikokuhyou",
+    "JA-C377-houmen",
+    "JA-C377-hanareru",
+    "JA-R377-review-372-377"
+  ],
+  "tex": "japanese/book/chapters/ch377-delays-and-cancellations.tex"
+}

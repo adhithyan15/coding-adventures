@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C152-bucuo",
+    "language": "chinese",
+    "chapter": 152,
+    "sequence": 12400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad4a0a07758e6345"
+  },
+  "findings": []
+}

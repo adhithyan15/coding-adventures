@@ -1,5 +1,50 @@
 # Changelog — dynval-runtime
 
+## Unreleased — #18417 — the pair refusal's text is public
+
+- New `abi::not_a_pair_message(op, word)` returns the refusal text, for an implementation that reports the error instead of panicking (`lang-aot`'s JIT callbacks), for example `dyn_pair_first: argument with tag 0 (int) is not a pair`. The private `not_a_pair` panic uses it.
+
+## Unreleased — LANG83 PR7f follow-up — the pair refusal names the tag, not the word
+
+- `abi::dyn_pair_first` / `dyn_pair_rest` panicked with `argument {:#x} is not a cons cell`, printing the raw word. A heap-tagged word that is not a cons cell (a closure) is a heap address, so the message could print a pointer on stderr. Both now go through a shared `not_a_pair` helper that prints `dyn_pair_first: argument with tag 7 (heap object) is not a pair`: the tag and its kind (`tag_kind_name`), the same words the C runtime (`twig-aot/runtime/dynval_runtime.c`) prints. New test `not_a_pair_names_the_tag_and_never_the_word` (it calls the Rust helper under `catch_unwind`, not the `extern "C"` functions).
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- The `extern "C"` ABI functions `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_make_symbol` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_symbol`, the LANG83 PR7f registry names.
+- The `LispyBinding` builtin names `make_nil` / `make_symbol` are renamed `dyn_nil` / `dyn_symbol` (and `builtins::make_nil` / `make_symbol` → `builtins::dyn_nil` / `dyn_symbol`). No frontend emits either: Twig and McCarthy Lisp write nil and symbols as typed constants.
+
+## Unreleased — fix a Stacked Borrows violation in `alloc_cons`
+
+### Fixed — `alloc_cons` exposed a read-only pointer to a mutable cell
+
+`alloc_cons` built its pointer as `Box::leak(cell) as *const ConsCell`. That
+`&'static mut → *const` cast reborrows through a shared reference first, so
+the provenance it exposed (via `LispyValue::from_heap`'s
+`expose_provenance`) was **read-only**. `set_field_unchecked` — the runtime of
+twig-vm's `alloc` + `field_store` lowering for typed cons cells and records —
+rebuilds a wildcard pointer with `with_exposed_provenance` and writes `car` /
+`cdr` through it; with only a read-only tag exposed, that write is Undefined
+Behavior under Stacked Borrows. Miri reported it on twig-vm's
+`tw05d_smoke::record_construction_and_first_accessor` once that test became
+reachable under `code/scripts/miri-twig-vm.sh` (an earlier stdin-reading test
+used to abort the run first).
+
+`alloc_cons` now uses `Box::into_raw(cell)`, whose `*mut` carries full write
+permission; the leak-forever semantics are unchanged. `alloc_closure`,
+`alloc_builtin_closure` and `alloc_string` switch to `Box::into_raw` too. They
+are never written through after allocation today, but a later pass (capture
+patching, a GC forwarding word, header flags) would hit the same UB through a
+read-only tag (security-review hardening).
+
+### Added — regression test in this crate's blocking Miri suite
+
+`heap::tests::set_field_unchecked_mutates_an_alloc_cons_cell` performs the
+same `alloc_cons(NIL, NIL)` + two `set_field_unchecked` writes, plus the three
+error paths (bad index, non-heap value, non-cons heap object).
+`set_field_unchecked` had no tests here before, which is why the per-PR
+`dynval-runtime` Miri check never saw the violation. The test reports the
+original UB under Miri when run against the old `alloc_cons` body.
+
 ## [0.7.0] — 2026-07-11 (DVAL01-2 — de-lisp the ABI export symbols)
 
 DVAL01-2: the Rust ABI mirror's `extern "C"` export symbols are de-lisped

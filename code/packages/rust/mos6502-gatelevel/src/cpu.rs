@@ -49,6 +49,29 @@ const IRQ_HI: usize = 0xFFFF;
 pub const FLIP_FLOP_COUNT: usize =
     DffMemory::DFF_COUNT + 4 * 8 + 16 + 7 + 1 + NUM_PORTS * 8 + NUM_PORTS * 8;
 
+/// Physical DFF counts derived from the machine's owned storage containers.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    /// DFFs in the 64 KiB memory.
+    pub memory_dffs: usize,
+    /// DFFs in A, X, Y, S, PC, and the seven stored flags.
+    pub register_dffs: usize,
+    /// The authoritative one-bit HALT register.
+    pub halt_dffs: usize,
+    /// DFFs in the 240 input latches.
+    pub input_dffs: usize,
+    /// DFFs in the 240 output latches.
+    pub output_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum the independently inventoried physical banks.
+    #[must_use]
+    pub const fn total(self) -> usize {
+        self.memory_dffs + self.register_dffs + self.halt_dffs + self.input_dffs + self.output_dffs
+    }
+}
+
 /// Gate-level MOS 6502 (NMOS) simulator.
 ///
 /// # Example
@@ -68,6 +91,7 @@ pub const FLIP_FLOP_COUNT: usize =
 pub struct GateLevelCpu {
     memory: DffMemory,
     rf: RegisterFile6502,
+    /// Non-authoritative compatibility observer, synchronized from HALT Q.
     halted: bool,
     halt_state: StateRegister,
     input_ports: [StateRegister; NUM_PORTS],
@@ -91,8 +115,7 @@ impl GateLevelCpu {
     pub fn reset(&mut self) {
         self.memory = DffMemory::new();
         self.rf.reset();
-        self.halted = false;
-        self.halt_state.write(0);
+        self.clock_halted(false);
     }
 
     /// Load program bytes at `origin` and set PC.
@@ -108,8 +131,7 @@ impl GateLevelCpu {
             self.memory.write(addr, byte);
         }
         self.rf.pc.write(origin);
-        self.halted = false;
-        self.halt_state.write(0);
+        self.clock_halted(false);
         Ok(())
     }
 
@@ -142,7 +164,7 @@ impl GateLevelCpu {
         self.load(program, 0)?;
         let mut traces = Vec::new();
         let mut steps = 0;
-        while !self.halted && steps < max_steps {
+        while !self.halted() && steps < max_steps {
             let trace = match self.step() {
                 Ok(trace) => trace,
                 Err(error) => {
@@ -154,7 +176,7 @@ impl GateLevelCpu {
             steps += 1;
         }
         Ok(ExecutionResult {
-            halted: self.halted,
+            halted: self.halted(),
             steps,
             pc: self.rf.pc.read(),
             traces,
@@ -165,7 +187,7 @@ impl GateLevelCpu {
     /// Execute one instruction.
     pub fn step(&mut self) -> Result<StepTrace, Mos6502Error> {
         self.load_wires_from_state();
-        if self.halted {
+        if self.halted() {
             return Err(Mos6502Error::Halted);
         }
         let address = self.rf.pc.read();
@@ -218,7 +240,7 @@ impl GateLevelCpu {
             flag_i: f.i != 0,
             flag_z: f.z != 0,
             flag_c: f.c != 0,
-            halted: self.halted,
+            halted: self.halted(),
             memory: self.memory.snapshot(),
             input_ports: std::array::from_fn(|port| self.input_ports[port].read() as u8),
             output_ports: std::array::from_fn(|port| self.output_ports[port].read() as u8),
@@ -244,8 +266,7 @@ impl GateLevelCpu {
         self.rf.flags.z = state.flag_z as u8;
         self.rf.flags.c = state.flag_c as u8;
         self.rf.flags.clock();
-        self.halted = state.halted;
-        self.halt_state.write(state.halted as u16);
+        self.clock_halted(state.halted);
         self.memory.copy_from_slice(&state.memory);
         for port in 0..NUM_PORTS {
             self.input_ports[port].write(u16::from(state.input_ports[port]));
@@ -256,12 +277,39 @@ impl GateLevelCpu {
 
     fn load_wires_from_state(&mut self) {
         self.rf.flags.load_wires();
-        self.halted = self.halt_state.read() != 0;
+        self.sync_halted_observer();
     }
 
     fn clock_wires_into_state(&mut self) {
         self.rf.flags.clock();
-        self.halt_state.write(self.halted as u16);
+        self.sync_halted_observer();
+    }
+
+    /// Observe the stable Q output of the physical HALT register.
+    #[must_use]
+    pub fn halted(&self) -> bool {
+        self.halt_state.read() != 0
+    }
+
+    fn clock_halted(&mut self, value: bool) {
+        self.halt_state.write(u16::from(value));
+        self.sync_halted_observer();
+    }
+
+    fn sync_halted_observer(&mut self) {
+        self.halted = self.halted();
+    }
+
+    /// Inventory physical storage from the concrete owned containers.
+    #[must_use]
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        PhysicalStorageInventory {
+            memory_dffs: self.memory.dff_count(),
+            register_dffs: self.rf.dff_count(),
+            halt_dffs: self.halt_state.dff_count(),
+            input_dffs: self.input_ports.iter().map(StateRegister::dff_count).sum(),
+            output_dffs: self.output_ports.iter().map(StateRegister::dff_count).sum(),
+        }
     }
 
     // ── Memory helpers ────────────────────────────────────────────────────────
@@ -421,7 +469,7 @@ impl GateLevelCpu {
                 self.push_byte(p);
                 self.rf.flags.i = 1;
                 self.rf.flags.b = 1;
-                self.halted = true;
+                self.clock_halted(true);
                 "BRK — software interrupt / halt".to_string()
             }
 
@@ -899,6 +947,70 @@ impl Default for GateLevelCpu {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn halt_q_overrides_both_observer_divergences_and_repairs_the_mirror() {
+        let mut running = GateLevelCpu::new();
+        running.load(&[0xEA, 0x00], 0).unwrap();
+        running.halted = true;
+        assert!(!running.halted());
+        assert!(!running.snapshot().halted);
+        let trace = running.step().unwrap();
+        assert_eq!(trace.raw, vec![0xEA]);
+        assert!(!running.halted);
+
+        running.step().unwrap();
+        assert!(running.halted());
+        running.halted = false;
+        let halted = running.snapshot();
+        assert!(halted.halted);
+        assert_eq!(running.step(), Err(Mos6502Error::Halted));
+        assert_eq!(running.snapshot(), halted);
+        assert!(running.halted);
+
+        running.reset();
+        assert!(!running.halted());
+        assert!(!running.halted);
+        running.halted = true;
+        running.load(&[0xEA], 0).unwrap();
+        assert!(!running.halted());
+        assert!(!running.halted);
+        let mut restored = running.snapshot();
+        restored.halted = true;
+        running.restore(&restored).unwrap();
+        assert!(running.halted());
+        assert!(running.halted);
+    }
+
+    #[test]
+    fn halt_q_survives_interrupt_helpers_and_transactional_rollback() {
+        let mut cpu = GateLevelCpu::new();
+        cpu.load(&[0x00], 0).unwrap();
+        cpu.step().unwrap();
+        cpu.halted = false;
+        cpu.interrupt();
+        assert!(cpu.halted());
+        assert!(cpu.halted);
+        cpu.halted = false;
+        cpu.nmi();
+        assert!(cpu.halted());
+        assert!(cpu.halted);
+
+        let mut running = GateLevelCpu::new();
+        running.set_input_port(7, 0xA5).unwrap();
+        running.halted = true;
+        let before = running.snapshot();
+        assert_eq!(
+            running.run(&[0xEA, 0x02], 4),
+            Err(Mos6502Error::UnknownOpcode {
+                address: 1,
+                opcode: 0x02,
+            })
+        );
+        assert_eq!(running.snapshot(), before);
+        assert!(!running.halted());
+        assert!(!running.halted);
+    }
 
     fn run(program: &[u8]) -> Mos6502State {
         let mut cpu = GateLevelCpu::new();

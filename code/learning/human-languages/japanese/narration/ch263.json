@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 263,
+  "title": "Calling for Help",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1cd8442cde271243",
+  "lessons": [
+    {
+      "id": "JA-C263-kyuukyuusha",
+      "sequence": 16050,
+      "title": "きゅうきゅうしゃ (kyūkyūsha) — an ambulance",
+      "headword": "きゅうきゅうしゃ",
+      "romanization": "kyūkyūsha",
+      "gloss": "an ambulance",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b08c491c8d89aed8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for suddenly, then the Japanese for damage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きゅうきゅうしゃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゅうきゅうしゃ — kyūkyūsha — \"an ambulance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じこが あって、きゅうきゅうしゃが きました。 — jiko ga atte, kyūkyūsha ga kimashita — \"There was an accident, and an ambulance came.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゅうきゅうしゃ (kyūkyūsha) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kyū, \"rescue\" (Middle Chinese kjuwH), kyū, \"emergency\" (kip) and sha, \"car\" (tsyhae) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūkyūsha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūkyūsha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyūkyūsha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyūkyūsha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiko ga atte, kyūkyūsha ga kimashita — There was an accident, and an ambulance came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiko ga atte, kyūkyūsha ga kimashita* — There was an accident, and an ambulance came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for suddenly, then the Japanese for damage, then say kyūkyūsha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for suddenly, then the Japanese for damage, then say *kyūkyūsha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きゅうきゅうしゃ (kyūkyūsha) mean? (\"An ambulance\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C263-kyuukyuusha-type",
+              "prompt": "Say the Japanese for 'an ambulance'.",
+              "assesses": [
+                "JA-LEX-C263-KYUUKYUU263-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きゅうきゅうしゃ",
+                "kyūkyūsha",
+                "kyuukyuusha",
+                "kyukyusha"
+              ],
+              "feedback": {
+                "correct": "Right: きゅうきゅうしゃ (kyūkyūsha) is 'an ambulance'.",
+                "incorrect": "'An ambulance' is きゅうきゅうしゃ (kyūkyūsha)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C263-yobu",
+      "sequence": 16060,
+      "title": "よぶ (yobu) — to call; to send for",
+      "headword": "よぶ",
+      "romanization": "yobu",
+      "gloss": "to call; to send for",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cfc2e2c1adbf183",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for damage, then the Japanese for an ambulance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よぶ — yobu — \"to call; to send for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちが きゅうきゅうしゃを よびました。 — chichi ga kyūkyūsha o yobimashita — \"My father phoned for an ambulance.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite よびます, yobimasu; a godan verb. Past (polite): ははが いしゃを よびました。, haha ga isha o yobimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よぶ (yobu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi ga kyūkyūsha o yobimashita — My father phoned for an ambulance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi ga kyūkyūsha o yobimashita* — My father phoned for an ambulance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for damage, then the Japanese for an ambulance, then say yobu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for damage, then the Japanese for an ambulance, then say *yobu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よぶ (yobu) mean? (\"To call; to send for\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C263-yobu-type",
+              "prompt": "Say the Japanese for 'to call'.",
+              "assesses": [
+                "JA-LEX-C263-KYUUKYUU263-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よぶ",
+                "yobu"
+              ],
+              "feedback": {
+                "correct": "Right: よぶ (yobu) is 'to call; to send for'.",
+                "incorrect": "'To call' is よぶ (yobu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C263-sakebu",
+      "sequence": 16070,
+      "title": "さけぶ (sakebu) — to shout; to cry out",
+      "headword": "さけぶ",
+      "romanization": "sakebu",
+      "gloss": "to shout; to cry out",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83710ec3a0f524ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an ambulance, then the Japanese for to call."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さけぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さけぶ — sakebu — \"to shout; to cry out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもが かわで さけびました。 — kodomo ga kawa de sakebimashita — \"A child cried out by the river.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さけびます, sakebimasu; a godan verb. Past (polite): おとこが さけびました。, otoko ga sakebimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さけぶ (sakebu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakebu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakebu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakebu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakebu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ga kawa de sakebimashita — A child cried out by the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ga kawa de sakebimashita* — A child cried out by the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an ambulance, then the Japanese for to call, then say sakebu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an ambulance, then the Japanese for to call, then say *sakebu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さけぶ (sakebu) mean? (\"To shout; to cry out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C263-sakebu-type",
+              "prompt": "Say the Japanese for 'to shout'.",
+              "assesses": [
+                "JA-LEX-C263-KYUUKYUU263-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さけぶ",
+                "sakebu"
+              ],
+              "feedback": {
+                "correct": "Right: さけぶ (sakebu) is 'to shout; to cry out'.",
+                "incorrect": "'To shout' is さけぶ (sakebu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C263-awateru",
+      "sequence": 16080,
+      "title": "あわてる (awateru) — to panic; to be flustered",
+      "headword": "あわてる",
+      "romanization": "awateru",
+      "gloss": "to panic; to be flustered",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cfd185161265a23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to call, then the Japanese for to shout."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あわてる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あわてる — awateru — \"to panic; to be flustered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あわてたら、あぶないでしょう。 — awatetara, abunai deshō — \"If you panicked, it would be dangerous.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あわてます, awatemasu; an ichidan verb. Past (polite): ちちが あわてました。, chichi ga awatemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あわてる (awateru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awateru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awateru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awateru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awateru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awatetara, abunai deshō — If you panicked, it would be dangerous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awatetara, abunai deshō* — If you panicked, it would be dangerous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to call, then the Japanese for to shout, then say awateru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to call, then the Japanese for to shout, then say *awateru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あわてる (awateru) mean? (\"To panic; to be flustered\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C263-awateru-type",
+              "prompt": "Say the Japanese for 'to panic'.",
+              "assesses": [
+                "JA-LEX-C263-KYUUKYUU263-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あわてる",
+                "awateru"
+              ],
+              "feedback": {
+                "correct": "Right: あわてる (awateru) is 'to panic; to be flustered'.",
+                "incorrect": "'To panic' is あわてる (awateru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C263-sugu",
+      "sequence": 16090,
+      "title": "すぐ (sugu) — at once; right away",
+      "headword": "すぐ",
+      "romanization": "sugu",
+      "gloss": "at once; right away",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f607475f1fec9703",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to shout, then the Japanese for to panic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すぐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すぐ — sugu — \"at once; right away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けいさつが すぐ きました。 — keisatsu ga sugu kimashita — \"The police came straight away.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すぐ (sugu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keisatsu ga sugu kimashita — The police came straight away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keisatsu ga sugu kimashita* — The police came straight away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to shout, then the Japanese for to panic, then say sugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to shout, then the Japanese for to panic, then say *sugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すぐ (sugu) mean? (\"At once; right away\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C263-sugu-type",
+              "prompt": "Say the Japanese for 'at once'.",
+              "assesses": [
+                "JA-LEX-C263-KYUUKYUU263-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すぐ",
+                "sugu"
+              ],
+              "feedback": {
+                "correct": "Right: すぐ (sugu) is 'at once; right away'.",
+                "incorrect": "'At once' is すぐ (sugu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

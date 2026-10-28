@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:09003c6e89e4b1d4",
+  "lessonIds": [
+    "JA-C442-kekkan",
+    "JA-C442-kinniku",
+    "JA-C442-ketsueki",
+    "JA-C442-sebone",
+    "JA-C442-kansetsu"
+  ],
+  "tex": "japanese/book/chapters/ch442-inside-the-body.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C520-kokorobosoi",
+  "pathSegment": "JA-PATH-520-WORRY520",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-520-WORRY520",
+      "order": 1
+    }
+  ]
+}

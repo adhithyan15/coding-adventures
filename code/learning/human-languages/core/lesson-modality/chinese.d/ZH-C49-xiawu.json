@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C49-xiawu",
+    "language": "chinese",
+    "chapter": 49,
+    "sequence": 3960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a9c58eab7115e0f"
+  },
+  "findings": []
+}

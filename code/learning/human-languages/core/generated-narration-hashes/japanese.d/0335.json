@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:084a813e59e17f1d",
+  "lessonIds": [
+    "JA-C335-dantai",
+    "JA-C335-kaiin",
+    "JA-C335-kaihi",
+    "JA-C335-jibun",
+    "JA-C335-tanin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch335.txt",
+  "json": "japanese/narration/ch335.json",
+  "textHash": "fnv1a64:b42e2b394f59e175",
+  "jsonHash": "fnv1a64:2b3ffdee66537804",
+  "findings": []
+}

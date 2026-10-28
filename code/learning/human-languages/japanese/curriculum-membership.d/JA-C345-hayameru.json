@@ -1,0 +1,11 @@
+{
+  "id": "JA-C345-hayameru",
+  "pathSegment": "JA-PATH-345-HENKOU345",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-345-HENKOU345",
+      "order": 4
+    }
+  ]
+}

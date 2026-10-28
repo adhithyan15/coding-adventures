@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C521-dandan",
+    "language": "japanese",
+    "chapter": 521,
+    "sequence": 30120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07b457dc104089f9"
+  },
+  "findings": []
+}

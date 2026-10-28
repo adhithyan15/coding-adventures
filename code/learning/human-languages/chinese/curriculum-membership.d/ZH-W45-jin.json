@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W45-jin",
+  "pathSegment": "ZH-PATH-45-TODAY45",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-45-TODAY45",
+      "order": 3
+    }
+  ]
+}

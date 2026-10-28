@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W269-xian-first",
+    "language": "chinese",
+    "chapter": 269,
+    "sequence": 20095,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:63fd1ec0f2a3bb13",
+    "detachableSegments": [
+      "Script — a cross and a long bar, over 儿"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

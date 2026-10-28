@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C129-chao",
+    "language": "chinese",
+    "chapter": 129,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f630e1b620c708a6"
+  },
+  "findings": []
+}

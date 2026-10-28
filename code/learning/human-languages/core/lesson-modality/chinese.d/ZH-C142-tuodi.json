@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C142-tuodi",
+    "language": "chinese",
+    "chapter": 142,
+    "sequence": 10980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feaae8aa61034e22"
+  },
+  "findings": []
+}

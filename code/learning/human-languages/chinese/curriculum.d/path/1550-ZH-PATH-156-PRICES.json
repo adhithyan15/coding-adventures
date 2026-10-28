@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-156-PRICES",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-156-PRICES"
+  ],
+  "after": []
+}

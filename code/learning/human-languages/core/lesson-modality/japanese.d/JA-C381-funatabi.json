@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C381-funatabi",
+    "language": "japanese",
+    "chapter": 381,
+    "sequence": 22460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7a9bb3fa1781f68"
+  },
+  "findings": []
+}

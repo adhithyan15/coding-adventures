@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Deliveries and the Laundry",
+  "label": "ch:zh-deliveries-and-the-laundry",
+  "canDo": "I can have goods delivered, sign for a parcel, leave luggage in safekeeping and use the laundry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C215-ganxi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can have goods delivered, sign for a parcel, leave luggage in safekeeping and use the laundry.",
+    "assesses": [
+      "ZH-LEX-C215-DELIVER215-03",
+      "ZH-LEX-C215-DELIVER215-04",
+      "ZH-LEX-C215-DELIVER215-05"
+    ]
+  }
+}

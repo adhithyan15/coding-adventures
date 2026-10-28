@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:7ef265240c3000d5",
+  "lessonIds": [
+    "JA-C407-sanpai",
+    "JA-C407-butsuzou",
+    "JA-C407-daibutsu",
+    "JA-C407-hondou",
+    "JA-C407-ogamu",
+    "JA-R407-review-402-407"
+  ],
+  "tex": "japanese/book/chapters/ch407-inside-the-temple.tex"
+}

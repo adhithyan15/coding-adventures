@@ -1,0 +1,21 @@
+{
+  "chapter": 328,
+  "title": "Out in Public",
+  "label": "ch:ja-out-in-public",
+  "canDo": "I can ask people to behave well in public places and say why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-R328-review-323-328",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can ask people to behave well in public places and say why.",
+    "assesses": [
+      "JA-LEX-C328-KOUKYOU328-01",
+      "JA-LEX-C328-KOUKYOU328-02",
+      "JA-LEX-C328-KOUKYOU328-03",
+      "JA-LEX-C328-KOUKYOU328-04",
+      "JA-LEX-C328-KOUKYOU328-05"
+    ]
+  }
+}

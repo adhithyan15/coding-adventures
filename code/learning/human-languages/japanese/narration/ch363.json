@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 363,
+  "title": "Paying the Bill",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:527e864dd164b5fd",
+  "lessons": [
+    {
+      "id": "JA-C363-kaikei",
+      "sequence": 21380,
+      "title": "かいけい (kaikei) — the bill; paying at the till",
+      "headword": "かいけい",
+      "romanization": "kaikei",
+      "gloss": "the bill; paying at the till",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2030b8dee9bc59df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for prices in general, then the Japanese for a rental deposit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かいけい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいけい — kaikei — \"the bill; paying at the till\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょくじが おわったら、かいけいを おねがいします。 — shokuji ga owattara, kaikei o onegai shimasu — \"When we have finished eating, the bill, please.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいけい (kaikei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kai, \"meeting\" (Middle Chinese hwajH) and kei, \"plan\" (kejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaikei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaikei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaikei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaikei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokuji ga owattara, kaikei o onegai shimasu — When we have finished eating, the bill, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokuji ga owattara, kaikei o onegai shimasu* — When we have finished eating, the bill, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for prices in general, then the Japanese for a rental deposit, then say kaikei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for prices in general, then the Japanese for a rental deposit, then say *kaikei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かいけい (kaikei) mean? (\"The bill; paying at the till\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C363-kaikei-type",
+              "prompt": "Say the Japanese for 'the bill'.",
+              "assesses": [
+                "JA-LEX-C363-KAIKEI363-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かいけい",
+                "kaikei"
+              ],
+              "feedback": {
+                "correct": "Right: かいけい (kaikei) is 'the bill; paying at the till'.",
+                "incorrect": "'The bill' is かいけい (kaikei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C363-daikin",
+      "sequence": 21390,
+      "title": "だいきん (daikin) — the payment; the price of goods",
+      "headword": "だいきん",
+      "romanization": "daikin",
+      "gloss": "the payment; the price of goods",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5e2ba64cd855de0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a rental deposit, then the Japanese for the bill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だいきん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいきん — daikin — \"the payment; the price of goods\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しなものが とどいたら、だいきんを はらいます。 — shinamono ga todoitara, daikin o haraimasu — \"When the goods arrive, I will pay for them.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいきん (daikin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dai, \"fee\" (Middle Chinese dojH) and kin, \"gold\" (kim) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daikin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daikin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daikin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daikin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinamono ga todoitara, daikin o haraimasu — When the goods arrive, I will pay for them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinamono ga todoitara, daikin o haraimasu* — When the goods arrive, I will pay for them.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a rental deposit, then the Japanese for the bill, then say daikin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a rental deposit, then the Japanese for the bill, then say *daikin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だいきん (daikin) mean? (\"The payment; the price of goods\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C363-daikin-type",
+              "prompt": "Say the Japanese for 'the payment'.",
+              "assesses": [
+                "JA-LEX-C363-KAIKEI363-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だいきん",
+                "daikin"
+              ],
+              "feedback": {
+                "correct": "Right: だいきん (daikin) is 'the payment; the price of goods'.",
+                "incorrect": "'The payment' is だいきん (daikin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C363-shouhizei",
+      "sequence": 21400,
+      "title": "しょうひぜい (shōhizei) — consumption tax",
+      "headword": "しょうひぜい",
+      "romanization": "shōhizei",
+      "gloss": "consumption tax",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7582aad4fecd3c87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the bill, then the Japanese for the payment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょうひぜい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうひぜい — shōhizei — \"consumption tax\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうひぜいが あがったら、かいものを ひかえるでしょう。 — shōhizei ga agattara, kaimono o hikaeru deshō — \"If consumption tax goes up, people will probably cut down on shopping.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうひぜい (shōhizei) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shō, \"extinguish\" (Middle Chinese sjew), hi, \"expense\" (phj+jH) and zei, \"tax\" (sywejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōhizei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōhizei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōhizei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōhizei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōhizei ga agattara, kaimono o hikaeru deshō — If consumption tax goes up, people will probably cut down on shopping.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōhizei ga agattara, kaimono o hikaeru deshō* — If consumption tax goes up, people will probably cut down on shopping.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the bill, then the Japanese for the payment, then say shōhizei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the bill, then the Japanese for the payment, then say *shōhizei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょうひぜい (shōhizei) mean? (\"Consumption tax\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C363-shouhizei-type",
+              "prompt": "Say the Japanese for 'consumption tax'.",
+              "assesses": [
+                "JA-LEX-C363-KAIKEI363-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょうひぜい",
+                "shōhizei",
+                "shouhizei",
+                "shoohizei",
+                "shohizei"
+              ],
+              "feedback": {
+                "correct": "Right: しょうひぜい (shōhizei) is 'consumption tax'.",
+                "incorrect": "'Consumption tax' is しょうひぜい (shōhizei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C363-hangaku",
+      "sequence": 21410,
+      "title": "はんがく (hangaku) — half price",
+      "headword": "はんがく",
+      "romanization": "hangaku",
+      "gloss": "half price",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed4a2eb5a22cbea8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the payment, then the Japanese for consumption tax."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はんがく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はんがく — hangaku — \"half price\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ばんに なったら、おべんとうが はんがくに なります。 — ban ni nattara, obentō ga hangaku ni narimasu — \"In the evening, the boxed lunches go half price.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はんがく (hangaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are han, \"half\" (Middle Chinese panH) and gaku, \"sum\" (ngaek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hangaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hangaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hangaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hangaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ban ni nattara, obentō ga hangaku ni narimasu — In the evening, the boxed lunches go half price.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ban ni nattara, obentō ga hangaku ni narimasu* — In the evening, the boxed lunches go half price.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the payment, then the Japanese for consumption tax, then say hangaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the payment, then the Japanese for consumption tax, then say *hangaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はんがく (hangaku) mean? (\"Half price\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C363-hangaku-type",
+              "prompt": "Say the Japanese for 'half price'.",
+              "assesses": [
+                "JA-LEX-C363-KAIKEI363-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はんがく",
+                "hangaku"
+              ],
+              "feedback": {
+                "correct": "Right: はんがく (hangaku) is 'half price'.",
+                "incorrect": "'Half price' is はんがく (hangaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C363-zeitaku",
+      "sequence": 21420,
+      "title": "ぜいたく (zeitaku) — luxury; extravagant",
+      "headword": "ぜいたく",
+      "romanization": "zeitaku",
+      "gloss": "luxury; extravagant",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25874b2c7dc380c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for consumption tax, then the Japanese for half price."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぜいたく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜいたく — zeitaku — \"luxury; extravagant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おかねが あったら、ぜいたくを したいです。 — okane ga attara, zeitaku o shitai desu — \"If I had the money, I would like to live it up.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぜいたく (zeitaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zei, \"luxury\" (Middle Chinese tsywejH) and taku, \"swamp\" (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zeitaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zeitaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zeitaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zeitaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okane ga attara, zeitaku o shitai desu — If I had the money, I would like to live it up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okane ga attara, zeitaku o shitai desu* — If I had the money, I would like to live it up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for consumption tax, then the Japanese for half price, then say zeitaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for consumption tax, then the Japanese for half price, then say *zeitaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぜいたく (zeitaku) mean? (\"Luxury; extravagant\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C363-zeitaku-type",
+              "prompt": "Say the Japanese for 'luxury'.",
+              "assesses": [
+                "JA-LEX-C363-KAIKEI363-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぜいたく",
+                "zeitaku"
+              ],
+              "feedback": {
+                "correct": "Right: ぜいたく (zeitaku) is 'luxury; extravagant'.",
+                "incorrect": "'Luxury' is ぜいたく (zeitaku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

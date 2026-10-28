@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Damage and Compensation",
+  "label": "ch:ja-damage-and-compensation",
+  "canDo": "I can say who pays if something is damaged.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C364-sekinin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say who pays if something is damaged.",
+    "assesses": [
+      "JA-LEX-C364-SONGAI364-03",
+      "JA-LEX-C364-SONGAI364-04",
+      "JA-LEX-C364-SONGAI364-05"
+    ]
+  }
+}

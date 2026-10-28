@@ -1,0 +1,18 @@
+{
+  "chapter": 206,
+  "title": "They Went",
+  "label": "ch:pa-a2-gae",
+  "canDo": "I can recognise and use one bounded masculine plural form for went.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C206-payoff",
+    "kind": "production",
+    "summary": "Recognise and produce one bounded they-went frame through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-GRAM-GAE-206"
+    ],
+    "note": "This twenty-ninth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

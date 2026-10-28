@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C436-hogaraka",
+    "language": "japanese",
+    "chapter": 436,
+    "sequence": 25510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:393a6789fea38912"
+  },
+  "findings": []
+}

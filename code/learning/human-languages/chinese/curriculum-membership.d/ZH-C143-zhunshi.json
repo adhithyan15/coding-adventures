@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C143-zhunshi",
+  "pathSegment": "ZH-PATH-143-CLOCK143",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-143-CLOCK143",
+      "order": 3
+    }
+  ]
+}

@@ -77,14 +77,53 @@
 //! the integer↔real conversions — plus the four PR1b operations (`write_i64`,
 //! `i64_div_floor`, `i64_mod_floor`, `trap`), which every backend declares
 //! `Refused` until PR1b lowers them. Later slices add families that every
-//! backend lowers in the same PR: PR4's overflow-checked `i64_*_ovf` ops and
-//! PR6a's float writers `write_f64_py` / `write_f64_js` (shortest round-trip
-//! digits in Python's and JavaScript's layouts), and PR6c's non-trapping IEEE
+//! backend lowers in the same PR: PR4's overflow-checked `i64_*_ovf` ops,
+//! PR6c's non-trapping IEEE
 //! `f64_add`/`f64_sub`/`f64_mul`/`f64_div`/`f64_neg` with `f64_signbit` (lowered
-//! on the eight IEEE backends; BEAM refuses the arithmetic at compile time).
+//! on the eight IEEE backends; BEAM refuses the arithmetic at compile time),
+//! and PR7b's language-neutral float primitives `f64_class`, `f64_digits` and
+//! `f64_exp10` (the shortest round-trip digits as integers, on all nine).
+//!
+//! PR7f adds the **dynamic-value primitives** (`dyn_box_int` … `dyn_symbol`,
+//! family [`OpFamily::Dynamic`]): the tagged-word representation a dynamically
+//! typed language's values share — an integer, nil, a symbol, a boolean or a
+//! two-field heap pair in one 64-bit word. They were the Lisp-vocabulary
+//! builtins `dyn_cons`, `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`,
+//! `make_nil` and `make_symbol`, unregistered, until PR7f renamed them. Only
+//! the backends that link the tagged-word runtime lower them (native x86-64
+//! and AArch64, LLVM); the others refuse them, because their value models are
+//! structural (a managed object, an Erlang term, a `vm-core` heap cell).
+//!
+//! PR6a's float writers `write_f64_py` / `write_f64_js` were registered here
+//! until LANG83 PR7e. They printed a float in Python's or JavaScript's layout,
+//! so every backend carried two languages' formatting rules. Each compiler
+//! now emits its own layout helper over the PR7b digits, and the writers are
+//! gone (see the next section).
+//!
+//! # The language-neutrality rule (LANG83 PR7)
+//!
+//! The IIR is a language-neutral machine. **No registry op, builtin or trap
+//! kind may name a source language** or carry one language's semantics.
+//! [`language_name_violation`] enforces the *name* half: it splits a name on
+//! `_`, `.`, `-` and camelCase boundaries and refuses any word that is a
+//! language token, ignoring trailing digits
+//! ([`LANGUAGE_TOKENS`]) or shaped like a language's exception class (a part
+//! ending in `error` or `exception`, such as `ReferenceError`):
+//!
+//! ```text
+//!   write_f64_py         → write | f64 | py            "py" is Python       ✗
+//!   Trap.ReferenceError  → Trap | ReferenceError       an exception class   ✗
+//!   f64_digits           → f64 | digits                                     ✓
+//!   Trap.Unbound         → Trap | Unbound              a condition          ✓
+//! ```
+//!
+//! A test runs it over every registry name and every trap kind; vm-core runs
+//! it over its default builtins and `lang-aot`'s harnesses over theirs. A
+//! compiler's own module-local helpers (`__py_write_float`) are not IIR
+//! vocabulary, so the rule does not apply to them.
 //! Instructions that are not registry entries
-//! (control flow, calls, memory, heap, bitwise, the `dyn_*` lisp builtins, …)
-//! are simply not gated by the registry; their existing validators still apply.
+//! (control flow, calls, memory, heap, bitwise, …) are simply not gated by the
+//! registry; their existing validators still apply.
 //! See `code/specs/LANG83-iir-standard-operation-registry.md` for the full
 //! vocabulary including the families planned for later.
 
@@ -126,6 +165,11 @@ pub enum OpFamily {
     String,
     /// Program-terminating error operations.
     Error,
+    /// LANG83 PR7f: the dynamic-value representation — one tagged machine word
+    /// that is an integer, nil, a symbol, a boolean or a two-field heap pair.
+    /// Representation only: what a value *means* (which values are false, when
+    /// two are equal) is a language's rule, written by its compiler.
+    Dynamic,
 }
 
 /// What a backend does with one registry operation.
@@ -159,6 +203,26 @@ impl OpSupport {
 /// backend.
 pub const NOT_YET_LOWERED_PR1B: &str = "not yet lowered; LANG83 PR1b";
 
+/// Why a backend without the tagged-word runtime refuses the LANG83 PR7f
+/// dynamic-value primitives. Shared so the refusal a user sees is identical
+/// on every such backend.
+///
+/// The primitives are calls into the tagged-word runtime (`dynval_runtime.c`
+/// on the native and LLVM columns). The managed backends, BEAM, `vm-core` and
+/// the generic JIT hold dynamic values structurally instead (a GC object, an
+/// Erlang term, a heap cell): `lang-aot` lowers a frontend's pair builtins to
+/// `alloc` / `field_*` / `is_null` before those backends run, and none of them
+/// lowers a `dyn_*` call.
+pub const NO_TAGGED_WORD_RUNTIME: &str = "this backend holds dynamic values structurally and \
+     does not link the tagged-word runtime the dyn_* primitives call (LANG83 PR7f)";
+
+/// Why the tagged-word backends refuse `dyn_symbol`: a symbol reaches them as
+/// a `const Var(name) : symbol`, which `intern_symbols` turns into a finished
+/// tagged immediate at compile time. No pass or runtime call lowers a symbol
+/// built from a literal at run time.
+pub const SYMBOLS_ARE_INTERNED_CONSTANTS: &str = "symbols reach this backend as interned \
+     `const name : symbol` immediates; a dyn_symbol call is not lowered (LANG83 PR7f)";
+
 /// The `introduced_by` tag of the four operations PR1b will lower.
 pub const LANG83_PR1B: &str = "LANG83 PR1b";
 
@@ -167,18 +231,27 @@ pub const LANG83_PR1B: &str = "LANG83 PR1b";
 /// PR1b's, these were registered and lowered on every backend in one slice.
 pub const LANG83_PR4: &str = "LANG83 PR4";
 
-/// The `introduced_by` tag of the shortest round-trip float-output builtins
-/// (LANG83 PR6a): `write_f64_py` (Python `repr(float)`) and `write_f64_js`
-/// (JavaScript `Number.prototype.toString`). Like PR4's, registered and
-/// lowered on every backend in one slice.
-pub const LANG83_PR6A: &str = "LANG83 PR6a";
-
 /// The `introduced_by` tag of the non-trapping IEEE-754 `f64` arithmetic
 /// family and its sign-bit query (LANG83 PR6c): `f64_add`, `f64_sub`,
 /// `f64_mul`, `f64_div`, `f64_neg`, `f64_signbit`. Registered in one slice and
 /// lowered by every backend whose floats are IEEE binary64; BEAM, whose floats
 /// are always finite, refuses the five arithmetic ops at compile time.
 pub const LANG83_PR6C: &str = "LANG83 PR6c";
+
+/// The `introduced_by` tag of the language-neutral float primitives (LANG83
+/// PR7b): `f64_class`, `f64_digits`, `f64_exp10`. They expose the *digits*
+/// every PR6a float writer already computes — the shortest round-trip decimal
+/// significand and the exponent of its leading digit — as plain integers, so
+/// a compiler can lay a float out in its own language's style with integer
+/// ops and `putchar`, and no backend needs to know which language that is.
+pub const LANG83_PR7B: &str = "LANG83 PR7b";
+
+/// The `introduced_by` tag of the dynamic-value primitives (LANG83 PR7f):
+/// `dyn_box_int`, `dyn_unbox_int`, `dyn_tag`, `dyn_pair_new`, `dyn_pair_first`,
+/// `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil` and `dyn_symbol`.
+/// Before PR7f they were unregistered builtins with Lisp names (`dyn_cons`,
+/// `dyn_car`, `dyn_cdr`, `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol`).
+pub const LANG83_PR7F: &str = "LANG83 PR7f";
 
 /// One registered operation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -195,9 +268,10 @@ pub struct OpSpec {
     /// Whether the operation writes a `dest`.
     pub dest: bool,
     /// One descriptive type per operand: `"int"` (any integer width), `"i64"`,
-    /// `"f64"`, `"num"` (integer or `f64`), `"str"`, `"literal"` (an
-    /// `Operand::Str` compile-time literal) or `"kind"` (an `Operand::Str` trap
-    /// kind from the closed table in `exception_kind`).
+    /// `"f64"`, `"num"` (integer or `f64`), `"str"`, `"dyn"` (a dynamic
+    /// value: one tagged word, LANG83 PR7f), `"literal"` (an `Operand::Str`
+    /// compile-time literal) or `"kind"` (an `Operand::Str` trap kind from the
+    /// closed table in `exception_kind`).
     pub operand_types: &'static [&'static str],
     /// The trap kinds this operation may raise. [`CATCH_ANY`] means "whichever
     /// registered kind its operand names" (only `trap` itself).
@@ -219,14 +293,21 @@ impl OpSpec {
         self.introduced_by == LANG83_PR4
     }
 
-    /// `true` if this entry is one of the LANG83 PR6a float-output builtins.
-    pub fn is_pr6a(&self) -> bool {
-        self.introduced_by == LANG83_PR6A
-    }
-
     /// `true` if this entry is one of the LANG83 PR6c IEEE `f64` ops.
     pub fn is_pr6c(&self) -> bool {
         self.introduced_by == LANG83_PR6C
+    }
+
+    /// `true` if this entry is one of the LANG83 PR7b neutral float
+    /// primitives (`f64_class`, `f64_digits`, `f64_exp10`).
+    pub fn is_pr7b(&self) -> bool {
+        self.introduced_by == LANG83_PR7B
+    }
+
+    /// `true` if this entry is one of the LANG83 PR7f dynamic-value
+    /// primitives (`dyn_box_int` … `dyn_symbol`).
+    pub fn is_pr7f(&self) -> bool {
+        self.introduced_by == LANG83_PR7F
     }
 }
 
@@ -249,7 +330,7 @@ const fn spec(
     OpSpec { name, kind, family, arity, dest, operand_types, may_trap, terminator: false, introduced_by }
 }
 
-use OpFamily::{Arithmetic, Comparison, Conversion, Error, Float, Output, String as Str};
+use OpFamily::{Arithmetic, Comparison, Conversion, Dynamic, Error, Float, Output, String as Str};
 use OpKind::{Builtin, Op};
 
 const NO_TRAP: &[&str] = &[];
@@ -266,6 +347,8 @@ const UN_F64: &[&str] = &["f64"];
 const BIN_F64: &[&str] = &["f64", "f64"];
 const BIN_I64: &[&str] = &["i64", "i64"];
 const UN_I64: &[&str] = &["i64"];
+/// One dynamic value: a tagged word (see the PR7f block of [`STANDARD_OPS`]).
+const UN_DYN: &[&str] = &["dyn"];
 
 /// Every standard operation, grouped by family in vocabulary-table order.
 ///
@@ -281,13 +364,10 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     spec("putchar", Builtin, Output, 1, false, &["int"], NO_TRAP, "BF07"),
     spec("print_str", Op, Output, 1, false, &["str"], NO_TRAP, "LANG-FULL E4"),
     spec("write_i64", Builtin, Output, 1, false, &["int"], NO_TRAP, LANG83_PR1B),
-    // LANG83 PR6a: an `f64` as the SHORTEST decimal that reads back as exactly
-    // that value (ties to even), no newline — one builtin per *layout*, not a
-    // flags operand. `_py` is Python `repr` (`1e+16`, `1.0`, `-0.0`, `inf`,
-    // `nan`); `_js` is JavaScript `Number#toString` (`10000000000000000`, `1`,
-    // `0`, `Infinity`, `NaN`). The spec's "PR6a" section has both tables.
-    spec("write_f64_py", Builtin, Output, 1, false, UN_F64, NO_TRAP, LANG83_PR6A),
-    spec("write_f64_js", Builtin, Output, 1, false, UN_F64, NO_TRAP, LANG83_PR6A),
+    // There is no float writer. LANG83 PR6a's `write_f64_py` / `write_f64_js`
+    // (a float in Python's / JavaScript's layout) were removed in PR7e: a
+    // compiler prints a float with its own module-local helper, built from the
+    // PR7b digit ops below, integer arithmetic and `putchar`.
     // ── Strings (LANG-FULL E4): immutable byte strings ──────────────────────
     spec("str_const", Op, Str, 1, true, &["literal"], NO_TRAP, "LANG-FULL E4"),
     spec("str_len", Op, Str, 1, true, &["str"], NO_TRAP, "LANG-FULL E4"),
@@ -349,10 +429,91 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     // The sign bit as an integer 0/1 — the only way to tell `-0` from `0`
     // without dividing by it (JavaScript's `console.log(-0)` prints `-0`).
     spec("f64_signbit", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR6C),
+    // LANG83 PR7b — the language-neutral float primitives. Each takes one
+    // `f64` and returns an INTEGER (like `f64_signbit`, a Float-family op
+    // whose result is not a float). None traps, so all three are pure.
+    //
+    //   f64_class x    0 for ±0, 1 finite non-zero (subnormals too),
+    //                  2 for ±Infinity, 3 for NaN
+    //   f64_digits x   class 1: the shortest round-trip significand D of |x|
+    //                  (shortest, then closest, ties to even — PR6a's rule),
+    //                  no trailing zeros, 1 <= D < 10^17; otherwise 0
+    //   f64_exp10 x    class 1: e10, the exponent of D's leading digit, so
+    //                  |x| = D × 10^(e10 − n + 1) with n = digits of D;
+    //                  otherwise 0
+    //
+    //   x        class  digits             exp10
+    //   1.5      1      15                 0
+    //   100.0    1      1                  2
+    //   0.1      1      1                  -1
+    //   5e-324   1      5                  -324
+    //   1e21     1      1                  21
+    //   -0.0     0      0                  0
+    //   -inf     2      0                  0
+    //   nan      3      0                  0
+    //
+    // With `f64_signbit` these identify every value a float writer prints;
+    // where the point goes is the compiler's business (spec "PR7").
+    spec("f64_class", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR7B),
+    spec("f64_digits", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR7B),
+    spec("f64_exp10", Op, Float, 1, true, UN_F64, NO_TRAP, LANG83_PR7B),
     // ── Conversions (LANG-FULL E8) ──────────────────────────────────────────
     spec("int_to_real", Op, Conversion, 1, true, &["int"], NO_TRAP, "LANG-FULL E8"),
     spec("real_to_int_trunc", Op, Conversion, 1, true, UN_F64, CONV_RANGE_ONLY, "LANG-FULL E8"),
     spec("real_to_int_floor", Op, Conversion, 1, true, UN_F64, CONV_RANGE_ONLY, "LANG-FULL E8"),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // The representation a dynamically typed language's values share: one
+    // tagged 64-bit word (DVAL01). Its low three bits are the tag:
+    //
+    //   tag  value     encoding            dyn_tag
+    //   000  integer   n << 3              0
+    //   001  nil       the whole word 1    1
+    //   010  symbol    (id << 32) | 010    2
+    //   011  false     the whole word 3    3
+    //   101  true      the whole word 5    5
+    //   111  pair      pointer | 111       7
+    //
+    //   dyn_box_int n      an integer (|n| < 2^60) → its dynamic value
+    //   dyn_unbox_int x    a dynamic integer → the integer
+    //   dyn_tag x          x's tag number (table above), as an integer
+    //   dyn_pair_new a b   a fresh, garbage-collected pair of a and b
+    //   dyn_pair_first p   the pair's first field  (fails closed on a non-pair)
+    //   dyn_pair_rest p    the pair's second field (fails closed on a non-pair)
+    //   dyn_is_pair x      true if x is a pair, as a dynamic boolean
+    //   dyn_is_nil x       true if x is nil, as a dynamic boolean
+    //   dyn_nil            nil
+    //   dyn_symbol "name"  the symbol the literal names (one value per name)
+    //
+    // Representation only. Which values count as false, when two values are
+    // equal and what a program's result exits with are a language's rules;
+    // LANG83 PR7 gives them to that language's compiler, never to an op. They
+    // are Builtins because the tagged-word backends call a runtime function
+    // for each (`__dyn_pair_new`, …), named by the `dyn_` prefix — the one
+    // prefix arm that is meant to capture them (see
+    // `GRANDFATHERED_PREFIXED_NAMES`).
+    //
+    // `dyn_pair_first`/`rest` of a non-pair stops the program; no
+    // implementation reads memory through the word. The VM returns a
+    // `TypeError`, `dynval-runtime`'s `extern "C"` functions panic, and the
+    // C runtime the tagged-word backends link checks the tag and aborts with
+    // "dyn_pair_first: argument with tag 0 (int) is not a pair" on stderr —
+    // the tag, never the word, which could be a heap address (LANG83 PR7f
+    // follow-up; it was a read through the word before, so Twig's
+    // `(car 1000000)` read address 8000000). The traps list stays empty: a
+    // type error is not one of the closed `Trap.*` kinds, so a program cannot
+    // catch it — a frontend that wants a recoverable answer tests with
+    // `dyn_is_pair` first. `lang_aot::jit_lisp`'s McCarthy callbacks fail
+    // the same way (they answered nil until #18417).
+    spec("dyn_box_int", Builtin, Dynamic, 1, true, UN_I64, NO_TRAP, LANG83_PR7F),
+    spec("dyn_unbox_int", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_tag", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_pair_new", Builtin, Dynamic, 2, true, &["dyn", "dyn"], NO_TRAP, LANG83_PR7F),
+    spec("dyn_pair_first", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_pair_rest", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_is_pair", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_is_nil", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
+    spec("dyn_nil", Builtin, Dynamic, 0, true, &[], NO_TRAP, LANG83_PR7F),
+    spec("dyn_symbol", Builtin, Dynamic, 1, true, &["literal"], NO_TRAP, LANG83_PR7F),
     // ── Errors ───────────────────────────────────────────────────────────────
     // `trap kind` terminates the program after flushing output. The only
     // terminator in the registry, so it is spelled out instead of `spec(..)`.
@@ -378,9 +539,29 @@ pub const DISPATCH_PREFIXES: &[&str] = &[
 ];
 
 /// Registry names that start with a dispatch prefix *on purpose*: the six
-/// comparisons are exactly the family `cmp_` dispatches.
-pub const GRANDFATHERED_PREFIXED_NAMES: &[&str] =
-    &["cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge"];
+/// comparisons are exactly the family `cmp_` dispatches, and the ten LANG83
+/// PR7f dynamic-value primitives are exactly the family `dyn_` dispatches
+/// (the native backends turn `call_builtin "dyn_<x>"` into a call to the
+/// runtime's `__dyn_<x>`, and only for a name in their builtin table, so an
+/// unregistered `dyn_` name is still refused there).
+pub const GRANDFATHERED_PREFIXED_NAMES: &[&str] = &[
+    "cmp_eq",
+    "cmp_ne",
+    "cmp_lt",
+    "cmp_le",
+    "cmp_gt",
+    "cmp_ge",
+    "dyn_box_int",
+    "dyn_unbox_int",
+    "dyn_tag",
+    "dyn_pair_new",
+    "dyn_pair_first",
+    "dyn_pair_rest",
+    "dyn_is_pair",
+    "dyn_is_nil",
+    "dyn_nil",
+    "dyn_symbol",
+];
 
 // ---------------------------------------------------------------------------
 // Lookups
@@ -401,9 +582,8 @@ pub fn lookup(name: &str) -> Option<&'static OpSpec> {
 /// The registry entry an instruction invokes, if any.
 ///
 /// An Op matches on `instr.op`; a Builtin matches a `call_builtin` whose first
-/// source is `Operand::Var(name)`. A `call_builtin` of a non-registry name (the
-/// lisp `dyn_*` builtins, `getchar`, …) and every non-registry mnemonic return
-/// `None`.
+/// source is `Operand::Var(name)`. A `call_builtin` of a non-registry name
+/// (`getchar`, …) and every non-registry mnemonic return `None`.
 ///
 /// ```
 /// use interpreter_ir::instr::{IIRInstr, Operand};
@@ -465,6 +645,115 @@ pub fn name_rule_violation(name: &str) -> Option<String> {
     })
 }
 
+/// The source-language tokens no IIR vocabulary name may contain (LANG83
+/// PR7, "The principle"). A name is split into words (see
+/// [`language_name_violation`]); a word equal to one of these, ignoring case
+/// and trailing digits, names a language.
+///
+/// Languages the repository compiles, their common abbreviations, the
+/// families the spec lists, and the runtimes a writer might name instead of
+/// the language (`node`, `cpython`). It cannot be complete. It covers the
+/// spelling a writer reaches for first (`_py`, `_js`, `_ts`, `_rb`, `_pl`)
+/// and the languages with a frontend here whose names are not also ordinary
+/// words: `Oct`, `Nib`, `REDUCE` and `Derive` are left out, because
+/// `i64_to_oct` or `vec_reduce` would be neutral ops.
+pub const LANGUAGE_TOKENS: &[&str] = &[
+    "py", "python", "python2", "python3", "cpython", "js", "javascript", "ecma", "ecmascript",
+    "node", "ts", "typescript", "rb", "ruby", "pl", "perl", "php", "lisp", "scheme", "clojure",
+    "twig", "mccarthy", "basic", "algol", "cobol", "fortran", "flowmatic", "brainfuck", "macsyma",
+    "maxima", "wolfram", "mathematica", "lua", "elixir", "erlang", "haskell", "ocaml", "swift",
+    "csharp", "java", "kotlin", "scala", "golang", "rust", "smalltalk", "pascal",
+];
+
+/// The words of an IIR vocabulary name, for [`language_name_violation`]:
+/// the parts between `_`, `.` and `-`, each followed by its camelCase words
+/// when it has more than one.
+///
+/// | name | words |
+/// |------|-------|
+/// | `write_f64_py` | `write`, `f64`, `py` |
+/// | `Trap.DivZero` | `Trap`, `DivZero`, `Div`, `Zero` |
+/// | `toJSString` | `toJSString`, `to`, `JS`, `String` |
+/// | `py-print` | `py`, `print` |
+///
+/// A camelCase boundary falls before an upper-case letter that follows a
+/// lower-case letter or digit (`toJS` → `to` `JS`), or that follows an
+/// upper-case letter and precedes a lower-case one (`JSString` → `JS`
+/// `String`). The whole part is kept too, so `TypeScript` is caught as one
+/// word although neither `Type` nor `Script` is a language.
+fn name_words(name: &str) -> Vec<&str> {
+    let mut words = Vec::new();
+    for part in name.split(['_', '.', '-']).filter(|part| !part.is_empty()) {
+        words.push(part);
+        let bytes = part.as_bytes();
+        let mut start = 0;
+        let mut camel = Vec::new();
+        for i in 1..bytes.len() {
+            let (prev, cur) = (bytes[i - 1], bytes[i]);
+            let next_lower = bytes.get(i + 1).is_some_and(u8::is_ascii_lowercase);
+            let boundary = cur.is_ascii_uppercase()
+                && (prev.is_ascii_lowercase() || prev.is_ascii_digit() || (prev.is_ascii_uppercase() && next_lower));
+            if boundary {
+                camel.push(&part[start..i]);
+                start = i;
+            }
+        }
+        if !camel.is_empty() {
+            camel.push(&part[start..]);
+            words.extend(camel);
+        }
+    }
+    words
+}
+
+/// The language-neutrality violation for an IIR vocabulary name — a registry
+/// op or builtin, a VM builtin, or a trap kind — or `None` if it names no
+/// source language.
+///
+/// The name is split into words — on `_`, `.` and `-`, and at camelCase
+/// boundaries (see `name_words`) — and each word is checked, ignoring case
+/// and any trailing digits (`python3` → `python`, `js2` → `js`):
+///
+/// | Word | Verdict | Example |
+/// |------|---------|---------|
+/// | a [`LANGUAGE_TOKENS`] entry | names a language | `write_f64_py`, `Ruby.ZeroDivisionError`, `toJSString`, `py-print`, `rb2` |
+/// | ends in `error` or `exception` | a language's exception class; a trap kind names a *condition* instead | `Trap.ReferenceError`, `NameError` |
+/// | anything else | neutral | `f64_digits`, `Trap.Unbound`, `equal?` |
+///
+/// Splitting first matters: `print_str` contains no language although `str`
+/// and `print` might look like source words, and `js` inside `adjust` is not
+/// a word at all.
+///
+/// ```
+/// use interpreter_ir::op_registry::language_name_violation;
+/// assert!(language_name_violation("f64_digits").is_none());
+/// assert!(language_name_violation("Trap.Unbound").is_none());
+/// assert!(language_name_violation("write_f64_py").unwrap().contains("\"py\""));
+/// assert!(language_name_violation("writeF64Js").unwrap().contains("\"Js\""));
+/// assert!(language_name_violation("Trap.ReferenceError").unwrap().contains("exception class"));
+/// ```
+pub fn language_name_violation(name: &str) -> Option<String> {
+    name_words(name).into_iter().find_map(|part| {
+        let lower = part.to_ascii_lowercase();
+        let stem = lower.trim_end_matches(|c: char| c.is_ascii_digit());
+        if LANGUAGE_TOKENS.contains(&lower.as_str()) || LANGUAGE_TOKENS.contains(&stem) {
+            Some(format!(
+                "{name:?} contains {part:?}, a source language's name: the IIR is \
+                 language-neutral (LANG83 PR7), so the compiler of that language must \
+                 translate its semantics into neutral ops (or a module-local helper)"
+            ))
+        } else if lower.ends_with("error") || lower.ends_with("exception") {
+            Some(format!(
+                "{name:?} contains {part:?}, which reads as a language's exception class: \
+                 a trap kind names a machine-level condition (LANG83 PR7), and a \
+                 compiler maps its language's error onto one"
+            ))
+        } else {
+            None
+        }
+    })
+}
+
 /// Check a backend's `OP_SUPPORT` table against the registry.
 ///
 /// Every backend crate calls this from a unit test. It fails when a registry
@@ -519,7 +808,7 @@ pub fn support_from_table(table: &[(&str, OpSupport)], name: &str) -> OpSupport 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::exception_kind::is_registered_trap_kind;
+    use crate::exception_kind::is_trap_kind;
     use std::collections::HashSet;
 
     #[test]
@@ -547,11 +836,106 @@ mod tests {
         }
     }
 
+    /// LANG83 PR7e: no registry op or builtin, and no trap kind, names a
+    /// source language or a language's exception class.
     #[test]
-    fn grandfathered_names_are_registered_comparisons() {
+    fn no_registry_name_or_trap_kind_names_a_language() {
+        for name in STANDARD_OPS.iter().map(|s| s.name).chain(crate::exception_kind::ALL_TRAP_KINDS.iter().copied()) {
+            if let Some(why) = language_name_violation(name) {
+                panic!("{why}");
+            }
+        }
+    }
+
+    /// The rule catches the names PR7 retired, so none of them can come back,
+    /// and they are really gone from the registry and the kind table.
+    #[test]
+    fn the_language_name_rule_rejects_the_retired_names() {
+        for old in [
+            "write_f64_py",
+            "write_f64_js",
+            "write_f64_rb",
+            "f64_to_str_pl",
+            "py_print_float",
+            "py_name_error",
+            "Trap.ReferenceError",
+            "Ruby.ZeroDivisionError",
+            "NameError",
+            "lisp_truthy",
+            "JS.TypeError",
+        ] {
+            assert!(language_name_violation(old).is_some(), "{old} names a language");
+            assert!(lookup(old).is_none(), "{old} must not be registered");
+            assert!(!is_trap_kind(old), "{old} must not be a trap kind");
+        }
+        // Case does not matter; empty parts (`__x`) are skipped.
+        assert!(language_name_violation("Write_F64_PY").is_some());
+        assert!(language_name_violation("__python_helper").is_some());
+        // `-` separates words, camelCase boundaries do too, and a trailing
+        // version number does not hide a language.
+        for bad in [
+            "py-print",
+            "writeF64Py",
+            "toJSString",
+            "JSONtoRuby",
+            "TypeScript.cast",
+            "f64_to_str_js2",
+            "ruby3_hash",
+            "node_write",
+            "ts_number",
+            "php_echo",
+            "ocaml_compare",
+            "clojure_seq",
+            "scala_match",
+            "cpython_repr",
+            "CPythonRepr",
+        ] {
+            assert!(language_name_violation(bad).is_some(), "{bad} names a language");
+        }
+        // Neutral names pass, including ones whose letters merely contain a
+        // token (`adjust` holds "js", `plus` holds "pl"): only whole parts count.
+        // Splitting at camelCase and digits must not invent a token either:
+        // `f64` is `f`, `DivZero` is `Div` `Zero`, `nodes` and `tsc` are not
+        // `node` and `ts`.
+        for ok in [
+            "f64_digits",
+            "i64_div_floor",
+            "putchar",
+            "print_str",
+            "Trap.Unbound",
+            "Trap.DivZero",
+            "Trap.ConvRange",
+            "equal?",
+            "adjust_plus",
+            "+",
+            "list-nodes",
+            "toString",
+            "u8_to_f64",
+            "PutChar",
+        ] {
+            assert!(language_name_violation(ok).is_none(), "{ok} is neutral");
+        }
+    }
+
+    #[test]
+    fn grandfathered_names_are_registered_comparisons_or_dynamic_values() {
         for name in GRANDFATHERED_PREFIXED_NAMES {
             let spec = lookup(name).expect("grandfathered name must be registered");
-            assert_eq!(spec.family, OpFamily::Comparison);
+            match spec.family {
+                OpFamily::Comparison => assert!(name.starts_with("cmp_"), "{name}"),
+                // The `dyn_` arm is a call into the tagged-word runtime, so the
+                // family it captures must be Builtins.
+                OpFamily::Dynamic => {
+                    assert!(name.starts_with("dyn_"), "{name}");
+                    assert_eq!(spec.kind, OpKind::Builtin, "{name}");
+                }
+                other => panic!("{name} is grandfathered but is in family {other:?}"),
+            }
+        }
+        // Every dynamic-value primitive is grandfathered, and nothing else
+        // with the prefix is: `dyn_new` (above) is still a violation.
+        for spec in STANDARD_OPS.iter().filter(|s| s.family == OpFamily::Dynamic) {
+            assert!(GRANDFATHERED_PREFIXED_NAMES.contains(&spec.name), "{}", spec.name);
         }
     }
 
@@ -573,7 +957,7 @@ mod tests {
         for spec in STANDARD_OPS {
             for kind in spec.may_trap {
                 assert!(
-                    *kind == CATCH_ANY || is_registered_trap_kind(kind),
+                    *kind == CATCH_ANY || is_trap_kind(kind),
                     "{} lists unregistered trap kind {kind:?}",
                     spec.name
                 );
@@ -617,24 +1001,6 @@ mod tests {
         assert_eq!(lookup("i64_neg_ovf").unwrap().arity, 1);
     }
 
-    #[test]
-    fn pr6a_set_is_exactly_the_two_float_writers() {
-        let mut pr6a: Vec<&str> =
-            STANDARD_OPS.iter().filter(|s| s.is_pr6a()).map(|s| s.name).collect();
-        pr6a.sort_unstable();
-        assert_eq!(pr6a, ["write_f64_js", "write_f64_py"]);
-        for name in pr6a {
-            let spec = lookup(name).unwrap();
-            // Output builtins, like write_i64: one f64 operand, no result, and
-            // formatting a float can never trap (inf and nan have spellings).
-            assert_eq!(spec.kind, OpKind::Builtin);
-            assert_eq!(spec.family, OpFamily::Output);
-            assert!(!spec.dest, "{name} only writes");
-            assert_eq!(spec.operand_types, ["f64"]);
-            assert!(spec.may_trap.is_empty(), "{name} never traps");
-        }
-    }
-
     /// Every LANG83 operation that may trap must be kept by dead-code
     /// elimination: if it is not side-effecting, an unused result lets an
     /// optimiser delete the trap. Derived from the registry so a future
@@ -653,6 +1019,69 @@ mod tests {
             let unary = matches!(name, "f64_neg" | "f64_signbit");
             assert_eq!(spec.arity, if unary { 1 } else { 2 }, "{name}");
         }
+    }
+
+    #[test]
+    fn pr7b_set_is_exactly_the_neutral_float_primitives() {
+        let mut pr7b: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr7b()).map(|s| s.name).collect();
+        pr7b.sort_unstable();
+        assert_eq!(pr7b, ["f64_class", "f64_digits", "f64_exp10"]);
+        for name in pr7b {
+            let spec = lookup(name).unwrap();
+            // Ops, not Builtins: each reads one f64, writes an integer dest,
+            // writes nothing else and never traps — so DCE may drop one.
+            assert_eq!(spec.kind, OpKind::Op, "{name}");
+            assert_eq!(spec.family, OpFamily::Float, "{name}");
+            assert!(spec.dest, "{name} writes a dest");
+            assert_eq!(spec.operand_types, ["f64"], "{name}");
+            assert!(spec.may_trap.is_empty(), "{name} never traps");
+            assert!(!crate::opcodes::has_side_effects(name), "{name} is pure");
+        }
+    }
+
+    /// LANG83 PR7f: the dynamic-value primitives, under the neutral names
+    /// that replaced the Lisp vocabulary (`dyn_cons`, `dyn_car`, `dyn_cdr`,
+    /// `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol`, none of which
+    /// is registered).
+    #[test]
+    fn pr7f_set_is_exactly_the_dynamic_value_primitives() {
+        let mut pr7f: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr7f()).map(|s| s.name).collect();
+        pr7f.sort_unstable();
+        assert_eq!(
+            pr7f,
+            [
+                "dyn_box_int",
+                "dyn_is_nil",
+                "dyn_is_pair",
+                "dyn_nil",
+                "dyn_pair_first",
+                "dyn_pair_new",
+                "dyn_pair_rest",
+                "dyn_symbol",
+                "dyn_tag",
+                "dyn_unbox_int",
+            ]
+        );
+        for name in pr7f {
+            let spec = lookup(name).unwrap();
+            assert_eq!(spec.kind, OpKind::Builtin, "{name}");
+            assert_eq!(spec.family, OpFamily::Dynamic, "{name}");
+            assert!(spec.dest, "{name} writes a dest");
+            assert!(spec.may_trap.is_empty(), "{name} names no trap kind");
+            assert!(language_name_violation(name).is_none(), "{name}");
+        }
+        for old in ["dyn_cons", "dyn_car", "dyn_cdr", "dyn_pair_p", "dyn_null_p", "make_nil", "make_symbol"] {
+            assert!(lookup(old).is_none(), "{old} is the pre-PR7f name");
+        }
+        // The language-semantic runtime ops are not representation, so they
+        // are never registered (PR7f moves them into the compilers).
+        for semantic in ["dyn_truthy", "dyn_equal", "dyn_not", "dyn_to_exit_code"] {
+            assert!(lookup(semantic).is_none(), "{semantic} is a language's rule, not an op");
+        }
+        assert_eq!(lookup("dyn_nil").unwrap().arity, 0);
+        assert_eq!(lookup("dyn_pair_new").unwrap().operand_types, ["dyn", "dyn"]);
+        assert_eq!(lookup("dyn_box_int").unwrap().operand_types, ["i64"]);
+        assert_eq!(lookup("dyn_symbol").unwrap().operand_types, ["literal"]);
     }
 
     #[test]

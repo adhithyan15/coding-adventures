@@ -1,0 +1,21 @@
+{
+  "chapter": 46,
+  "title": "The Week",
+  "label": "ch:zh-the-week",
+  "canDo": "I can name the week, Monday, Sunday and the weekend.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C46-xingqitian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: I can name the week, Monday, Sunday and the weekend.",
+    "assesses": [
+      "ZH-LEX-C46-WEEK46-03",
+      "ZH-LEX-C46-WEEK46-04",
+      "ZH-LEX-C46-WEEK46-05",
+      "ZH-SCRIPT-XING-01",
+      "ZH-SCRIPT-QI-PERIOD-01"
+    ]
+  }
+}

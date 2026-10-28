@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W41-shao",
+    "language": "chinese",
+    "chapter": 41,
+    "sequence": 3517,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7dea600693c563ef",
+    "detachableSegments": [
+      "Script — 小 without its hook, and a sweep"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

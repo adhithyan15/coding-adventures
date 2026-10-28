@@ -1,0 +1,22 @@
+{
+  "chapter": 110,
+  "title": "Things I Can Do",
+  "label": "ch:zh-things-i-can-do",
+  "canDo": "I can say I speak a foreign language, play the piano, paint and dance.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-R110-review-105-110",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: I can say I speak a foreign language, play the piano, paint and dance.",
+    "assesses": [
+      "ZH-LEX-C110-SKILL110-01",
+      "ZH-LEX-C110-SKILL110-02",
+      "ZH-LEX-C110-SKILL110-03",
+      "ZH-LEX-C110-SKILL110-04",
+      "ZH-LEX-C110-SKILL110-05",
+      "ZH-SCRIPT-WAI-01"
+    ]
+  }
+}
