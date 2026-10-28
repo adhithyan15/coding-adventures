@@ -1,0 +1,11 @@
+{
+  "id": "JA-C512-kirikaeru",
+  "pathSegment": "JA-PATH-512-CHANGE512",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-512-CHANGE512",
+      "order": 1
+    }
+  ]
+}

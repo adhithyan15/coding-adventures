@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C47-nian",
+    "language": "chinese",
+    "chapter": 47,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d29914b1b9962488"
+  },
+  "findings": []
+}

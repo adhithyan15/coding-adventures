@@ -1,0 +1,21 @@
+{
+  "chapter": 146,
+  "title": "Day and Night",
+  "label": "ch:zh-day-and-night",
+  "canDo": "I can talk about the daytime, the night, the middle of the night, waking up and what I usually do.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-R146-review-final-146",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can talk about the daytime, the night, the middle of the night, waking up and what I usually do.",
+    "assesses": [
+      "ZH-LEX-C146-NIGHT146-01",
+      "ZH-LEX-C146-NIGHT146-02",
+      "ZH-LEX-C146-NIGHT146-03",
+      "ZH-LEX-C146-NIGHT146-04",
+      "ZH-LEX-C146-NIGHT146-05"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:cc1f258cc76712b6",
+  "lessonIds": [
+    "JA-C328-koukyou",
+    "JA-C328-jama",
+    "JA-C328-urusai",
+    "JA-C328-hikaeru",
+    "JA-C328-warikomu",
+    "JA-R328-review-323-328"
+  ],
+  "tex": "japanese/book/chapters/ch328-out-in-public.tex"
+}

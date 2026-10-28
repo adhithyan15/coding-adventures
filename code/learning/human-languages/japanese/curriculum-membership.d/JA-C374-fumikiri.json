@@ -1,0 +1,11 @@
+{
+  "id": "JA-C374-fumikiri",
+  "pathSegment": "JA-PATH-374-SENRO374",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-374-SENRO374",
+      "order": 1
+    }
+  ]
+}

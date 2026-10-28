@@ -1,0 +1,11 @@
+{
+  "id": "JA-C451-zangyou-suru",
+  "pathSegment": "JA-PATH-451-COMMUTE451",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-451-COMMUTE451",
+      "order": 4
+    }
+  ]
+}

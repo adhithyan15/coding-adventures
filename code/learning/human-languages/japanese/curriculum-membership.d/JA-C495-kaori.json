@@ -1,0 +1,11 @@
+{
+  "id": "JA-C495-kaori",
+  "pathSegment": "JA-PATH-495-SMELL495",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-495-SMELL495",
+      "order": 1
+    }
+  ]
+}

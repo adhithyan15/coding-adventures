@@ -1,0 +1,11 @@
+{
+  "id": "JA-C367-tsumari",
+  "pathSegment": "JA-PATH-367-HAKKIRI367",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-367-HAKKIRI367",
+      "order": 1
+    }
+  ]
+}

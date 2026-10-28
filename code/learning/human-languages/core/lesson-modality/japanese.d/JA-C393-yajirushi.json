@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C393-yajirushi",
+    "language": "japanese",
+    "chapter": 393,
+    "sequence": 23110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c03a3c56f3892446"
+  },
+  "findings": []
+}

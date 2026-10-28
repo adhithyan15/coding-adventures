@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C207-zhaoxiang",
+    "language": "chinese",
+    "chapter": 207,
+    "sequence": 16010,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f0cc100d4de32bd7"
+  },
+  "findings": []
+}

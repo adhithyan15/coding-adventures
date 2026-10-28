@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-102-DRINK102",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "ZH-EXT-102-DRINK102"
+  ],
+  "after": []
+}

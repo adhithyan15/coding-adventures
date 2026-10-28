@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:2b1498d34015ba13",
+  "lessonIds": [
+    "JA-C321-zettai",
+    "JA-C321-kanarazu",
+    "JA-C321-yahari",
+    "JA-C321-mushiro",
+    "JA-C321-unazuku"
+  ],
+  "tex": "japanese/book/chapters/ch321-how-sure-are-you.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:dde1b50af73135b4",
+  "lessonIds": [
+    "ZH-C143-miao",
+    "ZH-C143-fenzhong",
+    "ZH-C143-cha",
+    "ZH-C143-zhunshi",
+    "ZH-C143-bantian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch143.txt",
+  "json": "chinese/narration/ch143.json",
+  "textHash": "fnv1a64:f6cc7edc359a46f8",
+  "jsonHash": "fnv1a64:cf07d0e10cf3663e",
+  "findings": []
+}

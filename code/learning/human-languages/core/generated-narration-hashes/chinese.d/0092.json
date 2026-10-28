@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:5d03bddc62d7af56",
+  "lessonIds": [
+    "ZH-C92-ye",
+    "ZH-W92-ye",
+    "ZH-C92-caidan",
+    "ZH-C92-fuwuyuan",
+    "ZH-C92-biede",
+    "ZH-C92-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch92.txt",
+  "json": "chinese/narration/ch92.json",
+  "textHash": "fnv1a64:020b1a0ee4f04fcb",
+  "jsonHash": "fnv1a64:2625fea38271e2fb",
+  "findings": []
+}

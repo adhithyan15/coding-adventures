@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W126-yi-use",
+    "language": "chinese",
+    "chapter": 126,
+    "sequence": 10175,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:97f3b8bf56e015de",
+    "detachableSegments": [
+      "Script — four strokes in two pairs"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

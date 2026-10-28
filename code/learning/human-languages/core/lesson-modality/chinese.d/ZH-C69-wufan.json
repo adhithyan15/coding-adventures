@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C69-wufan",
+    "language": "chinese",
+    "chapter": 69,
+    "sequence": 5580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d65e94a696c2df2d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:b1b1ba53638a5164",
+  "lessonIds": [
+    "JA-C375-shihatsu",
+    "JA-C375-shuuden",
+    "JA-C375-shuuten",
+    "JA-C375-norikosu",
+    "JA-C375-norikomu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch375.txt",
+  "json": "japanese/narration/ch375.json",
+  "textHash": "fnv1a64:16f5e1d69da283d9",
+  "jsonHash": "fnv1a64:854eb479ceb50259",
+  "findings": []
+}

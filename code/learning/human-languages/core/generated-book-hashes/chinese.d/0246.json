@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:294475b69d2a69f5",
+  "lessonIds": [
+    "ZH-C246-cunzi",
+    "ZH-C246-qiao",
+    "ZH-C246-shitou",
+    "ZH-C246-chitang",
+    "ZH-C246-huachuan"
+  ],
+  "tex": "chinese/book/chapters/ch246-out-in-the-hills.tex"
+}

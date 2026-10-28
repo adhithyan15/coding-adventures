@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:741504fe539e12c7",
+  "lessonIds": [
+    "JA-C366-saiaku",
+    "JA-C366-kesshin-suru",
+    "JA-C366-junjo",
+    "JA-C366-yuusen-suru",
+    "JA-C366-aseru",
+    "JA-R366-review-362-366"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch366.txt",
+  "json": "japanese/narration/ch366.json",
+  "textHash": "fnv1a64:89efc146b3fa6841",
+  "jsonHash": "fnv1a64:f549a4351ee6be28",
+  "findings": []
+}

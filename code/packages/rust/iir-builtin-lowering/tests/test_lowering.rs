@@ -955,7 +955,7 @@ fn make_nil_instr(dest: &str) -> IIRInstr {
     IIRInstr::new(
         "call_builtin",
         Some(dest.into()),
-        vec![Operand::Var("make_nil".into())],
+        vec![Operand::Var("dyn_nil".into())],
         "ref<LispyPair>",
     )
 }
@@ -1307,7 +1307,7 @@ fn test_77_lower_heap_builtins_direct_call() {
         imports: vec![],
         release: None,
     };
-    lower_heap_builtins(&mut m);
+    lower_heap_builtins(&mut m).unwrap();
     assert_eq!(m.functions[0].instructions[0].op, "field_load");
 }
 

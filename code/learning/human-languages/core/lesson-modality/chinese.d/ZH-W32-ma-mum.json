@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W32-ma-mum",
+    "language": "chinese",
+    "chapter": 32,
+    "sequence": 3055,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ab5ba7b3202054c1",
+    "detachableSegments": [
+      "Script — the woman piece, then a horse"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

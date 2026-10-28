@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:baa5b9b6bf258608",
+  "lessonIds": [
+    "JA-C275-tsunami",
+    "JA-C275-nagareru",
+    "JA-C275-nagasu",
+    "JA-C275-uku",
+    "JA-C275-mata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch275.txt",
+  "json": "japanese/narration/ch275.json",
+  "textHash": "fnv1a64:066ee84d641310ea",
+  "jsonHash": "fnv1a64:cf96f1fbf8a814af",
+  "findings": []
+}

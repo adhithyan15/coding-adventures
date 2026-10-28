@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:d800b4de9c1fe3af",
+  "lessonIds": [
+    "ZH-C30-zenmeyang",
+    "ZH-C30-hen",
+    "ZH-W30-hen",
+    "ZH-C30-henhao",
+    "ZH-C30-mang",
+    "ZH-C30-lei",
+    "ZH-C30-haixing",
+    "ZH-C30-practice"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch30.txt",
+  "json": "chinese/narration/ch30.json",
+  "textHash": "fnv1a64:4df0c5233b68be87",
+  "jsonHash": "fnv1a64:e0358e5e74893154",
+  "findings": []
+}

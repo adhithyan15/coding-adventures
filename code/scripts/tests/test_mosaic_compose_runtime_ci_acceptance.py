@@ -137,6 +137,30 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("when (mosaicLayoutVariant(environmentReport))", block)
         self.assertIn("rust/mosaic-package-manifest", MODULE.ACCEPTANCE_PACKAGES)
 
+    def test_engram_screens_scroll_test_runs_in_the_lane(self) -> None:
+        """EN-6: the lane runs EngramScrollUiTest against the generated Engram
+        project, on a fresh state file of its own, with the runtime the
+        project carries, so a screen that stops scrolling fails CI."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# The screens scroll (EN-6): EngramScrollUiTest")
+        block = workflow[start : workflow.index("\n\n", start)]
+        self.assertIn(
+            "cp code/programs/mosaic/engram-app/conformance/compose/EngramScrollUiTest.kt",
+            block,
+        )
+        self.assertIn('cmp "$engram_runtime_library" "$engram_app_resources/libmosaic_app.so"', block)
+        self.assertIn('rm -f "$engram_scroll_state"', block)
+        self.assertIn('MOSAIC_APP_STATE_PATH="$engram_scroll_state"', block)
+        self.assertIn('-Dcompose.application.resources.dir=$engram_app_resources', block)
+        self.assertIn("run-under-xvfb.sh", block)
+        self.assertEqual(block.count("test --tests EngramScrollUiTest"), 1)
+        # After the Engram project compiles, before Journal's block begins.
+        self.assertLess(
+            workflow.index('-p "$engram_output/compose" compileKotlin'), start
+        )
+        self.assertLess(start, workflow.index("# ---- Journal: emit and COMPILE on Compose"))
+
     def test_platform_effects_library_is_driven_in_the_journal_lane(self) -> None:
         """UI87 §7: the Compose platform library every app gets is exercised
         with fake dialogs in the Journal project, not only compiled."""
@@ -694,7 +718,17 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
 
             def git(*arguments: str) -> None:
                 subprocess.run(
-                    ["git", "-c", "user.name=t", "-c", "user.email=t@example.com", *arguments],
+                    [
+                        "git",
+                        # A `git commit` may start a detached `gc --auto` /
+                        # `maintenance run --auto` that is still writing into
+                        # `.git` when TemporaryDirectory removes it, which fails
+                        # cleanup with "Directory not empty: '.git'".  Throwaway
+                        # repositories never need maintenance, so turn it off.
+                        "-c", "gc.auto=0", "-c", "maintenance.auto=false",
+                        "-c", "user.name=t", "-c", "user.email=t@example.com",
+                        *arguments,
+                    ],
                     cwd=repo,
                     check=True,
                     capture_output=True,

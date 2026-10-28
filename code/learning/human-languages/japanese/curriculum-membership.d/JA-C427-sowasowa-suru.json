@@ -1,0 +1,11 @@
+{
+  "id": "JA-C427-sowasowa-suru",
+  "pathSegment": "JA-PATH-427-NERVES427",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-427-NERVES427",
+      "order": 2
+    }
+  ]
+}

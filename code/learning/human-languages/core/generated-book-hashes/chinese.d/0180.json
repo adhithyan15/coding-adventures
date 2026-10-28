@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:354f8e8bfd02f044",
+  "lessonIds": [
+    "ZH-C180-zuoke",
+    "ZH-C180-zhuren",
+    "ZH-C180-kanwang",
+    "ZH-C180-guolai",
+    "ZH-C180-yue"
+  ],
+  "tex": "chinese/book/chapters/ch180-coming-over.tex"
+}

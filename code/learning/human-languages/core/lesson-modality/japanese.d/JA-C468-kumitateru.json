@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C468-kumitateru",
+    "language": "japanese",
+    "chapter": 468,
+    "sequence": 27210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94eef6e048c885ad"
+  },
+  "findings": []
+}

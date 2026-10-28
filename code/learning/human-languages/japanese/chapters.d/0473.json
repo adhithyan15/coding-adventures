@@ -1,0 +1,21 @@
+{
+  "chapter": 473,
+  "title": "Simmering and Melting",
+  "label": "ch:ja-simmering-and-melting",
+  "canDo": "I can say how something is cooked.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R473-review-468-473",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can say how something is cooked.",
+    "assesses": [
+      "JA-LEX-C473-SIMMER473-01",
+      "JA-LEX-C473-SIMMER473-02",
+      "JA-LEX-C473-SIMMER473-03",
+      "JA-LEX-C473-SIMMER473-04",
+      "JA-LEX-C473-SIMMER473-05"
+    ]
+  }
+}

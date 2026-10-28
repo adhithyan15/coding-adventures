@@ -1,0 +1,22 @@
+{
+  "chapter": 69,
+  "title": "Meals",
+  "label": "ch:zh-meals",
+  "canDo": "I can name the meals of the day, say who cooks and say it tastes good.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-R69-review-64-69",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: I can name the meals of the day, say who cooks and say it tastes good.",
+    "assesses": [
+      "ZH-LEX-C69-MEALS69-01",
+      "ZH-LEX-C69-MEALS69-02",
+      "ZH-LEX-C69-MEALS69-03",
+      "ZH-LEX-C69-MEALS69-04",
+      "ZH-LEX-C69-MEALS69-05",
+      "ZH-SCRIPT-ZUO-MAKE-01"
+    ]
+  }
+}

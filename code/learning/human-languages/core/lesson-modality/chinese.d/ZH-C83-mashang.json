@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C83-mashang",
+    "language": "chinese",
+    "chapter": 83,
+    "sequence": 6310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:641f5f03684e4d4c"
+  },
+  "findings": []
+}

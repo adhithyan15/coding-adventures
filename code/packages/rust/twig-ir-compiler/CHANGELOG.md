@@ -1,5 +1,26 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — security review: the whole `__` namespace, and unspellable temporaries
+
+- **Every name beginning with `__` is now reserved** (new `RESERVED_NAMESPACE = "__"`), not only the listed prefixes. A parameter or `let` name is an IIR register, and the compiler and the passes after it invent registers in the same function: twig-aot's `__aot_str{n}_len` (the byte count it hands the runtime's print), closure_heap's `__clo_*`, dyn_repr's `__truthy_*` / `__unbox_*`, iir-to-llvm's `__<hint><n>` SSA names. Listing each prefix is whack-a-mole, so the namespace is reserved, as C reserves `__` identifiers. `RESERVED_PREFIXES` also names `__gc_`, `__aot_` and `__clo_` (seven entries) so errors name the owner; `reserved_prefix` returns the most specific listed prefix, else `"__"`. Behaviour change: a program that used a `__` name of its own (none in this repo) is now refused.
+- **The compiler's temporaries and labels are unspellable.** `fresh_var` names a temporary `__t{n}_{what}` (was `_{what}{n}`) and `fresh_label` a label `__l{n}_{what}` (was `_{what}{n}`). The old names could be spelled by a program, and collided: `(let ((_n2 40)) (+ _n2 2))` wrote the literal `2` into the program's `_n2` and computed 4 on every column; `(define (f _n1) (+ _n1 2)) (f 40)` likewise; and a parameter `_else1` met the label `_else1` in LLVM's single `%` namespace (clang: "'%_else1' is not a basic block"). The `__t<digit>` / `__l<digit>` shape ending in a letter also cannot meet a later pass's generated name (iir-to-llvm's end in a digit). An unspellable *character* was ruled out because LLVM already uses `.` for its own derived names (`%x.slot`) and quotes `%`, `#`, `@`.
+- Tests: `tests/reserved_names.rs` `generated_register_names_cannot_be_spelled` and `a_let_named_like_an_old_temporary_keeps_its_value`; the prefix-table test covers the namespace.
+
+## Unreleased — reserved `__lambda_` and `__twig_` prefixes
+
+- `RESERVED_PREFIXES` adds `__lambda_` and `__twig_` (now `["__lisp_", "__dyn_", "__lambda_", "__twig_"]`). Two programs found by security review compiled and then misbehaved on native x86-64. In `(define (__twig_print_i64 n) 0) (begin (print 5) 0)`, `print`'s runtime call was linked to the program's function, so nothing was printed. In `(define (__lambda_0 y) (+ y 50)) … (g (lambda (y) (+ y 1)))`, the lifted lambda became a second `__lambda_0` and the closure called the program's function: exit 120 instead of 57. Both are now a `TwigCompileError` at the name.
+- Lifted lambdas keep the `__lambda_N` names. Reserving the prefix was chosen over a generated name with a character `NAME` cannot contain, because no such character is legal unquoted in every backend's symbols (JVM method names, LLVM identifiers, ilasm). The reasoning is in `reserved_names.rs`.
+- `tests/reserved_names.rs`: `runtime_and_lambda_names_are_reserved` (both repros, plus a bare reference to `__lambda_0`) and `a_lifted_lambda_is_the_only_function_with_its_name`; the prefix-table test is updated.
+
+## Unreleased — LANG83 PR7f-2 security review — reserved name prefixes
+
+- A program may no longer define, bind or reference a name beginning with `__lisp_` or `__dyn_` (ASCII case ignored, each `/`-separated segment checked): `Compiler::compile` refuses it with a `TwigCompileError` at the name's position, right after `check_cst`. Those prefixes name the functions the lowering passes add to the module (`__lisp_equal`, `__lisp_exit_code`, the inline-rule markers `__lisp_truthy` / `__lisp_not`, `__dyn_list_*`, `__dyn_call_closure`) and the C runtime's `__dyn_*` symbols, which the passes recognise by name: `(define (__lisp_equal a b) 42)` used to stand in for `equal?`, and `(define (__lisp_not x) 0) (__lisp_not 5)` was silently compiled as Lisp's `not`. Quoted symbols (`'__lisp_x`) are data and stay allowed.
+- New `src/reserved_names.rs`; `RESERVED_PREFIXES` and `reserved_prefix` are exported. New `tests/reserved_names.rs` covers both repros, the `__dyn_` prefix, every binding position, case, symbols and look-alike names.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- Tests that pin that a quote literal emits no runtime symbol call and that an empty program emits no nil call check the LANG83 PR7f names (`dyn_symbol`, `dyn_nil`) as well as the old ones. The compiler is unchanged.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

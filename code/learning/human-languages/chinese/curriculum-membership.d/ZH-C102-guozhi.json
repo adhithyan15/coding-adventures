@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C102-guozhi",
+  "pathSegment": "ZH-PATH-102-DRINK102",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-102-DRINK102",
+      "order": 1
+    }
+  ]
+}

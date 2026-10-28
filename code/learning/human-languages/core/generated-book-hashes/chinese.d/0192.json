@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:8891a3e10dd7c28a",
+  "lessonIds": [
+    "ZH-C192-cesuo",
+    "ZH-C192-dianti",
+    "ZH-C192-tingchechang",
+    "ZH-C192-paidui",
+    "ZH-C192-kaifang"
+  ],
+  "tex": "chinese/book/chapters/ch192-signs-in-a-building.tex"
+}

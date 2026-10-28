@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C327-shitsurei",
+    "language": "japanese",
+    "chapter": 327,
+    "sequence": 19530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1b95c8fc2fc56a40"
+  },
+  "findings": []
+}

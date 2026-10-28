@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W133-sao-sweep",
+  "pathSegment": "ZH-PATH-133-HOUSE133",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-133-HOUSE133",
+      "order": 1
+    }
+  ]
+}

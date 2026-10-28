@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C264-shibaraku",
+    "language": "japanese",
+    "chapter": 264,
+    "sequence": 16140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5ea09f225e686d4"
+  },
+  "findings": []
+}

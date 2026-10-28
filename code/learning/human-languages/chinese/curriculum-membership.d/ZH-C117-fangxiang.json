@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C117-fangxiang",
+  "pathSegment": "ZH-PATH-117-COMPASS117",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-117-COMPASS117",
+      "order": 4
+    }
+  ]
+}

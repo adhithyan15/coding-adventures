@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Young and Old",
+  "label": "ch:ja-young-and-old",
+  "canDo": "I can say how the young and the old live, and why.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C333-kosodate",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can say how the young and the old live, and why.",
+    "assesses": [
+      "JA-LEX-C333-WAKAMONO333-03",
+      "JA-LEX-C333-WAKAMONO333-04",
+      "JA-LEX-C333-WAKAMONO333-05"
+    ]
+  }
+}

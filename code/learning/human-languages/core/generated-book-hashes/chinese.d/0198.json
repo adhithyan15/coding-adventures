@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:eaa5ef52c62099d7",
+  "lessonIds": [
+    "ZH-C198-guanji",
+    "ZH-W198-guan-shut",
+    "ZH-C198-kaiji",
+    "ZH-C198-liuyan",
+    "ZH-C198-zhanxian",
+    "ZH-C198-xinhao"
+  ],
+  "tex": "chinese/book/chapters/ch198-phones-and-messages.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:0105a93577c1e49f",
+  "lessonIds": [
+    "ZH-C252-kaixin",
+    "ZH-C252-gandao",
+    "ZH-C252-shangxin",
+    "ZH-C252-shiwang",
+    "ZH-C252-manyi"
+  ],
+  "tex": "chinese/book/chapters/ch252-happy-and-sad.tex"
+}

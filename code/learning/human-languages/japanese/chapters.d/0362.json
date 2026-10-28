@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "What Will It Cost?",
+  "label": "ch:ja-what-will-it-cost",
+  "canDo": "I can say what the cost depends on.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C362-shikikin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say what the cost depends on.",
+    "assesses": [
+      "JA-LEX-C362-HIYOU362-03",
+      "JA-LEX-C362-HIYOU362-04",
+      "JA-LEX-C362-HIYOU362-05"
+    ]
+  }
+}

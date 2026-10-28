@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:6fef5d496d60b3d4",
+  "lessonIds": [
+    "JA-C523-daredemo",
+    "JA-C523-doredemo",
+    "JA-C523-sazo",
+    "JA-C523-tamatama",
+    "JA-C523-nantoka"
+  ],
+  "tex": "japanese/book/chapters/ch523-anyone-any-one.tex"
+}

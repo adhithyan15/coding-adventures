@@ -1,0 +1,1015 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 41,
+  "title": "Paying",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:9e68cb93ba367784",
+  "lessons": [
+    {
+      "id": "ZH-C41-duoshao",
+      "sequence": 3510,
+      "title": "多少 (duōshao) — how much; how many",
+      "headword": "多少",
+      "romanization": "duōshao",
+      "gloss": "how much; how many",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f2e3a0427689923",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for bread, then the Mandarin for egg."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 多少",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多少 — duōshao — \"how much; how many\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你买了多少 nǐ mǎi le duōshao — How many did you buy?"
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 多 (duō) — one three-stroke piece twice, one above the other; 少 (shǎo) — 小, the small piece, without its hook, and one long sweep below it. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多少 (duōshao) is built from 多 (duō) 'many' and 少 (shǎo) 'few', both inherited from Middle Chinese, ta and syewX (Guangyun, in Baxter's transcription): many-few, asked as a question."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking politely."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duōshao",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duōshao*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duōshao, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duōshao*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ mǎi le duōshao — How many did you buy?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ mǎi le duōshao* — How many did you buy?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for bread, then the Mandarin for egg, then say duōshao again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for bread, then the Mandarin for egg, then say *duōshao* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 多少 (duōshao) mean? (\"How much; how many\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W41-duo",
+      "sequence": 3513,
+      "title": "多 (duō) — the same three strokes, twice",
+      "headword": "多",
+      "romanization": "duō",
+      "gloss": "多 — the same three strokes, twice",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:64b0f845037e1e04",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the same three strokes, twice",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the same three strokes, twice and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say duōshao — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *duōshao* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "了 买."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — le, mǎi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *le*, *mǎi*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the same three strokes, twice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多 (duō)."
+            },
+            {
+              "kind": "speech",
+              "text": "One shape, twice: top, then bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The shape, three strokes. A short left-falling stroke. A horizontal that turns and falls to the lower left. A dot inside the turn."
+            },
+            {
+              "kind": "speech",
+              "text": "Make it again below, a little larger and a little to the right, so the two lean together."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 3 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "多 (duō), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 多, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in one half of 多 (duō)? (Three.) Which half is larger? (The lower one.) Where does the dot go? (Inside the turn.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 多 (duō), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W41-shao",
+      "sequence": 3517,
+      "title": "少 (shǎo) — 小 without its hook, and a sweep",
+      "headword": "少",
+      "romanization": "shǎo",
+      "gloss": "少 — 小 without its hook, and a long sweep",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7dea600693c563ef",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 小 without its hook, and a sweep",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 小 without its hook, and a sweep and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say duōshao — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *duōshao* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "小 买."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — xiǎo, mǎi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *xiǎo*, *mǎi*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 小 without its hook, and a sweep",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "少 (shǎo)."
+            },
+            {
+              "kind": "speech",
+              "text": "One piece, built on 小."
+            },
+            {
+              "kind": "speech",
+              "text": "Three strokes like 小. A vertical down the middle, but this time with no hook at the foot. A short stroke falling to the left. A dot on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "One more stroke. A long left-falling sweep from the right, under the vertical."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 1 = four."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "少 (shǎo), all four, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 少, all four, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character you know is inside 少 (shǎo)? (小.) What does the middle vertical lose? (Its hook.) Which stroke is last? (The long sweep to the left.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 少 (shǎo), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C41-qian",
+      "sequence": 3520,
+      "title": "qián — money",
+      "headword": "qián",
+      "romanization": "qián",
+      "gloss": "money",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52985fb5a0d643ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for egg, then the Mandarin for how much."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: qián",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qián — \"money\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhège duōshao qián — How much is this one?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qián is inherited from Middle Chinese dzjen (Guangyun, in Baxter's transcription), glossed 'coin'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking politely."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège duōshao qián — How much is this one?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège duōshao qián* — How much is this one?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for egg, then the Mandarin for how much, then say qián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for egg, then the Mandarin for how much, then say *qián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does qián mean? (\"Money\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C41-kuai",
+      "sequence": 3530,
+      "title": "kuài — yuan; lump",
+      "headword": "kuài",
+      "romanization": "kuài",
+      "gloss": "yuan; lump",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15fa19c321bc8937",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for how much, then the Mandarin for money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: kuài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kuài — \"yuan; lump\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nàge shí kuài qián — That one is ten yuan."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "kuài is the spoken word for the yuan: a price is a number, then kuài, then qián, which can be left off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kuài is inherited from Middle Chinese khwojH (Guangyun, in Baxter's transcription), glossed 'a clod of earth'. Its use for counting money is not given there, so how it took that job is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking politely."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nàge shí kuài qián — That one is ten yuan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nàge shí kuài qián* — That one is ten yuan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for how much, then the Mandarin for money, then say kuài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for how much, then the Mandarin for money, then say *kuài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kuài mean? (\"Yuan; lump\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C41-tai",
+      "sequence": 3540,
+      "title": "tài — too; too much",
+      "headword": "tài",
+      "romanization": "tài",
+      "gloss": "too; too much",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec3fd232a291c9c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for money, then the Mandarin for yuan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tài — \"too; too much\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tài xiǎo le — That's too small."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "tài usually brings a le at the end of the sentence with it: tài xiǎo le."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tài is inherited from Middle Chinese thajH (Guangyun, in Baxter's transcription), glossed 'extreme' and 'great'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking politely."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tài xiǎo le — That's too small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tài xiǎo le* — That's too small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for money, then the Mandarin for yuan, then say tài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for money, then the Mandarin for yuan, then say *tài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tài mean? (\"Too; too much\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C41-yao",
+      "sequence": 3550,
+      "title": "yào — to want; to ask for",
+      "headword": "yào",
+      "romanization": "yào",
+      "gloss": "to want; to ask for",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b12e3c192508b90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for yuan, then the Mandarin for too."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yào",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yào — \"to want; to ask for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ yào duōshao — How many would you like?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yào is inherited from Middle Chinese 'jiewH (Guangyun, in Baxter's transcription), glossed 'to bind by agreement'. The sense 'to want' is not given there, so how it got it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking politely."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ yào duōshao — How many would you like?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ yào duōshao* — How many would you like?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for yuan, then the Mandarin for too, then say yào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for yuan, then the Mandarin for too, then say *yào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yào mean? (\"To want; to ask for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

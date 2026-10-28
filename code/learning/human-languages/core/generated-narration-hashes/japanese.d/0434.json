@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:1880a6a3277e3e4e",
+  "lessonIds": [
+    "JA-C434-kansha-suru",
+    "JA-C434-doujou-suru",
+    "JA-C434-kinodoku",
+    "JA-C434-mijime",
+    "JA-C434-hagemasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch434.txt",
+  "json": "japanese/narration/ch434.json",
+  "textHash": "fnv1a64:600b0664178f6740",
+  "jsonHash": "fnv1a64:3315919251d60646",
+  "findings": []
+}

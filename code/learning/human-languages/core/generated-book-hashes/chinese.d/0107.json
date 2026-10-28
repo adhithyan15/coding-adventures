@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:f98875afde60b8c3",
+  "lessonIds": [
+    "ZH-C107-tiao",
+    "ZH-C107-pa-climb",
+    "ZH-C107-ban",
+    "ZH-C107-ting-stop",
+    "ZH-C107-likai"
+  ],
+  "tex": "chinese/book/chapters/ch107-on-the-move.tex"
+}

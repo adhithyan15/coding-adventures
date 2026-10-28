@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:8db61caa5558cce7",
+  "lessonIds": [
+    "ZH-C104-benzi",
+    "ZH-W104-ben",
+    "ZH-C104-bi",
+    "ZH-C104-qianbi",
+    "ZH-C104-zhi",
+    "ZH-C104-cidian",
+    "ZH-R104-review-99-104"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch104.txt",
+  "json": "chinese/narration/ch104.json",
+  "textHash": "fnv1a64:85c0650bada5a8dd",
+  "jsonHash": "fnv1a64:bff513c6940d73ef",
+  "findings": []
+}

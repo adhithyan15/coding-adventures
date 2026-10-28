@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C262-higai",
+    "language": "japanese",
+    "chapter": 262,
+    "sequence": 16040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1bdb3e3838f56ef"
+  },
+  "findings": []
+}

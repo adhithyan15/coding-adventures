@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C55-dianying",
+  "pathSegment": "ZH-PATH-55-LIKE55",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-55-LIKE55",
+      "order": 3
+    }
+  ]
+}

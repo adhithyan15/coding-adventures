@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:690faa066bdd75c3",
+  "lessonIds": [
+    "JA-C442-kekkan",
+    "JA-C442-kinniku",
+    "JA-C442-ketsueki",
+    "JA-C442-sebone",
+    "JA-C442-kansetsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch442.txt",
+  "json": "japanese/narration/ch442.json",
+  "textHash": "fnv1a64:22f7d88b2717e0c5",
+  "jsonHash": "fnv1a64:ed535b965e9ff343",
+  "findings": []
+}

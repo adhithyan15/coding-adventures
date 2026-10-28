@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Win or Lose",
+  "label": "ch:zh-win-or-lose",
+  "canDo": "I can talk about tennis and table tennis, an opponent and beating them, and cheer someone on.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C262-jiayou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can talk about tennis and table tennis, an opponent and beating them, and cheer someone on.",
+    "assesses": [
+      "ZH-LEX-C262-SPORT262-03",
+      "ZH-LEX-C262-SPORT262-04",
+      "ZH-LEX-C262-SPORT262-05"
+    ]
+  }
+}

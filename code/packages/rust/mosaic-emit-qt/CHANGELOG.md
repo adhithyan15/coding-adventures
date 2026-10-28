@@ -1,5 +1,20 @@
 # Changelog
 
+## [Unreleased]
+
+- `Text ( content: row )` inside `For ( each: slot: rows, as: row )` is
+  `text: row`, the delegate's `property var row: modelData` (backlog 6f1f).
+  `build_text_attribute` quoted a bare NAME as `text: "row"`, so every row
+  showed the word `row`, while React, HTML and XAML showed the value. A
+  kebab-case NAME is camelCased (`row-item` is `rowItem`), an `index:`
+  binding reads the delegate's `property int`, and outside a loop a NAME that
+  spells one of the component's own slots reads that root property. QML's
+  scope chain finds the delegate property first, which is UI29 §3.4's "For
+  wins". A NAME that is not a QML identifier falls back to empty text, as the
+  slot arm beside it does.
+- Visible change: CollectionActions' missing-media and unused-media lists (and
+  EngramApp, which inlines them) now show each filename and asset id.
+
 ## 2026-10-25 (Fixed text width floors)
 
 - Preserve static scalar text widths paired with exact flex-shrink: 0 (#18305).

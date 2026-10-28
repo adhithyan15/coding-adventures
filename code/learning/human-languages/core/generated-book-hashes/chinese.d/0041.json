@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:9c98dc9c38c5d476",
+  "lessonIds": [
+    "ZH-C41-duoshao",
+    "ZH-W41-duo",
+    "ZH-W41-shao",
+    "ZH-C41-qian",
+    "ZH-C41-kuai",
+    "ZH-C41-tai",
+    "ZH-C41-yao"
+  ],
+  "tex": "chinese/book/chapters/ch41-paying.tex"
+}

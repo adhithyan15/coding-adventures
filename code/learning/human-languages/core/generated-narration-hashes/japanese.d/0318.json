@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:e3bcc228097fef58",
+  "lessonIds": [
+    "JA-C318-setsumei-suru",
+    "JA-C318-nattoku-suru",
+    "JA-C318-konkyo",
+    "JA-C318-imi",
+    "JA-C318-naze"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch318.txt",
+  "json": "japanese/narration/ch318.json",
+  "textHash": "fnv1a64:96c6a240c0d6fbac",
+  "jsonHash": "fnv1a64:44abed1c6b948533",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:2f49057a16038032",
+  "lessonIds": [
+    "ZH-C164-daban",
+    "ZH-C164-xitou",
+    "ZH-C164-chuifengji",
+    "ZH-C164-huazhuang",
+    "ZH-C164-gualian"
+  ],
+  "tex": "chinese/book/chapters/ch164-getting-ready.tex"
+}

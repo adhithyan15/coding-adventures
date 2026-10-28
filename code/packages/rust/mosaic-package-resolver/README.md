@@ -86,6 +86,81 @@ Unknown-tag-at-resolve-time is **not** an error — `resolve()` returns
 `None` and lets the *compiler* decide what to do (typically: emit a
 "no such component `Foo` (did you mean `Bar`?)" diagnostic).
 
+## Inlining `pkg::P::C` call sites: required slots
+
+`LayoutPackageResolver` replaces each `pkg::P::C ( … )` node in a compiled
+layout with `C`'s own layout, rewriting `C`'s `slot:` references to the
+values bound at the call site (UI34 §5.1).
+
+Before it substitutes anything, it checks every call site against `C`'s
+interface. Each slot `C.mil` declares without a default must be bound
+(UI13 §1). Otherwise the result is `SlotBindingMissing` (UI34 §7):
+
+```
+// mosaic-pkg-lib/src/Card.mil       // ProbeApp.mll
+component Card {                     layout ProbeApp { Column [ app-root ] {
+  slot title : text ;                  pkg::mosaic-pkg-lib::Card ( title: slot: heading )
+  slot hint  : text ;      ← required } }
+  slot tone  : text = "" ; ← optional
+}
+
+`ProbeApp` mounts `pkg::mosaic-pkg-lib::Card` at Column[app-root] >
+pkg::mosaic-pkg-lib::Card#1 without binding its required slot `hint`;
+bind `hint` at the call site, or give it a default in Card.mil
+(`slot hint : <type> = <value> ;`)
+```
+
+- An omitted slot with a default takes the default.
+- The slot that the layout's `slot: <name>` child mount names is filled by
+  the caller's children, so it needs no binding. Every other `node` or
+  `list<node>` slot is read as a prop, so it does need one.
+- An emit the call site does not forward is dropped.
+- A call-site prop that names no slot or emit of `C` is ignored. It never
+  rewrites anything.
+- Every miss in the whole tree is reported at once, as
+  `LayoutResolveError::Multiple`. That includes misses inside the layouts
+  of the packages it reaches. At most 100 are listed, followed by
+  "… and N more".
+
+When a package component is loaded, its own names are checked too:
+
+- **Free names in expressions.** Every free name must be a declared slot,
+  a `For` `as:`/`index:` binding in scope, or `true`/`false`. Otherwise
+  the result is `UndeclaredExpressionIdentifier`. Without this check,
+  `If ( when: ( hint > 0 ) )` with no `slot hint` would compile, and after
+  inlining would read the consumer's `hint`.
+- **Bare NAME prop values.** `Text ( content: title )` lowers to a
+  variable on React (`{title}`) and HTML (`{{title}}`), so a bare NAME is
+  checked like an expression name. Exempt are `true`/`false`, the kernel's
+  enum positions (`moslayout_compiler::KEYWORD_LITERAL_PROPS`, such as
+  `axis: both` or `a11y-role: heading`), and, at a call site, one of the
+  declared values of the `one-of` slot it binds. A bare NAME that names one
+  of the component's own slots becomes `slot: <name>`, so it takes the call
+  site's binding. That includes forwarding: `Badge ( tone: tone )`.
+- **`one-of` values.** A `one-of` value bound at a call site (`tone: loud`)
+  reaches the callee as the string `"loud"`, except in an enum position,
+  where it stays a bare value. It is never a variable.
+  - Afterwards, expressions that have become constant are evaluated:
+    `( "loud" == "calm" )` becomes `false`. TypeScript rejects that
+    comparison as written.
+- **The child-mount slot.** It may be read only at the mount. A read
+  anywhere else is `ChildMountSlotReferenced`, because nothing ever binds
+  that slot by prop.
+- **Loop variables.** Inside a `For`, a name that matches the loop's
+  binding is the loop variable, and substitution leaves it alone.
+- **Hygiene.** The names the consumer passes in (bound values, and the
+  children it splices into a mount) keep meaning the consumer's names. If a
+  callee `For` binds the same name, so that substitution would put the
+  consumer's `row` inside the callee's `For ( …, as: row )`, the callee's
+  binding and its uses are renamed first (`row` → `row-in1`). A binding
+  that captures nothing keeps its name (UI29 §3.4).
+
+The check reads the interface rather than the layout, because an unbound
+name that survives substitution means a slot of the *consumer*. It was
+then either silently captured by a consumer slot with the same name, or
+left in generated code as an undeclared identifier.
+(`mosaic-unbound-slot-semantics-v1.md` §1.3 has the probes.)
+
 ## Version requirements
 
 A `[dependencies]` value is checked, not ignored
@@ -118,6 +193,46 @@ checks, so a stale requirement fails this crate's tests with the file to
 fix. (The build tool reruns those tests only when this crate or its
 dependencies change; a package build reaches the same check through
 `mosaic-package-artifact-builder`.)
+
+## Declared dependencies
+
+A `pkg::P::C` call site must name the referencing package itself or one of
+its declared `[dependencies]` (mosaic-package-publishing-v1 §10 Phase 1b).
+Otherwise the result is `UndeclaredPackageReference`:
+
+```text
+`ProbeApp` mounts `pkg::mosaic-pkg-lib::Card` at Column[app-root] >
+pkg::mosaic-pkg-lib::Card[hero], but `mosaic-pkg-lib` is not a declared
+dependency; add `mosaic-pkg-lib = "0.1.0"` to [dependencies] in
+…/probe-app/mosaic-package.toml
+```
+
+Without this check, any package on the search path could be inlined. Its
+version was never checked, and the build tool, which takes its edges from
+`[dependencies]`, never rebuilt the consumer when the package changed.
+
+- **Inside a package component**, the call sites are checked against that
+  package's own manifest. This always happens.
+- **In the layout being resolved**, the call sites are checked only when
+  the caller names the consumer:
+
+  ```rust
+  let resolver = LayoutPackageResolver::new(search_paths)
+      .with_consumer(&manifest, &package_root.join("mosaic-package.toml"));
+  ```
+
+  `mosaic-package-artifact-builder` does this for every package build.
+  Without `with_consumer`, the consumer's own references are accepted, as
+  before.
+- `pkg::<self>::C` is allowed. The artifact builder qualifies a package's
+  bare sibling references to that form.
+- Each undeclared package is reported once per manifest, at its first call
+  site. The message suggests the version found on the search path.
+- It runs in the same pre-substitution walk as `SlotBindingMissing`, so
+  both kinds of error come back together in one `Multiple`.
+- `every_repository_layout_binds_every_required_slot` resolves every
+  exported layout in the repository with its own manifest as the
+  consumer, so an undeclared reference fails this crate's tests.
 
 ## Kernel set
 

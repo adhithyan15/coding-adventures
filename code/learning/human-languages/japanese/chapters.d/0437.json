@@ -1,0 +1,21 @@
+{
+  "chapter": 437,
+  "title": "Strict, Sincere or Mean",
+  "label": "ch:ja-strict-sincere-or-mean",
+  "canDo": "I can describe a strict, sincere or mean person.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R437-review-432-437",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can describe a strict, sincere or mean person.",
+    "assesses": [
+      "JA-LEX-C437-HONEST437-01",
+      "JA-LEX-C437-HONEST437-02",
+      "JA-LEX-C437-HONEST437-03",
+      "JA-LEX-C437-HONEST437-04",
+      "JA-LEX-C437-HONEST437-05"
+    ]
+  }
+}

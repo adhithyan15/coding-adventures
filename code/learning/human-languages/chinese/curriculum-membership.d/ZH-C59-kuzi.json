@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C59-kuzi",
+  "pathSegment": "ZH-PATH-59-WEAR59",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-59-WEAR59",
+      "order": 3
+    }
+  ]
+}

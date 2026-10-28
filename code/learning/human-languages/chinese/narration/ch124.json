@@ -1,0 +1,724 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 124,
+  "title": "Tall and Handsome",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:83533e20b378b7e2",
+  "lessons": [
+    {
+      "id": "ZH-C124-gezi",
+      "sequence": 10050,
+      "title": "个子 (gèzi) — height; build (of a person)",
+      "headword": "个子",
+      "romanization": "gèzi",
+      "gloss": "height; build (of a person)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b82aaf2c08abf9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for warm-hearted, then the Mandarin for to care about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 个子",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "个子 — gèzi — \"height; build (of a person)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ gēge gèzi hěn gāo — My brother is tall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "个子 (gèzi) is built from 个, the measure word, and the noun ending 子, both inherited from Middle Chinese, kaH and tsiX (Guangyun, in Baxter's transcription). How the pair came to mean a person's height is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gèzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gèzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gèzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gèzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ gēge gèzi hěn gāo — My brother is tall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ gēge gèzi hěn gāo* — My brother is tall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for warm-hearted, then the Mandarin for to care about, then say gèzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for warm-hearted, then the Mandarin for to care about, then say *gèzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 个子 (gèzi) mean? (\"Height; build (of a person)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C124-toufa",
+      "sequence": 10060,
+      "title": "tóufa — hair (on the head)",
+      "headword": "tóufa",
+      "romanization": "tóufa",
+      "gloss": "hair (on the head)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c9232327cd21593",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to care about, then the Mandarin for a person's height."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tóufa",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tóufa — \"hair (on the head)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā de tóufa hěn cháng — Her hair is long."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tóufa is built from tóu 'head' and fa, both inherited from Middle Chinese, duw and pjot (Guangyun, in Baxter's transcription), which glosses the second 'the hair of the head'. In the word it loses its tone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tóufa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tóufa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tóufa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tóufa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā de tóufa hěn cháng — Her hair is long.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā de tóufa hěn cháng* — Her hair is long.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to care about, then the Mandarin for a person's height, then say tóufa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to care about, then the Mandarin for a person's height, then say *tóufa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tóufa mean? (\"Hair (on the head)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C124-shuai",
+      "sequence": 10070,
+      "title": "shuài — handsome",
+      "headword": "shuài",
+      "romanization": "shuài",
+      "gloss": "handsome",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17cb0ccb2e840ab2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a person's height, then the Mandarin for hair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shuài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shuài — \"handsome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ gēge hěn shuài — Your brother is handsome."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shuài is inherited from Middle Chinese srwijH (Guangyun, in Baxter's transcription), glossed 'a commander of troops'. The sense handsome is not given there, and how it came is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ gēge hěn shuài — Your brother is handsome.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ gēge hěn shuài* — Your brother is handsome.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a person's height, then the Mandarin for hair, then say shuài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a person's height, then the Mandarin for hair, then say *shuài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shuài mean? (\"Handsome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C124-nankan",
+      "sequence": 10080,
+      "title": "nánkàn — ugly",
+      "headword": "nánkàn",
+      "romanization": "nánkàn",
+      "gloss": "ugly",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:0217c2f1a5224807",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for hair, then the Mandarin for handsome."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nánkàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nánkàn — \"ugly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de xié hěn nánkàn — My shoes are ugly."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nánkàn is built from nán 'hard' and 看 'to look at', both inherited from Middle Chinese, nan and khanH (Guangyun, in Baxter's transcription): hard to look at."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nánkàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nánkàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nánkàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nánkàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de xié hěn nánkàn — My shoes are ugly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de xié hěn nánkàn* — My shoes are ugly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for hair, then the Mandarin for handsome, then say nánkàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for hair, then the Mandarin for handsome, then say *nánkàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nánkàn mean? (\"Ugly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C124-xiang-resemble",
+      "sequence": 10090,
+      "title": "xiàng — to resemble; to take after",
+      "headword": "xiàng",
+      "romanization": "xiàng",
+      "gloss": "to resemble; to take after",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af64d15a4a034064",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for handsome, then the Mandarin for ugly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xiàng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiàng — \"to resemble; to take after\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ xiàng wǒ bàba — I take after my dad."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiàng is inherited from Middle Chinese zjangX (Guangyun, in Baxter's transcription), glossed 'to be like'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiàng wǒ bàba — I take after my dad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiàng wǒ bàba* — I take after my dad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for handsome, then the Mandarin for ugly, then say xiàng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for handsome, then the Mandarin for ugly, then say *xiàng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xiàng mean? (\"To resemble; to take after\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

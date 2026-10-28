@@ -124,6 +124,12 @@ pub mod dynamic_arith;
 pub mod list_ops;
 pub mod closure_heap;
 pub mod immediates;
+// LANG83 PR7f-2: Lisp's truthiness, `not`, `equal?` and exit-code rules,
+// written as compiler-emitted IIR over the registry's dynamic-value primitives.
+pub mod lisp_semantics;
+// The rule both helper-adding passes (`list_ops`, `closure_heap`) follow: a
+// function already named like their helper must *be* their helper.
+pub mod helper_names;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in
@@ -176,6 +182,7 @@ pub use dynamic_arith::lower_dynamic_arith;
 pub use dynamic_arith::lower_box_unbox_to_runtime_calls;
 pub use list_ops::lower_list_ops;
 pub use closure_heap::lower_closures_to_heap;
+pub use helper_names::{HelperNameError, PASS_GENERATED_DYN_HELPERS};
 pub use immediates::materialize_immediate_operands;
 
 use interpreter_ir::IIRModule;
@@ -215,9 +222,15 @@ pub fn lower_builtins(module: &mut IIRModule) -> Vec<BuiltinLoweringError> {
     // into several (cons → alloc + 2 field_stores), so it rebuilds the
     // instruction list rather than mutating in place.
     //
-    // This pass is infallible: malformed heap instructions are left unchanged
-    // for the backend's validator to surface with clearer error messages.
-    heap::lower_heap_builtins(module);
+    // Malformed heap instructions are left unchanged for the backend's
+    // validator to surface with clearer error messages. The one refusal is a
+    // module that already defines a different function under a list helper's
+    // name (`helper_names`): the module is returned untouched by this phase
+    // and the later phases are skipped, so nothing is half-lowered.
+    if let Err(e) = heap::lower_heap_builtins(module) {
+        all_errors.push(BuiltinLoweringError::HelperName(e));
+        return all_errors;
+    }
 
     // ── Phase 3: global variables and I/O (LANG32) ────────────────────────
     //

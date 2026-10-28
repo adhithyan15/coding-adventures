@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:df24aaa71227807a",
+  "lessonIds": [
+    "ZH-C110-waiyu",
+    "ZH-W110-wai",
+    "ZH-C110-gangqin",
+    "ZH-C110-tan",
+    "ZH-C110-huahua",
+    "ZH-C110-tiaowu",
+    "ZH-R110-review-105-110"
+  ],
+  "tex": "chinese/book/chapters/ch110-things-i-can-do.tex"
+}

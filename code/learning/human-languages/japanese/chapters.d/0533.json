@@ -1,0 +1,21 @@
+{
+  "chapter": 533,
+  "title": "Worth the Effort",
+  "label": "ch:ja-worth-the-effort",
+  "canDo": "I can say what would make an effort worthwhile.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R533-review-final-533",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can say what would make an effort worthwhile.",
+    "assesses": [
+      "JA-LEX-C533-WORTH533-01",
+      "JA-LEX-C533-WORTH533-02",
+      "JA-LEX-C533-WORTH533-03",
+      "JA-LEX-C533-WORTH533-04",
+      "JA-LEX-C533-WORTH533-05"
+    ]
+  }
+}

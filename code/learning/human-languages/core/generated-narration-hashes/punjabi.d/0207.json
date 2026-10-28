@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:a10f0d31beed623c",
+  "lessonIds": [
+    "PA-C207-hona-return",
+    "PA-C207-hundaa",
+    "PA-C207-hundaa-review",
+    "PA-C207-daily-frame",
+    "PA-C207-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch207.txt",
+  "json": "punjabi/narration/ch207.json",
+  "textHash": "fnv1a64:de3c9565e9d8bf23",
+  "jsonHash": "fnv1a64:54d835eb8219e5e7",
+  "findings": []
+}

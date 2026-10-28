@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:ef6a9f991407b0d4",
+  "lessonIds": [
+    "ZH-C198-guanji",
+    "ZH-W198-guan-shut",
+    "ZH-C198-kaiji",
+    "ZH-C198-liuyan",
+    "ZH-C198-zhanxian",
+    "ZH-C198-xinhao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch198.txt",
+  "json": "chinese/narration/ch198.json",
+  "textHash": "fnv1a64:231d97d2d58ce921",
+  "jsonHash": "fnv1a64:2a99d8a12ca3bf2b",
+  "findings": []
+}

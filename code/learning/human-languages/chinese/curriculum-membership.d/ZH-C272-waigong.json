@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C272-waigong",
+  "pathSegment": "ZH-PATH-272-KIN272",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-272-KIN272",
+      "order": 3
+    }
+  ]
+}

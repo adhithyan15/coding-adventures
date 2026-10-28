@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W189-hao-number",
+    "language": "chinese",
+    "chapter": 189,
+    "sequence": 15055,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:44412d91c631e3f6",
+    "detachableSegments": [
+      "Script — 口 on top, then a bar and a hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

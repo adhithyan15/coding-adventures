@@ -1,0 +1,11 @@
+{
+  "id": "JA-C492-fukasu",
+  "pathSegment": "JA-PATH-492-BOIL492",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-492-BOIL492",
+      "order": 3
+    }
+  ]
+}

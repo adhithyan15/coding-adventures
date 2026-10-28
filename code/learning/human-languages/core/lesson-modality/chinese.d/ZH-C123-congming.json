@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C123-congming",
+    "language": "chinese",
+    "chapter": 123,
+    "sequence": 10000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40aa7a4fe9d292a8"
+  },
+  "findings": []
+}

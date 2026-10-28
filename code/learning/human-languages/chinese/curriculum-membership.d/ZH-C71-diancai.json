@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C71-diancai",
+  "pathSegment": "ZH-PATH-71-TASTE71",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-71-TASTE71",
+      "order": 4
+    }
+  ]
+}

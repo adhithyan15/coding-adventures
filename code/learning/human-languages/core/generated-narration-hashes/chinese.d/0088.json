@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:d9b8f4f4b6c6c082",
+  "lessonIds": [
+    "ZH-C88-liang",
+    "ZH-W88-liang",
+    "ZH-C88-yi-sandhi",
+    "ZH-C88-bei",
+    "ZH-C88-ben",
+    "ZH-C88-zhang",
+    "ZH-C88-zhi",
+    "ZH-C88-practice"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch88.txt",
+  "json": "chinese/narration/ch88.json",
+  "textHash": "fnv1a64:5e84d6f884ddf898",
+  "jsonHash": "fnv1a64:90ede862d982b5e9",
+  "findings": []
+}

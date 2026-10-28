@@ -54,6 +54,12 @@ internal sealed class EffectComponent
     public string Status { get; set; } = "unset";
 }
 
+internal sealed class Increment
+{
+    public string MosaicName => "increment";
+    public object MosaicPayload => new Dictionary<string, object?> { ["amount"] = 1 };
+}
+
 internal sealed class RequestEffect
 {
     public RequestEffect(bool batch) => MosaicName = batch
@@ -547,6 +553,79 @@ internal static class Driver
         Check(Counted(settled, "own answer") == 4, "and its value, not the stale one, reached the app");
     }
 
+    /// A state file the runtime rejects moves to the first FREE quarantine
+    /// name, never over an earlier quarantine, which may be someone's real
+    /// data. A directory takes a name as surely as a file does (Windows
+    /// refuses a move onto one as access denied, not as "exists"). With all
+    /// ten names taken the file stays where it is, and nothing is saved over
+    /// it.
+    ///
+    /// <code>
+    ///   launch | before                                  | afterwards
+    ///   -------+-----------------------------------------+------------------------------
+    ///   first  | `{}`, `.corrupt` file, `.corrupt.1` dir | `{}` in `.corrupt.2`, saving
+    ///   second | `{}`, `.corrupt` to `.9` held           | `{}` still live, not saving
+    /// </code>
+    ///
+    /// Each launch is a <c>LoadRequired</c> after a <c>Close</c>, the startup
+    /// retry path. The first <c>Close</c> comes before any seeding, so the
+    /// runtime the static initializer loaded (whenever it ran) saw no file.
+    private static async Task CaseQuarantine()
+    {
+        var path = Environment.GetEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        if (string.IsNullOrEmpty(path))
+        {
+            Check(false, "MOSAIC_APP_STATE_PATH names the quarantine state file");
+            return;
+        }
+        MosaicRuntimeHost.Close();
+        // `{}` parses, so it reaches the runtime, which refuses it: no schema.
+        const string rejected = "{}";
+        File.WriteAllText(path + ".corrupt", "earlier");
+        Directory.CreateDirectory(path + ".corrupt.1");
+        File.WriteAllText(path, rejected);
+
+        MosaicRuntimeHost.LoadRequired();
+        var moved = MosaicRuntimeHost.ApplyProps(new EffectComponent()) ?? string.Empty;
+        Check(File.ReadAllText(path + ".corrupt") == "earlier", "an earlier quarantine is never replaced");
+        Check(
+            Directory.Exists(path + ".corrupt.1")
+                && Directory.GetFileSystemEntries(path + ".corrupt.1").Length == 0,
+            "a directory at a quarantine name is skipped");
+        Check(
+            File.Exists(path + ".corrupt.2") && File.ReadAllText(path + ".corrupt.2") == rejected,
+            "a rejected file moves to the first free name");
+        Check(
+            moved.Contains("rejected persisted state", StringComparison.Ordinal)
+                && !moved.Contains("will not be saved", StringComparison.Ordinal),
+            "a file moved aside leaves saving on");
+        await MosaicRuntimeHost.HandleEvent(new EffectComponent(), new Increment());
+        Check(
+            File.Exists(path) && File.ReadAllText(path) != rejected,
+            "fresh state is saved once the rejected file is aside");
+
+        MosaicRuntimeHost.Close();
+        for (var index = 3; index < 10; index++)
+            File.WriteAllText($"{path}.corrupt.{index}", $"taken {index}");
+        File.WriteAllText(path, rejected);
+        MosaicRuntimeHost.LoadRequired();
+        var blocked = MosaicRuntimeHost.ApplyProps(new EffectComponent()) ?? string.Empty;
+        Check(
+            blocked.Contains("This session will not be saved.", StringComparison.Ordinal),
+            "with every name taken, the warning says nothing is saved");
+        var answer = await MosaicRuntimeHost.HandleEvent(new EffectComponent(), new Increment());
+        Check(File.ReadAllText(path) == rejected, "a file that could not move aside is not written over");
+        Check(
+            answer?.Status.Contains("This session will not be saved.", StringComparison.Ordinal) == true,
+            "the warning stays showing after an event");
+        Check(
+            File.ReadAllText(path + ".corrupt") == "earlier"
+                && Directory.Exists(path + ".corrupt.1")
+                && File.ReadAllText(path + ".corrupt.2") == rejected
+                && File.ReadAllText(path + ".corrupt.9") == "taken 9",
+            "no quarantine was replaced");
+    }
+
     public static async Task<int> Main()
     {
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
@@ -650,6 +729,7 @@ internal static class Driver
                 break;
             case "props-profile-validate":
                 var counts = new Dictionary<string, int>();
+                var labels = new HashSet<string>();
                 foreach (var line in System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!))
                 {
                     using var document = System.Text.Json.JsonDocument.Parse(line);
@@ -660,14 +740,22 @@ internal static class Driver
                         && sample.GetProperty("bytes").GetInt64() >= 0, "nonnegative profiling measurement");
                     var fields = 0;
                     foreach (var property in sample.EnumerateObject()) fields++;
-                    Check(fields == 3, "no names or values in profiling record");
+                    if (phase == "apply-props-convert" || phase == "apply-props-set")
+                    {
+                        Check(fields == 4 && sample.GetProperty("property").GetString() is "Count" or "AwaitedEffects" or "Status",
+                            "detailed scope identifies the reflected property, without values");
+                        labels.Add(sample.GetProperty("property").GetString()!);
+                    }
+                    else Check(fields == 3, "aggregate record shape remains compatible");
                 }
-                Check(counts.GetValueOrDefault("apply-props-convert") == 4, "conversion attempts include failure");
-                Check(counts.GetValueOrDefault("apply-props-set") == 3, "setter attempts include failure");
-                Check(counts.GetValueOrDefault("apply-props-notify") == 4, "every batch releases notifications");
-                Check(counts.GetValueOrDefault("apply-props") == 4, "aggregate covers every attempt");
+                Check(labels.SetEquals(new[] { "Count", "AwaitedEffects", "Status" }), "distinct properties remain distinguishable");
+                Check(counts.GetValueOrDefault("apply-props-convert") == 7, "conversion attempts include failure");
+                Check(counts.GetValueOrDefault("apply-props-set") == 6, "setter attempts include failure");
+                Check(counts.GetValueOrDefault("apply-props-notify") == 5, "every batch releases notifications");
+                Check(counts.GetValueOrDefault("apply-props") == 5, "aggregate covers every attempt");
                 break;
             case "props-batch":
+                MosaicRuntimeHost.ApplyProps(new EffectComponent());
                 var batched = new BatchComponent();
                 MosaicRuntimeHost.ApplyProps(batched);
                 Check(batched.Observed == 0 && batched.Begins == 1 && batched.Ends == 1 && batched.Depth == 0,
@@ -697,6 +785,7 @@ internal static class Driver
             case "closes": await CaseHandlerClosesHost(); break;
             case "deferred": await CaseDeferred(); break;
             case "scoped": await CaseScopedAcrossRetry(); break;
+            case "quarantine": await CaseQuarantine(); break;
             default:
                 Console.WriteLine($"unknown MOSAIC_PROBE_CASE `{probeCase}`");
                 return 2;

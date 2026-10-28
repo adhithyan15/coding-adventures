@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:68b57a1a393631f0",
+  "lessonIds": [
+    "ZH-C65-men",
+    "ZH-W65-men-door",
+    "ZH-C65-qingwen",
+    "ZH-W65-wen-ask",
+    "ZH-C65-buhaoyisi",
+    "ZH-C65-kai",
+    "ZH-C65-guan"
+  ],
+  "tex": "chinese/book/chapters/ch65-excuse-me.tex"
+}

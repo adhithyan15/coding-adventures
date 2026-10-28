@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:ef722714046a929b",
+  "lessonIds": [
+    "ZH-C53-shuo",
+    "ZH-W53-shuo",
+    "ZH-C53-hua",
+    "ZH-W53-hua",
+    "ZH-C53-ting",
+    "ZH-C53-dong",
+    "ZH-C53-man"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch53.txt",
+  "json": "chinese/narration/ch53.json",
+  "textHash": "fnv1a64:d56a97909aab49a1",
+  "jsonHash": "fnv1a64:531d3e0bc07d9254",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:e7b4971b11507221",
+  "lessonIds": [
+    "JA-C444-kokyuu-suru",
+    "JA-C444-myaku",
+    "JA-C444-ketsuatsu",
+    "JA-C444-taijuu",
+    "JA-C444-ibiki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch444.txt",
+  "json": "japanese/narration/ch444.json",
+  "textHash": "fnv1a64:6575b5fbf65491a1",
+  "jsonHash": "fnv1a64:1b1e04419a890531",
+  "findings": []
+}

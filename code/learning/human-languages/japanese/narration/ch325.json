@@ -1,0 +1,814 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 325,
+  "title": "Going Along or Pushing Back",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3f878666f5b4a1e3",
+  "lessons": [
+    {
+      "id": "JA-C325-shitagau",
+      "sequence": 19410,
+      "title": "したがう (shitagau) — to obey; to follow",
+      "headword": "したがう",
+      "romanization": "shitagau",
+      "gloss": "to obey; to follow",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76b347ff398ff398",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to criticize, then the Japanese for an excuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: したがう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "したがう — shitagau — \"to obey; to follow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんせいの いけんに したがった ほうが いいです。 — sensei no iken ni shitagatta hō ga ii desu — \"You should follow the teacher's advice.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite したがいます, shitagaimasu; a godan verb. Past (polite): がくせいは したがいました。, gakusei wa shitagaimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "したがう (shitagau) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitagau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitagau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitagau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitagau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensei no iken ni shitagatta hō ga ii desu — You should follow the teacher's advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensei no iken ni shitagatta hō ga ii desu* — You should follow the teacher's advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to criticize, then the Japanese for an excuse, then say shitagau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to criticize, then the Japanese for an excuse, then say *shitagau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does したがう (shitagau) mean? (\"To obey; to follow\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C325-shitagau-type",
+              "prompt": "Say the Japanese for 'to obey'.",
+              "assesses": [
+                "JA-LEX-C325-SHITAGAU325-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "したがう",
+                "shitagau"
+              ],
+              "feedback": {
+                "correct": "Right: したがう (shitagau) is 'to obey; to follow'.",
+                "incorrect": "'To obey' is したがう (shitagau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C325-sakarau",
+      "sequence": 19420,
+      "title": "さからう (sakarau) — to go against; to disobey",
+      "headword": "さからう",
+      "romanization": "sakarau",
+      "gloss": "to go against; to disobey",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97cd2db1891bbeb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an excuse, then the Japanese for to obey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さからう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さからう — sakarau — \"to go against; to disobey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははに さからったので、あとで あやまりました。 — haha ni sakaratta node, ato de ayamarimashita — \"I went against my mother, so I apologized later.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さからいます, sakaraimasu; a godan verb. Past (polite): むすこが さからいました。, musuko ga sakaraimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さからう (sakarau) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakarau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakarau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakarau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakarau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha ni sakaratta node, ato de ayamarimashita — I went against my mother, so I apologized later.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha ni sakaratta node, ato de ayamarimashita* — I went against my mother, so I apologized later.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an excuse, then the Japanese for to obey, then say sakarau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an excuse, then the Japanese for to obey, then say *sakarau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さからう (sakarau) mean? (\"To go against; to disobey\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C325-sakarau-type",
+              "prompt": "Say the Japanese for 'to go against'.",
+              "assesses": [
+                "JA-LEX-C325-SHITAGAU325-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さからう",
+                "sakarau"
+              ],
+              "feedback": {
+                "correct": "Right: さからう (sakarau) is 'to go against; to disobey'.",
+                "incorrect": "'To go against' is さからう (sakarau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C325-uketomeru",
+      "sequence": 19430,
+      "title": "うけとめる (uketomeru) — to take to heart; to catch",
+      "headword": "うけとめる",
+      "romanization": "uketomeru",
+      "gloss": "to take to heart; to catch",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7913ac6a3360df8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to obey, then the Japanese for to go against."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うけとめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うけとめる — uketomeru — \"to take to heart; to catch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いけんが ただしいと おもったので、ちちは うけとめました。 — iken ga tadashii to omotta node, chichi wa uketomemashita — \"My father thought the point was fair, so he took it to heart.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うけとめます, uketomemasu; an ichidan verb. Past (polite): ちちが うけとめました。, chichi ga uketomemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うけとめる (uketomeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built from ukeru, \"to receive\" and tomeru, \"to stop\", and its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uketomeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uketomeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uketomeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uketomeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iken ga tadashii to omotta node, chichi wa uketomemashita — My father thought the point was fair, so he took it to heart.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iken ga tadashii to omotta node, chichi wa uketomemashita* — My father thought the point was fair, so he took it to heart.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to obey, then the Japanese for to go against, then say uketomeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to obey, then the Japanese for to go against, then say *uketomeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うけとめる (uketomeru) mean? (\"To take to heart; to catch\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C325-uketomeru-type",
+              "prompt": "Say the Japanese for 'to take to heart'.",
+              "assesses": [
+                "JA-LEX-C325-SHITAGAU325-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うけとめる",
+                "uketomeru"
+              ],
+              "feedback": {
+                "correct": "Right: うけとめる (uketomeru) is 'to take to heart; to catch'.",
+                "incorrect": "'To take to heart' is うけとめる (uketomeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C325-kekkyoku",
+      "sequence": 19440,
+      "title": "けっきょく (kekkyoku) — in the end; after all",
+      "headword": "けっきょく",
+      "romanization": "kekkyoku",
+      "gloss": "in the end; after all",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38f38f8e1a0ec47a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to go against, then the Japanese for to take to heart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けっきょく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっきょく — kekkyoku — \"in the end; after all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふったので、けっきょく いきませんでした。 — ame ga futta node, kekkyoku ikimasen deshita — \"It rained, so in the end we did not go.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっきょく (kekkyoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ketsu, \"tie\" (Middle Chinese ket) and kyoku, \"conclusion\" (gjowk) (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as kek-kyoku."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kekkyoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kekkyoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kekkyoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kekkyoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame ga futta node, kekkyoku ikimasen deshita — It rained, so in the end we did not go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame ga futta node, kekkyoku ikimasen deshita* — It rained, so in the end we did not go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to go against, then the Japanese for to take to heart, then say kekkyoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to go against, then the Japanese for to take to heart, then say *kekkyoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けっきょく (kekkyoku) mean? (\"In the end; after all\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C325-kekkyoku-type",
+              "prompt": "Say the Japanese for 'after all'.",
+              "assesses": [
+                "JA-LEX-C325-SHITAGAU325-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けっきょく",
+                "kekkyoku"
+              ],
+              "feedback": {
+                "correct": "Right: けっきょく (kekkyoku) is 'in the end; after all'.",
+                "incorrect": "'After all' is けっきょく (kekkyoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C325-jiyuu",
+      "sequence": 19450,
+      "title": "じゆう (jiyū) — freedom; free",
+      "headword": "じゆう",
+      "romanization": "jiyū",
+      "gloss": "freedom; free",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c26e1cab7d4dcf3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to take to heart, then the Japanese for after all."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゆう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゆう — jiyū — \"freedom; free\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この がっこうは ふくが じゆうです。 — kono gakkō wa fuku ga jiyū desu — \"At this school, what you wear is up to you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A na-adjective: な before a noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゆう (jiyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"oneself\" (Middle Chinese dzijH) and yū, \"a reason\" (yuw) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono gakkō wa fuku ga jiyū desu — At this school, what you wear is up to you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono gakkō wa fuku ga jiyū desu* — At this school, what you wear is up to you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to take to heart, then the Japanese for after all, then say jiyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to take to heart, then the Japanese for after all, then say *jiyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゆう (jiyū) mean? (\"Freedom; free\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C325-jiyuu-type",
+              "prompt": "Say the Japanese for 'freedom'.",
+              "assesses": [
+                "JA-LEX-C325-SHITAGAU325-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゆう",
+                "jiyū",
+                "jiyuu",
+                "jiyu"
+              ],
+              "feedback": {
+                "correct": "Right: じゆう (jiyū) is 'freedom; free'.",
+                "incorrect": "'Freedom' is じゆう (jiyū)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

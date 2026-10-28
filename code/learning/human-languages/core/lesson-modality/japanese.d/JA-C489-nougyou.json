@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C489-nougyou",
+    "language": "japanese",
+    "chapter": 489,
+    "sequence": 28460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f08a998b0ee74dd"
+  },
+  "findings": []
+}

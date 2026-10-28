@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Kitchen and Table",
+  "label": "ch:ja-kitchen-and-table",
+  "canDo": "I can talk about the kitchen and the menu.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C475-ajitsuke",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about the kitchen and the menu.",
+    "assesses": [
+      "JA-LEX-C475-TABLE475-03",
+      "JA-LEX-C475-TABLE475-04",
+      "JA-LEX-C475-TABLE475-05"
+    ]
+  }
+}

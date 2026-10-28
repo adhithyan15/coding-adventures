@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:daa818cddc3f34e0",
+  "lessonIds": [
+    "JA-C299-ousama",
+    "JA-C299-ohimesama",
+    "JA-C299-samurai",
+    "JA-C299-mamoru",
+    "JA-C299-tonosama"
+  ],
+  "tex": "japanese/book/chapters/ch299-the-king-s-daughter.tex"
+}

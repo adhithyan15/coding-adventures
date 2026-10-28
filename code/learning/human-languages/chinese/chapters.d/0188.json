@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Money to Spend",
+  "label": "ch:zh-money-to-spend",
+  "canDo": "I can say someone is well off, spend money or spend less, ask for change and say it is enough.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-C188-gou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say someone is well off, spend money or spend less, ask for change and say it is enough.",
+    "assesses": [
+      "ZH-LEX-C188-MONEY188-03",
+      "ZH-LEX-C188-MONEY188-04",
+      "ZH-LEX-C188-MONEY188-05"
+    ]
+  }
+}

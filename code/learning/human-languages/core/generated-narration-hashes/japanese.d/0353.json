@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:4aebc0854ccbfc7e",
+  "lessonIds": [
+    "JA-C353-tenken-suru",
+    "JA-C353-choushi",
+    "JA-C353-shoukaki",
+    "JA-C353-dansui",
+    "JA-C353-ichiou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch353.txt",
+  "json": "japanese/narration/ch353.json",
+  "textHash": "fnv1a64:fb713f5e3ff9a0ee",
+  "jsonHash": "fnv1a64:73e93c92b5c674b2",
+  "findings": []
+}

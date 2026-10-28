@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Satisfied or Bored",
+  "label": "ch:ja-satisfied-or-bored",
+  "canDo": "I can say whether I am satisfied or bored.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C435-damaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can say whether I am satisfied or bored.",
+    "assesses": [
+      "JA-LEX-C435-CONTENT435-03",
+      "JA-LEX-C435-CONTENT435-04",
+      "JA-LEX-C435-CONTENT435-05"
+    ]
+  }
+}

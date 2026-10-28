@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C120-dizhi",
+  "pathSegment": "ZH-PATH-120-TAKEAWAY120",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-120-TAKEAWAY120",
+      "order": 2
+    }
+  ]
+}

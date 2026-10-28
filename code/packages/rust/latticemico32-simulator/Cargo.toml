@@ -1,0 +1,10 @@
+[package]
+name = "latticemico32-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked LatticeMico32 functional simulator"
+license = "MIT"
+
+[lib]
+name = "latticemico32_simulator"
+path = "src/lib.rs"

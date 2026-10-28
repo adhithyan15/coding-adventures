@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C117-beibian",
+    "language": "chinese",
+    "chapter": 117,
+    "sequence": 8960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d45904b5ad68d92"
+  },
+  "findings": []
+}

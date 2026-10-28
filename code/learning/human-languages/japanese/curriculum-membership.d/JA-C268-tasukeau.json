@@ -1,0 +1,11 @@
+{
+  "id": "JA-C268-tasukeau",
+  "pathSegment": "JA-PATH-268-KYUUJO268",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-268-KYUUJO268",
+      "order": 3
+    }
+  ]
+}

@@ -16,5 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.Bezier2D.fsproj" />
     <Compile Include="Bezier2DTests.fs" />
+    <Compile Include="FlatteningConformanceTests.fs" />
   </ItemGroup>
 </Project>

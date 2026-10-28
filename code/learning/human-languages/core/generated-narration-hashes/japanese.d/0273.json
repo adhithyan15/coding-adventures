@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:7076cca98f82ed1b",
+  "lessonIds": [
+    "JA-C273-saiban",
+    "JA-C273-bakkin",
+    "JA-C273-hanketsu",
+    "JA-C273-uttaeru",
+    "JA-C273-shouko",
+    "JA-R273-review-268-273"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch273.txt",
+  "json": "japanese/narration/ch273.json",
+  "textHash": "fnv1a64:df017199d4731959",
+  "jsonHash": "fnv1a64:87e6ed43b48bfe32",
+  "findings": []
+}

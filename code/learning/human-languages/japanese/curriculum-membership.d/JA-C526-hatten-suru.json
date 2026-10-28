@@ -1,0 +1,11 @@
+{
+  "id": "JA-C526-hatten-suru",
+  "pathSegment": "JA-PATH-526-PROGRESS526",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-526-PROGRESS526",
+      "order": 1
+    }
+  ]
+}

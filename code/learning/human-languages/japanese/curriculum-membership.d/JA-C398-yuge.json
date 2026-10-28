@@ -1,0 +1,11 @@
+{
+  "id": "JA-C398-yuge",
+  "pathSegment": "JA-PATH-398-ONSEN398",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-398-ONSEN398",
+      "order": 1
+    }
+  ]
+}

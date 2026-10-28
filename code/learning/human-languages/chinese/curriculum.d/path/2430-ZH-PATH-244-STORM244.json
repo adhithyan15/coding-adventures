@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-244-STORM244",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-244-STORM244"
+  ],
+  "after": []
+}
