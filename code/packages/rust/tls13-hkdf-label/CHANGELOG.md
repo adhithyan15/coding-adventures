@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Added allocation-free `hkdf_expand_label_fixed` composition over the
+  repository-owned SHA-256/SHA-384 HKDF boundary, with exact RFC 8448 coverage
+  and atomic public-failure behavior.
+
 ## [0.1.0] - 2026-10-25
 
 ### Added

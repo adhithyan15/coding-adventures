@@ -1,9 +1,10 @@
-//! Bounded, allocation-free TLS 1.3 `HkdfLabel` framing.
+//! Bounded, allocation-free TLS 1.3 `HKDF-Expand-Label` composition.
 //!
 //! RFC 8446 section 7.1 domain-separates every TLS 1.3 HKDF expansion by
 //! serializing a public output length, the fixed `"tls13 "` namespace plus a
-//! caller label, and a public context. This crate owns only that serialization:
-//! it accepts no secret and invokes no hash or HKDF implementation.
+//! caller label, and a public context. This crate owns that serialization and
+//! composes it with the repository-owned fixed-memory HKDF boundary. It does
+//! not select a cipher suite or compose a TLS key schedule.
 //!
 //! ```
 //! use tls13_hkdf_label::HkdfLabel;
@@ -17,6 +18,7 @@
 
 #![forbid(unsafe_code)]
 
+use coding_adventures_hkdf::{hkdf_expand_fixed, HkdfError, HkdfPrk};
 use core::fmt;
 
 /// The namespace prepended to every caller label by RFC 8446 section 7.1.
@@ -64,6 +66,39 @@ impl fmt::Display for HkdfLabelError {
 }
 
 impl std::error::Error for HkdfLabelError {}
+
+/// Stable failures for fixed-memory TLS 1.3 `HKDF-Expand-Label`.
+#[derive(Debug, PartialEq, Eq)]
+pub enum HkdfExpandLabelError {
+    /// Caller output cannot be represented by the RFC's two-byte length.
+    OutputLengthTooLarge,
+    /// Public label or context framing failed.
+    Framing(HkdfLabelError),
+    /// Repository-owned fixed-memory HKDF expansion failed.
+    Expand(HkdfError),
+}
+
+impl fmt::Display for HkdfExpandLabelError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::OutputLengthTooLarge => {
+                formatter.write_str("TLS 1.3 HKDF output exceeds its framing bound")
+            }
+            Self::Framing(error) => write!(formatter, "TLS 1.3 HKDF framing failed: {error}"),
+            Self::Expand(error) => write!(formatter, "TLS 1.3 HKDF expansion failed: {error}"),
+        }
+    }
+}
+
+impl std::error::Error for HkdfExpandLabelError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::OutputLengthTooLarge => None,
+            Self::Framing(error) => Some(error),
+            Self::Expand(error) => Some(error),
+        }
+    }
+}
 
 /// Validated public inputs for one RFC 8446 `HkdfLabel` encoding.
 ///
@@ -160,9 +195,61 @@ impl<'a> HkdfLabel<'a> {
     }
 }
 
+/// Derive caller-owned output with TLS 1.3 `HKDF-Expand-Label`.
+///
+/// The public RFC 8446 `HkdfLabel` information is encoded into one fixed-size
+/// stack buffer, then passed to repository-owned [`hkdf_expand_fixed`]. The
+/// algorithm is carried by `prk`, so framing cannot choose a hash that
+/// disagrees with Extract. The function performs no heap allocation.
+///
+/// Public length, label, and context failures occur before `output` changes.
+/// The underlying fixed-memory HKDF boundary preserves that property for its
+/// public failures and wipes caller output if an unexpected PRF failure occurs.
+/// Successful output remains caller-owned.
+///
+/// This function does not select a cipher suite, compose a TLS key schedule,
+/// process handshake or record state, or provide certificate or transport
+/// authority.
+///
+/// # Example
+///
+/// ```
+/// use coding_adventures_hkdf::{hkdf_extract_fixed, FixedHkdfHash};
+/// use tls13_hkdf_label::hkdf_expand_label_fixed;
+///
+/// let prk = hkdf_extract_fixed(b"salt", b"ikm", FixedHkdfHash::Sha256).unwrap();
+/// let mut output = [0u8; 16];
+/// hkdf_expand_label_fixed(&prk, b"key", b"transcript hash", &mut output).unwrap();
+/// ```
+pub fn hkdf_expand_label_fixed(
+    prk: &HkdfPrk,
+    label: &[u8],
+    context: &[u8],
+    output: &mut [u8],
+) -> Result<(), HkdfExpandLabelError> {
+    let output_length =
+        u16::try_from(output.len()).map_err(|_| HkdfExpandLabelError::OutputLengthTooLarge)?;
+    let label =
+        HkdfLabel::new(output_length, label, context).map_err(HkdfExpandLabelError::Framing)?;
+    let mut info_storage = [0u8; MAX_ENCODED_LENGTH];
+    let info = label
+        .encode(&mut info_storage)
+        .map_err(HkdfExpandLabelError::Framing)?;
+
+    hkdf_expand_fixed(prk, info, output).map_err(HkdfExpandLabelError::Expand)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_hkdf::{hkdf_extract_fixed, FixedHkdfHash};
+
+    fn decode_hex(value: &str) -> Vec<u8> {
+        (0..value.len())
+            .step_by(2)
+            .map(|index| u8::from_str_radix(&value[index..index + 2], 16).unwrap())
+            .collect()
+    }
 
     #[test]
     fn encodes_traffic_key_and_iv_labels_exactly() {
@@ -270,6 +357,110 @@ mod tests {
         assert_eq!(
             HkdfLabelError::OutputTooSmall.to_string(),
             "TLS 1.3 HKDF label output is too small"
+        );
+    }
+
+    #[test]
+    fn expands_rfc8448_sha256_derived_secret() {
+        // RFC 8448 section 3 derives this value from the all-zero early
+        // secret with the SHA-256 empty-string hash as context.
+        let context =
+            decode_hex("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+        let expected =
+            decode_hex("6f2615a108c702c5678f54fc9dbab69716c076189c48250cebeac3576c3611ba");
+        let zero_ikm = [0u8; 32];
+        let prk = hkdf_extract_fixed(&[], &zero_ikm, FixedHkdfHash::Sha256).unwrap();
+        let mut output = [0u8; 32];
+
+        hkdf_expand_label_fixed(&prk, b"derived", &context, &mut output).unwrap();
+
+        assert_eq!(output.as_slice(), expected);
+    }
+
+    #[test]
+    fn expands_sha384_across_three_hmac_blocks() {
+        // Independently generated from RFC 8446 section 7.1 with the Python
+        // standard library's SHA-384 HMAC implementation.
+        let expected = decode_hex(
+            "29e2f37a0cf31153c6b9760f5518eb5159d0db25f774e360927894d5bb9d3d5e\
+             83c4aa7756ecdd8db31c9b4dc79b128d1fa620f7748b7cc0eb984058e4619511\
+             f264c7b6d50638431e7d63b245058b5f819a32416ac84269e4a448c5ccc56c1f1f",
+        );
+        let prk = hkdf_extract_fixed(b"salt", b"ikm", FixedHkdfHash::Sha384).unwrap();
+        let mut output = [0u8; 97];
+
+        hkdf_expand_label_fixed(&prk, b"key", b"sha384 context", &mut output).unwrap();
+
+        assert_eq!(output.as_slice(), expected);
+    }
+
+    #[test]
+    fn public_failures_leave_output_unchanged() {
+        let prk = hkdf_extract_fixed(b"salt", b"ikm", FixedHkdfHash::Sha256).unwrap();
+        let mut output = [0xA5; 16];
+        let oversized_label = [b'l'; MAX_LABEL_LENGTH + 1];
+        let oversized_context = [b'c'; MAX_CONTEXT_LENGTH + 1];
+
+        assert_eq!(
+            hkdf_expand_label_fixed(&prk, b"", b"", &mut output),
+            Err(HkdfExpandLabelError::Framing(HkdfLabelError::EmptyLabel))
+        );
+        assert_eq!(output, [0xA5; 16]);
+        assert_eq!(
+            hkdf_expand_label_fixed(&prk, &oversized_label, b"", &mut output),
+            Err(HkdfExpandLabelError::Framing(HkdfLabelError::LabelTooLong))
+        );
+        assert_eq!(output, [0xA5; 16]);
+        assert_eq!(
+            hkdf_expand_label_fixed(&prk, b"key", &oversized_context, &mut output),
+            Err(HkdfExpandLabelError::Framing(
+                HkdfLabelError::ContextTooLong
+            ))
+        );
+        assert_eq!(output, [0xA5; 16]);
+    }
+
+    #[test]
+    fn hkdf_length_failures_leave_output_unchanged() {
+        let prk = hkdf_extract_fixed(b"salt", b"ikm", FixedHkdfHash::Sha256).unwrap();
+        let mut empty = [];
+        assert_eq!(
+            hkdf_expand_label_fixed(&prk, b"key", b"", &mut empty),
+            Err(HkdfExpandLabelError::Expand(HkdfError::OutputTooShort))
+        );
+
+        let maximum = 255 * FixedHkdfHash::Sha256.hash_len();
+        let mut oversized = vec![0xA5; maximum + 1];
+        assert_eq!(
+            hkdf_expand_label_fixed(&prk, b"key", b"", &mut oversized),
+            Err(HkdfExpandLabelError::Expand(HkdfError::OutputTooLong {
+                requested: maximum + 1,
+                maximum,
+            }))
+        );
+        assert!(oversized.iter().all(|byte| *byte == 0xA5));
+
+        let mut unrepresentable = vec![0xA5; u16::MAX as usize + 1];
+        assert_eq!(
+            hkdf_expand_label_fixed(&prk, b"key", b"", &mut unrepresentable),
+            Err(HkdfExpandLabelError::OutputLengthTooLarge)
+        );
+        assert!(unrepresentable.iter().all(|byte| *byte == 0xA5));
+    }
+
+    #[test]
+    fn composition_errors_are_stable_and_redacted() {
+        assert_eq!(
+            HkdfExpandLabelError::OutputLengthTooLarge.to_string(),
+            "TLS 1.3 HKDF output exceeds its framing bound"
+        );
+        assert_eq!(
+            HkdfExpandLabelError::Framing(HkdfLabelError::EmptyLabel).to_string(),
+            "TLS 1.3 HKDF framing failed: TLS 1.3 HKDF label is empty"
+        );
+        assert_eq!(
+            HkdfExpandLabelError::Expand(HkdfError::OutputTooShort).to_string(),
+            "TLS 1.3 HKDF expansion failed: HKDF output length must be positive"
         );
     }
 }

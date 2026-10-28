@@ -1,8 +1,9 @@
 # tls13-hkdf-label
 
 `tls13-hkdf-label` validates and serializes the public `HkdfLabel` information
-defined by RFC 8446 section 7.1. It is allocation-free, has no dependencies,
-and writes only into caller-owned storage.
+defined by RFC 8446 section 7.1 and composes it with the repository-owned
+fixed-memory HKDF implementation. It performs no heap allocation and derives
+only into caller-owned storage.
 
 ## Boundary
 
@@ -13,13 +14,18 @@ The crate binds:
 - the exact six-byte `"tls13 "` namespace prefix; and
 - a context from 0 through 255 bytes.
 
-The complete encoding is at most 514 bytes. Input bounds and output capacity
-are validated before output is modified. Stable errors contain categories only.
+The complete encoding is at most 514 bytes. `hkdf_expand_label_fixed` retains
+that encoding in a fixed stack buffer and passes it to `hkdf_expand_fixed`.
+The data-driven SHA-256 or SHA-384 selection is carried by the wipe-on-drop
+`HkdfPrk`, preventing an Extract/Expand mismatch. Public failures are checked
+before output is modified; unexpected PRF failure wipes caller output.
 
-This crate takes no secret and performs no hashing, HKDF execution, traffic-key
-derivation, cipher-suite selection, nonce management, AEAD operation,
-certificate validation, network access, HTTP, or OAuth authorization. It does
-not make TLS or concrete HTTPS available.
+This crate performs only in-process secret derivation. It performs no
+credential access, signing, audit, I/O, or external effect. It does not select
+a cipher suite, compose a TLS key schedule, manage transcripts or nonces,
+protect records, parse or validate certificates, select roots, enforce
+revocation, open a network connection, authorize HTTP, or make concrete HTTPS
+available.
 
 ## Example
 
@@ -32,6 +38,17 @@ assert_eq!(
     label.encode(&mut storage).unwrap(),
     b"\x00\x10\x09tls13 key\x00"
 );
+```
+
+Fixed-memory composition is explicit:
+
+```rust
+use coding_adventures_hkdf::{hkdf_extract_fixed, FixedHkdfHash};
+use tls13_hkdf_label::hkdf_expand_label_fixed;
+
+let prk = hkdf_extract_fixed(b"salt", b"ikm", FixedHkdfHash::Sha384).unwrap();
+let mut output = [0u8; 32];
+hkdf_expand_label_fixed(&prk, b"derived", b"transcript hash", &mut output).unwrap();
 ```
 
 ## Development
