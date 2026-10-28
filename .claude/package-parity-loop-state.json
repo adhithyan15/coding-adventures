@@ -25,8 +25,8 @@
   "last_ci_action": {
     "observed_at": "2026-10-28T11:05:56Z",
     "pr_number": 18511,
-    "head_revision": "cd46abd9c493004912415a69ae6df75e5ee67c9d",
-    "action": "The exact Haskell/Swift Bezier head failed before package tests on hosted macOS because GHC 9.4.8 selected the Xcode linker while its hardcoded CLT SDK contains arm64e.x1 stubs. Logged and immediately selected the bounded Haskell trig BUILD repair because that package is the first dependency in the affected closure and the repository already proves the same CLT linker selection for Haskell Starlark. Ubuntu and Windows remained pending; no guarded merge action is allowed until a repaired exact head completes fresh hosted checks.",
+    "head_revision": "77107207763aec5fc8302eb8b55c9abb13dd2deb",
+    "action": "The exact Haskell/Swift Bezier head failed before package tests on hosted macOS because GHC 9.4.8 selected the Xcode linker while its hardcoded CLT SDK contains arm64e.x1 stubs. Logged, reprioritized, implemented, and locally validated the bounded Haskell trig BUILD repair at 77107207763aec5fc8302eb8b55c9abb13dd2deb. No guarded merge action is allowed until the repaired published exact head completes fresh hosted checks.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -20876,7 +20876,7 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18511",
       "pr_opened_at": "2026-10-28T09:20:52Z",
       "publication_head": "2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a",
-      "publication_notes": "PR #18511 is open and non-draft. Dynamic Bezier PR #18506 advanced main and made exact lifecycle head 2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a conflicting, so exact current main is being merged normally without rewriting history. The resulting head requires exact delta review and fresh hosted checks before guarded auto-merge.",
+      "publication_notes": "PR #18511 is open and non-draft. Exact head cd46abd9c493004912415a69ae6df75e5ee67c9d reached a hosted macOS runner/toolchain failure before Haskell package tests. The bounded trig BUILD repair is implemented and locally validated at 77107207763aec5fc8302eb8b55c9abb13dd2deb. Publish the normal follow-up history and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
       "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all.",
       "selection_notes": "Selected from current main after independent review rejected the unpublished TypeScript Arc2D build candidate: the production runner already starts every BUILD line in the package directory, while the proposed POSIX identity guard would fail under the Windows fallback. That non-defect branch was retired rather than published. All three publication slots remain occupied; the ready C#/F# tranche stays first in the publication queue, while Python/Ruby/Perl and TypeScript/Elixir/Lua remain sequenced behind shared selector integration. Haskell/Swift is the highest independent implementation owner because it advances two non-Rust lanes, depends only on the already-merged neutral contract, and has no changed-path overlap with the active or prepared tranches. Keep scope to deterministic safe flattening APIs, all nine neutral fixture cases, native Bezier2D and Arc2D regressions, package docs/changelogs, and lifecycle receipts; Go/Rust, the aggregate owner, and build-selector integration remain separate.",
       "started_at": "2026-10-25T20:56:00-07:00",
@@ -20894,7 +20894,7 @@
     {
       "id": "haskell-trig-macos-clt-linker-selection",
       "title": "Select the matching CLT linker for Haskell trig on macOS",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
       "pr_number": 18511,
@@ -20904,8 +20904,10 @@
       "package_paths": [
         "code/packages/haskell/trig"
       ],
+      "implementation_revision": "77107207763aec5fc8302eb8b55c9abb13dd2deb",
+      "validation_revision": "77107207763aec5fc8302eb8b55c9abb13dd2deb",
       "selection_notes": "Fresh exact-head CI triage reprioritized this bounded repair ahead of every independent backlog item because it is the direct blocker for an already-published two-language parity tranche, requires no new API or product scope, and has no open-PR overlap. The hosted macOS failure occurs while linking the first Haskell dependency, before Bezier2D tests, and exactly matches the repository's reviewed Haskell Starlark repair and linker lesson. Keep the fix to Darwin-only DEVELOPER_DIR selection inside the trig BUILD front; leave Linux, Windows, package source, and all other backlog owners unchanged.",
-      "notes": "Hosted macOS job 122763808355 in run 40668092481 uses GHC 9.4.8, whose bindist hardcodes the CommandLineTools SDK. Cabal inherited the Xcode linker and rejected arm64e.x1 TAPI stubs before trig dependencies could build. Scope DEVELOPER_DIR=/Library/Developer/CommandLineTools to Cabal and its children on Darwin, matching the already-merged Haskell Starlark precedent. Validate the native trig BUILD and the Haskell Bezier2D closure locally, then require a fresh exact-head hosted matrix before guarded auto-merge."
+      "notes": "Hosted macOS job 122763808355 in run 40668092481 uses GHC 9.4.8, whose bindist hardcodes the CommandLineTools SDK. Cabal inherited the Xcode linker and rejected arm64e.x1 TAPI stubs before trig dependencies could build. The repair scopes DEVELOPER_DIR=/Library/Developer/CommandLineTools to Cabal and its children on Darwin, matching the already-merged Haskell Starlark precedent. On local macOS, the native trig BUILD selects that route and passes all 19 examples; the Haskell Bezier2D BUILD then passes all 19 Trig, 27 Point2D, and 29 Bezier2D examples. A fresh exact-head hosted matrix remains mandatory before guarded auto-merge."
     },
     {
       "id": "geometry-bezier2d-flattening-typescript-elixir-lua",

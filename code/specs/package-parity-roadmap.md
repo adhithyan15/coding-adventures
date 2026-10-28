@@ -18789,3 +18789,10 @@ the trig BUILD front. Linux, Windows, package source, and unrelated owners stay
 unchanged. Native trig and Haskell Bezier closure validation plus a completely
 fresh hosted matrix on the repaired exact head remain mandatory before guarded
 auto-merge.
+
+The bounded repair is implemented at
+`77107207763aec5fc8302eb8b55c9abb13dd2deb`. On local macOS the native trig
+BUILD follows the CLT route and passes all 19 examples. The dependent Haskell
+Bezier2D BUILD passes all 19 Trig, 27 Point2D, and 29 Bezier2D examples. Keep
+PR #18511 blocked until the normal follow-up commit is published and every
+replacement exact-head hosted check reaches a terminal acceptable result.
