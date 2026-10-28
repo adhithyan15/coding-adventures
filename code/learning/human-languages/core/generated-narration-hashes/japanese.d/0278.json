@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:8cce48df4171e3f1",
+  "lessonIds": [
+    "JA-C278-inazuma",
+    "JA-C278-ataru",
+    "JA-C278-hageshii",
+    "JA-C278-tatsumaki",
+    "JA-C278-katamuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch278.txt",
+  "json": "japanese/narration/ch278.json",
+  "textHash": "fnv1a64:f0bc72b263cee7ec",
+  "jsonHash": "fnv1a64:37c0c031f611ceb2",
+  "findings": []
+}

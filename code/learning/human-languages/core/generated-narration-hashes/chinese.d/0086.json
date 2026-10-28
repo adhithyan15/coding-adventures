@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:732796a77096b17f",
+  "lessonIds": [
+    "ZH-C86-nar-where",
+    "ZH-W86-na-where",
+    "ZH-C86-shangbian",
+    "ZH-C86-xiabian",
+    "ZH-C86-xishoujian",
+    "ZH-C86-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch86.txt",
+  "json": "chinese/narration/ch86.json",
+  "textHash": "fnv1a64:c003e22182575880",
+  "jsonHash": "fnv1a64:cda9b71c5e033c10",
+  "findings": []
+}

@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 514,
+  "title": "Guesses and Forecasts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:084c866900965979",
+  "lessons": [
+    {
+      "id": "JA-C514-suisoku-suru",
+      "sequence": 29750,
+      "title": "すいそくする (suisoku suru) — to guess; to conjecture",
+      "headword": "すいそくする",
+      "romanization": "suisoku suru",
+      "gloss": "to guess; to conjecture",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a872a88e9cc5d7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to adjust, then the Japanese for arrangements."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すいそくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいそくする — suisoku suru — \"to guess; to conjecture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし まよったら、すいそくしないで ください。 — moshi mayottara, suisokushinaide kudasai — \"If you are unsure, please do not guess.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite すいそくします, suisokushimasu; a する verb. Past (polite): せんせいが こたえを すいそくしました。, sensei ga kotae o suisokushimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいそくする (suisoku suru) is the Sino-Japanese (kango) noun suisoku with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sui, \"conjecture\" (Middle Chinese tsyhwij) and soku, \"fathom\" (tsrhik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suisoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suisoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suisoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suisoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi mayottara, suisokushinaide kudasai — If you are unsure, please do not guess.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi mayottara, suisokushinaide kudasai* — If you are unsure, please do not guess.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to adjust, then the Japanese for arrangements, then say suisoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to adjust, then the Japanese for arrangements, then say *suisoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すいそくする (suisoku suru) mean? (\"To guess; to conjecture\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C514-suisoku-suru-type",
+              "prompt": "Say the Japanese for 'to guess'.",
+              "assesses": [
+                "JA-LEX-C514-GUESS514-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すいそくする",
+                "suisoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: すいそくする (suisoku suru) is 'to guess; to conjecture'.",
+                "incorrect": "'To guess' is すいそくする (suisoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C514-yosoku-suru",
+      "sequence": 29760,
+      "title": "よそくする (yosoku suru) — to predict; to forecast",
+      "headword": "よそくする",
+      "romanization": "yosoku suru",
+      "gloss": "to predict; to forecast",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f919635124d32b50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for arrangements, then the Japanese for to guess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よそくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よそくする — yosoku suru — \"to predict; to forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし ゆきを よそくしたら、しあいを ちゅうしします。 — moshi yuki o yosokushitara, shiai o chūshi shimasu — \"If they forecast snow, they will call off the match.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite よそくします, yosokushimasu; a する verb. Past (polite): ちちが ゆきを よそくしました。, chichi ga yuki o yosokushimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よそくする (yosoku suru) is the Sino-Japanese (kango) noun yosoku with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"beforehand\" (Middle Chinese yoH) and soku, \"fathom\" (tsrhik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yosoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yosoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yosoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yosoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi yuki o yosokushitara, shiai o chūshi shimasu — If they forecast snow, they will call off the match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi yuki o yosokushitara, shiai o chūshi shimasu* — If they forecast snow, they will call off the match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for arrangements, then the Japanese for to guess, then say yosoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for arrangements, then the Japanese for to guess, then say *yosoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よそくする (yosoku suru) mean? (\"To predict; to forecast\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C514-yosoku-suru-type",
+              "prompt": "Say the Japanese for 'to predict'.",
+              "assesses": [
+                "JA-LEX-C514-GUESS514-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よそくする",
+                "yosoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: よそくする (yosoku suru) is 'to predict; to forecast'.",
+                "incorrect": "'To predict' is よそくする (yosoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C514-mikomi",
+      "sequence": 29770,
+      "title": "みこみ (mikomi) — a prospect; a hope (of)",
+      "headword": "みこみ",
+      "romanization": "mikomi",
+      "gloss": "a prospect; a hope (of)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a73f165f06e21b13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to guess, then the Japanese for to predict."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みこみ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みこみ — mikomi — \"a prospect; a hope (of)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みこみは ちりょうに よります。 — mikomi wa chiryō ni yorimasu — \"The prospects depend on the treatment.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みこみ (mikomi) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from mi, \"seeing\" and komi, \"putting in\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikomi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikomi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikomi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikomi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikomi wa chiryō ni yorimasu — The prospects depend on the treatment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikomi wa chiryō ni yorimasu* — The prospects depend on the treatment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to guess, then the Japanese for to predict, then say mikomi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to guess, then the Japanese for to predict, then say *mikomi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みこみ (mikomi) mean? (\"A prospect; a hope (of)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C514-mikomi-type",
+              "prompt": "Say the Japanese for 'a prospect'.",
+              "assesses": [
+                "JA-LEX-C514-GUESS514-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みこみ",
+                "mikomi"
+              ],
+              "feedback": {
+                "correct": "Right: みこみ (mikomi) is 'a prospect; a hope (of)'.",
+                "incorrect": "'A prospect' is みこみ (mikomi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C514-yohou",
+      "sequence": 29780,
+      "title": "よほう (yohō) — a forecast",
+      "headword": "よほう",
+      "romanization": "yohō",
+      "gloss": "a forecast",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d84469262ff6400b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to predict, then the Japanese for a prospect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よほう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よほう — yohō — \"a forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし よほうが あたったら、あしたは ゆきでしょう。 — moshi yohō ga atattara, ashita wa yuki deshō — \"If the forecast is right, it will snow tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よほう (yohō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"beforehand\" (Middle Chinese yoH) and hō, \"report\" (pawH), the same two as at the end of tenkiyohō, \"the weather forecast\" (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yohō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yohō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yohō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yohō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi yohō ga atattara, ashita wa yuki deshō — If the forecast is right, it will snow tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi yohō ga atattara, ashita wa yuki deshō* — If the forecast is right, it will snow tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to predict, then the Japanese for a prospect, then say yohō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to predict, then the Japanese for a prospect, then say *yohō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よほう (yohō) mean? (\"A forecast\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C514-yohou-type",
+              "prompt": "Say the Japanese for 'a forecast'.",
+              "assesses": [
+                "JA-LEX-C514-GUESS514-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よほう",
+                "yohō",
+                "yohou",
+                "yohoo",
+                "yoho"
+              ],
+              "feedback": {
+                "correct": "Right: よほう (yohō) is 'a forecast'.",
+                "incorrect": "'A forecast' is よほう (yohō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C514-mitoushi",
+      "sequence": 29790,
+      "title": "みとおし (mitōshi) — an outlook; a forecast",
+      "headword": "みとおし",
+      "romanization": "mitōshi",
+      "gloss": "an outlook; a forecast",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2264bff2474834ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a prospect, then the Japanese for a forecast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みとおし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みとおし — mitōshi — \"an outlook; a forecast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みとおしは てんきに よります。 — mitōshi wa tenki ni yorimasu — \"The outlook depends on the weather.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みとおし (mitōshi) is a native Japanese compound (wago), inherited rather than borrowed from Chinese: built from mi, \"seeing\" and tōshi, \"passing through\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitōshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitōshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitōshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitōshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitōshi wa tenki ni yorimasu — The outlook depends on the weather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitōshi wa tenki ni yorimasu* — The outlook depends on the weather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a prospect, then the Japanese for a forecast, then say mitōshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a prospect, then the Japanese for a forecast, then say *mitōshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みとおし (mitōshi) mean? (\"An outlook; a forecast\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C514-mitoushi-type",
+              "prompt": "Say the Japanese for 'an outlook'.",
+              "assesses": [
+                "JA-LEX-C514-GUESS514-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みとおし",
+                "mitōshi",
+                "mitoushi",
+                "mitooshi",
+                "mitoshi"
+              ],
+              "feedback": {
+                "correct": "Right: みとおし (mitōshi) is 'an outlook; a forecast'.",
+                "incorrect": "'An outlook' is みとおし (mitōshi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

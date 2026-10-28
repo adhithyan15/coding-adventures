@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:e25b46bf844539ba",
+  "lessonIds": [
+    "ZH-C244-taifeng",
+    "ZH-C244-zhenyu",
+    "ZH-C244-shuobuding",
+    "ZH-C244-wanyi",
+    "ZH-C244-jixu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch244.txt",
+  "json": "chinese/narration/ch244.json",
+  "textHash": "fnv1a64:6a97acbaf5ab782a",
+  "jsonHash": "fnv1a64:68c072885fc06b86",
+  "findings": []
+}

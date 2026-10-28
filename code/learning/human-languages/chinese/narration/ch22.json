@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "The Grammar That Is Not There",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:57280ab6b8e2db35",
+  "sourceHash": "fnv1a64:c37f31bf45e9a173",
   "lessons": [
     {
       "id": "ZH-C22-bubian",
@@ -526,7 +526,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:608f9c1771cf74f8",
+      "sourceHash": "fnv1a64:db3b2ef99d90170c",
       "notice": null,
       "blocks": [
         {
@@ -556,11 +556,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say shíyī èrshí jiúshíjiǔ yìbǎi — R2, the first real retrieval, five to fifteen lessons back",
+              "instruction": "say shíyī èrshí jiǔshíjiǔ yìbǎi — R2, the first real retrieval, five to fifteen lessons back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *shíyī èrshí jiúshíjiǔ yìbǎi* — **R2**, the first real retrieval, five to fifteen lessons back]"
+              "source": "[YOU RECALL: say *shíyī èrshí jiǔshíjiǔ yìbǎi* — **R2**, the first real retrieval, five to fifteen lessons back]"
             },
             {
               "kind": "prompt",

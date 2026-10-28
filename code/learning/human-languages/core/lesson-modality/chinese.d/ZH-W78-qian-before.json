@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W78-qian-before",
+    "language": "chinese",
+    "chapter": 78,
+    "sequence": 6055,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:de38076364ce1565",
+    "detachableSegments": [
+      "Script — horns, a bar, the moon and a blade"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Which Way?",
+  "label": "ch:zh-which-way",
+  "canDo": "I can say east, south, west and north, and ask which way to go.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C117-fangxiang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: I can say east, south, west and north, and ask which way to go.",
+    "assesses": [
+      "ZH-LEX-C117-COMPASS117-03",
+      "ZH-LEX-C117-COMPASS117-04",
+      "ZH-LEX-C117-COMPASS117-05"
+    ]
+  }
+}

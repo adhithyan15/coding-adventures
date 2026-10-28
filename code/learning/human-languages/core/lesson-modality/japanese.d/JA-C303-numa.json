@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C303-numa",
+    "language": "japanese",
+    "chapter": 303,
+    "sequence": 18130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73e663e3d9d3eef7"
+  },
+  "findings": []
+}

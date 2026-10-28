@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 457,
+  "title": "Looking for a Job",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7da2a131202b972a",
+  "lessons": [
+    {
+      "id": "JA-C457-shuushoku-suru",
+      "sequence": 26600,
+      "title": "しゅうしょくする (shūshoku suru) — to find a job",
+      "headword": "しゅうしょくする",
+      "romanization": "shūshoku suru",
+      "gloss": "to find a job",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d0d936a135abd3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to hire, then the Japanese for a workplace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅうしょくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅうしょくする — shūshoku suru — \"to find a job\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あねは ぎんこうに しゅうしょくしました。 — ane wa ginkō ni shūshoku shimashita — \"My elder sister got a job at a bank.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite しゅうしょくします, shūshokushimasu; a する verb. Past (polite): あにが かいしゃに しゅうしょくしました。, ani ga kaisha ni shūshoku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅうしょくする (shūshoku suru) is Sino-Japanese (kango) shūshoku with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shū, \"settle\" (Middle Chinese dzjuwH) and shoku, \"employment\" (tsyik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūshoku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūshoku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūshoku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūshoku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ane wa ginkō ni shūshoku shimashita — My elder sister got a job at a bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ane wa ginkō ni shūshoku shimashita* — My elder sister got a job at a bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to hire, then the Japanese for a workplace, then say shūshoku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to hire, then the Japanese for a workplace, then say *shūshoku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅうしょくする (shūshoku suru) mean? (\"To find a job\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C457-shuushoku-suru-type",
+              "prompt": "Say the Japanese for 'to find a job'.",
+              "assesses": [
+                "JA-LEX-C457-JOBHUNT457-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅうしょくする",
+                "shūshoku suru",
+                "shuushoku suru",
+                "shushoku suru"
+              ],
+              "feedback": {
+                "correct": "Right: しゅうしょくする (shūshoku suru) is 'to find a job'.",
+                "incorrect": "'To find a job' is しゅうしょくする (shūshoku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C457-mensetsu",
+      "sequence": 26610,
+      "title": "めんせつ (mensetsu) — a job interview; an interview",
+      "headword": "めんせつ",
+      "romanization": "mensetsu",
+      "gloss": "a job interview; an interview",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73689646e26efd8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a workplace, then the Japanese for to find a job."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めんせつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めんせつ — mensetsu — \"a job interview; an interview\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あした かいしゃで めんせつが あります。 — ashita kaisha de mensetsu ga arimasu — \"I have an interview at a company tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めんせつ (mensetsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are men, \"face\" (Middle Chinese mjienH) and setsu, \"contact\" (tsjep) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mensetsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mensetsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mensetsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mensetsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita kaisha de mensetsu ga arimasu — I have an interview at a company tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita kaisha de mensetsu ga arimasu* — I have an interview at a company tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a workplace, then the Japanese for to find a job, then say mensetsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a workplace, then the Japanese for to find a job, then say *mensetsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めんせつ (mensetsu) mean? (\"A job interview; an interview\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C457-mensetsu-type",
+              "prompt": "Say the Japanese for 'a job interview'.",
+              "assesses": [
+                "JA-LEX-C457-JOBHUNT457-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めんせつ",
+                "mensetsu"
+              ],
+              "feedback": {
+                "correct": "Right: めんせつ (mensetsu) is 'a job interview; an interview'.",
+                "incorrect": "'A job interview' is めんせつ (mensetsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C457-rirekisho",
+      "sequence": 26620,
+      "title": "りれきしょ (rirekisho) — a curriculum vitae",
+      "headword": "りれきしょ",
+      "romanization": "rirekisho",
+      "gloss": "a curriculum vitae",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5f533d225812017",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to find a job, then the Japanese for a job interview."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りれきしょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りれきしょ — rirekisho — \"a curriculum vitae\"."
+            },
+            {
+              "kind": "speech",
+              "text": "りれきしょを かいしゃに おくりました。 — rirekisho o kaisha ni okurimashita — \"I sent my curriculum vitae to the company.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りれきしょ (rirekisho) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ri, \"perform\" (Middle Chinese lijX), reki, \"curriculum\" (lek), and sho, \"write\" (syo) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rirekisho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rirekisho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rirekisho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rirekisho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rirekisho o kaisha ni okurimashita — I sent my curriculum vitae to the company.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rirekisho o kaisha ni okurimashita* — I sent my curriculum vitae to the company.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to find a job, then the Japanese for a job interview, then say rirekisho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to find a job, then the Japanese for a job interview, then say *rirekisho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りれきしょ (rirekisho) mean? (\"A curriculum vitae\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C457-rirekisho-type",
+              "prompt": "Say the Japanese for 'a curriculum vitae'.",
+              "assesses": [
+                "JA-LEX-C457-JOBHUNT457-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りれきしょ",
+                "rirekisho"
+              ],
+              "feedback": {
+                "correct": "Right: りれきしょ (rirekisho) is 'a curriculum vitae'.",
+                "incorrect": "'A curriculum vitae' is りれきしょ (rirekisho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C457-oubo-suru",
+      "sequence": 26630,
+      "title": "おうぼする (ōbo suru) — to apply (for a job or a prize)",
+      "headword": "おうぼする",
+      "romanization": "ōbo suru",
+      "gloss": "to apply (for a job or a prize)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27143b1ad0e6d7a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a job interview, then the Japanese for a curriculum vitae."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おうぼする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おうぼする — ōbo suru — \"to apply (for a job or a prize)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは みっつの かいしゃに おうぼしました。 — kare wa mittsu no kaisha ni ōbo shimashita — \"He applied to three companies.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おうぼします, ōboshimasu; a する verb. Past (polite): がくせいが おうぼしました。, gakusei ga ōbo shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おうぼする (ōbo suru) is Sino-Japanese (kango) ōbo with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ō, \"answer\" (Middle Chinese 'ingH) and bo, \"recruit\" (muH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōbo suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōbo suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōbo suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōbo suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa mittsu no kaisha ni ōbo shimashita — He applied to three companies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa mittsu no kaisha ni ōbo shimashita* — He applied to three companies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a job interview, then the Japanese for a curriculum vitae, then say ōbo suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a job interview, then the Japanese for a curriculum vitae, then say *ōbo suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おうぼする (ōbo suru) mean? (\"To apply (for a job or a prize)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C457-oubo-suru-type",
+              "prompt": "Say the Japanese for 'to apply'.",
+              "assesses": [
+                "JA-LEX-C457-JOBHUNT457-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おうぼする",
+                "ōbo suru",
+                "oubo suru",
+                "oobo suru",
+                "obo suru"
+              ],
+              "feedback": {
+                "correct": "Right: おうぼする (ōbo suru) is 'to apply (for a job or a prize)'.",
+                "incorrect": "'To apply' is おうぼする (ōbo suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C457-boshuu",
+      "sequence": 26640,
+      "title": "ぼしゅう (boshū) — recruitment; a call for applicants",
+      "headword": "ぼしゅう",
+      "romanization": "boshū",
+      "gloss": "recruitment; a call for applicants",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55e28069a7f6b0ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a curriculum vitae, then the Japanese for to apply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぼしゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼしゅう — boshū — \"recruitment; a call for applicants\"."
+            },
+            {
+              "kind": "speech",
+              "text": "みせで てんいんを ぼしゅうしています。 — mise de ten'in o boshū shite imasu — \"The shop is looking for staff.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼしゅう (boshū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bo, \"recruit\" (Middle Chinese muH) and shū, \"gather\" (dzip) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boshū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boshū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boshū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boshū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mise de ten'in o boshū shite imasu — The shop is looking for staff.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mise de ten'in o boshū shite imasu* — The shop is looking for staff.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a curriculum vitae, then the Japanese for to apply, then say boshū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a curriculum vitae, then the Japanese for to apply, then say *boshū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぼしゅう (boshū) mean? (\"Recruitment; a call for applicants\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C457-boshuu-type",
+              "prompt": "Say the Japanese for 'recruitment'.",
+              "assesses": [
+                "JA-LEX-C457-JOBHUNT457-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぼしゅう",
+                "boshū",
+                "boshuu",
+                "boshu"
+              ],
+              "feedback": {
+                "correct": "Right: ぼしゅう (boshū) is 'recruitment; a call for applicants'.",
+                "incorrect": "'Recruitment' is ぼしゅう (boshū)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

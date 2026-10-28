@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:24a0cf07a1370a0f",
+  "lessonIds": [
+    "ZH-C263-jingli",
+    "ZH-C263-fuze",
+    "ZH-C263-qingjia",
+    "ZH-W263-jia-leave",
+    "ZH-C263-bingjia",
+    "ZH-C263-nianjia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch263.txt",
+  "json": "chinese/narration/ch263.json",
+  "textHash": "fnv1a64:e0823010f8b21c68",
+  "jsonHash": "fnv1a64:9c2e18c5eec7f6ac",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C115-jinzhi",
+    "language": "chinese",
+    "chapter": 115,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05e0eb4d0b39827f"
+  },
+  "findings": []
+}

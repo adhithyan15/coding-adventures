@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C106-zixingche",
+  "pathSegment": "ZH-PATH-106-STOP106",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-106-STOP106",
+      "order": 4
+    }
+  ]
+}

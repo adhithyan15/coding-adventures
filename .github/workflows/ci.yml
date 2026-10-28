@@ -96,6 +96,8 @@ jobs:
       needs_cpp: ${{ steps.toolchains.outputs.needs_cpp }}
       needs_c_bounded_json_windows: ${{ steps.build-matrix.outputs.needs_c_bounded_json_windows }}
       needs_c_neural_framework_windows: ${{ steps.build-matrix.outputs.needs_c_neural_framework_windows }}
+      needs_cpp_bounded_json_windows: ${{ steps.build-matrix.outputs.needs_cpp_bounded_json_windows }}
+      needs_cpp_neural_framework_windows: ${{ steps.build-matrix.outputs.needs_cpp_neural_framework_windows }}
       needs_lang_windows: ${{ steps.lang-windows.outputs.required }}
       needs_venture_windows: ${{ steps.venture-windows.outputs.required }}
       needs_mosaic_xaml_windows: ${{ steps.mosaic-xaml-windows.outputs.required }}
@@ -478,6 +480,8 @@ jobs:
             return (
               bounded_json_windows
               or neural_framework_windows
+              or cpp_bounded_json_windows
+              or cpp_neural_framework_windows
               or flag("RUN_WINDOWS_OS_SUITES")
               or flag("NEEDS_SWIFT")
               or flag("NEEDS_ELIXIR")
@@ -518,6 +522,20 @@ jobs:
             or "c/neural-framework" in windows_affected
           )
           print("needs_c_neural_framework_windows=" + str(neural_framework_windows).lower())
+          # NN50 is a native C++ parser, not a C wrapper. Its actual Windows
+          # compilation belongs to this same dependency-aware required build.
+          cpp_bounded_json_windows = (
+            not isinstance(windows_affected, list)
+            or "cpp/bounded-json" in windows_affected
+          )
+          print("needs_cpp_bounded_json_windows=" + str(cpp_bounded_json_windows).lower())
+          # NN51 owns actual training execution, not merely a parser's Windows
+          # step. Retain its lane even in a plan selecting the trainer alone.
+          cpp_neural_framework_windows = (
+            not isinstance(windows_affected, list)
+            or "cpp/neural-framework" in windows_affected
+          )
+          print("needs_cpp_neural_framework_windows=" + str(cpp_neural_framework_windows).lower())
 
           if os.environ["FULL_BUILD"] == "true":
             shards = json.loads(os.environ.get("BUILD_SHARDS") or "[]")
@@ -663,6 +681,8 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_neural_framework_windows_ci.py'
+            python3 -m unittest discover -s code/scripts/tests -p 'test_cpp_bounded_json_windows_ci.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_cpp_neural_framework_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_neural_framework_c.py'
           # LANG84 release inventories (`code/grammars/*/releases.csv`): the
           # common header (every inventory, Perl's included since phase 2b),
@@ -950,7 +970,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -982,7 +1002,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1010,7 +1030,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1042,7 +1062,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1070,7 +1090,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1102,7 +1122,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1137,7 +1157,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1169,7 +1189,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1202,7 +1222,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -2760,6 +2780,18 @@ jobs:
             flutter pub get
             flutter analyze
             flutter build linux --debug
+
+            # The screens scroll (EN-6): engram_scroll_test.dart starts on
+            # Decks in an 800x600 window, requires its last button to start
+            # below the window, drags the screen until the button is inside
+            # it, and requires it to be hit-testable. Its own fresh state file,
+            # so it starts on Decks with an empty collection.
+            unset MOSAIC_APP_LIBRARY
+            cp "$GITHUB_WORKSPACE/code/programs/mosaic/engram-app/conformance/flutter/engram_scroll_test.dart" \
+              test/engram_scroll_test.dart
+            engram_scroll_state="$RUNNER_TEMP/mosaic-flutter-engram-scroll-state.json"
+            rm -f "$engram_scroll_state" "$engram_scroll_state.corrupt" "$engram_scroll_state.tmp"
+            MOSAIC_APP_STATE_PATH="$engram_scroll_state" flutter test test/engram_scroll_test.dart
           )
 
       - name: Round-trip Rust engine through standard Compose binding
@@ -2905,6 +2937,25 @@ jobs:
           # the handler source, not the packaging.
           gradle --no-daemon --stacktrace -p "$engram_output/compose" compileKotlin
 
+          # The screens scroll (EN-6): EngramScrollUiTest opens Options in
+          # Compose Desktop's default 800x600 window, requires the note type
+          # editor's New button to be off screen, scrolls the screen (ScrollBy,
+          # since performScrollTo hangs, EM-11) until it is displayed, and
+          # clicks it. Its own fresh state file. This lane packages nothing, so
+          # the runtime is read from the project's app-resources, as
+          # scripts/render-compose.sh does.
+          engram_app_resources="$engram_output/compose/app-resources/linux"
+          cmp "$engram_runtime_library" "$engram_app_resources/libmosaic_app.so"
+          mkdir -p "$engram_output/compose/src/test/kotlin"
+          cp code/programs/mosaic/engram-app/conformance/compose/EngramScrollUiTest.kt \
+            "$engram_output/compose/src/test/kotlin/EngramScrollUiTest.kt"
+          engram_scroll_state="$RUNNER_TEMP/mosaic-compose-engram-scroll-state.json"
+          rm -f "$engram_scroll_state" "$engram_scroll_state.corrupt" "$engram_scroll_state.tmp"
+          MOSAIC_APP_STATE_PATH="$engram_scroll_state" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$engram_app_resources" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$engram_output/compose" \
+              test --tests EngramScrollUiTest
+
           # ---- Journal: emit and COMPILE on Compose (J5b, #14416). -----------
           # Same gate as Engram above, minus the effects handler Journal does
           # not have.
@@ -2937,6 +2988,20 @@ jobs:
             JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
             bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
               test --tests JournalUiTest
+
+          # The pane scrolls (JO-5): JournalScrollUiTest writes more entries than
+          # the 1100x760 window shows, requires the bottom row to be off screen,
+          # scrolls the pane (ScrollBy, since performScrollTo hangs, EM-11) until
+          # it is displayed, and opens it. Its own state file: it leaves eight
+          # entries behind, which JournalUiTest's restored launch must not see.
+          cp code/packages/rust/journal-mosaic-app/conformance/compose/JournalScrollUiTest.kt \
+            "$journal_output/compose/src/test/kotlin/JournalScrollUiTest.kt"
+          journal_scroll_state="$RUNNER_TEMP/mosaic-compose-journal-scroll-state.json"
+          rm -f "$journal_scroll_state" "$journal_scroll_state.corrupt" "$journal_scroll_state.tmp"
+          MOSAIC_APP_STATE_PATH="$journal_scroll_state" \
+            JAVA_TOOL_OPTIONS="-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")" \
+            bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+              test --tests JournalScrollUiTest
 
           # The platform library's own behaviour (UI87 §7): every Compose app
           # gets MosaicFileEffects.kt and MosaicPlatformEffects.kt, and this
@@ -3518,7 +3583,7 @@ jobs:
 
       - name: Install uv
         if: needs.detect.outputs.needs_python == 'true'
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -3539,7 +3604,7 @@ jobs:
         run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
 
       - name: Set up MSVC (Lua + C/C++ + Venture + LANG)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.needs_c_bounded_json_windows == 'true' || needs.detect.outputs.needs_c_neural_framework_windows == 'true') && runner.os == 'Windows'
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true' || needs.detect.outputs.needs_c_bounded_json_windows == 'true' || needs.detect.outputs.needs_c_neural_framework_windows == 'true' || needs.detect.outputs.needs_cpp_bounded_json_windows == 'true' || needs.detect.outputs.needs_cpp_neural_framework_windows == 'true') && runner.os == 'Windows'
         shell: pwsh
         run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
 
@@ -3573,6 +3638,40 @@ jobs:
           try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/selftest.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
           finally { Pop-Location }
           Push-Location code/packages/c/neural-framework
+          try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/run.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          finally { Pop-Location }
+
+      - name: Validate bounded C++ JSON with MSVC
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_cpp_bounded_json_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 10
+        env:
+          ISO_REQUIRE: cl clang-cl
+        run: |
+          # The shared scheduler compiles both translation units with the
+          # existing strict C++17 flags; failures are part of BUILD_RESULT.
+          $windowsPowerShell = Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0/powershell.exe'
+          Push-Location code/packages/c/iso-harness
+          try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/selftest.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          finally { Pop-Location }
+          Push-Location code/packages/cpp/bounded-json
+          try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/run.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          finally { Pop-Location }
+
+      - name: Validate native C++ dense training with MSVC
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_cpp_neural_framework_windows == 'true'
+        shell: pwsh
+        timeout-minutes: 10
+        env:
+          ISO_REQUIRE: cl clang-cl
+        run: |
+          # Shared scheduler, strict C++17 flags, real numerical/schema tests
+          # and actual command validation for BOTH produced native binaries.
+          $windowsPowerShell = Join-Path $env:SystemRoot 'System32/WindowsPowerShell/v1.0/powershell.exe'
+          Push-Location code/packages/c/iso-harness
+          try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/selftest.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
+          finally { Pop-Location }
+          Push-Location code/packages/cpp/neural-framework
           try { & $windowsPowerShell -NoProfile -ExecutionPolicy Bypass -File tools/run.ps1; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE } }
           finally { Pop-Location }
 
@@ -3616,7 +3715,7 @@ jobs:
 
       - name: Set up LuaRocks (Unix)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-luarocks@35d062def313a7699a0d513e996bcf4352f05389 # v6.1.0
+        uses: leafo/gh-actions-luarocks@1c4a92caecc8f6850f673cbadfd57b3e555417ce # v6.1.1
 
       - name: Set up LuaRocks (Windows)
         if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
@@ -3658,7 +3757,7 @@ jobs:
       - name: Set up Ruby
         if: needs.detect.outputs.needs_ruby == 'true'
         id: setup-ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '3.4'
           bundler-cache: false

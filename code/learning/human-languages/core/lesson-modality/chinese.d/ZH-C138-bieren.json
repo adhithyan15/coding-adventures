@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C138-bieren",
+    "language": "chinese",
+    "chapter": 138,
+    "sequence": 10790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8f74ee6c75ac0a1"
+  },
+  "findings": []
+}

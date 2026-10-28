@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:7f7f1e5d40c10e3f",
+  "lessonIds": [
+    "JA-C480-tsukuru",
+    "JA-C480-deshi",
+    "JA-C480-shishou",
+    "JA-C480-tema",
+    "JA-C480-shiageru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch480.txt",
+  "json": "japanese/narration/ch480.json",
+  "textHash": "fnv1a64:8e46d01356314c4d",
+  "jsonHash": "fnv1a64:4116bac870a2443a",
+  "findings": []
+}

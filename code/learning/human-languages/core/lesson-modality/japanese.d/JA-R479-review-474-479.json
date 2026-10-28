@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R479-review-474-479",
+    "language": "japanese",
+    "chapter": 479,
+    "sequence": 27780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d940e8c565082f81"
+  },
+  "findings": []
+}

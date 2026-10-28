@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C30-hen",
+    "language": "chinese",
+    "chapter": 30,
+    "sequence": 2550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb79e33a9a1e18f3"
+  },
+  "findings": []
+}

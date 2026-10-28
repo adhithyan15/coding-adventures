@@ -1,0 +1,11 @@
+{
+  "id": "JA-C433-kyoumi",
+  "pathSegment": "JA-PATH-433-LONG433",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-433-LONG433",
+      "order": 3
+    }
+  ]
+}

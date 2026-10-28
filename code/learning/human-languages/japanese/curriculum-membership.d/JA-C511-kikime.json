@@ -1,0 +1,11 @@
+{
+  "id": "JA-C511-kikime",
+  "pathSegment": "JA-PATH-511-CAUSE511",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-511-CAUSE511",
+      "order": 3
+    }
+  ]
+}

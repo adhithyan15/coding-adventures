@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:59503941d61a3d29",
+  "lessonIds": [
+    "JA-C333-wakamono",
+    "JA-C333-koureisha",
+    "JA-C333-jinkou",
+    "JA-C333-kaigo-suru",
+    "JA-C333-kosodate"
+  ],
+  "tex": "japanese/book/chapters/ch333-young-and-old.tex"
+}

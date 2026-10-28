@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W89-gei",
+    "language": "chinese",
+    "chapter": 89,
+    "sequence": 7290,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:df5d81c176f228d3",
+    "detachableSegments": [
+      "Script — the silk piece, then 合"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

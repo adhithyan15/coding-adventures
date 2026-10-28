@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W230-shen-body",
+  "pathSegment": "ZH-PATH-230-BODY230",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-230-BODY230",
+      "order": 1
+    }
+  ]
+}

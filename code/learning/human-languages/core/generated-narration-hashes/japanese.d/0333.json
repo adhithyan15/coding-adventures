@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:977f6e51e0f21f09",
+  "lessonIds": [
+    "JA-C333-wakamono",
+    "JA-C333-koureisha",
+    "JA-C333-jinkou",
+    "JA-C333-kaigo-suru",
+    "JA-C333-kosodate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch333.txt",
+  "json": "japanese/narration/ch333.json",
+  "textHash": "fnv1a64:3b6d4a5434081296",
+  "jsonHash": "fnv1a64:658f01a7f9b1afb6",
+  "findings": []
+}

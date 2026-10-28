@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:c9cfe0ab9674d350",
+  "lessonIds": [
+    "ZH-C76-yihuir",
+    "ZH-W76-hui",
+    "ZH-C76-mingtianjian",
+    "ZH-C76-zaishuo",
+    "ZH-C76-wanan",
+    "ZH-C76-baibai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch76.txt",
+  "json": "chinese/narration/ch76.json",
+  "textHash": "fnv1a64:c5af04e4aa043ac1",
+  "jsonHash": "fnv1a64:d8a11466789431ce",
+  "findings": []
+}

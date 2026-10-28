@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 381,
+  "title": "The Ferry Crossing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:88ef97f9d9d9b236",
+  "lessons": [
+    {
+      "id": "JA-C381-funatabi",
+      "sequence": 22460,
+      "title": "ふなたび (funatabi) — a journey by boat",
+      "headword": "ふなたび",
+      "romanization": "funatabi",
+      "gloss": "a journey by boat",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7a9bb3fa1781f68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for dozing off, then the Japanese for a mouthful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふなたび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふなたび — funatabi — \"a journey by boat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しまへの ふなたびは たのしかったです。 — shima e no funatabi wa tanoshikatta desu — \"The boat trip to the island was fun.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふなたび (funatabi) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from funa, \"boat\" (from fune) and tabi, \"journey\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "funatabi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *funatabi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "funatabi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *funatabi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shima e no funatabi wa tanoshikatta desu — The boat trip to the island was fun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shima e no funatabi wa tanoshikatta desu* — The boat trip to the island was fun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for dozing off, then the Japanese for a mouthful, then say funatabi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for dozing off, then the Japanese for a mouthful, then say *funatabi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふなたび (funatabi) mean? (\"A journey by boat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C381-funatabi-type",
+              "prompt": "Say the Japanese for 'a journey by boat'.",
+              "assesses": [
+                "JA-LEX-C381-FUNATABI381-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふなたび",
+                "funatabi"
+              ],
+              "feedback": {
+                "correct": "Right: ふなたび (funatabi) is 'a journey by boat'.",
+                "incorrect": "'A journey by boat' is ふなたび (funatabi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C381-kouro",
+      "sequence": 22470,
+      "title": "こうろ (kōro) — a sea route; a course",
+      "headword": "こうろ",
+      "romanization": "kōro",
+      "gloss": "a sea route; a course",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9702a2d84fdc1181",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a mouthful, then the Japanese for a journey by boat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうろ — kōro — \"a sea route; a course\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この こうろは なみが たかいです。 — kono kōro wa nami ga takai desu — \"The waves are high on this sea route.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうろ (kōro) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"navigate\" (Middle Chinese hang) and ro, \"route\" (luH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono kōro wa nami ga takai desu — The waves are high on this sea route.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono kōro wa nami ga takai desu* — The waves are high on this sea route.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a mouthful, then the Japanese for a journey by boat, then say kōro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a mouthful, then the Japanese for a journey by boat, then say *kōro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうろ (kōro) mean? (\"A sea route; a course\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C381-kouro-type",
+              "prompt": "Say the Japanese for 'a sea route'.",
+              "assesses": [
+                "JA-LEX-C381-FUNATABI381-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうろ",
+                "kōro",
+                "kouro",
+                "kooro",
+                "koro"
+              ],
+              "feedback": {
+                "correct": "Right: こうろ (kōro) is 'a sea route; a course'.",
+                "incorrect": "'A sea route' is こうろ (kōro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C381-kishi",
+      "sequence": 22480,
+      "title": "きし (kishi) — a shore; a bank",
+      "headword": "きし",
+      "romanization": "kishi",
+      "gloss": "a shore; a bank",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73c73ec8434cfdb3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a journey by boat, then the Japanese for a sea route."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きし — kishi — \"a shore; a bank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふねが きしに つきました。 — fune ga kishi ni tsukimashita — \"The boat reached the shore.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きし (kishi) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kishi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kishi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kishi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kishi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fune ga kishi ni tsukimashita — The boat reached the shore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fune ga kishi ni tsukimashita* — The boat reached the shore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a journey by boat, then the Japanese for a sea route, then say kishi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a journey by boat, then the Japanese for a sea route, then say *kishi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きし (kishi) mean? (\"A shore; a bank\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C381-kishi-type",
+              "prompt": "Say the Japanese for 'a shore'.",
+              "assesses": [
+                "JA-LEX-C381-FUNATABI381-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きし",
+                "kishi"
+              ],
+              "feedback": {
+                "correct": "Right: きし (kishi) is 'a shore; a bank'.",
+                "incorrect": "'A shore' is きし (kishi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C381-kogu",
+      "sequence": 22490,
+      "title": "こぐ (kogu) — to row; to pedal",
+      "headword": "こぐ",
+      "romanization": "kogu",
+      "gloss": "to row; to pedal",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bac1f9943f4c86db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sea route, then the Japanese for a shore."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こぐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こぐ — kogu — \"to row; to pedal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちと ふねを こぎました。 — chichi to fune o kogimashita — \"I rowed a boat with my father.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こぎます, kogimasu; a godan verb. Past (polite): ちちが ふねを こぎました。, chichi ga fune o kogimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こぐ (kogu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kogu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kogu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kogu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kogu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi to fune o kogimashita — I rowed a boat with my father.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi to fune o kogimashita* — I rowed a boat with my father.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sea route, then the Japanese for a shore, then say kogu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sea route, then the Japanese for a shore, then say *kogu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こぐ (kogu) mean? (\"To row; to pedal\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C381-kogu-type",
+              "prompt": "Say the Japanese for 'to row'.",
+              "assesses": [
+                "JA-LEX-C381-FUNATABI381-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こぐ",
+                "kogu"
+              ],
+              "feedback": {
+                "correct": "Right: こぐ (kogu) is 'to row; to pedal'.",
+                "incorrect": "'To row' is こぐ (kogu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C381-tadayou",
+      "sequence": 22500,
+      "title": "ただよう (tadayou) — to drift; to float",
+      "headword": "ただよう",
+      "romanization": "tadayou",
+      "gloss": "to drift; to float",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efdb6359c4ad0d7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a shore, then the Japanese for to row."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ただよう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ただよう — tadayou — \"to drift; to float\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちいさい ふねが うみを ただよっています。 — chiisai fune ga umi o tadayotte imasu — \"A small boat is drifting on the sea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ただよいます, tadayoimasu; a godan verb. Past (polite): ふねが うみを ただよいました。, fune ga umi o tadayoimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ただよう (tadayou) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadayou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadayou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadayou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadayou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiisai fune ga umi o tadayotte imasu — A small boat is drifting on the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiisai fune ga umi o tadayotte imasu* — A small boat is drifting on the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a shore, then the Japanese for to row, then say tadayou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a shore, then the Japanese for to row, then say *tadayou* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ただよう (tadayou) mean? (\"To drift; to float\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C381-tadayou-type",
+              "prompt": "Say the Japanese for 'to drift'.",
+              "assesses": [
+                "JA-LEX-C381-FUNATABI381-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ただよう",
+                "tadayou"
+              ],
+              "feedback": {
+                "correct": "Right: ただよう (tadayou) is 'to drift; to float'.",
+                "incorrect": "'To drift' is ただよう (tadayou)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

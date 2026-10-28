@@ -1,0 +1,1289 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 156,
+  "title": "Price List",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:4237a802bd4f1588",
+  "lessons": [
+    {
+      "id": "ZH-C156-yuan",
+      "sequence": 12640,
+      "title": "元 (yuán) — yuan, as written",
+      "headword": "元",
+      "romanization": "yuán",
+      "gloss": "yuan (the unit of money, as written; said kuài)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:777431bf71e54480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on how much things cost."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 火车十点半到 — huǒchē shí diǎn bàn dào — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 火车十点半到 — *huǒchē shí diǎn bàn dào* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say guānmén, to close — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *guānmén*, to close — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuài, yuan, as said — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuài*, yuan, as said — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 多少 — duōshao, how much — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 多少 — *duōshao*, how much — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 元",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "元 — yuán — \"yuan\", the unit of money, as it is written."
+            },
+            {
+              "kind": "speech",
+              "text": "一本书十元 yì běn shū shí yuán — A book costs ten yuan."
+            },
+            {
+              "kind": "speech",
+              "text": "On a price list it is written 元 (yuán); aloud, most people say kuài: shí kuài. The next lesson puts the character in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "元 (yuán) is inherited from Middle Chinese ngjwon (Guangyun, in Baxter's transcription), glossed 'great; the beginning; the head'. The unit of money is a modern sense, assumed here, not quoted."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The number, then 元 (yuán): 十元. A thing's price follows the thing: 一本书, 十元."
+            },
+            {
+              "kind": "speech",
+              "text": "When you say it, swap in kuài: yì běn shū shí kuài. 一 falls before the dip of běn: yì běn."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "一本书十元 — yì běn shū shí yuán — A book costs ten yuan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 一本书十元 — *yì běn shū shí yuán* — A book costs ten yuan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yì běn shū shí kuài — the same price, as people say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yì běn shū shí kuài* — the same price, as people say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kuài, then 元 (yuán)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kuài*, then 元]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 元 (yuán) mean? (Yuan, as written.) How do people say it aloud? (kuài.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W156-yuan-money",
+      "sequence": 12650,
+      "title": "元 (yuán) — 二, then 儿 under it",
+      "headword": "元",
+      "romanization": "yuán",
+      "gloss": "元 — 二, then 儿 under it",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:047ac4940f0dbf75",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 二, then 儿 under it",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 二, then 儿 under it and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yuán — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yuán* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "二 儿."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — èr, ér",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *èr*, *ér*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 二, then 儿 under it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "元 (yuán)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two characters you own, one above the other."
+            },
+            {
+              "kind": "speech",
+              "text": "二, two strokes: the short upper bar, then the longer lower bar."
+            },
+            {
+              "kind": "speech",
+              "text": "儿, two strokes, under them: the left-falling stroke, then the vertical that bends right along the foot and hooks up."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 2 = four."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "元 (yuán), all four, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 元, all four, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 元 (yuán)? (Four.) Which character is on top? (二.) And under it? (儿.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 元 (yuán), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C156-jiaqian",
+      "sequence": 12660,
+      "title": "jiàqián — price",
+      "headword": "jiàqián",
+      "romanization": "jiàqián",
+      "gloss": "price",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0da2960b625720fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read the last lesson's character in a price, then two words for money."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "十元, aloud — shí yuán",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 十元, aloud — *shí yuán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say qián, money — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *qián*, money — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say guì, expensive — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *guì*, expensive — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiàqián",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiàqián — \"price\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jiàqián tài guì le — The price is too high."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiàqián is built from jià 'price' and qián 'money', the word you know. Both are inherited from Middle Chinese, kaeH and dzjen (Guangyun, in Baxter's transcription), glossed 'price; value' and 'coin'. The jià of fàngjià, a holiday, sounds the same and is a different word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiàqián names the price as a fact, the figure on the list; duōshao qián asks it aloud."
+            },
+            {
+              "kind": "speech",
+              "text": "太 … 了 is still the complaint: jiàqián tài guì le."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiàqián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiàqián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiàqián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiàqián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiàqián tài guì le — The price is too high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiàqián tài guì le* — The price is too high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say qián, then jiàqián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *qián*, then *jiàqián*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiàqián mean? (\"Price\".) How do you ask a price aloud? (duōshao qián.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C156-mianfei",
+      "sequence": 12670,
+      "title": "miǎnfèi — free of charge",
+      "headword": "miǎnfèi",
+      "romanization": "miǎnfèi",
+      "gloss": "free (of charge)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ac6e9bf21a742fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then the word for buying."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiàqián, price — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiàqián*, price — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 买 — mǎi, to buy — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 买 — *mǎi*, to buy — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: miǎnfèi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "miǎnfèi — \"free (of charge)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "shuǐ miǎnfèi — The water's free."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "miǎnfèi is built from miǎn 'to be spared' and fèi 'cost'. Both are inherited from Middle Chinese, mjenX and phj+jH (Guangyun, in Baxter's transcription), glossed 'to escape; to remove' and 'to use up; to spend'. Spared the spending: free."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "miǎnfèi follows the thing, as a price does: shuǐ miǎnfèi, where a price list would say 水 一元."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first syllable dips: miǎn."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miǎnfèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miǎnfèi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miǎnfèi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miǎnfèi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuǐ miǎnfèi — The water's free.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuǐ miǎnfèi* — The water's free.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 买, then miǎnfèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 买, then *miǎnfèi*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does miǎnfèi mean? (\"Free of charge\".) Where does it go? (After the thing, as a price does.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C156-guanggao",
+      "sequence": 12680,
+      "title": "guǎnggào — advert",
+      "headword": "guǎnggào",
+      "romanization": "guǎnggào",
+      "gloss": "advert; advertisement",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1320c14065e0d665",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then a thing worth advertising."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say miǎnfèi, free — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *miǎnfèi*, free — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 手机 — shǒujī, a phone — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 手机 — *shǒujī*, a phone — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: guǎnggào",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guǎnggào — \"advert; advertisement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè shì shǒujī de guǎnggào — This is an advert for a phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guǎnggào is built from guǎng 'wide' and gào 'to tell'. Both are inherited from Middle Chinese, kwangX and kawH (Guangyun, in Baxter's transcription), glossed 'broad' and 'to report': telling widely. 'An advert' is the pair's modern sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "的 joins the thing to the advert: shǒujī de guǎnggào, an advert for a phone."
+            },
+            {
+              "kind": "speech",
+              "text": "An advert often has a price and a day on it, and little else."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǎnggào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǎnggào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǎnggào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǎnggào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè shì shǒujī de guǎnggào — This is an advert for a phone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè shì shǒujī de guǎnggào* — This is an advert for a phone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say miǎnfèi, then guǎnggào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *miǎnfèi*, then *guǎnggào*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does guǎnggào mean? (\"An advert\".) How do you say an advert for a phone? (shǒujī de guǎnggào.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C156-reading",
+      "sequence": 12690,
+      "title": "(reading) (shū, shí yuán yì běn) — a price list and an advert",
+      "headword": "(reading)",
+      "romanization": "shū, shí yuán yì běn",
+      "gloss": "a shop's price list and a weekend advert, every character written by the reader",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:0c8ecb6c200e5a09",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A shop's price list, then an advert under it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say guǎnggào, an advert — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *guǎnggào*, an advert — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 白菜 — báicài, cabbage — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 白菜 — *báicài*, cabbage — **R3**, durable]"
+            },
+            {
+              "kind": "speech",
+              "text": "本子."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it aloud, with nothing said first — běnzi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it aloud, with nothing said first — *běnzi*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "书 十元一本 本子 两元一本 大白菜 三元 水 一元 手机 九百九十九元."
+            },
+            {
+              "kind": "speech",
+              "text": "星期六和星期天 两本书十五元."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list through once without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list through once without stopping; do not translate as you go]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert again, and work out what two books cost at the weekend",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert again, and work out what two books cost at the weekend]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the pinyin, after you have tried",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shū, shí yuán yì běn běnzi, liǎng yuán yì běn dà báicài, sān yuán shuǐ, yì yuán shǒujī, jiǔbǎi jiǔshíjiǔ yuán."
+            },
+            {
+              "kind": "speech",
+              "text": "xīngqīliù hé xīngqītiān liǎng běn shū shíwǔ yuán."
+            },
+            {
+              "kind": "speech",
+              "text": "A price list puts the thing first and its price after, with 一本 for each one where the thing is counted by the book. 一 falls before the rise of yuán: yì yuán, as before běn. The advert changes only one thing: the price at the weekend."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do two books cost on Saturday? (Fifteen yuan: 两本书十五元, said shíwǔ kuài.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What do a book and a notebook cost together? (Twelve yuan, said shí'èr kuài.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which costs one yuan? (The water: 水 一元.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the price list aloud, once, saying kuài for each 元 (yuán)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the price list aloud, once, saying *kuài* for each 元]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C156-reading-weekend",
+              "prompt": "How many yuan do two books cost on Saturday?",
+              "assesses": [
+                "ZH-SKILL-READ-PRICE-LIST-01",
+                "ZH-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "15",
+                "fifteen",
+                "十五",
+                "十五元",
+                "shíwǔ",
+                "shíwǔ kuài",
+                "15 yuan"
+              ],
+              "feedback": {
+                "correct": "十五元: the advert's weekend price.",
+                "incorrect": "两本书十五元: fifteen yuan at the weekend."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the dearest thing on the list? (手机, 999 yuan.) What does a notebook cost? (两元, said liǎng kuài.) Which days does the advert cover? (星期六和星期天.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C156-practice",
+      "sequence": 12700,
+      "title": "一本书十元 (yì běn shū shí yuán)",
+      "headword": "一本书十元",
+      "romanization": "yì běn shū shí yuán",
+      "gloss": "at the counter: prices off the list and the advert, written in 元 and said in kuài",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:015507891a3a1c64",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Reading — the exchange at once",
+          "What you've built — reading prices, saying prices",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Reading — the exchange at once, What you've built — reading prices, saying prices and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, at the counter, asking about the list you have read."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 水 一元 — shuǐ, yì yuán — R1, the reading",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 水 一元 — *shuǐ, yì yuán* — **R1**, the reading]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say miǎnfèi, free — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *miǎnfèi*, free — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiàqián, price — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiàqián*, price — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: zhè běn shū duōshao qián — How much is this book? B: 一本书十元 yì běn shū shí yuán — Ten yuan a book. A: jiàqián tài guì le — That's too dear. B: 星期六和星期天 两本书十五元 xīngqīliù hé xīngqītiān, liǎng běn shū shíwǔ yuán — At the weekend, two books for fifteen. A: nǐ kàndào guǎnggào le ma — Did you see the advert? B: kàndào le, shuǐ miǎnfèi — Yes, and the water's free. A: 本子呢 běnzi ne — And notebooks? B: 两元一本 liǎng yuán yì běn — Two yuan each."
+            },
+            {
+              "kind": "speech",
+              "text": "The list says 元 (yuán) and the speakers read it as written; at a counter, most people would say kuài. Both are right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C156-practice-free",
+              "prompt": "What is free?",
+              "assesses": [
+                "ZH-PERFORMANCE-PRICES-01",
+                "ZH-LEX-C156-MIANFEI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "water",
+                "水",
+                "shuǐ",
+                "shui",
+                "the water"
+              ],
+              "feedback": {
+                "correct": "The water: shuǐ miǎnfèi.",
+                "incorrect": "B says shuǐ miǎnfèi: the water is free."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — reading prices, saying prices",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Written in 元 (yuán), said in kuài:"
+            },
+            {
+              "kind": "speech",
+              "text": "一本书十元 yì běn shū shí yuán — said yì běn shū shí kuài."
+            },
+            {
+              "kind": "speech",
+              "text": "两本书十五元 liǎng běn shū shíwǔ yuán — two books, fifteen yuan."
+            },
+            {
+              "kind": "speech",
+              "text": "jiàqián tài guì le — the price is too high."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Yí ge shǒujī duōshao qián?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Read three prices from a list you know, saying kuài each time."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "十元 — 元 (yuán) is 二 over 儿",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 十元 — 元 is 二 over 儿]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè běn shū duōshao qián — How much is this book?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè běn shū duōshao qián* — How much is this book?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "一本书十元 — yì běn shū shí yuán — Ten yuan a book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 一本书十元 — *yì běn shū shí yuán* — Ten yuan a book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "一本书十元 (yì běn shū shí yuán)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 一本书十元]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ten yuan as written. (十元.) Say it as people do. (shí kuài.) Say the water is free. (shuǐ miǎnfèi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

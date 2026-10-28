@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:e601dc55184b811f",
+  "lessonIds": [
+    "JA-C479-nakayoshi",
+    "JA-C479-nakanaori-suru",
+    "JA-C479-shitashii",
+    "JA-C479-mimamoru",
+    "JA-C479-uyamau",
+    "JA-R479-review-474-479",
+    "JA-R479-review-final-479"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch479.txt",
+  "json": "japanese/narration/ch479.json",
+  "textHash": "fnv1a64:3dfe5183279ecc58",
+  "jsonHash": "fnv1a64:a293d2351a3d803f",
+  "findings": []
+}

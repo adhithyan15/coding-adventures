@@ -1,0 +1,11 @@
+{
+  "id": "JA-C468-tenrankai",
+  "pathSegment": "JA-PATH-468-WORKS468",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-468-WORKS468",
+      "order": 1
+    }
+  ]
+}

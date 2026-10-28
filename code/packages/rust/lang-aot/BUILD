@@ -162,7 +162,7 @@ cargo test -p lang-aot --test lang_matrix python_rows_run_their_corpus_case -- -
 # LANG83 check runs `check_module_for` on all nine backends and pins exactly
 # which rows BEAM refuses at compile time (the IEEE `f64_*` arithmetic); the JIT
 # test compiles `main` and runs it compiled (no interpreter fallback); the trap test
-# checks `Trap.ReferenceError` after output on every column.
+# checks `Trap.Unbound` (JavaScript's ReferenceError) after output on every column.
 cargo test -p lang-aot --test lang_matrix javascript_rows_run_on_every_available_backend -- --exact
 cargo test -p lang-aot --test lang_matrix javascript_rows_agree_with_the_host_node_oracle -- --exact
 cargo test -p lang-aot --test lang_matrix javascript_rows_pass_the_lang83_check_on_all_nine_backends -- --exact

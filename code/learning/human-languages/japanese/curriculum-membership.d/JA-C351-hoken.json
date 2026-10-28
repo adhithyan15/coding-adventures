@@ -1,0 +1,11 @@
+{
+  "id": "JA-C351-hoken",
+  "pathSegment": "JA-PATH-351-MANICHI351",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-351-MANICHI351",
+      "order": 1
+    }
+  ]
+}

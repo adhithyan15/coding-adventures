@@ -1,0 +1,19 @@
+{
+  "chapter": 463,
+  "title": "Training Hard",
+  "label": "ch:ja-training-hard",
+  "canDo": "I can talk about training and stamina.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C463-kisou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can talk about training and stamina.",
+    "assesses": [
+      "JA-LEX-C463-TRAIN463-03",
+      "JA-LEX-C463-TRAIN463-04",
+      "JA-LEX-C463-TRAIN463-05"
+    ]
+  }
+}

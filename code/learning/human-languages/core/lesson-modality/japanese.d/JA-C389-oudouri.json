@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C389-oudouri",
+    "language": "japanese",
+    "chapter": 389,
+    "sequence": 22870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a508abdcd6a0d99"
+  },
+  "findings": []
+}

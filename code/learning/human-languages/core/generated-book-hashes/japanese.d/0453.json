@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:e3da16bc16fd6ff8",
+  "lessonIds": [
+    "JA-C453-shiryou",
+    "JA-C453-uchiawase",
+    "JA-C453-shimekiri",
+    "JA-C453-teishutsu-suru",
+    "JA-C453-tetsuya-suru"
+  ],
+  "tex": "japanese/book/chapters/ch453-handouts-and-deadlines.tex"
+}

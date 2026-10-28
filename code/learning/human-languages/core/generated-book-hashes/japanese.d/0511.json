@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:dddfc4cd00d2d1c3",
+  "lessonIds": [
+    "JA-C511-hikiokosu",
+    "JA-C511-seika",
+    "JA-C511-shoujiru",
+    "JA-C511-kikime",
+    "JA-C511-moto"
+  ],
+  "tex": "japanese/book/chapters/ch511-what-caused-it.tex"
+}

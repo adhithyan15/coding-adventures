@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-386-ZEIKAN386",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-386-ZEIKAN386"
+  ],
+  "after": []
+}

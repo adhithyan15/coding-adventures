@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:c6de17392051416e",
+  "lessonIds": [
+    "JA-C443-tekubi",
+    "JA-C443-ashikubi",
+    "JA-C443-oyayubi",
+    "JA-C443-kuchibiru",
+    "JA-C443-mabuta",
+    "JA-R443-review-438-443"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch443.txt",
+  "json": "japanese/narration/ch443.json",
+  "textHash": "fnv1a64:daf73873b61d9065",
+  "jsonHash": "fnv1a64:143b470ff11331e1",
+  "findings": []
+}

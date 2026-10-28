@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:1fe7e4734c95f150",
+  "lessonIds": [
+    "JA-C347-houmon-suru",
+    "JA-C347-youken",
+    "JA-C347-chokusetsu",
+    "JA-C347-tsuideni",
+    "JA-C347-raikyaku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch347.txt",
+  "json": "japanese/narration/ch347.json",
+  "textHash": "fnv1a64:4f7ae2acdac8d08c",
+  "jsonHash": "fnv1a64:84adc4b1cf2b9628",
+  "findings": []
+}

@@ -1,0 +1,802 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 409,
+  "title": "Regions and Borders",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1d3a607a28dade24",
+  "lessons": [
+    {
+      "id": "JA-C409-chiiki",
+      "sequence": 23910,
+      "title": "ちいき (chiiki) — an area; a district",
+      "headword": "ちいき",
+      "romanization": "chiiki",
+      "gloss": "an area; a district",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:360e863671704b7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for religion, then the Japanese for to enshrine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちいき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちいき — chiiki — \"an area; a district\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この ちいきは ゆきが おおいです。 — kono chiiki wa yuki ga ōi desu — \"This region gets a lot of snow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちいき (chiiki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chi, \"ground\" (Middle Chinese dijH) and iki, \"region\" (hwik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiiki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiiki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiiki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiiki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono chiiki wa yuki ga ōi desu — This region gets a lot of snow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono chiiki wa yuki ga ōi desu* — This region gets a lot of snow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for religion, then the Japanese for to enshrine, then say chiiki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for religion, then the Japanese for to enshrine, then say *chiiki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちいき (chiiki) mean? (\"An area; a district\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C409-chiiki-type",
+              "prompt": "Say the Japanese for 'an area'.",
+              "assesses": [
+                "JA-LEX-C409-CHIIKI409-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちいき",
+                "chiiki"
+              ],
+              "feedback": {
+                "correct": "Right: ちいき (chiiki) is 'an area; a district'.",
+                "incorrect": "'An area' is ちいき (chiiki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C409-shuto",
+      "sequence": 23920,
+      "title": "しゅと (shuto) — a capital city",
+      "headword": "しゅと",
+      "romanization": "shuto",
+      "gloss": "a capital city",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10535088f3c870d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to enshrine, then the Japanese for an area."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅと — shuto — \"a capital city\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅとの ちかてつは いつも こんざつしています。 — shuto no chikatetsu wa itsumo konzatsu shite imasu — \"The subway in the capital is always crowded.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅと (shuto) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shu, \"neck\" (Middle Chinese syuwX) and to, \"capital\" (tu) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shuto no chikatetsu wa itsumo konzatsu shite imasu — The subway in the capital is always crowded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shuto no chikatetsu wa itsumo konzatsu shite imasu* — The subway in the capital is always crowded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to enshrine, then the Japanese for an area, then say shuto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to enshrine, then the Japanese for an area, then say *shuto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅと (shuto) mean? (\"A capital city\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C409-shuto-type",
+              "prompt": "Say the Japanese for 'a capital city'.",
+              "assesses": [
+                "JA-LEX-C409-CHIIKI409-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅと",
+                "shuto"
+              ],
+              "feedback": {
+                "correct": "Right: しゅと (shuto) is 'a capital city'.",
+                "incorrect": "'A capital city' is しゅと (shuto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C409-kokkyou",
+      "sequence": 23930,
+      "title": "こっきょう (kokkyō) — a national border",
+      "headword": "こっきょう",
+      "romanization": "kokkyō",
+      "gloss": "a national border",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efb63768d2ac84fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an area, then the Japanese for a capital city."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こっきょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こっきょう — kokkyō — \"a national border\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くるまで こっきょうを こえました。 — kuruma de kokkyō o koemashita — \"We crossed the border by car.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こっきょう (kokkyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are koku, \"country\" (Middle Chinese kwok) and kyō, \"boundary\" (kjaengX), joined as kokkyō (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokkyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokkyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kokkyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kokkyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruma de kokkyō o koemashita — We crossed the border by car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruma de kokkyō o koemashita* — We crossed the border by car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an area, then the Japanese for a capital city, then say kokkyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an area, then the Japanese for a capital city, then say *kokkyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こっきょう (kokkyō) mean? (\"A national border\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C409-kokkyou-type",
+              "prompt": "Say the Japanese for 'a national border'.",
+              "assesses": [
+                "JA-LEX-C409-CHIIKI409-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こっきょう",
+                "kokkyō",
+                "kokkyou",
+                "kokkyoo",
+                "kokkyo"
+              ],
+              "feedback": {
+                "correct": "Right: こっきょう (kokkyō) is 'a national border'.",
+                "incorrect": "'A national border' is こっきょう (kokkyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C409-sakai",
+      "sequence": 23940,
+      "title": "さかい (sakai) — a boundary",
+      "headword": "さかい",
+      "romanization": "sakai",
+      "gloss": "a boundary",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff575655ed2eb864",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a capital city, then the Japanese for a national border."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さかい — sakai — \"a boundary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かわが ふたつの まちの さかいです。 — kawa ga futatsu no machi no sakai desu — \"The river is the boundary between the two towns.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さかい (sakai) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kawa ga futatsu no machi no sakai desu — The river is the boundary between the two towns.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kawa ga futatsu no machi no sakai desu* — The river is the boundary between the two towns.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a capital city, then the Japanese for a national border, then say sakai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a capital city, then the Japanese for a national border, then say *sakai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さかい (sakai) mean? (\"A boundary\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C409-sakai-type",
+              "prompt": "Say the Japanese for 'a boundary'.",
+              "assesses": [
+                "JA-LEX-C409-CHIIKI409-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さかい",
+                "sakai"
+              ],
+              "feedback": {
+                "correct": "Right: さかい (sakai) is 'a boundary'.",
+                "incorrect": "'A boundary' is さかい (sakai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C409-hougen",
+      "sequence": 23950,
+      "title": "ほうげん (hōgen) — a dialect",
+      "headword": "ほうげん",
+      "romanization": "hōgen",
+      "gloss": "a dialect",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6610e3646afc3e75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a national border, then the Japanese for a boundary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほうげん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうげん — hōgen — \"a dialect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふは いなかの ほうげんで はなします。 — sofu wa inaka no hōgen de hanashimasu — \"My grandfather speaks a country dialect.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうげん (hōgen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hō, \"direction\" (Middle Chinese pjang) and gen, \"say\" (ngjon) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōgen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōgen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōgen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōgen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu wa inaka no hōgen de hanashimasu — My grandfather speaks a country dialect.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu wa inaka no hōgen de hanashimasu* — My grandfather speaks a country dialect.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a national border, then the Japanese for a boundary, then say hōgen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a national border, then the Japanese for a boundary, then say *hōgen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほうげん (hōgen) mean? (\"A dialect\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C409-hougen-type",
+              "prompt": "Say the Japanese for 'a dialect'.",
+              "assesses": [
+                "JA-LEX-C409-CHIIKI409-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうげん",
+                "hōgen",
+                "hougen",
+                "hoogen",
+                "hogen"
+              ],
+              "feedback": {
+                "correct": "Right: ほうげん (hōgen) is 'a dialect'.",
+                "incorrect": "'A dialect' is ほうげん (hōgen)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

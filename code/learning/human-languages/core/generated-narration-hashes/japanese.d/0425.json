@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:22d88bd009d961fc",
+  "lessonIds": [
+    "JA-C425-tsuuyaku",
+    "JA-C425-hon-yaku",
+    "JA-C425-toiawaseru",
+    "JA-C425-tsuujiru",
+    "JA-C425-juuden",
+    "JA-R425-review-420-425",
+    "JA-R425-review-final-425"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch425.txt",
+  "json": "japanese/narration/ch425.json",
+  "textHash": "fnv1a64:8449e12ba8c8cf3c",
+  "jsonHash": "fnv1a64:c5f15ff0fb3a31e9",
+  "findings": []
+}

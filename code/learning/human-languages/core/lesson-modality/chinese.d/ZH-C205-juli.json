@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C205-juli",
+    "language": "chinese",
+    "chapter": 205,
+    "sequence": 15910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c0036c638498db7"
+  },
+  "findings": []
+}

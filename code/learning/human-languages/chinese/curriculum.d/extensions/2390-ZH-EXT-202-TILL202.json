@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-202-TILL202",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can pay by scanning a code, ask for a receipt, take something back and find the checkout.",
+  "prerequisites": []
+}

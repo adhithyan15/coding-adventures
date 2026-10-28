@@ -1,0 +1,11 @@
+{
+  "id": "JA-C513-chousei-suru",
+  "pathSegment": "JA-PATH-513-PLAN513",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-513-PLAN513",
+      "order": 3
+    }
+  ]
+}

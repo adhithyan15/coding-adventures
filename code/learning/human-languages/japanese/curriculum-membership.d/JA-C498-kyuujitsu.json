@@ -1,0 +1,11 @@
+{
+  "id": "JA-C498-kyuujitsu",
+  "pathSegment": "JA-PATH-498-REST498",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-498-REST498",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:9d418130ddf648c9",
+  "lessonIds": [
+    "JA-C283-happyou-suru",
+    "JA-C283-houkoku-suru",
+    "JA-C283-chousa-suru",
+    "JA-C283-jouhou",
+    "JA-C283-jijitsu"
+  ],
+  "tex": "japanese/book/chapters/ch283-the-announcement.tex"
+}

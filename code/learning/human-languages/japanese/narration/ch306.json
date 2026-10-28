@@ -1,0 +1,934 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 306,
+  "title": "Greetings by Post",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:af0f5d2efa0f5e84",
+  "lessons": [
+    {
+      "id": "JA-C306-aisatsu",
+      "sequence": 18270,
+      "title": "あいさつ (aisatsu) — a greeting",
+      "headword": "あいさつ",
+      "romanization": "aisatsu",
+      "gloss": "a greeting",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52dd8c68d3b5b39d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a delivery, then the Japanese for after a long time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あいさつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あいさつ — aisatsu — \"a greeting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あさ、となりの おばあさんに あいさつしました。 — asa, tonari no obāsan ni aisatsu shimashita — \"In the morning I said hello to the old lady next door.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あいさつ (aisatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ai, \"push open\" (Middle Chinese 'eajX) and satsu, \"draw close\" (tsat) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aisatsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aisatsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aisatsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aisatsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa, tonari no obāsan ni aisatsu shimashita — In the morning I said hello to the old lady next door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa, tonari no obāsan ni aisatsu shimashita* — In the morning I said hello to the old lady next door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a delivery, then the Japanese for after a long time, then say aisatsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a delivery, then the Japanese for after a long time, then say *aisatsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あいさつ (aisatsu) mean? (\"A greeting\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C306-aisatsu-type",
+              "prompt": "Say the Japanese for 'a greeting'.",
+              "assesses": [
+                "JA-LEX-C306-AISATSU306-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あいさつ",
+                "aisatsu"
+              ],
+              "feedback": {
+                "correct": "Right: あいさつ (aisatsu) is 'a greeting'.",
+                "incorrect": "'A greeting' is あいさつ (aisatsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C306-yoroshiku",
+      "sequence": 18280,
+      "title": "よろしく (yoroshiku) — kind regards; please remember me",
+      "headword": "よろしく",
+      "romanization": "yoroshiku",
+      "gloss": "kind regards; please remember me",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc819e737339a2cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for after a long time, then the Japanese for a greeting."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よろしく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よろしく — yoroshiku — \"kind regards; please remember me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんせいに よろしく いって ください。 — sensei ni yoroshiku itte kudasai — \"Please give my regards to your teacher.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よろしく (yoroshiku) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoroshiku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoroshiku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yoroshiku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yoroshiku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensei ni yoroshiku itte kudasai — Please give my regards to your teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensei ni yoroshiku itte kudasai* — Please give my regards to your teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for after a long time, then the Japanese for a greeting, then say yoroshiku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for after a long time, then the Japanese for a greeting, then say *yoroshiku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よろしく (yoroshiku) mean? (\"Kind regards; please remember me\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C306-yoroshiku-type",
+              "prompt": "Say the Japanese for 'kind regards'.",
+              "assesses": [
+                "JA-LEX-C306-AISATSU306-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よろしく",
+                "yoroshiku"
+              ],
+              "feedback": {
+                "correct": "Right: よろしく (yoroshiku) is 'kind regards; please remember me'.",
+                "incorrect": "'Kind regards' is よろしく (yoroshiku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C306-nengajou",
+      "sequence": 18290,
+      "title": "ねんがじょう (nengajō) — a New Year's card",
+      "headword": "ねんがじょう",
+      "romanization": "nengajō",
+      "gloss": "a New Year's card",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4bb5e9f8ee3614b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a greeting, then the Japanese for kind regards."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねんがじょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねんがじょう — nengajō — \"a New Year's card\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうがつに ねんがじょうが とどきました。 — shōgatsu ni nengajō ga todokimashita — \"Greeting cards arrived for the new year.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねんがじょう (nengajō) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nen, \"year\" (Middle Chinese nen), ga, \"congratulations\" (haH) and jō, \"form\" (dzrjangH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nengajō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nengajō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nengajō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nengajō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōgatsu ni nengajō ga todokimashita — Greeting cards arrived for the new year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōgatsu ni nengajō ga todokimashita* — Greeting cards arrived for the new year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a greeting, then the Japanese for kind regards, then say nengajō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a greeting, then the Japanese for kind regards, then say *nengajō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねんがじょう (nengajō) mean? (\"A New Year's card\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C306-nengajou-type",
+              "prompt": "Say the Japanese for 'a New Year's card'.",
+              "assesses": [
+                "JA-LEX-C306-AISATSU306-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねんがじょう",
+                "nengajō",
+                "nengajou",
+                "nengajoo",
+                "nengajo"
+              ],
+              "feedback": {
+                "correct": "Right: ねんがじょう (nengajō) is 'a New Year's card'.",
+                "incorrect": "'A New Year's card' is ねんがじょう (nengajō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C306-funabin",
+      "sequence": 18300,
+      "title": "ふなびん (funabin) — surface mail; sea mail",
+      "headword": "ふなびん",
+      "romanization": "funabin",
+      "gloss": "surface mail; sea mail",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f75b181872d846e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for kind regards, then the Japanese for a New Year's card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふなびん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふなびん — funabin — \"surface mail; sea mail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はこを ふなびんで おくりました。 — hako o funabin de okurimashita — \"I sent the box by sea mail.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふなびん (funabin) is a mixed word, native and Sino-Japanese: funa, \"ship\", is native Japanese, the form fune takes in compounds, and bin, \"letter\", is a Chinese character read with its on'yomi, a reading borrowed from Chinese (Middle Chinese bjienH) (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "funabin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *funabin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "funabin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *funabin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hako o funabin de okurimashita — I sent the box by sea mail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hako o funabin de okurimashita* — I sent the box by sea mail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for kind regards, then the Japanese for a New Year's card, then say funabin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for kind regards, then the Japanese for a New Year's card, then say *funabin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふなびん (funabin) mean? (\"Surface mail; sea mail\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C306-funabin-type",
+              "prompt": "Say the Japanese for 'surface mail'.",
+              "assesses": [
+                "JA-LEX-C306-AISATSU306-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふなびん",
+                "funabin"
+              ],
+              "feedback": {
+                "correct": "Right: ふなびん (funabin) is 'surface mail; sea mail'.",
+                "incorrect": "'Surface mail' is ふなびん (funabin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C306-morau",
+      "sequence": 18310,
+      "title": "もらう (morau) — to receive; to get",
+      "headword": "もらう",
+      "romanization": "morau",
+      "gloss": "to receive; to get",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fdbd532a17177a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a New Year's card, then the Japanese for surface mail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もらう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もらう — morau — \"to receive; to get\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そふから ねんがじょうを もらいました。 — sofu kara nengajō o moraimashita — \"I got a greeting card from my grandfather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite もらいます, moraimasu; a godan verb. Past (polite): いもうとが はがきを もらいました。, imōto ga hagaki o moraimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もらう (morau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "morau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *morau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "morau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *morau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sofu kara nengajō o moraimashita — I got a greeting card from my grandfather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sofu kara nengajō o moraimashita* — I got a greeting card from my grandfather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a New Year's card, then the Japanese for surface mail, then say morau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a New Year's card, then the Japanese for surface mail, then say *morau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もらう (morau) mean? (\"To receive; to get\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C306-morau-type",
+              "prompt": "Say the Japanese for 'to receive'.",
+              "assesses": [
+                "JA-LEX-C306-AISATSU306-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もらう",
+                "morau"
+              ],
+              "feedback": {
+                "correct": "Right: もらう (morau) is 'to receive; to get'.",
+                "incorrect": "'To receive' is もらう (morau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R306-review-302-306",
+      "sequence": 18320,
+      "title": "Looking back: from Ghost Stories to Greetings by Post",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Ghost Stories to Greetings by Post",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:498b2aa0d2d87931",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a ghost and a spook."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ghost, a spook, to bear a grudge against, a legend, a god",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ghost, a spook, to bear a grudge against, a legend, a god]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dragon, a marsh, to float up, a small wayside shrine, auspicious",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dragon, a marsh, to float up, a small wayside shrine, auspicious]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thanks, repaying a kindness, a trap, to peep, needy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thanks, repaying a kindness, a trap, to peep, needy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the post, an address (on a letter), express delivery, a delivery, after a long time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the post, an address (on a letter), express delivery, a delivery, after a long time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a greeting, kind regards, a New Year's card, surface mail, to receive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a greeting, kind regards, a New Year's card, surface mail, to receive]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A ghost? (ゆうれい, yūrei.) A spook? (おばけ, obake.) To bear a grudge against? (うらむ, uramu.) A legend? (でんせつ, densetsu.) A god? (かみさま, kamisama.) A dragon? (りゅう, ryū.) A marsh? (ぬま, numa.) To float up? (うかぶ, ukabu.) A small wayside shrine? (ほこら, hokora.) Auspicious? (めでたい, medetai.) Thanks? (おれい, orei.) Repaying a kindness? (おんがえし, ongaeshi.) A trap? (わな, wana.) To peep? (のぞく, nozoku.) Needy? (まずしい, mazushii.) The post? (ゆうびん, yūbin.) An address (on a letter)? (あてさき, atesaki.) Express delivery? (そくたつ, sokutatsu.) A delivery? (はいたつ, haitatsu.) After a long time? (ひさしぶり, hisashiburi.) A greeting? (あいさつ, aisatsu.) Kind regards? (よろしく, yoroshiku.) A New Year's card? (ねんがじょう, nengajō.) Surface mail? (ふなびん, funabin.) To receive? (もらう, morau.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R306-review-302-306-type",
+              "prompt": "Say the Japanese for 'a ghost'.",
+              "assesses": [
+                "JA-LEX-C302-YUUREI302-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆうれい",
+                "yūrei",
+                "yuurei",
+                "yurei"
+              ],
+              "feedback": {
+                "correct": "Right: ゆうれい (yūrei) is 'a ghost'.",
+                "incorrect": "'A ghost' is ゆうれい (yūrei)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

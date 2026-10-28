@@ -1,0 +1,14 @@
+{
+  "language": "japanese",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:13af5810bcad08c0",
+  "lessonIds": [
+    "JA-C455-kyouryoku-suru",
+    "JA-C455-shiji-suru",
+    "JA-C455-meirei",
+    "JA-C455-tantou",
+    "JA-C455-hikitsugu",
+    "JA-R455-review-450-455"
+  ],
+  "tex": "japanese/book/chapters/ch455-working-together.tex"
+}

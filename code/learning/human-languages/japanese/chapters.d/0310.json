@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Waiting for an Answer",
+  "label": "ch:ja-waiting-for-an-answer",
+  "canDo": "I can say how long I waited and what came true.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C310-mamonaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can say how long I waited and what came true.",
+    "assesses": [
+      "JA-LEX-C310-HENJI310-03",
+      "JA-LEX-C310-HENJI310-04",
+      "JA-LEX-C310-HENJI310-05"
+    ]
+  }
+}

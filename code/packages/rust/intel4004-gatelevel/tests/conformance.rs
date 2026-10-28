@@ -52,14 +52,45 @@ fn is_two_byte(raw: u8) -> bool {
 }
 
 #[test]
-fn every_specified_encoding_matches_the_functional_oracle() {
-    for raw in [0x00, 0x01].into_iter().chain(0x10..=0xFD) {
+fn every_first_byte_classification_matches_the_functional_oracle() {
+    for raw in 0u8..=u8::MAX {
         let program = if is_two_byte(raw) {
             vec![raw, 0x22]
         } else {
             vec![raw]
         };
-        assert_run_matches(&program, 1);
+        let mut gate = Intel4004GateLevel::new();
+        let mut functional = Intel4004Simulator::new(4096);
+        gate.load_program(&program).unwrap();
+        functional.load_program(&program).unwrap();
+        let gate_before = gate.snapshot();
+        let functional_before = functional.snapshot();
+
+        match (gate.step(), functional.step()) {
+            (Ok(gate_trace), Ok(functional_trace)) => {
+                assert_eq!(usize::from(gate_trace.address), functional_trace.address);
+                assert_eq!(gate_trace.raw, functional_trace.raw);
+                assert_eq!(gate_trace.raw2, functional_trace.raw2);
+                assert_eq!(
+                    gate_trace.accumulator_after,
+                    functional_trace.accumulator_after
+                );
+                assert_eq!(gate_trace.carry_after, functional_trace.carry_after);
+                assert_state_matches(&gate, &functional);
+            }
+            (Err(gate_error), Err(functional_error)) => {
+                assert_eq!(gate_error, functional_error, "opcode {raw:#04X}");
+                assert_eq!(gate.snapshot(), gate_before, "opcode {raw:#04X}");
+                assert_eq!(
+                    functional.snapshot(),
+                    functional_before,
+                    "opcode {raw:#04X}"
+                );
+            }
+            (gate_result, functional_result) => panic!(
+                "opcode {raw:#04X} disagreed: gate={gate_result:?}, functional={functional_result:?}"
+            ),
+        }
     }
 }
 
@@ -174,6 +205,47 @@ fn reset_and_exact_topology_are_stable() {
     let reset = gate.snapshot();
     gate.reset();
     assert_eq!(gate.snapshot(), reset);
-    assert_eq!(FLIP_FLOP_COUNT, 1_428);
+    let inventory = gate.physical_storage_inventory();
+    assert_eq!(inventory.register_dffs, 64);
+    assert_eq!(inventory.accumulator_dffs, 4);
+    assert_eq!(inventory.carry_dffs, 1);
+    assert_eq!(inventory.pc_dffs, 12);
+    assert_eq!(inventory.stack_dffs, 38);
+    assert_eq!(inventory.ram_main_dffs, 1_024);
+    assert_eq!(inventory.ram_status_dffs, 256);
+    assert_eq!(inventory.ram_output_dffs, 16);
+    assert_eq!(inventory.selector_dffs, 8);
+    assert_eq!(inventory.rom_port_dffs, 4);
+    assert_eq!(inventory.halt_dffs, 1);
+    assert_eq!(inventory.total(), 1_428);
+    assert_eq!(inventory.total(), FLIP_FLOP_COUNT);
     assert!(gate.gate_count() > FLIP_FLOP_COUNT * 6);
+}
+
+#[test]
+fn checked_restore_is_complete_and_invalid_states_are_atomic() {
+    let mut gate = Intel4004GateLevel::new();
+    gate.run(&[0x20, 0xAB, 0xD3, 0xFA, 0x01], 16).unwrap();
+    let complete = gate.snapshot();
+
+    gate.reset();
+    gate.restore(&complete).unwrap();
+    assert_eq!(gate.snapshot(), complete);
+
+    let before = gate.snapshot();
+    let mut invalid = before.clone();
+    invalid.registers.pop();
+    assert_eq!(
+        gate.restore(&invalid),
+        Err(Intel4004Error::InvalidState("register file"))
+    );
+    assert_eq!(gate.snapshot(), before);
+
+    let mut invalid = before.clone();
+    invalid.ram[0][0].pop();
+    assert_eq!(
+        gate.restore(&invalid),
+        Err(Intel4004Error::InvalidState("RAM"))
+    );
+    assert_eq!(gate.snapshot(), before);
 }

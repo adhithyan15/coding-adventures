@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W72-huo",
+    "language": "chinese",
+    "chapter": 72,
+    "sequence": 5725,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:eef20f58a3df952e",
+    "detachableSegments": [
+      "Script — two sparks around 人"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

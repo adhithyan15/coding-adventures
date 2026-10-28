@@ -343,6 +343,11 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   // discipline the Sheet Labels column already uses. Empty means "no
   // attachment." See code/specs/task-app-notes-ui-v1.md's addendum.
   let noteTaskDraft = "";
+  // Why the last Save was refused, or "" (E5; task-app-notes-ui-v1.md
+  // addendum v1.2). The same rule as task-mosaic-app's `note-error`, and as
+  // Journal's `draft-error`: Save sets or clears it, every other event
+  // clears it, and it is never persisted.
+  let noteError = "";
   // Checklists (C3b; spec task-app-checklists-view-v1.md). The same view and
   // contract task-mosaic-app serves natively (C3a): the library selection
   // (a template or a run id, "" for none) and the two composers. UI state,
@@ -588,9 +593,20 @@ export function makeController(engine: any, init: ControllerInit = {}) {
     const notesMap = (ws.projects?.[activeId]?.notes ?? {}) as Record<string, any>;
     const entries = Object.values(notesMap) as any[];
     entries.sort((a, b) => String(a.title ?? "").localeCompare(String(b.title ?? "")));
+    // Rows are the toolkit RecordList's [key, heading, title, subtitle,
+    // meta, badge] (Notes 0.3.0, task-app-notes-ui-v1.md v1.3), the same
+    // rows task-mosaic-app builds. Only the key and the title are filled:
+    // RecordList leaves an empty field out, so a row stays one line.
     return {
       ids: entries.map((n) => n.id as string),
-      rows: entries.map((n) => [n.id as string, String(n.title ?? "").trim() || "Untitled"]),
+      rows: entries.map((n) => [
+        n.id as string,
+        "",
+        String(n.title ?? "").trim() || "Untitled",
+        "",
+        "",
+        "",
+      ]),
     };
   };
 
@@ -634,6 +650,33 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   const displayName = (name: string) => (String(name).trim() ? String(name) : "Untitled checklist");
   const checklistIndent = (depth: number) => "  ".repeat(Math.min(Math.max(depth, 0), CHECKLIST_INDENT_MAX));
   const chars = (text: string) => [...text].length;
+
+  // ── Note draft caps (E5) ────────────────────────────────────────────────
+  // task-mosaic-app's MAX_NOTE_TITLE_CHARS / MAX_NOTE_BODY_BYTES, which are
+  // Journal's entry limits: a title is counted in characters (code points,
+  // as `chars` counts them), a body in UTF-8 bytes, because that cap bounds
+  // the stored workspace. An over-cap edit is refused, not truncated, so the
+  // field shows the last accepted draft again.
+  const NOTE_TITLE_MAX_CHARS = 512;
+  const NOTE_BODY_MAX_BYTES = 1024 * 1024;
+  const NOTE_TASK_NOT_FOUND =
+    "No task in this project has that name. Fix it, or clear the field to save the note without one.";
+  const utf8 = new TextEncoder();
+  // The UTF-8 size of `text`, or an upper bound on it that is itself within
+  // `max`. A UTF-16 code unit never takes more than 3 UTF-8 bytes, so
+  // `length * 3` bounds the size; when that bound is within the cap the
+  // string fits whatever its exact size, and encoding it (a copy of up to
+  // 1 MiB per keystroke) is skipped. Above the bound it is exact, which is
+  // the only place `draftFits` compares sizes against each other.
+  const utf8Bytes = (text: string, max: number) =>
+    text.length * 3 <= max ? text.length * 3 : utf8.encode(text).length;
+  // Refused only when the edit is over the cap AND longer than the draft it
+  // replaces: a note stored before the caps existed loads whole, and may be
+  // edited down towards the cap but never grown past it.
+  const draftFits = (next: string, current: string, measure: (t: string) => number, max: number) => {
+    const size = measure(next);
+    return size <= max || size <= measure(current);
+  };
 
   /// The selection, if it names a checklist of the wanted kind in THIS project.
   const selectedOfKind = (wantRun: boolean): any | null => {
@@ -1147,6 +1190,12 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         noteTitleValue: noteTitleDraft,
         noteBodyValue: noteBodyDraft,
         noteTaskValue: noteTaskDraft,
+        noteError,
+        // Delete only for a note the engine has saved. A new note's id is
+        // minted on "+ New note", before the engine hears of it, so an open
+        // id alone is not enough: "" makes DraftEditor draw no Delete.
+        // Same rule as task-mosaic-app.
+        noteDeleteLabel: notes.ids.includes(selectedNoteId) ? "Delete" : "",
         // Checklists (C3b): the same slots task-mosaic-app fills natively.
         checklistsMode: view === "checklists" ? "checklists" : "",
         checklistsTitle: "Checklists",
@@ -1191,6 +1240,8 @@ export function makeController(engine: any, init: ControllerInit = {}) {
     },
 
     apply(event: TaskAppEvent) {
+      // A note error describes the last Save; anything else moves on from it.
+      if (event.type !== "saveNote") noteError = "";
       switch (event.type) {
         case "newTaskNameChange":
           newName = event.value;
@@ -1566,11 +1617,17 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           noteTaskDraft = "";
           break;
         case "noteTitleChange":
-          noteTitleDraft = event.value;
+          if (draftFits(event.value, noteTitleDraft, chars, NOTE_TITLE_MAX_CHARS)) {
+            noteTitleDraft = event.value;
+          }
           break;
-        case "noteBodyChange":
-          noteBodyDraft = event.value;
+        case "noteBodyChange": {
+          const bytes = (text: string) => utf8Bytes(text, NOTE_BODY_MAX_BYTES);
+          if (draftFits(event.value, noteBodyDraft, bytes, NOTE_BODY_MAX_BYTES)) {
+            noteBodyDraft = event.value;
+          }
           break;
+        }
         case "noteTaskNameChange":
           noteTaskDraft = event.value;
           break;
@@ -1586,7 +1643,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           if (typedName) {
             const taskId = tasksByName().get(typedName.toLowerCase());
             if (!taskId) {
-              console.error("Note save failed: no task named", JSON.stringify(typedName));
+              // Refused where the person can see it, with the draft kept
+              // exactly as typed so the name can be corrected (E5). This
+              // was a console error, invisible to everyone but a developer.
+              noteError = NOTE_TASK_NOT_FOUND;
               break;
             }
             attachedTask = taskId;
@@ -1604,6 +1664,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             console.error("Note save failed:", res.error ?? res);
             break;
           }
+          noteError = "";
           persist();
           break;
         }

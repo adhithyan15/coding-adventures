@@ -468,22 +468,15 @@ impl FnRegs {
 }
 
 // ---------------------------------------------------------------------------
-// LANG83 PR6a — the float writer `__iir_write_f64(float64, int32)`
+// LANG83 PR6a / PR7b — the shortest round-trip digits
 // ---------------------------------------------------------------------------
 //
-// `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
-//
-// ```text
-// ldloc x;  ldc.i4.0 | ldc.i4.1;  call void <Asm>Program::__iir_write_f64(float64, int32)
-// ```
-//
-// and the module gets this one extra static method when it prints a float.
 // Since .NET Core 3.0, `double.ToString("R", CultureInfo.InvariantCulture)`
-// prints the SHORTEST decimal that reads back as the value. The method re-reads
-// that string's digits `D` and decimal exponent `e`, because .NET's own layout
-// (`1E+16`, `1E-05`, `123.456`) is neither Python's nor JavaScript's. It then
-// writes the LANG83 layout piece by piece with `Console.Write(string)`, on the
-// same writer as every other output builtin:
+// prints the SHORTEST decimal that reads back as the value. The module's own
+// `string __iir_f64_shortest(float64 ax, int32& e10)` re-reads that string's
+// digits `D` and decimal exponent `e`, because .NET's own layout (`1E+16`,
+// `1E-05`, `123.456`) is not the digits alone. It returns `D` and stores `e`
+// through the managed pointer:
 //
 // ```text
 // s    = Math.Abs(x).ToString("R", Invariant)       "1.5E-05" | "123.456" | "100"
@@ -498,82 +491,39 @@ impl FnRegs {
 // e    = ilen - 1 - lz + exp                        exponent of D[0]
 // ```
 //
+// The PR7b `f64_digits` / `f64_exp10` helpers call it, so the two can never
+// disagree on a digit. PR6a wrote this parse inside the float writer
+// `__iir_write_f64(float64, int32)`, which also laid `D` out in Python's or
+// JavaScript's style for `write_f64_py` / `write_f64_js`. LANG83 PR7e removed
+// the writers: a compiler lays a float out itself, in its own module.
+//
 // The stack is EMPTY at every label and every branch: each value goes
-// straight to a local or to `Console.Write`. CoreCLR rejects IL whose stack
-// shape differs between the edges into a label, even when `ilasm` assembles
-// it (lesson from Perl 4a). The unit tests run a stack-depth model over this
-// method to hold that rule and to check `.maxstack 8`.
+// straight to a local. CoreCLR rejects IL whose stack shape differs between
+// the edges into a label, even when `ilasm` assembles it (lesson from Perl
+// 4a). The unit tests run a stack-depth model over these methods to hold
+// that rule and to check `.maxstack 8`.
 
-/// The helper's CIL name; a module function with this name is refused.
-const WRITE_F64_METHOD: &str = "__iir_write_f64";
+/// Every synthetic float method a class may carry (LANG83 PR7b); a module
+/// function with one of these names is refused.
+const SYNTHETIC_F64_METHODS: &[&str] = &["__iir_f64_shortest", "__iir_f64_digits", "__iir_f64_exp10"];
 
-/// `true` if the module calls either PR6a float writer.
-fn module_uses_write_f64(module: &IIRModule) -> bool {
-    module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
-        i.op == "call_builtin"
-            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
-    })
+/// `true` if the module uses the PR7b op `op` (`f64_digits` / `f64_exp10`).
+fn module_uses_op(module: &IIRModule, op: &str) -> bool {
+    module.functions.iter().flat_map(|f| &f.instructions).any(|i| i.op == op)
 }
 
-/// The helper's IL. Labels are `F64_*`, unique within the method.
-const WRITE_F64_IL: &str = r#"  .method private static void __iir_write_f64(float64 x, int32 js) cil managed {
+/// LANG83 PR7b: the shared digit parse, `__iir_f64_shortest(ax, out e10)` —
+/// returns `D` (the shortest digits of `ax = |x|`, finite and non-zero, as a
+/// string with no leading or trailing zeros) and stores the exponent of its
+/// first digit through `e10`. Moved here unchanged from PR6a's
+/// `__iir_write_f64` (removed in PR7e); the two queries below call it.
+/// `{ASM}` is replaced with the assembly name at emission.
+const F64_SHORTEST_IL: &str = r#"  .method private static string __iir_f64_shortest(float64 ax, int32& e10) cil managed {
     .maxstack 8
-    .locals init (float64 ax, string s, int32 idx, int32 exp, string m, int32 dot, int32 ilen, string all, string d1, int32 lz, string d, int32 n, int32 e, int32 a)
+    .locals init (float64 v, string s, int32 idx, int32 exp, string m, int32 dot, int32 ilen, string all, string d1, int32 lz, string d)
     ldarg 0
-    ldarg 0
-    beq F64_NOT_NAN
-    ldarg 1
-    brfalse F64_NAN_PY
-    ldstr "NaN"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_NAN_PY:
-    ldstr "nan"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_NOT_NAN:
-    ldarg 0
-    call bool [System.Runtime]System.Double::IsNegative(float64)
-    brfalse F64_NO_SIGN
-    ldarg 1
-    brfalse F64_MINUS
-    ldarg 0
-    ldc.r8 0.0
-    beq F64_NO_SIGN
-  F64_MINUS:
-    ldstr "-"
-    call void [System.Console]System.Console::Write(string)
-  F64_NO_SIGN:
-    ldarg 0
-    call bool [System.Runtime]System.Double::IsInfinity(float64)
-    brfalse F64_FINITE
-    ldarg 1
-    brfalse F64_INF_PY
-    ldstr "Infinity"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_INF_PY:
-    ldstr "inf"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_FINITE:
-    ldarg 0
-    ldc.r8 0.0
-    bne.un F64_DIGITS
-    ldarg 1
-    brfalse F64_ZERO_PY
-    ldstr "0"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_ZERO_PY:
-    ldstr "0.0"
-    call void [System.Console]System.Console::Write(string)
-    ret
-  F64_DIGITS:
-    ldarg 0
-    call float64 [System.Runtime]System.Math::Abs(float64)
-    stloc ax
-    ldloca ax
+    stloc v
+    ldloca v
     ldstr "R"
     call class [System.Runtime]System.Globalization.CultureInfo [System.Runtime]System.Globalization.CultureInfo::get_InvariantCulture()
     call instance string [System.Runtime]System.Double::ToString(string, class [System.Runtime]System.IFormatProvider)
@@ -584,7 +534,7 @@ const WRITE_F64_IL: &str = r#"  .method private static void __iir_write_f64(floa
     stloc idx
     ldloc idx
     ldc.i4.0
-    blt F64_NO_EXP
+    blt F64S_NO_EXP
     ldloc s
     ldloc idx
     ldc.i4.1
@@ -598,20 +548,20 @@ const WRITE_F64_IL: &str = r#"  .method private static void __iir_write_f64(floa
     ldloc idx
     callvirt instance string [System.Runtime]System.String::Substring(int32, int32)
     stloc m
-    br F64_MANTISSA
-  F64_NO_EXP:
+    br F64S_MANTISSA
+  F64S_NO_EXP:
     ldc.i4.0
     stloc exp
     ldloc s
     stloc m
-  F64_MANTISSA:
+  F64S_MANTISSA:
     ldloc m
     ldc.i4 46
     callvirt instance int32 [System.Runtime]System.String::IndexOf(char)
     stloc dot
     ldloc dot
     ldc.i4.0
-    blt F64_NO_DOT
+    blt F64S_NO_DOT
     ldloc dot
     stloc ilen
     ldloc m
@@ -619,14 +569,14 @@ const WRITE_F64_IL: &str = r#"  .method private static void __iir_write_f64(floa
     ldc.i4.1
     callvirt instance string [System.Runtime]System.String::Remove(int32, int32)
     stloc all
-    br F64_ALL
-  F64_NO_DOT:
+    br F64S_ALL
+  F64S_NO_DOT:
     ldloc m
     callvirt instance int32 [System.Runtime]System.String::get_Length()
     stloc ilen
     ldloc m
     stloc all
-  F64_ALL:
+  F64S_ALL:
     ldloc all
     ldc.i4 48
     callvirt instance string [System.Runtime]System.String::TrimStart(char)
@@ -641,9 +591,7 @@ const WRITE_F64_IL: &str = r#"  .method private static void __iir_write_f64(floa
     ldc.i4 48
     callvirt instance string [System.Runtime]System.String::TrimEnd(char)
     stloc d
-    ldloc d
-    callvirt instance int32 [System.Runtime]System.String::get_Length()
-    stloc n
+    ldarg 1
     ldloc ilen
     ldc.i4.1
     sub
@@ -651,121 +599,68 @@ const WRITE_F64_IL: &str = r#"  .method private static void __iir_write_f64(floa
     sub
     ldloc exp
     add
-    stloc e
-    ldarg 1
-    brfalse F64_PY_RANGE
-    ldloc e
-    ldc.i4 -6
-    blt F64_SCI
-    ldloc e
-    ldc.i4 21
-    bge F64_SCI
-    br F64_FIXED
-  F64_PY_RANGE:
-    ldloc e
-    ldc.i4 -4
-    blt F64_SCI
-    ldloc e
-    ldc.i4 16
-    bge F64_SCI
-  F64_FIXED:
-    ldloc e
-    ldc.i4.0
-    bge F64_AT_LEAST_ONE
-    ldstr "0."
-    call void [System.Console]System.Console::Write(string)
-    ldc.i4 48
-    ldc.i4.m1
-    ldloc e
-    sub
-    newobj instance void [System.Runtime]System.String::.ctor(char, int32)
-    call void [System.Console]System.Console::Write(string)
+    stind.i4
     ldloc d
-    call void [System.Console]System.Console::Write(string)
     ret
-  F64_AT_LEAST_ONE:
-    ldloc n
-    ldloc e
-    ldc.i4.1
-    add
-    bgt F64_FRACTION
-    ldloc d
-    call void [System.Console]System.Console::Write(string)
-    ldc.i4 48
-    ldloc e
-    ldc.i4.1
-    add
-    ldloc n
-    sub
-    newobj instance void [System.Runtime]System.String::.ctor(char, int32)
-    call void [System.Console]System.Console::Write(string)
-    ldarg 1
-    brtrue F64_DONE
-    ldstr ".0"
-    call void [System.Console]System.Console::Write(string)
-  F64_DONE:
+  }
+"#;
+
+/// LANG83 PR7b `f64_digits`: `0` for ±0, ±Infinity and NaN (the magnitude's
+/// bits are 0 or at least +Infinity's), else `Int64.Parse(D)` (at most 17
+/// digits, so it fits).
+const F64_DIGITS_IL: &str = r#"  .method private static int64 __iir_f64_digits(float64 x) cil managed {
+    .maxstack 8
+    .locals init (int64 m, int32 e)
+    ldarg 0
+    call int64 [System.Runtime]System.BitConverter::DoubleToInt64Bits(float64)
+    ldc.i8 9223372036854775807
+    and
+    stloc m
+    ldloc m
+    ldc.i8 0
+    beq F64D_NONE
+    ldloc m
+    ldc.i8 9218868437227405312
+    bge F64D_NONE
+    ldarg 0
+    call float64 [System.Runtime]System.Math::Abs(float64)
+    ldloca e
+    call string {ASM}Program::__iir_f64_shortest(float64, int32&)
+    call class [System.Runtime]System.Globalization.CultureInfo [System.Runtime]System.Globalization.CultureInfo::get_InvariantCulture()
+    call int64 [System.Runtime]System.Int64::Parse(string, class [System.Runtime]System.IFormatProvider)
     ret
-  F64_FRACTION:
-    ldloc d
-    ldc.i4.0
-    ldloc e
-    ldc.i4.1
-    add
-    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)
-    call void [System.Console]System.Console::Write(string)
-    ldstr "."
-    call void [System.Console]System.Console::Write(string)
-    ldloc d
-    ldloc e
-    ldc.i4.1
-    add
-    callvirt instance string [System.Runtime]System.String::Substring(int32)
-    call void [System.Console]System.Console::Write(string)
+  F64D_NONE:
+    ldc.i8 0
     ret
-  F64_SCI:
-    ldloc d
-    ldc.i4.0
-    ldc.i4.1
-    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)
-    call void [System.Console]System.Console::Write(string)
-    ldloc n
-    ldc.i4.1
-    ble F64_EXPONENT
-    ldstr "."
-    call void [System.Console]System.Console::Write(string)
-    ldloc d
-    ldc.i4.1
-    callvirt instance string [System.Runtime]System.String::Substring(int32)
-    call void [System.Console]System.Console::Write(string)
-  F64_EXPONENT:
-    ldstr "e"
-    call void [System.Console]System.Console::Write(string)
+  }
+"#;
+
+/// LANG83 PR7b `f64_exp10`: `0` for ±0, ±Infinity and NaN, else the `e10` the
+/// shared parse stored.
+const F64_EXP10_IL: &str = r#"  .method private static int64 __iir_f64_exp10(float64 x) cil managed {
+    .maxstack 8
+    .locals init (int64 m, int32 e)
+    ldarg 0
+    call int64 [System.Runtime]System.BitConverter::DoubleToInt64Bits(float64)
+    ldc.i8 9223372036854775807
+    and
+    stloc m
+    ldloc m
+    ldc.i8 0
+    beq F64E_NONE
+    ldloc m
+    ldc.i8 9218868437227405312
+    bge F64E_NONE
+    ldarg 0
+    call float64 [System.Runtime]System.Math::Abs(float64)
+    ldloca e
+    call string {ASM}Program::__iir_f64_shortest(float64, int32&)
+    pop
     ldloc e
-    ldc.i4.0
-    bge F64_E_POSITIVE
-    ldstr "-"
-    call void [System.Console]System.Console::Write(string)
-    ldc.i4.0
-    ldloc e
-    sub
-    stloc a
-    br F64_E_ABS
-  F64_E_POSITIVE:
-    ldstr "+"
-    call void [System.Console]System.Console::Write(string)
-    ldloc e
-    stloc a
-  F64_E_ABS:
-    ldarg 1
-    brtrue F64_E_DIGITS
-    ldloc a
-    ldc.i4 10
-    bge F64_E_DIGITS
-    ldstr "0"
-    call void [System.Console]System.Console::Write(string)
-  F64_E_DIGITS:
-    ldloc a
-    call void [System.Console]System.Console::Write(int32)
+    conv.i8
+    ret
+  F64E_NONE:
+    ldc.i8 0
     ret
   }
 "#;
@@ -1033,15 +928,25 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
         emit_method(&mut il, module, f, asm, &globals)?;
     }
 
-    // LANG83 PR6a: the float writer, once, when any function prints a float.
-    if module_uses_write_f64(module) {
-        if module.functions.iter().any(|f| f.name == WRITE_F64_METHOD) {
+    // LANG83 PR7b: the two digit queries, each once and only when used,
+    // both calling ONE shared digit parse (`__iir_f64_shortest`).
+    let uses_digits = module_uses_op(module, "f64_digits");
+    let uses_exp10 = module_uses_op(module, "f64_exp10");
+    if uses_digits || uses_exp10 {
+        if let Some(f) = module.functions.iter().find(|f| SYNTHETIC_F64_METHODS.contains(&f.name.as_str())) {
             return Err(IIRClrError::InvalidOperand {
-                function: WRITE_F64_METHOD.to_string(),
-                detail: "a module function may not take the synthetic float writer's name".to_string(),
+                function: f.name.clone(),
+                detail: "a module function may not take a synthetic float method's name".to_string(),
             });
         }
-        il.push_str(WRITE_F64_IL);
+        // The helpers call each other through the class, whose name is the
+        // assembly name plus `Program` (see the launcher below).
+        il.push_str(&F64_SHORTEST_IL.replace("{ASM}", asm));
+        for (used, helper) in [(uses_digits, F64_DIGITS_IL), (uses_exp10, F64_EXP10_IL)] {
+            if used {
+                il.push_str(&helper.replace("{ASM}", asm));
+            }
+        }
     }
 
     // Launcher. For an **expression** program the result is the program — so we
@@ -1268,7 +1173,7 @@ fn emit_method(
             // <kind>` on stderr and exits non-zero — after the flush.
             "trap" => {
                 let kind = match instr.srcs.as_slice() {
-                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k,
+                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_trap_kind(k) => k,
                     other => {
                         return Err(IIRClrError::InvalidOperand {
                             function: f.name.clone(),
@@ -1739,42 +1644,79 @@ fn emit_method(
             }
             // ── LANG-FULL E8: real_to_int_trunc / real_to_int_floor ─────────
             //
-            // Narrow a real to an integer. The CLR's **overflow-checking**
-            // conversion `conv.ovf.i4` truncates toward zero AND throws
-            // `OverflowException` when the value is NaN, ±∞, or out of `int32`
-            // range. That gives us the VM's *fail-closed trap* contract for free
-            // (spec §7's recommendation) — one opcode, no exception-table
-            // plumbing — so unlike the JVM backend (whose `d2i`/`d2l` saturate)
-            // the CLR matches the VM bit-for-bit on the pathological inputs too.
+            // Narrow a real to an integer. `real_to_int_floor` (ALGOL
+            // `entier`) rounds toward −∞ first with `System.Math::Floor`;
+            // `real_to_int_trunc` needs no rounding call, because the
+            // conversion itself truncates toward zero.
             //
-            // CLR-int64: the narrowing target follows the destination local —
-            // `conv.ovf.i8` for an `int64` dest, `conv.ovf.i4` otherwise. Both
-            // are overflow-checked, so an `i64` destination genuinely widens the
-            // accepted range instead of trapping on values a 32-bit slot could
-            // never have held.
+            // A value that cannot fit — NaN, ±∞, or outside the destination's
+            // range — raises LANG83's typed `Trap.ConvRange` through the same
+            // [`emit_lang83_trap`] sequence `Trap.DivZero` uses:
             //
-            // `real_to_int_floor` (ALGOL `entier`) rounds toward −∞ first: there
-            // is no single floor-to-int opcode, so we `call System.Math::Floor`
-            // (round to −∞, still a `float64`) and then the overflow-checked
-            // narrowing (which now only drops a `.0`).
+            //     ld src; [call Math::Floor]; ldc.r8 LO; blt.un|ble.un TRAP
+            //     ld src; [call Math::Floor]; ldc.r8 HI; blt OK
+            //   TRAP:
+            //     <flush Console.Out; throw Exception("Trap.ConvRange")>
+            //   OK:
+            //     ld src; [call Math::Floor]; conv.ovf.i8 | conv.ovf.i4; st dest
+            //
+            // | dest    | LO (trap if v …)          | HI (ok if v <) |
+            // |---------|---------------------------|----------------|
+            // | `int64` | `blt.un` −2⁶³ (inclusive) | 2⁶³            |
+            // | `int32` | `ble.un` −2³¹−1           | 2³¹            |
+            //
+            // The `.un` branch is taken when the comparison is *unordered*,
+            // so NaN goes to TRAP at the first test; ±∞ fails one bound.
+            // Both bounds are exact doubles. The operand is reloaded (and
+            // re-floored) for each use instead of `dup`'d, so the evaluation
+            // stack is empty at every branch and label — the same shape as
+            // the `Trap.DivZero` check — and no scratch local is needed.
+            // The overflow-checked `conv.ovf.*` after the check can never
+            // throw its untyped `OverflowException`; it stays so that a
+            // wrong check would still fail closed. The destination's width
+            // follows the local's type (CLR-int64): an `int64` destination
+            // accepts the whole i64 range.
             "real_to_int_trunc" | "real_to_int_floor" => {
+                use interpreter_ir::exception_kind::TRAP_CONV_RANGE;
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: format!("{} must have a dest", instr.op),
                 })?;
                 let src = var_src(f, instr, 0, &instr.op)?;
-                load_var(il, &regs, src)?;
-                if instr.op == "real_to_int_floor" {
-                    let _ = writeln!(
-                        il,
-                        "    call float64 [System.Runtime]System.Math::Floor(float64)"
-                    );
-                }
-                let _ = writeln!(
-                    il,
-                    "    {}",
-                    if regs.home(dest)?.ty == "int64" { "conv.ovf.i8" } else { "conv.ovf.i4" }
-                );
+                // Push the operand, rounded toward −∞ for `real_to_int_floor`.
+                let push_rounded = |il: &mut String| -> Result<(), IIRClrError> {
+                    load_var(il, &regs, src)?;
+                    if instr.op == "real_to_int_floor" {
+                        let _ = writeln!(
+                            il,
+                            "    call float64 [System.Runtime]System.Math::Floor(float64)"
+                        );
+                    }
+                    Ok(())
+                };
+                let wide = regs.home(dest)?.ty == "int64";
+                let (lo, lo_branch, hi, conv) = if wide {
+                    (-9_223_372_036_854_775_808.0_f64, "blt.un", 9_223_372_036_854_775_808.0_f64, "conv.ovf.i8")
+                } else {
+                    (-2_147_483_649.0_f64, "ble.un", 2_147_483_648.0_f64, "conv.ovf.i4")
+                };
+                // `ldc.r8 (b0 … b7)`: the exact little-endian bytes, as for
+                // a `real` literal, so ilasm never re-parses the bound.
+                let r8 = |x: f64| {
+                    x.to_le_bytes().iter().map(|b| format!("{b:02X}")).collect::<Vec<_>>().join(" ")
+                };
+                let (trap, ok) = (lang83_label(), lang83_label());
+                push_rounded(il)?;
+                let _ = writeln!(il, "    ldc.r8 ({})", r8(lo));
+                let _ = writeln!(il, "    {lo_branch} {trap}");
+                push_rounded(il)?;
+                let _ = writeln!(il, "    ldc.r8 ({})", r8(hi));
+                let _ = writeln!(il, "    blt {ok}");
+                let _ = writeln!(il, "  {trap}:");
+                emit_lang83_trap(il, &f.name, TRAP_CONV_RANGE)?;
+                let _ = writeln!(il, "  {ok}:");
+                push_rounded(il)?;
+                let _ = writeln!(il, "    {conv}");
                 store_var(il, &regs, dest)?;
             }
             // ── AL8 sqrt + transcendentals: System.Math calls ────────────────
@@ -1862,6 +1804,57 @@ fn emit_method(
                         let _ = writeln!(il, "    ldc.i4.s 63");
                         let _ = writeln!(il, "    shr.un");
                     }
+                }
+                store_var(il, &regs, dest)?;
+            }
+            // ── LANG83 PR7b: the language-neutral float primitives ───────────
+            //
+            // `f64_class` is inline and branch-free: three unsigned compares
+            // of the magnitude `m` (the raw bits with bit 63 masked off),
+            // each 0 or 1, summed:
+            //
+            //   class = (m >u 0) + (m >u 0x7FEF…F) + (m >u 0x7FF0…0)
+            //           ±0 → 0   finite ≠ 0 → 1   ±Infinity → 2   NaN → 3
+            //
+            //   ldloc a; call int64 BitConverter::DoubleToInt64Bits(float64);
+            //   ldc.i8 0x7FFF…F; and; ldc.i8 <bound>; cgt.un      (× 3, summed)
+            //   add; add; conv.i8; stloc d
+            //
+            // (`m >u 0x7FEF…F` is `m >= +Infinity's bits`.) `f64_digits` /
+            // `f64_exp10` call the class's own `__iir_f64_digits(float64)` /
+            // `__iir_f64_exp10(float64)`, which share the PR6a writer's `"R"`
+            // digit parse:  ldloc a; call int64 <Asm>Program::__iir_f64_digits(float64); stloc d
+            "f64_class" | "f64_digits" | "f64_exp10" => {
+                let op = instr.op.as_str();
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("{op} must have a dest"),
+                })?;
+                let src = var_src(f, instr, 0, op)?;
+                if regs.home(src)?.ty != "float64" || regs.home(dest)?.ty != "int64" {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: format!("{op} needs a float64 source and an int64 dest"),
+                    });
+                }
+                if op == "f64_class" {
+                    for bound in ["0", "9218868437227405311", "9218868437227405312"] {
+                        load_var(il, &regs, src)?;
+                        let _ = writeln!(
+                            il,
+                            "    call int64 [System.Runtime]System.BitConverter::DoubleToInt64Bits(float64)"
+                        );
+                        let _ = writeln!(il, "    ldc.i8 9223372036854775807");
+                        let _ = writeln!(il, "    and");
+                        let _ = writeln!(il, "    ldc.i8 {bound}");
+                        let _ = writeln!(il, "    cgt.un");
+                    }
+                    let _ = writeln!(il, "    add");
+                    let _ = writeln!(il, "    add");
+                    let _ = writeln!(il, "    conv.i8");
+                } else {
+                    load_var(il, &regs, src)?;
+                    let _ = writeln!(il, "    call int64 {asm}Program::__iir_{op}(float64)");
                 }
                 store_var(il, &regs, dest)?;
             }
@@ -2406,23 +2399,6 @@ fn emit_method(
                 // `write_i64` (LANG83 PR1b) — decimal, NO newline:
                 // `Console.Write(int64)`, the same `Console.Out` writer as
                 // `print_i64`/`putchar`/`print_str`, so the stream stays ordered.
-                // `write_f64_py` / `write_f64_js` (LANG83 PR6a): the module's own
-                // `__iir_write_f64(float64, int32 layout)` — 0 = Python repr,
-                // 1 = JavaScript toString. The operand must be a float64.
-                if builtin == "write_f64_py" || builtin == "write_f64_js" {
-                    let val = var_src(f, instr, 1, builtin)?;
-                    if regs.home(val)?.ty != "float64" {
-                        return Err(IIRClrError::InvalidOperand {
-                            function: f.name.clone(),
-                            detail: format!("call_builtin \"{builtin}\" requires an f64 operand"),
-                        });
-                    }
-                    load_var(il, &regs, val)?;
-                    let layout = u8::from(builtin == "write_f64_js");
-                    let _ = writeln!(il, "    ldc.i4.{layout}");
-                    let _ = writeln!(il, "    call void {asm}Program::{WRITE_F64_METHOD}(float64, int32)");
-                    continue;
-                }
                 if builtin == "write_i64" {
                     let val = var_src(f, instr, 1, "write_i64")?;
                     load_var_as(il, &regs, val, "int64")?;
@@ -4245,14 +4221,14 @@ mod tests {
     fn unsupported_op_is_rejected_not_emitted() {
         // A `call_builtin` to a name outside the CLR whitelist (only pair?/not/
         // equal? are emittable today) must be rejected explicitly, not emit junk —
-        // e.g. `dyn_cons` is a heap builtin handled structurally, never here.
+        // e.g. `dyn_pair_new` is a heap builtin handled structurally, never here.
         let mut m = scalar_module(1);
         m.functions[0].instructions.insert(
             0,
             IIRInstr::new(
                 "call_builtin",
                 Some("p".into()),
-                vec![Operand::Var("dyn_cons".into())],
+                vec![Operand::Var("dyn_pair_new".into())],
                 "ref<LispyPair>",
             ),
         );

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C329-suigara",
+    "language": "japanese",
+    "chapter": 329,
+    "sequence": 19660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0f8d3447fc2c296"
+  },
+  "findings": []
+}

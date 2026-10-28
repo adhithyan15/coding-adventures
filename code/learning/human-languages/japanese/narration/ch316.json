@@ -1,0 +1,1025 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 316,
+  "title": "A Story to Pass On",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:071bafe47b6a627d",
+  "lessons": [
+    {
+      "id": "JA-C316-monogatari",
+      "sequence": 18790,
+      "title": "ものがたり (monogatari) — a story; a tale",
+      "headword": "ものがたり",
+      "romanization": "monogatari",
+      "gloss": "a story; a tale",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36285b49e5d8e8c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for here and there, then the Japanese for to keep watch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ものがたり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ものがたり — monogatari — \"a story; a tale\"."
+            },
+            {
+              "kind": "speech",
+              "text": "これは むかしの ものがたりです。 — kore wa mukashi no monogatari desu — \"This is a story from long ago.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ものがたり (monogatari) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from mono, \"thing\", and gatari, \"telling\" (from kataru) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "monogatari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *monogatari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "monogatari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *monogatari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kore wa mukashi no monogatari desu — This is a story from long ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kore wa mukashi no monogatari desu* — This is a story from long ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for here and there, then the Japanese for to keep watch, then say monogatari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for here and there, then the Japanese for to keep watch, then say *monogatari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ものがたり (monogatari) mean? (\"A story; a tale\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C316-monogatari-type",
+              "prompt": "Say the Japanese for 'a story'.",
+              "assesses": [
+                "JA-LEX-C316-MONOGATARI316-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ものがたり",
+                "monogatari"
+              ],
+              "feedback": {
+                "correct": "Right: ものがたり (monogatari) is 'a story; a tale'.",
+                "incorrect": "'A story' is ものがたり (monogatari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C316-dentou",
+      "sequence": 18800,
+      "title": "でんとう (dentō) — a tradition",
+      "headword": "でんとう",
+      "romanization": "dentō",
+      "gloss": "a tradition",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2cdd6ba48f1ae87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to keep watch, then the Japanese for a story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: でんとう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でんとう — dentō — \"a tradition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この まちには ふるい でんとうが あります。 — kono machi ni wa furui dentō ga arimasu — \"This town has old traditions.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でんとう (dentō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are den, \"transmit\" (Middle Chinese drjwen) and tō, \"relationship\" (thowngH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dentō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dentō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dentō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dentō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono machi ni wa furui dentō ga arimasu — This town has old traditions.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono machi ni wa furui dentō ga arimasu* — This town has old traditions.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to keep watch, then the Japanese for a story, then say dentō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to keep watch, then the Japanese for a story, then say *dentō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does でんとう (dentō) mean? (\"A tradition\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C316-dentou-type",
+              "prompt": "Say the Japanese for 'a tradition'.",
+              "assesses": [
+                "JA-LEX-C316-MONOGATARI316-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "でんとう",
+                "dentō",
+                "dentou",
+                "dentoo",
+                "dento"
+              ],
+              "feedback": {
+                "correct": "Right: でんとう (dentō) is 'a tradition'.",
+                "incorrect": "'A tradition' is でんとう (dentō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C316-hotondo",
+      "sequence": 18810,
+      "title": "ほとんど (hotondo) — almost; nearly all",
+      "headword": "ほとんど",
+      "romanization": "hotondo",
+      "gloss": "almost; nearly all",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6924033b43e44d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a story, then the Japanese for a tradition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほとんど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほとんど — hotondo — \"almost; nearly all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちの なまえは ほとんど わすれました。 — tomodachi no namae wa hotondo wasuremashita — \"I have forgotten nearly all my friends' names.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほとんど (hotondo) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hotondo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hotondo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hotondo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hotondo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi no namae wa hotondo wasuremashita — I have forgotten nearly all my friends' names.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi no namae wa hotondo wasuremashita* — I have forgotten nearly all my friends' names.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a story, then the Japanese for a tradition, then say hotondo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a story, then the Japanese for a tradition, then say *hotondo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほとんど (hotondo) mean? (\"Almost; nearly all\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C316-hotondo-type",
+              "prompt": "Say the Japanese for 'almost'.",
+              "assesses": [
+                "JA-LEX-C316-MONOGATARI316-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほとんど",
+                "hotondo"
+              ],
+              "feedback": {
+                "correct": "Right: ほとんど (hotondo) is 'almost; nearly all'.",
+                "incorrect": "'Almost' is ほとんど (hotondo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C316-kanjiru",
+      "sequence": 18820,
+      "title": "かんじる (kanjiru) — to feel; to sense",
+      "headword": "かんじる",
+      "romanization": "kanjiru",
+      "gloss": "to feel; to sense",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5dc19a44fa78d5d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a tradition, then the Japanese for almost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かんじる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんじる — kanjiru — \"to feel; to sense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いなかで あきを かんじました。 — inaka de aki o kanjimashita — \"In the countryside I could feel the autumn.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かんじます, kanjimasu; an ichidan verb. Past (polite): ははが あきを かんじました。, haha ga aki o kanjimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かんじる (kanjiru) is a mixed word, native and Sino-Japanese: kan, \"feeling\", is a Chinese character read with its on'yomi, a reading borrowed from Chinese (Middle Chinese komX), and jiru, \"a native verb ending\", is native Japanese (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanjiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanjiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanjiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanjiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inaka de aki o kanjimashita — In the countryside I could feel the autumn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inaka de aki o kanjimashita* — In the countryside I could feel the autumn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a tradition, then the Japanese for almost, then say kanjiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a tradition, then the Japanese for almost, then say *kanjiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かんじる (kanjiru) mean? (\"To feel; to sense\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C316-kanjiru-type",
+              "prompt": "Say the Japanese for 'to feel'.",
+              "assesses": [
+                "JA-LEX-C316-MONOGATARI316-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かんじる",
+                "kanjiru"
+              ],
+              "feedback": {
+                "correct": "Right: かんじる (kanjiru) is 'to feel; to sense'.",
+                "incorrect": "'To feel' is かんじる (kanjiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C316-motto",
+      "sequence": 18830,
+      "title": "もっと (motto) — more; even more",
+      "headword": "もっと",
+      "romanization": "motto",
+      "gloss": "more; even more",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cae17a5245143e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for almost, then the Japanese for to feel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もっと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もっと — motto — \"more; even more\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もっと むかしばなしを ききたいです。 — motto mukashibanashi o kikitai desu — \"I want to hear more old stories.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もっと (motto) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and it is usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "motto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *motto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "motto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *motto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "motto mukashibanashi o kikitai desu — I want to hear more old stories.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *motto mukashibanashi o kikitai desu* — I want to hear more old stories.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for almost, then the Japanese for to feel, then say motto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for almost, then the Japanese for to feel, then say *motto* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もっと (motto) mean? (\"More; even more\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C316-motto-type",
+              "prompt": "Say the Japanese for 'more'.",
+              "assesses": [
+                "JA-LEX-C316-MONOGATARI316-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もっと",
+                "motto"
+              ],
+              "feedback": {
+                "correct": "Right: もっと (motto) is 'more; even more'.",
+                "incorrect": "'More' is もっと (motto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R316-review-312-316",
+      "sequence": 18840,
+      "title": "Looking back: from History to A Story to Pass On",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from History to A Story to Pass On",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc6ca725ea4d90de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for history and an era."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "history, an era, the past, formerly, at that time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: history, an era, the past, formerly, at that time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a record, to prosper, to perish, the other day, ruins",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a record, to prosper, to perish, the other day, ruins]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "completely, before one knows it, before long, to decrease, to think of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: completely, before one knows it, before long, to decrease, to think of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thereupon, however, but, here and there, to keep watch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thereupon, however, but, here and there, to keep watch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a story, a tradition, almost, to feel, more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a story, a tradition, almost, to feel, more]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "History? (れきし, rekishi.) An era? (じだい, jidai.) The past? (かこ, kako.) Formerly? (いぜん, izen.) At that time? (とうじ, tōji.) A record? (きろく, kiroku.) To prosper? (さかえる, sakaeru.) To perish? (ほろびる, horobiru.) The other day? (せんじつ, senjitsu.) Ruins? (いせき, iseki.) Completely? (すっかり, sukkari.) Before one knows it? (いつのまにか, itsunomanika.) Before long? (やがて, yagate.) To decrease? (へる, heru.) To think of? (おもいつく, omoitsuku.) Thereupon? (すると, suruto.) However? (ところが, tokoroga.) But? (しかし, shikashi.) Here and there? (ところどころ, tokorodokoro.) To keep watch? (みはる, miharu.) A story? (ものがたり, monogatari.) A tradition? (でんとう, dentō.) Almost? (ほとんど, hotondo.) To feel? (かんじる, kanjiru.) More? (もっと, motto.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R316-review-312-316-type",
+              "prompt": "Say the Japanese for 'history'.",
+              "assesses": [
+                "JA-LEX-C312-REKISHI312-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "れきし",
+                "rekishi"
+              ],
+              "feedback": {
+                "correct": "Right: れきし (rekishi) is 'history'.",
+                "incorrect": "'History' is れきし (rekishi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R316-review-final-316",
+      "sequence": 18850,
+      "title": "A Story to Pass On — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e212b3fecc64c974",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a story and a tradition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a story, a tradition, almost, to feel, more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a story, a tradition, almost, to feel, more]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A story? (ものがたり, monogatari.) A tradition? (でんとう, dentō.) Almost? (ほとんど, hotondo.) To feel? (かんじる, kanjiru.) More? (もっと, motto.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R316-review-final-316-type",
+              "prompt": "Say the Japanese for 'a story'.",
+              "assesses": [
+                "JA-LEX-C316-MONOGATARI316-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ものがたり",
+                "monogatari"
+              ],
+              "feedback": {
+                "correct": "Right: ものがたり (monogatari) is 'a story; a tale'.",
+                "incorrect": "'A story' is ものがたり (monogatari)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 43,
+  "title": "Coming and Going",
+  "label": "ch:zh-coming-and-going",
+  "canDo": "I can say where I am going and that I am going home.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C43-xuexiao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 43: I can say where I am going and that I am going home.",
+    "assesses": [
+      "ZH-LEX-C43-GO43-03",
+      "ZH-LEX-C43-GO43-04",
+      "ZH-LEX-C43-GO43-05"
+    ]
+  }
+}

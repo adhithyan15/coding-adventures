@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W91-yao",
+    "language": "chinese",
+    "chapter": 91,
+    "sequence": 7420,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:04daf1d93caba3b0",
+    "detachableSegments": [
+      "Script — the top of 西, then 女"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

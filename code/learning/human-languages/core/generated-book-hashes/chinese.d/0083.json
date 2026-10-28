@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:65653e2907d844f1",
+  "lessonIds": [
+    "ZH-C83-shijian",
+    "ZH-C83-zao",
+    "ZH-C83-mashang",
+    "ZH-C83-laibuji",
+    "ZH-C83-chidao"
+  ],
+  "tex": "chinese/book/chapters/ch83-running-late.tex"
+}

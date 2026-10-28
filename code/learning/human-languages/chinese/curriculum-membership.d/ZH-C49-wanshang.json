@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C49-wanshang",
+  "pathSegment": "ZH-PATH-49-DAY49",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-49-DAY49",
+      "order": 3
+    }
+  ]
+}

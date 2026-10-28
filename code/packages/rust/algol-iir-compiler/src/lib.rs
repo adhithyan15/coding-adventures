@@ -5055,7 +5055,7 @@ impl Compiler {
                     if let Some(units) = prefix_units {
                         proof.magnitude = proof.magnitude.checked_mul(units)?;
                         proof.value_gcd = proof.value_gcd.checked_mul(units)?;
-                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE {
                             return None;
                         }
                     }
@@ -5114,7 +5114,10 @@ impl Compiler {
                                         *units,
                                     );
                             } else if operator == "/" {
-                                if *units == 0 || proof.value_gcd % *units != 0 {
+                                if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE
+                                    || *units == 0
+                                    || proof.value_gcd % *units != 0
+                                {
                                     return None;
                                 }
                                 proof.magnitude /= *units;
@@ -5123,14 +5126,15 @@ impl Compiler {
                                 return None;
                             }
                         }
-                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE {
                             return None;
                         }
                     }
                     if remaining_roots.next().is_some() || remaining_static.next().is_some() {
                         return None;
                     }
-                    return Some(proof);
+                    return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
+                        .then_some(proof);
                 }
                 let (rooted_index, mut proof) = rooted.into_iter().next()?;
                 let folds_integer_prefix = static_terms.iter().any(
@@ -5167,7 +5171,7 @@ impl Compiler {
                     let prefix_units = prefix_value?.unsigned_abs();
                     proof.magnitude = proof.magnitude.checked_mul(prefix_units)?;
                     proof.value_gcd = proof.value_gcd.checked_mul(prefix_units)?;
-                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE {
                         return None;
                     }
                 } else if rooted_index > 0
@@ -5201,7 +5205,10 @@ impl Compiler {
                             units,
                         );
                     } else if operator == Some("/") {
-                        if units == 0 || proof.value_gcd % units != 0 {
+                        if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE
+                            || units == 0
+                            || proof.value_gcd % units != 0
+                        {
                             return None;
                         }
                         proof.magnitude /= units;
@@ -5210,11 +5217,11 @@ impl Compiler {
                         proof.magnitude = proof.magnitude.checked_mul(units)?;
                         proof.value_gcd = proof.value_gcd.checked_mul(units)?;
                     }
-                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE {
                         return None;
                     }
                 }
-                return Some(proof);
+                return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(proof);
             }
         }
         if node.rule_name != "proc_call" {
@@ -12673,6 +12680,12 @@ struct ExactIntegerSignProof<'n> {
 /// unlike an additive offset, the scaled sign itself may be exactly `2^53`.
 const MAX_EXACT_SIGN_INTEGER_MAGNITUDE: u64 = 9_007_199_254_740_992;
 
+/// Largest worst-case magnitude admitted while a sign-rooted expression is
+/// still entirely in ALGOL's integer domain. A later `div` or `mod` may reduce
+/// this exact i64 intermediate into binary64's contiguous integer range before
+/// any widening occurs. Real `/` still requires the narrower bound first.
+const MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE: u64 = i64::MAX as u64;
+
 /// Units contributed by one variable-free additive term around a bounded
 /// `sign` result: its magnitude when it is a whole number within
 /// [`MAX_SIGN_OFFSET_UNITS`], otherwise `None` (fractional, non-finite, or too
@@ -12837,11 +12850,15 @@ fn exact_integer_sign_div_bounds(magnitude: u64, value_gcd: u64, divisor: u64) -
     (reduced_magnitude, reduced_gcd)
 }
 
-/// Reduce through integer remainder. A divisor above the complete magnitude
-/// makes remainder an identity and preserves the existing common divisor. For
-/// the stable three-value shape, the exact nonzero magnitude becomes `m mod
-/// divisor`; wider value sets retain the conservative fallback.
+/// Reduce through integer remainder. A divisor of the common divisor proves
+/// every possible remainder is zero. A divisor above the complete magnitude
+/// instead makes remainder an identity and preserves the existing common
+/// divisor. For the stable three-value shape, the exact nonzero magnitude
+/// becomes `m mod divisor`; wider value sets retain the conservative fallback.
 fn exact_integer_sign_mod_bounds(magnitude: u64, value_gcd: u64, divisor: u64) -> (u64, u64) {
+    if value_gcd.is_multiple_of(divisor) {
+        return (0, 0);
+    }
     let reduced_magnitude = magnitude.min(divisor - 1);
     let reduced_gcd = if magnitude < divisor {
         value_gcd
@@ -15896,6 +15913,8 @@ mod tests {
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(12 * sign(left()) mod 5 * sign(right()) / 2); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((2 * sign(left()) + 2) div 5) * sign(right()) / 7); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((2 * sign(left()) + 2) mod 5) * sign(right()) / 2); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((6 * sign(left()) + 6) mod 3) * sign(right()) / 7); output(result) end",
+            "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier((9007199254740992 * sign(left()) * 2 * sign(right()) mod 5) / 2); output(result) end",
             "begin real procedure left; left := -2.25; real procedure right; right := 3.5; real result; result := entier(((12 div 5 * sign(left()) * 15 div 5 * sign(right())) mod 5) ^ 2); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
@@ -16618,6 +16637,9 @@ mod tests {
             "begin real procedure pick; pick := -2.25; real x; x := entier((sign(pick()) + 2) mod 2); output(x) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier(((2 * sign(pick()) + 2) mod 3) ^ 2); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((((6 * sign(pick())) + 6) mod 4) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((((6 * sign(pick())) + 6) mod 3) / 7); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick()) * 2 mod 5) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick()) * 2 div 3) mod 5); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
@@ -16639,10 +16661,21 @@ mod tests {
             "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) mod 0); output(result) end",
             "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := entier(pick()); result := entier(sign(pick()) mod divisor); output(result) end",
         ] {
-            let err = compile_source(source, "test").expect_err(
-                "a zero or dynamic modulo divisor must remain outside the composed proof",
-            );
+            let err = compile_source(source, "test")
+                .expect_err("a zero or dynamic modulo divisor must remain outside the composed proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_wide_integer_reductions_reject_overflow_and_early_real_division() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick()) * 1024 mod 5) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick()) * 2 / 2) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "i64 overflow and real division before integer reduction must fail closed",
+            );
         }
     }
 

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:d629e9fd9c03dea8",
+  "lessonIds": [
+    "ZH-C100-yinhang",
+    "ZH-C100-chaoshi",
+    "ZH-C100-gongyuan",
+    "ZH-C100-tushuguan",
+    "ZH-C100-youju"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch100.txt",
+  "json": "chinese/narration/ch100.json",
+  "textHash": "fnv1a64:333511ec351a94ea",
+  "jsonHash": "fnv1a64:1d1ea264ed8b29de",
+  "findings": []
+}

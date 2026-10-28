@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C472-zairyou",
+    "language": "japanese",
+    "chapter": 472,
+    "sequence": 27370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25c16dc9f88dc4bf"
+  },
+  "findings": []
+}

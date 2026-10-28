@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C108-daxiao",
+  "pathSegment": "ZH-PATH-108-SHOP108",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-108-SHOP108",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C140-suan",
+    "language": "chinese",
+    "chapter": 140,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b615f120c26792fe"
+  },
+  "findings": []
+}

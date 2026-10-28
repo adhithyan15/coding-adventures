@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-343-SHINYOU343",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-343-SHINYOU343"
+  ],
+  "after": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:f5e02140f68a5c55",
+  "lessonIds": [
+    "ZH-C231-zhongyi",
+    "ZH-W231-yi-medicine",
+    "ZH-C231-xiyi",
+    "ZH-W231-xi-west",
+    "ZH-C231-guahao",
+    "ZH-C231-hushi",
+    "ZH-C231-kaiyao"
+  ],
+  "tex": "chinese/book/chapters/ch231-seeing-a-doctor.tex"
+}

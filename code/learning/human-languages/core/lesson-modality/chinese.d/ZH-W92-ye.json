@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W92-ye",
+    "language": "chinese",
+    "chapter": 92,
+    "sequence": 7480,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:59da42ceaa32356c",
+    "detachableSegments": [
+      "Script — the right half of 他"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

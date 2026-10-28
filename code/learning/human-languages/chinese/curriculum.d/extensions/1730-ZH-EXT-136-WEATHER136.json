@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-136-WEATHER136",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give the weather as a reason: sunny, overcast, windy, thundery or cool.",
+  "prerequisites": []
+}

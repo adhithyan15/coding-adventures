@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C251-zuowen",
+    "language": "chinese",
+    "chapter": 251,
+    "sequence": 19160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41c6f691b2834fc1"
+  },
+  "findings": []
+}

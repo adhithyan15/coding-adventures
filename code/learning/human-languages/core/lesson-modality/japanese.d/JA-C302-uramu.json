@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C302-uramu",
+    "language": "japanese",
+    "chapter": 302,
+    "sequence": 18090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d95a6a191fdb61c"
+  },
+  "findings": []
+}

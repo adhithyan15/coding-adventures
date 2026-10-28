@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C197-luxian",
+    "language": "chinese",
+    "chapter": 197,
+    "sequence": 15500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06e9ffc1b0ea89aa"
+  },
+  "findings": []
+}

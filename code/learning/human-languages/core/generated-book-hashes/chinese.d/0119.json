@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:4d78d58e212c14db",
+  "lessonIds": [
+    "ZH-C119-shubao",
+    "ZH-W119-bao-wrap",
+    "ZH-C119-xiangzi",
+    "ZH-C119-hezi",
+    "ZH-C119-daizi",
+    "ZH-C119-xingli"
+  ],
+  "tex": "chinese/book/chapters/ch119-bags-and-boxes.tex"
+}

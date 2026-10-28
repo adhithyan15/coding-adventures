@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C190-shudian",
+    "language": "chinese",
+    "chapter": 190,
+    "sequence": 15100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fadc4cf0f76029e9"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:1df5758f2f652807",
+  "lessonIds": [
+    "JA-C459-daigaku",
+    "JA-C459-ryuugaku-suru",
+    "JA-C459-kenkyuu-suru",
+    "JA-C459-senmon",
+    "JA-C459-shinro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch459.txt",
+  "json": "japanese/narration/ch459.json",
+  "textHash": "fnv1a64:55a85d47b4be0a17",
+  "jsonHash": "fnv1a64:f7ef15340e976d8a",
+  "findings": []
+}

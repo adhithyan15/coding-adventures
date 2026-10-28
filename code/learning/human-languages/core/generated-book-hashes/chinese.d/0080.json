@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:ecf7b83211d42d01",
+  "lessonIds": [
+    "ZH-C80-shangban",
+    "ZH-C80-gongren",
+    "ZH-C80-siji",
+    "ZH-C80-yisheng",
+    "ZH-C80-gongsi"
+  ],
+  "tex": "chinese/book/chapters/ch80-jobs.tex"
+}

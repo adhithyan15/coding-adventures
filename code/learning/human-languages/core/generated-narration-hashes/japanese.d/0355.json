@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:7ed896bde8e8bd52",
+  "lessonIds": [
+    "JA-C355-tabun",
+    "JA-C355-kitto",
+    "JA-C355-osoraku",
+    "JA-C355-kanousei",
+    "JA-C355-hazureru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch355.txt",
+  "json": "japanese/narration/ch355.json",
+  "textHash": "fnv1a64:bcd40165250ebde7",
+  "jsonHash": "fnv1a64:ac58651bacb4969f",
+  "findings": []
+}

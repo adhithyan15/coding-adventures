@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C287-seichou-suru",
+    "language": "japanese",
+    "chapter": 287,
+    "sequence": 17330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ec5c40ee7cb738e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C234-duoyu",
+  "pathSegment": "ZH-PATH-234-RAIN234",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-234-RAIN234",
+      "order": 4
+    }
+  ]
+}

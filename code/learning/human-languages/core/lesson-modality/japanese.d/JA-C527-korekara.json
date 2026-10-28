@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C527-korekara",
+    "language": "japanese",
+    "chapter": 527,
+    "sequence": 30450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84e6b40fed9ced6a"
+  },
+  "findings": []
+}

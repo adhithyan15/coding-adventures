@@ -1,0 +1,11 @@
+{
+  "id": "JA-C487-juugyouin",
+  "pathSegment": "JA-PATH-487-SHOP487",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-487-SHOP487",
+      "order": 4
+    }
+  ]
+}

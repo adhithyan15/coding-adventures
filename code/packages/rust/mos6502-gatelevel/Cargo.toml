@@ -9,3 +9,7 @@ license = "MIT"
 logic-gates = { path = "../logic-gates" }
 arithmetic = { path = "../arithmetic" }
 mos6502-simulator = { path = "../mos6502-simulator" }
+
+[dev-dependencies]
+quote = "1"
+syn = { version = "2", features = ["full"] }

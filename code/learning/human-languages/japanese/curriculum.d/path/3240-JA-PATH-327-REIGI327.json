@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-327-REIGI327",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-327-REIGI327"
+  ],
+  "after": []
+}

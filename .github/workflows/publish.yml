@@ -7,6 +7,20 @@
 #
 # Tag format: <language>/<package-name>/v<version>
 #
+# Other products release from this repository under their own tags
+# (task-app-v*, engram-v*, ...). Those are not ours: parse-tag only
+# runs for python/ and ruby/ tags, and every downstream job needs it,
+# so a foreign release skips this workflow instead of failing it.
+#
+# The tag is attacker-shaped text. Git ref names may contain `$`,
+# `(`, `)`, `;`, `|` and `${IFS}`, and anyone who can push a tag can
+# publish a release. So the tag never appears inside a `run:` script:
+# it reaches the shell only as an environment variable, and it is
+# checked against a strict pattern before anything is written to
+# $GITHUB_OUTPUT, because those outputs flow into later jobs (one of
+# which holds RUBYGEMS_API_KEY). Downstream jobs read pkg_dir through
+# env: as well.
+#
 # Examples:
 #   python/coding-adventures-arithmetic/v0.1.0
 #   ruby/coding_adventures_clock/v0.1.0
@@ -42,6 +56,9 @@ permissions:
 jobs:
   # ── Parse the release tag ─────────────────────────────────────
   parse-tag:
+    if: >-
+      startsWith(github.event.release.tag_name, 'python/') ||
+      startsWith(github.event.release.tag_name, 'ruby/')
     runs-on: ubuntu-latest
     outputs:
       language: ${{ steps.parse.outputs.language }}
@@ -51,14 +68,45 @@ jobs:
       has_native: ${{ steps.parse.outputs.has_native }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # History (without file contents) for the main-ancestry check.
+          fetch-depth: 0
+          filter: blob:none
+
+      # A release can be published for a tag on any commit, including one
+      # that never merged. Every publish job below checks out and builds
+      # that commit, and building a gem runs its gemspec (Ruby) before the
+      # job that holds RUBYGEMS_API_KEY pushes it. So only commits already
+      # on main are published.
+      - name: Require the tagged commit to be on main
+        run: |
+          # Fully qualified: a bare `main` would prefer a tag named main over
+          # the branch (git resolves refs/tags/ before refs/heads/), and
+          # anyone who can push tags could point that tag at their commit.
+          git fetch --no-tags --filter=blob:none origin +refs/heads/main:refs/remotes/origin/main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" refs/remotes/origin/main; then
+            echo "::error::The release tag's commit ($GITHUB_SHA) is not on main; refusing to publish."
+            exit 1
+          fi
 
       - name: Parse release tag
         id: parse
+        env:
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          TAG="${{ github.event.release.tag_name }}"
+          # Expected format: language/package-name/vX.Y.Z, optionally with a
+          # pre-release or post-release suffix in semver (v1.2.3-rc.1), PEP 440
+          # (v1.2.3rc1, v1.2.3.post1) or RubyGems (v1.2.3.pre) style. The
+          # package name is letters, digits, `-` and `_` only, so no `/`, `.`
+          # or shell metacharacter can reach PKG_DIR or any output.
+          TAG_PATTERN='^(python|ruby)/[A-Za-z0-9_-]+/v[0-9]+\.[0-9]+\.[0-9]+([.-]?[0-9A-Za-z]+)*$'
+          if ! [[ "$TAG" =~ $TAG_PATTERN ]]; then
+            echo "::error::Release tag is not <python|ruby>/<package>/v<semver>; refusing to publish."
+            exit 1
+          fi
 
-          # Expected format: language/package-name/vX.Y.Z
           LANGUAGE=$(echo "$TAG" | cut -d'/' -f1)
           PACKAGE=$(echo "$TAG" | cut -d'/' -f2)
           VERSION=$(echo "$TAG" | cut -d'/' -f3 | sed 's/^v//')
@@ -85,8 +133,22 @@ jobs:
             exit 1
           fi
 
+          if [ -z "$DIR_NAME" ]; then
+            echo "::error::The tag names no package after the language prefix."
+            exit 1
+          fi
           if [ ! -d "$PKG_DIR" ]; then
             echo "::error::Package directory not found: $PKG_DIR"
+            exit 1
+          fi
+          # A directory alone is not a package: require the build file the
+          # publish job will use.
+          if [ "$LANGUAGE" = "python" ] && [ ! -f "$PKG_DIR/pyproject.toml" ]; then
+            echo "::error::$PKG_DIR has no pyproject.toml"
+            exit 1
+          fi
+          if [ "$LANGUAGE" = "ruby" ] && ! compgen -G "$PKG_DIR/*.gemspec" > /dev/null; then
+            echo "::error::$PKG_DIR has no .gemspec"
             exit 1
           fi
 
@@ -115,10 +177,12 @@ jobs:
       id-token: write  # OIDC for Trusted Publishers
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
         with:
           python-version: '3.13'
 
@@ -126,10 +190,12 @@ jobs:
         run: pip install build
 
       - name: Build sdist and wheel
-        run: python -m build "${{ needs.parse-tag.outputs.pkg_dir }}"
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+        run: python -m build "$PKG_DIR"
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
         with:
           packages-dir: "${{ needs.parse-tag.outputs.pkg_dir }}/dist/"
 
@@ -162,7 +228,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Build wheels with maturin
         uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
@@ -171,7 +239,7 @@ jobs:
           working-directory: ${{ needs.parse-tag.outputs.pkg_dir }}
 
       - name: Upload wheel artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: wheels-${{ matrix.os }}-${{ matrix.target }}
           path: ${{ needs.parse-tag.outputs.pkg_dir }}/dist/*.whl
@@ -186,7 +254,9 @@ jobs:
       id-token: write  # OIDC for Trusted Publishers
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Build sdist (source distribution)
         uses: PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b # v1.51.0
@@ -196,18 +266,20 @@ jobs:
           working-directory: ${{ needs.parse-tag.outputs.pkg_dir }}
 
       - name: Download all wheel artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           pattern: wheels-*
           path: dist/
           merge-multiple: true
 
       - name: Copy sdist to dist
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
         run: |
-          cp "${{ needs.parse-tag.outputs.pkg_dir }}/dist/"*.tar.gz dist/ 2>/dev/null || true
+          cp "$PKG_DIR/dist/"*.tar.gz dist/ 2>/dev/null || true
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
         with:
           packages-dir: dist/
 
@@ -216,27 +288,34 @@ jobs:
     needs: parse-tag
     if: needs.parse-tag.outputs.language == 'ruby'
     runs-on: ubuntu-latest
+    # Give this environment required reviewers and a `ruby/*` deployment tag
+    # rule, and move RUBYGEMS_API_KEY into it (or switch to RubyGems trusted
+    # publishing), so the key is only released to an approved run.
+    environment: rubygems
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           ruby-version: '3.4'
 
       - name: Build gem
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
         run: |
-          cd "${{ needs.parse-tag.outputs.pkg_dir }}"
+          cd "$PKG_DIR"
           gem build *.gemspec
 
       - name: Publish to RubyGems
+        env:
+          PKG_DIR: ${{ needs.parse-tag.outputs.pkg_dir }}
+          # gem push reads the key from the environment, so it is never
+          # written to disk or spliced into the script text.
+          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
         run: |
-          cd "${{ needs.parse-tag.outputs.pkg_dir }}"
-          mkdir -p ~/.gem
-          cat > ~/.gem/credentials <<EOF
-          ---
-          :rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
-          EOF
-          chmod 0600 ~/.gem/credentials
+          cd "$PKG_DIR"
           gem push *.gem

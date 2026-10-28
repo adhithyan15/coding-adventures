@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C62-yuan",
+  "pathSegment": "ZH-PATH-62-FAST62",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-62-FAST62",
+      "order": 3
+    }
+  ]
+}

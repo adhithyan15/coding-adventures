@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W248-gao-tall",
+    "language": "chinese",
+    "chapter": 248,
+    "sequence": 19035,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1446eaf5c0c11523",
+    "detachableSegments": [
+      "Script — a lid, 口, then a frame around a small 口"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

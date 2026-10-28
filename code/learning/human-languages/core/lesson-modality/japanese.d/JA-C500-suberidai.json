@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C500-suberidai",
+    "language": "japanese",
+    "chapter": 500,
+    "sequence": 29070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01d8f39c120b2d21"
+  },
+  "findings": []
+}

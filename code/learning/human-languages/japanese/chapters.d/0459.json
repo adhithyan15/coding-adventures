@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Studying Further",
+  "label": "ch:ja-studying-further",
+  "canDo": "I can talk about university and research.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C459-shinro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can talk about university and research.",
+    "assesses": [
+      "JA-LEX-C459-STUDY459-03",
+      "JA-LEX-C459-STUDY459-04",
+      "JA-LEX-C459-STUDY459-05"
+    ]
+  }
+}

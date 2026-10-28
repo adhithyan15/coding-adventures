@@ -129,12 +129,26 @@ header from that file and `releases.csv`, and rewrites mechanical copies;
 `check` fails if anything is stale or if a `copy:` row's blobs differ from its
 source's. Reviewed pairs are hand-written below their header.
 
-What R0 lexes, what it leaves to later slices (R1 strings, R3 percent
+What R0 lexes, what it leaves to later slices (R1a strings, R3 percent
 literals, R4 regexps, R5 heredocs, R6 local-variable-sensitive forms), and
 each known divergence from the release's own lexer is listed at the top of
-every `.tokens` file and pinned by tests in `code/packages/rust/ruby-parser`
-(`tests/r0_differential.rs`, `tests/r0_releases.rs`,
-`tests/release_probes.rs`).
+every `.tokens` file. Each is pinned by tests in `code/packages/rust/ruby-parser`:
+`tests/r0_differential.rs`, `tests/r0_releases.rs` and
+`tests/release_probes.rs`.
+
+**Slice R1b (2026-10-25)** adds `=begin`/`=end` embedded documents and the
+`__END__` line to the 3.3.x pairs. Both are `@line_start` skip patterns
+(LANG84 E1) that follow parse.y's word and whole-line rules, and an
+unterminated `=begin` is refused.
+
+A skipped line is safe only where Ruby is not inside a multi-line literal,
+so the pairs now refuse every regexp, `%`-literal or heredoc opener Ruby
+might read. That includes inside a `def` head, which three new flat modes
+track. As a result `x/2` and `a%b` without spaces are refused. The argument
+is in LANG84's R1b plan, and the tests are in `tests/r1b_line_start.rs`.
+
+0.49 and 0.50 have no embedded documents, and their `__END__` keyword has
+been lexed since R0.
 
 ## IIR status (LANG84 phase 5a)
 
