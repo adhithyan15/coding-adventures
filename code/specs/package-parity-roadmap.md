@@ -18856,3 +18856,21 @@ Arc2D closures (29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples), all
 27 Swift Bezier2D tests, and all 13 downstream Swift Arc2D tests. The normal
 merge may now be published; its new exact head still needs a full replacement
 hosted matrix.
+
+## October 28, 2026: Haskell reverse-closure linker repair
+
+Replacement head `d7277e638d7aea6a9a729708f6e9c43ef810385f` passed
+Ubuntu and Windows but failed hosted macOS in build run 40678136914. The direct
+trig BUILD now selects the correct CommandLineTools linker, but the build plan
+also launches independent point2d, wave, and Bezier2D BUILD processes for the
+reverse dependency closure. Point2D and wave failed with the same
+`arm64e.x1-macos` TAPI error; Bezier2D was dependency-skipped and would inherit
+the same mismatched linker next.
+
+Log `haskell-bezier-reverse-closure-macos-clt-linker-selection` and prioritize
+it immediately as the exact blocker on the already-published two-language PR.
+Apply the reviewed Darwin-only Cabal wrapper to the three independent BUILD
+fronts. Keep package sources, Linux, Windows, unrelated Haskell packages, and
+the separate fleet-wide cleanup out of scope. Validate all three fronts plus
+the downstream Arc2D closure locally, then require a completely fresh hosted
+matrix before guarded auto-merge.

@@ -19,13 +19,14 @@
   "active_pr": 18511,
   "active_prs": [
     18511,
-    18516
+    18516,
+    18517
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T11:08:57Z",
-    "pr_number": 18508,
-    "head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
-    "action": "Verified scripting Bezier PR #18508 completed every exact-head check acceptably and merged through guarded squash auto-merge as fe057f18c6e8b62cae9921fee2538c091fae1bbb. The receipt is current origin/main and the clean completed worktree and local branch were removed. Normal current-main reconciliation is now required for the two remaining published parity PRs, including a fresh hosted matrix for the repaired Haskell linker head.",
+    "observed_at": "2026-10-28T11:47:55Z",
+    "pr_number": 18511,
+    "head_revision": "d7277e638d7aea6a9a729708f6e9c43ef810385f",
+    "action": "The replacement exact head passed Ubuntu and Windows but failed hosted macOS in the reverse dependency closure. The trig BUILD fix worked only for the direct package; separate point2d, wave, and Bezier2D BUILD processes inherited the same mismatched linker and rejected the CommandLineTools SDK arm64e.x1 stubs. Logged and immediately selected the bounded closure repair; guarded auto-merge remains disabled.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -20917,6 +20918,24 @@
       "validation_revision": "77107207763aec5fc8302eb8b55c9abb13dd2deb",
       "selection_notes": "Fresh exact-head CI triage reprioritized this bounded repair ahead of every independent backlog item because it is the direct blocker for an already-published two-language parity tranche, requires no new API or product scope, and has no open-PR overlap. The hosted macOS failure occurs while linking the first Haskell dependency, before Bezier2D tests, and exactly matches the repository's reviewed Haskell Starlark repair and linker lesson. Keep the fix to Darwin-only DEVELOPER_DIR selection inside the trig BUILD front; leave Linux, Windows, package source, and all other backlog owners unchanged.",
       "notes": "Hosted macOS job 122763808355 in run 40668092481 uses GHC 9.4.8, whose bindist hardcodes the CommandLineTools SDK. Cabal inherited the Xcode linker and rejected arm64e.x1 TAPI stubs before trig dependencies could build. The repair scopes DEVELOPER_DIR=/Library/Developer/CommandLineTools to Cabal and its children on Darwin, matching the already-merged Haskell Starlark precedent. On local macOS, the native trig BUILD selects that route and passes all 19 examples; the Haskell Bezier2D BUILD then passes all 19 Trig, 27 Point2D, and 29 Bezier2D examples. A fresh exact-head hosted matrix remains mandatory before guarded auto-merge."
+    },
+    {
+      "id": "haskell-bezier-reverse-closure-macos-clt-linker-selection",
+      "title": "Select the matching CLT linker across the Haskell Bezier reverse closure",
+      "status": "in-progress",
+      "depends_on": [],
+      "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
+      "pr_number": 18511,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18511",
+      "discovered_at": "2026-10-28T11:47:55Z",
+      "discovered_revision": "d7277e638d7aea6a9a729708f6e9c43ef810385f",
+      "package_paths": [
+        "code/packages/haskell/point2d",
+        "code/packages/haskell/wave",
+        "code/packages/haskell/bezier2d"
+      ],
+      "selection_notes": "The fresh hosted failure invalidated the earlier direct-package assumption: changing trig selects its reverse dependencies, and every selected package launches an independent BUILD process. Reprioritize this closure repair ahead of all independent work because it is the exact blocker on an already-published two-language PR, Ubuntu and Windows are green, and the required Darwin-only Cabal wrapper is the same reviewed repository pattern. Keep scope to point2d, wave, and Bezier2D BUILD fronts; package sources, Linux, Windows, unrelated Haskell packages, and the separate fleet-wide cleanup remain unchanged.",
+      "notes": "Hosted macOS job 122783571620 in run 40678136914 failed haskell/point2d and haskell/wave with the same arm64e.x1 TAPI error after the direct trig BUILD fix. Bezier2D was dependency-skipped and would launch its own Cabal process next, so apply the matching CommandLineTools selection to all three independent BUILD fronts. Validate each native front plus the downstream Arc2D closure locally, then require a completely fresh exact-head hosted matrix."
     },
     {
       "id": "geometry-bezier2d-flattening-typescript-elixir-lua",
