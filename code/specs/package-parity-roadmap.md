@@ -19526,3 +19526,33 @@ stable all-or-error output and process-free authority. Keep lifecycle edits
 and the program implementation on the dedicated current-main worktree, require
 native validation plus independent exact-head security review before
 publication, and do not claim execution-adapter or host authority readiness.
+
+#### Elixir graph/diff local implementation and review
+
+Exact current-main head `cd136e09fd595c9bdf0705252ae13ed5102a0a4b`
+adds the typed, process-free `BuildTool.GraphDiff` core and dynamically consumes
+the exact eight graph and twelve diff-selection fixtures. The core returns
+canonical levels and sorted closures, verifies the domain-separated repository
+boundary digest, recognizes only exact BUILD fronts, and completes the
+50,000,000-unit Unicode-scalar match-work preflight before matching or
+unknown-path policy. It accepts only caller-materialized values and gains no
+checkout, Git, filesystem, process, environment, network, clock, randomness,
+credential, or execution authority.
+
+Independent security review first rejected an unbounded decoded boundary DAG
+canonicalization path and a lexical-adjacency package-root overlap check. The
+repaired exact head validates object graphs before canonicalization under
+depth, queued-value, nonempty-container, and aggregate UTF-8 ceilings; rejects
+shared containers and non-JSON terms; preserves malformed-digest precedence;
+and uses a folded segment trie to reject ancestor and Unicode-fold collisions.
+Hostile alias, depth, non-JSON, string-byte, node, container, punctuation, and
+case-fold probes pass, and exact-head re-review issued SHIP with no findings.
+
+The final BUILD runs 282 tests with two established skips. Warnings-as-errors
+compilation, focused formatting, changelog validation, diff hygiene, current-
+main ancestry, state-graph validation, and artifact cleanup pass. The new
+module measures 90.15% coverage. Package aggregate coverage is 70.02% because
+unrelated legacy Resolver and CLI modules retain pre-existing gaps; do not
+widen this bounded contract tranche into that separate debt. Publish only
+after one final exact-head lifecycle review, then require fresh hosted
+qualification before guarded auto-merge.
