@@ -19,7 +19,8 @@
   "active_pr": 18508,
   "active_prs": [
     18508,
-    18511
+    18511,
+    18516
   ],
   "last_ci_action": {
     "observed_at": "2026-10-28T09:52:15Z",
@@ -26155,12 +26156,16 @@
     {
       "id": "gfm-fenced-block-swift-contract-adoption",
       "title": "Adopt the source-preserving fenced-block contract in Swift",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [
         "gfm-language-neutral-conformance-fixture"
       ],
       "branch": "codex/parity-gfm-swift-fenced-block-20261025",
-      "pr_number": null,
+      "pr_number": 18516,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18516",
+      "pr_opened_at": "2026-10-28T10:30:33Z",
+      "publication_head": "af66b66094b0a62248189f542a5b8bedede9c18f",
+      "publication_notes": "Opened draft PR #18516 from clean, fresh-six-package-validated head af66b66094b0a62248189f542a5b8bedede9c18f after confirming the 17-path diff, strict JSON state, and zero live-PR overlap across all three directly changed package roots. The lifecycle-only follow-up will be pushed normally before readiness; guarded auto-merge remains disabled until every exact-head hosted check is terminal and acceptable.",
       "delivery_class": "portable-lane-reconciliation",
       "selection_blocked": false,
       "registered_at": "2026-10-24T19:17:58Z",
