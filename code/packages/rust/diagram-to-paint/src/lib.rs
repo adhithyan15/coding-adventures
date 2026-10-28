@@ -7315,8 +7315,14 @@ where
 
     // ── Relationships (drawn behind nodes) ───────────────────────────────────
     for rel in &diagram.relationships {
-        let mut relationship_path = line_path(&rel.points, "#6b7280", 1.5);
-        if rel.kind == RelKind::Dependency {
+        let mut relationship_path = line_path(
+            &rel.points,
+            &rel.style.stroke,
+            rel.style.stroke_width,
+        );
+        if let Some(stroke_dash) = &rel.style.stroke_dash {
+            relationship_path.stroke_dash = Some(stroke_dash.clone());
+        } else if rel.kind == RelKind::Dependency {
             relationship_path.stroke_dash = Some(vec![6.0, 4.0]);
         }
         instructions.push(PaintInstruction::Path(relationship_path));
@@ -7324,7 +7330,12 @@ where
             let tip = &rel.points[rel.points.len() - 1];
             let prev = &rel.points[rel.points.len() - 2];
             instructions.push(PaintInstruction::Path(structural_arrowhead(
-                prev, tip, &rel.kind,
+                prev,
+                tip,
+                &rel.kind,
+                &rel.style.fill,
+                &rel.style.stroke,
+                rel.style.stroke_width,
             )));
         }
         if rel.start_arrow && rel.points.len() >= 2 {
@@ -7332,6 +7343,9 @@ where
                 &rel.points[1],
                 &rel.points[0],
                 &rel.kind,
+                &rel.style.fill,
+                &rel.style.stroke,
+                rel.style.stroke_width,
             )));
         }
         if let Some((pos, lbl)) = rel.label.as_ref().filter(|(_, label)| !label.is_empty()) {
@@ -7355,12 +7369,7 @@ where
                 80.0,
                 ls * 1.2,
                 lf.clone(),
-                Color {
-                    r: 55,
-                    g: 65,
-                    b: 81,
-                    a: 255,
-                },
+                css_to_color(&rel.style.text_color),
             ));
         }
         if rel.points.len() >= 2 {
@@ -7593,7 +7602,14 @@ where
     }
 }
 
-fn structural_arrowhead(prev: &Point, tip: &Point, kind: &RelKind) -> PaintPath {
+fn structural_arrowhead(
+    prev: &Point,
+    tip: &Point,
+    kind: &RelKind,
+    fill: &str,
+    stroke: &str,
+    stroke_width: f64,
+) -> PaintPath {
     let dx = tip.x - prev.x;
     let dy = tip.y - prev.y;
     let len = (dx * dx + dy * dy).sqrt().max(1e-9);
@@ -7605,11 +7621,7 @@ fn structural_arrowhead(prev: &Point, tip: &Point, kind: &RelKind) -> PaintPath 
     let by = tip.y - uy * size;
     let px = -uy;
     let py = ux;
-    let (fill, open) = match kind {
-        RelKind::Inheritance | RelKind::Realization => ("#ffffff", true),
-        RelKind::Composition => ("#374151", false),
-        _ => ("#6b7280", false),
-    };
+    let open = matches!(kind, RelKind::Inheritance | RelKind::Realization);
     let commands = if open {
         vec![
             PathCommand::MoveTo { x: tip.x, y: tip.y },
@@ -7646,8 +7658,8 @@ fn structural_arrowhead(prev: &Point, tip: &Point, kind: &RelKind) -> PaintPath 
             Some(fill.into())
         },
         fill_rule: None,
-        stroke: Some("#374151".into()),
-        stroke_width: Some(1.5),
+        stroke: Some(stroke.into()),
+        stroke_width: Some(stroke_width),
         stroke_cap: None,
         stroke_join: None,
         stroke_dash: None,
@@ -10256,6 +10268,11 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: None,
+                style: ResolvedDiagramStyle {
+                    fill: "#6b7280".into(),
+                    stroke: "#6b7280".into(),
+                    ..edge_style()
+                },
             }],
         };
 
@@ -10309,6 +10326,11 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: Some((Point { x: 100.0, y: 40.0 }, String::new())),
+                style: ResolvedDiagramStyle {
+                    fill: "#6b7280".into(),
+                    stroke: "#6b7280".into(),
+                    ..edge_style()
+                },
             }],
         };
 

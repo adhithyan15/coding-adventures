@@ -2447,6 +2447,7 @@ pub struct StructuralRelationship {
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,
     pub label: Option<String>,
+    pub style: Option<DiagramStyle>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -2543,6 +2544,7 @@ pub struct LayoutedStructuralRelationship {
     pub from_mult: Option<String>,
     pub to_mult: Option<String>,
     pub label: Option<(Point, String)>,
+    pub style: ResolvedDiagramStyle,
 }
 
 #[derive(Clone, Debug, PartialEq)]
