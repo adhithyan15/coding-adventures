@@ -19251,3 +19251,14 @@ randomness. Keep that neutral reconciliation pending and require it before any
 whole-family DT20 conformance claim. It does not block the selected Swift lane,
 which explicitly pins zero-based optional rank/select, a real span-augmented
 tower, injected level generation, and finite resource ceilings.
+
+The bounded Swift implementation is committed at
+`e2cfdff742b28bde6dcce0b73b2e7130fcf42eb9`. Seven native tests pass exact
+scripted spans, update and source-call semantics, invalid-level atomicity,
+capacity, deletion and top-level collapse, nullable presence, comparator
+profiles, bounded ranges, and a 200-key rank/select reference trace. The
+release build and strict formatting pass; production coverage is 98.38% of
+lines, 95.45% of functions, and 93.75% of regions. The closed empty capability
+profile and authority scan pass. A bounded real build-tool plan detects one
+changed and affected package and selects exactly `swift/skip-list`. Keep the
+branch local pending exact-head review and Bloom/current-main reconciliation.
