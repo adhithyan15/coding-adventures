@@ -14074,10 +14074,17 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         .join("\n"),
                 );
             }
-            "DIRECTION" | "CONFIG_MACRO" => {
+            "DIRECTION" => {
                 cursor.advance();
                 if token_name(cursor.current()) == "LPAREN" {
                     parse_c4_arguments(&mut cursor)?;
+                }
+            }
+            "CONFIG_MACRO" => {
+                let macro_token = cursor.advance().clone();
+                let args = parse_c4_arguments(&mut cursor)?;
+                if macro_token.value == "UpdateElementStyle" {
+                    apply_c4_element_style(&args, &mut nodes, &node_indices);
                 }
             }
             "RBRACE" => {
@@ -14237,6 +14244,36 @@ fn parse_c4_argument_value(cursor: &mut TokenCursor) -> Result<String, ParseErro
         return Err(token_error(&token, "expected C4 argument value"));
     }
     Ok(cursor.advance().value.clone())
+}
+
+fn apply_c4_element_style(
+    args: &[String],
+    nodes: &mut [StructuralNode],
+    node_indices: &HashMap<String, usize>,
+) {
+    let Some(index) = args.first().and_then(|id| node_indices.get(id)).copied() else {
+        return;
+    };
+    let mut style = nodes[index].style.clone().unwrap_or_default();
+    for (position, argument) in args.iter().skip(1).enumerate() {
+        let (key, value) = argument
+            .split_once('=')
+            .map_or_else(|| (None, argument.as_str()), |(key, value)| (Some(key), value));
+        let color = sanitize_railroad_color(Some(value), "");
+        if color.is_empty() {
+            continue;
+        }
+        match key {
+            Some("$bgColor") => style.fill = Some(color),
+            Some("$fontColor") => style.text_color = Some(color),
+            Some("$borderColor") => style.stroke = Some(color),
+            None if position == 0 => style.fill = Some(color),
+            None if position == 1 => style.text_color = Some(color),
+            None if position == 2 => style.stroke = Some(color),
+            _ => {}
+        }
+    }
+    nodes[index].style = Some(style);
 }
 
 fn upsert_c4_node(

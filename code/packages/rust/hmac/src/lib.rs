@@ -56,7 +56,7 @@
 use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_md5::sum_md5;
 use coding_adventures_sha1::sum1;
-use coding_adventures_sha256::sha256;
+use coding_adventures_sha256::{Sha256Error, Sha256Hasher};
 use coding_adventures_sha512::sum512;
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 
@@ -70,6 +70,7 @@ use coding_adventures_zeroize::{Zeroize, Zeroizing};
 // keys are as different as possible even though both are derived from K'.
 const IPAD: u8 = 0x36;
 const OPAD: u8 = 0x5C;
+const SHA256_BLOCK_LENGTH: usize = 64;
 
 // ─── Generic HMAC ─────────────────────────────────────────────────────────────
 
@@ -136,17 +137,27 @@ pub enum HmacError {
     /// The key was empty. HMAC requires a non-empty key; an empty key almost
     /// always indicates a misconfiguration (e.g. an unset environment variable).
     EmptyKey,
+    /// The complete HMAC-SHA256 input would exceed FIPS 180-4's 64-bit
+    /// encoded message-length field.
+    InputTooLong,
 }
 
 impl std::fmt::Display for HmacError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             HmacError::EmptyKey => write!(f, "HMAC key must not be empty"),
+            HmacError::InputTooLong => write!(f, "HMAC input is too long"),
         }
     }
 }
 
 impl std::error::Error for HmacError {}
+
+impl From<Sha256Error> for HmacError {
+    fn from(_: Sha256Error) -> Self {
+        Self::InputTooLong
+    }
+}
 
 /// HMAC-MD5: 16-byte authentication tag.
 ///
@@ -191,23 +202,53 @@ pub fn hmac_sha1(key: &[u8], message: &[u8]) -> Result<[u8; 20], HmacError> {
     Ok(tag)
 }
 
-/// HMAC-SHA256: 32-byte authentication tag.
+/// Fixed-memory HMAC-SHA256: 32-byte authentication tag.
 ///
 /// The modern default for TLS 1.3, JWT HS256, AWS Signature V4.
 ///
+/// This implementation does not route through generic [`hmac`]. It uses two
+/// fixed-memory [`Sha256Hasher`] passes and stack-resident key material, so the
+/// HMAC core performs no heap allocation. Normalized key bytes, keyed pads,
+/// the inner digest, and both hash states are wiped at their ownership
+/// boundaries. The returned tag belongs to the caller.
+///
 /// # Errors
-/// Returns [`HmacError::EmptyKey`] if `key` is empty.
+///
+/// Returns [`HmacError::EmptyKey`] if `key` is empty or
+/// [`HmacError::InputTooLong`] if key normalization or either SHA-256 pass
+/// would exceed the standard's encoded message-length bound.
 pub fn hmac_sha256(key: &[u8], message: &[u8]) -> Result<[u8; 32], HmacError> {
     if key.is_empty() {
         return Err(HmacError::EmptyKey);
     }
-    let mut result = hmac(|d| sha256(d).to_vec(), 64, key, message);
-    // SAFETY: sha256 always returns exactly 32 bytes, so try_into cannot fail.
-    let tag: [u8; 32] = result[..]
-        .try_into()
-        .expect("hmac_sha256: internal invariant — sha256 output is always 32 bytes");
-    result.zeroize();
-    Ok(tag)
+
+    let mut key_block = Zeroizing::new([0u8; SHA256_BLOCK_LENGTH]);
+    if key.len() > SHA256_BLOCK_LENGTH {
+        let mut key_hasher = Sha256Hasher::new();
+        key_hasher.try_update(key)?;
+        let key_digest = Zeroizing::new(key_hasher.digest());
+        key_block[..key_digest.len()].copy_from_slice(&key_digest[..]);
+    } else {
+        key_block[..key.len()].copy_from_slice(key);
+    }
+
+    for byte in key_block.iter_mut() {
+        *byte ^= IPAD;
+    }
+    let mut inner_hasher = Sha256Hasher::new();
+    inner_hasher.try_update(&key_block[..])?;
+    inner_hasher.try_update(message)?;
+    let inner_digest = Zeroizing::new(inner_hasher.digest());
+
+    // Transform K' XOR ipad into K' XOR opad in place, avoiding a second
+    // keyed pad and preserving one fixed 64-byte storage owner.
+    for byte in key_block.iter_mut() {
+        *byte ^= IPAD ^ OPAD;
+    }
+    let mut outer_hasher = Sha256Hasher::new();
+    outer_hasher.try_update(&key_block[..])?;
+    outer_hasher.try_update(&inner_digest[..])?;
+    Ok(outer_hasher.digest())
 }
 
 /// HMAC-SHA512: 64-byte authentication tag.
@@ -372,6 +413,36 @@ mod tests {
         assert_eq!(
             hmac_sha256_hex(&key, data),
             "9b09ffa71b942fcb27635fbcd5b0e944bfdc63644f0713938a7f51535c3a35e2"
+        );
+    }
+
+    #[test]
+    fn fixed_memory_sha256_matches_generic_reference_across_boundaries() {
+        for key_length in [1, 32, 63, 64, 65, 128, 129] {
+            let key = vec![0xA5; key_length];
+            for message_length in [0, 1, 55, 56, 63, 64, 65, 127, 128, 129] {
+                let message = vec![0x5A; message_length];
+                let fixed = hmac_sha256(&key, &message).unwrap();
+                let reference = hmac(
+                    |data| coding_adventures_sha256::sha256(data).to_vec(),
+                    64,
+                    &key,
+                    &message,
+                );
+                assert_eq!(fixed.as_slice(), reference.as_slice());
+            }
+        }
+    }
+
+    #[test]
+    fn hmac_error_categories_are_payload_free() {
+        assert_eq!(
+            HmacError::EmptyKey.to_string(),
+            "HMAC key must not be empty"
+        );
+        assert_eq!(
+            HmacError::InputTooLong.to_string(),
+            "HMAC input is too long"
         );
     }
 

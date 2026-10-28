@@ -111,6 +111,18 @@ external executable comparison dependency without changing its public API.
 This comparison boundary does not make generic HMAC fixed-memory, add
 HMAC-SHA-384, select hashes for TLS, or implement HKDF or a TLS key schedule.
 
+`hmac_sha256` is the fixed-output exception to the generic allocation model.
+It normalizes the key into one stack-resident 64-byte block, transforms that
+block from the inner pad to the outer pad in place, and feeds both passes into
+the fixed-memory repository SHA-256 hasher. Normalized key bytes, keyed pads,
+the inner digest, and both hash states are wiped at their ownership boundaries.
+The HMAC core performs no heap allocation; only the returned 32-byte tag remains
+caller-owned. Checked SHA-256 length failures are payload-free.
+
+This fixed-output HMAC-SHA-256 boundary does not add HMAC-SHA-384, audit or
+replace generic HMAC, select a TLS cipher suite, implement HKDF or a TLS key
+schedule, process certificates, perform I/O, or provide concrete HTTPS.
+
 ## Memory hygiene
 
 Every key-derived intermediate inside `hmac()` is wipe-on-drop, and that is a
@@ -125,9 +137,10 @@ Two details are easy to get wrong and are therefore worth naming:
   place. Building the padded key and then growing the buffer with the message
   reallocates, and a reallocation abandons the old buffer *un-wiped*. Wrapping
   the final buffer in `Zeroizing` would wipe the wrong copy.
-- The named `hmac_*` variants **wipe the heap tag** before returning their
+- The heap-backed named variants **wipe the heap tag** before returning their
   fixed-size array, because `try_into` frees that buffer with a live
-  authentication tag still in it.
+  authentication tag still in it. `hmac_sha256` takes the fixed-memory path
+  documented above and creates no heap tag.
 
 The returned array or `Vec` is the function's output and belongs to the caller,
 who is responsible for wiping it if it is secret. A TOTP tag is: the code is
