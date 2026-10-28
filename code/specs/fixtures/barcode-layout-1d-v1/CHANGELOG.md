@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Repoint the unchanged Haskell package-tree evidence to PR #18527's reachable
+  squash-merge revision so fresh clones can verify ancestry after publication.
 - Re-verify the Haskell lane at the durable Windows-front implementation and
   repoint its package-tree evidence after `BUILD_windows` changed outside the
   dependency-lockfile exception.
