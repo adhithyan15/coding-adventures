@@ -4,12 +4,12 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-const LIB_LOCK: u64 = 0x527e_0048_c4bf_262b;
-const ENGINE_LOCK: u64 = 0x5611_2a13_2c0b_238d;
+const LIB_LOCK: u64 = 0x1f6b_b5a1_17cf_64ec;
+const ENGINE_LOCK: u64 = 0x8314_ccdc_a068_c535;
 const GATES_LOCK: u64 = 0x6b10_8fb1_b7a0_9416;
-const ALLOCATION_LOCK: u64 = 0x3f36_1e28_b86a_11b3;
-const SYSTEM360_LIB_LOCK: u64 = 0xcce4_d4a8_a5ef_75ab;
-const SYSTEM360_EXECUTOR_LOCK: u64 = 0xab0a_5f9e_c7cb_57f7;
+const ALLOCATION_LOCK: u64 = 0xae2a_d6b9_ccb8_7638;
+const SYSTEM360_LIB_LOCK: u64 = 0x9b0e_87fa_4661_de30;
+const SYSTEM360_EXECUTOR_LOCK: u64 = 0x100b_3b6c_09f4_e64f;
 const SYSTEM360_GATES_LOCK: u64 = 0x40ac_678d_18ec_7f7e;
 const SYSTEM360_HFP_LOCK: u64 = 0xd47e_243c_d4f6_e080;
 const SYSTEM360_STATE_LOCK: u64 = 0x3818_2c9d_9d0b_a82f;
@@ -221,7 +221,7 @@ fn every_complete_compiler_valid_hostile_crate_is_rejected() {
         ("src/lib.rs", "\nfn direct_q_read(cpu: &System370GateLevel) -> (u32, u8) { (cpu.core.gpr_q(0), cpu.core.memory_q(0)) }\n"),
         ("src/lib.rs", "\nfn post_commit_overwrite(cpu: &mut System370GateLevel) { let _ = cpu.set_program_counter(0); }\n"),
         ("src/lib.rs", "\nfn post_trace_overwrite(trace: &mut StepTrace) { trace.pc_after = 0; }\n"),
-        ("src/lib.rs", "\nfn host_authored_final_state(cpu: &System370GateLevel) -> System370State { cpu.get_state() }\n"),
+        ("src/lib.rs", "\nfn host_authored_final_state(cpu: &System370GateLevel) -> System370State { cpu.get_state().unwrap() }\n"),
         ("src/lib.rs", "\nuse engine as routed_engine;\n"),
         ("src/lib.rs", "\nmacro_rules! discarded_route { () => { mod fake_engine; } }\n"),
         ("src/lib.rs", "\nfn oracle_authored_transition() -> System370State { System370Simulator::new().get_state() }\n"),
@@ -236,7 +236,7 @@ fn every_complete_compiler_valid_hostile_crate_is_rejected() {
         ("src/gates.rs", "\nconst EXPECTATION_SHADOW: [u8; 5] = [1, 0, 0, 0, 0];\n"),
         ("src/allocation.rs", "\nfn bypass_allocation_preflight() -> bool { true }\n"),
         ("system360/src/lib.rs", "\nstruct PackedHostMirror(System360State);\n"),
-        ("system360/src/executor.rs", "\nfn duplicate_inherited_executor(before: &System360State, trace: &StepTrace) -> Result<System360State, System360Error> { let authority = DecodeAuthority::new(trace.raw[0])?; execute(before, trace, &authority) }\n"),
+        ("system360/src/executor.rs", "\nfn duplicate_inherited_executor(before: &System360State, trace: &StepTrace) -> Result<System360State, System360Error> { let authority = DecodeAuthority::new(trace.raw[0])?; execute(before, before.clone(), trace, &authority) }\n"),
     ];
     for (file, mutation) in mutations {
         let hostile = TempCrate::new();
@@ -261,7 +261,7 @@ fn every_complete_compiler_valid_hostile_crate_is_rejected() {
         ),
         (
             "system360/src/lib.rs",
-            "let gate_next = executor::execute(&before, &trace, &authority)?;",
+            "let gate_next = executor::execute(&before, candidate, &trace, &authority)?;",
             "let gate_next = oracle_next.clone();",
         ),
         (

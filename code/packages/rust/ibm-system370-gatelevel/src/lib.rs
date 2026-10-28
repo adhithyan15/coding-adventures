@@ -27,23 +27,9 @@ pub struct System370GateLevel {
     core: System360GateLevel,
 }
 
-impl Default for System370GateLevel {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl System370GateLevel {
-    /// Construct deterministic reset state.
-    #[must_use]
-    pub fn new() -> Self {
-        Self {
-            core: System360GateLevel::new(),
-        }
-    }
-
-    /// Construct reset state through the checked initial-storage allocation.
-    pub fn try_new() -> Result<Self, System370Error> {
+    /// Construct deterministic reset state through checked stable-Q storage.
+    pub fn new() -> Result<Self, System370Error> {
         allocation::checkpoint(AllocationSite::InitialStorage)
             .map_err(|()| System370Error::AllocationFailed)?;
         Ok(Self {
@@ -52,15 +38,19 @@ impl System370GateLevel {
         })
     }
 
+    /// Backward-compatible checked-constructor spelling.
+    pub fn try_new() -> Result<Self, System370Error> {
+        Self::new()
+    }
+
     /// Clock every architectural bit and lifecycle scalar to reset state.
     pub fn reset(&mut self) {
         self.core.reset();
     }
 
     /// Reconstruct the complete public state from stable Q.
-    #[must_use]
-    pub fn get_state(&self) -> System370State {
-        from_system360(self.core.get_state())
+    pub fn get_state(&self) -> Result<System370State, System370Error> {
+        self.try_state(AllocationSite::PublicState)
     }
 
     fn try_state(&self, site: AllocationSite) -> Result<System370State, System370Error> {
@@ -75,30 +65,14 @@ impl System370GateLevel {
     /// Validate and atomically clock a complete snapshot.
     pub fn restore(&mut self, snapshot: System370State) -> Result<(), System370Error> {
         validate_state(&snapshot)?;
-        allocation::checkpoint(AllocationSite::RestoreMemory)
-            .map_err(|()| System370Error::AllocationFailed)?;
-        let mut memory = Vec::new();
-        memory
-            .try_reserve_exact(snapshot.memory.len())
-            .map_err(|_| System370Error::AllocationFailed)?;
-        memory.extend_from_slice(&snapshot.memory);
-        let mut staged = snapshot;
-        staged.memory = memory;
-        self.core
-            .restore(to_system360(staged))
-            .map_err(map_system360_error)
+        let staged = to_system360(snapshot);
+        self.core.restore_validated_storage(&staged);
+        Ok(())
     }
 
     /// Reset and install a raw big-endian program image atomically.
     pub fn load(&mut self, program: &[u8], origin: u32) -> Result<usize, System370Error> {
-        allocation::checkpoint(AllocationSite::LoadImage)
-            .map_err(|()| System370Error::AllocationFailed)?;
-        let mut staged = Vec::new();
-        staged
-            .try_reserve_exact(program.len())
-            .map_err(|_| System370Error::AllocationFailed)?;
-        staged.extend_from_slice(program);
-        self.core.load(&staged, origin).map_err(map_system360_error)
+        self.core.load(program, origin).map_err(map_system360_error)
     }
 
     pub fn read_gpr(&self, index: usize) -> Result<u32, System370Error> {
@@ -128,9 +102,20 @@ impl System370GateLevel {
     }
 
     pub fn read_memory(&self, address: u32, bytes: usize) -> Result<Vec<u8>, System370Error> {
-        self.core
-            .read_memory(address, bytes)
-            .map_err(map_system360_error)
+        let end = (address as usize)
+            .checked_add(bytes)
+            .ok_or(System370Error::MemoryOutOfRange { address, bytes })?;
+        if address > 0x00ff_ffff || end > MEMORY_BYTES {
+            return Err(System370Error::MemoryOutOfRange { address, bytes });
+        }
+        allocation::checkpoint(AllocationSite::MemoryRead)
+            .map_err(|()| System370Error::AllocationFailed)?;
+        let mut result = Vec::new();
+        result
+            .try_reserve_exact(bytes)
+            .map_err(|_| System370Error::AllocationFailed)?;
+        result.extend((address as usize..end).map(|index| self.core.memory_q(index)));
+        Ok(result)
     }
 
     pub fn write_memory(&mut self, address: u32, data: &[u8]) -> Result<(), System370Error> {
@@ -144,13 +129,35 @@ impl System370GateLevel {
         if self.core.halted_q() {
             return Err(System370Error::Halted);
         }
-        let _rollback_only = self.try_state(AllocationSite::StateSnapshot)?;
         let pc = self.core.program_counter_q();
         let opcode = self.fetch_opcode_q(pc)?;
         let Some(extension) = engine::classify_extension(opcode) else {
+            let mut checkpoint = |site| {
+                let site = match site {
+                    ibm_system360_gatelevel::EmbeddedAllocationSite::EntryState => {
+                        AllocationSite::InheritedEntryState
+                    }
+                    ibm_system360_gatelevel::EmbeddedAllocationSite::OracleState => {
+                        AllocationSite::InheritedOracleState
+                    }
+                    ibm_system360_gatelevel::EmbeddedAllocationSite::GateCandidate => {
+                        AllocationSite::InheritedGateCandidate
+                    }
+                    ibm_system360_gatelevel::EmbeddedAllocationSite::RawInstruction => {
+                        AllocationSite::InheritedRawInstruction
+                    }
+                    ibm_system360_gatelevel::EmbeddedAllocationSite::Mnemonic => {
+                        AllocationSite::InheritedMnemonic
+                    }
+                    ibm_system360_gatelevel::EmbeddedAllocationSite::Description => {
+                        AllocationSite::InheritedDescription
+                    }
+                };
+                allocation::checkpoint(site)
+            };
             return self
                 .core
-                .step()
+                .try_step_embedded(&mut checkpoint)
                 .map(convert_trace)
                 .map_err(map_system360_error);
         };
@@ -162,12 +169,28 @@ impl System370GateLevel {
         }
 
         let oracle_before = self.try_state(AllocationSite::OracleState)?;
-        let mut oracle = System370Simulator::new();
-        oracle.restore(oracle_before)?;
-        let oracle_result = oracle.step();
+        let oracle = System370Simulator::from_state_for_gate(oracle_before)?;
+        let mut oracle_checkpoint = |site| {
+            let site = match site {
+                ibm_system370_simulator::GateAllocationSite::RawInstruction => {
+                    AllocationSite::OracleRawInstruction
+                }
+                ibm_system370_simulator::GateAllocationSite::Mnemonic => {
+                    AllocationSite::OracleMnemonic
+                }
+                ibm_system370_simulator::GateAllocationSite::Description => {
+                    AllocationSite::OracleDescription
+                }
+            };
+            allocation::checkpoint(site)
+        };
+        let oracle_result = oracle.try_step_for_gate(&mut oracle_checkpoint);
 
-        let settled = match (settled_result, oracle_result) {
+        let (settled, oracle_next) = match (settled_result, oracle_result) {
             (Err(System370Error::AllocationFailed), _) => {
+                return Err(System370Error::AllocationFailed)
+            }
+            (_, Err(System370Error::AllocationFailed)) => {
                 return Err(System370Error::AllocationFailed)
             }
             (Err(gate_error), Err(oracle_error)) if gate_error == oracle_error => {
@@ -178,7 +201,7 @@ impl System370GateLevel {
             }
             (Err(_), Ok(_)) => return gate_disagrees("gate rejected an oracle-valid extension"),
             (Ok(_), Err(_)) => return gate_disagrees("gate accepted an oracle-invalid extension"),
-            (Ok(settled), Ok(oracle_trace)) => {
+            (Ok(settled), Ok((oracle_trace, oracle_next))) => {
                 if settled.raw != oracle_trace.raw
                     || settled.width != oracle_trace.width
                     || settled.mnemonic != oracle_trace.mnemonic
@@ -188,11 +211,10 @@ impl System370GateLevel {
                 {
                     return gate_disagrees("gate trace and functional trace differ");
                 }
-                settled
+                (settled, oracle_next)
             }
         };
 
-        let oracle_next = oracle.get_state();
         if !self.settled_matches_oracle(&settled, &oracle_next) {
             return gate_disagrees("settled gate transition diverged from functional oracle");
         }
@@ -482,6 +504,7 @@ fn map_system360_error(error: ibm_system360_gatelevel::System360Error) -> System
         Source::FixedPointDivide => System370Error::FixedPointDivide,
         Source::FloatingExponent => System370Error::FloatingExponent,
         Source::FloatingDivide => System370Error::FloatingDivide,
+        Source::AllocationFailed => System370Error::AllocationFailed,
         Source::Halted => System370Error::Halted,
         Source::MaxStepsExceeded { max_steps } => System370Error::MaxStepsExceeded { max_steps },
     }

@@ -118,7 +118,7 @@ fn reserve_description() -> Result<String, System370Error> {
 
 fn checked_mnemonic(value: &str) -> Result<String, System370Error> {
     let mut mnemonic = String::new();
-    allocation::checkpoint(AllocationSite::Description)
+    allocation::checkpoint(AllocationSite::Mnemonic)
         .map_err(|()| System370Error::AllocationFailed)?;
     mnemonic
         .try_reserve_exact(value.len())

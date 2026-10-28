@@ -136,11 +136,15 @@ storage access and preserves condition code exactly.
 
 ## Lifecycle and fault atomicity
 
-The public checked API matches Layer 07as: reset, load, immutable state,
-validated restore, direct register/storage access, `step`, transactional
-bounded `run`, and transactional bounded `execute`. Big-endian byte order,
-24-bit addresses, halfword-aligned fetch, exact installed-program bounds, and
-the `SVC 0` teaching halt sentinel are unchanged.
+The public checked API matches Layer 07as in operation while making every
+allocation-bearing boundary explicitly fallible: checked construction,
+reset, load, immutable state, validated restore, direct register/storage
+access, `step`, transactional bounded `run`, and transactional bounded
+`execute`. In particular, `new`, `get_state`, and `read_memory` return a typed
+result so fixed storage, complete-state snapshots, and requested byte vectors
+cannot abort on allocation pressure. Big-endian byte order, 24-bit addresses,
+halfword-aligned fetch, exact installed-program bounds, and the `SVC 0`
+teaching halt sentinel are unchanged.
 
 Every malformed, unsupported, misaligned, out-of-range, arithmetic, divide,
 register-pair, supervisor-call, post-halt, and step-limit failure preserves
@@ -149,16 +153,19 @@ typed specification fault and also preserves the entry state.
 
 The gate API additionally exposes a stable typed `AllocationFailed` error.
 Every real fallible allocation in production has a named deterministic
-test-only injection seam at the same call site. The required boundary list is
-maintained beside the implementation and includes, when present: initial
-memory construction; load-image staging; restore-memory staging; entry-Q and
-metadata snapshots for `step`, `run`, and `execute`; raw-instruction capture;
-mnemonic and description construction; oracle-state conversion; trace-vector
-reservation and trace retention; complete final-state construction; and
-execution-result construction. Adding, removing, or moving a production
-allocation changes that inventory and its exact-lock test. A seam that exists
-only in test code, or that fires after an infallible allocation already
-succeeded, is not evidence.
+test-only injection seam immediately before the same call site. The required
+boundary list is maintained beside the implementation and includes, when
+present: initial memory construction; public complete-state observation;
+public memory reads; entry-Q and metadata snapshots for `step`, `run`, and
+`execute`; raw-instruction capture; mnemonic and description construction;
+extension-oracle state and trace creation; inherited System/360 entry,
+oracle, and independent gate-candidate state plus inherited trace creation;
+memory-write staging; trace-vector reservation and trace retention; and
+complete final-state construction. Load and restore perform no duplicate
+image or memory staging allocation. Adding, removing, eliminating, or moving
+a production allocation changes that inventory and its exact-lock test. A
+seam that exists only in test code, or that fires after an infallible
+allocation already succeeded, is not evidence.
 
 All potentially failing allocations complete before the corresponding DFF
 commit. Tests inject each boundary at entry and, for both `run` and `execute`,

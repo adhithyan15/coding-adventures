@@ -281,15 +281,23 @@ impl Route {
 }
 
 fn assert_pair(gate: &mut System370GateLevel, oracle: &mut System370Simulator, label: &str) {
-    let gate_before = gate.get_state();
+    let gate_before = gate.get_state().unwrap();
     let oracle_before = oracle.get_state();
     assert_eq!(gate_before, oracle_before, "pre-state {label}");
     let gate_result = gate.step();
     let oracle_result = oracle.step();
     assert_eq!(gate_result, oracle_result, "result {label}");
-    assert_eq!(gate.get_state(), oracle.get_state(), "post-state {label}");
+    assert_eq!(
+        gate.get_state().unwrap(),
+        oracle.get_state(),
+        "post-state {label}"
+    );
     if gate_result.is_err() {
-        assert_eq!(gate.get_state(), gate_before, "gate atomicity {label}");
+        assert_eq!(
+            gate.get_state().unwrap(),
+            gate_before,
+            "gate atomicity {label}"
+        );
         assert_eq!(
             oracle.get_state(),
             oracle_before,
@@ -299,7 +307,7 @@ fn assert_pair(gate: &mut System370GateLevel, oracle: &mut System370Simulator, l
 }
 
 fn pair_with(program: &[u8]) -> (System370GateLevel, System370Simulator) {
-    let mut gate = System370GateLevel::new();
+    let mut gate = System370GateLevel::new().unwrap();
     let mut oracle = System370Simulator::new();
     gate.load(program, 0).unwrap();
     oracle.load(program, 0).unwrap();
@@ -345,11 +353,14 @@ fn rx(opcode: u8, r1: u8, address: u16) -> [u8; 4] {
 
 #[test]
 fn topology_and_reset_state_are_exact() {
-    let cpu = System370GateLevel::new();
+    let cpu = System370GateLevel::new().unwrap();
     assert_eq!(FLIP_FLOP_COUNT, 8_389_403);
     assert_eq!(cpu.flip_flop_count(), 8_389_403);
     assert!(cpu.gate_count() > cpu.flip_flop_count() * 6);
-    assert_eq!(cpu.get_state(), System370Simulator::new().get_state());
+    assert_eq!(
+        cpu.get_state().unwrap(),
+        System370Simulator::new().get_state()
+    );
 }
 
 #[test]
@@ -359,14 +370,14 @@ fn literal_256_by_installed_width_transport_matrix_is_exact_and_atomic() {
             let mut program = [0_u8; 6];
             program[0] = opcode;
             let (mut gate, mut oracle) = pair_with(&program[..installed]);
-            let before = gate.get_state();
+            let before = gate.get_state().unwrap();
             let gate_result = gate.step();
             let oracle_result = oracle.step();
             assert_eq!(
                 gate_result, oracle_result,
                 "opcode={opcode:#04x} bytes={installed}"
             );
-            assert_eq!(gate.get_state(), oracle.get_state());
+            assert_eq!(gate.get_state().unwrap(), oracle.get_state());
             match FIRST_BYTE_TABLE[usize::from(opcode)].width() {
                 None => assert_eq!(
                     gate_result,
@@ -382,7 +393,7 @@ fn literal_256_by_installed_width_transport_matrix_is_exact_and_atomic() {
                 Some(_) => {}
             }
             if gate_result.is_err() {
-                assert_eq!(gate.get_state(), before);
+                assert_eq!(gate.get_state().unwrap(), before);
             }
         }
     }
@@ -520,7 +531,7 @@ fn all_masks_and_character_condition_codes_match() {
                 let (mut gate, mut oracle) = pair_with(&instruction);
                 write_gpr_pair(&mut gate, &mut oracle, 2, 0x1122_3344);
                 write_memory_pair(&mut gate, &mut oracle, 0x100, &bytes);
-                let mut state = gate.get_state();
+                let mut state = gate.get_state().unwrap();
                 state.condition_code = 3;
                 gate.restore(state.clone()).unwrap();
                 oracle.restore(state).unwrap();
@@ -536,15 +547,15 @@ fn all_masks_and_character_condition_codes_match() {
 
 #[test]
 fn lifecycle_restore_helpers_and_faults_preserve_complete_state() {
-    let mut gate = System370GateLevel::new();
+    let mut gate = System370GateLevel::new().unwrap();
     gate.load(&[0x18, 0x12], 0x20).unwrap();
     gate.write_gpr(1, 7).unwrap();
     gate.write_fpr(4, 0x1122_3344_5566_7788).unwrap();
     gate.write_memory(0x100, &[1, 2, 3]).unwrap();
-    let complete = gate.get_state();
+    let complete = gate.get_state().unwrap();
     gate.reset();
     gate.restore(complete.clone()).unwrap();
-    assert_eq!(gate.get_state(), complete);
+    assert_eq!(gate.get_state().unwrap(), complete);
 
     let mut invalid = complete.clone();
     invalid.memory.pop();
@@ -552,35 +563,35 @@ fn lifecycle_restore_helpers_and_faults_preserve_complete_state() {
         gate.restore(invalid),
         Err(System370Error::InvalidState { .. })
     ));
-    assert_eq!(gate.get_state(), complete);
+    assert_eq!(gate.get_state().unwrap(), complete);
     assert!(gate.write_gpr(16, 0).is_err());
     assert!(gate
         .write_memory(ibm_system370_gatelevel::MEMORY_BYTES as u32, &[1])
         .is_err());
-    assert_eq!(gate.get_state(), complete);
+    assert_eq!(gate.get_state().unwrap(), complete);
 }
 
 #[test]
 fn every_public_typed_fault_family_is_differential_and_atomic() {
     for program in [vec![], vec![0, 0]] {
-        let mut gate = System370GateLevel::new();
+        let mut gate = System370GateLevel::new().unwrap();
         let mut oracle = System370Simulator::new();
-        let gate_before = gate.get_state();
+        let gate_before = gate.get_state().unwrap();
         let oracle_before = oracle.get_state();
         let origin = if program.is_empty() { 0 } else { 1 };
         assert_eq!(gate.load(&program, origin), oracle.load(&program, origin));
-        assert_eq!(gate.get_state(), gate_before);
+        assert_eq!(gate.get_state().unwrap(), gate_before);
         assert_eq!(oracle.get_state(), oracle_before);
     }
-    let mut gate = System370GateLevel::new();
+    let mut gate = System370GateLevel::new().unwrap();
     let mut oracle = System370Simulator::new();
-    let gate_before = gate.get_state();
+    let gate_before = gate.get_state().unwrap();
     let oracle_before = oracle.get_state();
     assert_eq!(
         gate.load(&[0, 0], ibm_system370_gatelevel::MEMORY_BYTES as u32),
         oracle.load(&[0, 0], ibm_system370_gatelevel::MEMORY_BYTES as u32)
     );
-    assert_eq!(gate.get_state(), gate_before);
+    assert_eq!(gate.get_state().unwrap(), gate_before);
     assert_eq!(oracle.get_state(), oracle_before);
 
     for program in [
@@ -626,17 +637,17 @@ fn every_public_typed_fault_family_is_differential_and_atomic() {
     assert_pair(&mut gate, &mut oracle, "halt transition");
     assert_pair(&mut gate, &mut oracle, "post-halt fault");
 
-    let mut invalid_gate = System370GateLevel::new();
+    let mut invalid_gate = System370GateLevel::new().unwrap();
     let mut invalid_oracle = System370Simulator::new();
-    let mut invalid = invalid_gate.get_state();
+    let mut invalid = invalid_gate.get_state().unwrap();
     invalid.condition_code = 4;
-    let gate_before = invalid_gate.get_state();
+    let gate_before = invalid_gate.get_state().unwrap();
     let oracle_before = invalid_oracle.get_state();
     assert_eq!(
         invalid_gate.restore(invalid.clone()),
         invalid_oracle.restore(invalid)
     );
-    assert_eq!(invalid_gate.get_state(), gate_before);
+    assert_eq!(invalid_gate.get_state().unwrap(), gate_before);
     assert_eq!(invalid_oracle.get_state(), oracle_before);
     assert_eq!(invalid_gate.read_gpr(16), invalid_oracle.read_gpr(16));
     assert_eq!(invalid_gate.write_fpr(1, 0), invalid_oracle.write_fpr(1, 0));
@@ -644,32 +655,32 @@ fn every_public_typed_fault_family_is_differential_and_atomic() {
 
 #[test]
 fn run_execute_are_transactional() {
-    let mut gate = System370GateLevel::new();
+    let mut gate = System370GateLevel::new().unwrap();
     gate.load(&[0x18, 0x12, 0x0a, 0], 0).unwrap();
     gate.write_gpr(2, 0xfeed_face).unwrap();
     let result = gate.run(2).unwrap();
     assert!(result.halted);
-    assert_eq!(result.final_state, gate.get_state());
+    assert_eq!(result.final_state, gate.get_state().unwrap());
 
-    let mut bounded = System370GateLevel::new();
+    let mut bounded = System370GateLevel::new().unwrap();
     bounded.load(&[0x18, 0x12, 0x18, 0x12], 0).unwrap();
-    let before = bounded.get_state();
+    let before = bounded.get_state().unwrap();
     assert_eq!(
         bounded.run(1),
         Err(System370Error::MaxStepsExceeded { max_steps: 1 })
     );
-    assert_eq!(bounded.get_state(), before);
+    assert_eq!(bounded.get_state().unwrap(), before);
 
-    let mut execute = System370GateLevel::new();
+    let mut execute = System370GateLevel::new().unwrap();
     execute.write_gpr(1, 9).unwrap();
     let result = execute.execute(&[0x0a, 0], 0x20, 1).unwrap();
     assert!(result.halted);
 
-    let mut fault = System370GateLevel::new();
+    let mut fault = System370GateLevel::new().unwrap();
     fault.write_gpr(1, 9).unwrap();
-    let before = fault.get_state();
+    let before = fault.get_state().unwrap();
     assert_eq!(fault.execute(&[], 0, 1), Err(System370Error::EmptyProgram));
-    assert_eq!(fault.get_state(), before);
+    assert_eq!(fault.get_state().unwrap(), before);
 }
 
 #[allow(dead_code)]

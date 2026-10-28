@@ -34,14 +34,16 @@ let mut cpu = System370GateLevel::try_new()?;
 cpu.load(&[0x0a, 0x00], 0)?; // SVC 0 is the bounded teaching halt sentinel.
 let trace = cpu.step()?;
 assert_eq!(trace.mnemonic, "SVC");
-assert!(cpu.get_state().halted);
+assert!(cpu.get_state()?.halted);
 # Ok::<(), ibm_system370_gatelevel::System370Error>(())
 ```
 
 `step` is atomic. `run` and `execute` additionally restore the complete entry
 state on any architectural, oracle, allocation, or step-limit failure.
 Deterministic allocation seams are exposed for validation and never supply
-architectural data.
+architectural data. Construction, complete-state observation, and memory
+reads are fallible so real storage allocation failures are returned as the
+typed `AllocationFailed` error rather than aborting the process.
 
 ## Evidence
 
@@ -52,7 +54,8 @@ architectural data.
   authority.
 - Compiler-checked complete temporary crates prove each hostile mutation
   compiles before parsed-token structural validation rejects it.
-- Package-source line coverage is 94.75% (812/857), above the 80% requirement.
+- Package-source line coverage is 95.27% (825/866), above the 80% requirement
+  and the 95% target.
 - Package-scoped Rustfmt, strict Clippy, strict rustdoc, and the exact BUILD
   recipe pass.
 - The current-source repository planner identifies seven affected packages;

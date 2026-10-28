@@ -13,6 +13,9 @@ All notable changes to this package will be documented in this file.
   condition-code networks.
 - System/370-owned public state, traces, results, typed transactional faults,
   checked allocation seams, and complete `step`/`run`/`execute` rollback.
+- Fallible construction, state observation, memory reads, inherited execution,
+  and functional-oracle trace creation, with an adjacent named injection seam
+  for every real production allocation and atomic post-progress rollback.
 - Twenty-one exhaustive transport, differential, truth-table, allocation, and
-  compiler-checked parsed-structure evidence with 94.75% line coverage
-  (812/857).
+  compiler-checked parsed-structure evidence with 95.27% line coverage
+  (825/866).

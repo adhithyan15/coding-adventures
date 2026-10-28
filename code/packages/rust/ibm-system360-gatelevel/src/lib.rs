@@ -28,6 +28,18 @@ pub const ESTIMATED_GATE_COUNT: usize = FLIP_FLOP_COUNT * 6 + 196_608;
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct StorageAllocationError;
 
+/// Checked allocation boundaries exposed to an embedding successor gate.
+#[doc(hidden)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum EmbeddedAllocationSite {
+    EntryState,
+    OracleState,
+    GateCandidate,
+    RawInstruction,
+    Mnemonic,
+    Description,
+}
+
 /// IBM System/360 state stored in simulated D flip-flops.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct System360GateLevel {
@@ -244,8 +256,7 @@ impl System360GateLevel {
     }
 
     pub fn load(&mut self, program: &[u8], origin: u32) -> Result<usize, System360Error> {
-        let mut validator = System360Simulator::new();
-        let loaded = validator.load(program, origin)?;
+        validate_program(program, origin)?;
         self.reset();
         for (offset, value) in program.iter().copied().enumerate() {
             self.memory.write(origin as usize + offset, value);
@@ -253,7 +264,7 @@ impl System360GateLevel {
         clock_bits(&mut self.pc, u64::from(origin));
         self.loaded_origin = origin;
         self.loaded_len = program.len();
-        Ok(loaded)
+        Ok(program.len())
     }
 
     pub fn read_gpr(&self, index: usize) -> Result<u32, System360Error> {
@@ -312,8 +323,11 @@ impl System360GateLevel {
     }
 
     pub fn set_program_counter(&mut self, pc: u32) -> Result<(), System360Error> {
-        let mut validator = System360Simulator::new();
-        validator.set_program_counter(pc)?;
+        if pc > 0x00ff_ffff || !pc.is_multiple_of(2) {
+            return Err(System360Error::InvalidState {
+                reason: "instruction address is invalid",
+            });
+        }
         clock_bits(&mut self.pc, u64::from(pc));
         Ok(())
     }
@@ -343,18 +357,44 @@ impl System360GateLevel {
 
     /// Execute one checked transition and clock its settled state into DFFs.
     pub fn step(&mut self) -> Result<StepTrace, System360Error> {
-        let before = self.get_state();
-        let (authority, fetched) = decode_transition(&before)?;
-        let mut transition = System360Simulator::new();
-        transition.restore(before.clone())?;
-        let trace = transition.step()?;
-        let oracle_next = transition.get_state();
-        if trace.raw != fetched || usize::from(trace.width) != fetched.len() {
+        self.try_step_embedded(&mut |_| Ok(()))
+    }
+
+    /// Execute one transition with fallible owned buffers and caller-visible seams.
+    #[doc(hidden)]
+    pub fn try_step_embedded(
+        &mut self,
+        checkpoint: &mut dyn FnMut(EmbeddedAllocationSite) -> Result<(), ()>,
+    ) -> Result<StepTrace, System360Error> {
+        let before = self.try_state_embedded(EmbeddedAllocationSite::EntryState, checkpoint)?;
+        let (authority, width) = decode_transition(&before)?;
+        let oracle_before =
+            self.try_state_embedded(EmbeddedAllocationSite::OracleState, checkpoint)?;
+        let oracle = System360Simulator::from_state_for_gate(oracle_before)?;
+        let mut oracle_checkpoint = |site| {
+            let site = match site {
+                ibm_system360_simulator::GateAllocationSite::RawInstruction => {
+                    EmbeddedAllocationSite::RawInstruction
+                }
+                ibm_system360_simulator::GateAllocationSite::Mnemonic => {
+                    EmbeddedAllocationSite::Mnemonic
+                }
+                ibm_system360_simulator::GateAllocationSite::Description => {
+                    EmbeddedAllocationSite::Description
+                }
+            };
+            checkpoint(site)
+        };
+        let (trace, oracle_next) = oracle.try_step_for_gate(&mut oracle_checkpoint)?;
+        if trace.raw != before.memory[before.pc as usize..before.pc as usize + width]
+            || usize::from(trace.width) != width
+        {
             return Err(System360Error::Specification {
                 reason: "functional trace changed the gate-authorized transport",
             });
         }
-        let gate_next = executor::execute(&before, &trace, &authority)?;
+        let candidate = clone_state_embedded(&before, checkpoint)?;
+        let gate_next = executor::execute(&before, candidate, &trace, &authority)?;
         validate_gate_transition(&before, &gate_next, &trace, &authority)?;
         if gate_next != oracle_next {
             return Err(System360Error::Specification {
@@ -363,6 +403,16 @@ impl System360GateLevel {
         }
         self.commit_transition(&gate_next);
         Ok(trace)
+    }
+
+    fn try_state_embedded(
+        &self,
+        site: EmbeddedAllocationSite,
+        checkpoint: &mut dyn FnMut(EmbeddedAllocationSite) -> Result<(), ()>,
+    ) -> Result<System360State, System360Error> {
+        checkpoint(site).map_err(|()| System360Error::AllocationFailed)?;
+        self.try_get_state_storage()
+            .map_err(|_| System360Error::AllocationFailed)
     }
 
     pub fn run(&mut self, max_steps: usize) -> Result<ExecutionResult, System360Error> {
@@ -418,7 +468,7 @@ impl System360GateLevel {
 /// either the behavioral oracle or an operation candidate may run.
 fn decode_transition(
     before: &System360State,
-) -> Result<(executor::DecodeAuthority, Vec<u8>), System360Error> {
+) -> Result<(executor::DecodeAuthority, usize), System360Error> {
     if before.halted {
         return Err(System360Error::Halted);
     }
@@ -453,7 +503,53 @@ fn decode_transition(
             pc: before.pc,
         });
     }
-    Ok((authority, before.memory[start..start + width].to_vec()))
+    Ok((authority, width))
+}
+
+fn clone_state_embedded(
+    state: &System360State,
+    checkpoint: &mut dyn FnMut(EmbeddedAllocationSite) -> Result<(), ()>,
+) -> Result<System360State, System360Error> {
+    checkpoint(EmbeddedAllocationSite::GateCandidate)
+        .map_err(|()| System360Error::AllocationFailed)?;
+    let mut memory = Vec::new();
+    memory
+        .try_reserve_exact(state.memory.len())
+        .map_err(|_| System360Error::AllocationFailed)?;
+    memory.extend_from_slice(&state.memory);
+    Ok(System360State {
+        gprs: state.gprs,
+        fprs: state.fprs,
+        pc: state.pc,
+        condition_code: state.condition_code,
+        memory,
+        halted: state.halted,
+        loaded_origin: state.loaded_origin,
+        loaded_len: state.loaded_len,
+    })
+}
+
+fn validate_program(program: &[u8], origin: u32) -> Result<(), System360Error> {
+    if program.is_empty() {
+        return Err(System360Error::EmptyProgram);
+    }
+    if !origin.is_multiple_of(2) {
+        return Err(System360Error::MisalignedProgram { origin });
+    }
+    let end =
+        (origin as usize)
+            .checked_add(program.len())
+            .ok_or(System360Error::ProgramOutOfRange {
+                origin,
+                bytes: program.len(),
+            })?;
+    if origin > 0x00ff_ffff || end > MEMORY_BYTES {
+        return Err(System360Error::ProgramOutOfRange {
+            origin,
+            bytes: program.len(),
+        });
+    }
+    Ok(())
 }
 
 fn validate_gate_transition(
@@ -845,13 +941,13 @@ fn validate_rx_transition(
     if expected_cc.is_some_and(|value| next.condition_code != value) {
         return gate_disagrees("gate RX condition-code network and transition disagree");
     }
-    let expected_store: Option<Vec<u8>> = match operation {
-        executor::Operation::Sth => Some((a as u16).to_be_bytes().to_vec()),
-        executor::Operation::Stc => Some(vec![a as u8]),
-        executor::Operation::St => Some(a.to_be_bytes().to_vec()),
-        _ => None,
+    let store_matches = match operation {
+        executor::Operation::Sth => next.memory[address..address + 2] == (a as u16).to_be_bytes(),
+        executor::Operation::Stc => next.memory[address] == a as u8,
+        executor::Operation::St => next.memory[address..address + 4] == a.to_be_bytes(),
+        _ => true,
     };
-    if expected_store.is_some_and(|bytes| next.memory[address..address + bytes.len()] != bytes) {
+    if !store_matches {
         return gate_disagrees("gate RX storage path and transition disagree");
     }
     if operation == executor::Operation::M {
@@ -1213,10 +1309,15 @@ fn validate_ss_transition(
     let destination = gate_ea_base(&trace.raw, 2, before) as usize;
     let source = gate_ea_base(&trace.raw, 4, before) as usize;
     let mut nonzero = false;
-    let mut settled = before.memory.clone();
     for offset in 0..length {
-        let a = u32::from(settled[destination + offset]);
-        let b = u32::from(settled[source + offset]);
+        let a = u32::from(before.memory[destination + offset]);
+        let source_index = source + offset;
+        let source_was_written = source_index >= destination && source_index < destination + offset;
+        let b = u32::from(if source_was_written {
+            next.memory[source_index]
+        } else {
+            before.memory[source_index]
+        });
         let value = match operation {
             executor::Operation::Mvc => b as u8,
             executor::Operation::Nc => gates::bit_and_32(a, b) as u8,
@@ -1224,15 +1325,6 @@ fn validate_ss_transition(
             executor::Operation::Xc => gates::bit_xor_32(a, b) as u8,
             _ => before.memory[destination + offset],
         };
-        if matches!(
-            operation,
-            executor::Operation::Mvc
-                | executor::Operation::Nc
-                | executor::Operation::Oc
-                | executor::Operation::Xc
-        ) {
-            settled[destination + offset] = value;
-        }
         nonzero |= value != 0;
         if matches!(
             operation,
