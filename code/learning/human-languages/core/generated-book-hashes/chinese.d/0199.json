@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:1529fb391c677665",
+  "lessonIds": [
+    "ZH-C199-chima",
+    "ZH-C199-bao",
+    "ZH-C199-fei",
+    "ZH-C199-jin",
+    "ZH-C199-tiao-pick",
+    "ZH-R199-review-194-199"
+  ],
+  "tex": "chinese/book/chapters/ch199-sizes.tex"
+}

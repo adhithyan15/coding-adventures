@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C201-kuaidi",
+  "pathSegment": "ZH-PATH-201-POST201",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-201-POST201",
+      "order": 1
+    }
+  ]
+}

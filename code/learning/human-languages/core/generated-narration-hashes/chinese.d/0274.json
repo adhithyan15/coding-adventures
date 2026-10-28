@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:fab77a05a756f13e",
+  "lessonIds": [
+    "ZH-C274-huabing",
+    "ZH-C274-shouji",
+    "ZH-C274-remen",
+    "ZH-C274-shougong",
+    "ZH-C274-qiumi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch274.txt",
+  "json": "chinese/narration/ch274.json",
+  "textHash": "fnv1a64:24e141e5ed3d1fb7",
+  "jsonHash": "fnv1a64:3e413bdcf7bb6d96",
+  "findings": []
+}

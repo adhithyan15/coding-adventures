@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:cded0d9d8682d775",
+  "lessonIds": [
+    "ZH-C203-zu",
+    "ZH-C203-fangdong",
+    "ZH-W203-dong-east",
+    "ZH-C203-fangzu",
+    "ZH-C203-yajin",
+    "ZH-C203-hetong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch203.txt",
+  "json": "chinese/narration/ch203.json",
+  "textHash": "fnv1a64:8c43c565ce2c285e",
+  "jsonHash": "fnv1a64:3a745330ba093e3f",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 230,
+  "title": "Head to Toe",
+  "label": "ch:zh-head-to-toe",
+  "canDo": "I can say what I have on me and what I weigh, and talk about my tummy, my nose and my legs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C230-tui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say what I have on me and what I weigh, and talk about my tummy, my nose and my legs.",
+    "assesses": [
+      "ZH-LEX-C230-BODY230-01",
+      "ZH-LEX-C230-BODY230-03",
+      "ZH-LEX-C230-BODY230-04",
+      "ZH-LEX-C230-BODY230-05"
+    ]
+  }
+}

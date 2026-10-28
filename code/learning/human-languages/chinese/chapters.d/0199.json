@@ -1,0 +1,21 @@
+{
+  "chapter": 199,
+  "title": "Sizes",
+  "label": "ch:zh-sizes",
+  "canDo": "I can ask what size someone wears, say clothes are thin, baggy or tight, and pick one out.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "ZH-R199-review-194-199",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can ask what size someone wears, say clothes are thin, baggy or tight, and pick one out.",
+    "assesses": [
+      "ZH-LEX-C199-SIZE199-01",
+      "ZH-LEX-C199-SIZE199-02",
+      "ZH-LEX-C199-SIZE199-03",
+      "ZH-LEX-C199-SIZE199-04",
+      "ZH-LEX-C199-SIZE199-05"
+    ]
+  }
+}

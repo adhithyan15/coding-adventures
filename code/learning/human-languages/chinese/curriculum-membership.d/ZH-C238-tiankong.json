@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C238-tiankong",
+  "pathSegment": "ZH-PATH-238-SKY238",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-238-SKY238",
+      "order": 0
+    }
+  ]
+}

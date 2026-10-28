@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-208-A2-PIA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use one bounded masculine singular past-necessity form.",
+  "prerequisites": [
+    "PA-EXT-207-A2-HUNDA"
+  ]
+}

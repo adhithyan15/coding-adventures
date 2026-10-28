@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:3b1d90af7f6603ba",
+  "lessonIds": [
+    "ZH-C243-qihou",
+    "ZH-C243-xuehua",
+    "ZH-C243-bianhua",
+    "ZH-C243-jiebing",
+    "ZH-C243-wendu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch243.txt",
+  "json": "chinese/narration/ch243.json",
+  "textHash": "fnv1a64:0b8f4f6b382a1984",
+  "jsonHash": "fnv1a64:c014d7f0fa34925b",
+  "findings": []
+}

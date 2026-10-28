@@ -3,10 +3,12 @@
 //! The lowering passes after this compiler add functions of their own —
 //! `__lisp_equal`, `__dyn_list_length`, … — and recognise them by name, so a
 //! Twig program may not define, bind or reference a name that begins with
-//! `__lisp_` or `__dyn_`. Each test below is a program that, before the
-//! reservation, compiled and then silently changed what a builtin meant.
+//! `__lisp_` or `__dyn_`. A second review added `__lambda_` (this compiler's
+//! lifted lambdas) and `__twig_` (the native runtime). Each test below is a
+//! program that, before the reservation, compiled and then silently changed
+//! what a builtin meant.
 
-use twig_ir_compiler::{compile_source, reserved_prefix, RESERVED_PREFIXES};
+use twig_ir_compiler::{compile_source, reserved_prefix, RESERVED_NAMESPACE, RESERVED_PREFIXES};
 
 /// Compile `src` and return the error message, panicking if it compiled.
 fn refused(src: &str) -> twig_ir_compiler::TwigCompileError {
@@ -65,16 +67,16 @@ fn every_kind_of_name_is_checked() {
     }
 }
 
-/// Quoted symbols are data, not names; names that merely contain the
-/// prefix, or share its letters without the trailing underscore, are fine.
+/// Quoted symbols are data, not names; names that merely contain a
+/// prefix after the start, or begin with a single underscore, are fine.
 #[test]
 fn symbols_and_lookalikes_are_not_reserved() {
     for src in [
         "(define s '__lisp_equal) 1",
         "(define s (quote __dyn_pair_new)) 1",
         "(define (my__lisp_x a) a) (my__lisp_x 1)",
-        "(define (__lispy a) a) (__lispy 1)",
         "(define (_lisp_x a) a) (_lisp_x 1)",
+        "(let ((_n2 40)) _n2)",
     ] {
         compile_source(src, "m").unwrap_or_else(|e| panic!("{src}: {e}"));
     }
@@ -82,11 +84,98 @@ fn symbols_and_lookalikes_are_not_reserved() {
 
 #[test]
 fn reserved_prefix_reads_each_segment_and_ignores_case() {
-    assert_eq!(RESERVED_PREFIXES, ["__lisp_", "__dyn_"]);
+    assert_eq!(RESERVED_PREFIXES, ["__lisp_", "__dyn_", "__lambda_", "__twig_", "__gc_", "__aot_", "__clo_"]);
+    assert_eq!(RESERVED_NAMESPACE, "__");
     assert_eq!(reserved_prefix("__lisp_equal"), Some("__lisp_"));
     assert_eq!(reserved_prefix("__DYN_x"), Some("__dyn_"));
     assert_eq!(reserved_prefix("host/__dyn_x"), Some("__dyn_"));
-    assert_eq!(reserved_prefix("__lispy"), None);
+    // Not a listed prefix, but inside the reserved namespace.
+    assert_eq!(reserved_prefix("__lispy"), Some("__"));
     assert_eq!(reserved_prefix("my__lisp_x"), None);
-    assert_eq!(reserved_prefix("__twig_x"), None);
+    assert_eq!(reserved_prefix("__twig_x"), Some("__twig_"));
+    assert_eq!(reserved_prefix("__Lambda_3"), Some("__lambda_"));
+    assert_eq!(reserved_prefix("__lambda"), Some("__"));
+    assert_eq!(reserved_prefix("__twigx"), Some("__"));
+    assert_eq!(reserved_prefix("__gc_alloc_kind"), Some("__gc_"));
+    assert_eq!(reserved_prefix("__AOT_STR0_LEN"), Some("__aot_"));
+    assert_eq!(reserved_prefix("__clo_argnil1"), Some("__clo_"));
+    assert_eq!(reserved_prefix("__t3_n"), Some("__"));
+    assert_eq!(reserved_prefix("_n2"), None);
+    assert_eq!(reserved_prefix("_"), None);
+}
+
+/// Security review, third round: registers. A parameter or `let` name is an
+/// IIR register, and so is every temporary the compiler and the passes after
+/// it invent. Every generated register name begins with `__`, so every `__`
+/// name is refused, wherever it appears.
+#[test]
+fn generated_register_names_cannot_be_spelled() {
+    for (src, prefix) in [
+        // twig-aot's string lowering: a literal's length register.
+        ("(let ((s \"hi\")) (let ((__aot_str0_len 100000)) (print s)))", "__aot_"),
+        // closure_heap's chain temporaries.
+        ("(define (f __clo_argnil1) __clo_argnil1) (f 1)", "__clo_"),
+        // the native GC's entry points and allocator.
+        ("(define (__gc_alloc_kind n k) 0) 1", "__gc_"),
+        // this compiler's own temporary and label shapes, and anything else.
+        ("(let ((__t2_n 40)) (+ __t2_n 2))", "__"),
+        ("((lambda (__l1_else) __l1_else) 1)", "__"),
+        ("(let ((__truthy_0 1)) __truthy_0)", "__"),
+    ] {
+        let e = refused(src);
+        assert!(e.message.contains(&format!("{prefix:?}")), "{src}: {}", e.message);
+    }
+}
+
+/// The repro for the temporaries: with the old `_n{k}` names, the literal `2`
+/// was compiled into `_n2` — the program's own binding — so the sum was
+/// `2 + 2`. The program's single-underscore names are its own now: no
+/// temporary begins with one underscore.
+#[test]
+fn a_let_named_like_an_old_temporary_keeps_its_value() {
+    let m = compile_source("(let ((_n2 40) (_ifv1 0) (_r3 0)) (if (= _ifv1 0) (+ _n2 2) _r3))", "m")
+        .expect("single-underscore names are the program's");
+    let main = m.functions.iter().find(|f| f.name == "main").expect("main");
+    for instr in &main.instructions {
+        if let Some(dest) = &instr.dest {
+            assert!(
+                matches!(dest.as_str(), "_n2" | "_ifv1" | "_r3") || dest.starts_with("__t"),
+                "a register that is neither the program's nor a `__t` temporary: {dest}"
+            );
+        }
+    }
+    // Only the program's three `let` moves write the program's names.
+    let writes_to_n2 = main.instructions.iter().filter(|i| i.dest.as_deref() == Some("_n2")).count();
+    assert_eq!(writes_to_n2, 1, "the literal 2 must not be written into the program's `_n2`");
+}
+
+/// The second security review's repros. `print` lowers to a call of the
+/// runtime's `__twig_print_i64`, and a `(lambda …)` is lifted into a function
+/// this compiler names `__lambda_N`; a program that could spell either name
+/// could stand in for the runtime or for one of its own lambdas.
+#[test]
+fn runtime_and_lambda_names_are_reserved() {
+    let e = refused("(define (__twig_print_i64 n) 0) (begin (print 5) 0)");
+    assert!(e.message.contains("\"__twig_\""), "{}", e.message);
+    assert_eq!((e.line, e.column), (1, 10));
+
+    let e = refused(
+        "(define (__lambda_0 y) (+ y 50)) (define (g f) (+ 0 (f 5))) \
+         (+ (__lambda_0 1) (g (lambda (y) (+ y 1))))",
+    );
+    assert!(e.message.contains("\"__lambda_\""), "{}", e.message);
+
+    // A reference alone is refused too: `(__lambda_0 1)` would call the
+    // compiler's own lifted lambda.
+    refused("(define (g f) (f 5)) (+ (g (lambda (y) y)) (__lambda_0 1))");
+}
+
+/// The lambda the compiler lifts keeps its `__lambda_N` name, and since no
+/// source name can begin with `__lambda_`, it is the only function so named.
+#[test]
+fn a_lifted_lambda_is_the_only_function_with_its_name() {
+    let m = compile_source("(define (g f) (+ 0 (f 5))) (+ (g (lambda (y) (+ y 1))) 1)", "m").expect("compiles");
+    let lambdas: Vec<&str> =
+        m.functions.iter().map(|f| f.name.as_str()).filter(|n| n.starts_with("__lambda_")).collect();
+    assert_eq!(lambdas, ["__lambda_0"]);
 }

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:cf9f564d0b42733d",
+  "lessonIds": [
+    "ZH-C243-qihou",
+    "ZH-C243-xuehua",
+    "ZH-C243-bianhua",
+    "ZH-C243-jiebing",
+    "ZH-C243-wendu"
+  ],
+  "tex": "chinese/book/chapters/ch243-changing-seasons.tex"
+}

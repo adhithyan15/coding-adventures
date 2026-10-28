@@ -477,8 +477,8 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     //   dyn_unbox_int x    a dynamic integer → the integer
     //   dyn_tag x          x's tag number (table above), as an integer
     //   dyn_pair_new a b   a fresh, garbage-collected pair of a and b
-    //   dyn_pair_first p   the pair's first field  (p must be a pair)
-    //   dyn_pair_rest p    the pair's second field (p must be a pair)
+    //   dyn_pair_first p   the pair's first field  (fails closed on a non-pair)
+    //   dyn_pair_rest p    the pair's second field (fails closed on a non-pair)
     //   dyn_is_pair x      true if x is a pair, as a dynamic boolean
     //   dyn_is_nil x       true if x is nil, as a dynamic boolean
     //   dyn_nil            nil
@@ -490,8 +490,20 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     // are Builtins because the tagged-word backends call a runtime function
     // for each (`__dyn_pair_new`, …), named by the `dyn_` prefix — the one
     // prefix arm that is meant to capture them (see
-    // `GRANDFATHERED_PREFIXED_NAMES`). `dyn_pair_first`/`rest` of a non-pair
-    // is undefined: a frontend tests with `dyn_is_pair` first.
+    // `GRANDFATHERED_PREFIXED_NAMES`).
+    //
+    // `dyn_pair_first`/`rest` of a non-pair stops the program; no
+    // implementation reads memory through the word. The VM returns a
+    // `TypeError`, `dynval-runtime`'s `extern "C"` functions panic, and the
+    // C runtime the tagged-word backends link checks the tag and aborts with
+    // "dyn_pair_first: argument with tag 0 (int) is not a pair" on stderr —
+    // the tag, never the word, which could be a heap address (LANG83 PR7f
+    // follow-up; it was a read through the word before, so Twig's
+    // `(car 1000000)` read address 8000000). The traps list stays empty: a
+    // type error is not one of the closed `Trap.*` kinds, so a program cannot
+    // catch it — a frontend that wants a recoverable answer tests with
+    // `dyn_is_pair` first. `lang_aot::jit_lisp`'s McCarthy callbacks fail
+    // the same way (they answered nil until #18417).
     spec("dyn_box_int", Builtin, Dynamic, 1, true, UN_I64, NO_TRAP, LANG83_PR7F),
     spec("dyn_unbox_int", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),
     spec("dyn_tag", Builtin, Dynamic, 1, true, UN_DYN, NO_TRAP, LANG83_PR7F),

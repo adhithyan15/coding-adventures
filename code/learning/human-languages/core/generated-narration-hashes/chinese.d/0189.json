@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:754a26328768efe2",
+  "lessonIds": [
+    "ZH-C189-hao",
+    "ZH-W189-hao-number",
+    "ZH-C189-biaoge",
+    "ZH-C189-tianxie",
+    "ZH-C189-qianming",
+    "ZH-C189-shenfenzheng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch189.txt",
+  "json": "chinese/narration/ch189.json",
+  "textHash": "fnv1a64:521e7b1287901ec9",
+  "jsonHash": "fnv1a64:6f06ed7cb001b4e7",
+  "findings": []
+}

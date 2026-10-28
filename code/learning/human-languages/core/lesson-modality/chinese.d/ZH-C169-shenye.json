@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C169-shenye",
+    "language": "chinese",
+    "chapter": 169,
+    "sequence": 13600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5bd6b005342b62f"
+  },
+  "findings": []
+}

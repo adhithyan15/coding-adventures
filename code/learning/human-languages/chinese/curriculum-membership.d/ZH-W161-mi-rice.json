@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W161-mi-rice",
+  "pathSegment": "ZH-PATH-161-RICE161",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-161-RICE161",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:c6367674365332c2",
+  "lessonIds": [
+    "ZH-C158-jiaoxing",
+    "ZH-C158-shuizhao",
+    "ZH-C158-zuomeng",
+    "ZH-C158-qilai",
+    "ZH-C158-xiguan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch158.txt",
+  "json": "chinese/narration/ch158.json",
+  "textHash": "fnv1a64:49fd3c75b1295881",
+  "jsonHash": "fnv1a64:ab08b00e4d5a4e75",
+  "findings": []
+}
