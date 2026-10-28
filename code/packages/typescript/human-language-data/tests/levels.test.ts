@@ -22,7 +22,7 @@ import {
 import type { CurriculumSpine, LanguageCurriculum } from "../src/types.js";
 import { loadLevelProgressOwners } from "./level-gate-attainment-pins.js";
 
-function lesson(id: string, language = "spanish") {
+function lesson(id: string, language = "alpha") {
   return parseLesson(
     `---\nschema_version: 2\nid: ${id}\nchapter: 1\ntype: word\n` +
       `headword: hola\ngloss: hello\nconcept_tag: GREETING-HELLO\n---\n\n# ${id}\n\n` +
@@ -45,7 +45,7 @@ function curricula(segments: Array<{ node: string; lessons: string[] }>): Langua
   return [
     {
       version: 1,
-      language: "spanish",
+      language: "alpha",
       path: segments.map((segment, index) => ({
         id: `P-${index}`,
         spine_node: segment.node,
@@ -167,7 +167,7 @@ const LEVEL_PROGRESS = loadLevelProgressOwners(
 
 describe("exam alignment", () => {
   // The owner's instruction: do not leave things unmapped. A track with no mapping
-  // silently drops out of every level report, and a learner asking "what is A1 in Tamil?"
+  // silently drops out of every level report, and a learner asking about A1
   // deserves an answer. This test is the guard — registering a track now requires
   // answering the question.
   it("maps every registered track, with the KIND of answer recorded", () => {
@@ -211,8 +211,7 @@ describe("corpus level summary", () => {
   // Ratchet these as content lands. `A2: 0` was the headline for a long time: the A2
   // spine tranche existed but NO track had realized a single node of it.
   //
-  // That changed when three tracks authored core verbs at once — Latin chapter 37 (8),
-  // Arabic chapters 28-30 (6) and Russian chapter 3 (6). All twenty attach to
+  // That changed when several tracks authored core verbs at once. Those additions attach to
   // SPINE-SAY-WHAT-I-DO, which the shared spine declares at stage A2, so the level is
   // DERIVED rather than claimed:
   //
@@ -295,7 +294,7 @@ describe("corpus level summary", () => {
     // that joins, not inferred from the total.
     // +1, measured as a set difference: TA-W20-read-onru is the only lesson that
     // joins. The three A2 speaking lessons are above the A1 cut and do not.
-    expect(ramp.length).toBeGreaterThanOrEqual(1404); // FLOOR — content only grows; // +3: HL-C97 adds the repair kit (no entiendo, mas despacio) at chapter 14 // +40: vocabulary wave 5, all of it pre-A1 // +54: vocabulary wave 6, all of it pre-A1 // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6) -- all of it below the A1 cut // HL12 payment two: +8 Hindi segments
+    expect(ramp.length).toBeGreaterThanOrEqual(1404); // FLOOR — corpus content only grows.
     expect(ramp.length).toBeLessThan(lessons.length);
   });
 });

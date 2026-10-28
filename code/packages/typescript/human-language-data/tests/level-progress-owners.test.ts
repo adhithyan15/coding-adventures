@@ -9,6 +9,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { loadEverything } from "../src/loader.js";
 import {
   assertLevelProgressOwners,
   loadLevelProgressOwners,
@@ -151,12 +152,17 @@ describe("per-track level-progress owners", () => {
 });
 
 describe("shared progression tests remain generic", () => {
-  it("does not restore track advancement diaries or exact track arrays", () => {
+  it("contains no registered track identity in either shared test", () => {
     const root = new URL(".", import.meta.url);
+    const registered = new Set(
+      loadEverything().registry.languages.map((language) => language.id.toLowerCase()),
+    );
     for (const name of ["level-gate.test.ts", "levels.test.ts"]) {
       const source = readFileSync(new URL(name, root), "utf8");
-      expect(source).not.toMatch(/\/\/.*\b(?:followed|joins? the list|moved it from)\b/i);
-      expect(source).not.toMatch(/toEqual\(\[\s*"(?:arabic|bengali|chinese)"/s);
+      const mentioned = [...new Set(source.toLowerCase().match(/[a-z][a-z0-9-]*/g) ?? [])]
+        .filter((word) => registered.has(word))
+        .sort();
+      expect(mentioned, `${name} contains a direct track identity`).toEqual([]);
     }
   });
 });

@@ -36,9 +36,6 @@ const LEVEL_PROGRESS = loadLevelProgressOwners(
   ATTAINMENT_DIR,
   REAL_EVERYTHING.registry.languages.map((language) => language.id),
 );
-const ATTAINMENT = Object.fromEntries(
-  Object.entries(LEVEL_PROGRESS).map(([language, owner]) => [language, owner.attained]),
-);
 
 // Built ONCE for the file, not once per test. The gap report now walks continuity
 // (~900ms) and the level gate on top of everything else, so rebuilding an identical
@@ -69,8 +66,8 @@ function realReport() {
 
 // The atom-budget witness, built synthetically and at IMPORT for the same reason
 // REAL_REPORT is. The claim it carries is "a track can attain pre-A1 while an A1
-// lesson is over budget", and the corpus stopped holding a real example of it when
-// Bengali, the last one, attained A1. So take a track that attains A1 on the real
+// lesson is over budget", and the corpus stopped holding a real example when the
+// final witness attained A1. So take a track that attains A1 on the real
 // corpus, mark one of its A1 lessons over budget in the ramp report, and run the
 // gate again on otherwise identical inputs.
 const SYNTHETIC_WITNESS = (() => {
@@ -106,53 +103,19 @@ describe("the gate that would have caught the A2 claim", () => {
   // load, while passing in isolation — so a per-file run will not reproduce it.
   it("separates what a track TOUCHES from what it has ATTAINED", { timeout: 60_000 }, () => {
     const gate = realReport().levelGate!;
-    const spanish = gate.tracks.find((t) => t.language === "spanish")!;
-
-    // The number that misled: one lesson pointing at one node moves `touches`, and
-    // three lessons on `SPINE-REPORT-WHAT-OTHERS-SAID` have now moved it to B2 --
-    // out of a track whose vocabulary has not cleared pre-A1. `attained` is unmoved
-    // at null, which is exactly the distinction this module exists for, and the gap
-    // between the two numbers widens every time the ladder is climbed.
-    // HL-C175: chapter 272 touches SPINE-INFER-IMPLICIT-MEANING, so `touches`
-    // rises to C1 while `attained` stays null. That widening gap is not a
-    // regression -- it is the entire point of this module: five lessons on a C1
-    // node do not make a C1 reader, and the gate says so.
-    // HL-C178: chapter 274 touches SPINE-READ-CULTURAL-WEIGHT, so `touches`
-    // reaches the top of the ladder while `attained` is STILL null. That is the
-    // widest this gap has ever been, and it is the clearest statement of what
-    // this module is for: a track can touch C2 and have attained nothing.
-    expect(spanish.touches).toBe("C2");
-    // The number that does not, and the SECOND time it has ever moved. Spanish has
-    // now met all five A1 criteria — 617 headwords and 40 verb headwords at or below
-    // the level, every A1 spine node realized, no lesson over the atom budget, every
-    // A1 atom revisited twice, and the writing stages proved — so `attained` reads
-    // A1 and the work in progress is A2.
-    //
-    // Criterion 4 was the last to close, and HOW it closed is the part worth keeping:
-    // by authoring the ten `review` lessons that carry the 59 remaining atoms, not by
-    // re-scoping the criterion. A rung reached by loosening a gate should not be
-    // asserted at all; a rung reached by writing what the gate asked for is precisely
-    // what the gate exists to detect.
-    //
-    // The distinction this test is named for is UNCHANGED by that, and the gap is
-    // still five rungs wide: `touches` says C2 because three lessons point at a C2
-    // node; `attained` says A1 because that is the highest rung whose criteria
-    // actually hold. Asserting `attained === null`, and later `=== "pre-A1"`, was
-    // only ever a proxy for "the two numbers disagree" — each was merely the value at
-    // the time, and each had to be edited when the track climbed. What is asserted
-    // now is the disagreement itself, plus a RATCHET on the floor.
-    //
-    // Floor rather than pin, deliberately: `attained` is the one number in this
-    // corpus that is supposed to rise, so pinning it exactly conscripts every future
-    // tranche into editing this line. What must never happen is that it FALLS — a
-    // revoked level is a regression dressed as progress — and a floor catches that
-    // while ignoring the next honest climb.
-    expect(levelRank(spanish.attained!)).toBeGreaterThanOrEqual(levelRank("A1"));
-    // In progress is always exactly one rung above attained, and naming that relation
-    // rather than the literal "A2" keeps this test off the critical path of the next
-    // tranche too.
-    expect(levelRank(spanish.inProgressAt!)).toBeGreaterThan(levelRank(spanish.attained!));
-    expect(levelRank(spanish.touches!)).toBeGreaterThan(levelRank(spanish.attained!));
+    const separated = gate.tracks.filter(
+      (track) =>
+        track.touches !== null &&
+        (track.attained === null || levelRank(track.touches) > levelRank(track.attained)),
+    );
+    // Anti-vacuity: the corpus must exercise the distinction, while the direct
+    // owners below carry every mutable per-track value.
+    expect(separated.length).toBeGreaterThan(0);
+    for (const track of separated) {
+      if (track.attained !== null) {
+        expect(levelRank(track.touches!)).toBeGreaterThan(levelRank(track.attained));
+      }
+    }
   });
 
   it("reports every track as overstating, which is the finding", () => {
@@ -179,79 +142,34 @@ describe("the gate that would have caught the A2 claim", () => {
     expect(gate.summary.tracksWithAnyLevel).toBe(
       Object.values(LEVEL_PROGRESS).filter((owner) => owner.attained !== null).length,
     );
-    const expectedByLevel = new Map<string, number>();
+    const expectedByLevel = Object.fromEntries(CEFR_LEVELS.map((level) => [level, 0]));
     for (const owner of Object.values(LEVEL_PROGRESS)) {
       if (owner.attained !== null) {
-        expectedByLevel.set(owner.attained, (expectedByLevel.get(owner.attained) ?? 0) + 1);
+        expectedByLevel[owner.attained] += 1;
       }
     }
-    for (const [level, count] of Object.entries(gate.summary.attainedByLevel)) {
-      expect(count, level).toBe(expectedByLevel.get(level) ?? 0);
-    }
+    expect(gate.summary.attainedByLevel).toEqual(expectedByLevel);
   });
 
   it("names which criterion failed and by how much, not just that one did", () => {
     const gate = realReport().levelGate!;
-    const spanish = gate.tracks.find((t) => t.language === "spanish")!;
-
-    // This asserted, in turn, Spanish's `vocabulary` blocker and its shortfall, and
-    // then — once chapters 328-334 carried the track past the 300-word floor — the
-    // ABSENCE of that blocker from `spanish.blockers`. Both readings were of a list
-    // scoped to whatever rung Spanish happened to be working on, and that rung has
-    // now moved: `blockers` describes A1, where a 600-word target is open again and
-    // `vocabulary` is legitimately back in the list. Asserting its absence would now
-    // be asserting something false about a different level.
-    //
-    // The closure is stated where it cannot drift: `attained` is the gate's own
-    // verdict that EVERY pre-A1 criterion holds, which is strictly more than the
-    // one criterion the old line reached for.
-    expect(levelRank(spanish.attained!)).toBeGreaterThanOrEqual(levelRank("pre-A1"));
-    // Anti-vacuity. The loop below asserts over `spanish.blockers`, and a `for` over
-    // an empty array passes without checking anything — so a Spanish that had gone
-    // clean at every level, or a gate that had stopped populating blockers at all,
-    // would turn this test green while measuring nothing. Something must be open for
-    // the loop to have a subject.
-    expect(spanish.blockers.length).toBeGreaterThan(0);
-    expect(spanish.inProgressAt).not.toBeNull();
-    // This once asserted a `reinforcement` blocker, then asserted its absence
-    // after the reinforcement tranche closed all 24 under-reinforced atoms, and
-    // now it would have to assert its presence again — criterion 4 re-opens
-    // every time a vocabulary wave lands and closes as the new atoms get their
-    // second outing. That churn is the argument: pinning WHICH criteria are open
-    // makes this test a ledger of unfinished work that every tranche has to
-    // edit. What is asserted instead is the property the test is named for —
-    // every blocker names its criterion AND quantifies it.
-    for (const blocker of spanish.blockers) {
-      expect(blocker.detail.trim()).not.toBe("");
-      expect(blocker.shortfall).toBeGreaterThan(0);
+    const open = gate.tracks.filter((track) => track.inProgressAt !== null);
+    expect(open.length).toBeGreaterThan(0);
+    for (const track of open) {
+      expect(track.blockers.length, track.language).toBeGreaterThan(0);
+      for (const blocker of track.blockers) {
+        expect(blocker.criterion.trim(), track.language).not.toBe("");
+        expect(blocker.detail.trim(), track.language).not.toBe("");
+        expect(blocker.shortfall, track.language).toBeGreaterThan(0);
+      }
     }
-
-    // The criterion counts vocabulary AT OR BELOW the level, not the whole track.
-    // Measuring the whole track against a per-level target was the first version
-    // of this module committing the very error it exists to catch — a number
-    // meaning "everything taught" published against one meaning "by the end of
-    // pre-A1". That distinction is what the closure above rests on: the track
-    // teaches 482 headwords in total, and it is the 304 taught at or below
-    // pre-A1 that cleared the 300-word floor. The shortfall CEILING that stood
-    // here is retired along with the blocker it measured — git holds its history.
-    // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
-    // Chapter 17 correctly reclassifies its two tense bundles as grammar.
-    // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
-    expect(spanish.vocabulary).toBeGreaterThanOrEqual(347); // spanish pre-A1 survival tranche: +15, and exactly +15 -- an earlier draft moved this only +12 because cansado, mal and como-se-dice already existed elsewhere in the track; they were replaced with tranquilo, triste and que-significa rather than shipped as duplicates // +2 more: the repair kit // -1: HL-C98 retires the bundled AR-PRESENT-SINGULAR headword // HL-C152: +5 lessons, +1 chapter — Spanish realizes SPINE-NEGATE-AND-ASK, completing A2 at 5/5 // HL-C157: ayer + hablare close A2 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines // HL-C177: +5 -- chapter 273, C1 closes // HL-C178: +5 -- chapter 274, C2 opens // HL-C179: +5 -- chapter 275, fine shades // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C194: +16 Spanish pre-A1 words // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) // FLOOR — content only grows; exact pins serialize parallel tranches
   });
 
   it("scopes the atom budget to the level, so a high lesson cannot block a low one", () => {
-    // Hindi has one over-budget lesson, and it sits ABOVE pre-A1. Before the criteria
-    // were level-scoped it blocked pre-A1 anyway, which made criterion 3 unfalsifiable
-    // at the bottom of the ladder for every track.
-    //
-    // Hindi showed it end to end first: with chapters 106-127 it ATTAINED pre-A1
-    // while that one over-budget lesson was still in the track, and the lesson
-    // surfaced as an atom-budget blocker only on the rung it actually sat on, A1.
-    // Bengali, Gujarati, Malayalam, Punjabi and Sanskrit were later witnesses. Each
-    // split its over-budget lessons on the way to A1, and when Bengali, the last,
-    // did so the claim moved to the synthetic fixture built above: one A1 lesson of
-    // an A1 track marked over budget, everything else the real corpus.
+    // Before the criteria were level-scoped, an over-budget lesson above pre-A1
+    // blocked pre-A1 anyway. The real corpus eventually stopped carrying a stable
+    // witness, so the claim now uses the synthetic fixture built above: one A1
+    // lesson of an A1 track marked over budget, everything else the real corpus.
     const { track, lesson, baseline, gate } = SYNTHETIC_WITNESS;
     expect(baseline.attained, `${track} attains A1 before the injection`).toBe("A1");
     const witness = gate.tracks.find((t) => t.language === track)!;
@@ -267,7 +185,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // the grounds that "no node is unrealized" is not "every node is realized".
     // The tranche is authored now, so the refusal has a better reason: 17 nodes exist,
     // and a track that has not realized them is refused on that count. The failure
-    // names a number instead of a void. (Spanish has since realized all of B1.)
+    // names a number instead of a void. (The corpus now exercises the positive case.)
     const e = REAL_EVERYTHING;
     const gate = runLevelGate({
       lessons: e.lessons,
@@ -282,14 +200,14 @@ describe("the gate that would have caught the A2 claim", () => {
     // Authoring a rung does not climb it. No track may attain B1 on an empty ledger.
     //
     // This read `every(t => t.attained === null)`, which was a stronger claim than the
-    // sentence above it and stopped being true when Spanish attained pre-A1. pre-A1 is
+    // sentence above it and stopped being true when the first track attained pre-A1. pre-A1 is
     // not the rung under test — B1 is, and the reason B1 is refused is that all 17 of
     // its nodes are unrealized, which has nothing to do with what the bottom of the
     // ladder has closed. Scoping the assertion to B1-and-above says exactly the thing
     // the test is named for, and still fails the day a track is handed a rung whose
     // ledger is empty.
     //
-    // Spanish then climbed B1 honestly (chapters 512-777), so "below B1" stopped
+    // A track then climbed B1 honestly, so "below B1" stopped
     // being true for every track. The claim the test is named for still holds and is
     // now checked directly rather than by proxy: a track at B1 or above must realize
     // EVERY authored B1 node in its own lessons. A track handed B1 on an empty ledger
@@ -321,17 +239,11 @@ describe("the gate that would have caught the A2 claim", () => {
   });
 });
 
-describe("the first rung anybody actually climbed", () => {
-  // Everything below is about ONE track reaching ONE level. It is worth its own
-  // describe because for the whole life of this module the answer was "none", and a
-  // regression to "none" is the kind of thing a corpus-wide suite reports as a
-  // changed integer somewhere rather than as the thing it is.
-
-  it("closes criterion 4 for Spanish at the atom, not just at the summary", { timeout: 60_000 }, () => {
-    // `attained === "pre-A1"` is the gate's own verdict, and asserting only the
-    // verdict would pass on a gate that had quietly stopped measuring. So this
-    // re-derives criterion 4 from the same two inputs the gate reads — the continuity
-    // report and the lesson→level map — and names any atom that fails it.
+describe("the rungs tracks have climbed", () => {
+  it("closes criterion 4 at the atom for every attained rung", { timeout: 60_000 }, () => {
+    // Re-derive criterion 4 from the same two inputs the gate reads. The mutable
+    // rung for each track comes from its direct owner; this shared test states only
+    // the invariant that every attained rung has no thin non-etymology atoms.
     const e = REAL_EVERYTHING;
     const continuity = measureContinuity(e.lessons);
     const spineNodes = lessonSpineNodes(e.curricula);
@@ -348,54 +260,49 @@ describe("the first rung anybody actually climbed", () => {
       if (stage) levelOf.set(l.realization.lessonId, stage);
     }
 
-    const thin = continuity.reinforcement.filter((defect) => {
-      if (defect.language !== "spanish") return false;
-      const level = levelOf.get(defect.introducedBy);
-      if (level === undefined || levelRank(level) > levelRank("pre-A1")) return false;
-      return defect.revisits < 2 && !isEtymologyAtom(defect.atom);
-    });
-    // Named, not counted: if this ever regresses, the failure should say which atoms
-    // went thin rather than making the next reader re-run the query by hand.
-    expect(thin.map((d) => `${d.atom} (${d.introducedBy})`)).toEqual([]);
-
-    // Anti-vacuity for the filter above. If `levelOf` were empty — a plausible
-    // refactoring accident, since it is rebuilt here rather than exported — every
-    // defect would be skipped and the assertion would pass having checked nothing.
-    const scoped = continuity.reinforcement.filter(
-      (d) => d.language === "spanish" && levelRank(levelOf.get(d.introducedBy) ?? "C2") <= levelRank("pre-A1"),
-    );
-    expect(scoped.length).toBeGreaterThan(0);
+    let scopedDefects = 0;
+    let attainedTracks = 0;
+    for (const [language, owner] of Object.entries(LEVEL_PROGRESS)) {
+      if (owner.attained === null) continue;
+      attainedTracks += 1;
+      const scoped = continuity.reinforcement.filter((defect) => {
+        const level = levelOf.get(defect.introducedBy);
+        return (
+          defect.language === language &&
+          level !== undefined &&
+          levelRank(level) <= levelRank(owner.attained!)
+        );
+      });
+      scopedDefects += scoped.length;
+      const thin = scoped.filter((defect) => defect.revisits < 2 && !isEtymologyAtom(defect.atom));
+      expect(
+        thin.map((defect) => `${defect.atom} (${defect.introducedBy})`),
+        language,
+      ).toEqual([]);
+    }
+    expect(attainedTracks).toBeGreaterThan(0);
+    expect(scopedDefects).toBeGreaterThan(0);
   });
 
-  it("says WHICH track reached it, because a bare count cannot be checked", () => {
-    // The one line this whole apparatus was built to print. It read
-    // "levels ATTAINED (HL09 §3.1): none" from the day it was written; then
-    // "1 track at pre-A1 (spanish)"; and now "1 track at A1 (spanish)". Pinning that
-    // a TRACK IS NAMED, rather than the literal rung, is deliberate: a bare count is
-    // satisfied by any track at all, so the track name is the load-bearing part,
-    // while the rung is the part that is supposed to keep moving.
-    const gate = realReport().levelGate!;
-    const held = gate.tracks.find((t) => t.language === "spanish")!.attained!;
+  it("names every track at every attained rung, because bare counts cannot be checked", () => {
     const rendered = renderCurriculumGapReport(realReport());
     const line = rendered.split(/\r?\n/).find((l) => l.startsWith("levels with STRUCTURAL COVERAGE"))!;
     expect(line).toBeDefined();
+    const groups = new Map<CefrLevel, string[]>();
+    for (const [language, owner] of Object.entries(LEVEL_PROGRESS)) {
+      if (owner.attained === null) continue;
+      const peers = groups.get(owner.attained) ?? [];
+      peers.push(language);
+      groups.set(owner.attained, peers);
+    }
+    expect(groups.size).toBeGreaterThan(0);
     expect(line).not.toContain("none");
-    // The rung comes from the gate rather than from a literal, so this reads the
-    // renderer against the data it renders — which is the actual claim — instead of
-    // against a constant that has now had to be edited twice.
-    // The A1 peer roster is derived from the sharded attainment owners, so a track
-    // climbing honestly updates its one owner instead of this aggregate test.
-    const peers = Object.entries(ATTAINMENT)
-      .filter(([, level]) => level === held)
-      .map(([language]) => language)
-      .sort();
-    // Singular when one track holds the rung: Spanish was the first at B1, alone.
-    expect(line).toContain(
-      `${peers.length} track${peers.length === 1 ? "" : "s"} at ${held} (${peers.join(", ")})`,
-    );
-    // And it must really be a rung that was climbed, not `null` stringified into the
-    // sentence. Without this the line above would pass on "1 track at null (spanish)".
-    expect(levelRank(held)).toBeGreaterThanOrEqual(levelRank("A1"));
+    for (const [level, peers] of groups) {
+      peers.sort();
+      expect(line).toContain(
+        `${peers.length} track${peers.length === 1 ? "" : "s"} at ${level} (${peers.join(", ")})`,
+      );
+    }
     // And the plural agrees with the count, which nothing could have caught while the
     // populated branch of this line had never once run.
     // Guarded by a no-digit lookbehind: "11 tracks" is correct English and
@@ -489,32 +396,33 @@ describe("the first rung anybody actually climbed", () => {
   });
 
   it("scopes each row's vocabulary to at-or-below the level in progress", () => {
-    // The two-numbers lesson (HL-C195), applied to the new rows. `vocabulary`
-    // on the track is the TOTAL headword count; the criterion counts only
-    // headwords at or below the level being worked on. Printing the total here
-    // would show a track as nearly done while its blocker said otherwise --
-    // Spanish read "227/300" while the blocker said 48.
+    // `vocabulary` on a track is the total headword count; the criterion counts
+    // only headwords at or below the level being worked on. Choose a witness by
+    // measured properties so no advancing track becomes a shared fixture.
     const gate = realReport().levelGate!;
-    const spanish = gate.tracks.find((t) => t.language === "spanish")!;
-    const blocker = spanish.blockers.find((b) => b.criterion === "vocabulary");
+    const witness = gate.tracks.find((track) => {
+      const blocker = track.blockers.find((candidate) => candidate.criterion === "vocabulary");
+      if (!blocker || track.inProgressAt === null) return false;
+      const target = gate.vocabularyTargets[track.inProgressAt];
+      return target - blocker.shortfall !== track.vocabulary;
+    });
+    expect(witness).toBeDefined();
+    const blocker = witness!.blockers.find((candidate) => candidate.criterion === "vocabulary")!;
+    const target = gate.vocabularyTargets[witness!.inProgressAt!];
     const rendered = renderCurriculumGapReport(realReport());
     const row = rendered
       .split(/\r?\n/)
-      .find((l) => l.trimStart().startsWith("spanish ") && l.includes("touches "))!;
+      .find((line) => line.trimStart().startsWith(`${witness!.language} `) && line.includes("touches "))!;
     expect(row).toBeDefined();
-    if (blocker) {
-      const target = gate.vocabularyTargets[spanish.inProgressAt ?? "C2"];
-      expect(row).toContain(`vocabulary ${target - blocker.shortfall}/${target}`);
-      // And it is NOT the track total, which is the number that misled before.
-      expect(row).not.toContain(`vocabulary ${spanish.vocabulary}/${target}`);
-    }
+    expect(row).toContain(`vocabulary ${target - blocker.shortfall}/${target}`);
+    expect(row).not.toContain(`vocabulary ${witness!.vocabulary}/${target}`);
   });
 
   it("does not print the word ATTAINED, because §3.1 measures a corpus", () => {
     // The vocabulary-of-attainment fix. Every §3.1 criterion counts something
     // about the BOOK — headwords, verbs, spine nodes, reinforcement windows,
     // writing stages — and none of them scores a learner. "levels ATTAINED"
-    // reads as a claim about what a reader can do, and Spanish was about to
+    // reads as a claim about what a reader can do, and a track was about to
     // print it having never had one exam item marked against it.
     //
     // Asserting the word is ABSENT, not merely that the new one is present:
@@ -529,44 +437,8 @@ describe("the first rung anybody actually climbed", () => {
     expect(rendered).toContain("no line above claims a reader can pass anything");
   });
 
-  it("has SATISFIED criterion 2b at A1 — the composition blocker is discharged", () => {
-    // HL23's finding, made into a gate, and now paid off. The history of this one
-    // assertion is the whole argument for criterion 2b, so it is kept here rather
-    // than deleted with the blocker:
-    //
-    //   - first written when Spanish taught 584 headwords at or below A1 of which
-    //     SEVEN were verbs, and it read `verb-vocabulary(-32)` beside
-    //     `vocabulary(-15)` — two criteria failing by two different amounts, which
-    //     is what proved they measure different things;
-    //   - then `verb-vocabulary(-16)` with the `vocabulary` blocker GONE, the
-    //     moment the total crossed 600 on a lexicon of 24 verbs. That was the
-    //     sharpest the point ever got: a gate carrying only the count would have
-    //     waved A1's vocabulary through, and exactly one of the two numbers could
-    //     tell.
-    //
-    // Both are now discharged. 617 headwords at or below A1 against a floor of
-    // 600, and 40 verb headwords against a floor of 40 — met exactly, with no margin.
-    //
-    // WHY THIS TEST STOPPED READING `blockers` AND STARTED RE-DERIVING
-    //
-    // It used to assert `inProgressAt === "A1"` and then that `vocabulary` and
-    // `verb-vocabulary` were ABSENT from `blockers`. Both halves have now expired for
-    // the same reason: criterion 4 closed, Spanish ATTAINED A1, and `blockers` is
-    // scoped to the first FAILING level — which is A2. At A2 both criteria are
-    // legitimately open again (669 against 1200, 77 against 120), so asserting their
-    // absence would now be asserting something false about a different rung, exactly
-    // the trap the `vocabulary` comment at the top of this file records.
-    //
-    // The subject of this test is A1, so it is measured at A1 rather than read off a
-    // list that has moved. `attained` is the gate's own verdict that EVERY A1
-    // criterion holds — strictly more than 2b — and the counts below re-derive 2b
-    // from the corpus so the claim is checked at the atom, not inferred from the
-    // verdict. Both are needed: the verdict alone would pass on a gate that had
-    // stopped measuring, and the counts alone would not prove the gate agreed.
+  it("re-derives criteria 2b and 4 for every track at or above A1", () => {
     const gate = realReport().levelGate!;
-    const spanish = gate.tracks.find((t) => t.language === "spanish")!;
-    expect(levelRank(spanish.attained!)).toBeGreaterThanOrEqual(levelRank("A1"));
-
     const e = REAL_EVERYTHING;
     const spineNodes = lessonSpineNodes(e.curricula);
     const stageOf = new Map<string, CefrLevel>();
@@ -580,47 +452,36 @@ describe("the first rung anybody actually climbed", () => {
       const stage = node ? stageOf.get(node) : undefined;
       return stage !== undefined && levelRank(stage) <= levelRank("A1");
     };
-    // Mirrors `vocabularyOf` / `verbVocabularyOf` in src/level-gate.ts, which are
-    // module-private. The `(^|-)VERB-` anchor is the same one, and it is the reason
-    // `ADVERB-*` does not count toward a verb lexicon.
-    const headwordsAtA1 = new Set<string>();
-    const verbsAtA1 = new Set<string>();
-    for (const lesson of e.lessons) {
-      if (lesson.realization.language !== "spanish") continue;
-      if (!CONTENT_TYPES.has(lesson.realization.type)) continue;
-      if (!atOrBelowA1(lesson.realization.lessonId)) continue;
-      const headword = (lesson.realization.headword ?? "").trim().toLowerCase();
-      if (!headword) continue;
-      headwordsAtA1.add(headword);
-      if (/(^|-)VERB-/.test(lesson.realization.concept ?? "")) verbsAtA1.add(headword);
-    }
-    // FLOORS against the published targets, not pins against today's corpus: content
-    // only grows, and 40-against-40 is the number that must never fall back.
-    expect(headwordsAtA1.size).toBeGreaterThanOrEqual(LEVEL_VOCABULARY["A1"]);
-    expect(verbsAtA1.size).toBeGreaterThanOrEqual(LEVEL_VERB_VOCABULARY["A1"]);
-
-    // Criterion 4 was what held A1 after 2b was discharged, and it is what the review
-    // tranche closed. Asserting it here — at A1, on the same re-derivation the
-    // criterion-4 test uses for pre-A1 — is what stops "the verb blocker is gone"
-    // from being the only thing this test still checks.
     const continuity = measureContinuity(e.lessons);
-    const thinAtA1 = continuity.reinforcement.filter(
-      (d) =>
-        d.language === "spanish" &&
-        atOrBelowA1(d.introducedBy) &&
-        d.revisits < 2 &&
-        !isEtymologyAtom(d.atom),
+    const witnesses = gate.tracks.filter(
+      (track) => track.attained !== null && levelRank(track.attained) >= levelRank("A1"),
     );
-    expect(thinAtA1.map((d) => `${d.atom} (${d.introducedBy})`)).toEqual([]);
-    // Anti-vacuity for the filter: if `atOrBelowA1` ever returned false for everything
-    // — a plausible refactoring accident, since the stage map is rebuilt here — the
-    // assertion above would pass having inspected nothing.
-    expect(headwordsAtA1.size).toBeGreaterThan(0);
-
-    // Critically: pre-A1 is NOT perturbed, by this criterion or by the tranches
-    // that moved the A1 numbers. A change that revoked an already-held rung would be
-    // a regression dressed as progress, and the floor above is what catches it.
-    expect(levelRank(spanish.attained!)).toBeGreaterThanOrEqual(levelRank("pre-A1"));
+    expect(witnesses.length).toBeGreaterThan(0);
+    for (const track of witnesses) {
+      // Mirrors the two module-private vocabulary counters. The anchored verb tag
+      // deliberately excludes concepts that only contain the substring elsewhere.
+      const headwords = new Set<string>();
+      const verbs = new Set<string>();
+      for (const lesson of e.lessons) {
+        if (lesson.realization.language !== track.language) continue;
+        if (!CONTENT_TYPES.has(lesson.realization.type)) continue;
+        if (!atOrBelowA1(lesson.realization.lessonId)) continue;
+        const headword = (lesson.realization.headword ?? "").trim().toLowerCase();
+        if (!headword) continue;
+        headwords.add(headword);
+        if (/(^|-)VERB-/.test(lesson.realization.concept ?? "")) verbs.add(headword);
+      }
+      expect(headwords.size, track.language).toBeGreaterThanOrEqual(LEVEL_VOCABULARY["A1"]);
+      expect(verbs.size, track.language).toBeGreaterThanOrEqual(LEVEL_VERB_VOCABULARY["A1"]);
+      const thin = continuity.reinforcement.filter(
+        (defect) =>
+          defect.language === track.language &&
+          atOrBelowA1(defect.introducedBy) &&
+          defect.revisits < 2 &&
+          !isEtymologyAtom(defect.atom),
+      );
+      expect(thin.map((defect) => `${defect.atom} (${defect.introducedBy})`), track.language).toEqual([]);
+    }
   });
 });
 
@@ -631,12 +492,9 @@ describe("etymology is a hook, not a skill", () => {
     // for an etymon was to re-state it in the Guided Practice and again in the
     // Wrap-up Recall -- so the GATE was manufacturing the repetition.
     //
-    // This test used to read Spanish and pin `reinforcement.shortfall` to 24. Spanish
-    // no longer HAS a reinforcement blocker -- closing all 24 is what the pre-A1
-    // reinforcement tranche did -- so the subject moved, and with it the shape of the
-    // assertion. A pinned integer on one track's unfinished work serialises every
-    // parallel authoring tranche behind this file, and it names a number that is
-    // supposed to fall to zero. What is checked now is the waiver itself.
+    // This test once pinned one track's mutable reinforcement shortfall. A shared
+    // integer for unfinished work serializes parallel authoring, so the invariant
+    // now checks the waiver itself with a property-selected witness.
     const e = REAL_EVERYTHING;
     const base = measureContinuity(e.lessons);
     const gateInputs = {
@@ -726,10 +584,9 @@ describe("etymology is a hook, not a skill", () => {
     // runs: a blocker is scoped to the level the track is IN PROGRESS at, so if the
     // waiver lets a track climb a rung, the two runs report shortfalls for two
     // different levels and "unwaived >= waived" stops meaning anything. That is not
-    // hypothetical — it is Spanish today. With the waiver it stands at pre-A1 and is
-    // working on A1, carrying 88 under-reinforced A1 atoms; with the etymons renamed
-    // it never leaves pre-A1 and carries 27 there. 27 < 88 with no waiver bug in
-    // sight, and the old assertion failed on it.
+    // hypothetical: when the waiver changes a track's rung, shortfalls from the two
+    // runs are no longer commensurable. The verdict comparison below handles both
+    // the same-rung and changed-rung cases.
     const verdicts = (report: ContinuityReport) =>
       new Map(
         runLevelGate({ ...gateInputs, continuity: report }).tracks.map((track) => [
@@ -906,13 +763,10 @@ word ${index + 1}
   it("still BITES on a track that reaches the total with the wrong parts", () => {
     // This test exists because the corpus stopped providing the red case.
     //
-    // Until this tranche, criterion 2b was proved on real data: Spanish reached
-    // 601 headwords at or below A1 with 24 verbs, and `verb-vocabulary(-16)` was
-    // the blocker that said so. Authoring sixteen more verbs discharged it — and
-    // that left the criterion with NO failing instance anywhere in the suite. The
-    // whole of `verbVocabularyOf` could have been deleted and every test would
-    // still have passed, which is the exact shape of a gate that quietly stops
-    // gating.
+    // Criterion 2b was first proved on mutable corpus data. Once authoring
+    // discharged its last real blocker, the suite needed a stable red case: the
+    // whole counter could otherwise disappear while every positive corpus test
+    // stayed green.
     //
     // So the red case moves from the corpus into a fixture, where authoring can
     // never turn it green. The track below satisfies criterion 2 EXACTLY -- all
