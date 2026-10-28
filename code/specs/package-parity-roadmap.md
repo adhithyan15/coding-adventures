@@ -18358,3 +18358,15 @@ against the same tracked tree. Both temporary exports were moved to Trash after
 validation. The production delta is unchanged from the previously independently
 reviewed correction series; only the current-main and validation receipts need
 final exact-head review before publication.
+
+## October 28, 2026: Go/Rust Bezier draft publication
+
+The reconciled and revalidated tranche passed exact-head receipt review at
+`3d4de4a17994bf509021c29250580b9427a3ebf0`. The branch was pushed normally
+without rewriting history and opened as draft PR #18503 at
+`2026-10-28T07:20:44Z`. GitHub reports the exact draft head mergeable. This
+draft records the durable PR identity only; the lifecycle-only receipt requires
+exact delta review before readiness. Guarded auto-merge remains disabled until
+the final exact head is conflict-free and every hosted check reaches a terminal
+acceptable conclusion. The live parity set is now exactly {#18355, #18367,
+#18503}, filling the three-PR publication ceiling.

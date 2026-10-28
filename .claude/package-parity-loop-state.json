@@ -19,7 +19,8 @@
   "active_pr": 18355,
   "active_prs": [
     18355,
-    18367
+    18367,
+    18503
   ],
   "last_ci_action": {
     "observed_at": "2026-10-26T23:13:55Z",
@@ -20774,12 +20775,16 @@
     {
       "id": "geometry-bezier2d-flattening-go-rust",
       "title": "Consume safe Bezier flattening contract in Go and Rust",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
       "branch": "codex/parity-bezier-go-rust-flattening-20261025",
-      "pr_number": null,
+      "pr_number": 18503,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18503",
+      "pr_opened_at": "2026-10-28T07:20:44Z",
+      "publication_head": "3d4de4a17994bf509021c29250580b9427a3ebf0",
+      "publication_notes": "Draft PR #18503 opened from exact reviewed implementation, reconciliation, and validation-receipt head 3d4de4a17994bf509021c29250580b9427a3ebf0. GitHub reports the draft mergeable. The durable PR identity is recorded without changing production scope; this lifecycle-only receipt requires exact delta review before readiness, and guarded auto-merge remains disabled until every final-head hosted check is terminal acceptable.",
       "notes": "Explicit error-return API slice for bounded flattening failure. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite controls/tolerance, finite-segment bound, depth/work limit, and Bezier2D plus Arc2D tests; document any API compatibility adjustment.",
       "selection_notes": "Selected as the final bounded existing-lane G2D02 implementation child after the C#/F#, Python/Ruby/Perl, TypeScript/Elixir/Lua, and Haskell/Swift tranches were implemented or prepared. Its neutral termination-contract dependency is merged, its Go and Rust package paths do not overlap the three active PRs or prepared branches, and it closes the last two stale midpoint-recursive implementations before the aggregate owner can be evaluated. Change the public flattening methods to explicit error returns, preserve evaluation/split/bounds behavior, consume all nine fixture rows dynamically, carry the subnormal-underflow regression, and run native Bezier2D plus same-language Arc2D suites. Shared selector integration remains sequenced behind PR #18293; no fourth PR opens while the publication ceiling is full.",
       "started_at": "2026-10-25T22:12:00-07:00",
