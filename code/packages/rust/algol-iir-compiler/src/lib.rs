@@ -4851,6 +4851,31 @@ impl Compiler {
         )
     }
 
+    /// Read a variable-free or tracked static integer term without first
+    /// converting it to binary64. Integer-domain reductions may temporarily
+    /// exceed `2^53`; real-valued static terms retain the narrower exact-f64
+    /// boundary.
+    fn exact_integer_sign_static_term(
+        &self,
+        node: &GrammarASTNode,
+        magnitude_limit: u64,
+    ) -> Option<(u64, i64)> {
+        if !self.contains_procedure_call(node) {
+            if let Some(value) = self.static_integer_scalar_value(node) {
+                return (value.unsigned_abs() <= magnitude_limit)
+                    .then_some((value.unsigned_abs(), value));
+            }
+        }
+        let value = expr_static_real_arithmetic_value_with(node, &|_| None)
+            .or_else(|| {
+                exact_static_integer_reduction_value_with(node, &|candidate| {
+                    self.exact_static_integer_reduction_leaf_value(candidate)
+                })
+                .map(|value| value as f64)
+            })?;
+        Some((exact_sign_integer_units(value)?, value as i64))
+    }
+
     fn builtin_exact_integer_sign_operand_with_limit<'n>(
         &self,
         node: &'n GrammarASTNode,
@@ -4943,21 +4968,9 @@ impl Compiler {
                         {
                             rooted.push(candidate);
                         } else {
-                            let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
-                                .or_else(|| {
-                                    exact_static_integer_reduction_value_with(
-                                        operand,
-                                        &|candidate| {
-                                            self.exact_static_integer_reduction_leaf_value(
-                                                candidate,
-                                            )
-                                        },
-                                    )
-                                    .map(|value| value as f64)
-                                })?;
-                            let units = exact_sign_integer_units(value)?;
+                            let (units, signed_value) = self
+                                .exact_integer_sign_static_term(operand, magnitude_limit)?;
                             static_magnitude = static_magnitude.checked_add(units)?;
-                            let signed_value = value as i64;
                             if index > 0
                                 && matches!(sequence.get(index - 1), Some(Piece::Op(op)) if op == "-")
                             {
@@ -5002,19 +5015,10 @@ impl Compiler {
                         ) {
                             rooted.push((index, candidate));
                         } else {
-                            let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
-                                .or_else(|| {
-                                    exact_static_integer_reduction_value_with(
-                                        operand,
-                                        &|candidate| {
-                                            self.exact_static_integer_reduction_leaf_value(
-                                                candidate,
-                                            )
-                                        },
-                                    )
-                                    .map(|value| value as f64)
-                                })?;
-                            let units = exact_sign_integer_units(value)?;
+                            let (units, signed_value) = self.exact_integer_sign_static_term(
+                                operand,
+                                MAX_EXACT_SIGN_INTEGER_INTERMEDIATE_MAGNITUDE,
+                            )?;
                             let operator = (index > 0)
                                 .then(|| sequence.get(index - 1))
                                 .flatten()
@@ -5022,7 +5026,7 @@ impl Compiler {
                                     Piece::Op(op) => Some(op.as_str()),
                                     Piece::Node(_) => None,
                                 });
-                            static_terms.push((index, operator, units, value as i64));
+                            static_terms.push((index, operator, units, signed_value));
                         }
                     } else {
                         let Piece::Op(op) = piece else {
@@ -16714,6 +16718,30 @@ mod tests {
         ] {
             compile_source(source, "test")
                 .expect_err("unreduced wide sums and early real division must fail closed");
+        }
+    }
+
+    #[test]
+    fn al4_wide_static_integer_terms_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740993 * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740993 * sign(pick()) + 9007199254740993) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "an exact i64 static term may reduce below 2^53 before widening for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(9007199254740993 * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((9007199254740993 * sign(pick())) / 2) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((9007199254740993 * 1024 * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, early-widened, and overflowing wide static terms must fail closed",
+            );
         }
     }
 
