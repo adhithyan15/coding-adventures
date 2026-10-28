@@ -19127,3 +19127,17 @@ compatibility, stable errors, native build fronts, documentation, and empty
 capabilities. Keep the branch local until current-main lifecycle receipts are
 reconciled, complete native validation passes, and the exact head receives
 independent review.
+
+The bounded implementation is now committed at
+`d9eff3c2776c4093894bc3544b996cb048019212`. Six native tests and the release
+build pass; strict Swift Format lint passes; production coverage is 98.68% of
+lines, 96.00% of functions, and 92.75% of regions. The real Go build tool's
+bounded sparse inventory selects the new package together with its DT17
+hash-functions prerequisite and records the intended dependency edge. Keep the
+branch local while exact-head review and current-main reconciliation complete.
+
+Independent review of exact head
+`d9eff3c2776c4093894bc3544b996cb048019212` now passes with no remaining code,
+security, or test finding. Review drove the 64-bit correction/saturation
+regressions and reflexive NaN error equality. Current-main lifecycle
+reconciliation and generated-artifact cleanup still precede publication.
