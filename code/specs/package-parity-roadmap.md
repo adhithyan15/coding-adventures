@@ -18112,6 +18112,42 @@ enforce the 95% library line target on Unix and Windows. Package APIs, AST
 nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
 of scope.
 
+## October 25, 2026: scripting Bezier flattening selection
+
+The occupied three-PR publication ceiling does not block independent local
+preparation. The next dependency-ready tranche is
+`geometry-bezier2d-flattening-python-ruby-perl`: its sole prerequisite is the
+merged G2D02 termination contract, and its native package sources do not
+overlap the active Haskell, C# document-AST, or .NET Wasm PRs or the prepared
+C#/F# Bezier tranche.
+
+All three scripting implementations still use midpoint-only flatness and
+unbounded recursion. Adopt the nine-case neutral fixture through each public
+polyline API, reject nonpositive or nonfinite tolerance and nonfinite control
+points, use the finite-segment control-point bound, and fail atomically when
+the shared depth or split budget is exhausted. Preserve public return shapes
+and endpoint ordering, and run each same-language Arc2D regression suite.
+Shared Go build-tool selector changes remain with the earlier C#/F# tranche;
+this branch consumes the fixture natively and avoids conflicting selector
+edits until that dependency-independent publication lands.
+
+The prepared implementation now replaces recursion in all three lanes with a
+left-first explicit stack, a depth limit of 32, and a shared 65,535-split
+budget. Scaled finite-segment distance arithmetic also carries the independent
+.NET review's subnormal-underflow lesson into these lanes before publication.
+The branch is now reconciled normally with exact current main
+`5daf063f8aeaf4f2c40936ab579a00113706074b`, preserving every intervening
+parity merge receipt without rewriting its prepared implementation history.
+The Python, Ruby, and Perl production delta is unchanged from exact reviewed
+head `6138482108a9535aed890eb76424c2bfe442275b`; the live publication set is
+{#18367, #18506}, leaving one slot for this independent three-lane tranche.
+All native fixtures and same-language Arc2D suites pass. Python's 35-test
+Bezier2D build measures 95.73% production coverage and its one-test negative
+selection fails the raised 95% floor; Ruby passes 19 tests with 138 assertions,
+and Perl passes 86 assertions. Independent review also pinned the fixture
+version, depth, and split-budget metadata in every reader and corrected Ruby's
+retired midpoint-flatness comment. Hosted platforms and independent final-head
+review remain required before this tranche can be published.
 ## October 25, 2026: dynamic-runtime Bezier flattening selection
 
 With the three publication slots still occupied and the C#/F# plus
@@ -18682,7 +18718,7 @@ PaintVmAscii preparation, publication, and review history. Dynamic Bezier PR
 {#18367, #18506}. The resulting Swift merge head must pass focused validation,
 exact-head review, and fresh hosted checks before guarded auto-merge.
 
-## October 28, 2026: Swift merge and dynamic Bezier conflict reconciliation
+## October 28, 2026: Swift merge and published Bezier conflict reconciliation
 
 Swift PaintVmAscii PR #18367 completed all 40 exact-head checks acceptably and
 merged through guarded squash auto-merge from exact reconciliation head
@@ -18692,9 +18728,26 @@ merged through guarded squash auto-merge from exact reconciliation head
 completed worktree and local branch were removed safely.
 
 That base advance conflicts with the published dynamic and scripting Bezier
-branches only on their append-only lifecycle records. Preserve the dynamic
-branch's published history with a normal merge of exact current main while
-retaining every prior merge receipt and the TypeScript/Elixir/Lua implementation,
-validation, publication, and review history. The live publication set is now
-{#18506, #18508}; each reconciled exact head requires fresh hosted checks before
-guarded auto-merge can be enabled.
+branches only on append-only lifecycle records. Both branches preserve their
+published histories through normal merges of exact current main: the scripting
+branch retains the Python/Ruby/Perl implementation and review receipts, while
+the dynamic branch retains the TypeScript/Elixir/Lua implementation and review
+receipts. The live publication set is now {#18506, #18508}; each reconciled
+exact head requires fresh hosted checks before guarded auto-merge can be enabled.
+
+## October 28, 2026: dynamic Bezier merge and scripting reconciliation
+
+Dynamic Bezier PR #18506 completed all 39 exact-head checks acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`133ed55bc690321aef534d18902b875353bedff9` as
+`e08ed142125a4441e2ca53470e6b584573b7e6ac` at
+`2026-10-28T09:52:15Z`. The exact receipt is current origin/main, and its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with the published scripting and Haskell/Swift
+Bezier branches only on append-only lifecycle records. Preserve the scripting
+branch's published history through a normal merge of exact current main while
+retaining every prior merge receipt and the complete Python/Ruby/Perl
+implementation, validation, publication, and review history. The live
+publication set is now {#18508, #18511}; replacement exact-head hosted checks
+remain required before guarded auto-merge.

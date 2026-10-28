@@ -1,1 +1,1 @@
-ruby test/test_bezier2d.rb
+ruby -Itest -e 'Dir["test/test_*.rb"].sort.each { |file| load file }'
