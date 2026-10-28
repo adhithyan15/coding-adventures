@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased] - 2026-10-06
 
+### Added
+
+- Add a pure, bounded graph and diff-selection evaluator that dynamically
+  consumes the exact eight graph and twelve diff-selection neutral fixtures.
+  It provides canonical graph levels, stable all-or-error diagnostics,
+  dependent and prerequisite closures, strict memoized Unicode-scalar globs,
+  exact BUILD-front handling, domain-separated repository-boundary validation,
+  deterministic shared-input fanout, and the operation-wide 50,000,000-unit
+  match-work preflight without adding checkout, Git, process, environment,
+  network, clock, randomness, credential, or execution authority.
+
 ### Changed
 
 - Discovery now requires an exact regular canonical `BUILD` before any
@@ -44,6 +55,10 @@ All notable changes to this project will be documented in this file.
 
 ### Tests
 
+- Exercise every neutral graph and diff-selection case through production code,
+  pin the exact case-ID roster, assert both shared-input consumers independently,
+  and cover structural rejection, no-partial cycle and unknown-path failures,
+  glob validation, boundary mismatch, and exact/over-limit work accounting.
 - Project the checked Windows-override and variant-without-canonical cases
   through production discovery on explicit platforms, check real Windows host
   selection and emitted shell-only plan, and retain macOS/Linux precedence and

@@ -64,6 +64,7 @@ policy retains a separate owner.
 | `BuildTool.CLI` | Escript entry point, argument parsing, orchestration |
 | `BuildTool.Discovery` | Recursive directory walk to find `BUILD` files |
 | `BuildTool.DirectedGraph` | Inline DAG implementation (Kahn's algorithm, affected nodes) |
+| `BuildTool.GraphDiff` | Bounded, process-free neutral graph and diff selection |
 | `BuildTool.Resolver` | Parse dependency metadata, build the dependency graph |
 | `BuildTool.GitDiff` | Git-based change detection |
 | `BuildTool.GlobMatch` | Bounded Unicode-scalar portable-glob matching |
@@ -209,6 +210,40 @@ checking a BUILD-file fast path, an earlier matching pattern, or the package
 filesystem. Patterns remain inert strings; matching adds no filesystem, Git,
 process, environment, network, credential, or execution authority.
 
+## Process-free graph and diff selection
+
+`BuildTool.GraphDiff.evaluate_graph/1` and
+`BuildTool.GraphDiff.evaluate_diff_selection/1` accept only caller-owned,
+already-materialized values. They do not read fixture paths or the checkout,
+invoke Git, inspect the environment, launch a process, access the network, use
+credentials, consult a clock, or introduce execution authority. Fixture JSON
+decoding remains in the native test suite.
+
+The graph operation validates at most 4,096 unique qualified package names and
+16,384 unique prerequisite-to-dependent edges before emitting canonical sorted
+edges and deterministic prerequisite-first levels. A cycle, including one
+beside a ready disconnected component, returns only `GRAPH_CYCLE` and no
+partial schedule.
+
+Diff selection validates package roots, exact source modes, portable globs,
+forced seeds, graph closure, and the optional domain-separated repository
+source-input boundary before selection. Strict globs use the same memoized
+Unicode-scalar matcher described above. Exact recursive BUILD fronts cost no
+match work; every other changed path below a strict package root charges the
+complete declared pattern product. The evaluator preflights the whole request
+against the exact 50,000,000-unit ceiling before matching, then returns sorted
+changed, dependent-closed affected, and prerequisite-only package lists.
+Unknown paths follow the explicit `all` or `error` policy. Every structural,
+boundary, work-limit, cycle, or unknown-path failure is all-or-error and cannot
+leak a forced or locally matched partial selection.
+
+The native suite dynamically discovers and pins the complete shared roster of
+eight graph and twelve diff-selection fixtures. This includes strict character
+classes, exact BUILD fronts, the at-limit and over-limit Unicode-scalar cases,
+and one shared Rust workspace input selecting both registered Swift consumers
+in deterministic order while excluding the unregistered peer. This evidence
+does not claim that the Elixir front door is a neutral conformance adapter.
+
 ## Source hashing v1
 
 Package source selection uses the checked language-neutral source-input
@@ -246,6 +281,9 @@ fixtures and all five tracked-artifact fixtures. Focused tests cover exemption
 precedence, hostile-path redaction, Python blank reasons and ASCII-JSON detail
 ordering, rooted BUILD selection, Unicode 17 full-fold aliases, tracked version
 drift, scalar path boundaries, pinned Unicode sentinels, and inert entry kinds.
+`test/graph_diff_test.exs` dynamically consumes the exact eight graph and twelve
+diff-selection fixtures through the pure production evaluator and pins the
+complete case-ID roster so corpus additions cannot be skipped silently.
 
 ## Dependencies
 
