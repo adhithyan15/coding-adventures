@@ -19181,9 +19181,9 @@ the active lifecycle state is reconciled from main and exact-head review
 passes.
 
 The bounded implementation is now committed at
-`ea78bcfad6828c4660922c77067625e99152d6d7`. Five native tests and the release
-build pass; strict Swift Format lint passes; production coverage is 97.45% of
-lines, 100% of functions, and 95.71% of regions. The real Go build tool's
+`dc7ac4b6db0b3eea11de45b34d7c26ab549b5e93`. Five native tests and the release
+build pass; strict Swift Format lint passes; production coverage is 95.22% of
+lines, 96.55% of functions, and 92.11% of regions. The real Go build tool's
 bounded sparse inventory selects the new package together with its DT17
 hash-functions prerequisite and records the intended dependency edge. Keep the
 branch local while exact-head review and active-main reconciliation complete.
