@@ -19342,3 +19342,13 @@ does not overclaim complexity under adversarial caller levels; all are fixed
 without changing the approved implementation. Preserve this reviewed delta
 through the normal current-main merge, re-run bounded validation, and require
 fresh exact merge-head review before publication.
+
+Normal merge head `3489fb88bf12f870c16fa2228a1860fde6230354`
+preserves reviewed skip-list parent
+`7a54e9c4c285f87ec0ae82f76f82985ee4c0ea9f` and exact current-main parent
+`c85baee9a4b57105b7d1c57f71f8536b5379b164`. All seven tests, the release
+build, strict formatting, JSON and diff checks pass with unchanged coverage.
+The bounded real build-tool plan now discovers 171 Swift packages, detects one
+changed and affected package, and selects exactly `swift/skip-list` while the
+newly merged Bloom filter remains skipped. Remove generated artifacts and
+require independent exact merge-head review before publication.
