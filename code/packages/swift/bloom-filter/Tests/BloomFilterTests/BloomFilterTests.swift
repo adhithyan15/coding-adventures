@@ -108,5 +108,13 @@ final class BloomFilterTests: XCTestCase {
     ) { error in
       XCTAssertEqual(error as? BloomFilterError, .invalidMemoryBytes(0))
     }
+    XCTAssertThrowsError(
+      try BloomFilter.capacity(
+        memoryBytes: BloomFilterLimits.maximumBitCount / 8,
+        falsePositiveRate: Double(1).nextDown
+      )
+    ) { error in
+      XCTAssertEqual(error as? BloomFilterError, .capacityOverflow)
+    }
   }
 }

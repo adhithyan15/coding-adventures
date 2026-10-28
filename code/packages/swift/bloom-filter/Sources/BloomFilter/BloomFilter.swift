@@ -9,6 +9,7 @@ public enum BloomFilterError: Error, Equatable, Sendable {
   case invalidHashCount(Int)
   case invalidMemoryBytes(Int)
   case allocationLimitExceeded(requestedBits: Int, maximumBits: Int)
+  case capacityOverflow
 
   public static func == (left: Self, right: Self) -> Bool {
     switch (left, right) {
@@ -30,6 +31,8 @@ public enum BloomFilterError: Error, Equatable, Sendable {
       .allocationLimitExceeded(let rightBits, let rightMaximum)
     ):
       leftBits == rightBits && leftMaximum == rightMaximum
+    case (.capacityOverflow, .capacityOverflow):
+      true
     default:
       false
     }
@@ -167,9 +170,15 @@ public struct BloomFilter: Equatable, Sendable {
     let requested = ceil(
       -Double(expectedItems) * log(falsePositiveRate) / (logTwo * logTwo)
     )
-    guard requested.isFinite, requested <= Double(Int.max) else {
+    guard requested.isFinite,
+      requested <= Double(BloomFilterLimits.maximumBitCount)
+    else {
+      let boundedRequest =
+        requested.isFinite && requested < Double(Int.max)
+        ? Int(requested)
+        : Int.max
       throw BloomFilterError.allocationLimitExceeded(
-        requestedBits: Int.max,
+        requestedBits: boundedRequest,
         maximumBits: BloomFilterLimits.maximumBitCount
       )
     }
@@ -202,7 +211,11 @@ public struct BloomFilter: Equatable, Sendable {
     try validate(falsePositiveRate: falsePositiveRate)
     let bitCount = Double(memoryBytes * 8)
     let logTwo = log(2.0)
-    return Int(floor(-bitCount * logTwo * logTwo / log(falsePositiveRate)))
+    let capacity = floor(-bitCount * logTwo * logTwo / log(falsePositiveRate))
+    guard capacity.isFinite, capacity < Double(Int.max) else {
+      throw BloomFilterError.capacityOverflow
+    }
+    return Int(capacity)
   }
 
   private func hashIndices(for bytes: [UInt8]) -> [Int] {
