@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18531,
+  "active_prs": [
+    18531
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T16:37:37Z",
-    "pr_number": 18527,
-    "head_revision": "70f21eaf0b154c39490b19dd47ec5ae0cc1cf2de",
-    "action": "Every exact-head check for PR #18527 completed acceptably with zero failures and GitHub reported the reviewed head cleanly mergeable. Guarded squash auto-merge produced exact main revision 3fd9485da978aa6276aba825336f0962897fd456; its receipt is verified and the clean completed worktree and local branch are removed.",
+    "observed_at": "2026-10-28T16:42:35Z",
+    "pr_number": 18531,
+    "head_revision": "60198587d0363966d3ed0ab16d278efa5a3beffc",
+    "action": "Published independently reviewed Swift HyperLogLog candidate 60198587d0363966d3ed0ab16d278efa5a3beffc as draft PR #18531. Keep it draft only while the durable PR lifecycle receipt is committed and reviewed; then mark ready and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15231,12 +15233,16 @@
     {
       "id": "swift-hyperloglog-lane-parity",
       "title": "Implement DT21 HyperLogLog in Swift",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
       "branch": "codex/swift-hyperloglog-lane-parity",
-      "pr_number": null,
+      "pr_number": 18531,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18531",
+      "pr_opened_at": "2026-10-28T16:42:35Z",
+      "publication_head": "60198587d0363966d3ed0ab16d278efa5a3beffc",
+      "publication_notes": "Draft PR #18531 is open from independently reviewed exact current-main candidate 60198587d0363966d3ed0ab16d278efa5a3beffc. Keep it draft only while this durable lifecycle receipt is committed and reviewed; after the reviewed receipt is published, mark ready and require a completely fresh hosted matrix before guarded auto-merge.",
       "selected_at": "2026-10-28T16:25:00Z",
       "selection_revision": "d70b1afc3de8ae83b641d8ca8fe9565d901798f6",
       "base_revision": "d70b1afc3de8ae83b641d8ca8fe9565d901798f6",

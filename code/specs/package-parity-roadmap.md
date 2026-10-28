@@ -19209,3 +19209,9 @@ All six tests, the release build, strict formatting, JSON and diff checks, and
 the bounded build-tool dependency plan pass again. Final review found no code,
 security, test, or merge-resolution defect; clear the now-merged Haskell PR
 from the active set and remove the ignored SwiftPM build tree before push.
+
+Publish the independently reviewed exact current-main candidate
+`60198587d0363966d3ed0ab16d278efa5a3beffc` as draft PR #18531. Keep it draft
+only while the durable PR lifecycle receipt is committed and reviewed. Once
+that exact receipt is pushed, mark the PR ready and require a completely fresh
+hosted matrix before guarded auto-merge.
