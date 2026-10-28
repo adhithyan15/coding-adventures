@@ -128,7 +128,7 @@
       "metadata_projection": "Metadata adapter",
       "copy_semantics_hook": "immutable equality and repeat-call assertions",
       "known_divergences": [],
-      "verified_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
+      "verified_revision": "3fd9485da978aa6276aba825336f0962897fd456",
       "package_tree": "141d16aba4a61bca2cbc93b593db9f1d9d825ce9",
       "corpus_sha256": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
       "adoption_pr": 18527,
