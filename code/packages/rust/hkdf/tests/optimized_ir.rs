@@ -6,6 +6,7 @@
 //! and the previous-block owner reach the repository zeroize primitive, while
 //! the public Expand function contains no allocator call.
 
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::Path;
 use std::process::Command;
@@ -78,13 +79,18 @@ fn optimized_fixed_expand_scrubs_result_slots_without_allocating() {
         );
     }
 
-    assert_result_slot_wiped(expand, 33, 32);
-    assert_result_slot_wiped(expand, 49, 48);
+    let sha256_payload = assert_result_slot_wiped(expand, 33, 32);
+    let sha384_payload = assert_result_slot_wiped(expand, 49, 48);
     let previous = alloca_name(expand, 48, 1);
-    assert_owner_wiped(expand, &previous, 48);
+    assert_owner_wiped(
+        expand,
+        &previous,
+        48,
+        &[(&sha256_payload, 32), (&sha384_payload, 48)],
+    );
 }
 
-fn assert_result_slot_wiped(function: &str, result_size: usize, tag_size: usize) {
+fn assert_result_slot_wiped(function: &str, result_size: usize, tag_size: usize) -> String {
     let result = alloca_name(function, result_size, 1);
     let payload_marker = format!("ptr {result}, i64 1");
     let payload = function
@@ -101,6 +107,7 @@ fn assert_result_slot_wiped(function: &str, result_size: usize, tag_size: usize)
         .unwrap_or_else(|| panic!("optimized Expand has no payload pointer for {result}"));
 
     assert_success_copies_are_wiped(function, &payload, tag_size);
+    payload
 }
 
 fn alloca_name(function: &str, size: usize, alignment: usize) -> String {
@@ -145,56 +152,129 @@ fn assert_success_copies_are_wiped(function: &str, payload: &str, tag_size: usiz
     }
 }
 
-fn assert_owner_wiped(function: &str, owner: &str, size: usize) {
-    let lines: Vec<&str> = function.lines().collect();
-    let return_slot = return_slot_name(function);
-    // HkdfError has four variants, so Result<(), HkdfError>::Ok is encoded as
-    // discriminant 4 in this function's return slot.
-    let success_store = lines
+fn assert_owner_wiped(
+    function: &str,
+    owner: &str,
+    size: usize,
+    successful_payloads: &[(&str, usize)],
+) {
+    let blocks = basic_blocks(function);
+    let by_label: HashMap<&str, &BasicBlock<'_>> = blocks
         .iter()
-        .position(|line| is_success_store(line, &return_slot))
-        .unwrap_or_else(|| panic!("optimized Expand has no success store through {return_slot}"));
-    let block_start = lines[..success_store]
+        .map(|block| (block.label.as_str(), block))
+        .collect();
+    let starts: Vec<&BasicBlock<'_>> = blocks
         .iter()
-        .rposition(|line| is_basic_block_label(line))
-        .map_or(0, |index| index + 1);
-    let block_end = lines[success_store + 1..]
-        .iter()
-        .position(|line| is_basic_block_label(line))
-        .map_or(lines.len(), |offset| success_store + 1 + offset);
-
+        .filter(|block| {
+            block.lines.iter().any(|line| {
+                successful_payloads
+                    .iter()
+                    .any(|(payload, tag_size)| is_full_tag_copy(line, payload, *tag_size))
+            })
+        })
+        .collect();
     assert!(
-        lines[block_start..block_end]
-            .iter()
-            .any(|line| is_zeroize_call(line, owner, size)),
-        "optimized Expand does not scrub {size} bytes through {owner} in its success-return block:\n{function}"
+        !starts.is_empty(),
+        "optimized Expand has no successful tag-copy blocks"
     );
+
+    for start in starts {
+        let mut stack = vec![start.label.clone()];
+        let mut visited = HashSet::new();
+        let mut reached_wipe = false;
+        while let Some(label) = stack.pop() {
+            if !visited.insert(label.clone()) {
+                continue;
+            }
+            let block = by_label
+                .get(label.as_str())
+                .unwrap_or_else(|| panic!("optimized Expand references missing block {label}"));
+            if block
+                .lines
+                .iter()
+                .any(|line| is_zeroize_call(line, owner, size))
+            {
+                reached_wipe = true;
+                continue;
+            }
+            let successors = successor_labels(&block.lines);
+            if successors.is_empty() {
+                assert!(
+                    !block
+                        .lines
+                        .iter()
+                        .any(|line| line.trim_start().starts_with("ret ")),
+                    "optimized Expand can return from successful copy block {} through terminal block {label} without scrubbing {owner}:\n{function}",
+                    start.label
+                );
+            }
+            stack.extend(successors);
+        }
+        assert!(
+            reached_wipe,
+            "optimized Expand has no reachable scrub of {owner} after successful copy block {}",
+            start.label
+        );
+    }
 }
 
-fn return_slot_name(function: &str) -> String {
-    let definition = function
-        .lines()
-        .find(|line| line.starts_with("define "))
-        .expect("optimized function must have a definition");
-    let first_argument = call_arguments(definition)
-        .and_then(|arguments| arguments.split(',').next())
-        .expect("optimized function must have a return-slot argument");
-    first_argument
-        .split_ascii_whitespace()
-        .find(|token| token.starts_with('%'))
-        .map(str::to_owned)
-        .expect("optimized function must name its return slot")
+struct BasicBlock<'a> {
+    label: String,
+    lines: Vec<&'a str>,
 }
 
-fn is_success_store(line: &str, return_slot: &str) -> bool {
-    let tokens: Vec<&str> = line.split_ascii_whitespace().collect();
-    tokens.len() >= 5
-        && tokens[0] == "store"
-        && tokens[1]
-            .strip_prefix('i')
-            .is_some_and(|width| width.bytes().all(|byte| byte.is_ascii_digit()))
-        && tokens[2].trim_end_matches(',') == "4"
-        && line_mentions_value(line, return_slot)
+fn basic_blocks(function: &str) -> Vec<BasicBlock<'_>> {
+    let mut blocks = Vec::new();
+    let mut current: Option<BasicBlock<'_>> = None;
+    for line in function.lines() {
+        if let Some(label) = basic_block_label(line) {
+            if let Some(block) = current.take() {
+                blocks.push(block);
+            }
+            current = Some(BasicBlock {
+                label: label.to_owned(),
+                lines: Vec::new(),
+            });
+        } else if let Some(block) = &mut current {
+            block.lines.push(line);
+        }
+    }
+    if let Some(block) = current {
+        blocks.push(block);
+    }
+    blocks
+}
+
+fn successor_labels(lines: &[&str]) -> Vec<String> {
+    let text = lines.join("\n");
+    if text.contains("invoke ") && text.contains("zeroize_bytes") {
+        return label_after(&text, "to label %").into_iter().collect();
+    }
+    let mut successors = Vec::new();
+    let mut remaining = text.as_str();
+    while let Some(offset) = remaining.find("label %") {
+        let after = &remaining[offset + "label %".len()..];
+        let length = after
+            .bytes()
+            .take_while(|byte| is_ir_value_byte(*byte))
+            .count();
+        if length > 0 {
+            successors.push(after[..length].to_owned());
+        }
+        remaining = &after[length..];
+    }
+    successors.sort();
+    successors.dedup();
+    successors
+}
+
+fn label_after(text: &str, marker: &str) -> Option<String> {
+    let after = text.split_once(marker)?.1;
+    let length = after
+        .bytes()
+        .take_while(|byte| is_ir_value_byte(*byte))
+        .count();
+    (length > 0).then(|| after[..length].to_owned())
 }
 
 fn is_full_tag_copy(line: &str, payload: &str, tag_size: usize) -> bool {
@@ -271,8 +351,12 @@ fn is_ir_value_byte(byte: u8) -> bool {
 }
 
 fn is_basic_block_label(line: &str) -> bool {
+    basic_block_label(line).is_some()
+}
+
+fn basic_block_label(line: &str) -> Option<&str> {
     let code = line.split(';').next().unwrap_or_default().trim();
-    !code.is_empty() && code.ends_with(':')
+    code.strip_suffix(':').filter(|label| !label.is_empty())
 }
 
 #[test]
@@ -280,8 +364,8 @@ fn parser_does_not_require_lifetime_intrinsics() {
     let result_without_lifetime = "bb0:\n  call void @llvm.memcpy.p0.p0.i64(ptr %previous, ptr %tag, i64 32, i1 false)\n  invoke void @zeroize_bytes(ptr %tag, i64 32)\n";
     assert_success_copies_are_wiped(result_without_lifetime, "%tag", 32);
 
-    let owner_without_lifetime = "define void @expand(ptr sret([24 x i8]) %return) {\nbb0:\n  store i64 4, ptr %return, align 8\n  call void @zeroize_bytes(ptr %previous, i64 48)\n  ret void\n}";
-    assert_owner_wiped(owner_without_lifetime, "%previous", 48);
+    let owner_without_lifetime = "define void @expand() {\ncopy:\n  call void @llvm.memcpy.p0.p0.i64(ptr %previous, ptr %tag, i64 32, i1 false)\n  invoke void @zeroize_bytes(ptr %tag, i64 32) to label %success unwind label %cleanup\nsuccess:\n  call void @zeroize_bytes(ptr %previous, i64 48)\n  ret void\ncleanup:\n  call void @zeroize_bytes(ptr %previous, i64 48)\n  resume { ptr, i32 } undef\n}";
+    assert_owner_wiped(owner_without_lifetime, "%previous", 48, &[("%tag", 32)]);
 }
 
 #[test]
@@ -298,10 +382,10 @@ fn parser_distinguishes_overlapping_ir_value_names() {
 }
 
 #[test]
-#[should_panic(expected = "does not scrub 48 bytes through %previous in its success-return block")]
+#[should_panic(expected = "return from successful copy block copy through terminal block success")]
 fn parser_rejects_an_owner_wipe_only_on_an_error_path() {
-    let function = "define void @expand(ptr sret([24 x i8]) %return) {\nerror:\n  call void @zeroize_bytes(ptr %previous, i64 48)\n  ret void\nsuccess:\n  store i64 4, ptr %return, align 8\n  ret void\n}";
-    assert_owner_wiped(function, "%previous", 48);
+    let function = "define void @expand() {\ncopy:\n  call void @llvm.memcpy.p0.p0.i64(ptr %previous, ptr %tag, i64 32, i1 false)\n  invoke void @zeroize_bytes(ptr %tag, i64 32) to label %success unwind label %error\nerror:\n  call void @zeroize_bytes(ptr %previous, i64 48)\n  ret void\nsuccess:\n  ret void\n}";
+    assert_owner_wiped(function, "%previous", 48, &[("%tag", 32)]);
 }
 
 fn rust_function_body<'a>(ir: &'a str, rust_name: &str) -> &'a str {
