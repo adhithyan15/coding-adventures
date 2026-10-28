@@ -19529,9 +19529,12 @@ publication, and do not claim execution-adapter or host authority readiness.
 
 #### Elixir graph/diff local implementation and review
 
-Exact current-main head `cd136e09fd595c9bdf0705252ae13ed5102a0a4b`
+Reviewed implementation head `cd136e09fd595c9bdf0705252ae13ed5102a0a4b`
 adds the typed, process-free `BuildTool.GraphDiff` core and dynamically consumes
-the exact eight graph and twelve diff-selection fixtures. The core returns
+the exact eight graph and twelve diff-selection fixtures. Normal merge head
+`121885ac4b8431a94e6c9afbba7c1e7832b8e711` preserves that reviewed lineage
+and exact current main `5ca8d638258ff7100f0c077c587846dccbd85d03`;
+the intervening Microwatt Rust package is path-disjoint. The core returns
 canonical levels and sorted closures, verifies the domain-separated repository
 boundary digest, recognizes only exact BUILD fronts, and completes the
 50,000,000-unit Unicode-scalar match-work preflight before matching or
