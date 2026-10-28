@@ -2514,7 +2514,6 @@ fn pinned_c4_element_colors_reach_semantic_ir() {
     let keyed_style = keyed.nodes[0].style.as_ref().expect("keyed element style");
     assert_eq!(keyed_style.fill.as_deref(), Some("grey"));
     assert_eq!(keyed_style.text_color.as_deref(), Some("red"));
-    assert_eq!(keyed_style.fill.as_deref(), Some("#b91c1c"));
     assert_eq!(keyed_style.stroke.as_deref(), Some("#b91c1c"));
 
     let positional = parse_c4_diagram(
@@ -2524,7 +2523,6 @@ fn pinned_c4_element_colors_reach_semantic_ir() {
     let positional_style = positional.nodes[0].style.as_ref().expect("positional element style");
     assert_eq!(positional_style.fill.as_deref(), Some("#dcfce7"));
     assert_eq!(positional_style.text_color.as_deref(), Some("#14532d"));
-    assert_eq!(positional_style.fill.as_deref(), Some("#166534"));
     assert_eq!(positional_style.stroke.as_deref(), Some("#166534"));
 }
 
@@ -2546,6 +2544,7 @@ fn pinned_c4_relationship_colors_reach_semantic_ir() {
         .as_ref()
         .expect("keyed relationship style");
     assert_eq!(keyed_style.text_color.as_deref(), Some("red"));
+    assert_eq!(keyed_style.fill.as_deref(), Some("#b91c1c"));
     assert_eq!(keyed_style.stroke.as_deref(), Some("#b91c1c"));
 
     let positional = parse_c4_diagram(
@@ -2557,6 +2556,7 @@ fn pinned_c4_relationship_colors_reach_semantic_ir() {
         .as_ref()
         .expect("positional relationship style");
     assert_eq!(positional_style.text_color.as_deref(), Some("#14532d"));
+    assert_eq!(positional_style.fill.as_deref(), Some("#166534"));
     assert_eq!(positional_style.stroke.as_deref(), Some("#166534"));
 }
 
