@@ -237,6 +237,15 @@ Unknown paths follow the explicit `all` or `error` policy. Every structural,
 boundary, work-limit, cycle, or unknown-path failure is all-or-error and cannot
 leak a forced or locally matched partial selection.
 
+Before canonical boundary encoding or digest work, an iterative object-graph
+guard admits at most 16 levels, 65,536 JSON values, 4,096 non-empty containers,
+and 16 MiB of aggregate UTF-8 string data, including object keys. It rejects
+non-JSON values and shared or cyclic container identity where the BEAM can
+represent it, preventing a compact shared DAG from expanding during canonical
+encoding. Folded package-root ancestry is checked with a segment trie rather
+than lexical adjacency, so punctuation between an ancestor and descendant and
+Unicode full-fold aliases cannot make package ownership ambiguous.
+
 The native suite dynamically discovers and pins the complete shared roster of
 eight graph and twelve diff-selection fixtures. This includes strict character
 classes, exact BUILD fronts, the at-limit and over-limit Unicode-scalar cases,

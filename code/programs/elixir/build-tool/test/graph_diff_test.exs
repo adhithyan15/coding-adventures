@@ -158,6 +158,44 @@ defmodule BuildTool.GraphDiffTest do
              })
   end
 
+  test "rejects non-adjacent folded root ancestry and Unicode fold collisions" do
+    punctuation =
+      diff_with_packages([
+        package("fixture/root", "a"),
+        package("fixture/punctuation", "a!"),
+        package("fixture/descendant", "a/x")
+      ])
+
+    assert {:error, "DIFF_PATH_INVALID"} = GraphDiff.evaluate_diff_selection(punctuation)
+
+    unicode_fold =
+      diff_with_packages([
+        package("fixture/eszett", "code/ß"),
+        package("fixture/double-s", "code/ss")
+      ])
+
+    assert {:error, "DIFF_PATH_INVALID"} = GraphDiff.evaluate_diff_selection(unicode_fold)
+  end
+
+  test "rejects a shared boundary DAG before canonical encoding can expand it" do
+    leaf = %{"payload" => String.duplicate("x", 32)}
+    shared_dag = Enum.reduce(1..12, leaf, fn _level, shared -> [shared, shared] end)
+
+    boundary = %{
+      "schema_version" => 1,
+      "language_source_input_registry_sha256" => String.duplicate("0", 64),
+      "boundaries" => shared_dag
+    }
+
+    input = %{
+      diff_with_packages([package("fixture/a", "code/a")])
+      | boundary_sha256: String.duplicate("0", 64),
+        boundary: boundary
+    }
+
+    assert {:error, "DIFF_BOUNDARY_INVALID"} = GraphDiff.evaluate_diff_selection(input)
+  end
+
   test "unknown-path errors never expose forced or local partial selections" do
     input = %DiffInput{
       packages: [
@@ -197,6 +235,20 @@ defmodule BuildTool.GraphDiffTest do
 
   defp decode_fixture(path) do
     path |> File.read!() |> Jason.decode!()
+  end
+
+  defp package(name, root) do
+    %Package{name: name, rel_path: root, source_mode: "package_prefix"}
+  end
+
+  defp diff_with_packages(packages) do
+    %DiffInput{
+      packages: packages,
+      edges: [],
+      forced_packages: [],
+      unknown_path_policy: "error",
+      changed_paths: []
+    }
   end
 
   defp diff_input(document, boundary) do

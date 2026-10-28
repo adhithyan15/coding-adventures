@@ -14,6 +14,10 @@ All notable changes to this project will be documented in this file.
   deterministic shared-input fanout, and the operation-wide 50,000,000-unit
   match-work preflight without adding checkout, Git, process, environment,
   network, clock, randomness, credential, or execution authority.
+- Bound repository-boundary object graphs before canonical encoding and reject
+  shared-container expansion, excessive depth, value count, or aggregate UTF-8
+  string data. Package-root overlap detection now uses folded path segments, so
+  punctuation ordering and Unicode fold aliases cannot hide ancestry.
 
 ### Changed
 
@@ -59,6 +63,8 @@ All notable changes to this project will be documented in this file.
   pin the exact case-ID roster, assert both shared-input consumers independently,
   and cover structural rejection, no-partial cycle and unknown-path failures,
   glob validation, boundary mismatch, and exact/over-limit work accounting.
+- Cover compact exponentially expanding shared boundary input, non-adjacent
+  punctuation ancestry, and Unicode full-fold root collisions.
 - Project the checked Windows-override and variant-without-canonical cases
   through production discovery on explicit platforms, check real Windows host
   selection and emitted shell-only plan, and retain macOS/Linux precedence and

@@ -7,3 +7,6 @@
 - Prove exact shared-input multi-consumer fanout and cross-platform BUILD-front
   behavior without granting the evaluator checkout, Git, filesystem, process,
   environment, network, credential, or execution authority.
+- Guard boundary object graphs before canonical encoding and use folded path
+  tries so shared-container expansion, punctuation-hidden ancestry, and Unicode
+  fold collisions fail without partial selection.

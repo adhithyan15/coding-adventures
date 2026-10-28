@@ -88,6 +88,10 @@ defmodule BuildTool.GraphDiff do
   @max_path_scalars 512
   @max_name_scalars 240
   @max_match_work 50_000_000
+  @max_boundary_depth 16
+  @max_boundary_nodes 65_536
+  @max_boundary_containers 4_096
+  @max_boundary_string_bytes 16_777_216
   @build_fronts MapSet.new([
                   "BUILD",
                   "BUILD_windows",
@@ -361,19 +365,38 @@ defmodule BuildTool.GraphDiff do
   end
 
   defp validate_root_identities(packages) do
-    identities =
-      packages
-      |> Enum.map(fn package -> package.rel_path |> Unicode.nfc() |> Unicode.casefold() end)
-      |> Enum.sort()
+    packages
+    |> Enum.map(fn package ->
+      package.rel_path |> Unicode.nfc() |> Unicode.casefold() |> String.split("/")
+    end)
+    |> Enum.reduce_while(%{}, fn segments, trie ->
+      case insert_root_identity(trie, segments) do
+        {:ok, next_trie} -> {:cont, next_trie}
+        :overlap -> {:halt, :overlap}
+      end
+    end)
+    |> case do
+      :overlap -> {:error, "DIFF_PATH_INVALID"}
+      _trie -> :ok
+    end
+  end
 
-    if identities
-       |> Enum.chunk_every(2, 1, :discard)
-       |> Enum.any?(fn [left, right] ->
-         left == right or String.starts_with?(right, left <> "/")
-       end) do
-      {:error, "DIFF_PATH_INVALID"}
+  defp insert_root_identity(trie, []) do
+    if map_size(trie) == 0 do
+      {:ok, %{terminal: true}}
     else
-      :ok
+      :overlap
+    end
+  end
+
+  defp insert_root_identity(%{terminal: true}, _segments), do: :overlap
+
+  defp insert_root_identity(trie, [segment | rest]) do
+    child = Map.get(trie, segment, %{})
+
+    case insert_root_identity(child, rest) do
+      {:ok, next_child} -> {:ok, Map.put(trie, segment, next_child)}
+      :overlap -> :overlap
     end
   end
 
@@ -419,6 +442,7 @@ defmodule BuildTool.GraphDiff do
 
   defp boundary_reverse_index(%DiffInput{} = input, packages) do
     with :ok <- validate_digest_shape(input.boundary_sha256),
+         :ok <- validate_boundary_object_graph(input.boundary),
          {:ok, canonical} <- encode_boundary(input.boundary),
          :ok <- verify_boundary_digest(input.boundary_sha256, canonical),
          :ok <- validate_boundary(input.boundary) do
@@ -431,6 +455,157 @@ defmodule BuildTool.GraphDiff do
       :ok
     else
       {:error, "DIFF_BOUNDARY_DIGEST_MISMATCH"}
+    end
+  end
+
+  defp validate_boundary_object_graph(boundary) when is_map(boundary) do
+    initial = %{
+      nodes: 0,
+      containers: 0,
+      string_bytes: 0,
+      pending: 1,
+      seen: %{}
+    }
+
+    walk_boundary_graph([{boundary, 0}], initial)
+  end
+
+  defp validate_boundary_object_graph(_boundary),
+    do: {:error, "DIFF_BOUNDARY_DIGEST_MISMATCH"}
+
+  defp walk_boundary_graph([], _state), do: :ok
+
+  defp walk_boundary_graph([{_value, depth} | _rest], _state)
+       when depth > @max_boundary_depth,
+       do: {:error, "DIFF_BOUNDARY_INVALID"}
+
+  defp walk_boundary_graph([{value, depth} | rest], state) do
+    state = %{state | nodes: state.nodes + 1, pending: state.pending - 1}
+
+    if state.nodes > @max_boundary_nodes do
+      {:error, "DIFF_BOUNDARY_INVALID"}
+    else
+      walk_boundary_value(value, depth, rest, state)
+    end
+  end
+
+  defp walk_boundary_value(value, _depth, rest, state) when is_binary(value) do
+    if String.valid?(value) do
+      continue_boundary_walk(rest, add_boundary_string_bytes(state, byte_size(value)))
+    else
+      {:error, "DIFF_BOUNDARY_INVALID"}
+    end
+  end
+
+  defp walk_boundary_value(value, depth, rest, state) when is_map(value) do
+    with {:ok, state} <- reserve_boundary_children(state, map_size(value)),
+         keys = Map.keys(value),
+         true <- Enum.all?(keys, &(is_binary(&1) and String.valid?(&1))),
+         {:ok, state} <- add_boundary_key_bytes(state, keys),
+         {:ok, state} <- register_boundary_container(value, {:map, Enum.sort(keys)}, state),
+         :ok <- boundary_child_depth_ok?(depth, map_size(value)) do
+      children =
+        Enum.reduce(value, rest, fn {_key, child}, stack -> [{child, depth + 1} | stack] end)
+
+      walk_boundary_graph(children, state)
+    else
+      _invalid -> {:error, "DIFF_BOUNDARY_INVALID"}
+    end
+  end
+
+  defp walk_boundary_value(value, depth, rest, state) when is_list(value) do
+    remaining = @max_boundary_nodes - state.nodes - state.pending
+
+    with {:ok, child_count} <- bounded_list_length(value, remaining),
+         {:ok, state} <- reserve_boundary_children(state, child_count),
+         {:ok, state} <- register_boundary_container(value, {:list, child_count}, state),
+         :ok <- boundary_child_depth_ok?(depth, child_count) do
+      children = Enum.reduce(value, rest, fn child, stack -> [{child, depth + 1} | stack] end)
+      walk_boundary_graph(children, state)
+    else
+      _invalid -> {:error, "DIFF_BOUNDARY_INVALID"}
+    end
+  end
+
+  defp walk_boundary_value(value, _depth, rest, state)
+       when is_integer(value) or is_float(value) or is_boolean(value) or is_nil(value),
+       do: walk_boundary_graph(rest, state)
+
+  defp walk_boundary_value(_value, _depth, _rest, _state),
+    do: {:error, "DIFF_BOUNDARY_INVALID"}
+
+  defp continue_boundary_walk(_rest, :over_limit), do: {:error, "DIFF_BOUNDARY_INVALID"}
+  defp continue_boundary_walk(rest, state), do: walk_boundary_graph(rest, state)
+
+  defp add_boundary_key_bytes(state, keys) do
+    keys
+    |> Enum.reduce_while(state, fn key, current ->
+      case add_boundary_string_bytes(current, byte_size(key)) do
+        :over_limit -> {:halt, :over_limit}
+        next -> {:cont, next}
+      end
+    end)
+    |> case do
+      :over_limit -> {:error, "DIFF_BOUNDARY_INVALID"}
+      next -> {:ok, next}
+    end
+  end
+
+  defp add_boundary_string_bytes(state, additional) do
+    if additional > @max_boundary_string_bytes - state.string_bytes do
+      :over_limit
+    else
+      %{state | string_bytes: state.string_bytes + additional}
+    end
+  end
+
+  defp reserve_boundary_children(state, children) do
+    if children <= @max_boundary_nodes - state.nodes - state.pending do
+      {:ok, %{state | pending: state.pending + children}}
+    else
+      {:error, "DIFF_BOUNDARY_INVALID"}
+    end
+  end
+
+  defp bounded_list_length(value, maximum), do: bounded_list_length(value, maximum, 0)
+
+  defp bounded_list_length([], _maximum, count), do: {:ok, count}
+
+  defp bounded_list_length([_item | _rest], maximum, count) when count >= maximum,
+    do: {:error, "DIFF_BOUNDARY_INVALID"}
+
+  defp bounded_list_length([_item | rest], maximum, count),
+    do: bounded_list_length(rest, maximum, count + 1)
+
+  defp boundary_child_depth_ok?(_depth, 0), do: :ok
+
+  defp boundary_child_depth_ok?(depth, _children) do
+    if depth < @max_boundary_depth,
+      do: :ok,
+      else: {:error, "DIFF_BOUNDARY_INVALID"}
+  end
+
+  defp register_boundary_container(value, _signature, state)
+       when value == %{} or value == [],
+       do: {:ok, state}
+
+  defp register_boundary_container(value, signature, state) do
+    prior = Map.get(state.seen, signature, [])
+
+    cond do
+      state.containers >= @max_boundary_containers ->
+        {:error, "DIFF_BOUNDARY_INVALID"}
+
+      Enum.any?(prior, fn item -> :erts_debug.same(value, item) end) ->
+        {:error, "DIFF_BOUNDARY_INVALID"}
+
+      true ->
+        {:ok,
+         %{
+           state
+           | containers: state.containers + 1,
+             seen: Map.put(state.seen, signature, [value | prior])
+         }}
     end
   end
 
