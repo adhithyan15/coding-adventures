@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-26
+**Last reprioritized:** 2026-10-28
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -109,6 +109,7 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 17 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | `RCPU-083` is complete locally: full pinned base configuration, 34 release tests, 712 checked-in evidence rows including 308 independent manual transitions, 183 distinct source-topology transitions, and 56 lifecycle/fault rows, strict checks, and 94.33% line coverage (882/935). Independent exact-head review is next. `RCPU-084` remains merge-dependent and must review the manual/RTL EBA bit-8 discrepancy before claiming state equality. |
 | 18 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is complete locally from its independently reviewed spec-only predecessor: fixed-width big-endian execution, two complete register banks, CC/PC/interrupt/image state, exact transactions, typed atomic lifecycle, 31 completion tests, two corpus consumers over 3,970 checked-in upstream rows, one doctest, and 92.70% release line coverage (1,270/1,370). Exact-clean-head review is next; `RCPU-086` remains blocked until the functional oracle merges. |
 | 19 | PIC16 classic mid-range (PIC16F84A profile) | Microchip DS35007C device data sheet and DS33023A family reference manual | Complete locally: source-pinned 14-bit Harvard CPU with all 35 documented instructions, exact banked file-register/PCL/stack behavior, typed peripheral boundaries, 14 release tests, one doctest, strict checks, and 98.67% package-source line coverage (670/679). |
+| 21 | Intel 80960KA scalar integer (`RCPU-091` / `RCPU-092`) | Intel order 270567, March 1988, plus Intel's June 1997 KA/KB specification update; MAME 0.289 i80960KA core is secondary differential evidence | Spec 07bh is ready for independent pre-implementation review. `RCPU-091` pins the little-endian scalar application surface, all four instruction formats, 32 split local/global registers, exact AC condition/overflow fields, unaligned scalar memory, four/eight-byte transport, ordered transactions, and typed transactional lifecycle. Calls/register-frame spill, system faults/interrupts, atomics, synchronous/multi-register transfers, floating point, timing, and SoC behavior remain separate cells. No public KA RTL/netlist was found, so `RCPU-092` is reserved only for an explicitly educational repository-synthesized gate model after the functional merge; it may not claim exact Intel topology. Order 20 and `RCPU-089` / `RCPU-090` remain reserved for the parallel MIPS R4000 audit. |
 
 CDP1802 merged in PR #18354 after independent specification and implementation
 review. The functional cell covers the complete register matrix, instruction
@@ -186,6 +187,18 @@ behind typed boundaries instead of inventing peripheral semantics. A later
 educational gate cell and a source-backed PIC16F84A SoC composition remain
 separate queued follow-up cells after independent implementation review and
 publication of the functional core.
+
+Intel i960 follows the already active ZPU and reserved MIPS R4000 cells. The
+duplicate audit found no package, spec, branch, worktree claim, or open/merged
+PR for i960/80960. Intel's public 270567 programmer reference gives the exact
+KA scalar register, format, addressing, condition-code, and instruction
+contract, while the separately written MAME 0.289 i80960KA device supplies a
+real reproducible common-subset differential target. The first cell stays
+bounded to scalar application execution so register-window spills, system
+tables, architectural fault/interrupt entry, KB floating point, and bus/SoC
+behavior are not approximated. The manuals do not disclose an internal KA
+netlist; any later gate package is educational synthesis, not a source-backed
+exact gate reconstruction.
 
 ## Discovered follow-up work
 
