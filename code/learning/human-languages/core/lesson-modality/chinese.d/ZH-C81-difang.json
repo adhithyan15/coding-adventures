@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C81-difang",
+    "language": "chinese",
+    "chapter": 81,
+    "sequence": 6210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a73a074f17c917b"
+  },
+  "findings": []
+}

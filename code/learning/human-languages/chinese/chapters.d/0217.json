@@ -1,0 +1,21 @@
+{
+  "chapter": 217,
+  "title": "Never Mind",
+  "label": "ch:zh-never-mind",
+  "canDo": "I can say it doesn't matter, say of course, say I remember, ask around and solve a problem.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "ZH-R217-review-final-217",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say it doesn't matter, say of course, say I remember, ask around and solve a problem.",
+    "assesses": [
+      "ZH-LEX-C217-FINE217-01",
+      "ZH-LEX-C217-FINE217-02",
+      "ZH-LEX-C217-FINE217-03",
+      "ZH-LEX-C217-FINE217-04",
+      "ZH-LEX-C217-FINE217-05"
+    ]
+  }
+}

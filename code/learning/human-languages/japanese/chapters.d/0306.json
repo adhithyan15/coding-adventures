@@ -1,0 +1,21 @@
+{
+  "chapter": 306,
+  "title": "Greetings by Post",
+  "label": "ch:ja-greetings-by-post",
+  "canDo": "I can send greetings and say what I received.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R306-review-302-306",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can send greetings and say what I received.",
+    "assesses": [
+      "JA-LEX-C306-AISATSU306-01",
+      "JA-LEX-C306-AISATSU306-02",
+      "JA-LEX-C306-AISATSU306-03",
+      "JA-LEX-C306-AISATSU306-04",
+      "JA-LEX-C306-AISATSU306-05"
+    ]
+  }
+}

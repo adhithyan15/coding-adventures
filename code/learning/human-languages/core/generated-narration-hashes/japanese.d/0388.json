@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:6c5ec8ed75d4bb45",
+  "lessonIds": [
+    "JA-C388-ryohi",
+    "JA-C388-koutsuuhi",
+    "JA-C388-tsuuka",
+    "JA-C388-muryou",
+    "JA-C388-yuuryou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch388.txt",
+  "json": "japanese/narration/ch388.json",
+  "textHash": "fnv1a64:a17e967dc3bf9cab",
+  "jsonHash": "fnv1a64:02931b86b08e7592",
+  "findings": []
+}

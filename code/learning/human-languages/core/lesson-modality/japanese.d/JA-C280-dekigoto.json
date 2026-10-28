@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C280-dekigoto",
+    "language": "japanese",
+    "chapter": 280,
+    "sequence": 16950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acf330bcc0072a29"
+  },
+  "findings": []
+}

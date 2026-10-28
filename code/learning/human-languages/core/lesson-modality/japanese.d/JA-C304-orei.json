@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C304-orei",
+    "language": "japanese",
+    "chapter": 304,
+    "sequence": 18170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02a426e92aa7ab15"
+  },
+  "findings": []
+}

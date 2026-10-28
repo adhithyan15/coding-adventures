@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-390-KOUSOKU390",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-390-KOUSOKU390"
+  ],
+  "after": []
+}

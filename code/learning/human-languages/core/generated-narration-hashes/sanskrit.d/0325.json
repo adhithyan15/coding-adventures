@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:bff1633b937fe6d8",
+  "lessonIds": [
+    "SA-C325-gada",
+    "SA-C325-sulam",
+    "SA-C325-tunirah",
+    "SA-C325-sarathih",
+    "SA-C325-vidhyati",
+    "SA-R325-review-318-325"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch325.txt",
+  "json": "sanskrit/narration/ch325.json",
+  "textHash": "fnv1a64:e928ab84f160d7df",
+  "jsonHash": "fnv1a64:bc40027323e9c557",
+  "findings": []
+}

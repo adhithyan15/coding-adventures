@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C326-batsu",
+    "language": "japanese",
+    "chapter": 326,
+    "sequence": 19500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bbe36e321f2dbdb8"
+  },
+  "findings": []
+}

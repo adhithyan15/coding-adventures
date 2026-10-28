@@ -1,0 +1,19 @@
+{
+  "chapter": 447,
+  "title": "Worn Out",
+  "label": "ch:ja-worn-out",
+  "canDo": "I can say I feel dizzy, sluggish or worn out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C447-nebusoku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can say I feel dizzy, sluggish or worn out.",
+    "assesses": [
+      "JA-LEX-C447-TIRED447-03",
+      "JA-LEX-C447-TIRED447-04",
+      "JA-LEX-C447-TIRED447-05"
+    ]
+  }
+}

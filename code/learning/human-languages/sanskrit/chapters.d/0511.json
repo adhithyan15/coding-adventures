@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Heat in the Kitchen",
+  "label": "ch:sa-heat-in-the-kitchen",
+  "canDo": "I can talk about the fire, the steam and boiling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C511-bhrjjati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about the fire, the steam and boiling.",
+    "assesses": [
+      "SA-LEX-C511-KASTHA511-03",
+      "SA-LEX-C511-KASTHA511-04",
+      "SA-LEX-C511-KASTHA511-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C502-engeki",
+  "pathSegment": "JA-PATH-502-STAGE502",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-502-STAGE502",
+      "order": 1
+    }
+  ]
+}

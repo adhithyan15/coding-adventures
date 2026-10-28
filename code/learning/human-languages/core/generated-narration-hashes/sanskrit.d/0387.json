@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:fd9c72a7985dc393",
+  "lessonIds": [
+    "SA-C387-unnatih",
+    "SA-C387-vikasah",
+    "SA-C387-durgatih",
+    "SA-C387-samskaroti",
+    "SA-C387-vrddhih"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch387.txt",
+  "json": "sanskrit/narration/ch387.json",
+  "textHash": "fnv1a64:8c817066d83d7a25",
+  "jsonHash": "fnv1a64:08db5ca39c536e68",
+  "findings": []
+}

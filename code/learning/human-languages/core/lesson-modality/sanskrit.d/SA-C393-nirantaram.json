@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C393-nirantaram",
+    "language": "sanskrit",
+    "chapter": 393,
+    "sequence": 22730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8aae210cc9a03cb5"
+  },
+  "findings": []
+}

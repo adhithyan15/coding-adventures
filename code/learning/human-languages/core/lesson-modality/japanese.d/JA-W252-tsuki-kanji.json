@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "JA-W252-tsuki-kanji",
+    "language": "japanese",
+    "chapter": 252,
+    "sequence": 15120,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:756bf4ca67ac3a9d",
+    "detachableSegments": [
+      "Script — the shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

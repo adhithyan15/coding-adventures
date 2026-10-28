@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C87-deng",
+    "language": "chinese",
+    "chapter": 87,
+    "sequence": 7160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06d4b1d1ff3b32ca"
+  },
+  "findings": []
+}

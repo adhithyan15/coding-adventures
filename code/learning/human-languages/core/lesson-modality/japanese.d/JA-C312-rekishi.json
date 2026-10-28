@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C312-rekishi",
+    "language": "japanese",
+    "chapter": 312,
+    "sequence": 18590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3bd7c7a469949a3"
+  },
+  "findings": []
+}

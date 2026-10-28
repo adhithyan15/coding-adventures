@@ -1,0 +1,11 @@
+{
+  "id": "SA-R280-asking-the-way",
+  "pathSegment": "SA-PATH-280-TRAVEL280",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-280-TRAVEL280",
+      "order": 1
+    }
+  ]
+}

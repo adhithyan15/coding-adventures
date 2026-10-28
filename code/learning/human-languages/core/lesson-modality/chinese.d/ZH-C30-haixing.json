@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C30-haixing",
+    "language": "chinese",
+    "chapter": 30,
+    "sequence": 2600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17bcbeedba6d6289"
+  },
+  "findings": []
+}

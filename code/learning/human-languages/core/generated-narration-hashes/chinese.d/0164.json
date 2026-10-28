@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:cec2e5d0edcec412",
+  "lessonIds": [
+    "ZH-C164-daban",
+    "ZH-C164-xitou",
+    "ZH-C164-chuifengji",
+    "ZH-C164-huazhuang",
+    "ZH-C164-gualian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch164.txt",
+  "json": "chinese/narration/ch164.json",
+  "textHash": "fnv1a64:77e271c714ceb9f4",
+  "jsonHash": "fnv1a64:8e0ff6ba5f0d61f9",
+  "findings": []
+}

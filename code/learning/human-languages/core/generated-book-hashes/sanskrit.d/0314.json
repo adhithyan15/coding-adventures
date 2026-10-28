@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:e30f5a103ae809b5",
+  "lessonIds": [
+    "SA-C314-sauryam",
+    "SA-C314-dhirah",
+    "SA-C314-kirtih",
+    "SA-C314-gauravam",
+    "SA-C314-abhinandati"
+  ],
+  "tex": "sanskrit/book/chapters/ch314-a-brave-deed.tex"
+}

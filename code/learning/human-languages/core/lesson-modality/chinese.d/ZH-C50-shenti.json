@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C50-shenti",
+    "language": "chinese",
+    "chapter": 50,
+    "sequence": 4010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2fec4bf576d6826"
+  },
+  "findings": []
+}

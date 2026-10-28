@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C509-jirnoddharah",
+    "language": "sanskrit",
+    "chapter": 509,
+    "sequence": 29390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4863949d4c42257a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C364-benshou-suru",
+  "pathSegment": "JA-PATH-364-SONGAI364",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-364-SONGAI364",
+      "order": 1
+    }
+  ]
+}

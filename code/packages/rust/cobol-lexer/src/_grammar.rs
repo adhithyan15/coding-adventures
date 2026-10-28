@@ -19,6 +19,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 68,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"NAME"#.to_string(),
@@ -26,6 +27,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 75,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_DQ"#.to_string(),
@@ -33,6 +35,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 80,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STRING_SQ"#.to_string(),
@@ -40,6 +43,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 81,
                 alias: Some(r#"STRING"#.to_string()),
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"DOT"#.to_string(),
@@ -47,6 +51,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 92,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LPAREN"#.to_string(),
@@ -54,6 +59,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 93,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"RPAREN"#.to_string(),
@@ -61,6 +67,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 94,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"COLON"#.to_string(),
@@ -68,6 +75,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 99,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"POW"#.to_string(),
@@ -75,6 +83,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 118,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"PLUS"#.to_string(),
@@ -82,6 +91,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 119,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"MINUS"#.to_string(),
@@ -89,6 +99,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 120,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"STAR"#.to_string(),
@@ -96,6 +107,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 121,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"SLASH"#.to_string(),
@@ -103,6 +115,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 122,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"EQ"#.to_string(),
@@ -110,6 +123,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 123,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"GE"#.to_string(),
@@ -117,6 +131,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 124,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LE"#.to_string(),
@@ -124,6 +139,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 125,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"NE"#.to_string(),
@@ -131,6 +147,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 126,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"GT"#.to_string(),
@@ -138,6 +155,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 127,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"LT"#.to_string(),
@@ -145,6 +163,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: false,
                 line_number: 128,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         keywords: vec![r#"IDENTIFICATION"#.to_string(), r#"ENVIRONMENT"#.to_string(), r#"DATA"#.to_string(), r#"PROCEDURE"#.to_string(), r#"DIVISION"#.to_string(), r#"SECTION"#.to_string(), r#"PROGRAM-ID"#.to_string(), r#"AUTHOR"#.to_string(), r#"INSTALLATION"#.to_string(), r#"DATE-WRITTEN"#.to_string(), r#"DATE-COMPILED"#.to_string(), r#"SECURITY"#.to_string(), r#"REMARKS"#.to_string(), r#"CONFIGURATION"#.to_string(), r#"SOURCE-COMPUTER"#.to_string(), r#"OBJECT-COMPUTER"#.to_string(), r#"INPUT-OUTPUT"#.to_string(), r#"FILE-CONTROL"#.to_string(), r#"SELECT"#.to_string(), r#"ASSIGN"#.to_string(), r#"FILE"#.to_string(), r#"WORKING-STORAGE"#.to_string(), r#"FD"#.to_string(), r#"SD"#.to_string(), r#"PICTURE"#.to_string(), r#"PIC"#.to_string(), r#"VALUE"#.to_string(), r#"FILLER"#.to_string(), r#"OCCURS"#.to_string(), r#"REDEFINES"#.to_string(), r#"USAGE"#.to_string(), r#"COMPUTATIONAL"#.to_string(), r#"COMP"#.to_string(), r#"MOVE"#.to_string(), r#"ADD"#.to_string(), r#"SUBTRACT"#.to_string(), r#"MULTIPLY"#.to_string(), r#"DIVIDE"#.to_string(), r#"COMPUTE"#.to_string(), r#"PERFORM"#.to_string(), r#"DISPLAY"#.to_string(), r#"ACCEPT"#.to_string(), r#"OPEN"#.to_string(), r#"CLOSE"#.to_string(), r#"READ"#.to_string(), r#"WRITE"#.to_string(), r#"GO"#.to_string(), r#"STOP"#.to_string(), r#"RUN"#.to_string(), r#"ALTER"#.to_string(), r#"EXAMINE"#.to_string(), r#"SET"#.to_string(), r#"IF"#.to_string(), r#"ELSE"#.to_string(), r#"EVALUATE"#.to_string(), r#"END-EVALUATE"#.to_string(), r#"STRING"#.to_string(), r#"UNSTRING"#.to_string(), r#"DELIMITED"#.to_string(), r#"POINTER"#.to_string(), r#"OVERFLOW"#.to_string(), r#"WITH"#.to_string(), r#"END-STRING"#.to_string(), r#"END-UNSTRING"#.to_string(), r#"INSPECT"#.to_string(), r#"TALLYING"#.to_string(), r#"REPLACING"#.to_string(), r#"CONVERTING"#.to_string(), r#"LEADING"#.to_string(), r#"CHARACTERS"#.to_string(), r#"BEFORE"#.to_string(), r#"AFTER"#.to_string(), r#"FOR"#.to_string(), r#"END-INSPECT"#.to_string(), r#"TO"#.to_string(), r#"FROM"#.to_string(), r#"BY"#.to_string(), r#"INTO"#.to_string(), r#"GIVING"#.to_string(), r#"ROUNDED"#.to_string(), r#"SIZE"#.to_string(), r#"ERROR"#.to_string(), r#"IS"#.to_string(), r#"ARE"#.to_string(), r#"OF"#.to_string(), r#"IN"#.to_string(), r#"AND"#.to_string(), r#"OR"#.to_string(), r#"NOT"#.to_string(), r#"GREATER"#.to_string(), r#"LESS"#.to_string(), r#"EQUAL"#.to_string(), r#"THAN"#.to_string(), r#"THROUGH"#.to_string(), r#"THRU"#.to_string(), r#"UNTIL"#.to_string(), r#"VARYING"#.to_string(), r#"TIMES"#.to_string(), r#"DEPENDING"#.to_string(), r#"ON"#.to_string(), r#"WHEN"#.to_string(), r#"OTHER"#.to_string(), r#"NEXT"#.to_string(), r#"SENTENCE"#.to_string(), r#"TRUE"#.to_string(), r#"ZERO"#.to_string(), r#"ZEROS"#.to_string(), r#"ZEROES"#.to_string(), r#"SPACE"#.to_string(), r#"SPACES"#.to_string(), r#"HIGH-VALUE"#.to_string(), r#"HIGH-VALUES"#.to_string(), r#"LOW-VALUE"#.to_string(), r#"LOW-VALUES"#.to_string(), r#"QUOTE"#.to_string(), r#"QUOTES"#.to_string(), r#"ALL"#.to_string()],
@@ -156,6 +175,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 327,
                 alias: None,
+                guard: Default::default(),
             },
             TokenDefinition {
                 name: r#"SEPARATOR"#.to_string(),
@@ -163,6 +183,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 328,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         reserved_keywords: vec![],
@@ -174,6 +195,7 @@ pub fn token_grammar() -> TokenGrammar {
                 is_regex: true,
                 line_number: 334,
                 alias: None,
+                guard: Default::default(),
             },
         ],
         groups: {
@@ -185,6 +207,7 @@ pub fn token_grammar() -> TokenGrammar {
                         is_regex: true,
                         line_number: 145,
                         alias: None,
+                        guard: Default::default(),
                     },
                 ] };
             __map.insert(r#"picture"#.to_string(), __g_picture);
@@ -202,6 +225,7 @@ pub fn token_grammar() -> TokenGrammar {
                 on_tokens: vec![r#"KEYWORD"#.to_string()],
                 on_value: Some(r#"PICTURE"#.to_string()),
                 in_mode: None,
+                conditions: vec![],
                 actions: vec![TransitionAction::SetMode(r#"picture"#.to_string())],
                 line_number: 314,
             },
@@ -209,6 +233,7 @@ pub fn token_grammar() -> TokenGrammar {
                 on_tokens: vec![r#"KEYWORD"#.to_string()],
                 on_value: Some(r#"PIC"#.to_string()),
                 in_mode: None,
+                conditions: vec![],
                 actions: vec![TransitionAction::SetMode(r#"picture"#.to_string())],
                 line_number: 315,
             },
@@ -216,6 +241,7 @@ pub fn token_grammar() -> TokenGrammar {
                 on_tokens: vec![r#"PIC_STRING"#.to_string()],
                 on_value: None,
                 in_mode: None,
+                conditions: vec![],
                 actions: vec![TransitionAction::SetMode(r#"default"#.to_string())],
                 line_number: 316,
             },

@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 350,
+  "title": "Taking Care",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:74e79fae466e1456",
+  "lessons": [
+    {
+      "id": "JA-C350-youjin-suru",
+      "sequence": 20700,
+      "title": "ようじんする (yōjin suru) — to take precautions; to be on guard",
+      "headword": "ようじんする",
+      "romanization": "yōjin suru",
+      "gloss": "to take precautions; to be on guard",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5bb8ad0d7202e28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to miss a chance, then the Japanese for at great pains."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ようじんする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようじんする — yōjin suru — \"to take precautions; to be on guard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ばんに でかけたら、ようじんして ください。 — ban ni dekaketara, yōjin shite kudasai — \"If you go out in the evening, be on your guard.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ようじんします, yōjinshimasu; a する verb. Past (polite): ちちは ようじんしました。, chichi wa yōjin shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようじんする (yōjin suru) is built from a Sino-Japanese noun and the native verb suru, \"to do\". The noun, yōjin, is two Chinese characters read with their on'yomi, readings borrowed from Chinese: yō, \"utilize\" (Middle Chinese yowngH) and jin, \"heart\" (sim) (KANJIDIC2; JMdict; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōjin suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōjin suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōjin suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōjin suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ban ni dekaketara, yōjin shite kudasai — If you go out in the evening, be on your guard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ban ni dekaketara, yōjin shite kudasai* — If you go out in the evening, be on your guard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to miss a chance, then the Japanese for at great pains, then say yōjin suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to miss a chance, then the Japanese for at great pains, then say *yōjin suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ようじんする (yōjin suru) mean? (\"To take precautions; to be on guard\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C350-youjin-suru-type",
+              "prompt": "Say the Japanese for 'to take precautions'.",
+              "assesses": [
+                "JA-LEX-C350-YOUJIN350-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ようじんする",
+                "yōjin suru",
+                "youjin suru",
+                "yoojin suru",
+                "yojin suru"
+              ],
+              "feedback": {
+                "correct": "Right: ようじんする (yōjin suru) is 'to take precautions; to be on guard'.",
+                "incorrect": "'To take precautions' is ようじんする (yōjin suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C350-yudan",
+      "sequence": 20710,
+      "title": "ゆだん (yudan) — carelessness; letting one's guard down",
+      "headword": "ゆだん",
+      "romanization": "yudan",
+      "gloss": "carelessness; letting one's guard down",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1db0a917a994cb1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for at great pains, then the Japanese for to take precautions."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆだん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆだん — yudan — \"carelessness; letting one's guard down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆだんしたら、けがを します。 — yudan shitara, kega o shimasu — \"If you let your guard down, you will get hurt.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆだん (yudan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yu, \"oil\" (Middle Chinese yuw) and dan, \"severance\" (dwanX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yudan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yudan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yudan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yudan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yudan shitara, kega o shimasu — If you let your guard down, you will get hurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yudan shitara, kega o shimasu* — If you let your guard down, you will get hurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for at great pains, then the Japanese for to take precautions, then say yudan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for at great pains, then the Japanese for to take precautions, then say *yudan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆだん (yudan) mean? (\"Carelessness; letting one's guard down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C350-yudan-type",
+              "prompt": "Say the Japanese for 'carelessness'.",
+              "assesses": [
+                "JA-LEX-C350-YOUJIN350-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆだん",
+                "yudan"
+              ],
+              "feedback": {
+                "correct": "Right: ゆだん (yudan) is 'carelessness; letting one's guard down'.",
+                "incorrect": "'Carelessness' is ゆだん (yudan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C350-sonaeru",
+      "sequence": 20720,
+      "title": "そなえる (sonaeru) — to prepare for; to be ready for",
+      "headword": "そなえる",
+      "romanization": "sonaeru",
+      "gloss": "to prepare for; to be ready for",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7505402dee444b31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to take precautions, then the Japanese for carelessness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: そなえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そなえる — sonaeru — \"to prepare for; to be ready for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいふうが きたら こまるから、そなえた ほうが いいです。 — taifū ga kitara komaru kara, sonaeta hō ga ii desu — \"A typhoon would cause trouble, so we should be ready for one.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite そなえます, sonaemasu; an ichidan verb. Past (polite): まちが たいふうに そなえました。, machi ga taifū ni sonaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "そなえる (sonaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. Its kanji was attached to it later as a kun'yomi, a native reading given to a Chinese character (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sonaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sonaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sonaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sonaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū ga kitara komaru kara, sonaeta hō ga ii desu — A typhoon would cause trouble, so we should be ready for one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū ga kitara komaru kara, sonaeta hō ga ii desu* — A typhoon would cause trouble, so we should be ready for one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to take precautions, then the Japanese for carelessness, then say sonaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to take precautions, then the Japanese for carelessness, then say *sonaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does そなえる (sonaeru) mean? (\"To prepare for; to be ready for\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C350-sonaeru-type",
+              "prompt": "Say the Japanese for 'to prepare for'.",
+              "assesses": [
+                "JA-LEX-C350-YOUJIN350-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "そなえる",
+                "sonaeru"
+              ],
+              "feedback": {
+                "correct": "Right: そなえる (sonaeru) is 'to prepare for; to be ready for'.",
+                "incorrect": "'To prepare for' is そなえる (sonaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C350-taisaku",
+      "sequence": 20730,
+      "title": "たいさく (taisaku) — a countermeasure",
+      "headword": "たいさく",
+      "romanization": "taisaku",
+      "gloss": "a countermeasure",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57830f2268e96ad9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for carelessness, then the Japanese for to prepare for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいさく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいさく — taisaku — \"a countermeasure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめが ふったら、どんな たいさくが ありますか。 — ame ga futtara, donna taisaku ga arimasu ka — \"If it rains, what can we do about it?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいさく (taisaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"opposite\" (Middle Chinese twojH) and saku, \"scheme\" (tsrheak) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taisaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taisaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taisaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taisaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame ga futtara, donna taisaku ga arimasu ka — If it rains, what can we do about it?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame ga futtara, donna taisaku ga arimasu ka* — If it rains, what can we do about it?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for carelessness, then the Japanese for to prepare for, then say taisaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for carelessness, then the Japanese for to prepare for, then say *taisaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいさく (taisaku) mean? (\"A countermeasure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C350-taisaku-type",
+              "prompt": "Say the Japanese for 'a countermeasure'.",
+              "assesses": [
+                "JA-LEX-C350-YOUJIN350-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいさく",
+                "taisaku"
+              ],
+              "feedback": {
+                "correct": "Right: たいさく (taisaku) is 'a countermeasure'.",
+                "incorrect": "'A countermeasure' is たいさく (taisaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C350-bousai",
+      "sequence": 20740,
+      "title": "ぼうさい (bōsai) — disaster preparedness",
+      "headword": "ぼうさい",
+      "romanization": "bōsai",
+      "gloss": "disaster preparedness",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19dde6043dba70f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to prepare for, then the Japanese for a countermeasure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぼうさい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼうさい — bōsai — \"disaster preparedness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もし じしんが きたら、ぼうさいの きそくに したがって ください。 — moshi jishin ga kitara, bōsai no kisoku ni shitagatte kudasai — \"If an earthquake comes, follow the disaster rules.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぼうさい (bōsai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are bō, \"ward off\" (Middle Chinese bjang) and sai, \"disaster\" (tsoj) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōsai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōsai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōsai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōsai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moshi jishin ga kitara, bōsai no kisoku ni shitagatte kudasai — If an earthquake comes, follow the disaster rules.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moshi jishin ga kitara, bōsai no kisoku ni shitagatte kudasai* — If an earthquake comes, follow the disaster rules.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to prepare for, then the Japanese for a countermeasure, then say bōsai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to prepare for, then the Japanese for a countermeasure, then say *bōsai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぼうさい (bōsai) mean? (\"Disaster preparedness\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C350-bousai-type",
+              "prompt": "Say the Japanese for 'disaster preparedness'.",
+              "assesses": [
+                "JA-LEX-C350-YOUJIN350-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぼうさい",
+                "bōsai",
+                "bousai",
+                "boosai",
+                "bosai"
+              ],
+              "feedback": {
+                "correct": "Right: ぼうさい (bōsai) is 'disaster preparedness'.",
+                "incorrect": "'Disaster preparedness' is ぼうさい (bōsai)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

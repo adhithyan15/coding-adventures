@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:734aa33763059176",
+  "lessonIds": [
+    "ZH-C135-zuqiu",
+    "ZH-C135-lanqiu",
+    "ZH-C135-ti",
+    "ZH-C135-bisai",
+    "ZH-C135-duanlian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch135.txt",
+  "json": "chinese/narration/ch135.json",
+  "textHash": "fnv1a64:b1c57efe23720308",
+  "jsonHash": "fnv1a64:f078b3b5cdc5cada",
+  "findings": []
+}

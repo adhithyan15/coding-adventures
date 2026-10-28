@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C536-sampadyate",
+    "language": "sanskrit",
+    "chapter": 536,
+    "sequence": 30780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6373afbd2fb1ff8e"
+  },
+  "findings": []
+}

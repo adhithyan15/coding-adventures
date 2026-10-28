@@ -4,16 +4,66 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-### Fixed
-
-- Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
-  without changing shared styles or claiming general flex support.
-
-Entries added after `task-app-v0.5.12` accumulate here until the next version is
+Entries added after `task-app-v0.5.13` accumulate here until the next version is
 cut.
 
 ### Changed
 
+- **Notes is built from the shared list and editor (E3).** The Notes view
+  mounts `mosaic-pkg-notes` 0.3.0, which draws its list with the toolkit's
+  `RecordList` and its title, body and Save/Delete/Cancel with
+  `DraftEditor`. The fields gain visible labels ("Title", "Note", "Attach to
+  task") that are also their accessible names; the attach-to-task field had
+  no name before. Every label is now written at TaskApp's Notes mount, not
+  inside the package. **Delete is shown only for a saved note:** the new
+  `note-delete-label` slot is "Delete" for a note the project has saved and
+  empty for a new one, so no Delete button appears on a note that does not
+  exist yet. `note-rows` rows are RecordList's six fields. Ctrl/Cmd+Enter
+  still saves from the body. Spec: `task-app-notes-ui-v1.md`, addendum v1.3.
+
+### Fixed
+
+- **A refused note Save says why (E5).** Saving a note whose *Attach to task*
+  field names no task in the project did nothing visible: the web host logged
+  to the console and the native hosts did nothing at all. TaskApp gains a
+  `note-error` slot, drawn as `Text [ note-error ]` above the Notes view in
+  the composer errors' style, as Journal draws `draft-error` above its
+  editor. The draft is kept as typed; any other action clears the message.
+  It is a TaskApp slot rather than a `Notes` one, so the package's contract
+  and its other consumers are unchanged.
+- **Note drafts are capped as typed (E5).** The title stops at 512
+  characters and the body at 1 MiB of UTF-8, Journal's limits; an edit past
+  them is refused, not truncated. A note stored before the caps loads whole
+  and can be edited down, but not grown. Spec: `task-app-notes-ui-v1.md`,
+  addendum v1.2.
+
+## [0.5.13] - 2026-10-26
+
+### Fixed
+
+- Never replace an earlier quarantined state file. Every native Trestle (Qt,
+  Flutter, Compose, SwiftUI, WinUI) used to delete `mosaic-state.v1.json.corrupt`
+  before moving a newly rejected file there, so a second rejection destroyed
+  the first, which may hold real tasks. A rejected file now moves to the first
+  free name of `.corrupt` and `.corrupt.1` to `.corrupt.9`; if it cannot move,
+  or all ten are taken, it stays in place and Trestle saves nothing that
+  session and says so. `LOCAL-DATA.txt` and the release gate's upgrade check
+  follow the new names.
+- Preserve Qt timeline labels' authored 150-pixel non-shrinking width (#18305),
+  without changing shared styles or claiming general flex support.
+
+### Changed
+
+- Run the release upgrade and corrupt-recovery gate's generic checks through
+  the shared `code/scripts/mosaic_release_state_gate.py`
+  (`mosaic-release-state-gate-v1`), which Engram and the other Mosaic apps can
+  adopt. `taskapp_release.py` keeps its `materialize-upgrade-fixture` and
+  `verify-upgrade-state` subcommands, reads the v0.1.0 fixture through an
+  adapter rather than converting it, and keeps the TaskApp-only expected-task
+  check. The materialized state is byte-identical on Linux and macOS; on
+  Windows its trailing newline is now LF rather than CRLF.
+- Run `test_taskapp_release.py` and the shared gate's tests in the release
+  lane's validate job; no workflow ran them before.
 - The `mosaic-pkg-toolkit` dependency pin moves from 0.15.0 to 0.16.0, the
   toolkit's current version (Journal already pins it). 0.16.0 only adds
   `RecordList`; nothing TaskApp uses changed, so no source or output changes.

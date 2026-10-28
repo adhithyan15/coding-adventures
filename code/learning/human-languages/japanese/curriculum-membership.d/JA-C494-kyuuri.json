@@ -1,0 +1,11 @@
+{
+  "id": "JA-C494-kyuuri",
+  "pathSegment": "JA-PATH-494-VEG494",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-494-VEG494",
+      "order": 1
+    }
+  ]
+}

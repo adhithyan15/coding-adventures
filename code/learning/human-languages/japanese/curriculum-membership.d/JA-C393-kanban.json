@@ -1,0 +1,11 @@
+{
+  "id": "JA-C393-kanban",
+  "pathSegment": "JA-PATH-393-MEJIRUSHI393",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-393-MEJIRUSHI393",
+      "order": 1
+    }
+  ]
+}

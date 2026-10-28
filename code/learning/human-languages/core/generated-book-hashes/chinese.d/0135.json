@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:055814b19e0c6419",
+  "lessonIds": [
+    "ZH-C135-zuqiu",
+    "ZH-C135-lanqiu",
+    "ZH-C135-ti",
+    "ZH-C135-bisai",
+    "ZH-C135-duanlian"
+  ],
+  "tex": "chinese/book/chapters/ch135-sport.tex"
+}

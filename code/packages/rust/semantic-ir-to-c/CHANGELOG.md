@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.42.2 — Every `MakeClosure` gets its thunk
+
+`collect_closure_targets` decides which functions need a
+`_sir_thunk_<f>` adapter.  It used a hand-written walk that missed many
+places a `MakeClosure` can sit:
+
+- the *target* of an `IndirectCall`;
+- `while`/`for` bodies;
+- most expression kinds other than `If`, `Block` and call arguments.
+
+A closure built in one of those places was emitted as
+`_sir_make_closure(_sir_thunk_f, ...)` with no `_sir_thunk_f` defined, so
+the C did not compile.  `python-to-semantic-ir` 0.12.0 emits exactly this
+shape for a recursive call to a capturing nested `def`
+(`IndirectCall(MakeClosure(go, [n]), [x - 1])`).
+
+The collector now uses the shared `semantic_ir::Visitor` walk, so it
+reaches every `MakeClosure` the emitter can meet.  It is covered end to
+end by `sir-conformance/tests/python_nested_closures.rs`.
+
 ## 0.42.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

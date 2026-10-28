@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:8061c08958cd531a",
+  "lessonIds": [
+    "ZH-C96-yinwei",
+    "ZH-W96-yin",
+    "ZH-C96-suoyi",
+    "ZH-C96-shufu",
+    "ZH-C96-practice"
+  ],
+  "tex": "chinese/book/chapters/ch96-because.tex"
+}

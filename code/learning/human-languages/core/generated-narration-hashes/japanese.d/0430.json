@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:f5d87eb172d88411",
+  "lessonIds": [
+    "JA-C430-ikari",
+    "JA-C430-nonoshiru",
+    "JA-C430-niramu",
+    "JA-C430-iya",
+    "JA-C430-abareru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch430.txt",
+  "json": "japanese/narration/ch430.json",
+  "textHash": "fnv1a64:306d2024bf18f8ae",
+  "jsonHash": "fnv1a64:834faa0a03e2f19f",
+  "findings": []
+}

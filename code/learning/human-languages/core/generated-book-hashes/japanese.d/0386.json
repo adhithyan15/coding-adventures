@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:448a3cfb60544544",
+  "lessonIds": [
+    "JA-C386-ryoken",
+    "JA-C386-zeikan",
+    "JA-C386-nyuukoku",
+    "JA-C386-shukkoku",
+    "JA-C386-toridasu"
+  ],
+  "tex": "japanese/book/chapters/ch386-passport-and-customs.tex"
+}

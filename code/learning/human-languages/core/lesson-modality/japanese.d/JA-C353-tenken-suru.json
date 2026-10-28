@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C353-tenken-suru",
+    "language": "japanese",
+    "chapter": 353,
+    "sequence": 20860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47e33749085eae79"
+  },
+  "findings": []
+}

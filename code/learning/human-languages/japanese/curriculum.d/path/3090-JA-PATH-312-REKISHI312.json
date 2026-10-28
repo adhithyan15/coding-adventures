@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-312-REKISHI312",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-312-REKISHI312"
+  ],
+  "after": []
+}

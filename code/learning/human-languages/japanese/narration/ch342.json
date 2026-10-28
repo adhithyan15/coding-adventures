@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 342,
+  "title": "Causes and Effects",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6c6175f7bc174993",
+  "lessons": [
+    {
+      "id": "JA-C342-gen-in",
+      "sequence": 20290,
+      "title": "げんいん (gen'in) — a cause",
+      "headword": "げんいん",
+      "romanization": "gen'in",
+      "gloss": "a cause",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eece3e21c0513e88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for as much as possible, then the Japanese for for example."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: げんいん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんいん — gen'in — \"a cause\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じこの げんいんが わからないので、しらべています。 — jiko no gen'in ga wakaranai node, shirabete imasu — \"Nobody knows the cause of the accident, so it is being investigated.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんいん (gen'in) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, \"original\" and in, \"cause\" (Middle Chinese 'jin) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gen'in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gen'in*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gen'in, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gen'in*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiko no gen'in ga wakaranai node, shirabete imasu — Nobody knows the cause of the accident, so it is being investigated.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiko no gen'in ga wakaranai node, shirabete imasu* — Nobody knows the cause of the accident, so it is being investigated.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for as much as possible, then the Japanese for for example, then say gen'in again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for as much as possible, then the Japanese for for example, then say *gen'in* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does げんいん (gen'in) mean? (\"A cause\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C342-gen-in-type",
+              "prompt": "Say the Japanese for 'a cause'.",
+              "assesses": [
+                "JA-LEX-C342-GENIN342-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "げんいん",
+                "gen'in"
+              ],
+              "feedback": {
+                "correct": "Right: げんいん (gen'in) is 'a cause'.",
+                "incorrect": "'A cause' is げんいん (gen'in)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C342-eikyou",
+      "sequence": 20300,
+      "title": "えいきょう (eikyō) — an influence; an effect",
+      "headword": "えいきょう",
+      "romanization": "eikyō",
+      "gloss": "an influence; an effect",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba990fd2dcb7f3f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for for example, then the Japanese for a cause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えいきょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えいきょう — eikyō — \"an influence; an effect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいふうの えいきょうで、でんしゃが とまりました。 — taifū no eikyō de, densha ga tomarimashita — \"The trains stopped because of the typhoon.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えいきょう (eikyō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ei, \"shadow\" (Middle Chinese 'jaengX) and kyō, \"echo\" (xjangX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eikyō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eikyō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eikyō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eikyō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taifū no eikyō de, densha ga tomarimashita — The trains stopped because of the typhoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taifū no eikyō de, densha ga tomarimashita* — The trains stopped because of the typhoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for for example, then the Japanese for a cause, then say eikyō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for for example, then the Japanese for a cause, then say *eikyō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えいきょう (eikyō) mean? (\"An influence; an effect\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C342-eikyou-type",
+              "prompt": "Say the Japanese for 'an influence'.",
+              "assesses": [
+                "JA-LEX-C342-GENIN342-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えいきょう",
+                "eikyō",
+                "eikyou",
+                "eikyoo",
+                "eikyo"
+              ],
+              "feedback": {
+                "correct": "Right: えいきょう (eikyō) is 'an influence; an effect'.",
+                "incorrect": "'An influence' is えいきょう (eikyō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C342-kekka",
+      "sequence": 20310,
+      "title": "けっか (kekka) — a result; an outcome",
+      "headword": "けっか",
+      "romanization": "kekka",
+      "gloss": "a result; an outcome",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d131f3429f664d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cause, then the Japanese for an influence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けっか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっか — kekka — \"a result; an outcome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がんばったので、いい けっかに なりました。 — ganbatta node, ii kekka ni narimashita — \"We worked hard, so it turned out well.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けっか (kekka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ketsu, \"tie\" (Middle Chinese ket) and ka, \"fruit\" (KANJIDIC2; Middle Chinese in Baxter's transcription). The two join as kek-ka."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kekka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kekka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kekka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kekka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ganbatta node, ii kekka ni narimashita — We worked hard, so it turned out well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ganbatta node, ii kekka ni narimashita* — We worked hard, so it turned out well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cause, then the Japanese for an influence, then say kekka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cause, then the Japanese for an influence, then say *kekka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けっか (kekka) mean? (\"A result; an outcome\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C342-kekka-type",
+              "prompt": "Say the Japanese for 'a result'.",
+              "assesses": [
+                "JA-LEX-C342-GENIN342-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けっか",
+                "kekka"
+              ],
+              "feedback": {
+                "correct": "Right: けっか (kekka) is 'a result; an outcome'.",
+                "incorrect": "'A result' is けっか (kekka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C342-nazenara",
+      "sequence": 20320,
+      "title": "なぜなら (nazenara) — because (the reason is)",
+      "headword": "なぜなら",
+      "romanization": "nazenara",
+      "gloss": "because (the reason is)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fd5533338ba22ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an influence, then the Japanese for a result."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なぜなら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なぜなら — nazenara — \"because (the reason is)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なぜなら、あした しけんが あるからです。 — nazenara, ashita shiken ga aru kara desu — \"The reason is that I have an exam tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なぜなら (nazenara) is a native Japanese word (wago), inherited rather than borrowed from Chinese: it is built on naze, \"why\", and JMdict lists it as a conjunction, usually written in kana (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazenara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazenara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazenara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazenara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazenara, ashita shiken ga aru kara desu — The reason is that I have an exam tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazenara, ashita shiken ga aru kara desu* — The reason is that I have an exam tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an influence, then the Japanese for a result, then say nazenara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an influence, then the Japanese for a result, then say *nazenara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なぜなら (nazenara) mean? (\"Because (the reason is)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C342-nazenara-type",
+              "prompt": "Say the Japanese for 'the reason is'.",
+              "assesses": [
+                "JA-LEX-C342-GENIN342-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なぜなら",
+                "nazenara"
+              ],
+              "feedback": {
+                "correct": "Right: なぜなら (nazenara) is 'because (the reason is)'.",
+                "incorrect": "'The reason is' is なぜなら (nazenara)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C342-taido",
+      "sequence": 20330,
+      "title": "たいど (taido) — an attitude; a manner",
+      "headword": "たいど",
+      "romanization": "taido",
+      "gloss": "an attitude; a manner",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb4c30d24b4a68f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a result, then the Japanese for the reason is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいど — taido — \"an attitude; a manner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "てんいんの たいどが きらいだから、あの みせに いきません。 — ten'in no taido ga kirai da kara, ano mise ni ikimasen — \"I dislike the shop assistant's attitude, so I don't go to that shop.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいど (taido) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"attitude\" (Middle Chinese thojH) and do, \"degrees\" (duH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taido*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taido, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taido*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ten'in no taido ga kirai da kara, ano mise ni ikimasen — I dislike the shop assistant's attitude, so I don't go to that shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ten'in no taido ga kirai da kara, ano mise ni ikimasen* — I dislike the shop assistant's attitude, so I don't go to that shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a result, then the Japanese for the reason is, then say taido again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a result, then the Japanese for the reason is, then say *taido* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいど (taido) mean? (\"An attitude; a manner\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C342-taido-type",
+              "prompt": "Say the Japanese for 'an attitude'.",
+              "assesses": [
+                "JA-LEX-C342-GENIN342-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいど",
+                "taido"
+              ],
+              "feedback": {
+                "correct": "Right: たいど (taido) is 'an attitude; a manner'.",
+                "incorrect": "'An attitude' is たいど (taido)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

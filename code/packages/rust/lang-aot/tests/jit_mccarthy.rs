@@ -58,7 +58,7 @@ fn symbols_f6() {
 #[test]
 fn lambda_and_label_f7() {
     // Direct application: the argument is boxed across the call and the
-    // polymorphic result coerced at the program exit by `dyn_to_exit_code`.
+    // polymorphic result coerced at the program exit by `__lisp_exit_code`.
     assert_eq!(run("((LAMBDA (X) X) 5)"), 5);
     assert_eq!(run("((LAMBDA (X) (CAR X)) (CONS 7 9))"), 7);
     assert_eq!(run("((LAMBDA (X) (CDR X)) (CONS 7 9))"), 9);
@@ -72,4 +72,48 @@ fn lambda_and_label_f7() {
     // LABEL: a recursive closure. `FF` descends the car-spine to the leftmost atom.
     assert_eq!(run("((LABEL FF (LAMBDA (X) (COND ((ATOM X) X) ((QUOTE T) (FF (CAR X)))))) (CONS (CONS 7 8) 9))"), 7);
     assert_eq!(run("((LABEL FF (LAMBDA (X) (COND ((ATOM X) X) ((QUOTE T) (FF (CAR X)))))) 42)"), 42);
+}
+
+/// #18417: `CAR` / `CDR` of a value that is not a pair fail the run on the
+/// JIT, as on every other column, instead of answering nil.
+///
+/// The JIT has two tiers and the test reaches both. A top-level `(CAR 5)`
+/// runs `main` on the interpreter tier. The `LAMBDA` forms put the `car` in
+/// a function the `GenericCirJit` compiles: with the compiled callback's
+/// error report disabled, `((LAMBDA (X) (CAR X)) 5)` returned 0, so that row
+/// covers the compiled path. Whichever tier runs the `car`:
+///
+/// - the interpreter fallback gets a `VMError::TypeError` from the builtin;
+/// - the compiled `GenericCirJit` path has the callback record the error,
+///   which stops the run.
+///
+/// Both report `dynval-runtime`'s refusal text: the tag and its kind, never
+/// the word. The reference VM (`mccarthy-lisp-vm`) refuses every one of
+/// these programs too, so the JIT now agrees with it rather than with nobody.
+#[test]
+fn car_and_cdr_of_a_non_pair_fail_on_the_jit() {
+    for (src, op, tag_and_kind) in [
+        ("(CAR 5)", "dyn_pair_first", "tag 0 (int)"),
+        ("(CDR 5)", "dyn_pair_rest", "tag 0 (int)"),
+        ("(CAR (QUOTE A))", "dyn_pair_first", "tag 2 (symbol)"),
+        ("((LAMBDA (X) (CAR X)) 5)", "dyn_pair_first", "tag 0 (int)"),
+        ("((LAMBDA (X) (CDR X)) 5)", "dyn_pair_rest", "tag 0 (int)"),
+        ("((LABEL FF (LAMBDA (X) (COND ((EQ X 0) (CDR X)) ((QUOTE T) (FF 0))))) 3)", "dyn_pair_rest", "tag 0 (int)"),
+    ] {
+        let err = match run_mccarthy_on_jit(src) {
+            Err(e) => e.to_string(),
+            Ok(v) => panic!("JIT run of {src:?} must fail, got {v:?}"),
+        };
+        let want = format!("{op}: argument with {tag_and_kind} is not a pair");
+        assert!(err.contains(&want), "{src}: {err:?} lacks {want:?}");
+        assert!(err.contains("TypeError"), "{src}: {err:?} is not a type error");
+        assert!(!err.contains("0x"), "{src}: the refusal must not print a raw word: {err:?}");
+
+        // The reference VM refuses the same program.
+        let module = lang_aot::compile_source_to_iir(lang_aot::Language::McCarthyLisp, src, "vm").expect(src);
+        assert!(mccarthy_lisp_vm::run(&module).is_err(), "{src}: the reference VM must refuse it too");
+    }
+    // A real pair still reads, on both functions.
+    assert_eq!(run("(CAR (CONS 7 9))"), 7);
+    assert_eq!(run("((LAMBDA (X) (CDR X)) (CONS 7 9))"), 9);
 }

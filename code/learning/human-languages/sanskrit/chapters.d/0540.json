@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "Time Running Out",
+  "label": "ch:sa-time-running-out",
+  "canDo": "I can talk about deadlines and what happens if we are slow.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C540-ativahayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can talk about deadlines and what happens if we are slow.",
+    "assesses": [
+      "SA-LEX-C540-ASANNA540-03",
+      "SA-LEX-C540-ASANNA540-04",
+      "SA-LEX-C540-ASANNA540-05"
+    ]
+  }
+}

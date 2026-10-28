@@ -1,0 +1,11 @@
+{
+  "id": "JA-C427-dokidoki-suru",
+  "pathSegment": "JA-PATH-427-NERVES427",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-427-NERVES427",
+      "order": 1
+    }
+  ]
+}

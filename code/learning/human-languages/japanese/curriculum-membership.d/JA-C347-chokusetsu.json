@@ -1,0 +1,11 @@
+{
+  "id": "JA-C347-chokusetsu",
+  "pathSegment": "JA-PATH-347-HOUMON347",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-347-HOUMON347",
+      "order": 2
+    }
+  ]
+}

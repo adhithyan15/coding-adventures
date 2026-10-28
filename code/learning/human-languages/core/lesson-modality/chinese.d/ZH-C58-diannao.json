@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C58-diannao",
+    "language": "chinese",
+    "chapter": 58,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df750684474ea2f0"
+  },
+  "findings": []
+}

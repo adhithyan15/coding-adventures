@@ -1,0 +1,11 @@
+{
+  "id": "SA-C426-videsah",
+  "pathSegment": "SA-PATH-426-VIDESHA426",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-426-VIDESHA426",
+      "order": 0
+    }
+  ]
+}

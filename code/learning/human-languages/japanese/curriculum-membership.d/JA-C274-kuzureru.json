@@ -1,0 +1,11 @@
+{
+  "id": "JA-C274-kuzureru",
+  "pathSegment": "JA-PATH-274-JISHIN274",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-274-JISHIN274",
+      "order": 1
+    }
+  ]
+}

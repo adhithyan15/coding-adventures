@@ -1,0 +1,11 @@
+{
+  "id": "JA-C333-wakamono",
+  "pathSegment": "JA-PATH-333-WAKAMONO333",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-333-WAKAMONO333",
+      "order": 0
+    }
+  ]
+}

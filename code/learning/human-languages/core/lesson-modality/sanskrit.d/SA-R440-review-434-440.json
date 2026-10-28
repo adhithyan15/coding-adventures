@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R440-review-434-440",
+    "language": "sanskrit",
+    "chapter": 440,
+    "sequence": 25400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00c27984b23b2553"
+  },
+  "findings": []
+}

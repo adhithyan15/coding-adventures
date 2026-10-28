@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:98347541ffec64ac",
+  "lessonIds": [
+    "ZH-C277-youqu",
+    "ZH-C277-taoyan",
+    "ZH-C277-xinshang",
+    "ZH-C277-xiangshou",
+    "ZH-C277-reai",
+    "ZH-R277-review-272-277",
+    "ZH-R277-review-final-277"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch277.txt",
+  "json": "chinese/narration/ch277.json",
+  "textHash": "fnv1a64:dc28f220e8ddb81d",
+  "jsonHash": "fnv1a64:bcdc8fa0978aa638",
+  "findings": []
+}

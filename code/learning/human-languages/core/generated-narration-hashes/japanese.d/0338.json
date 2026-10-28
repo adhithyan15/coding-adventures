@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:3150ac836dbec630",
+  "lessonIds": [
+    "JA-C338-muda",
+    "JA-C338-herasu",
+    "JA-C338-fuyasu",
+    "JA-C338-moyasu",
+    "JA-C338-shigen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch338.txt",
+  "json": "japanese/narration/ch338.json",
+  "textHash": "fnv1a64:5f20679b1854e0d3",
+  "jsonHash": "fnv1a64:c956c580506e95ec",
+  "findings": []
+}

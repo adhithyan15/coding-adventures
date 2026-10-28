@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 494,
+  "title": "Bringing Up a Child",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:575dea7550e6b62d",
+  "lessons": [
+    {
+      "id": "SA-C494-lalayati",
+      "sequence": 28350,
+      "title": "लालयति (lālayati) — pampers",
+      "headword": "लालयति",
+      "romanization": "lālayati",
+      "gloss": "pampers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a9cd00671f30866",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the first haircut, then the Sanskrit for the sacred-thread ceremony."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लालयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लालयति — lālayati — \"pampers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पितामही पौत्रं लालयति। pitāmahī pautraṃ lālayati. Grandmother pampers her grandson."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा पौत्रं लालितवती, sā pautraṃ lālitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लालयति (lālayati) is built on the causative of the root √lal, \"to play, to frolic\"; MW's ppp lālita is \"caressed, fondled, indulged\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lālayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lālayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lālayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lālayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitāmahī pautraṃ lālayati. — Grandmother pampers her grandson.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitāmahī pautraṃ lālayati.* — Grandmother pampers her grandson.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the first haircut, then the Sanskrit for the sacred-thread ceremony, then say lālayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the first haircut, then the Sanskrit for the sacred-thread ceremony, then say *lālayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लालयति (lālayati) mean? (\"Pampers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C494-samvardhayati",
+      "sequence": 28360,
+      "title": "संवर्धयति (saṃvardhayati) — brings up",
+      "headword": "संवर्धयति",
+      "romanization": "saṃvardhayati",
+      "gloss": "brings up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dff3ad9a1b3be38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the sacred-thread ceremony, then the Sanskrit for pampers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संवर्धयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संवर्धयति — saṃvardhayati — \"brings up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माता पिता च पुत्रं स्नेहेन संवर्धयतः। mātā pitā ca putraṃ snehena saṃvardhayataḥ. The mother and father bring up their son with love."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा पुत्रीं स्नेहेन संवर्धितवती, sā putrīṃ snehena saṃvardhitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संवर्धयति (saṃvardhayati) is built on sam and the causative of the root √vṛdh, \"to grow\", the root of वर्धते; MW's ppp saṃvardhita is \"brought up, reared\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvardhayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvardhayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃvardhayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃvardhayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātā pitā ca putraṃ snehena saṃvardhayataḥ. — The mother and father bring up their son with love.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātā pitā ca putraṃ snehena saṃvardhayataḥ.* — The mother and father bring up their son with love.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the sacred-thread ceremony, then the Sanskrit for pampers, then say saṃvardhayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the sacred-thread ceremony, then the Sanskrit for pampers, then say *saṃvardhayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संवर्धयति (saṃvardhayati) mean? (\"Brings up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C494-bhartsayati",
+      "sequence": 28370,
+      "title": "भर्त्सयति (bhartsayati) — scolds",
+      "headword": "भर्त्सयति",
+      "romanization": "bhartsayati",
+      "gloss": "scolds",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35b417fa27150790",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for pampers, then the Sanskrit for brings up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भर्त्सयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भर्त्सयति — bhartsayati — \"scolds\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पिता अलसं पुत्रं भर्त्सयति। pitā alasaṃ putraṃ bhartsayati. Father scolds his lazy son."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः पुत्रं भर्त्सितवान्, saḥ putraṃ bhartsitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भर्त्सयति (bhartsayati) comes from the root √bharts, \"to menace, to threaten, to abuse\"; MW's ppp is bhartsita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhartsayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhartsayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhartsayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhartsayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitā alasaṃ putraṃ bhartsayati. — Father scolds his lazy son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitā alasaṃ putraṃ bhartsayati.* — Father scolds his lazy son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for pampers, then the Sanskrit for brings up, then say bhartsayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for pampers, then the Sanskrit for brings up, then say *bhartsayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भर्त्सयति (bhartsayati) mean? (\"Scolds\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C494-anujanati",
+      "sequence": 28380,
+      "title": "अनुजानाति (anujānāti) — permits",
+      "headword": "अनुजानाति",
+      "romanization": "anujānāti",
+      "gloss": "permits",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f40f3b564b528249",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for brings up, then the Sanskrit for scolds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुजानाति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुजानाति — anujānāti — \"permits\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पिता पुत्रस्य यात्राम् अनुजानाति। pitā putrasya yātrām anujānāti. Father allows his son's journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः यात्राम् अनुज्ञातवान्, saḥ yātrām anujñātavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुजानाति (anujānāti) is built from anu, \"after\", and the root √jñā, \"to know\", the root of जानाति; MW gives \"to permit, grant, allow\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anujānāti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anujānāti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anujānāti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anujānāti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitā putrasya yātrām anujānāti. — Father allows his son's journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitā putrasya yātrām anujānāti.* — Father allows his son's journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for brings up, then the Sanskrit for scolds, then say anujānāti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for brings up, then the Sanskrit for scolds, then say *anujānāti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुजानाति (anujānāti) mean? (\"Permits\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C494-balyam",
+      "sequence": 28390,
+      "title": "बाल्यम् (bālyam) — childhood",
+      "headword": "बाल्यम्",
+      "romanization": "bālyam",
+      "gloss": "childhood",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39168c82c0f619d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for scolds, then the Sanskrit for permits."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाल्यम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाल्यम् — bālyam — \"childhood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बाल्ये अहं ग्रामे अवसम्। bālye ahaṃ grāme avasam. In childhood I lived in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाल्यम् (bālyam) is built on बालः, \"a child\", by lengthening its vowel and adding -ya; MW gives \"boyhood, childhood, infancy\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bālye ahaṃ grāme avasam. — In childhood I lived in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bālye ahaṃ grāme avasam.* — In childhood I lived in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for scolds, then the Sanskrit for permits, then say bālyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for scolds, then the Sanskrit for permits, then say *bālyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाल्यम् (bālyam) mean? (\"Childhood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R494-review-488-494",
+      "sequence": 28400,
+      "title": "Looking back: from Sleep and Waking to Bringing Up a Child",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Sleep and Waking to Bringing Up a Child",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2c923a638eaef43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for awakes and lassitude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awakes, lassitude, wakes someone up, sleepless, a three-hour watch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: awakes, lassitude, wakes someone up, sleepless, a three-hour watch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a vice, self-control, smoking, gives up entirely, liquor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a vice, self-control, smoking, gives up entirely, liquor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pale, length of life, grey-haired, a wrinkle, appearance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pale, length of life, grey-haired, a wrinkle, appearance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "old age, wears out, death, funeral rites, a rite for the ancestors",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: old age, wears out, death, funeral rites, a rite for the ancestors]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pregnant woman, gives birth, birth, newborn, a swing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pregnant woman, gives birth, birth, newborn, a swing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rite of passage, the naming ceremony, a baby's first rice, the first haircut, the sacred-thread ceremony",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rite of passage, the naming ceremony, a baby's first rice, the first haircut, the sacred-thread ceremony]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pampers, brings up, scolds, permits, childhood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pampers, brings up, scolds, permits, childhood]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Awakes? (प्रतिबुध्यते, pratibudhyate.) Lassitude? (तन्द्रा, tandrā.) Wakes someone up? (प्रबोधयति, prabodhayati.) Sleepless? (उन्निद्रः, unnidraḥ.) A three-hour watch? (प्रहरः, praharaḥ.) A vice? (व्यसनम्, vyasanam.) Self-control? (संयमः, saṃyamaḥ.) Smoking? (धूमपानम्, dhūmapānam.) Gives up entirely? (परित्यजति, parityajati.) Liquor? (मद्यम्, madyam.) Pale? (गौरः, gauraḥ.) Length of life? (आयुः, āyuḥ.) Grey-haired? (पलितः, palitaḥ.) A wrinkle? (वलिः, valiḥ.) Appearance? (रूपम्, rūpam.) Old age? (जरा, jarā.) Wears out? (जीर्यति, jīryati.) Death? (मृत्युः, mṛtyuḥ.) Funeral rites? (अन्त्येष्टिः, antyeṣṭiḥ.) A rite for the ancestors? (श्राद्धम्, śrāddham.) A pregnant woman? (गर्भिणी, garbhiṇī.) Gives birth? (प्रसूते, prasūte.) Birth? (जन्म, janma.) Newborn? (नवजातः, navajātaḥ.) A swing? (दोला, dolā.) A rite of passage? (संस्कारः, saṃskāraḥ.) The naming ceremony? (नामकरणम्, nāmakaraṇam.) A baby's first rice? (अन्नप्राशनम्, annaprāśanam.) The first haircut? (चूडाकरणम्, cūḍākaraṇam.) The sacred-thread ceremony? (उपनयनम्, upanayanam.) Pampers? (लालयति, lālayati.) Brings up? (संवर्धयति, saṃvardhayati.) Scolds? (भर्त्सयति, bhartsayati.) Permits? (अनुजानाति, anujānāti.) Childhood? (बाल्यम्, bālyam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

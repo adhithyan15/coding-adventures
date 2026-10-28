@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:6f438131b62ea8d5",
+  "lessonIds": [
+    "JA-C487-shoubai",
+    "JA-C487-shounin",
+    "JA-C487-tenchou",
+    "JA-C487-uriage",
+    "JA-C487-juugyouin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch487.txt",
+  "json": "japanese/narration/ch487.json",
+  "textHash": "fnv1a64:dd7840de909ac414",
+  "jsonHash": "fnv1a64:3d9692a2fd5add28",
+  "findings": []
+}

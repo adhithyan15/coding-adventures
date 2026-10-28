@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:68a4399243b925a1",
+  "lessonIds": [
+    "ZH-C126-changchang",
+    "ZH-C126-youshihou",
+    "ZH-C126-yiqian",
+    "ZH-W126-yi-use",
+    "ZH-C126-gangcai",
+    "ZH-C126-yijing"
+  ],
+  "tex": "chinese/book/chapters/ch126-often-and-sometimes.tex"
+}

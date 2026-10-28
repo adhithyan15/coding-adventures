@@ -1,0 +1,11 @@
+{
+  "id": "JA-C510-megumareru",
+  "pathSegment": "JA-PATH-510-CHANCE510",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-510-CHANCE510",
+      "order": 4
+    }
+  ]
+}

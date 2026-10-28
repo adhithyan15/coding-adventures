@@ -26,10 +26,11 @@ import XCTest
 //
 // Controls are found by part name, the `.accessibilityIdentifier` every
 // generated control carries, as the Android test finds them by test tag.
-// Timeline rows are the toolkit RecordList's buttons, identified
-// `record-list-title` (or `-selected`). RecordList is mounted more than once
-// ("On this day" sits above the timeline), and a later mount's parts are
-// suffixed `-m2`, so rows are matched by identifier PREFIX and by label.
+// Timeline rows are mosaic-pkg-card Cards, each opened by the "Open" button
+// beside it, identified `timeline-entry-open` (or `-selected`). The button's
+// accessibility label is "Open {title}" (the app's open-label row field),
+// so rows are matched by identifier PREFIX and by label. (They were
+// RecordList's `record-list-title` buttons before the timeline became Cards.)
 
 private let draftTitle = "Drafted on iPadOS"
 private let keptTitle = "Kept across an iPadOS relaunch"
@@ -57,8 +58,8 @@ final class JournalUiTests: XCTestCase {
         app.buttons.matching(
             NSPredicate(
                 format: "identifier BEGINSWITH %@ AND label CONTAINS %@",
-                "record-list-title",
-                title
+                "timeline-entry-open",
+                "Open \(title)"
             )
         ).firstMatch
     }

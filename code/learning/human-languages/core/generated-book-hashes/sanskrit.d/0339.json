@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:7adc390977f5b694",
+  "lessonIds": [
+    "SA-C339-yuvarajah",
+    "SA-C339-svayamvarah",
+    "SA-C339-vrnite",
+    "SA-C339-pracchannah",
+    "SA-C339-nyayah",
+    "SA-R339-review-333-339",
+    "SA-R339-review-final-339"
+  ],
+  "tex": "sanskrit/book/chapters/ch339-the-prince-s-choice.tex"
+}

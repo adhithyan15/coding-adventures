@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:ac722574b9a0a7b6",
+  "lessonIds": [
+    "JA-C478-nedaru",
+    "JA-C478-amayakasu",
+    "JA-C478-ijimeru",
+    "JA-C478-karakau",
+    "JA-C478-maneru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch478.txt",
+  "json": "japanese/narration/ch478.json",
+  "textHash": "fnv1a64:4924dd28f35f8ae1",
+  "jsonHash": "fnv1a64:645d3027e70d7a00",
+  "findings": []
+}

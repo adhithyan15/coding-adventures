@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:448754a94100991c",
+  "lessonIds": [
+    "JA-C299-ousama",
+    "JA-C299-ohimesama",
+    "JA-C299-samurai",
+    "JA-C299-mamoru",
+    "JA-C299-tonosama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch299.txt",
+  "json": "japanese/narration/ch299.json",
+  "textHash": "fnv1a64:834772da16b7eb6c",
+  "jsonHash": "fnv1a64:8c7eabea35447c63",
+  "findings": []
+}

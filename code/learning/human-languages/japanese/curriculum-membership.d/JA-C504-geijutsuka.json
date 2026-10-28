@@ -1,0 +1,11 @@
+{
+  "id": "JA-C504-geijutsuka",
+  "pathSegment": "JA-PATH-504-ART504",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-504-ART504",
+      "order": 3
+    }
+  ]
+}

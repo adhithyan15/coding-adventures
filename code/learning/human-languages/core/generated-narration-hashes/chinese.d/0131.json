@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:d62959961d24084b",
+  "lessonIds": [
+    "ZH-C131-chuntian",
+    "ZH-W131-chun-spring",
+    "ZH-C131-xiatian",
+    "ZH-C131-qiutian",
+    "ZH-C131-dongtian",
+    "ZH-C131-jijie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch131.txt",
+  "json": "chinese/narration/ch131.json",
+  "textHash": "fnv1a64:d3457796aa70e505",
+  "jsonHash": "fnv1a64:fee6433cb7d136c9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:528849542583c709",
+  "lessonIds": [
+    "SA-C356-vijnapayati",
+    "SA-C356-niyojayati",
+    "SA-C356-anumodate",
+    "SA-C356-vibhagah",
+    "SA-C356-prastavah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch356.txt",
+  "json": "sanskrit/narration/ch356.json",
+  "textHash": "fnv1a64:24fddffcf5bfacb6",
+  "jsonHash": "fnv1a64:6e005344f2fb192f",
+  "findings": []
+}

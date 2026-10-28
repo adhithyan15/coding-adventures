@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 536,
+  "title": "A Stroke of Luck",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dc8b6d7885368af9",
+  "lessons": [
+    {
+      "id": "SA-C536-adrstam",
+      "sequence": 30740,
+      "title": "अदृष्टम् (adṛṣṭam) — the unseen; fate",
+      "headword": "अदृष्टम्",
+      "romanization": "adṛṣṭam",
+      "gloss": "the unseen; fate",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f623353d3fb6bffa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a breaking, then the Sanskrit for one's word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अदृष्टम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अदृष्टम् — adṛṣṭam — \"the unseen; fate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि अदृष्टं साहाय्यं करोति, तर्हि सः जयति। yadi adṛṣṭaṃ sāhāyyaṃ karoti, tarhi saḥ jayati. If fate helps him, he wins."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अदृष्टम् (adṛṣṭam) is built on a, \"not\", and dṛṣṭa, \"seen\", from the root √dṛś, \"to see\": the unseen; MW gives adṛṣṭa as what is beyond observation, the merit or demerit of one's deeds, fate (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adṛṣṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adṛṣṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adṛṣṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adṛṣṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi adṛṣṭaṃ sāhāyyaṃ karoti, tarhi saḥ jayati. — If fate helps him, he wins.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi adṛṣṭaṃ sāhāyyaṃ karoti, tarhi saḥ jayati.* — If fate helps him, he wins.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a breaking, then the Sanskrit for one's word, then say adṛṣṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a breaking, then the Sanskrit for one's word, then say *adṛṣṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अदृष्टम् (adṛṣṭam) mean? (\"The unseen; fate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C536-bhavitavyata",
+      "sequence": 30750,
+      "title": "भवितव्यता (bhavitavyatā) — what must be; destiny",
+      "headword": "भवितव्यता",
+      "romanization": "bhavitavyatā",
+      "gloss": "what must be; destiny",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdd2b2c6bf668fbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for one's word, then the Sanskrit for the unseen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भवितव्यता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भवितव्यता — bhavitavyatā — \"what must be; destiny\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवितव्यता एवम् अस्ति, तर्हि किं करोमि? yadi bhavitavyatā evam asti, tarhi kiṃ karomi? If that is what must be, what can I do?"
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भवितव्यता (bhavitavyatā) is built on bhavitavya, \"what is to be\", from the root √bhū, \"to be\", with the abstract ending -tā; MW gives bhavitavyatā as inevitable consequence, necessity, destiny (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhavitavyatā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhavitavyatā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhavitavyatā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhavitavyatā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavitavyatā evam asti, tarhi kiṃ karomi? — If that is what must be, what can I do?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavitavyatā evam asti, tarhi kiṃ karomi?* — If that is what must be, what can I do?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for one's word, then the Sanskrit for the unseen, then say bhavitavyatā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for one's word, then the Sanskrit for the unseen, then say *bhavitavyatā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भवितव्यता (bhavitavyatā) mean? (\"What must be; destiny\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C536-samyogah",
+      "sequence": 30760,
+      "title": "संयोगः (saṃyogaḥ) — a coincidence; a conjunction",
+      "headword": "संयोगः",
+      "romanization": "saṃyogaḥ",
+      "gloss": "a coincidence; a conjunction",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84ce7a2e51963e66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the unseen, then the Sanskrit for what must be."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संयोगः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संयोगः — saṃyogaḥ — \"a coincidence; a conjunction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि संयोगः भवति, तर्हि त्वां श्वः द्रक्ष्यामि। yadi saṃyogaḥ bhavati, tarhi tvāṃ śvaḥ drakṣyāmi. If chance brings us together, I'll see you tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संयोगः (saṃyogaḥ) is built on sam, \"together\", and yoga, \"joining\", from the root √yuj; MW gives saṃyoga as conjunction, connection, union; \"a coincidence\" is its modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃyogaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃyogaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃyogaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃyogaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saṃyogaḥ bhavati, tarhi tvāṃ śvaḥ drakṣyāmi. — If chance brings us together, I'll see you tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saṃyogaḥ bhavati, tarhi tvāṃ śvaḥ drakṣyāmi.* — If chance brings us together, I'll see you tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the unseen, then the Sanskrit for what must be, then say saṃyogaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the unseen, then the Sanskrit for what must be, then say *saṃyogaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संयोगः (saṃyogaḥ) mean? (\"A coincidence; a conjunction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C536-yadrcchaya",
+      "sequence": 30770,
+      "title": "यदृच्छया (yadṛcchayā) — by chance",
+      "headword": "यदृच्छया",
+      "romanization": "yadṛcchayā",
+      "gloss": "by chance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3818e245b8315548",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for what must be, then the Sanskrit for a coincidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: यदृच्छया",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यदृच्छया — yadṛcchayā — \"by chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि यदृच्छया मार्गे मित्रं पश्यामि, तर्हि मोदे। yadi yadṛcchayā mārge mitraṃ paśyāmi, tarhi mode. If I happen to meet a friend on the road, I am glad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "यदृच्छया (yadṛcchayā) is built from yad, \"what, whatever\", and ṛcchā, as MW gives it; MW records yadṛcchā as self-will, accident, chance, and yadṛcchayā as by accident (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadṛcchayā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadṛcchayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadṛcchayā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadṛcchayā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi yadṛcchayā mārge mitraṃ paśyāmi, tarhi mode. — If I happen to meet a friend on the road, I am glad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi yadṛcchayā mārge mitraṃ paśyāmi, tarhi mode.* — If I happen to meet a friend on the road, I am glad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for what must be, then the Sanskrit for a coincidence, then say yadṛcchayā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for what must be, then the Sanskrit for a coincidence, then say *yadṛcchayā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does यदृच्छया (yadṛcchayā) mean? (\"By chance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C536-sampadyate",
+      "sequence": 30780,
+      "title": "सम्पद्यते (sampadyate) — turns out well",
+      "headword": "सम्पद्यते",
+      "romanization": "sampadyate",
+      "gloss": "turns out well",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6373afbd2fb1ff8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a coincidence, then the Sanskrit for by chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सम्पद्यते",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्पद्यते — sampadyate — \"turns out well\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सर्वं सम्यक् सम्पद्यते, तर्हि वयम् उत्सवं करिष्यामः। yadi sarvaṃ samyak sampadyate, tarhi vayam utsavaṃ kariṣyāmaḥ. If everything turns out well, we will celebrate."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): कार्यं सम्पन्नवत्, kāryaṃ sampannavat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सम्पद्यते (sampadyate) is built on sam, \"together, well\", and the root √pad, \"to fall, to go\"; MW gives sampad as to fall out well, to turn out well, to succeed; its past participle is sampanna (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampadyate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampadyate*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampadyate, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampadyate*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi sarvaṃ samyak sampadyate, tarhi vayam utsavaṃ kariṣyāmaḥ. — If everything turns out well, we will celebrate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi sarvaṃ samyak sampadyate, tarhi vayam utsavaṃ kariṣyāmaḥ.* — If everything turns out well, we will celebrate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a coincidence, then the Sanskrit for by chance, then say sampadyate again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a coincidence, then the Sanskrit for by chance, then say *sampadyate* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सम्पद्यते (sampadyate) mean? (\"Turns out well\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

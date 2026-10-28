@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 400,
+  "output": "sanskrit/book/chapters/ch400-round-the-shrine.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

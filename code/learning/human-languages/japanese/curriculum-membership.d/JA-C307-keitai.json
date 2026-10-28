@@ -1,0 +1,11 @@
+{
+  "id": "JA-C307-keitai",
+  "pathSegment": "JA-PATH-307-DENWA307",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-307-DENWA307",
+      "order": 3
+    }
+  ]
+}

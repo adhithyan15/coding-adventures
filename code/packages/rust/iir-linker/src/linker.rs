@@ -9,7 +9,10 @@ use interpreter_ir::module::IIRModule;
 
 use crate::error::LinkError;
 use crate::merge::merge_modules;
-use crate::resolve::{build_export_map, resolve_imports, verify_imports_against};
+use crate::resolve::{
+    build_export_map, check_entry_point, check_function_references, check_module_names,
+    resolve_imports, verify_imports_against,
+};
 
 // ---------------------------------------------------------------------------
 // Free-function API (the recommended entry points)
@@ -19,20 +22,33 @@ use crate::resolve::{build_export_map, resolve_imports, verify_imports_against};
 ///
 /// # Algorithm
 ///
-/// 1. Build the export map: `(module_name, public_name) → &IIRFunction`.
+/// 0. Check that every module name is unique.
+/// 1. Build the export map: `(module_name, public_name) → &IIRFunction`,
+///    checking that each public name has exactly one owning module.
 /// 2. Resolve every import against the export map; type-check if annotations
-///    are present.
+///    are present.  Check that the entry point resolves inside its module,
+///    and that every function reference (`call`, `alloc_closure`, spawn
+///    target) names a function its module defines or imports.
 /// 3. Merge all functions into a single `IIRModule`, renaming collisions with
-///    `"<module>::"` prefix and rewriting `call` instructions accordingly.
+///    `"<module>::"` prefix and rewriting every function-name operand
+///    accordingly.
 /// 4. Return the merged module, or all errors if any were found.
 ///
 /// # Errors
 ///
 /// Returns `Err(errors)` if any of:
+/// - Two input modules have the same name (`LinkError::DuplicateModuleName`)
 /// - An import has no matching export (`LinkError::Unresolved`)
 /// - An import's type annotations don't match (`LinkError::TypeMismatch`)
-/// - Two modules export the same `(module_name, function_name)` pair
+/// - One module exports the same public name twice
 ///   (`LinkError::DuplicateExport`)
+/// - Two different modules export the same public name
+///   (`LinkError::ConflictingExport`)
+/// - The entry module's `entry_point` is neither defined nor imported by
+///   that module (`LinkError::UnresolvedEntryPoint`)
+/// - A function reference names something its module neither defines nor
+///   imports — for example another module's private function
+///   (`LinkError::UndeclaredCall`, issue #18432)
 ///
 /// # Example
 ///
@@ -103,15 +119,28 @@ impl IIRLinker {
     /// Link `modules` into one merged module.  Same algorithm as the free
     /// function [`link`].
     pub fn link(&self, modules: &[IIRModule]) -> Result<IIRModule, Vec<LinkError>> {
-        let mut all_errors: Vec<LinkError> = Vec::new();
+        // Step 0: Module names must be unique — exports and import
+        // rewrites are keyed by them (DuplicateModuleName).
+        let mut all_errors: Vec<LinkError> = check_module_names(modules);
 
-        // Step 1: Build export map (may produce DuplicateExport errors).
+        // Step 1: Build export map (may produce DuplicateExport and
+        // ConflictingExport errors).
         let (export_map, mut dup_errors) = build_export_map(modules);
         all_errors.append(&mut dup_errors);
 
         // Step 2: Resolve imports (may produce Unresolved + TypeMismatch errors).
         let mut import_errors = resolve_imports(modules, &export_map);
         all_errors.append(&mut import_errors);
+
+        // Step 2b: The entry point must resolve inside its own module
+        // (UnresolvedEntryPoint).
+        all_errors.extend(check_entry_point(modules));
+
+        // Step 2c: Every function reference must name a function the module
+        // defines or imports (UndeclaredCall).  A bare name would otherwise
+        // bind to whoever owns it after merging — possibly another module's
+        // private function (#18432).
+        all_errors.append(&mut check_function_references(modules));
 
         if !all_errors.is_empty() {
             return Err(all_errors);

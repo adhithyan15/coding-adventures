@@ -1,0 +1,11 @@
+{
+  "id": "JA-C283-chousa-suru",
+  "pathSegment": "JA-PATH-283-HAPPYOU283",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-283-HAPPYOU283",
+      "order": 2
+    }
+  ]
+}

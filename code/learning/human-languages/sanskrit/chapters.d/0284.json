@@ -1,0 +1,21 @@
+{
+  "chapter": 284,
+  "title": "If It Rains",
+  "label": "ch:sa-if-it-rains",
+  "canDo": "I can say what follows if something happens (yadi … tarhi …), with the present or the future in both halves, and what will happen otherwise (anyathā).",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-R284-if-and-otherwise",
+    "kind": "production",
+    "summary": "Complete SA-R284-if-and-otherwise: say what follows if something happens, and what happens otherwise.",
+    "assesses": [
+      "SA-GRAMMAR-C284-IF-01",
+      "SA-GRAMMAR-C284-IF-02",
+      "SA-GRAMMAR-C284-CONDITIONAL-REAL-01",
+      "SA-GRAMMAR-C284-CONDITIONAL-REAL-02",
+      "SA-LEX-C284-ANYATHA-01"
+    ]
+  }
+}

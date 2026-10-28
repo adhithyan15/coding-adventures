@@ -92,6 +92,40 @@ pub struct GateState {
     pub rom_port: u8,
 }
 
+/// Physical DFF counts derived from the simulator's owned storage containers.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    pub register_dffs: usize,
+    pub accumulator_dffs: usize,
+    pub carry_dffs: usize,
+    pub pc_dffs: usize,
+    pub stack_dffs: usize,
+    pub ram_main_dffs: usize,
+    pub ram_status_dffs: usize,
+    pub ram_output_dffs: usize,
+    pub selector_dffs: usize,
+    pub rom_port_dffs: usize,
+    pub halt_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum every independently inventoried persistent storage bank.
+    #[must_use]
+    pub const fn total(self) -> usize {
+        self.register_dffs
+            + self.accumulator_dffs
+            + self.carry_dffs
+            + self.pc_dffs
+            + self.stack_dffs
+            + self.ram_main_dffs
+            + self.ram_status_dffs
+            + self.ram_output_dffs
+            + self.selector_dffs
+            + self.rom_port_dffs
+            + self.halt_dffs
+    }
+}
+
 /// Exact number of persistent D flip-flops, excluding read-only program ROM.
 pub const FLIP_FLOP_COUNT: usize = 1_428;
 
@@ -126,6 +160,8 @@ pub struct Intel4004GateLevel {
     ram_character: StateRegister,
     rom_port: StateRegister,
     is_halted: StateRegister,
+    /// Non-authoritative diagnostic observer synchronized from HALT Q.
+    halted_observer: bool,
 }
 
 impl Intel4004GateLevel {
@@ -145,6 +181,7 @@ impl Intel4004GateLevel {
             ram_character: StateRegister::new(4),
             rom_port: StateRegister::new(4),
             is_halted: StateRegister::new(1),
+            halted_observer: false,
         }
     }
 
@@ -175,6 +212,37 @@ impl Intel4004GateLevel {
     /// Whether the CPU is halted.
     pub fn halted(&self) -> bool {
         self.is_halted.read() != 0
+    }
+
+    /// Inventory the exact persistent topology from concrete containers.
+    #[must_use]
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        PhysicalStorageInventory {
+            register_dffs: self.regs.dff_count(),
+            accumulator_dffs: self.acc.dff_count(),
+            carry_dffs: self.carry_flag.dff_count(),
+            pc_dffs: self.pc.dff_count(),
+            stack_dffs: self.stack.dff_count(),
+            ram_main_dffs: self.ram.main_dff_count(),
+            ram_status_dffs: self.ram.status_dff_count(),
+            ram_output_dffs: self.ram.output_dff_count(),
+            selector_dffs: self.ram_bank.dff_count()
+                + self.ram_register.dff_count()
+                + self.ram_character.dff_count(),
+            rom_port_dffs: self.rom_port.dff_count(),
+            halt_dffs: self.is_halted.dff_count(),
+        }
+    }
+
+    /// Clock the physical HALT register, then refresh its observer.
+    fn clock_halted(&mut self, value: bool) {
+        self.is_halted.write(u16::from(value));
+        self.sync_halted_observer();
+    }
+
+    /// Repair the non-authoritative observer from the HALT Q output.
+    fn sync_halted_observer(&mut self) {
+        self.halted_observer = self.halted();
     }
 
     /// Read stack levels (for inspection only).
@@ -255,7 +323,100 @@ impl Intel4004GateLevel {
         self.rom.fill(0);
         self.rom[..program.len()].copy_from_slice(program);
         self.pc.reset();
-        self.is_halted.reset();
+        self.clock_halted(false);
+        Ok(())
+    }
+
+    /// Restore a validated complete snapshot through DFF-backed write paths.
+    pub fn restore(&mut self, state: &GateState) -> Result<(), Intel4004Error> {
+        Self::validate_state(state)?;
+
+        self.acc.write(state.accumulator);
+        for (index, &value) in state.registers.iter().enumerate() {
+            self.regs.write(index, value);
+        }
+        self.carry_flag.write(state.carry);
+        self.rom.clone_from(&state.rom);
+        self.pc.load(state.pc);
+        self.clock_halted(state.halted);
+        self.stack.restore(&state.hw_stack, state.stack_pointer);
+        for bank in 0..4 {
+            for register in 0..4 {
+                for character in 0..16 {
+                    self.ram.write_main(
+                        bank,
+                        register,
+                        character,
+                        state.ram[bank][register][character],
+                    );
+                }
+                for status in 0..4 {
+                    self.ram.write_status(
+                        bank,
+                        register,
+                        status,
+                        state.ram_status[bank][register][status],
+                    );
+                }
+            }
+            self.ram.write_output(bank, state.ram_output[bank]);
+        }
+        self.ram_bank.write(state.ram_bank as u16);
+        self.ram_register.write(state.ram_register as u16);
+        self.ram_character.write(state.ram_character as u16);
+        self.rom_port.write(u16::from(state.rom_port));
+        Ok(())
+    }
+
+    fn validate_state(state: &GateState) -> Result<(), Intel4004Error> {
+        if state.accumulator > 0xF {
+            return Err(Intel4004Error::InvalidState("accumulator"));
+        }
+        if state.registers.len() != 16 || state.registers.iter().any(|&value| value > 0xF) {
+            return Err(Intel4004Error::InvalidState("register file"));
+        }
+        if state.rom.len() != 4096 {
+            return Err(Intel4004Error::InvalidState("ROM"));
+        }
+        if state.pc >= 4096 {
+            return Err(Intel4004Error::InvalidState("program counter"));
+        }
+        if state.hw_stack.len() != 3 || state.hw_stack.iter().any(|&value| value >= 4096) {
+            return Err(Intel4004Error::InvalidState("hardware stack"));
+        }
+        if state.stack_pointer >= 3 {
+            return Err(Intel4004Error::InvalidState("stack pointer"));
+        }
+        if state.ram.len() != 4
+            || state.ram.iter().any(|bank| {
+                bank.len() != 4
+                    || bank
+                        .iter()
+                        .any(|register| register.len() != 16 || register.iter().any(|&v| v > 0xF))
+            })
+        {
+            return Err(Intel4004Error::InvalidState("RAM"));
+        }
+        if state.ram_status.len() != 4
+            || state.ram_status.iter().any(|bank| {
+                bank.len() != 4
+                    || bank
+                        .iter()
+                        .any(|register| register.len() != 4 || register.iter().any(|&v| v > 0xF))
+            })
+        {
+            return Err(Intel4004Error::InvalidState("RAM status"));
+        }
+        if state.ram_output.len() != 4 || state.ram_output.iter().any(|&value| value > 0xF) {
+            return Err(Intel4004Error::InvalidState("RAM output"));
+        }
+        if state.ram_bank >= 4
+            || state.ram_register >= 4
+            || state.ram_character >= 16
+            || state.rom_port > 0xF
+        {
+            return Err(Intel4004Error::InvalidState("selector or port"));
+        }
         Ok(())
     }
 
@@ -263,6 +424,7 @@ impl Intel4004GateLevel {
     ///
     /// Returns a GateTrace with before/after state.
     pub fn step(&mut self) -> Result<GateTrace, Intel4004Error> {
+        self.sync_halted_observer();
         if self.halted() {
             return Err(Intel4004Error::Halted);
         }
@@ -325,6 +487,7 @@ impl Intel4004GateLevel {
                 capacity: self.rom.len(),
             });
         }
+        let before = self.snapshot();
         self.reset();
         self.load_program(program)?;
 
@@ -333,7 +496,13 @@ impl Intel4004GateLevel {
             if self.halted() {
                 break;
             }
-            traces.push(self.step()?);
+            match self.step() {
+                Ok(trace) => traces.push(trace),
+                Err(error) => {
+                    self.restore(&before)?;
+                    return Err(error);
+                }
+            }
         }
         Ok(traces)
     }
@@ -351,7 +520,7 @@ impl Intel4004GateLevel {
         self.ram_register.reset();
         self.ram_character.reset();
         self.rom_port.reset();
-        self.is_halted.reset();
+        self.clock_halted(false);
     }
 
     /// Total estimated gate count for the CPU.
@@ -381,7 +550,7 @@ impl Intel4004GateLevel {
 
         // HLT
         if d.is_hlt != 0 {
-            self.is_halted.write(1);
+            self.clock_halted(true);
             self.pc.increment();
             return "HLT".to_string();
         }
@@ -829,6 +998,61 @@ impl Default for Intel4004GateLevel {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn halt_q_overrides_both_observer_divergences_and_repairs_the_mirror() {
+        let mut cpu = Intel4004GateLevel::new();
+        cpu.load_program(&[0x00, 0x01]).unwrap();
+
+        cpu.halted_observer = true;
+        assert!(!cpu.halted());
+        assert!(!cpu.snapshot().halted);
+        assert_eq!(cpu.step().unwrap().mnemonic, "NOP");
+        assert!(!cpu.halted_observer);
+
+        assert_eq!(cpu.step().unwrap().mnemonic, "HLT");
+        assert!(cpu.halted());
+        cpu.halted_observer = false;
+        let halted = cpu.snapshot();
+        assert!(halted.halted);
+        assert_eq!(cpu.step(), Err(Intel4004Error::Halted));
+        assert_eq!(cpu.snapshot(), halted);
+        assert!(cpu.halted_observer);
+
+        cpu.reset();
+        assert!(!cpu.halted());
+        assert!(!cpu.halted_observer);
+        cpu.halted_observer = true;
+        cpu.load_program(&[0x00]).unwrap();
+        assert!(!cpu.halted());
+        assert!(!cpu.halted_observer);
+
+        let mut restored = cpu.snapshot();
+        restored.halted = true;
+        cpu.restore(&restored).unwrap();
+        assert!(cpu.halted());
+        assert!(cpu.halted_observer);
+    }
+
+    #[test]
+    fn late_run_fault_rolls_back_q_and_repairs_the_observer() {
+        let mut cpu = Intel4004GateLevel::new();
+        cpu.load_program(&[0xD7]).unwrap();
+        cpu.step().unwrap();
+        cpu.halted_observer = true;
+        let before = cpu.snapshot();
+
+        assert_eq!(
+            cpu.run(&[0x00, 0xFE], 4),
+            Err(Intel4004Error::UnknownOpcode {
+                address: 1,
+                opcode: 0xFE,
+            })
+        );
+        assert_eq!(cpu.snapshot(), before);
+        assert!(!cpu.halted());
+        assert!(!cpu.halted_observer);
+    }
 
     // --- Basic instruction tests ---
 

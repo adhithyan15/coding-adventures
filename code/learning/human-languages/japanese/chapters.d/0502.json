@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "At the Theatre",
+  "label": "ch:ja-at-the-theatre",
+  "canDo": "I can talk about plays and the people in them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C502-enjiru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about plays and the people in them.",
+    "assesses": [
+      "JA-LEX-C502-STAGE502-03",
+      "JA-LEX-C502-STAGE502-04",
+      "JA-LEX-C502-STAGE502-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "New Year at the Shrine",
+  "label": "ch:ja-new-year-at-the-shrine",
+  "canDo": "I can say what we did at the shrine at New Year.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C295-hibiku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say what we did at the shrine at New Year.",
+    "assesses": [
+      "JA-LEX-C295-HATSUMOUDE295-03",
+      "JA-LEX-C295-HATSUMOUDE295-04",
+      "JA-LEX-C295-HATSUMOUDE295-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 301,
+  "title": "Buried Treasure",
+  "label": "ch:ja-buried-treasure",
+  "canDo": "I can say who buried the treasure and who dug it up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R301-review-297-301",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say who buried the treasure and who dug it up.",
+    "assesses": [
+      "JA-LEX-C301-TAKARA301-01",
+      "JA-LEX-C301-TAKARA301-02",
+      "JA-LEX-C301-TAKARA301-03",
+      "JA-LEX-C301-TAKARA301-04",
+      "JA-LEX-C301-TAKARA301-05"
+    ]
+  }
+}

@@ -28,9 +28,37 @@ pub fn select_u32(d0: u32, d1: u32, select: u8) -> u32 {
 }
 
 pub fn branch_selected(mask: u8, condition_code: u8) -> u8 {
-    let line = 3_u8.wrapping_sub(condition_code);
-    let candidate = (mask >> line) & 1;
-    and_gate(candidate, u8::from(condition_code < 4))
+    let condition = [condition_code & 1, (condition_code >> 1) & 1];
+    let mask = [mask & 1, (mask >> 1) & 1, (mask >> 2) & 1, (mask >> 3) & 1];
+    let cc_0_or_1 = mux2(mask[3], mask[2], condition[0]);
+    let cc_2_or_3 = mux2(mask[1], mask[0], condition[0]);
+    mux2(cc_0_or_1, cc_2_or_3, condition[1])
+}
+
+/// One when a four-bit architectural register field is not register zero.
+pub fn register_field_nonzero(field: u8) -> u8 {
+    (0..4).fold(0, |present, bit| or_gate(present, (field >> bit) & 1))
+}
+
+/// One when a 32-bit count contains any asserted wire.
+pub fn nonzero_32(value: u32) -> u8 {
+    not_gate(is_zero_32(value))
+}
+
+/// The combined BCTR predicate: nonzero decremented count and nonzero target.
+pub fn count_branch_selected(count: u32, target_register: u8) -> u8 {
+    and_gate(nonzero_32(count), register_field_nonzero(target_register))
+}
+
+/// The BXH/BXLE predicate from the transition's already-settled one-hot lines.
+pub fn index_branch_selected(bxh_select: u8, bxle_select: u8, compare_condition_code: u8) -> u8 {
+    let low = compare_condition_code & 1;
+    let high_bit = (compare_condition_code >> 1) & 1;
+    let high = and_gate(high_bit, not_gate(low));
+    or_gate(
+        and_gate(bxh_select, high),
+        and_gate(bxle_select, not_gate(high)),
+    )
 }
 
 pub fn u32_to_bits(value: u32) -> [u8; 32] {

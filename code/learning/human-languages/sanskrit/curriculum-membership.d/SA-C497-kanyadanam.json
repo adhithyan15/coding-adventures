@@ -1,0 +1,11 @@
+{
+  "id": "SA-C497-kanyadanam",
+  "pathSegment": "SA-PATH-497-KANYADANA497",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-497-KANYADANA497",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-198-PHONE198",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can switch a phone off and on, leave a message, and say the line is engaged or there is no signal.",
+  "prerequisites": []
+}

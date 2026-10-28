@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "At the Station",
+  "label": "ch:zh-at-the-station",
+  "canDo": "I can say get on and get off, and name the station, the airport and tickets.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C73-piao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: I can say get on and get off, and name the station, the airport and tickets.",
+    "assesses": [
+      "ZH-LEX-C73-STATION73-03",
+      "ZH-LEX-C73-STATION73-04",
+      "ZH-LEX-C73-STATION73-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:f3070a6b466da442",
+  "lessonIds": [
+    "SA-C470-phupphusah",
+    "SA-C470-yakrt",
+    "SA-C470-vrkkah",
+    "SA-C470-amasayah",
+    "SA-C470-svasiti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch470.txt",
+  "json": "sanskrit/narration/ch470.json",
+  "textHash": "fnv1a64:240f265d7ab13d56",
+  "jsonHash": "fnv1a64:0ad974c0b8884150",
+  "findings": []
+}

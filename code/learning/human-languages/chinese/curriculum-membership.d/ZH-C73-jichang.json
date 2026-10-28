@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C73-jichang",
+  "pathSegment": "ZH-PATH-73-STATION73",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-73-STATION73",
+      "order": 4
+    }
+  ]
+}

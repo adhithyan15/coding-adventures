@@ -1,0 +1,11 @@
+{
+  "id": "SA-C472-rasah",
+  "pathSegment": "SA-PATH-472-TALU472",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-472-TALU472",
+      "order": 4
+    }
+  ]
+}

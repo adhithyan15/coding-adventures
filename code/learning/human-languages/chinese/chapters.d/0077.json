@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Thanks and Replies",
+  "label": "ch:zh-thanks-and-replies",
+  "canDo": "I can answer thanks, thank people warmly and say really and very.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "ZH-C77-zhen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: I can answer thanks, thank people warmly and say really and very.",
+    "assesses": [
+      "ZH-LEX-C77-THANKS77-03",
+      "ZH-LEX-C77-THANKS77-04",
+      "ZH-LEX-C77-THANKS77-05"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "language": "sanskrit",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:c01afcd3953a1a92",
+  "lessonIds": [
+    "SA-C280-sthanakam-kutra",
+    "SA-R280-asking-the-way"
+  ],
+  "tex": "sanskrit/book/chapters/ch280-which-way-to-the-station.tex"
+}

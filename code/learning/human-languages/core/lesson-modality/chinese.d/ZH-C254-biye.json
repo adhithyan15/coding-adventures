@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C254-biye",
+    "language": "chinese",
+    "chapter": 254,
+    "sequence": 19330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6df563c9a3fa256c"
+  },
+  "findings": []
+}

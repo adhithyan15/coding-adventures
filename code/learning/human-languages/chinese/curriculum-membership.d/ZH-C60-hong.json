@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C60-hong",
+  "pathSegment": "ZH-PATH-60-COLOR60",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-60-COLOR60",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 142,
+  "title": "More Housework",
+  "label": "ch:zh-more-housework",
+  "canDo": "I can talk about mopping, rubbish, drying things in the sun, sorting things out and watering the plants.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C142-jiaohua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: I can talk about mopping, rubbish, drying things in the sun, sorting things out and watering the plants.",
+    "assesses": [
+      "ZH-LEX-C142-CHORE142-01",
+      "ZH-LEX-C142-CHORE142-03",
+      "ZH-LEX-C142-CHORE142-04",
+      "ZH-LEX-C142-CHORE142-05"
+    ]
+  }
+}

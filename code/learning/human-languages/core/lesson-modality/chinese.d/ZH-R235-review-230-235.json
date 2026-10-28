@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R235-review-230-235",
+    "language": "chinese",
+    "chapter": 235,
+    "sequence": 17920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b12b7588431a6e17"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Magic and Disguise",
+  "label": "ch:sa-magic-and-disguise",
+  "canDo": "I can tell a story with magic in it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "SA-C335-akarsati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can tell a story with magic in it.",
+    "assesses": [
+      "SA-LEX-C335-MAYA335-03",
+      "SA-LEX-C335-MAYA335-04",
+      "SA-LEX-C335-MAYA335-05"
+    ]
+  }
+}

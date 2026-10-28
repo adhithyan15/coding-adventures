@@ -1,0 +1,23 @@
+{
+  "chapter": 150,
+  "title": "Have You Ever Been?",
+  "label": "ch:zh-have-you-ever-been",
+  "canDo": "I can ask whether someone has ever done something, and answer.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C150-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Asking whether someone has ever done something with 过 after the verb, and telling what came next with 后来 and ránhòu, built on one new written character: 过.",
+    "assesses": [
+      "ZH-LEX-C150-GUOQU-01",
+      "ZH-SCRIPT-GUO-PASS-01",
+      "ZH-GRAMMAR-GUO-EXPERIENCE-01",
+      "ZH-LEX-C150-HOULAI-01",
+      "ZH-LEX-C150-RANHOU-01",
+      "ZH-LEX-C150-CONGLAI-01",
+      "ZH-PERFORMANCE-EVER-01"
+    ]
+  }
+}

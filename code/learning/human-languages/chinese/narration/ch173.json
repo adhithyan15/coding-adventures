@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 173,
+  "title": "An Invitation",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f9a2ce7d524042b0",
+  "lessons": [
+    {
+      "id": "ZH-C173-yaoqing",
+      "sequence": 13770,
+      "title": "yāoqǐng — to invite; an invitation",
+      "headword": "yāoqǐng",
+      "romanization": "yāoqǐng",
+      "gloss": "to invite; an invitation",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2cfd26b1ccd1f30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for smelling good, then the Mandarin for bland."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yāoqǐng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yāoqǐng — \"to invite; an invitation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā yāoqǐng wǒmen qù tā jiā — He's invited us to his place."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yāoqǐng is built from yāo and 请 'to ask', both inherited from Middle Chinese, 'jiew and tshjengX (Guangyun, in Baxter's transcription); the dictionary glosses the first 'to stop someone on the way'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about plans."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yāoqǐng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yāoqǐng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yāoqǐng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yāoqǐng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā yāoqǐng wǒmen qù tā jiā — He's invited us to his place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā yāoqǐng wǒmen qù tā jiā* — He's invited us to his place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for smelling good, then the Mandarin for bland, then say yāoqǐng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for smelling good, then the Mandarin for bland, then say *yāoqǐng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yāoqǐng mean? (\"To invite; an invitation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C173-wenhou",
+      "sequence": 13780,
+      "title": "问候 (wènhòu) — to send regards to; to greet",
+      "headword": "问候",
+      "romanization": "wènhòu",
+      "gloss": "to send regards to; to greet",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfa5731d65219fce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for bland, then the Mandarin for to invite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 问候",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "问候 — wènhòu — \"to send regards to; to greet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ bāng wǒ wènhòu nǐ bàba māma — Give my regards to your mum and dad."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 候 (hòu) — ten strokes: the person piece, a thin vertical beside it, then on the right a small hooked top, a horizontal, and a base of five strokes: a short stroke falling to the left, two horizontals, and two long strokes falling to either side. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "问候 (wènhòu) is built from 问 'to ask' and 候 (hòu) 'to wait upon', both inherited from Middle Chinese, mjunH and huwH (Guangyun, in Baxter's transcription): to ask after someone. The second is a different word from 后 'after', huwX."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about plans."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wènhòu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wènhòu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wènhòu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wènhòu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ bāng wǒ wènhòu nǐ bàba māma — Give my regards to your mum and dad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ bāng wǒ wènhòu nǐ bàba māma* — Give my regards to your mum and dad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for bland, then the Mandarin for to invite, then say wènhòu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for bland, then the Mandarin for to invite, then say *wènhòu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 问候 (wènhòu) mean? (\"To send regards to; to greet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W173-hou-wait",
+      "sequence": 13785,
+      "title": "候 (hòu) — the person piece, a thin stroke, then the right side",
+      "headword": "候",
+      "romanization": "hòu",
+      "gloss": "候 — the person piece, a thin vertical, then a hooked top over a base of five",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4591be6d4fdb5288",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the person piece, a thin stroke, then the right side",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the person piece, a thin stroke, then the right side and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wènhòu — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wènhòu* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "亻 问."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — the person piece, wèn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — the person piece, *wèn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the person piece, a thin stroke, then the right side",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "候 (hòu)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, left to right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The person piece, 亻, two strokes, as in 你."
+            },
+            {
+              "kind": "speech",
+              "text": "A thin vertical, one short stroke standing beside it."
+            },
+            {
+              "kind": "speech",
+              "text": "The right side, seven strokes. On top a short horizontal that turns and falls to the left, like a small hook. A horizontal under it. Then the base, five strokes: a short stroke falling to the left, a short horizontal, a longer horizontal, a long stroke falling to the left through them, and a long stroke falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 1 + 7 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "候 (hòu), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 候, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 候 (hòu)? (Ten.) What comes after the person piece? (One thin vertical.) How many strokes in the base? (Five.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 候 (hòu), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C173-wanhui",
+      "sequence": 13790,
+      "title": "晚会 (wǎnhuì) — evening party; evening show",
+      "headword": "晚会",
+      "romanization": "wǎnhuì",
+      "gloss": "evening party; evening show",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09bb4890a6edd79c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to invite, then the Mandarin for to send regards to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 晚会",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "晚会 — wǎnhuì — \"evening party; evening show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "晚上我有事不能去晚会 wǎnshang wǒ yǒushì bù néng qù wǎnhuì — I've got something on tonight, so I can't come to the party."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "晚会 (wǎnhuì) is built from 晚 'evening' and 会 'to meet', both inherited from Middle Chinese, mjonX and hwajH (Guangyun, in Baxter's transcription), which glosses the second 'to come together'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about plans."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnhuì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnhuì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnhuì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnhuì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnshang wǒ yǒushì bù néng qù wǎnhuì — I've got something on tonight, so I can't come to the party.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnshang wǒ yǒushì bù néng qù wǎnhuì* — I've got something on tonight, so I can't come to the party.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to invite, then the Mandarin for to send regards to, then say wǎnhuì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to invite, then the Mandarin for to send regards to, then say *wǎnhuì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 晚会 (wǎnhuì) mean? (\"Evening party; evening show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C173-juhui",
+      "sequence": 13800,
+      "title": "jùhuì — get-together; party",
+      "headword": "jùhuì",
+      "romanization": "jùhuì",
+      "gloss": "get-together; party",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5daca27ca25efaec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to send regards to, then the Mandarin for an evening party."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jùhuì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jùhuì — \"get-together; party\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhōumò wǒmen yǒu yí ge jùhuì nǐ lái ma — We're having a get-together at the weekend: are you coming?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jùhuì is built from jù 'to gather' and 会 'to meet', both inherited from Middle Chinese, dzjuX and hwajH (Guangyun, in Baxter's transcription); the dictionary glosses the first 'many' and 'to gather', and quotes an older book that glosses it with the second."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about plans."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jùhuì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jùhuì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jùhuì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jùhuì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōumò wǒmen yǒu yí ge jùhuì nǐ lái ma — We're having a get-together at the weekend: are you coming?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōumò wǒmen yǒu yí ge jùhuì nǐ lái ma* — We're having a get-together at the weekend: are you coming?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to send regards to, then the Mandarin for an evening party, then say jùhuì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to send regards to, then the Mandarin for an evening party, then say *jùhuì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jùhuì mean? (\"Get-together; party\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C173-qingke",
+      "sequence": 13810,
+      "title": "请客 (qǐngkè) — to pay for everyone; to treat (the others)",
+      "headword": "请客",
+      "romanization": "qǐngkè",
+      "gloss": "to pay for everyone; to treat (the others)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d0a0dd8df64750d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an evening party, then the Mandarin for a get-together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 请客",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "请客 — qǐngkè — \"to pay for everyone; to treat (the others)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今天我请客每个人一杯茶 jīntiān wǒ qǐngkè měi ge rén yì bēi chá — It's on me today: a cup of tea each."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "请客 (qǐngkè) is built from 请 'to ask, to invite' and 客 'guest', both inherited from Middle Chinese, tshjengX and khaek (Guangyun, in Baxter's transcription): to have the others as your guests, and so to pay."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about plans."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐngkè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐngkè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐngkè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐngkè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān wǒ qǐngkè měi ge rén yì bēi chá — It's on me today: a cup of tea each.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān wǒ qǐngkè měi ge rén yì bēi chá* — It's on me today: a cup of tea each.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an evening party, then the Mandarin for a get-together, then say qǐngkè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an evening party, then the Mandarin for a get-together, then say *qǐngkè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 请客 (qǐngkè) mean? (\"To pay for everyone; to treat (the others)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

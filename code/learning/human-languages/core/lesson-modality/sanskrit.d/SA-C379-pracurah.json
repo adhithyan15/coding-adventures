@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C379-pracurah",
+    "language": "sanskrit",
+    "chapter": 379,
+    "sequence": 22010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a38a1f948ea77f9"
+  },
+  "findings": []
+}

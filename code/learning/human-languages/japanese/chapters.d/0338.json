@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Less and More",
+  "label": "ch:ja-less-and-more",
+  "canDo": "I can say what we should cut down on and what we should increase.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C338-shigen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can say what we should cut down on and what we should increase.",
+    "assesses": [
+      "JA-LEX-C338-MUDA338-03",
+      "JA-LEX-C338-MUDA338-04",
+      "JA-LEX-C338-MUDA338-05"
+    ]
+  }
+}

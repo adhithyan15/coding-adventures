@@ -45,6 +45,36 @@ Implements the entire TW00 surface:
 Deferred (errors at lowering time): `match`, records, unions, type
 aliases.
 
+## Name resolution
+
+Twig is lexically scoped, like Scheme.  Every name resolves in the same
+order (TW00 "Name resolution"), whether it is read as a value or called.
+The first row that binds the name wins:
+
+| Row | Bound by                                                   | `name` reads as         | `(name args…)` lowers to   |
+|-----|------------------------------------------------------------|-------------------------|----------------------------|
+| 1   | parameter, `let` / `let*`, lambda parameter, capture        | `VarRef` Local/Param/Capture | `IndirectCall` on it   |
+| 2   | top-level function `define`                                | `VarRef` Global         | `DirectCall name`          |
+| 3   | top-level value `define`                                   | `VarRef` Global         | `IndirectCall` on it       |
+| 4   | builtin (`+`, `cons`, `car`, `print`, …)                   | `VarRef` Builtin        | `BuiltinCall name`         |
+
+So redefining a builtin is allowed, and the definition wins everywhere:
+
+```scheme
+(define (car p) 42)
+(car (cons 1 2))                 ; DirectCall car → 42, not the builtin's 1
+(define (f car) (car 1))         ; IndirectCall on the parameter
+(let ((car (lambda (p) 9)))      ; IndirectCall on the let binding → 9
+  (car 1))
+(cdr (cons 1 2))                 ; cdr is not shadowed: BuiltinCall cdr → 2
+```
+
+A define whose expression is a bare `lambda`, such as
+`(define g (lambda (x) x))`, counts as a function define (row 2).
+Special forms (`if`, `let`, `let*`, `lambda`, `begin`, `quote`) are
+syntax, parsed before resolution runs, so a definition cannot shadow
+them.  Before 0.2.1 call position checked row 4 first (issue #18456).
+
 ## Closure model
 
 Each `(lambda (x) ...)` becomes:
@@ -65,7 +95,11 @@ appearing in the capture list.
 
 Covers each lowering rule, scope resolution corner cases (parallel
 let vs sequential let*), closure capture computation, validator
-integration, and deferred-form rejection.
+integration, and deferred-form rejection.  `tests/name_resolution.rs`
+pins the call node chosen for each resolution row, including every
+builtin shadowed by a function, a value, a parameter, a `let` binding,
+a lambda parameter and a capture.  `semantic-ir-to-javascript`'s
+`tests/twig_name_resolution.rs` runs those programs under `node`.
 
 ## Related crates
 

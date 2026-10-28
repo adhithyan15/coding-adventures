@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C338-papam",
+    "language": "sanskrit",
+    "chapter": 338,
+    "sequence": 19670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eae64e819154404"
+  },
+  "findings": []
+}

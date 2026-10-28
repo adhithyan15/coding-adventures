@@ -1,0 +1,11 @@
+{
+  "id": "JA-C525-izure",
+  "pathSegment": "JA-PATH-525-REAL525",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-525-REAL525",
+      "order": 4
+    }
+  ]
+}

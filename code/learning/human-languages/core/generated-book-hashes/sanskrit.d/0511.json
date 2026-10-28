@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:2c55e8cdcf4ce448",
+  "lessonIds": [
+    "SA-C511-kastham",
+    "SA-C511-tapayati",
+    "SA-C511-uttarayati",
+    "SA-C511-pakah",
+    "SA-C511-bhrjjati"
+  ],
+  "tex": "sanskrit/book/chapters/ch511-heat-in-the-kitchen.tex"
+}

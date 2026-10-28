@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:ec941e7111ddf91a",
+  "lessonIds": [
+    "SA-C466-medha",
+    "SA-C466-muhyati",
+    "SA-C466-unmadah",
+    "SA-C466-balisah",
+    "SA-C466-bodhah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch466.txt",
+  "json": "sanskrit/narration/ch466.json",
+  "textHash": "fnv1a64:7e5914a5ef63e8d1",
+  "jsonHash": "fnv1a64:74505714fb545657",
+  "findings": []
+}

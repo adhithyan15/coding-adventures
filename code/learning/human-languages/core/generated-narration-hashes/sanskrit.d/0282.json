@@ -1,0 +1,18 @@
+{
+  "language": "sanskrit",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:a422aec9de6b9710",
+  "lessonIds": [
+    "SA-C282-aham-prasannah-asmi",
+    "SA-C282-bhavitum-icchami",
+    "SA-C282-utsukah",
+    "SA-R282-feelings-and-hopes"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "sanskrit/narration/ch282.txt",
+  "json": "sanskrit/narration/ch282.json",
+  "textHash": "fnv1a64:558752506887c3da",
+  "jsonHash": "fnv1a64:8c4c19d7ec65b6e4",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Screens",
+  "label": "ch:zh-screens",
+  "canDo": "I can talk about going online, the television, photos, charging and downloading.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C109-xiazai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: I can talk about going online, the television, photos, charging and downloading.",
+    "assesses": [
+      "ZH-LEX-C109-SCREEN109-03",
+      "ZH-LEX-C109-SCREEN109-04",
+      "ZH-LEX-C109-SCREEN109-05"
+    ]
+  }
+}

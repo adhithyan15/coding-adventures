@@ -1,0 +1,730 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 323,
+  "title": "Ruins of the Past",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:eced67c84ead67e4",
+  "lessons": [
+    {
+      "id": "SA-C323-stupah",
+      "sequence": 18890,
+      "title": "स्तूपः (stūpaḥ) — a stupa; a mound",
+      "headword": "स्तूपः",
+      "romanization": "stūpaḥ",
+      "gloss": "a stupa; a mound",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:969a29cdcfa2889e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for founds, then the Sanskrit for introduces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्तूपः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्तूपः — stūpaḥ — \"a stupa; a mound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पर्वतस्य समीपे प्राचीनः स्तूपः अस्ति। parvatasya samīpe prācīnaḥ stūpaḥ asti. There is an ancient stupa near the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्तूपः (stūpaḥ) MW gives stūpa as a knot of hair, a top, and a heap of earth or bricks, especially a Buddhist monument, and reports two old derivations, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stūpaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stūpaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stūpaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *stūpaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parvatasya samīpe prācīnaḥ stūpaḥ asti. — There is an ancient stupa near the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parvatasya samīpe prācīnaḥ stūpaḥ asti.* — There is an ancient stupa near the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for founds, then the Sanskrit for introduces, then say stūpaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for founds, then the Sanskrit for introduces, then say *stūpaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्तूपः (stūpaḥ) mean? (\"A stupa; a mound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C323-praciram",
+      "sequence": 18900,
+      "title": "प्राचीरम् (prācīram) — a rampart; an enclosing wall",
+      "headword": "प्राचीरम्",
+      "romanization": "prācīram",
+      "gloss": "a rampart; an enclosing wall",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ec33716eeb1ef3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for introduces, then the Sanskrit for a stupa."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्राचीरम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्राचीरम् — prācīram — \"a rampart; an enclosing wall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दुर्गस्य प्राचीरं जीर्णम् अस्ति। durgasya prācīraṃ jīrṇam asti. The fort's rampart is crumbling."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्राचीरम् (prācīram) is built on pra-cīra, by MW's account; MW gives prācīra as an enclosure, hedge, fence, wall (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prācīram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prācīram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prācīram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prācīram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durgasya prācīraṃ jīrṇam asti. — The fort's rampart is crumbling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durgasya prācīraṃ jīrṇam asti.* — The fort's rampart is crumbling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for introduces, then the Sanskrit for a stupa, then say prācīram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for introduces, then the Sanskrit for a stupa, then say *prācīram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्राचीरम् (prācīram) mean? (\"A rampart; an enclosing wall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C323-atitam",
+      "sequence": 18910,
+      "title": "अतीतम् (atītam) — the past",
+      "headword": "अतीतम्",
+      "romanization": "atītam",
+      "gloss": "the past",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:944427364e37ea04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a stupa, then the Sanskrit for a rampart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अतीतम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतीतम् — atītam — \"the past\"."
+            },
+            {
+              "kind": "speech",
+              "text": "इतिहासः अतीतं वर्णयति। itihāsaḥ atītaṃ varṇayati. History describes the past."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतीतम् (atītam) is built from ati, \"beyond\", and ita, \"gone\", from the root √i, \"to go\"; MW gives atīta as gone by, past, and as a noun the past (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atītam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atītam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atītam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atītam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itihāsaḥ atītaṃ varṇayati. — History describes the past.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itihāsaḥ atītaṃ varṇayati.* — History describes the past.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a stupa, then the Sanskrit for a rampart, then say atītam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a stupa, then the Sanskrit for a rampart, then say *atītam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अतीतम् (atītam) mean? (\"The past\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C323-utkhanati",
+      "sequence": 18920,
+      "title": "उत्खनति (utkhanati) — digs up; excavates",
+      "headword": "उत्खनति",
+      "romanization": "utkhanati",
+      "gloss": "digs up; excavates",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a655aaeaf53edcd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a rampart, then the Sanskrit for the past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उत्खनति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्खनति — utkhanati — \"digs up; excavates\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वैज्ञानिकाः भूमिम् उत्खनन्ति। vaijñānikāḥ bhūmim utkhananti. The scientists dig up the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः भूमिम् उत्खातवान्, saḥ bhūmim utkhātavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उत्खनति (utkhanati) is built from ud, \"up, out\", and the root √khan, \"to dig\", as in khanati; MW gives ut-khan as to dig up or out, excavate (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkhanati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkhanati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utkhanati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utkhanati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaijñānikāḥ bhūmim utkhananti. — The scientists dig up the ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaijñānikāḥ bhūmim utkhananti.* — The scientists dig up the ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a rampart, then the Sanskrit for the past, then say utkhanati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a rampart, then the Sanskrit for the past, then say *utkhanati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उत्खनति (utkhanati) mean? (\"Digs up; excavates\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C323-aviskaroti",
+      "sequence": 18930,
+      "title": "आविष्करोति (āviṣkaroti) — brings to light; discovers",
+      "headword": "आविष्करोति",
+      "romanization": "āviṣkaroti",
+      "gloss": "brings to light; discovers",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:1bfe652e28525150",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "The word, taken apart"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: The word, taken apart."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the past, then the Sanskrit for digs up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आविष्करोति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आविष्करोति — āviṣkaroti — \"brings to light; discovers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वैज्ञानिकः प्राचीनं नगरम् आविष्करोति। vaijñānikaḥ prācīnaṃ nagaram āviṣkaroti. The scientist brings an ancient city to light."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः नगरम् आविष्कृतवान्, saḥ nagaram āviṣkṛtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आविष्करोति (āviṣkaroti) is built from āvis, \"openly, before the eyes\", and the root √kṛ, \"to make\"; MW gives āviṣ-kṛ as to make apparent, reveal, uncover, and to discover is its modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āviṣkaroti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āviṣkaroti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āviṣkaroti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āviṣkaroti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaijñānikaḥ prācīnaṃ nagaram āviṣkaroti. — The scientist brings an ancient city to light.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaijñānikaḥ prācīnaṃ nagaram āviṣkaroti.* — The scientist brings an ancient city to light.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the past, then the Sanskrit for digs up, then say āviṣkaroti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the past, then the Sanskrit for digs up, then say *āviṣkaroti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आविष्करोति (āviṣkaroti) mean? (\"Brings to light; discovers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

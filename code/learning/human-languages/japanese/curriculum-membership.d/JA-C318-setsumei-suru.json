@@ -1,0 +1,11 @@
+{
+  "id": "JA-C318-setsumei-suru",
+  "pathSegment": "JA-PATH-318-SETSUMEI318",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-318-SETSUMEI318",
+      "order": 0
+    }
+  ]
+}

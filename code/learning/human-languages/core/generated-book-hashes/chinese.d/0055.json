@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:c364f55c1ca21487",
+  "lessonIds": [
+    "ZH-C55-xiang",
+    "ZH-W55-xiang",
+    "ZH-C55-ai",
+    "ZH-C55-dianying",
+    "ZH-C55-changge",
+    "ZH-C55-kafei"
+  ],
+  "tex": "chinese/book/chapters/ch55-what-you-love.tex"
+}

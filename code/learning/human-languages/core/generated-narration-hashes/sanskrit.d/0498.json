@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:ddfa47e21f4ca6b3",
+  "lessonIds": [
+    "SA-C498-agrajah",
+    "SA-C498-anujah",
+    "SA-C498-jyesthah",
+    "SA-C498-kanisthah",
+    "SA-C498-yamalau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch498.txt",
+  "json": "sanskrit/narration/ch498.json",
+  "textHash": "fnv1a64:5f9d786f3075e4f0",
+  "jsonHash": "fnv1a64:bc5131a3be8199e0",
+  "findings": []
+}

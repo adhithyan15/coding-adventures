@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Nursing",
+  "label": "ch:sa-nursing",
+  "canDo": "I can say how I care for someone who is ill.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C485-rasayanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can say how I care for someone who is ill.",
+    "assesses": [
+      "SA-LEX-C485-SUSRUSA485-03",
+      "SA-LEX-C485-SUSRUSA485-04",
+      "SA-LEX-C485-SUSRUSA485-05"
+    ]
+  }
+}

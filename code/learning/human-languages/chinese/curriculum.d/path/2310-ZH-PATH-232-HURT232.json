@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-232-HURT232",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "ZH-EXT-232-HURT232"
+  ],
+  "after": []
+}

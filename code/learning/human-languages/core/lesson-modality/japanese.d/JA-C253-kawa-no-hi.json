@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C253-kawa-no-hi",
+    "language": "japanese",
+    "chapter": 253,
+    "sequence": 15180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6471b431c10ae2fe"
+  },
+  "findings": []
+}

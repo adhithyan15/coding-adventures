@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "What Caused It",
+  "label": "ch:ja-what-caused-it",
+  "canDo": "I can talk about causes and effects.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C511-moto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about causes and effects.",
+    "assesses": [
+      "JA-LEX-C511-CAUSE511-03",
+      "JA-LEX-C511-CAUSE511-04",
+      "JA-LEX-C511-CAUSE511-05"
+    ]
+  }
+}

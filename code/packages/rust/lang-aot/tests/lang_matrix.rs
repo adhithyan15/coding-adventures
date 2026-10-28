@@ -248,6 +248,13 @@ macro_rules! python_float_case {
     };
 }
 
+/// The source of one `es-number-log` corpus case (LANG84 phase 6e).
+macro_rules! js_case {
+    ($name:literal) => {
+        include_str!(concat!("../../../../grammars/ecmascript/corpus/es-number-log/", $name, ".js"))
+    };
+}
+
 /// Every executable column, for rows that run on all of them.
 const EVERY_COLUMN: &[Backend] = &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam];
 
@@ -3903,12 +3910,15 @@ fn main() { out(1, VALUE); }\n",
     // x86-64 `cvttsd2si` returned i64::MIN (a sign-flipped answer), JVM `d2l`
     // saturated to i64::MAX, and aarch64 `fcvtzs` saturated too. The first
     // row is finite (exp(exp(4)) ≈ 5.1e23 > 2^63); the second overflows to +∞.
+    // Both stop with LANG83's typed `Trap.ConvRange` on every column — the
+    // same kind, not a SIGILL on native, `ArithmeticException` on the JVM or
+    // `OverflowException` on the CLR.
     Prog {
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure pick; pick := 4.0; integer result; \
                   result := entier(exp(exp(pick()))); output(result) end",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.ConvRange"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -3918,7 +3928,7 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real procedure pick; pick := 2.0; integer result; \
                   result := entier(exp(exp(exp(pick())))); output(result) end",
-        expect: Expect::Trap,
+        expect: Expect::StdoutThenTrap("", "Trap.ConvRange"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -6746,6 +6756,29 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin real procedure leftvalue; leftvalue := 3.5; real procedure rightvalue; rightvalue := -2.25; real result; result := entier(((((2 * sign(leftvalue()) + 2) div 5) / 7 + (((2 * sign(leftvalue()) + 2) mod 5) * sign(rightvalue()) / 2)) ^ 2)); output(result) end",
         expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - a static modulo divisor of the conservative common divisor
+    // proves an exact zero remainder before later roots and exact division.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := 3.5; real procedure rightvalue; rightvalue := -2.25; real result; result := entier(((((6 * sign(leftvalue()) + 6) mod 3) / 7 + (((6 * sign(leftvalue()) + 6) mod 3) * sign(rightvalue()) / 11)) ^ 2)); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // ALGOL 60 - integer multiplication may exceed binary64's contiguous
+    // exact range while staying in i64 when later div/mod reductions bring the
+    // value back before widening; the three reduced terms are -2, -2, and -1.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real result; result := entier((9007199254740992 * sign(leftvalue()) * 2 mod 5) / 2 + (9007199254740992 * sign(leftvalue()) * 2 * sign(rightvalue()) mod 5) / 2 + ((9007199254740992 * sign(leftvalue()) * 2 div 3) mod 5)); output(result) end",
+        expect: Expect::Stdout("-5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
         case: None,
@@ -9591,6 +9624,9 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Ruby, ext: "rb", src: "puts(4)\nputs((7 - 7) * 3, 10 / (5 - 5))\n", expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/div_zero_nested") },
     // An empty program (one blank line) prints nothing and exits 0.
     Prog { lang: Language::Ruby, ext: "rb", src: "\n", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/empty_program") },
+    // LANG84 R1b: an `=begin`/`=end` document and everything after a
+    // `__END__` line are skipped, so `puts 2` and `puts 4` never run.
+    Prog { lang: Language::Ruby, ext: "rb", src: "puts 1\n=begin\nputs 2\n=end\nputs 3\n__END__\nputs 4\n", expect: Expect::Stdout("1\n3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam], release: Some("3.3.6"), case: Some("rb-int-puts/embedded_document_and_end") },
     // 3.3.5 — representative of the one IIR-identity class `ruby-iir-compiler`'s
     // release sweep finds (3.3.5, 3.3.6, 3.3.7: `code/grammars/ruby/release_classes.csv`).
     // It is the class's first release in `releases.csv` order, so it, not the
@@ -9611,6 +9647,7 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_in_second_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_in_second_argument") },
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("div_zero_nested"), expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/div_zero_nested") },
     Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("empty_program"), expect: Expect::Stdout(""), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/empty_program") },
+    Prog { lang: Language::Ruby, ext: "rb", src: ruby_case!("embedded_document_and_end"), expect: Expect::Stdout("1\n3"), backends: EVERY_COLUMN, release: Some("3.3.5"), case: Some("rb-int-puts/embedded_document_and_end") },
     // FLOW-MATIC — unified-matrix baseline (VM-020). A file-qualified field is
     // initialised to zero, moved through the frontend's scalar-field path, and
     // rendered by WRITE-ITEM through the shared recursive integer printer plus
@@ -11364,9 +11401,12 @@ fn main() { out(1, VALUE); }\n",
     // Each source is a case of `code/grammars/python/corpus/py-float-print/`
     // verbatim, checked against host CPython 3.13 by
     // `python_rows_agree_with_the_host_python_oracle`. The two literal-only
-    // rows (`const`, `write_f64_py`, `putchar`) run on all eight columns; the
-    // rest use the LANG83 PR6c `f64_*` ops, which BEAM refuses at compile time
-    // (`UnsupportedOps`, which stage B allows), so they declare `IEEE_COLUMNS`.
+    // rows run on all eight columns; the rest use the LANG83 PR6c `f64_*`
+    // ops, which BEAM refuses at compile time (`UnsupportedOps`, which stage B
+    // allows), so they declare `IEEE_COLUMNS`. Since LANG83 PR7c-py a float is
+    // printed by the module's own `__py_write_float` helper
+    // (`f64_class`/`f64_signbit`/`f64_digits`/`f64_exp10` and integer code,
+    // all lowered on BEAM), so the arithmetic alone decides the columns.
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("literals"), expect: Expect::Stdout("1.5\n0.5\n1.0\n0.25\n1000.0\n0.0025\n1e+16\n1000000000000000.0\n1e-05\n0.0001\n0.0\n0.1\n1.2345678901234568e+17\n1.7976931348623157e+308\n5e-324"), backends: EVERY_COLUMN, release: Some("3.13.16"), case: Some("py-float-print/literals") },
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("float_underscores"), expect: Expect::Stdout("1000.5\n10000000000.0\n0.01\n1.001"), backends: EVERY_COLUMN, release: Some("3.13.16"), case: Some("py-float-print/float_underscores") },
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("true_division"), expect: Expect::Stdout("3.5\n-3.5\n0.3333333333333333\n2.0\n-0.0\n0.0\n2.0\n3002399751580330.5\n-9007199254740992.0"), backends: IEEE_COLUMNS, release: Some("3.13.16"), case: Some("py-float-print/true_division") },
@@ -11407,6 +11447,55 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("negative_zero_divisor"), expect: Expect::StdoutThenTrap("0.25", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/negative_zero_divisor") },
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("div_zero_inside_argument"), expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/div_zero_inside_argument") },
     Prog { lang: Language::Python, ext: "py", src: python_float_case!("overflow_inside_float"), expect: Expect::StdoutThenTrap("1.5", "Trap.Overflow"), backends: IEEE_COLUMNS, release: Some("3.5.10"), case: Some("py-float-print/overflow_inside_float") },
+    // LANG84 phase 6e: JavaScript `es-number-log` on every backend, one row per
+    // case on each IIR-identity class representative (es2016, es2021) and on the
+    // default edition (es2020). Expectations are host node v22's stdout
+    // (`<case>.cite`); `javascript_rows_agree_with_the_host_node_oracle` reruns it.
+    // A row with arithmetic uses the PR6c `f64_*` ops, which BEAM refuses at
+    // compile time (`UnsupportedOps`, allowed by stage B), so it lists the seven
+    // IEEE columns; a literal-only row runs on all eight. Since LANG83 PR7c-js
+    // a number is printed by the module's own `__js_write_number` helper
+    // (`f64_class`/`f64_digits`/`f64_exp10` and integer code, all lowered on
+    // BEAM), and the `-0` test is `f64_class`/`f64_signbit`, so the arithmetic
+    // alone decides the columns.
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("arithmetic"), expect: Expect::Stdout("3 -3 42"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/arithmetic") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("asi_newlines"), expect: Expect::Stdout("1\n2\n2"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/asi_newlines") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_after_names"), expect: Expect::Stdout("1 3 3"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/division_after_names") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_chain"), expect: Expect::Stdout("2 0.3333333333333333 2.5"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/division_chain") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("empty_log"), expect: Expect::Stdout("42"), backends: EVERY_COLUMN, release: Some("es2016"), case: Some("es-number-log/empty_log") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("float_formatting"), expect: Expect::Stdout("0.30000000000000004 123456789012345680000 0.000001"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/float_formatting") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("infinities_and_nan"), expect: Expect::Stdout("Infinity -Infinity NaN"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/infinities_and_nan") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("lexical_bindings"), expect: Expect::Stdout("2 6 -6"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/lexical_bindings") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("negative_zero"), expect: Expect::Stdout("-0 -0 0"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/negative_zero") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("precedence"), expect: Expect::Stdout("7 9 2"), backends: IEEE_COLUMNS, release: Some("es2016"), case: Some("es-number-log/precedence") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("radix_literals"), expect: Expect::Stdout("31 5 15"), backends: EVERY_COLUMN, release: Some("es2016"), case: Some("es-number-log/radix_literals") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("trailing_dot_and_legacy"), expect: Expect::Stdout("5 50 1000\n8.5 80 15\n0 0\n5"), backends: EVERY_COLUMN, release: Some("es2016"), case: Some("es-number-log/trailing_dot_and_legacy") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("arithmetic"), expect: Expect::Stdout("3 -3 42"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/arithmetic") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("asi_newlines"), expect: Expect::Stdout("1\n2\n2"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/asi_newlines") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_after_names"), expect: Expect::Stdout("1 3 3"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/division_after_names") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_chain"), expect: Expect::Stdout("2 0.3333333333333333 2.5"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/division_chain") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("empty_log"), expect: Expect::Stdout("42"), backends: EVERY_COLUMN, release: Some("es2020"), case: Some("es-number-log/empty_log") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("float_formatting"), expect: Expect::Stdout("0.30000000000000004 123456789012345680000 0.000001"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/float_formatting") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("infinities_and_nan"), expect: Expect::Stdout("Infinity -Infinity NaN"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/infinities_and_nan") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("lexical_bindings"), expect: Expect::Stdout("2 6 -6"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/lexical_bindings") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("negative_zero"), expect: Expect::Stdout("-0 -0 0"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/negative_zero") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("precedence"), expect: Expect::Stdout("7 9 2"), backends: IEEE_COLUMNS, release: Some("es2020"), case: Some("es-number-log/precedence") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("radix_literals"), expect: Expect::Stdout("31 5 15"), backends: EVERY_COLUMN, release: Some("es2020"), case: Some("es-number-log/radix_literals") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("trailing_dot_and_legacy"), expect: Expect::Stdout("5 50 1000\n8.5 80 15\n0 0\n5"), backends: EVERY_COLUMN, release: Some("es2020"), case: Some("es-number-log/trailing_dot_and_legacy") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("arithmetic"), expect: Expect::Stdout("3 -3 42"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/arithmetic") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("asi_newlines"), expect: Expect::Stdout("1\n2\n2"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/asi_newlines") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_after_names"), expect: Expect::Stdout("1 3 3"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/division_after_names") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("division_chain"), expect: Expect::Stdout("2 0.3333333333333333 2.5"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/division_chain") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("empty_log"), expect: Expect::Stdout("42"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/empty_log") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("float_formatting"), expect: Expect::Stdout("0.30000000000000004 123456789012345680000 0.000001"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/float_formatting") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("infinities_and_nan"), expect: Expect::Stdout("Infinity -Infinity NaN"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/infinities_and_nan") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("lexical_bindings"), expect: Expect::Stdout("2 6 -6"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/lexical_bindings") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("negative_zero"), expect: Expect::Stdout("-0 -0 0"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/negative_zero") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("numeric_separators"), expect: Expect::Stdout("1000000 0.0001"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/numeric_separators") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("numeric_separators_radix"), expect: Expect::Stdout("255 2 63\n10000000000 0.55 100100000000"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/numeric_separators_radix") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("precedence"), expect: Expect::Stdout("7 9 2"), backends: IEEE_COLUMNS, release: Some("es2021"), case: Some("es-number-log/precedence") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("radix_literals"), expect: Expect::Stdout("31 5 15"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/radix_literals") },
+    Prog { lang: Language::JavaScript, ext: "js", src: js_case!("trailing_dot_and_legacy"), expect: Expect::Stdout("5 50 1000\n8.5 80 15\n0 0\n5"), backends: EVERY_COLUMN, release: Some("es2021"), case: Some("es-number-log/trailing_dot_and_legacy") },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -13216,12 +13305,17 @@ fn run_clr_il(p: &Prog, il: &str, input: &[u8], ilasm: &std::path::Path) -> RunR
     RunResult::Completed { code, stdout: printed }
 }
 
-/// Python's `repr(x)`, the text LANG83 PR6a `write_f64_py` writes (LANG84
-/// 7c slice 3, `py-float-print`): the same formatter vm-core's default
-/// builtin uses, so the VM and JIT columns capture exactly what a standalone
-/// run would print.
-fn py_float_text(x: f64) -> String {
-    vm_core::float_format::python_repr(x)
+/// LANG83 PR7e: every builtin a harness registers names no source language,
+/// exactly like the registry's ops and trap kinds
+/// (`interpreter_ir::op_registry::language_name_violation`). The VM and JIT
+/// runners call this on what they registered, so a sink named after a
+/// language (PR6a's `write_f64_py` / `write_f64_js`) cannot come back.
+fn assert_harness_builtins_name_no_language<'a>(column: &str, names: impl IntoIterator<Item = &'a str>) {
+    for name in names {
+        if let Some(why) = interpreter_ir::op_registry::language_name_violation(name) {
+            panic!("{column} harness builtin: {why}");
+        }
+    }
 }
 
 /// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**
@@ -13258,8 +13352,8 @@ fn py_float_text(x: f64) -> String {
 /// every language.
 fn lower_dynamic_for_generic_engine(module: &mut interpreter_ir::IIRModule) {
     iir_builtin_lowering::lower_global_io(module);
-    iir_builtin_lowering::lower_closures_to_heap(module);
-    iir_builtin_lowering::lower_heap_builtins(module);
+    iir_builtin_lowering::lower_closures_to_heap(module).expect("closure lowering");
+    iir_builtin_lowering::lower_heap_builtins(module).expect("heap lowering");
     // A symbol literal is still encoded as `const Var(name) : symbol` after the
     // structural heap pass. The code-generation pipelines intern that form before
     // execution; do the same here so VM/JIT receive stable integer identities rather
@@ -13317,20 +13411,9 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
         bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
         Ok(Value::Null)
     });
-    // LANG83 PR6a `write_f64_py` (Python's `print` of a float, LANG84 7c
-    // slice 3): `repr(x)`, into the same ordered buffer. vm-core's default
-    // would write to the process stdout, where the harness cannot see it.
-    let bytes = Arc::clone(&printed_bytes);
-    vm.builtins_mut().register("write_f64_py", move |args: &[Value]| {
-        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
-            vm_core::errors::VMError::Custom(format!("write_f64_py: expected a float, got {args:?}"))
-        })?;
-        bytes
-            .lock()
-            .expect("lang-matrix VM output buffer poisoned")
-            .extend_from_slice(py_float_text(x).as_bytes());
-        Ok(Value::Null)
-    });
+    // No float writer: LANG83 PR7e removed `write_f64_py` / `write_f64_js`.
+    // The Python and JavaScript modules write every float themselves, with
+    // `putchar` (their `__py_write_float` / `__js_write_number` helpers).
     let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
         let s = args.first().and_then(Value::as_str).unwrap_or("");
@@ -13378,6 +13461,7 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     vm.builtins_mut().register("input_str", move |_args: &[Value]| {
         Ok(Value::Str(drain_stdin_line(&input)))
     });
+    assert_harness_builtins_name_no_language("Vm", vm.builtins_mut().names());
 
     let result = match vm.execute(&mut module, &entry, &[]) {
         Ok(result) => result,
@@ -13465,17 +13549,6 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
-    vm.builtins_mut().register("write_f64_py", move |args: &[Value]| {
-        let x = args.first().and_then(Value::as_f64).ok_or_else(|| {
-            vm_core::errors::VMError::Custom(format!("write_f64_py: expected a float, got {args:?}"))
-        })?;
-        bytes
-            .lock()
-            .expect("lang-matrix JIT output buffer poisoned")
-            .extend_from_slice(py_float_text(x).as_bytes());
-        Ok(Value::Null)
-    });
-    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
         let s = args.first().and_then(Value::as_str).unwrap_or("");
         bytes
@@ -13543,17 +13616,6 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
         Value::Null
     });
-    // `CALL_BUILTIN_F64` hands the compiled tier's handler a `Value::Float`.
-    let bytes = Arc::clone(&printed_bytes);
-    backend.register_builtin("write_f64_py", move |args: &[Value]| {
-        // A non-float would be a JIT bug; print a marker no row can match.
-        let text = args
-            .first()
-            .and_then(Value::as_f64)
-            .map_or_else(|| format!("<write_f64_py: not a float: {args:?}>"), py_float_text);
-        bytes.lock().expect("lang-matrix JIT output buffer poisoned").extend_from_slice(text.as_bytes());
-        Value::Null
-    });
     let input = Arc::clone(&stdin_buf);
     backend.register_builtin("getchar", move |_args: &[Value]| {
         let byte = input.lock().expect("lang-matrix JIT stdin buffer poisoned").pop_front();
@@ -13588,6 +13650,8 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     backend.register_builtin("equal?", |args: &[Value]| {
         Value::Bool(args.len() == 2 && args[0] == args[1])
     });
+    assert_harness_builtins_name_no_language("Jit (interpreter tier)", vm.builtins_mut().names());
+    assert_harness_builtins_name_no_language("Jit", backend.builtin_names().iter().map(String::as_str));
 
     // `JITCore::new` takes `&mut vm` only to thread thresholds — it does not hold the
     // borrow, so `execute_with_jit` can re-borrow `vm` for the interpreter tier.
@@ -13996,6 +14060,518 @@ fn non_algol_matrix_every_proven_cell_agrees() {
     }
     assert!(programs > 0 && ran > 0, "non-ALGOL matrix must execute a nonempty corpus");
     eprintln!("non-ALGOL matrix: {programs} programs, {ran} cells exercised, {skipped} skipped");
+}
+
+// ---------------------------------------------------------------------------
+// LANG83 PR7f-2 security review — truthiness of a malformed word
+// ---------------------------------------------------------------------------
+
+/// A raw machine integer that reaches a tagged position is tested by Lisp
+/// truthiness exactly as the runtime's `__dyn_truthy` tested it: false only
+/// for the whole words nil (1) and `#f` (3).
+///
+/// Twig passes an unboxed parameter straight into `dyn_pair_new` (a known
+/// boxing gap), so `(car (cons n (list)))` with `n = 9` hands the `if` the
+/// raw word `9` = `0b1001` — nil's *tag*, but not nil. Before LANG83 PR7f-2
+/// the C runtime answered "true" and the program exited 1; PR7f-2's first
+/// draft tested `dyn_tag` instead and exited 2 on LLVM and native x86-64.
+/// The expected exits are the pre-PR7f-2 ones, and the VM — whose
+/// truthiness never moved — agrees. `11` (`#f`'s tag) and `17` / `19` are
+/// the same shape; the literal `9` is boxed before `cons` (word 72), true as
+/// every integer. (A raw `0` is left out: the word 0 is the boxed integer 0,
+/// true on the tagged-word columns, while the VM reads its unboxed `0` as
+/// false — the boxing gap itself, not truthiness.)
+#[test]
+fn twig_truthiness_of_a_raw_word_matches_the_runtime_rule_it_replaced() {
+    const PROGRAMS: [(&str, i32); 5] = [
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 9)", 1),
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 11)", 1),
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 17)", 1),
+        ("(define (f n) (if (car (cons n (list))) 1 2)) (f 19)", 1),
+        ("(if (car (cons 9 (list))) 1 2)", 1),
+    ];
+    let mut ran = Vec::new();
+    for (src, code) in PROGRAMS {
+        let p = Prog {
+            lang: Language::Twig,
+            ext: "twig",
+            src,
+            expect: Expect::Exit(code),
+            backends: &[Llvm, NativeAot, Vm],
+            release: None,
+            case: None,
+        };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    assert!(ran.contains(&Vm), "the VM always runs");
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        assert!(ran.contains(&NativeAot), "the native column must run on an x86-64 Linux host");
+    }
+}
+
+/// `car` / `cdr` of a value that is not a pair fail closed on every column —
+/// no column reads memory through the word.
+///
+/// On the tagged-word columns (LLVM, native x86-64) `(car 5)` lowers to a call
+/// of the C runtime's `__dyn_pair_first` with the boxed integer `5 << 3 = 40`.
+/// Before the runtime checked the tag it cleared the low bits and read the 8
+/// bytes at address 40 — a segfault here, but `(car 1000000)` reads address
+/// 8000000, wherever that lands: an arbitrary read steered by program data.
+/// The VM's `field_load` asks `heap::car`, which answers "not a cons cell", and
+/// the run fails with a `TypeError`; the C runtime now stops the program the
+/// same way (stderr names the call, then `abort()`), so every column agrees the
+/// program fails rather than returning something.
+///
+/// `Expect::Trap` is the data-less "fails at run time" expectation: a type
+/// error is not one of LANG83's closed trap kinds, so there is no kind to
+/// compare, only that no column completes. That alone cannot tell the fix
+/// from the bug — a read of address 40 also kills the process (SIGSEGV) — so
+/// the tagged-word columns are run once more and their stderr must carry the
+/// runtime's refusal (`dyn_pair_first: argument with tag 0 (int) is not a
+/// pair`), which only the tag check prints. The refusal names the tag, never
+/// the word, so no stderr here may carry a `0x…` value (a heap address there
+/// would be an ASLR leak).
+///
+/// Columns: the ones that compile a `car` with no `cons` in the program and
+/// can be checked here. WASM refuses that program at compile time (its
+/// `$LispyPair` type is registered only when a `cons` exists); CLR and BEAM
+/// are left to a host with `dotnet`/`erl`.
+#[test]
+fn twig_car_and_cdr_of_a_non_pair_fail_closed_on_every_column() {
+    const PROGRAMS: [&str; 6] = [
+        "(car 5)",
+        "(cdr 5)",
+        "(car 1000000)",
+        "(cdr 1000000)",
+        "(define (head x) (car x)) (head #t)",
+        "(define (tail x) (cdr x)) (tail (list))",
+    ];
+    let mut ran = Vec::new();
+    for src in PROGRAMS {
+        let p = Prog {
+            lang: Language::Twig,
+            ext: "twig",
+            src,
+            expect: Expect::Trap,
+            backends: &[Llvm, NativeAot, Vm, Jit, Jvm],
+            release: None,
+            case: None,
+        };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+        for (column, stderr) in tagged_word_stderr(&p) {
+            assert!(
+                stderr.contains("argument with tag ") && stderr.contains("is not a pair"),
+                "{column} {src}: the C runtime must refuse the non-pair, not read \
+                 through it; stderr: {stderr:?}"
+            );
+            assert!(
+                !stderr.contains("0x"),
+                "{column} {src}: the refusal must name the tag, not print the word; \
+                 stderr: {stderr:?}"
+            );
+        }
+    }
+    assert!(ran.contains(&Vm), "the VM always runs");
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        assert!(ran.contains(&NativeAot), "the native column must run on an x86-64 Linux host");
+    }
+}
+
+/// #18416: on the LLVM column a program function is `internal` (only `main`
+/// is exported), so a program cannot replace a libc function the linked C
+/// runtime or the collector calls.
+///
+/// | program                                     | before (external linkage)                              | now        |
+/// |---------------------------------------------|--------------------------------------------------------|------------|
+/// | `(define (abort) 0) (car 5)`                | the runtime's `abort()` returned; only the pair guard's `__builtin_trap` stopped it (SIGILL) | SIGABRT, the refusal on stderr |
+/// | `(define (malloc n) 0) (car (cons 3 4))`    | gc-core-capi's allocations failed: "memory allocation of 32 bytes failed", SIGABRT | exit 3 |
+/// | `(define (calloc a b) 0) (car (cons 3 4))`  | the cons cell came back null; `car` refused it          | exit 3     |
+/// | `(define (exit n) 7) (car (cons 3 4))`      | exit 3 (glibc's start-up code does not call `exit` through the program's symbol) | exit 3 |
+///
+/// Each runs on the native column too (where program functions were never
+/// exported) and on the VM, which never links C.
+#[test]
+fn twig_programs_cannot_interpose_libc_on_the_llvm_column() {
+    let mut ran = Vec::new();
+    for src in [
+        "(define (malloc n) 0) (car (cons 3 4))",
+        "(define (calloc a b) 0) (car (cons 3 4))",
+        "(define (exit n) 7) (car (cons 3 4))",
+        "(define (fflush x) 0) (define (printf x) 0) (car (cons 3 4))",
+    ] {
+        let p = Prog {
+            lang: Language::Twig,
+            ext: "twig",
+            src,
+            expect: Expect::Exit(3),
+            backends: &[Llvm, NativeAot, Vm],
+            release: None,
+            case: None,
+        };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+        // Every non-entry function of the LLVM module is internal.
+        let iir = lang_aot::compile_source_to_iir(Language::Twig, "(define (abort) 0) (car 5)", "m").expect("iir");
+        let ll = lang_aot::compile_iir_to_llvm(iir, "m", "x86_64-unknown-linux-gnu").expect("llvm");
+        assert!(ll.contains("define internal i64 @abort("), "{ll}");
+        assert!(ll.lines().any(|l| l.starts_with("define i64 @main(")), "{ll}");
+    }
+
+    // A program `abort` does not stop the pair guard's real abort: the process
+    // dies of SIGABRT (not the SIGILL of the guard's backstop trap, which is
+    // what happened while `abort` was the program's) with the refusal on stderr.
+    let p = Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (abort) 0) (car 5)",
+        expect: Expect::Trap,
+        backends: &[Llvm, NativeAot, Vm],
+        release: None,
+        case: None,
+    };
+    for &backend in p.backends {
+        if let Some(result) = run(backend, &p) {
+            assert_cell(backend, &p, result);
+        }
+    }
+    #[cfg(unix)]
+    if clang_ok() {
+        use std::os::unix::process::ExitStatusExt;
+        let (status, stderr) = llvm_status_and_stderr(&p);
+        assert_eq!(status.signal(), Some(6), "SIGABRT expected, got {status:?}; stderr {stderr:?}");
+        assert!(stderr.contains("is not a pair"), "{stderr:?}");
+    }
+}
+
+/// Build `p` on the LLVM column (clang, linking the C runtime and the
+/// collector as `run_llvm` does) and run it, returning its status and stderr.
+#[cfg(unix)]
+fn llvm_status_and_stderr(p: &Prog) -> (std::process::ExitStatus, String) {
+    let dir = tempfile::tempdir().expect("llvm probe: temp dir");
+    let triple = String::from_utf8(Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine").stdout)
+        .expect("clang -dumpmachine emitted valid UTF-8")
+        .trim()
+        .to_string();
+    let ll = prog_iir(p, "lm")
+        .and_then(|m| lang_aot::compile_iir_to_llvm(m, "lm", &triple))
+        .unwrap_or_else(|e| cell_failed("Llvm", p, "source → LLVM IR", format!("{e:?}")));
+    let ll_path = dir.path().join("probe.ll");
+    std::fs::write(&ll_path, &ll).expect("llvm probe: write .ll");
+    let exe = dir.path().join("probe_llvm");
+    let rt = |name: &str| std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name);
+    let built = Command::new("clang")
+        .arg("-x").arg("ir").arg(&ll_path)
+        .arg("-x").arg("none").arg(rt("dynval_runtime.c"))
+        .args(common::gc_link_args())
+        .arg(rt("twig_runtime.c"))
+        .arg("-o").arg(&exe)
+        .output()
+        .expect("llvm probe: spawn clang");
+    assert!(built.status.success(), "llvm probe: clang: {}", String::from_utf8_lossy(&built.stderr));
+    let run = Command::new(&exe).output().expect("llvm probe: run");
+    (run.status, String::from_utf8_lossy(&run.stderr).into_owned())
+}
+
+/// Run a Twig program that calls only `__dyn_*` runtime functions on the
+/// tagged-word columns available here (LLVM via `clang`, native x86-64 via the
+/// system linker) and return each column's stderr — what `run_llvm` /
+/// `run_native` compute and discard. A column whose toolchain is absent is
+/// left out, as `run` leaves it out.
+fn tagged_word_stderr(p: &Prog) -> Vec<(&'static str, String)> {
+    let mut out = Vec::new();
+    let dir = tempfile::tempdir().expect("stderr probe: create temp dir");
+    if clang_ok() {
+        let triple = String::from_utf8(
+            Command::new("clang").arg("-dumpmachine").output().expect("clang -dumpmachine").stdout,
+        )
+        .expect("clang -dumpmachine emitted valid UTF-8")
+        .trim()
+        .to_string();
+        let ll = prog_iir(p, "lm")
+            .and_then(|m| lang_aot::compile_iir_to_llvm(m, "lm", &triple))
+            .unwrap_or_else(|e| cell_failed("Llvm", p, "source → LLVM IR", format!("{e:?}")));
+        let ll_path = dir.path().join("probe.ll");
+        std::fs::write(&ll_path, &ll).expect("stderr probe: write .ll");
+        let exe = dir.path().join("probe_llvm");
+        let rt = |name: &str| {
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../twig-aot/runtime").join(name)
+        };
+        let built = Command::new("clang")
+            .arg("-x").arg("ir").arg(&ll_path)
+            .arg("-x").arg("none").arg(rt("dynval_runtime.c"))
+            .args(common::gc_link_args())
+            .arg(rt("twig_runtime.c"))
+            .arg("-o").arg(&exe)
+            .output()
+            .expect("stderr probe: spawn clang");
+        assert!(built.status.success(), "stderr probe: clang: {}", String::from_utf8_lossy(&built.stderr));
+        let run = Command::new(&exe).output().expect("stderr probe: run LLVM executable");
+        out.push(("Llvm", String::from_utf8_lossy(&run.stderr).into_owned()));
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        let src_path = dir.path().join(format!("probe.{}", p.ext));
+        std::fs::write(&src_path, p.src).expect("stderr probe: write source");
+        let exe = dir.path().join("probe_native");
+        if let Err(e) = compile_native(&src_path, &exe, request(p)) {
+            cell_failed("NativeAot", p, "source → native executable", e);
+        }
+        let run = Command::new(&exe).output().expect("stderr probe: run native executable");
+        out.push(("NativeAot", String::from_utf8_lossy(&run.stderr).into_owned()));
+    }
+    out
+}
+
+/// LANG83 PR7f-2 security review: the Lisp lowering recognises its own
+/// helpers (`__lisp_equal`, …) and inline-rule markers (`__lisp_not`, …) by
+/// name, so no program may define or call one. Twig refuses the name at the
+/// source; IIR that spells one anyway (from any frontend) is refused by the
+/// LLVM and native pipelines before the pass rewrites anything.
+#[test]
+fn compiler_reserved_lisp_names_are_refused_at_the_source_and_in_the_pipeline() {
+    for src in [
+        "(define (__lisp_equal a b) 42) (equal? 1 2)",
+        "(define (__lisp_not x) 0) (__lisp_not 5)",
+        "(define (__dyn_list_length l) 99) (length (list 1 2))",
+    ] {
+        let err = lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect_err(src);
+        assert!(format!("{err:?}").contains("is reserved"), "{src}: {err:?}");
+    }
+    // The same program with an innocent name, renamed in the IIR: what a
+    // frontend without the reservation would hand the pipeline.
+    let mut module =
+        lang_aot::compile_source_to_iir(Language::Twig, "(define (g a b) 42) (+ (g 1 2) (if (equal? 1 2) 0 1))", "m")
+            .expect("compiles");
+    for f in &mut module.functions {
+        if f.name == "g" {
+            f.name = "__lisp_equal".into();
+        }
+        for i in &mut f.instructions {
+            for src in &mut i.srcs {
+                if matches!(src, interpreter_ir::Operand::Var(v) if v == "g") {
+                    *src = interpreter_ir::Operand::Var("__lisp_equal".into());
+                }
+            }
+        }
+    }
+    let err = lang_aot::compile_iir_to_llvm(module.clone(), "m", "x86_64-unknown-linux-gnu")
+        .expect_err("LLVM must refuse a program __lisp_equal");
+    assert!(format!("{err:?}").contains("reserved for the compiler"), "{err:?}");
+    let err = twig_aot::compile_module_linux_x86_64_object(&module)
+        .expect_err("native x86-64 must refuse a program __lisp_equal");
+    assert!(format!("{err:?}").contains("reserved for the compiler"), "{err:?}");
+
+    // Only the names the pass recognises are refused. The pass also runs on
+    // Nib's and ALGOL's modules, so a function merely *prefixed* `__lisp_` —
+    // here `g` renamed to `__lisp_helper` — must still compile.
+    for f in &mut module.functions {
+        if f.name == "__lisp_equal" {
+            f.name = "__lisp_helper".into();
+        }
+        for i in &mut f.instructions {
+            for src in &mut i.srcs {
+                if matches!(src, interpreter_ir::Operand::Var(v) if v == "__lisp_equal") {
+                    *src = interpreter_ir::Operand::Var("__lisp_helper".into());
+                }
+            }
+        }
+    }
+    lang_aot::compile_iir_to_llvm(module.clone(), "m", "x86_64-unknown-linux-gnu")
+        .expect("an unreserved __lisp_ name compiles on LLVM");
+    twig_aot::compile_module_linux_x86_64_object(&module).expect("an unreserved __lisp_ name compiles natively");
+}
+
+/// Rename every function `from` in `module` to `to`, at its definition and at
+/// each direct `call` / closure reference: what a frontend without Twig's
+/// reserved prefixes would hand the pipeline.
+fn rename_function(module: &mut interpreter_ir::IIRModule, from: &str, to: &str) {
+    for f in &mut module.functions {
+        if f.name == from {
+            f.name = to.into();
+        }
+        for i in &mut f.instructions {
+            for src in &mut i.srcs {
+                match src {
+                    interpreter_ir::Operand::Var(v) | interpreter_ir::Operand::Str(v) if v == from => {
+                        *v = to.into();
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+}
+
+/// Security review of the LANG83 PR7f-2 stack: three ways a Twig program's
+/// own function could take the place of code the toolchain owns.
+///
+/// | repro | before the fix |
+/// |-------|----------------|
+/// | `(define (__twig_print_i64 n) 0) (begin (print 5) 0)` | native x86-64 linked `print`'s runtime call to the program's function: nothing printed |
+/// | `(define (__lambda_0 y) (+ y 50)) …` | the lifted lambda was a second `__lambda_0`; the closure called the program's (native exit 120) |
+/// | a program `__dyn_list_length` / `__dyn_call_closure` (IIR from any frontend) | `length` / every closure call silently called it |
+///
+/// Twig refuses all three spellings in source. Below that, the pipelines
+/// refuse the renamed IIR themselves: the native linker step refuses a
+/// function named like a runtime symbol or defined twice, and the list and
+/// closure passes refuse a function that carries their helper's name without
+/// being their helper (on LLVM and native alike, since both run them).
+#[test]
+fn program_names_cannot_shadow_runtime_symbols_or_compiler_functions() {
+    const LAMBDA_REPRO: &str =
+        "(define (__lambda_0 y) (+ y 50)) (define (g f) (+ 0 (f 5))) (+ (__lambda_0 1) (g (lambda (y) (+ y 1))))";
+    // 1. The source spellings are reserved.
+    for (src, prefix) in [
+        ("(define (__twig_print_i64 n) 0) (begin (print 5) 0)", "__twig_"),
+        (LAMBDA_REPRO, "__lambda_"),
+        ("(define (__dyn_call_closure c a) 0) ((lambda (x) x) 1)", "__dyn_"),
+    ] {
+        let err = lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect_err(src);
+        let msg = format!("{err:?}");
+        assert!(msg.contains("is reserved") && msg.contains(prefix), "{src}: {msg}");
+    }
+
+    // 2. The same shapes under innocent names behave. (A program function next
+    // to a lambda that the closure must reach; `print` beside a program
+    // function. LLVM has no Twig `print` — it refuses `io_out` — so that row
+    // is native only. The rows avoid arithmetic over a call's result, which
+    // the tagged-word columns get wrong for an unrelated, pre-existing
+    // boxing reason: `(define (h y) (+ y 1)) (h 1)` exits 9 there.)
+    let mut ran = Vec::new();
+    for (src, expect, backends) in [
+        (
+            "(define (h y) y) (define (g f) (f 5)) (begin (h 1) (g (lambda (y) (+ y 1))))",
+            Expect::Exit(6),
+            &[Llvm, NativeAot][..],
+        ),
+        ("(define (my_print n) 0) (begin (print 5) 0)", Expect::Stdout("5"), &[NativeAot][..]),
+    ] {
+        let p = Prog { lang: Language::Twig, ext: "twig", src, expect, backends, release: None, case: None };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+    if cfg!(all(target_os = "linux", target_arch = "x86_64")) && native_linker_ok() {
+        assert!(ran.contains(&NativeAot), "the native column must run on an x86-64 Linux host");
+    }
+
+    // 3. Renamed in the IIR, below the source check.
+    let iir = |src: &str| lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect(src);
+    let native_refuses = |module: &interpreter_ir::IIRModule, want: &str| {
+        let err = twig_aot::compile_module_linux_x86_64_object(module).expect_err(want);
+        assert!(err.to_string().contains(want), "native: {err} lacks {want:?}");
+    };
+    let llvm_refuses = |module: &interpreter_ir::IIRModule, want: &str| {
+        let err = lang_aot::compile_iir_to_llvm(module.clone(), "m", "x86_64-unknown-linux-gnu").expect_err(want);
+        assert!(err.to_string().contains(want), "LLVM: {err} lacks {want:?}");
+    };
+
+    // (i) a runtime symbol: refused by the native link step.
+    let mut m = iir("(define (my_print n) 0) (begin (print 5) (my_print 1))");
+    rename_function(&mut m, "my_print", "__twig_print_i64");
+    native_refuses(&m, "reserved for the compiler");
+
+    // The LLVM column links the same C runtime and collector, and runs the
+    // same check (twig-aot's, shared) before any pass: a program
+    // `@__gc_alloc_kind` would replace the collector's allocator for every
+    // caller in the runtime, and any `__dyn_*` name but a pass helper's is
+    // the runtime's.
+    for runtime_name in ["__twig_print_i64", "__gc_alloc_kind", "__gc_register_kind", "__dyn_pair_first", "__dyn_not_yet_defined"] {
+        let mut m = iir("(define (my_print n) 0) (begin (print 5) (my_print 1))");
+        rename_function(&mut m, "my_print", runtime_name);
+        native_refuses(&m, "reserved for the compiler");
+        llvm_refuses(&m, "reserved for the compiler");
+    }
+
+    // (ii) a second function named like the lifted lambda: refused on both
+    // columns as a duplicate (the native link step's offset table would keep
+    // only one; LLVM would emit two definitions).
+    let mut m = iir("(define (h y) y) (define (g f) (f 5)) (begin (h 1) (g (lambda (y) (+ y 1))))");
+    rename_function(&mut m, "h", "__lambda_0");
+    native_refuses(&m, "more than one function named \"__lambda_0\"");
+    llvm_refuses(&m, "more than one function named \"__lambda_0\"");
+
+    // (iii) a pass helper's name, refused by the pass on both columns.
+    let mut m = iir("(define (len2 l) 99) (+ (len2 0) (length (list 1 2)))");
+    rename_function(&mut m, "len2", "__dyn_list_length");
+    native_refuses(&m, "lower_list_ops");
+    llvm_refuses(&m, "lower_list_ops");
+    let mut m = iir("(define (disp c a) 0) (+ (disp 0 0) ((lambda (x) x) 1))");
+    rename_function(&mut m, "disp", "__dyn_call_closure");
+    native_refuses(&m, "lower_closures_to_heap");
+    llvm_refuses(&m, "lower_closures_to_heap");
+}
+
+/// Security review, third round: a Twig parameter or `let` name is an IIR
+/// register, in the same function as the compiler's own temporaries. Those
+/// were `_n1`, `_n2`, … and labels `_else1`, … — all spellable:
+///
+/// | program                                        | old IIR                                        | old result |
+/// |------------------------------------------------|------------------------------------------------|------------|
+/// | `(let ((_n2 40)) (+ _n2 2))`                   | `const _n2 = 2` over the binding, `add _n2, _n2` | 4        |
+/// | `(define (f _n1) (+ _n1 2)) (f 40)`            | `const _n1 = 2` over the parameter             | 4          |
+/// | `(define (g _else1) (if (= _else1 5) 42 0)) (g 5)` | a parameter and a label both `_else1`: one `%` namespace in LLVM | clang: "'%_else1' is not a basic block" |
+///
+/// The temporaries are `__t{n}_{what}` and the labels `__l{n}_{what}` now,
+/// and Twig refuses every `__` name, so a program's names are its own on
+/// every column.
+#[test]
+fn twig_names_shaped_like_compiler_temporaries_keep_their_values() {
+    let mut ran = Vec::new();
+    for (src, want, backends) in [
+        ("(let ((_n2 40)) (+ _n2 2))", 42, &[Vm, Jit, Llvm, NativeAot, Wasm, Jvm][..]),
+        // A call's arithmetic result: not on the tagged-word columns, which
+        // mis-box a call result for an unrelated, pre-existing reason (see
+        // `program_names_cannot_shadow_runtime_symbols_or_compiler_functions`).
+        ("(define (f _n1) (+ _n1 2)) (f 40)", 42, &[Vm, Jit, Wasm, Jvm][..]),
+        ("(define (g _else1) (if (= _else1 5) 42 0)) (g 5)", 42, &[Vm, Jit, Llvm, NativeAot, Wasm, Jvm][..]),
+    ] {
+        let p = Prog { lang: Language::Twig, ext: "twig", src, expect: Expect::Exit(want), backends, release: None, case: None };
+        for &backend in p.backends {
+            if let Some(result) = run(backend, &p) {
+                assert_cell(backend, &p, result);
+                ran.push(backend);
+            }
+        }
+    }
+    assert!(ran.contains(&Vm), "the VM always runs");
+    if clang_ok() {
+        assert!(ran.contains(&Llvm), "clang is present, so the LLVM column must run");
+    }
+
+    // And the generated shapes themselves are refused at the source.
+    for src in ["(let ((__t1_n 40)) __t1_n)", "(let ((__aot_str0_len 9)) 0)", "((lambda (__clo_argnil1) 0) 1)"] {
+        let err = lang_aot::compile_source_to_iir(Language::Twig, src, "m").expect_err(src);
+        assert!(format!("{err:?}").contains("is reserved"), "{src}: {err:?}");
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -14644,8 +15220,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // Ruby: LANG84 phase 5a's thirteen rb-int-puts rows (four of them
         // StdoutThenTrap) plus 4c's empty_program row on the default 3.3.6,
         // and 5b slice 2's same fourteen cases on the IIR-identity class
-        // representative 3.3.5, all eight columns.
-        (Language::Ruby, 28, 224),
+        // representative 3.3.5, all eight columns. R1b adds the
+        // embedded_document_and_end case on both releases.
+        (Language::Ruby, 30, 240),
         (Language::Cobol60, 59, 472),
         // Perl: the `pl-int-print` corpus on the three IIR-identity class
         // representatives (LANG84 4c): 12 cases on 5.38.0, 11 on 1.000 and 10
@@ -14664,6 +15241,12 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // the other 33 the seven IEEE columns (BEAM refuses `f64_*`):
         // 100 + 38 rows, 800 + 5 * 8 + 33 * 7 = 1071 cells.
         (Language::Python, 138, 1071),
+        // JavaScript: LANG84 phase 6e's es-number-log corpus on the default
+        // es2020 (12 cases) and the two IIR-identity class representatives,
+        // es2016 (12) and es2021 (14). The 11 literal-only rows run on all
+        // eight columns; the 27 with IEEE arithmetic on the seven IEEE ones
+        // (BEAM refuses `f64_*` at compile time): 11 * 8 + 27 * 7 = 277.
+        (Language::JavaScript, 38, 277),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -16821,6 +17404,56 @@ fn algol_range_dominated_sign_reductions_run_on_every_available_standard_backend
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but range-dominated sign reductions did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_divisor_aligned_modulo_zero_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "sign(leftvalue()) + 6) mod 3) / 7 + (((6 * sign(leftvalue()) + 6) mod 3)",
+                )
+        })
+        .expect("the ALGOL divisor-aligned modulo-zero program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but divisor-aligned modulo zero did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_reduced_wide_integer_intermediates_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "9007199254740992 * sign(leftvalue()) * 2 * sign(rightvalue()) mod 5",
+                )
+        })
+        .expect("the reduced wide-integer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but reduced wide-integer intermediates did not complete"
             );
             continue;
         };
@@ -19709,7 +20342,7 @@ fn algol_out_of_range_entier_traps_on_every_available_standard_backend() {
         .iter()
         .filter(|program| {
             program.lang == Language::Algol60
-                && matches!(program.expect, Expect::Trap)
+                && matches!(program.expect, Expect::StdoutThenTrap("", "Trap.ConvRange"))
                 && (program.src.contains("result := entier(exp(exp(pick())))")
                     || program.src.contains("result := entier(exp(exp(exp(pick()))))"))
         })
@@ -28987,24 +29620,33 @@ fn python_rows_agree_with_the_host_python_oracle() {
 /// LANG83 backends (CLR, BEAM and AArch64 included, whatever this host can
 /// run) and holds only registry ops: the PR4 checked arithmetic,
 /// `i64_div_floor` / `i64_mod_floor`, `print_i64` / `putchar`, plus the
-/// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives.
-/// Since phase 7c slice 3 a `py-float-print` row may also hold the PR6c
-/// `f64_*` ops, `int_to_real`, `write_f64_py` and `trap`; BEAM refuses
-/// exactly the rows with `f64_*` arithmetic (which do not list it), and the
-/// generic JIT leaves `int_to_real` to its interpreter tier.
+/// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives in
+/// `main`. Since phase 7c slice 3 a `py-float-print` row may also hold the
+/// PR6c `f64_*` ops, `int_to_real` and `trap`; since LANG83 PR7c-py its float
+/// prints `call` the module's own `__py_write_float`, whose helpers hold the
+/// PR7b `f64_class`/`f64_digits`/`f64_exp10`, `f64_signbit`, integer
+/// `add`/`sub`/`mul`/`div` on non-negative operands, `cmp_*`, branches and
+/// `call`s between themselves, and no `write_f64_py` survives anywhere.
+/// BEAM refuses exactly the rows with `f64_*` arithmetic (which do not list
+/// it), naming only those five ops. The generic JIT lowers `int_to_real`
+/// too, since jit-core gained the LANG83 conversions.
 #[test]
 fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
+    const ARITHMETIC: [&str; 5] = ["f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg"];
+    const HELPERS: [&str; 4] = ["__py_write_float", "__py_digit_count", "__py_write_digits", "__py_write_uint"];
     let mut checked_ops = 0;
     let (mut beam_runs, mut beam_refuses) = (0usize, 0usize);
     for program in python_rows() {
         let module = lang_aot::compile_source_to_iir_at(Language::Python, program.release, program.src, "c7")
             .unwrap_or_else(|e| panic!("{:?} {:?}: {e}", program.release, program.case));
         assert_eq!(module.release.as_deref(), program.release, "{:?}", program.case);
-        for instr in module.functions.iter().flat_map(|f| &f.instructions) {
-            match interpreter_ir::op_registry::registry_name(instr) {
-                Some(name) => {
-                    assert!(
-                        [
+        for function in &module.functions {
+            let in_main = function.name == "main";
+            assert!(in_main || HELPERS.contains(&function.name.as_str()), "{:?}: {}", program.case, function.name);
+            for instr in &function.instructions {
+                match interpreter_ir::op_registry::registry_name(instr) {
+                    Some(name) => {
+                        let main_op = [
                             "i64_add_ovf",
                             "i64_sub_ovf",
                             "i64_mul_ovf",
@@ -29014,22 +29656,42 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
                             "print_i64",
                             "putchar",
                             // py-float-print (LANG84 7c slice 3).
-                            "f64_add",
-                            "f64_sub",
-                            "f64_mul",
-                            "f64_div",
-                            "f64_neg",
                             "int_to_real",
-                            "write_f64_py",
                             "trap",
                         ]
-                        .contains(&name),
-                        "{:?}: unexpected registry op {name}",
-                        program.src
-                    );
-                    checked_ops += usize::from(name.starts_with("i64_"));
+                        .contains(&name)
+                            || ARITHMETIC.contains(&name);
+                        // The `repr(float)` helpers (LANG83 PR7c-py).
+                        let helper_op = [
+                            "f64_class", "f64_signbit", "f64_digits", "f64_exp10", "add", "sub", "mul", "div",
+                            "cmp_eq", "cmp_lt", "cmp_gt", "cmp_ge", "putchar",
+                        ]
+                        .contains(&name);
+                        assert!(
+                            if in_main { main_op } else { helper_op },
+                            "{:?}: unexpected registry op {name} in {}",
+                            program.src,
+                            function.name
+                        );
+                        checked_ops += usize::from(name.starts_with("i64_"));
+                    }
+                    None => {
+                        let op = instr.op.as_str();
+                        let allowed = match op {
+                            "const" | "ret" => true,
+                            // Only the compiler's own helpers are ever called.
+                            "call" => instr.srcs.first().and_then(|s| s.as_var()).is_some_and(|f| HELPERS.contains(&f)),
+                            "jmp" | "jmp_if_false" | "label" => !in_main,
+                            _ => false,
+                        };
+                        assert!(allowed, "{:?}: {instr:?} in {}", program.src, function.name);
+                    }
                 }
-                None => assert!(["const", "ret"].contains(&instr.op.as_str()), "{:?}: {instr:?}", program.src),
+                assert!(
+                    instr.srcs.iter().all(|s| s.as_var() != Some("write_f64_py")),
+                    "{:?}: PR7c-py prints with the module's helper, not write_f64_py: {instr:?}",
+                    program.case
+                );
             }
         }
         for backend in lang_aot::op_check::Backend::ALL {
@@ -29046,7 +29708,7 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
                     }
                     (false, Err(refusal)) => {
                         assert!(
-                            refusal.refusals.iter().all(|r| r.op.starts_with("f64_")),
+                            refusal.refusals.iter().all(|r| ARITHMETIC.contains(&r.op)),
                             "{:?}: BEAM refused more than IEEE arithmetic: {refusal}",
                             program.case
                         );
@@ -29056,18 +29718,6 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
                         panic!("{:?}: lists BEAM = {lists_beam} but BEAM's op check gave {checked:?}", program.case)
                     }
                 },
-                // The generic JIT compiles no `int_to_real`: a function using
-                // it runs on the vm-core interpreter tier, as every printing
-                // function's JIT cell does today (`execute_with_jit`).
-                lang_aot::op_check::Backend::Jit => {
-                    if let Err(refusal) = checked {
-                        assert!(
-                            refusal.refusals.iter().all(|r| r.op == "int_to_real"),
-                            "{:?}: the JIT refused more than int_to_real: {refusal}",
-                            program.case
-                        );
-                    }
-                }
                 _ => {
                     checked.unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.src, backend.name()));
                 }
@@ -29076,6 +29726,126 @@ fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
     }
     assert!(checked_ops > 0, "the rows must exercise the LANG83 checked and floor ops");
     assert!(beam_runs > 0 && beam_refuses > 0, "{beam_runs} BEAM runs, {beam_refuses} refusals");
+}
+
+/// LANG83 PR7c-py: with the arithmetic taken out, what is left of a Python
+/// float print — the `call` and the four `repr(float)` helpers — lowers on
+/// BEAM. Every `py-float-print` row's module, minus its `f64_*` arithmetic
+/// (each result replaced by a constant), passes BEAM's op check and the
+/// whole BEAM pipeline, so a print is never what keeps a module off BEAM.
+#[test]
+fn python_float_prints_lower_on_beam_once_the_arithmetic_is_gone() {
+    let (mut stripped, mut helpers) = (0usize, 0usize);
+    for program in python_rows_of("py-float-print") {
+        let mut module = prog_iir(program, "c7").unwrap();
+        helpers += usize::from(module.get_function("__py_write_float").is_some());
+        for function in &mut module.functions {
+            for instr in &mut function.instructions {
+                if matches!(instr.op.as_str(), "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg") {
+                    *instr = interpreter_ir::IIRInstr::new(
+                        "const",
+                        instr.dest.clone(),
+                        vec![interpreter_ir::Operand::Float(1.5)],
+                        "f64",
+                    );
+                    stripped += 1;
+                }
+            }
+        }
+        lang_aot::op_check::check_module_for(lang_aot::op_check::Backend::Beam, &module)
+            .unwrap_or_else(|e| panic!("{:?}: BEAM refused a print: {e}", program.case));
+        lang_aot::compile_iir_to_beam(module, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: BEAM lowering failed: {e}", program.case));
+    }
+    assert!(stripped > 0 && helpers > 0, "{stripped} {helpers}");
+}
+
+/// The matrix's JIT column drives `execute_with_jit`, which compiles the
+/// fully typed functions eagerly and interprets the rest. Since LANG83
+/// PR7c-py a float print `call`s the module's `__py_write_float`, and the
+/// generic JIT has no `call` bytecode, so `main`, `__py_write_float` and the
+/// recursive `__py_write_uint` run on the interpreter tier (as LANG83
+/// "Per-backend lowering" anticipates). The two call-free helpers,
+/// `__py_digit_count` and `__py_write_digits`, are integer code the JIT
+/// compiles. This test pins exactly that split for every `py-float-print`
+/// row, then runs `main` with those two compiled: the row's stdout (and
+/// trap) is unchanged, and the compiled tier writes the significant digits.
+#[test]
+fn python_float_rows_run_with_their_call_free_float_helpers_compiled_by_the_jit() {
+    use jit_core::core::JITCore;
+    use jit_core::GenericCirJit;
+    use std::sync::{Arc, Mutex};
+    use vm_core::value::Value;
+
+    for program in python_rows_of("py-float-print") {
+        let mut module = prog_iir(program, "main").unwrap();
+        lower_dynamic_for_generic_engine(&mut module);
+        let printed: Arc<Mutex<Vec<u8>>> = Arc::default();
+        let compiled_bytes: Arc<Mutex<Vec<u8>>> = Arc::default();
+        // The interpreter tier: `main` (ints through `print_i64`, newlines),
+        // and the non-digit text of `__py_write_float`.
+        let mut vm = vm_core::core::VMCore::new();
+        let bytes = Arc::clone(&printed);
+        vm.builtins_mut().register("putchar", move |args: &[Value]| {
+            let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
+            bytes.lock().expect("VM output buffer").push(b);
+            Ok(Value::Null)
+        });
+        let bytes = Arc::clone(&printed);
+        vm.builtins_mut().register("print_i64", move |args: &[Value]| {
+            let n = args.first().and_then(Value::as_i64).unwrap_or(0);
+            bytes.lock().expect("VM output buffer").extend_from_slice(format!("{n}\n").as_bytes());
+            Ok(Value::Null)
+        });
+        // The compiled tier writes into the same stream, and also records
+        // what it wrote.
+        let backend = GenericCirJit::new();
+        let (bytes, mine) = (Arc::clone(&printed), Arc::clone(&compiled_bytes));
+        backend.register_builtin("putchar", move |args: &[Value]| {
+            let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
+            bytes.lock().expect("JIT output buffer").push(b);
+            mine.lock().expect("JIT output record").push(b);
+            Value::Null
+        });
+        let error_slot = Arc::clone(&backend.error);
+        let mut jit = JITCore::new(&mut vm, Box::new(backend));
+        let names: Vec<String> = module.functions.iter().map(|f| f.name.clone()).collect();
+        let mut compiled: Vec<&str> = Vec::new();
+        for name in &names {
+            if matches!(jit.compile(&mut vm, &module, name), Ok(true)) {
+                compiled.push(name);
+            }
+        }
+        assert_eq!(
+            compiled,
+            ["__py_digit_count", "__py_write_digits"],
+            "{:?}@{:?}: the JIT's share of {names:?}",
+            program.case,
+            program.release
+        );
+        let outcome = jit.execute(&mut vm, &mut module, "main", &[]);
+        assert!(error_slot.lock().expect("JIT error slot").take().is_none());
+        let stdout = String::from_utf8(printed.lock().unwrap().clone()).unwrap();
+        let want = match (&program.expect, outcome) {
+            (Expect::Stdout(want), Ok(_)) => *want,
+            (Expect::StdoutThenTrap(want, kind), Err(vm_core::errors::VMError::Trap { kind: got })) => {
+                assert_eq!(got, *kind, "{:?}@{:?}", program.case, program.release);
+                *want
+            }
+            (expect, outcome) => panic!("{:?}@{:?}: {outcome:?}, want {expect:?}", program.case, program.release),
+        };
+        assert_eq!(stdout.trim_end(), want, "{:?}@{:?}", program.case, program.release);
+        // Every byte the compiled tier wrote is a digit, and it wrote some
+        // exactly when a finite non-zero float was printed (each has a
+        // significant digit; `0.0`, `inf` and `nan` are the helper's own
+        // text, and an int is `print_i64`'s).
+        let from_jit = compiled_bytes.lock().unwrap().clone();
+        assert!(from_jit.iter().all(u8::is_ascii_digit), "{:?}: {from_jit:?}", program.case);
+        let prints_a_finite_nonzero_float = want.lines().any(|line| {
+            line.contains(['.', 'e']) && line.bytes().any(|b| (b'1'..=b'9').contains(&b))
+        });
+        assert_eq!(!from_jit.is_empty(), prints_a_finite_nonzero_float, "{:?}@{:?}", program.case, program.release);
+    }
 }
 
 /// LANG84 7b slice 2: the Python rows are the `py-int-print` corpus on the
@@ -29098,4 +29868,340 @@ fn python_rows_run_their_corpus_case() {
         python_rows().len(),
         "every Python row belongs to one subset"
     );
+}
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 6e — JavaScript `es-number-log` on every backend, per release class
+// ---------------------------------------------------------------------------
+
+fn javascript_rows() -> Vec<&'static Prog> {
+    let rows: Vec<_> = PROGRAMS.iter().filter(|p| p.lang == Language::JavaScript).collect();
+    assert!(!rows.is_empty(), "PROGRAMS has no JavaScript rows");
+    rows
+}
+
+/// Does this JavaScript row's module do IEEE arithmetic (a PR6c `f64_*`
+/// op)? Exactly those rows leave BEAM out of their columns. Until LANG83
+/// PR7c-js the `-0` sign test added an `f64_add` of its own; the class test
+/// that replaced it is arithmetic-free.
+fn javascript_row_uses_ieee_arithmetic(module: &interpreter_ir::IIRModule) -> bool {
+    module
+        .functions
+        .iter()
+        .flat_map(|f| &f.instructions)
+        .any(|i| matches!(i.op.as_str(), "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg"))
+}
+
+/// Every JavaScript row on every backend it declares, as one named test so a
+/// JavaScript regression is reported as one. A runner that returns `None`
+/// while its toolchain is present fails rather than skips.
+#[test]
+fn javascript_rows_run_on_every_available_backend() {
+    let (mut ran, mut skipped) = (0usize, 0usize);
+    for program in javascript_rows() {
+        let module = prog_iir(program, "c7").unwrap_or_else(|e| panic!("{:?}: {e}", program.case));
+        let want = if javascript_row_uses_ieee_arithmetic(&module) { IEEE_COLUMNS } else { EVERY_COLUMN };
+        assert_eq!(program.backends, want, "{:?}@{:?}: its columns", program.case, program.release);
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(!available, "JavaScript {backend:?} silently skipped: {:?}", program.case);
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(ran > 0);
+    eprintln!("JavaScript matrix: {ran} cells executed, {skipped} skipped");
+}
+
+/// The oracle: host node on the v22 line must print each row's stdout. The
+/// compiled programs never run on it. Skips (loudly) without a matching `node`.
+#[test]
+fn javascript_rows_agree_with_the_host_node_oracle() {
+    let version = match Command::new("node").arg("--version").output() {
+        Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
+        _ => {
+            eprintln!("SKIP JavaScript oracle: no `node` on PATH");
+            return;
+        }
+    };
+    if !version.starts_with("v22.") {
+        eprintln!("SKIP JavaScript oracle: node {version} is not the v22 line these rows target");
+        return;
+    }
+    for program in javascript_rows() {
+        // `node -` reads the script from stdin (see `run_host_oracle`).
+        let out = run_host_oracle(Command::new("node").arg("-"), program.src);
+        let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
+        match program.expect {
+            Expect::Stdout(want) => {
+                assert!(out.status.success(), "node {version} failed {:?}", program.case);
+                assert_eq!(stdout.trim(), want, "node {version}: {:?}", program.case);
+            }
+            ref other => panic!("no JavaScript oracle for {other:?}"),
+        }
+    }
+    eprintln!("JavaScript oracle: {} rows agree with node {version}", javascript_rows().len());
+}
+
+/// LANG84 C7.3: every row's module holds only registry ops — the PR6c IEEE
+/// arithmetic, the PR7b `f64_class`/`f64_digits`/`f64_exp10`, `f64_signbit`,
+/// integer `add`/`sub`/`mul`/`div` and compares, `putchar` — plus the ungated
+/// `const`, branches, `call` and `ret`; no JavaScript-named builtin survives
+/// (LANG83 PR7c-js: `write_f64_js` is gone from the module, and `String(x)`
+/// is the compiler's own `__js_write_number`). Eight backends accept every
+/// row's module at compile time. BEAM accepts exactly the literal-only rows
+/// and refuses the others with `UnsupportedOps` naming only the five `f64_*`
+/// arithmetic ops — never the `-0` class test or the number helpers — at
+/// compile time, which stage B allows, so its cells are never a run-time
+/// failure.
+#[test]
+fn javascript_rows_pass_the_lang83_check_on_all_nine_backends() {
+    const ARITHMETIC: [&str; 5] = ["f64_add", "f64_sub", "f64_mul", "f64_div", "f64_neg"];
+    let (mut beam_runs, mut beam_refuses) = (0usize, 0usize);
+    for program in javascript_rows() {
+        let module = lang_aot::compile_source_to_iir_at(Language::JavaScript, program.release, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?} {:?}: {e}", program.release, program.case));
+        assert_eq!(module.release.as_deref(), program.release, "{:?}", program.case);
+        // CLR cannot execute on every host; its textual IL is emitted on all.
+        lang_aot::compile_iir_to_cil_text(module.clone(), "Main")
+            .unwrap_or_else(|e| panic!("{:?}: CLR lowering failed: {e}", program.case));
+        for instr in module.functions.iter().flat_map(|f| &f.instructions) {
+            match interpreter_ir::op_registry::registry_name(instr) {
+                Some(name) => assert!(
+                    ARITHMETIC.contains(&name)
+                        || [
+                            "f64_signbit", "f64_class", "f64_digits", "f64_exp10", "add", "sub", "mul", "div",
+                            "cmp_eq", "cmp_lt", "cmp_gt", "cmp_ge", "putchar",
+                        ]
+                        .contains(&name),
+                    "{:?}: unexpected registry op {name}",
+                    program.case
+                ),
+                None => assert!(
+                    ["const", "jmp", "jmp_if_false", "label", "call", "ret"].contains(&instr.op.as_str()),
+                    "{:?}: {instr:?}",
+                    program.case
+                ),
+            }
+            assert!(
+                instr.srcs.iter().all(|s| s.as_var() != Some("write_f64_js")),
+                "{:?}: PR7c-js prints with the module's helper, not write_f64_js: {instr:?}",
+                program.case
+            );
+        }
+        for backend in lang_aot::op_check::Backend::ALL {
+            let checked = lang_aot::op_check::check_module_for(backend, &module);
+            if backend != lang_aot::op_check::Backend::Beam {
+                checked.unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.case, backend.name()));
+                continue;
+            }
+            match (program.backends.contains(&Beam), checked) {
+                (true, Ok(())) => {
+                    // The whole BEAM pipeline lowers it, not just the op check.
+                    lang_aot::compile_iir_to_beam(module.clone(), "c7")
+                        .unwrap_or_else(|e| panic!("{:?}: BEAM lowering failed: {e}", program.case));
+                    beam_runs += 1;
+                }
+                (false, Err(refusal)) => {
+                    assert!(
+                        refusal.refusals.iter().all(|r| ARITHMETIC.contains(&r.op)),
+                        "{:?}: BEAM refused more than IEEE arithmetic: {refusal}",
+                        program.case
+                    );
+                    assert!(matches!(
+                        lang_aot::compile_iir_to_beam(module.clone(), "c7"),
+                        Err(lang_aot::LangAotError::UnsupportedOps(_))
+                    ));
+                    beam_refuses += 1;
+                }
+                (lists_beam, checked) => {
+                    panic!("{:?}: lists BEAM = {lists_beam} but BEAM's op check gave {checked:?}", program.case)
+                }
+            }
+        }
+    }
+    assert!(beam_runs > 0 && beam_refuses > 0, "{beam_runs} BEAM runs, {beam_refuses} refusals");
+}
+
+/// LANG83 PR7c-js: with the arithmetic taken out, what is left of a
+/// JavaScript print — the `-0` class test, the call and the four
+/// `String(x)` helpers — lowers on BEAM. Every row's module, minus its
+/// `f64_*` arithmetic (each result replaced by a constant), passes BEAM's op
+/// check and the whole BEAM pipeline. Before PR7c-js the sign test's own
+/// `f64_add` kept every computed value's print off BEAM.
+#[test]
+fn javascript_prints_lower_on_beam_once_the_arithmetic_is_gone() {
+    let mut stripped = 0usize;
+    for program in javascript_rows() {
+        let mut module = prog_iir(program, "c7").unwrap();
+        for function in &mut module.functions {
+            for instr in &mut function.instructions {
+                if matches!(instr.op.as_str(), "f64_add" | "f64_sub" | "f64_mul" | "f64_div" | "f64_neg") {
+                    *instr = interpreter_ir::IIRInstr::new(
+                        "const",
+                        instr.dest.clone(),
+                        vec![interpreter_ir::Operand::Float(1.5)],
+                        "f64",
+                    );
+                    stripped += 1;
+                }
+            }
+        }
+        lang_aot::op_check::check_module_for(lang_aot::op_check::Backend::Beam, &module)
+            .unwrap_or_else(|e| panic!("{:?}: BEAM refused a print: {e}", program.case));
+        lang_aot::compile_iir_to_beam(module, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: BEAM lowering failed: {e}", program.case));
+    }
+    assert!(stripped > 0);
+}
+
+/// The matrix's JIT column drives `execute_with_jit`, which compiles the
+/// fully typed functions eagerly and interprets the rest. Since LANG83
+/// PR7c-js a row's `main` `call`s the module's `__js_write_number`, and the
+/// generic JIT has no `call` bytecode, so `main` runs on the interpreter tier
+/// (LANG83 "Per-backend lowering": "Where the JIT refuses a helper's `call`,
+/// that function falls back to the interpreter"). So do `__js_write_number`
+/// and the recursive `__js_write_uint`. The two call-free helpers,
+/// `__js_digit_count` and `__js_write_digits`, are integer code the JIT
+/// compiles. This test pins exactly that split for every row, then runs
+/// `main` on the interpreter with those two compiled: the interpreter's
+/// `call`s reach the compiled code, which writes every significant digit,
+/// and the row's stdout is unchanged.
+#[test]
+fn javascript_rows_run_with_their_call_free_number_helpers_compiled_by_the_jit() {
+    use jit_core::core::JITCore;
+    use jit_core::GenericCirJit;
+    use std::sync::{Arc, Mutex};
+    use vm_core::value::Value;
+    for program in javascript_rows() {
+        let mut module = prog_iir(program, "main").unwrap();
+        lower_dynamic_for_generic_engine(&mut module);
+        let printed: Arc<Mutex<Vec<u8>>> = Arc::default();
+        let compiled_bytes: Arc<Mutex<Vec<u8>>> = Arc::default();
+        // The interpreter tier: main, the `-0` sign, separators and the
+        // non-digit text of `__js_write_number`.
+        let mut vm = vm_core::core::VMCore::new();
+        let bytes = Arc::clone(&printed);
+        vm.builtins_mut().register("putchar", move |args: &[Value]| {
+            let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
+            bytes.lock().expect("VM output buffer").push(b);
+            Ok(Value::Null)
+        });
+        // The compiled tier writes into the same stream, and also records
+        // what it wrote.
+        let backend = GenericCirJit::new();
+        let (bytes, mine) = (Arc::clone(&printed), Arc::clone(&compiled_bytes));
+        backend.register_builtin("putchar", move |args: &[Value]| {
+            let b = (args.first().and_then(Value::as_i64).unwrap_or(0) & 0xFF) as u8;
+            bytes.lock().expect("JIT output buffer").push(b);
+            mine.lock().expect("JIT output record").push(b);
+            Value::Null
+        });
+        let error_slot = Arc::clone(&backend.error);
+        let mut jit = JITCore::new(&mut vm, Box::new(backend));
+        let names: Vec<String> = module.functions.iter().map(|f| f.name.clone()).collect();
+        let mut compiled: Vec<&str> = Vec::new();
+        for name in &names {
+            if matches!(jit.compile(&mut vm, &module, name), Ok(true)) {
+                compiled.push(name);
+            }
+        }
+        assert_eq!(
+            compiled,
+            ["__js_digit_count", "__js_write_digits"],
+            "{:?}@{:?}: the JIT's share of {names:?}",
+            program.case,
+            program.release
+        );
+        jit.execute(&mut vm, &mut module, "main", &[])
+            .unwrap_or_else(|e| panic!("{:?}@{:?}: {e:?}", program.case, program.release));
+        assert!(error_slot.lock().expect("JIT error slot").take().is_none());
+        let stdout = String::from_utf8(printed.lock().unwrap().clone()).unwrap();
+        let Expect::Stdout(want) = program.expect else { panic!("{:?}", program.expect) };
+        assert_eq!(stdout.trim(), want, "{:?}@{:?}", program.case, program.release);
+        // Every byte the compiled tier wrote is a digit, and a row prints a
+        // significant digit exactly when some finite non-zero number's
+        // digits went through the compiled `__js_write_digits`.
+        let from_jit = compiled_bytes.lock().unwrap().clone();
+        assert!(from_jit.iter().all(u8::is_ascii_digit), "{:?}: {from_jit:?}", program.case);
+        assert_eq!(
+            !from_jit.is_empty(),
+            want.bytes().any(|b| (b'1'..=b'9').contains(&b)),
+            "{:?}@{:?}",
+            program.case,
+            program.release
+        );
+    }
+}
+
+/// LANG84 6e: a ReferenceError is `trap "Trap.Unbound"`, a closed, neutral
+/// LANG83 kind (stable id 7; `Trap.ReferenceError` until LANG83 PR7d renamed
+/// it), so every column stops with that kind after the
+/// lines already written — the undeclared name and the temporal dead zone
+/// alike. These programs are not `es-number-log` corpus cases (the corpus has
+/// no failing case yet), so they are checked here rather than as `PROGRAMS`
+/// rows; each is node's behaviour (`ReferenceError` after `1`).
+#[test]
+fn javascript_reference_errors_trap_after_output_on_every_available_backend() {
+    let programs = [
+        Prog {
+            lang: Language::JavaScript,
+            ext: "js",
+            src: "console.log(1);\nconsole.log(z);\nconsole.log(2);\n",
+            expect: Expect::StdoutThenTrap("1", "Trap.Unbound"),
+            backends: EVERY_COLUMN,
+            release: Some("es2016"),
+            case: None,
+        },
+        Prog {
+            lang: Language::JavaScript,
+            ext: "js",
+            src: "console.log(1);\nconsole.log(a + 1);\nlet a = 2;\n",
+            expect: Expect::StdoutThenTrap("1", "Trap.Unbound"),
+            backends: EVERY_COLUMN,
+            release: Some("es2021"),
+            case: None,
+        },
+    ];
+    let mut ran = 0usize;
+    for program in &programs {
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => assert!(!available, "JavaScript {backend:?} silently skipped: {:?}", program.src),
+            }
+        }
+        // The trap ends the program: nothing after it is even emitted.
+        let module = prog_iir(program, "main").unwrap();
+        let ops: Vec<_> = module.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        // `main` still ends with its exit status (`const 0`, `ret`).
+        assert_eq!(&ops[ops.len() - 3..], ["trap", "const", "ret"], "{:?}", program.src);
+    }
+    assert!(ran > 0);
+}
+
+/// LANG84 6e: the JavaScript rows are the `es-number-log` corpus on the
+/// default edition (es2020) and on each IIR-identity class representative
+/// (es2016, which refuses the two numeric-separator cases, and es2021),
+/// exactly as `javascript-iir-compiler`'s release sweep records them.
+#[test]
+fn javascript_rows_run_their_corpus_case() {
+    lang84_rows_run_their_corpus_case(&javascript_rows(), "ecmascript", "es-number-log", "js", "es2020");
 }

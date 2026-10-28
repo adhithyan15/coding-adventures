@@ -1,0 +1,23 @@
+{
+  "chapter": 89,
+  "title": "Give Me That",
+  "label": "ch:zh-give-me-that",
+  "canDo": "I can name everyday actions: give, do, put, bring, stand.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C89-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Five everyday actions, give, do, put, bring and stand, and 给我 as a request, built on one new written character: 给.",
+    "assesses": [
+      "ZH-LEX-C89-GEI-01",
+      "ZH-SCRIPT-GEI-01",
+      "ZH-LEX-C89-ZUO-01",
+      "ZH-LEX-C89-FANG-01",
+      "ZH-LEX-C89-DAI-01",
+      "ZH-LEX-C89-ZHAN-01",
+      "ZH-PERFORMANCE-ACTIONS-01"
+    ]
+  }
+}

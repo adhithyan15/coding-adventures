@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:2296d151fb484328",
+  "lessonIds": [
+    "SA-C287-anudhavati",
+    "SA-C287-vegah",
+    "SA-C287-upasarpati",
+    "SA-C287-jagarti",
+    "SA-C287-kolahalah"
+  ],
+  "tex": "sanskrit/book/chapters/ch287-the-chase.tex"
+}

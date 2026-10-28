@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ZH-W98-with-a-clock",
+    "language": "chinese",
+    "chapter": 98,
+    "sequence": 7830,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1197b573c45009f5",
+    "detachableSegments": [
+      "Writing — timed production"
+    ]
+  },
+  "findings": []
+}

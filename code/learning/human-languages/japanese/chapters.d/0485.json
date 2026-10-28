@@ -1,0 +1,21 @@
+{
+  "chapter": 485,
+  "title": "Silk and Cloth",
+  "label": "ch:ja-silk-and-cloth",
+  "canDo": "I can say what cloth is like.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-R485-review-480-485",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can say what cloth is like.",
+    "assesses": [
+      "JA-LEX-C485-CLOTH485-01",
+      "JA-LEX-C485-CLOTH485-02",
+      "JA-LEX-C485-CLOTH485-03",
+      "JA-LEX-C485-CLOTH485-04",
+      "JA-LEX-C485-CLOTH485-05"
+    ]
+  }
+}

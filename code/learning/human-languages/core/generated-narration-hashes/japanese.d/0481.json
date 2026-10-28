@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:51a5ef870f2220cd",
+  "lessonIds": [
+    "JA-C481-udemae",
+    "JA-C481-bukiyou",
+    "JA-C481-gijutsu",
+    "JA-C481-chie",
+    "JA-C481-kufuu-suru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch481.txt",
+  "json": "japanese/narration/ch481.json",
+  "textHash": "fnv1a64:a731b76c6c23bcba",
+  "jsonHash": "fnv1a64:25ff4c8db32e1d37",
+  "findings": []
+}

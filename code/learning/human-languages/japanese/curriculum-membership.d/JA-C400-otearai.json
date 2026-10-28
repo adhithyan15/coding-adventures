@@ -1,0 +1,11 @@
+{
+  "id": "JA-C400-otearai",
+  "pathSegment": "JA-PATH-400-TOKONOMA400",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-400-TOKONOMA400",
+      "order": 3
+    }
+  ]
+}

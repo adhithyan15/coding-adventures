@@ -151,6 +151,21 @@ impl RAM {
         }
     }
 
+    /// Return the number of DFFs in the main-character array.
+    pub(crate) fn main_dff_count(&self) -> usize {
+        self.main.iter().flatten().flatten().map(Vec::len).sum()
+    }
+
+    /// Return the number of DFFs in the status-character array.
+    pub(crate) fn status_dff_count(&self) -> usize {
+        self.status.iter().flatten().flatten().map(Vec::len).sum()
+    }
+
+    /// Return the number of DFFs in the four output ports.
+    pub(crate) fn output_dff_count(&self) -> usize {
+        self.output.iter().map(Vec::len).sum()
+    }
+
     /// 1,296 storage bits x 6 gates/ff plus addressing/decoding.
     /// Plus addressing/decoding: ~200 gates.
     pub fn gate_count(&self) -> usize {

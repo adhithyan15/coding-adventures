@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:b761e0953eca06e7",
+  "lessonIds": [
+    "SA-C508-istaka",
+    "SA-C508-cinoti",
+    "SA-C508-nirmanam",
+    "SA-C508-sandadhati",
+    "SA-C508-sudha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch508.txt",
+  "json": "sanskrit/narration/ch508.json",
+  "textHash": "fnv1a64:f01dbff4a1c583ae",
+  "jsonHash": "fnv1a64:daf75d033a091fca",
+  "findings": []
+}

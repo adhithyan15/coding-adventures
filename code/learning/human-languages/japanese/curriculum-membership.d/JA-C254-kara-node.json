@@ -1,0 +1,11 @@
+{
+  "id": "JA-C254-kara-node",
+  "pathSegment": "JA-PATH-254-REASONS254",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-254-REASONS254",
+      "order": 1
+    }
+  ]
+}

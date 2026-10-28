@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:cf3f27757e0b7607",
+  "lessonIds": [
+    "JA-C417-tenimotsu",
+    "JA-C417-nifuda",
+    "JA-C417-seou",
+    "JA-C417-kakaeru",
+    "JA-C417-korogasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch417.txt",
+  "json": "japanese/narration/ch417.json",
+  "textHash": "fnv1a64:55024286f5227e0e",
+  "jsonHash": "fnv1a64:94da62d6c910694e",
+  "findings": []
+}

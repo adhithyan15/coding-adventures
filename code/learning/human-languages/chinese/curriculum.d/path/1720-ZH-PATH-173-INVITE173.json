@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-173-INVITE173",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-173-INVITE173"
+  ],
+  "after": []
+}

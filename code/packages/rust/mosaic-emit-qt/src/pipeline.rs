@@ -5893,6 +5893,7 @@ fn emit_busy_indicator_style(out: &mut String, pad: &str, props: Option<&[StyleP
 ///
 /// - `content: "literal"`         → `Some("text: \"literal\"")`.
 /// - `content: slot: my-name`     → `Some("text: myName")`.
+/// - `content: row-item` (bare)   → `Some("text: rowItem")`, the variable.
 /// - No `content` prop            → `None`.
 fn build_text_attribute(node: &LayoutNode) -> Option<String> {
     let prop = node.props.iter().find(|p| p.name == "content")?;
@@ -5909,7 +5910,27 @@ fn build_text_attribute(node: &LayoutNode) -> Option<String> {
                 "text: \"\"".to_string()
             }
         }
-        LayoutPropValue::Keyword(k) => format!("text: \"{k}\""),
+        // A bare NAME is a variable, not a string (UI29 §3.3
+        // `name_ref ::= NAME`). In
+        //
+        //     For ( each: slot: rows, as: row ) { Text ( content: row ) }
+        //
+        // the Repeater delegate declares `property var row: modelData`,
+        // so `text: row` shows each row's value. This arm used to quote
+        // the NAME, and every row read the word "row", while React, HTML
+        // and XAML showed the value. QML's scope chain gives UI29 §3.4's
+        // "For wins": the delegate's property is found before the root's
+        // slot property of the same name. Outside a loop the NAME finds
+        // the component's own slot property, as React's prop does. An
+        // unsafe spelling falls back to empty text, like the slot arm.
+        LayoutPropValue::Keyword(k) => {
+            let camel = to_camel_case_first_lower(k);
+            if is_safe_identifier(&camel) {
+                format!("text: {camel}")
+            } else {
+                "text: \"\"".to_string()
+            }
+        }
         LayoutPropValue::Number(n) => format!("text: \"{n}\""),
         LayoutPropValue::EmitRef(_) => "text: \"\"".to_string(),
         // U29-G3 expression + UI29 §3.4 scope (PR #4398) — the Expr text
@@ -10855,6 +10876,90 @@ mod tests {
             !result.output.contains("text: \"displayName\""),
             "slot ref must be bare identifier, not string"
         );
+    }
+
+    /// A bare NAME in `content:` is a variable, never its own spelling.
+    ///
+    /// | authored                      | bound by           | emitted          |
+    /// |-------------------------------|--------------------|------------------|
+    /// | `For (…, as: row-item)` body  | delegate property  | `text: rowItem`  |
+    /// | `For (…, index: i)` body      | delegate property  | `text: i`        |
+    /// | `content: display-name`       | the root's slot    | `text: displayName` |
+    ///
+    /// Before the fix each of these quoted the NAME, so every row of a list
+    /// showed the word "row-item" instead of the row.
+    #[test]
+    fn text_content_bare_name_reads_the_variable() {
+        fn for_over_rows(binding: &str, index: Option<&str>, shown: &str) -> LayoutNode {
+            let mut props = vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword(binding.to_string()),
+                },
+            ];
+            if let Some(index) = index {
+                props.push(LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword(index.to_string()),
+                });
+            }
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props,
+                children: vec![bare_text(shown)],
+            }
+        }
+        fn bare_text(name: &str) -> LayoutNode {
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Keyword(name.to_string()),
+                }],
+                children: Vec::new(),
+            }
+        }
+        let m = component(
+            "Ledger",
+            vec![
+                slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("display-name", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "Ledger".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    bare_text("display-name"),
+                    for_over_rows("row-item", None, "row-item"),
+                    for_over_rows("row", Some("i"), "i"),
+                ],
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Ledger")).unwrap().output;
+        assert!(out.contains("property var rowItem: modelData"), "{out}");
+        assert!(out.contains("property int i: index"), "{out}");
+        for (binding, spelling) in [
+            ("text: rowItem", "row-item"),
+            ("text: i", "i"),
+            ("text: displayName", "display-name"),
+        ] {
+            assert!(out.contains(binding), "missing `{binding}` in:\n{out}");
+            assert!(
+                !out.contains(&format!("text: \"{spelling}\"")),
+                "`{spelling}` must not be quoted as a label:\n{out}"
+            );
+        }
     }
 
     /// Slot text is application data, so it must render as plain text. Qt's

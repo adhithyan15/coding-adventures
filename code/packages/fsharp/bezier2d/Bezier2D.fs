@@ -1,13 +1,71 @@
 namespace CodingAdventures.Bezier2D.FSharp
 
 open System
+open System.Collections.Generic
 open CodingAdventures.Point2D
 open CodingAdventures.Trig
 
 module private BezierHelpers =
-    let validateTolerance tolerance =
-        if not (Double.IsFinite tolerance) || tolerance < 0.0 then
-            raise (ArgumentOutOfRangeException("tolerance", tolerance, "tolerance must be finite and non-negative"))
+    [<Literal>]
+    let MaxDepth = 32
+
+    [<Literal>]
+    let MaxSubdivisions = 65_535
+
+    let validateInputs tolerance (controlPoints: Point list) =
+        if not (Double.IsFinite tolerance) || tolerance <= 0.0 then
+            raise (ArgumentOutOfRangeException("tolerance", tolerance, "tolerance must be finite and positive"))
+
+        for point in controlPoints do
+            if not (Double.IsFinite point.X) || not (Double.IsFinite point.Y) then
+                raise (ArgumentOutOfRangeException("controlPoints", point, "control points must be finite"))
+
+    let finite value =
+        if Double.IsFinite value then
+            value
+        else
+            raise (InvalidOperationException("Bezier subdivision produced nonfinite geometry"))
+
+    let distance (left: Point) (right: Point) =
+        let dx = finite (left.X - right.X)
+        let dy = finite (left.Y - right.Y)
+        let scale = max (abs dx) (abs dy)
+
+        if scale = 0.0 then
+            0.0
+        else
+            let normalizedX = dx / scale
+            let normalizedY = dy / scale
+            let normalizedLengthSquared = finite (finite (normalizedX * normalizedX) + finite (normalizedY * normalizedY))
+            finite (scale * Math.Sqrt normalizedLengthSquared)
+
+    let distanceToSegment (point: Point) (startPoint: Point) (endPoint: Point) =
+        let dx = finite (endPoint.X - startPoint.X)
+        let dy = finite (endPoint.Y - startPoint.Y)
+        let scale = max (abs dx) (abs dy)
+
+        if scale = 0.0 then
+            distance point startPoint
+        else
+            let normalizedX = dx / scale
+            let normalizedY = dy / scale
+            let normalizedLengthSquared = finite (finite (normalizedX * normalizedX) + finite (normalizedY * normalizedY))
+            let offsetX = finite (point.X - startPoint.X)
+            let offsetY = finite (point.Y - startPoint.Y)
+            let normalizedOffsetX = finite (offsetX / scale)
+            let normalizedOffsetY = finite (offsetY / scale)
+            let projection =
+                finite (
+                    finite (
+                        finite (normalizedOffsetX * normalizedX)
+                        + finite (normalizedOffsetY * normalizedY))
+                    / normalizedLengthSquared)
+                |> fun value -> Math.Clamp(value, 0.0, 1.0)
+            let nearest = Point.New(finite (startPoint.X + projection * dx), finite (startPoint.Y + projection * dy))
+            distance point nearest
+
+    let budgetExceeded () =
+        InvalidOperationException("Bezier flattening exceeded the depth or subdivision budget")
 
     let extremaOfCubicDerivative v0 v1 v2 v3 =
         let a = -3.0 * v0 + 9.0 * v1 - 9.0 * v2 + 3.0 * v3
@@ -60,17 +118,29 @@ type QuadraticBezier =
         QuadraticBezier.New(this.P0, q0, midpoint), QuadraticBezier.New(midpoint, q1, this.P2)
 
     member this.ToPolyline(tolerance: float) =
-        BezierHelpers.validateTolerance tolerance
-        let chordMid = this.P0.Lerp(this.P2, 0.5)
-        let curveMid = this.Evaluate 0.5
+        BezierHelpers.validateInputs tolerance [ this.P0; this.P1; this.P2 ]
+        let points = ResizeArray<Point>()
+        let pending = Stack<QuadraticBezier * int>()
+        points.Add this.P0
+        pending.Push((this, 0))
+        let mutable subdivisions = 0
 
-        if chordMid.Distance curveMid <= tolerance then
-            [ this.P0; this.P2 ]
-        else
-            let left, right = this.Split 0.5
-            let leftPoints = left.ToPolyline tolerance
-            let rightPoints = right.ToPolyline tolerance
-            leftPoints @ (rightPoints |> List.tail)
+        while pending.Count > 0 do
+            let curve, depth = pending.Pop()
+            let error = BezierHelpers.distanceToSegment curve.P1 curve.P0 curve.P2
+
+            if error <= tolerance then
+                points.Add curve.P2
+            else
+                if depth >= BezierHelpers.MaxDepth || subdivisions >= BezierHelpers.MaxSubdivisions then
+                    raise (BezierHelpers.budgetExceeded())
+
+                subdivisions <- subdivisions + 1
+                let left, right = curve.Split 0.5
+                pending.Push((right, depth + 1))
+                pending.Push((left, depth + 1))
+
+        List.ofSeq points
 
     member this.BoundingBox() =
         let mutable minX = min this.P0.X this.P2.X
@@ -142,17 +212,32 @@ and CubicBezier =
         CubicBezier.New(this.P0, p01, p012, p0123), CubicBezier.New(p0123, p123, p23, this.P3)
 
     member this.ToPolyline(tolerance: float) =
-        BezierHelpers.validateTolerance tolerance
-        let chordMid = this.P0.Lerp(this.P3, 0.5)
-        let curveMid = this.Evaluate 0.5
+        BezierHelpers.validateInputs tolerance [ this.P0; this.P1; this.P2; this.P3 ]
+        let points = ResizeArray<Point>()
+        let pending = Stack<CubicBezier * int>()
+        points.Add this.P0
+        pending.Push((this, 0))
+        let mutable subdivisions = 0
 
-        if chordMid.Distance curveMid <= tolerance then
-            [ this.P0; this.P3 ]
-        else
-            let left, right = this.Split 0.5
-            let leftPoints = left.ToPolyline tolerance
-            let rightPoints = right.ToPolyline tolerance
-            leftPoints @ (rightPoints |> List.tail)
+        while pending.Count > 0 do
+            let curve, depth = pending.Pop()
+            let error =
+                max
+                    (BezierHelpers.distanceToSegment curve.P1 curve.P0 curve.P3)
+                    (BezierHelpers.distanceToSegment curve.P2 curve.P0 curve.P3)
+
+            if error <= tolerance then
+                points.Add curve.P3
+            else
+                if depth >= BezierHelpers.MaxDepth || subdivisions >= BezierHelpers.MaxSubdivisions then
+                    raise (BezierHelpers.budgetExceeded())
+
+                subdivisions <- subdivisions + 1
+                let left, right = curve.Split 0.5
+                pending.Push((right, depth + 1))
+                pending.Push((left, depth + 1))
+
+        List.ofSeq points
 
     member this.BoundingBox() =
         let mutable minX = min this.P0.X this.P3.X

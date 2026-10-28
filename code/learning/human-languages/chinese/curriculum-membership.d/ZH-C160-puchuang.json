@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C160-puchuang",
+  "pathSegment": "ZH-PATH-160-CHORE160",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-160-CHORE160",
+      "order": 2
+    }
+  ]
+}

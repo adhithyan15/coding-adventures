@@ -22,12 +22,13 @@
 //! | `add sub mul div neg` (integer) | `ADD_I64` … `NEG_I64` | Lowered |
 //! | `cmp_*` (integer / bool) | `CMP_*_I64` | Lowered |
 //! | `print_i64`, `putchar`, `write_i64` | `CALL_BUILTIN` to the embedder-registered handler | Lowered |
-//! | `write_f64_py`, `write_f64_js` | `CALL_BUILTIN_F64` (the float's bits, handed over as `Value::Float`) to the embedder-registered handler; `const_f64` compiles to the bits | Lowered |
 //! | `i64_div_floor`, `i64_mod_floor` | `DIV_FLOOR_I64`, `MOD_FLOOR_I64` (defined traps) | Lowered |
 //! | `trap` | `TRAP <kind id>` (error slot `trap: <kind>`) | Lowered |
 //! | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` | `ADD_OVF_I64` … `NEG_OVF_I64` (`checked_*`; `Trap.Overflow`) | Lowered |
 //! | `f64_add` `f64_sub` `f64_mul` `f64_div` `f64_neg` `f64_signbit` (LANG83 PR6c) | `ADD_F64` … `SIGNBIT_F64` on float registers (the float's bits; IEEE, never a trap); `ret_f64` → `RET_F64` | Lowered |
+//! | `f64_class` `f64_digits` `f64_exp10` (LANG83 PR7b) | `CLASS_F64` / `DIGITS_F64` / `EXP10_F64`: a float register in, an integer register out; the digits are `vm_core::float_format`'s | Lowered |
 //! | `mod`, strings, `f64` math (`f64_sqrt` … `f64_pow`), conversions, `print_str` | — | Refused (interpreter tier only) |
+//! | `dyn_*` (LANG83 PR7f) | `CALL_BUILTIN` only to an embedder-registered handler; the harnesses register no tagged-word runtime | Refused |
 //!
 //! Like every backend's table, this one is name-granular: `add` is `Lowered`
 //! even though the JIT refuses `add` on `f64` operands (type-level refusals stay
@@ -35,7 +36,7 @@
 //! test checks every row against the real compiler: it builds a one-op function
 //! per registry entry, specialises it, and asks `GenericCirJit` to compile it.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport};
+use interpreter_ir::op_registry::{support_from_table, OpSupport, NO_TAGGED_WORD_RUNTIME};
 use OpSupport::{Lowered, Refused};
 
 /// The reason given for an operation that runs only on the interpreter tier.
@@ -49,10 +50,9 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("putchar", Lowered),
     ("print_str", Refused(INTERPRETER_TIER_ONLY)),
     ("write_i64", Lowered),
-    // LANG83 PR6a — the embedder formats (lang-aot's harness calls
-    // `vm_core::float_format`, the same code as the VM's default builtins).
-    ("write_f64_py", Lowered),
-    ("write_f64_js", Lowered),
+    // No float writer: LANG83 PR7e removed `write_f64_py` / `write_f64_js`
+    // (and the `CALL_BUILTIN_F64` bytecode that served them). A compiler's
+    // float-layout helper is integer code over `f64_digits` / `f64_exp10`.
     // ── Strings (LANG-FULL E4) ──────────────────────────────────────────────
     ("str_const", Refused(INTERPRETER_TIER_ONLY)),
     ("str_len", Refused(INTERPRETER_TIER_ONLY)),
@@ -97,10 +97,32 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("f64_div", Lowered),
     ("f64_neg", Lowered),
     ("f64_signbit", Lowered),
+    // LANG83 PR7b — the neutral float primitives (integer results).
+    ("f64_class", Lowered),
+    ("f64_digits", Lowered),
+    ("f64_exp10", Lowered),
     // ── Conversions ─────────────────────────────────────────────────────────
-    ("int_to_real", Refused(INTERPRETER_TIER_ONLY)),
-    ("real_to_int_trunc", Refused(INTERPRETER_TIER_ONLY)),
-    ("real_to_int_floor", Refused(INTERPRETER_TIER_ONLY)),
+    // `I64_TO_F64` / `F64_TO_I64_TRUNC` / `F64_TO_I64_FLOOR` (LANG83
+    // "Conversions on the JIT"): integer register ↔ float register.
+    ("int_to_real", Lowered),
+    ("real_to_int_trunc", Lowered),
+    ("real_to_int_floor", Lowered),
+    // ── Dynamic values (LANG83 PR7f) ────────────────────────────────────────
+    // A `call_builtin` compiles only to a handler the embedder registered, and
+    // the tagged-word runtime is not one the LANG83 harnesses register (the
+    // `lang_matrix` JIT column runs dynamic values structurally, through
+    // `alloc`/`field_*`). `lang_aot::jit_lisp` registers its own callbacks for
+    // McCarthy Lisp; that embedding is not this column.
+    ("dyn_box_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_unbox_int", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_tag", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_new", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_first", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_pair_rest", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_pair", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_is_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_nil", Refused(NO_TAGGED_WORD_RUNTIME)),
+    ("dyn_symbol", Refused(NO_TAGGED_WORD_RUNTIME)),
     // ── Errors ──────────────────────────────────────────────────────────────
     ("trap", Lowered),
 ];
@@ -146,8 +168,9 @@ mod tests {
     fn result_type(spec: &OpSpec) -> &'static str {
         match (spec.family, spec.name) {
             (OpFamily::Comparison, _) => "bool",
-            // LANG83 PR6c: a Float-family op whose result is the integer 0/1.
-            (_, "f64_signbit") => "i64",
+            // Float-family ops whose result is an INTEGER: LANG83 PR6c's
+            // sign bit and PR7b's three digit queries.
+            (_, "f64_signbit" | "f64_class" | "f64_digits" | "f64_exp10") => "i64",
             (OpFamily::Float, _) | (_, "int_to_real") => "f64",
             (_, "str_const" | "str_concat" | "str_slice") => "str",
             _ => "i64",
@@ -200,13 +223,11 @@ mod tests {
         jit.register_builtin("print_i64", |_args: &[Value]| Value::Null);
         jit.register_builtin("putchar", |_args: &[Value]| Value::Null);
         jit.register_builtin("write_i64", |_args: &[Value]| Value::Null);
-        jit.register_builtin("write_f64_py", |_args: &[Value]| Value::Null);
-        jit.register_builtin("write_f64_js", |_args: &[Value]| Value::Null);
         for spec in STANDARD_OPS {
             let func = one_op_function(spec);
             let cir = specialise(&func, 0);
             // Compile WITH the parameter list, as JITCore does, so an `f64`
-            // parameter is known to hold a float (LANG83 PR6a).
+            // parameter is known to hold a float (LANG83 PR6a's `PARAM_F64`).
             let ctx = FunctionContext { name: "f", params: &func.params, return_type: &func.return_type };
             let compiles = jit.compile_function(&ctx, &cir).is_some();
             assert_eq!(

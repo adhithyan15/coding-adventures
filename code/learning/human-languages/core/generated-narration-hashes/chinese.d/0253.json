@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:5ebfcb8a17b7ac03",
+  "lessonIds": [
+    "ZH-C253-yeye",
+    "ZH-C253-nainai",
+    "ZH-C253-xiaohai",
+    "ZH-W253-hai-child",
+    "ZH-C253-zinu",
+    "ZH-C253-qinqi",
+    "ZH-R253-review-248-253"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch253.txt",
+  "json": "chinese/narration/ch253.json",
+  "textHash": "fnv1a64:fa01649ca5e29a55",
+  "jsonHash": "fnv1a64:9d70a7a6ec154d2e",
+  "findings": []
+}

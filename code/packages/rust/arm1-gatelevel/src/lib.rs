@@ -41,6 +41,28 @@ use arm1_simulator::{
 /// bits, and one halt bit.
 pub const FLIP_FLOP_COUNT: usize = MEMORY_SIZE * 8 + 27 * 32 + 1;
 
+/// Counts derived from the machine's concrete persistent storage containers.
+///
+/// This inventory is intentionally independent of [`FLIP_FLOP_COUNT`] so the
+/// topology test does not merely restate the published constant.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    /// One DFF per bit in the owned unified memory.
+    pub memory_dffs: usize,
+    /// One DFF per bit in the 27 owned physical registers.
+    pub register_dffs: usize,
+    /// The single physical HALT latch.
+    pub halt_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum the independently inventoried banks.
+    #[must_use]
+    pub const fn total(self) -> usize {
+        self.memory_dffs + self.register_dffs + self.halt_dffs
+    }
+}
+
 // =========================================================================
 // Bit Conversion Helpers
 // =========================================================================
@@ -453,8 +475,10 @@ pub struct ARM1GateLevel {
     /// Unified memory: one packed stable Q bit per architectural DFF.
     memory: DffMemory,
 
+    /// Non-authoritative compatibility observer, synchronized from `halt_q`.
     halted: bool,
-    halt_q: u8,
+    /// Sole architectural HALT authority: the stable Q output of one DFF.
+    halt_q: [u8; 1],
 
     loaded_origin: usize,
     loaded_len: usize,
@@ -475,7 +499,7 @@ impl ARM1GateLevel {
             regs: [[0u8; 32]; 27],
             memory: DffMemory::new(memory_size),
             halted: false,
-            halt_q: 0,
+            halt_q: [0],
             loaded_origin: 0,
             loaded_len: memory_size,
             gate_ops: 0,
@@ -491,8 +515,7 @@ impl ARM1GateLevel {
         let r15val = FLAG_I | FLAG_F | MODE_SVC;
         let bits = int_to_bits(r15val, 32);
         self.regs[15].copy_from_slice(&bits);
-        self.halted = false;
-        clock_bit(&mut self.halt_q, false);
+        self.clock_halted(false);
         self.gate_ops = 0;
     }
 
@@ -573,7 +596,27 @@ impl ARM1GateLevel {
 
     /// Returns true if the CPU has been halted.
     pub fn halted(&self) -> bool {
-        self.halted
+        self.halt_q[0] != 0
+    }
+
+    /// Inventory the concrete persistent storage owned by this machine.
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        PhysicalStorageInventory {
+            memory_dffs: self.memory.dff_count(),
+            register_dffs: self.regs.iter().map(|register| register.len()).sum(),
+            halt_dffs: self.halt_q.len(),
+        }
+    }
+
+    /// Clock the physical HALT DFF, then refresh its compatibility observer.
+    fn clock_halted(&mut self, value: bool) {
+        clock_bit(&mut self.halt_q[0], value);
+        self.synchronize_halted_observer();
+    }
+
+    /// Repair the non-authoritative host observer from the HALT DFF Q output.
+    fn synchronize_halted_observer(&mut self) {
+        self.halted = self.halted();
     }
 
     /// Returns the total number of gate operations performed.
@@ -618,7 +661,7 @@ impl ARM1GateLevel {
         Arm1State {
             regs: std::array::from_fn(|index| bits_to_int(&self.regs[index])),
             memory: self.memory.snapshot(),
-            halted: self.halted,
+            halted: self.halted(),
             loaded_origin: self.loaded_origin as u32,
             loaded_len: self.loaded_len,
         }
@@ -632,8 +675,7 @@ impl ARM1GateLevel {
             self.write_physical_reg(index, value);
         }
         self.memory.restore_snapshot(&state.memory);
-        self.halted = state.halted;
-        clock_bit(&mut self.halt_q, state.halted);
+        self.clock_halted(state.halted);
         self.loaded_origin = state.loaded_origin as usize;
         self.loaded_len = state.loaded_len;
         Ok(())
@@ -698,8 +740,7 @@ impl ARM1GateLevel {
         self.write_physical_reg(24, r15);
         self.write_physical_reg(15, (r15 & !MODE_MASK) | MODE_IRQ | FLAG_I);
         self.set_pc(0x18);
-        self.halted = false;
-        clock_bit(&mut self.halt_q, false);
+        self.clock_halted(false);
         true
     }
 
@@ -712,8 +753,7 @@ impl ARM1GateLevel {
         self.write_physical_reg(22, r15);
         self.write_physical_reg(15, (r15 & !MODE_MASK) | MODE_FIQ | FLAG_I | FLAG_F);
         self.set_pc(0x1C);
-        self.halted = false;
-        clock_bit(&mut self.halt_q, false);
+        self.clock_halted(false);
         true
     }
 
@@ -879,6 +919,7 @@ impl ARM1GateLevel {
 
     /// Executes one instruction and returns a trace.
     pub fn step(&mut self) -> Trace {
+        self.synchronize_halted_observer();
         let pc = self.pc();
         let mut regs_before = [0u32; 16];
         for (i, reg) in regs_before.iter_mut().enumerate() {
@@ -886,7 +927,7 @@ impl ARM1GateLevel {
         }
         let flags_before = self.flags();
 
-        if self.halted {
+        if self.halted() {
             return Trace {
                 address: pc,
                 raw: 0,
@@ -937,15 +978,15 @@ impl ARM1GateLevel {
             trace.regs_after[i] = self.read_reg(i);
         }
         trace.flags_after = self.flags();
-        clock_bit(&mut self.halt_q, self.halted);
         trace
     }
 
     /// Executes instructions until halted or max_steps reached.
     pub fn run(&mut self, max_steps: usize) -> Vec<Trace> {
+        self.synchronize_halted_observer();
         let mut traces = Vec::with_capacity(max_steps.min(1024));
         for _ in 0..max_steps {
-            if self.halted {
+            if self.halted() {
                 break;
             }
             traces.push(self.step());
@@ -956,7 +997,8 @@ impl ARM1GateLevel {
     /// Executes one instruction atomically, checks the full transition against
     /// the functional simulator, and returns complete before/after state.
     pub fn step_checked(&mut self) -> Result<StepTrace, Arm1Error> {
-        if self.halted {
+        self.synchronize_halted_observer();
+        if self.halted() {
             return Err(Arm1Error::Halted);
         }
         let state_before = self.get_state();
@@ -1003,7 +1045,8 @@ impl ARM1GateLevel {
     pub fn run_loaded_checked(&mut self, max_steps: usize) -> Result<ExecutionResult, Arm1Error> {
         let original = self.get_state();
         let mut traces = Vec::new();
-        while traces.len() < max_steps && !self.halted {
+        self.synchronize_halted_observer();
+        while traces.len() < max_steps && !self.halted() {
             match self.step_checked() {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
@@ -1013,7 +1056,7 @@ impl ARM1GateLevel {
             }
         }
         Ok(ExecutionResult {
-            halted: self.halted,
+            halted: self.halted(),
             steps: traces.len(),
             final_state: self.get_state(),
             traces,
@@ -1254,7 +1297,7 @@ impl ARM1GateLevel {
 
     fn execute_swi(&mut self, d: &DecodedInstruction) {
         if d.swi_comment == HALT_SWI {
-            self.halted = true;
+            self.clock_halted(true);
             return;
         }
         let r15val = bits_to_int(&self.regs[15]);
@@ -1400,6 +1443,69 @@ mod tests {
         let traces = cpu.run(10);
         assert!(cpu.halted());
         assert_eq!(traces.len(), 1);
+    }
+
+    #[test]
+    fn halt_dff_q_overrides_both_observer_divergences() {
+        let mut cpu = ARM1GateLevel::new(1024);
+        cpu.load_words_checked(&[encode_mov_imm(COND_AL, 0, 7), encode_halt()], 0)
+            .unwrap();
+
+        cpu.halted = true;
+        assert!(!cpu.halted());
+        assert!(!cpu.get_state().halted);
+        let first = cpu.step_checked().unwrap();
+        assert_eq!(first.state_after.regs[0], 7);
+        assert!(!cpu.halted);
+
+        cpu.step_checked().unwrap();
+        assert!(cpu.halted());
+        cpu.halted = false;
+        let halted = cpu.get_state();
+        assert!(halted.halted);
+        assert_eq!(cpu.step_checked(), Err(Arm1Error::Halted));
+        assert_eq!(cpu.get_state(), halted);
+        assert!(cpu.halted);
+
+        let mut legacy = ARM1GateLevel::new(1024);
+        legacy.load_program_words(&[encode_mov_imm(COND_AL, 0, 9), encode_halt()], 0);
+        legacy.halted = true;
+        assert_eq!(legacy.run(1).len(), 1);
+        assert_eq!(legacy.read_register(0), 9);
+        assert!(!legacy.halted);
+        assert_eq!(legacy.run(1).len(), 1);
+        legacy.halted = false;
+        assert!(legacy.run(1).is_empty());
+        assert!(legacy.halted);
+    }
+
+    #[test]
+    fn halt_dff_lifecycle_and_fault_rollback_repair_observer() {
+        let mut cpu = ARM1GateLevel::new(64);
+        let mut halted = cpu.get_state();
+        halted.halted = true;
+        cpu.restore(&halted).unwrap();
+        assert!(cpu.halted());
+        assert!(cpu.halted);
+
+        cpu.halted = false;
+        cpu.reset();
+        assert!(!cpu.halted());
+        assert!(!cpu.halted);
+
+        cpu.restore(&halted).unwrap();
+        cpu.load_words_checked(&[(COND_AL << 28) | 0x0591_0000], 0)
+            .unwrap();
+        cpu.write_register(1, 0x1000);
+        cpu.halted = true;
+        let before = cpu.get_state();
+        assert!(matches!(
+            cpu.run_loaded_checked(1),
+            Err(Arm1Error::MemoryOutOfRange { .. })
+        ));
+        assert_eq!(cpu.get_state(), before);
+        assert!(!cpu.halted());
+        assert!(!cpu.halted);
     }
 
     #[test]

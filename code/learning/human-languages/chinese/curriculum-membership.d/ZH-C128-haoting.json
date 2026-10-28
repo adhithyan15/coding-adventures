@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C128-haoting",
+  "pathSegment": "ZH-PATH-128-MUSIC128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-128-MUSIC128",
+      "order": 3
+    }
+  ]
+}

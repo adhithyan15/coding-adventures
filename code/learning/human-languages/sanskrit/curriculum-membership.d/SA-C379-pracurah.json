@@ -1,0 +1,11 @@
+{
+  "id": "SA-C379-pracurah",
+  "pathSegment": "SA-PATH-379-ADHIKA379",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-379-ADHIKA379",
+      "order": 2
+    }
+  ]
+}

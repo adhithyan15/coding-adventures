@@ -647,6 +647,39 @@ export const scriptInventoryEvidence = {
       expect(missingJapanese.has(glyph)).toBe(false);
       expect(affected.get(glyph) ?? 0).toBe(0);
     }
+    // The B1 core's six kanji (chapters 252-258), each taught COPY-ONLY right
+    // after its anchor word (月日, 年じゅう, 言い出す, 日本人, 日本中, 今まで).
+    // Each row lists KanjiVG's order for its own code point, one step per
+    // stroke path, and its strokeOrderNote cites that file. 今 said
+    // "authoritative" for three strokes with no source; KanjiVG has four
+    // paths (㇒ ㇏ ㇐ ㇇), and the row now follows it. No ductus exists for any
+    // of the six, and script-ductus holds every penLifts / strokeOrderSource
+    // claim to a fitted ductus, so these rows carry neither: the order is
+    // cited in prose, and a structured source waits for the geometry.
+    for (const [glyph, file, codepoint, paths] of [
+      ["月", "06708", "U+6708", 4],
+      ["年", "05e74", "U+5E74", 6],
+      ["出", "051fa", "U+51FA", 5],
+      ["人", "04eba", "U+4EBA", 2],
+      ["中", "04e2d", "U+4E2D", 4],
+      ["今", "04eca", "U+4ECA", 4],
+    ] as const) {
+      const letter = scripts.japanese!.letters.find((entry) => entry.glyph === glyph)!;
+      expect(letter.role, glyph).toBe("logograph");
+      expect(letter.strokeOrder, glyph).toHaveLength(paths);
+      expect(letter.penLifts, glyph).toBeUndefined();
+      expect(letter.strokeOrderSource, glyph).toBeUndefined();
+      for (const phrase of [
+        `https://github.com/KanjiVG/kanjivg/blob/master/kanji/${file}.svg`,
+        codepoint,
+        `kvg:${file}-s1 to s${paths}`,
+        "Ulrich Apel and contributors, CC BY-SA 3.0",
+        "Only the order and direction",
+      ]) {
+        expect(letter.strokeOrderNote, `${glyph} ${phrase}`).toContain(phrase);
+      }
+      expect(missingJapanese.has(glyph)).toBe(false);
+    }
     const language = scripts.japanese!.letters.find((entry) => entry.glyph === "語")!;
     expect(language.strokeOrderSource?.variation).toContain(
       "s1 to s7 are 言, s8 to s11 五 and s12 to s14 口",

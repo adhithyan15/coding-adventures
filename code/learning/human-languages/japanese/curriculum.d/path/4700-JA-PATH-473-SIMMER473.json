@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-473-SIMMER473",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "JA-EXT-473-SIMMER473"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Citizens and Society",
+  "label": "ch:sa-citizens-and-society",
+  "canDo": "I can talk about citizens, the public and society.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C354-sanghatayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can talk about citizens, the public and society.",
+    "assesses": [
+      "SA-LEX-C354-NAGARIKA354-03",
+      "SA-LEX-C354-NAGARIKA354-04",
+      "SA-LEX-C354-NAGARIKA354-05"
+    ]
+  }
+}

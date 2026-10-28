@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-322-SHOUCHI322",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "JA-EXT-322-SHOUCHI322"
+  ],
+  "after": []
+}

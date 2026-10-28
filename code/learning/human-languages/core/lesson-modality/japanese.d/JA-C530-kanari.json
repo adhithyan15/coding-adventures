@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C530-kanari",
+    "language": "japanese",
+    "chapter": 530,
+    "sequence": 30580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31377d0ca8fac21b"
+  },
+  "findings": []
+}

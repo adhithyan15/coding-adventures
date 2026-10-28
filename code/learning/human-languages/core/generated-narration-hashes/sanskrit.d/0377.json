@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:aab782f1e9d870d4",
+  "lessonIds": [
+    "SA-C377-ativa",
+    "SA-C377-atyantam",
+    "SA-C377-tivrah",
+    "SA-C377-nitaram",
+    "SA-C377-atikramati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch377.txt",
+  "json": "sanskrit/narration/ch377.json",
+  "textHash": "fnv1a64:9e8d2e194fda1524",
+  "jsonHash": "fnv1a64:679e64bb962eb06f",
+  "findings": []
+}

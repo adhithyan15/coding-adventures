@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C183-jinlai",
+  "pathSegment": "ZH-PATH-183-INOUT183",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-183-INOUT183",
+      "order": 1
+    }
+  ]
+}

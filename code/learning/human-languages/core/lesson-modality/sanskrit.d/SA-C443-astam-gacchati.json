@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C443-astam-gacchati",
+    "language": "sanskrit",
+    "chapter": 443,
+    "sequence": 25520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4485e5fe0d9a2dd"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:6ff1d2cee40b9931",
+  "lessonIds": [
+    "SA-C493-samskarah",
+    "SA-C493-namakaranam",
+    "SA-C493-annaprasanam",
+    "SA-C493-cudakaranam",
+    "SA-C493-upanayanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch493.txt",
+  "json": "sanskrit/narration/ch493.json",
+  "textHash": "fnv1a64:ae61f2d9fbb70518",
+  "jsonHash": "fnv1a64:568ba3570f25a9e5",
+  "findings": []
+}

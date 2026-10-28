@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:0ba8a4a63268aba2",
+  "lessonIds": [
+    "SA-C400-parikramati",
+    "SA-C400-japamala",
+    "SA-C400-rudraksah",
+    "SA-C400-rathayatra",
+    "SA-C400-aharati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch400.txt",
+  "json": "sanskrit/narration/ch400.json",
+  "textHash": "fnv1a64:6e29a1f86d260d36",
+  "jsonHash": "fnv1a64:d8474701eb46f16b",
+  "findings": []
+}

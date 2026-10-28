@@ -1,0 +1,11 @@
+{
+  "id": "JA-C450-megusuri",
+  "pathSegment": "JA-PATH-450-CLINIC450",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-450-CLINIC450",
+      "order": 3
+    }
+  ]
+}

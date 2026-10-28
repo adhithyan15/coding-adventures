@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C136-guafeng",
+  "pathSegment": "ZH-PATH-136-WEATHER136",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-136-WEATHER136",
+      "order": 2
+    }
+  ]
+}

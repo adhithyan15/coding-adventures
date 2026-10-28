@@ -1,0 +1,21 @@
+{
+  "chapter": 509,
+  "title": "Lotteries and Odds",
+  "label": "ch:ja-lotteries-and-odds",
+  "canDo": "I can talk about lotteries and chances.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-R509-review-504-509",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about lotteries and chances.",
+    "assesses": [
+      "JA-LEX-C509-LOTTERY509-01",
+      "JA-LEX-C509-LOTTERY509-02",
+      "JA-LEX-C509-LOTTERY509-03",
+      "JA-LEX-C509-LOTTERY509-04",
+      "JA-LEX-C509-LOTTERY509-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C532-igai",
+  "pathSegment": "JA-PATH-532-LIMIT532",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-532-LIMIT532",
+      "order": 4
+    }
+  ]
+}

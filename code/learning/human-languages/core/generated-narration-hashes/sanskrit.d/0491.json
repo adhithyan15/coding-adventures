@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:28a6df0c58a71588",
+  "lessonIds": [
+    "SA-C491-jara",
+    "SA-C491-jiryati",
+    "SA-C491-mrtyuh",
+    "SA-C491-antyestih",
+    "SA-C491-sraddham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch491.txt",
+  "json": "sanskrit/narration/ch491.json",
+  "textHash": "fnv1a64:7119a1583d2220c9",
+  "jsonHash": "fnv1a64:d348cf1bbe706e7e",
+  "findings": []
+}

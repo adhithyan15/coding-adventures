@@ -1,0 +1,11 @@
+{
+  "id": "SA-C302-kramasah",
+  "pathSegment": "SA-PATH-302-JALAUGHA302",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-302-JALAUGHA302",
+      "order": 4
+    }
+  ]
+}

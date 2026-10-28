@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "These and Those",
+  "label": "ch:zh-these-and-those",
+  "canDo": "I can say these, those, which ones, some, and like this.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C127-zheyang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: I can say these, those, which ones, some, and like this.",
+    "assesses": [
+      "ZH-LEX-C127-THESE127-03",
+      "ZH-LEX-C127-THESE127-04",
+      "ZH-LEX-C127-THESE127-05"
+    ]
+  }
+}

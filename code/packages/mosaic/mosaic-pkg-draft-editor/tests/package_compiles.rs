@@ -81,6 +81,7 @@ fn interface_matches_spec() {
             "title-placeholder",
             "body-label",
             "body-value",
+            "body-placeholder",
             "save-label",
             "delete-label",
             "cancel-label",
@@ -90,9 +91,10 @@ fn interface_matches_spec() {
     assert_eq!(emits, ["onTitleChange", "onBodyChange", "onSave", "onDelete", "onCancel"]);
 }
 
-/// The layout properties the spec promises: the body is the multi-line legacy
-/// `Input` named by its visible label; the title field and every action exist
-/// only when labelled (so nothing unnamed can be drawn).
+/// The layout properties the spec promises: the body is the kernel's multi-line
+/// `HostInput`, named by its visible label and hinted by its own placeholder
+/// slot; the title field and every action exist only when labelled (so nothing
+/// unnamed can be drawn).
 #[test]
 fn layout_names_every_field_and_gates_every_optional_part() {
     let (_, layout) = compiled();
@@ -117,7 +119,10 @@ fn layout_names_every_field_and_gates_every_optional_part() {
     assert_eq!(prop(body, "onCommit").as_deref(), Some("EmitRef(\"onSave\")"));
     assert_eq!(prop(body, "a11y-label").as_deref(), Some("SlotRef(\"body-label\")"));
     assert_eq!(prop(body, "onChange").as_deref(), Some("EmitRef(\"onBodyChange\")"));
-    assert!(prop(body, "placeholder").is_none(), "literal-only on three backends; see spec");
+    // The hint is its own slot, never the label: a placeholder vanishes as
+    // the user types, so it cannot be the field's name (0.2.0; EM-13 made a
+    // slot-bound placeholder lower on every backend).
+    assert_eq!(prop(body, "placeholder").as_deref(), Some("SlotRef(\"body-placeholder\")"));
 
     // Actions: each gated on its own label, which is the button's label.
     let actions = &root.children[3];
@@ -135,6 +140,51 @@ fn layout_names_every_field_and_gates_every_optional_part() {
         assert_eq!(prop(button, "onClick"), Some(format!("EmitRef({emit:?})")));
         assert!(button.children.is_empty(), "HostButton children are dropped (#15921)");
     }
+}
+
+/// MosaicBook previews every slot: each story sets exactly the declared slots
+/// (an undeclared key is a typo the preview would silently ignore, a missing
+/// one previews the generated sample), and the body placeholder is shown
+/// non-empty at least once, on an empty body, where it is visible.
+#[test]
+fn stories_set_every_slot_and_show_the_body_placeholder() {
+    use coding_adventures_bounded_json::{parse, JsonValue};
+
+    fn field<'a>(value: &'a JsonValue, key: &str) -> Option<&'a JsonValue> {
+        match value {
+            JsonValue::Object(members) => members.iter().find(|(k, _)| k == key).map(|(_, v)| v),
+            _ => None,
+        }
+    }
+    fn text<'a>(value: Option<&'a JsonValue>, what: &str) -> &'a str {
+        match value {
+            Some(JsonValue::String(s)) => s,
+            other => panic!("{what}: expected a string, found {other:?}"),
+        }
+    }
+
+    let (component, _) = compiled();
+    let mut declared: Vec<&str> = component.slots.iter().map(|s| s.name.as_str()).collect();
+    declared.sort_unstable();
+
+    let doc = parse(&read_source("DraftEditor.stories.json")).expect("stories file is JSON");
+    let Some(JsonValue::Array(stories)) = field(&doc, "stories") else {
+        panic!("a stories array");
+    };
+    let mut shows_placeholder = false;
+    for story in stories {
+        let name = text(field(story, "name"), "story name");
+        let Some(fixtures @ JsonValue::Object(members)) = field(story, "fixtures") else {
+            panic!("{name}: a fixtures object");
+        };
+        let mut keys: Vec<&str> = members.iter().map(|(k, _)| k.as_str()).collect();
+        keys.sort_unstable();
+        assert_eq!(keys, declared, "{name}: fixtures must set exactly the declared slots");
+        let placeholder = text(field(fixtures, "body-placeholder"), name);
+        let body = text(field(fixtures, "body-value"), name);
+        shows_placeholder |= !placeholder.is_empty() && body.is_empty();
+    }
+    assert!(shows_placeholder, "a story shows a body placeholder on an empty body");
 }
 
 /// The package builds for every backend (the web ones included).

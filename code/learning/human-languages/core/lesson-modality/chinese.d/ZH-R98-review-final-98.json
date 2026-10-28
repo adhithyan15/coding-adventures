@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R98-review-final-98",
+    "language": "chinese",
+    "chapter": 98,
+    "sequence": 7840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f9e26d520163098"
+  },
+  "findings": []
+}

@@ -1,4 +1,130 @@
 # Changelog — `twig-aot`
+## Unreleased — security review: fail-closed `__dyn_` check, shared with LLVM; the `__aot_` register namespace
+
+- `check_program_function_names` fails closed. A module function named `__dyn_*` is a runtime symbol unless it is one of `iir_builtin_lowering::PASS_GENERATED_DYN_HELPERS`. The old check listed the runtime's functions, parsed from `dynval_runtime.c` (`DYNVAL_RUNTIME_SYMBOLS`, now removed), which fails open for a function added to the runtime later. It is now `pub`, so `lang-aot`'s LLVM path runs the same check.
+- New `check_no_aot_registers`, first thing in `prepare_module_for_aot`: a module that already uses a register, parameter or operand beginning `__aot_` is refused (`AotError::Compile`). The string lowering names its registers `__aot_str{n}_len` / `_buf` / … and `__aot_ps{n}_*`, strips dead blocks by that prefix, and hands `__aot_str{n}_len` to the runtime's print as the byte count. A program register of that name would be the same register. Twig cannot spell it any more (`__` is reserved), but Python and JavaScript locals can.
+- Tests: `every_dyn_name_but_the_pass_helpers_is_a_runtime_symbol` replaces `dynval_runtime_symbols_match_the_c_source`. It requires every `__dyn_` function in the C file, every registry `dyn_*` builtin and names the runtime does not define (`__dyn_pair_firsts`, `__dyn_not_yet_in_the_runtime`) to be refused, and no pass helper to be a runtime function. Also new: `a_module_using_an_aot_register_is_refused` (Linux, Windows, macOS objects).
+
+## Unreleased — a program function cannot stand in for a runtime symbol
+
+- The link step patches a call in place whenever its symbol names a function of the module, and the backends name a runtime call by its runtime symbol. So a program function called `__twig_print_i64` received `print`'s call: `(define (__twig_print_i64 n) 0) (begin (print 5) 0)` printed nothing on native x86-64. New `check_program_function_names`, run first by both link steps (`compile_module_x86_64_to_text`, `compile_module_to_text_raw`, so every native target), refuses two kinds of module with `AotError::Linker`:
+  - one that defines a function named like a runtime symbol: the `__twig_*` and `__gc_*` namespaces, or one of the `__dyn_*` functions `dynval_runtime.c` defines (`DYNVAL_RUNTIME_SYMBOLS`; the pass-generated `__dyn_list_*` / `__dyn_call_closure` stay allowed);
+  - one that defines two functions with one name (the offset table kept only one).
+- `prepare_module_for_aot` propagates `lower_closures_to_heap` / `lower_heap_builtins_runtime`'s new `HelperNameError` as `AotError::Compile`.
+- Tests: `a_program_function_named_like_a_runtime_symbol_is_refused` (five names × Linux, Windows and macOS objects), `a_module_with_two_functions_of_one_name_is_refused`, `module_helpers_and_lookalikes_are_not_runtime_symbols`, and `dynval_runtime_symbols_match_the_c_source`, which pins the list to the C file and to every registry `dyn_*` builtin.
+
+## Unreleased — LANG83 PR7f follow-up — pair reads check the tag
+
+- `runtime/dynval_runtime.c`: `__dyn_pair_first` / `__dyn_pair_rest` check that the word carries the pair tag (`0b111`) before reading the cell. A non-pair used to be read through: Twig's `(car 1000000)` lowers to `__dyn_pair_first(8000000)` and read the 8 bytes at address 8000000. Now, matching the VM (`TypeError`) and the Rust `extern "C" dyn_pair_first` (panic), the program stops: stdout is flushed, `dyn_pair_first: argument 0x… is not a pair` goes to stderr, then `abort()`. The helper is local to the file (not `__twig_trap`): a type error is not a LANG83 trap kind, and `dynval_runtime.c` is linked without `twig_runtime.c` by some harnesses. A heap-tagged non-pair object is still read as a pair (a type confusion inside a live GC block, not a wild read).
+- `dynval_runtime_golden`: new `c_pair_reads_of_a_non_pair_fail_closed` re-runs the test binary as a child for each of an integer, nil, `#f`, `#t` and a symbol, through both functions, and asserts the child died with the refusal on stderr; it also asserts the Rust reference (`heap::car` / `heap::cdr`) refuses each word, and that a real pair still reads.
+
+- Security-review fixes to the refusal (`lispy_not_a_pair`):
+  - It prints the word's tag and kind (`dyn_pair_first: argument with tag 0 (int) is not a pair`), never the word, so no heap address can reach stderr. `dynval-runtime`'s Rust panic now uses the same words.
+  - `abort()` is no longer the last line of defence. It is called through a `volatile` function pointer and followed by `__builtin_trap()` (MSVC: `__fastfail(FAST_FAIL_FATAL_APP_EXIT)`). A program-defined `abort` that returns (possible on LLVM, #18416) now ends in SIGILL instead of running on. The pointer matters: libc declares `abort` `noreturn`, so a plain `abort(); __builtin_trap();` let clang and GCC delete the trap. Checked by hand with a returning `abort` linked in: the plain form fell through into the next function and looped printing refusals (with a heap address), the new form exits with SIGILL at -O0 and -O2 under both compilers.
+- `dynval_runtime_golden`: `c_pair_reads_of_a_non_pair_fail_closed` expects the tag-and-kind message and no `0x` on stderr; the child sets `RLIMIT_CORE` to 0 before the deliberate abort so no core file is written per case; the test is `#[cfg(unix)]` (no Windows Error Reporting dialog or minidump per child). New Unix-only dev-dependency `libc` for `setrlimit`.
+
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).
+- `macos_arm64_smoke`'s closure-capture test coerces its integer result with `dyn_unbox_int` (it called `dyn_to_exit_code`).
+- Security review: `prepare_module_for_aot` returns `Result`; a module that defines or calls a compiler-reserved `__lisp_*` name is refused by `lower_dyn_repr` and surfaces as `AotError::Compile` from every native compile entry point, instead of letting a program function stand in for a Lisp rule.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `runtime/dynval_runtime.c`: `__dyn_cons` / `__dyn_car` / `__dyn_cdr` / `__dyn_pair_p` / `__dyn_null_p` / `__dyn_make_symbol` are renamed `__dyn_pair_new` / `__dyn_pair_first` / `__dyn_pair_rest` / `__dyn_is_pair` / `__dyn_is_nil` / `__dyn_symbol` (LANG83 PR7f's registry names, which the native backends map to `__` + name). New `int64_t __dyn_tag(uint64_t)`: the value's three-bit tag.
+- `dynval_runtime_golden`: new `c_tag_of_every_kind_matches_rust` pins `__dyn_tag` against `dynval-runtime`'s tag constants for an integer, nil, a symbol, `#f`, `#t` and a pair; the symbol tests are `c_symbol_*`.
+
+## Unreleased — LANG83 PR7e — no float writers in the runtime
+
+- `twig_runtime.c` drops `__twig_write_f64_py` / `__twig_write_f64_js` and
+  their layout code (`twig_write_f64`): the runtime holds no language's
+  float layout. The Burger–Dybvig core (`twig_f64_digits`) and
+  `__twig_f64_digits` / `__twig_f64_exp10` are unchanged.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- `__twig_trap`'s kind table (`TWIG_TRAP_KINDS`) renames id 7 from
+  `"Trap.ReferenceError"` to `"Trap.Unbound"`: the kind names the condition
+  (a name is unbound), not JavaScript's exception class. The id is unchanged,
+  so compiled code is unaffected; a native program that stops on it now
+  prints `trap: Trap.Unbound`. The comment no longer reserves ids from 1000
+  for language kinds, which LANG83 PR7d retired.
+- `runtime_trap_kind_table_matches_exception_kind` drops its
+  `LANGUAGE_TRAP_KINDS` check (the table is gone) and pins id 7's new name.
+
+## Unreleased — LANG83 PR7b — native runtime digit helpers
+
+- **`__twig_f64_digits(int64_t bits)` / `__twig_f64_exp10(int64_t bits)`** in
+  `runtime/twig_runtime.c`: the shortest round-trip significand `D` (no
+  trailing zeros) and the exponent of its leading digit, 0 for ±0, ±Infinity
+  and NaN. Both run `twig_f64_digits`, the core `__twig_write_f64_*` print
+  from, so the native backends' `f64_digits` / `f64_exp10` share it. Checked
+  against host `python3` on 122 108 values (every power of two, the
+  subnormal and finite edges, random bit patterns and short decimals) under
+  ASan/UBSan.
+- The runtime helpers are named `__twig_f64_digits` / `__twig_f64_exp10`, in
+  the runtime's own namespace. An `__iir_` name would have interposed on
+  iir-to-llvm's module-local 3-argument `@__iir_f64_digits` in any LLVM
+  program that links this runtime (found in security review).
+
+## Unreleased — precise GC on every ABI; nested gc-core-capi build fixes
+
+- **The Windows precise-GC differentials run again.**
+  `gc_stress_live_bytes_differential_on_windows` and
+  `gc_recursive_frame_live_bytes_differential_on_windows` no longer return
+  early. `gc-core-capi`'s precise entries are now naked trampolines that build
+  the walk's frame record themselves, so Win64's `lea rbp, [rsp+N]` codegen no
+  longer matters (see that crate's changelog).
+- **`build.rs` re-runs when anything the embedded collector is built from
+  changes.** It watched only `../gc-core-capi/src`, so editing `gc-core` (the
+  collector itself) or either crate's `Cargo.toml` left a stale archive baked
+  into the binary. It now also watches `../gc-core-capi/Cargo.toml`,
+  `../gc-core/src` and `../gc-core/Cargo.toml`.
+- **The nested build targets `TARGET`.** `host_key` and the C runtime follow
+  the target being built, but the nested `cargo build` compiled the collector
+  for the build host (or for an inherited `CARGO_BUILD_TARGET`, in which case
+  the copy from `<gc_target>/release` failed). It now always passes
+  `--target $TARGET` and copies from `<gc_target>/$TARGET/release`; the native
+  case is unchanged apart from the path. A cross target without its standard
+  library fails with a message naming the target and the `rustup` command.
+- `-Cforce-frame-pointers=yes` is still passed: the anchor no longer depends on
+  it, but it keeps any frames between the collector's caller and the Twig code
+  walkable.
+
+## Earlier in this release — precise GC: build the embedded collector with frame pointers
+
+- **`build.rs` compiles the embedded `gc-core-capi` archive with
+  `-Cforce-frame-pointers=yes`.** The flag is appended to the outer build's
+  `CARGO_ENCODED_RUSTFLAGS`.
+- **Why.** The precise collector anchors its stack walk at `rbp` inside
+  `__gc_collect_precise`. A `--release` build without frame pointers never
+  sets `rbp`, so with rustc 1.97 the walk started at the *mutator's* frame
+  pointer. The innermost Twig frame's stack map was then never consulted:
+  that frame fell into the conservative `[sp, start_fp)` region, and precise
+  collection silently degraded to conservative on x86-64 Linux.
+  `gc_stress_live_bytes_differential_on_linux` and
+  `gc_recursive_frame_live_bytes_differential_on_linux` failed (precise kept 64
+  bytes), and `gc-core-capi`'s own docs call an untrusted anchor unsafe once
+  stack maps are registered. With frame pointers, the archive's
+  `__gc_collect_precise` starts `push rbp; mov rbp, rsp`, the walk reaches the
+  Twig frame's safepoint, and both tests pass.
+- Whether the old build happened to pass depended on the rustc version, which
+  is why CI (latest stable) and a host on 1.97 disagreed.
+- **Windows x64 is not fixed by the flag.** LLVM sets `rbp` with
+  `lea rbp, [rsp+N]` there even under `-Cforce-frame-pointers=yes`, so
+  the Windows precise-GC smoke tests stay skipped. The nested build
+  now keeps the outer rustflags as an `OsString`, so a non-UTF-8 flag no
+  longer drops all of them (security review).
+
+## Unreleased (LANG84 phase 6e — `Trap.ReferenceError`)
+
+- `__twig_trap`'s kind table (`TWIG_TRAP_KINDS`) gains
+  `"Trap.ReferenceError"` at stable id 7, the kind `javascript-iir-compiler`
+  emits for an undeclared or temporal-dead-zone read. A native program that
+  stops on it prints `trap: Trap.ReferenceError` after flushing its output.
+  `runtime_trap_kind_table_matches_exception_kind` keeps the C table equal to
+  `interpreter_ir::exception_kind::ALL_TRAP_KINDS`.
+
 ## [0.57.0] — 2026-10-20 (LANG83 PR6a — native runtime float writers)
 
 - **`__twig_write_f64_py(int64_t bits)` / `__twig_write_f64_js(int64_t bits)`**

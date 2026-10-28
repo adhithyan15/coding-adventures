@@ -1,0 +1,813 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 387,
+  "title": "Meeting the Plane",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a6b7dda367379b48",
+  "lessons": [
+    {
+      "id": "JA-C387-demukaeru",
+      "sequence": 22770,
+      "title": "でむかえる (demukaeru) — to go out to meet (someone arriving)",
+      "headword": "でむかえる",
+      "romanization": "demukaeru",
+      "gloss": "to go out to meet (someone arriving)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9bd4b1cdb34211c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for departure from a country, then the Japanese for to take something out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: でむかえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でむかえる — demukaeru — \"to go out to meet (someone arriving)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くうこうで そふを でむかえました。 — kūkō de sofu o demukaemashita — \"We met my grandfather at the airport.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite でむかえます, demukaemasu; an ichidan verb. Past (polite): ははが くうこうで そふを でむかえました。, haha ga kūkō de sofu o demukaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でむかえる (demukaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from de, \"going out\" (from deru) and mukaeru, \"to welcome\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "demukaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *demukaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "demukaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *demukaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkō de sofu o demukaemashita — We met my grandfather at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkō de sofu o demukaemashita* — We met my grandfather at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for departure from a country, then the Japanese for to take something out, then say demukaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for departure from a country, then the Japanese for to take something out, then say *demukaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does でむかえる (demukaeru) mean? (\"To go out to meet (someone arriving)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C387-demukaeru-type",
+              "prompt": "Say the Japanese for 'to go out to meet'.",
+              "assesses": [
+                "JA-LEX-C387-DEMUKAERU387-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "でむかえる",
+                "demukaeru"
+              ],
+              "feedback": {
+                "correct": "Right: でむかえる (demukaeru) is 'to go out to meet (someone arriving)'.",
+                "incorrect": "'To go out to meet' is でむかえる (demukaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C387-mikakeru",
+      "sequence": 22780,
+      "title": "みかける (mikakeru) — to happen to see; to catch sight of",
+      "headword": "みかける",
+      "romanization": "mikakeru",
+      "gloss": "to happen to see; to catch sight of",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bba29bd025eb2f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to take something out, then the Japanese for to go out to meet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みかける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みかける — mikakeru — \"to happen to see; to catch sight of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くうこうで せんせいを みかけました。 — kūkō de sensei o mikakemashita — \"I happened to see my teacher at the airport.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みかけます, mikakemasu; an ichidan verb. Past (polite): あねが えきで せんせいを みかけました。, ane ga eki de sensei o mikakemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みかける (mikakeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict). Its first part is mi, from miru, \"to see\" (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikakeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikakeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikakeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikakeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkō de sensei o mikakemashita — I happened to see my teacher at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkō de sensei o mikakemashita* — I happened to see my teacher at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to take something out, then the Japanese for to go out to meet, then say mikakeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to take something out, then the Japanese for to go out to meet, then say *mikakeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みかける (mikakeru) mean? (\"To happen to see; to catch sight of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C387-mikakeru-type",
+              "prompt": "Say the Japanese for 'to happen to see'.",
+              "assesses": [
+                "JA-LEX-C387-DEMUKAERU387-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みかける",
+                "mikakeru"
+              ],
+              "feedback": {
+                "correct": "Right: みかける (mikakeru) is 'to happen to see; to catch sight of'.",
+                "incorrect": "'To happen to see' is みかける (mikakeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C387-toujou",
+      "sequence": 22790,
+      "title": "とうじょう (tōjō) — boarding (a plane or ship)",
+      "headword": "とうじょう",
+      "romanization": "tōjō",
+      "gloss": "boarding (a plane or ship)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8bcedd7eea6bf79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to go out to meet, then the Japanese for to happen to see."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とうじょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうじょう — tōjō — \"boarding (a plane or ship)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とうじょうの じかんは くじです。 — tōjō no jikan wa kuji desu — \"Boarding time is nine o'clock.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうじょう (tōjō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tō, \"board\" (Middle Chinese thap) and jō, \"ride\" (zying) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōjō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōjō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōjō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōjō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōjō no jikan wa kuji desu — Boarding time is nine o'clock.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōjō no jikan wa kuji desu* — Boarding time is nine o'clock.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to go out to meet, then the Japanese for to happen to see, then say tōjō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to go out to meet, then the Japanese for to happen to see, then say *tōjō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とうじょう (tōjō) mean? (\"Boarding (a plane or ship)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C387-toujou-type",
+              "prompt": "Say the Japanese for 'boarding (a plane or ship)'.",
+              "assesses": [
+                "JA-LEX-C387-DEMUKAERU387-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とうじょう",
+                "tōjō",
+                "toujou",
+                "toojoo",
+                "tojo"
+              ],
+              "feedback": {
+                "correct": "Right: とうじょう (tōjō) is 'boarding (a plane or ship)'.",
+                "incorrect": "'Boarding (a plane or ship)' is とうじょう (tōjō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C387-koukuuken",
+      "sequence": 22800,
+      "title": "こうくうけん (kōkūken) — a plane ticket",
+      "headword": "こうくうけん",
+      "romanization": "kōkūken",
+      "gloss": "a plane ticket",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:928aa6c253fb5ac4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to happen to see, then the Japanese for boarding (a plane or ship)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうくうけん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうくうけん — kōkūken — \"a plane ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつやすみの こうくうけんは たかかったです。 — natsuyasumi no kōkūken wa takakatta desu — \"The plane tickets for the summer holidays were expensive.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうくうけん (kōkūken) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"navigate\" (Middle Chinese hang), kū, \"sky\" (khuwng) and ken, \"ticket\" (khjwonH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōkūken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōkūken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōkūken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōkūken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsuyasumi no kōkūken wa takakatta desu — The plane tickets for the summer holidays were expensive.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsuyasumi no kōkūken wa takakatta desu* — The plane tickets for the summer holidays were expensive.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to happen to see, then the Japanese for boarding (a plane or ship), then say kōkūken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to happen to see, then the Japanese for boarding (a plane or ship), then say *kōkūken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうくうけん (kōkūken) mean? (\"A plane ticket\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C387-koukuuken-type",
+              "prompt": "Say the Japanese for 'a plane ticket'.",
+              "assesses": [
+                "JA-LEX-C387-DEMUKAERU387-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうくうけん",
+                "kōkūken",
+                "koukuuken",
+                "kookuuken",
+                "kokuken"
+              ],
+              "feedback": {
+                "correct": "Right: こうくうけん (kōkūken) is 'a plane ticket'.",
+                "incorrect": "'A plane ticket' is こうくうけん (kōkūken)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C387-shutchou",
+      "sequence": 22810,
+      "title": "しゅっちょう (shutchō) — a business trip",
+      "headword": "しゅっちょう",
+      "romanization": "shutchō",
+      "gloss": "a business trip",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9de3eb057f7d84f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for boarding (a plane or ship), then the Japanese for a plane ticket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅっちょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっちょう — shutchō — \"a business trip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは しゅっちょうで がいこくに いきました。 — chichi wa shutchō de gaikoku ni ikimashita — \"My father went abroad on a business trip.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅっちょう (shutchō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shutsu, \"exit\" (Middle Chinese tsyhwit) and chō, \"stretch\" (trjang), joined as shutchō (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shutchō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shutchō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shutchō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shutchō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa shutchō de gaikoku ni ikimashita — My father went abroad on a business trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa shutchō de gaikoku ni ikimashita* — My father went abroad on a business trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for boarding (a plane or ship), then the Japanese for a plane ticket, then say shutchō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for boarding (a plane or ship), then the Japanese for a plane ticket, then say *shutchō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅっちょう (shutchō) mean? (\"A business trip\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C387-shutchou-type",
+              "prompt": "Say the Japanese for 'a business trip'.",
+              "assesses": [
+                "JA-LEX-C387-DEMUKAERU387-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅっちょう",
+                "shutchō",
+                "shutchou",
+                "shutchoo",
+                "shutcho"
+              ],
+              "feedback": {
+                "correct": "Right: しゅっちょう (shutchō) is 'a business trip'.",
+                "incorrect": "'A business trip' is しゅっちょう (shutchō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

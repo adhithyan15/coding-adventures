@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Feeling Unwell",
+  "label": "ch:sa-feeling-unwell",
+  "canDo": "I can say that someone felt dizzy or sick.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "SA-C477-jvarati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can say that someone felt dizzy or sick.",
+    "assesses": [
+      "SA-LEX-C477-BHRAMA477-03",
+      "SA-LEX-C477-BHRAMA477-04",
+      "SA-LEX-C477-BHRAMA477-05"
+    ]
+  }
+}

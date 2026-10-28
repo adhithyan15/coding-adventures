@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C186-pingzi",
+  "pathSegment": "ZH-PATH-186-THINGS186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-186-THINGS186",
+      "order": 3
+    }
+  ]
+}

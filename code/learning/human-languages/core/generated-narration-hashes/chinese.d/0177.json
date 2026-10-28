@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:28bffdfd6dde56b3",
+  "lessonIds": [
+    "ZH-C177-tuijian",
+    "ZH-C177-doufu",
+    "ZH-C177-bao",
+    "ZH-C177-xinxian",
+    "ZH-C177-nanchi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch177.txt",
+  "json": "chinese/narration/ch177.json",
+  "textHash": "fnv1a64:be2a4ccc683efdeb",
+  "jsonHash": "fnv1a64:d7c76fd68fa8f779",
+  "findings": []
+}

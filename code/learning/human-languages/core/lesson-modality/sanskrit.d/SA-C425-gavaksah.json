@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C425-gavaksah",
+    "language": "sanskrit",
+    "chapter": 425,
+    "sequence": 24610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e8171700772a1b0"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C307-tsunagaru",
+  "pathSegment": "JA-PATH-307-DENWA307",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-307-DENWA307",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C265-nigemichi",
+  "pathSegment": "JA-PATH-265-KEMURI265",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-265-KEMURI265",
+      "order": 3
+    }
+  ]
+}

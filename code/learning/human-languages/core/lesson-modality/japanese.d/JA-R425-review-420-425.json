@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R425-review-420-425",
+    "language": "japanese",
+    "chapter": 425,
+    "sequence": 24780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed0e941208cdda18"
+  },
+  "findings": []
+}

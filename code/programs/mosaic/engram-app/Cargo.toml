@@ -42,3 +42,7 @@ path = "tests/native_complete_gate.rs"
 [[test]]
 name = "npm_lockfiles"
 path = "tests/npm_lockfiles.rs"
+
+[[test]]
+name = "snapshot_quarantine"
+path = "tests/snapshot_quarantine.rs"

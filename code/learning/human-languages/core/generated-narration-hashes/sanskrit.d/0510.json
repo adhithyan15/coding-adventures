@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:d837250ba14e3c79",
+  "lessonIds": [
+    "SA-C510-avakarah",
+    "SA-C510-utsarayati",
+    "SA-C510-vyavasthapayati",
+    "SA-C510-punjah",
+    "SA-C510-sammarjanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch510.txt",
+  "json": "sanskrit/narration/ch510.json",
+  "textHash": "fnv1a64:eb369fb80adff5f6",
+  "jsonHash": "fnv1a64:fc6ac1601fe13a16",
+  "findings": []
+}

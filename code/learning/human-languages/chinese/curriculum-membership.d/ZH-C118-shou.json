@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C118-shou",
+  "pathSegment": "ZH-PATH-118-SEND118",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-118-SEND118",
+      "order": 4
+    }
+  ]
+}

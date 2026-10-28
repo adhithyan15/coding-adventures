@@ -1,0 +1,11 @@
+{
+  "id": "JA-C287-seichou-suru",
+  "pathSegment": "JA-PATH-287-SODATSU287",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-287-SODATSU287",
+      "order": 4
+    }
+  ]
+}

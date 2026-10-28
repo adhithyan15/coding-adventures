@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:8dcf18ea59622b13",
+  "lessonIds": [
+    "JA-C452-buchou",
+    "JA-C452-kachou",
+    "JA-C452-buka",
+    "JA-C452-shain",
+    "JA-C452-meishi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch452.txt",
+  "json": "japanese/narration/ch452.json",
+  "textHash": "fnv1a64:ec5c030c58862d3a",
+  "jsonHash": "fnv1a64:30d9eb6db376f50f",
+  "findings": []
+}

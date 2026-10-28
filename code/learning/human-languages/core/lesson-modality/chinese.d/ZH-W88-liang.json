@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W88-liang",
+    "language": "chinese",
+    "chapter": 88,
+    "sequence": 7210,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d7fd867156581d3d",
+    "detachableSegments": [
+      "Script — a bar, a frame, two small 人"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

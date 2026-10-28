@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:55d9a623da59d583",
+  "lessonIds": [
+    "SA-C402-dharmasala",
+    "SA-C402-parnasala",
+    "SA-C402-nisidati",
+    "SA-C402-samvisati",
+    "SA-C402-padyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch402.txt",
+  "json": "sanskrit/narration/ch402.json",
+  "textHash": "fnv1a64:e4e03d5d500942ab",
+  "jsonHash": "fnv1a64:556fef5a347e8904",
+  "findings": []
+}
