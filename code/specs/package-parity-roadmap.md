@@ -19155,3 +19155,10 @@ adoption PR #16343, so the new `BUILD_windows` correctly appeared as unverified
 non-lockfile drift. Re-verify the unchanged Haskell lane at durable
 implementation `053cb27651a47c061bd2c4739b4657d5e9ac85d9`, repoint the exact package
 tree, and require another complete exact-head matrix.
+
+Before publishing that repair, current main advanced to
+`d70b1afc3de8ae83b641d8ca8fe9565d901798f6` with unrelated human-language
+level-progress owner sharding. Preserve both histories through a normal merge;
+the Haskell package trees and metadata repair are unchanged. Re-run the focused
+registry and Windows-front checks, then independently review the exact merge
+head before push.
