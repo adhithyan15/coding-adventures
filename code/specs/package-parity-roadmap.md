@@ -18413,3 +18413,15 @@ and the Elixir and Lua Arc2D suites each pass all nine tests. The production
 package delta is unchanged from the previously reviewed prepared head; only the
 current-main and validation receipts require final exact-head review before
 publication.
+
+## October 28, 2026: dynamic Bezier draft publication
+
+The reconciled and revalidated tranche passed exact-head receipt review at
+`4708c642472672b7c47e5421fb2930ea476641cc`. The branch was pushed normally
+without rewriting history and opened as draft PR #18506 at
+`2026-10-28T08:01:01Z`. GitHub reports the exact draft head mergeable. This
+draft records the durable PR identity only; the lifecycle-only receipt requires
+exact delta review before readiness. Guarded auto-merge remains disabled until
+the final exact head is conflict-free and every hosted check reaches a terminal
+acceptable conclusion. The live parity set is now exactly {#18367, #18503,
+#18506}, filling the three-PR publication ceiling.

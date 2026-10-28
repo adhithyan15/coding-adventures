@@ -19,7 +19,8 @@
   "active_pr": 18367,
   "active_prs": [
     18367,
-    18503
+    18503,
+    18506
   ],
   "last_ci_action": {
     "observed_at": "2026-10-28T07:21:45Z",
@@ -20805,12 +20806,16 @@
     {
       "id": "geometry-bezier2d-flattening-typescript-elixir-lua",
       "title": "Consume safe Bezier flattening contract in TypeScript, Elixir, and Lua",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
       "branch": "codex/parity-bezier-dynamic-flattening-20261025",
-      "pr_number": null,
+      "pr_number": 18506,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18506",
+      "pr_opened_at": "2026-10-28T08:01:01Z",
+      "publication_head": "4708c642472672b7c47e5421fb2930ea476641cc",
+      "publication_notes": "Draft PR #18506 opened from the exact reviewed implementation, current-main reconciliation, and fresh validation head 4708c642472672b7c47e5421fb2930ea476641cc. GitHub reports the draft mergeable. This lifecycle-only receipt requires exact delta review before readiness, and guarded auto-merge remains disabled until every final-head hosted check is terminal acceptable.",
       "notes": "Remaining runtime API slice. All three use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite inputs, enforce finite-segment control bound and atomic budget error, and run Bezier2D/Arc2D package regressions.",
       "selection_notes": "Selected after local preparation completed for the C#/F# and Python/Ruby/Perl tranches while the three-PR publication ceiling remained occupied. Its sole dependency, the G2D02 termination contract, is merged. It advances three non-Rust lanes and therefore ranks ahead of the two-lane Haskell/Swift and Go/Rust successors; its package sources are disjoint from all active and prepared work. Carry the independently discovered subnormal-distance regression into all three implementations, preserve their public runtime API shapes, and defer shared Go selector edits to the prepared C#/F# owner.",
       "reconciled_main_revision": "36178b3a0d81054cbaf4424b81aec7792f0bcfb0",
