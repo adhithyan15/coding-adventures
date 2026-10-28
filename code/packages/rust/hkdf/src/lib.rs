@@ -58,10 +58,11 @@
 //! assert_eq!(okm.len(), 32);
 //! ```
 
-use coding_adventures_blake2b::{Blake2bOptions, blake2b as b2b_hash};
-use coding_adventures_hmac::hmac;
+use coding_adventures_blake2b::{blake2b as b2b_hash, Blake2bOptions};
+use coding_adventures_hmac::{hmac, hmac_sha256, hmac_sha384, HmacError};
 use coding_adventures_sha256::sha256;
 use coding_adventures_sha512::sum512;
+use coding_adventures_zeroize::Zeroizing;
 
 // ─── Hash Algorithm Selection ────────────────────────────────────────────────
 
@@ -153,6 +154,62 @@ impl HashAlgorithm {
     }
 }
 
+/// Repository-owned fixed-output hashes admitted by the fixed-memory Extract
+/// boundary.
+///
+/// This is deliberately separate from [`HashAlgorithm`]. The legacy enum also
+/// contains allocation-backed compatibility algorithms that are not admitted
+/// for production TLS secret handling.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FixedHkdfHash {
+    /// HMAC-SHA-256 with a 32-byte PRK.
+    Sha256,
+    /// HMAC-SHA-384 with a 48-byte PRK.
+    Sha384,
+}
+
+impl FixedHkdfHash {
+    /// The exact PRK and RFC 5869 default-salt length for this hash.
+    pub const fn hash_len(self) -> usize {
+        match self {
+            Self::Sha256 => 32,
+            Self::Sha384 => 48,
+        }
+    }
+}
+
+/// Wipe-on-drop pseudorandom key produced by [`hkdf_extract_fixed`].
+///
+/// The owner uses one fixed 48-byte backing array and exposes only the selected
+/// hash's 32-byte or 48-byte prefix. Debug formatting reports metadata, never
+/// PRK bytes. Callers should retain this owner rather than copying its secret
+/// slice into longer-lived storage.
+pub struct HkdfPrk {
+    algorithm: FixedHkdfHash,
+    bytes: Zeroizing<[u8; 48]>,
+}
+
+impl HkdfPrk {
+    /// The hash algorithm that produced this PRK.
+    pub const fn algorithm(&self) -> FixedHkdfHash {
+        self.algorithm
+    }
+
+    /// Borrow the selected hash's exact PRK bytes.
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.bytes[..self.algorithm.hash_len()]
+    }
+}
+
+impl std::fmt::Debug for HkdfPrk {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("HkdfPrk")
+            .field("algorithm", &self.algorithm)
+            .field("length", &self.algorithm.hash_len())
+            .finish_non_exhaustive()
+    }
+}
+
 // ─── Error Type ──────────────────────────────────────────────────────────────
 
 /// Errors that can occur during HKDF operations.
@@ -162,12 +219,16 @@ pub enum HkdfError {
     ///
     /// The Expand phase uses a single-byte counter (0x01..0xFF), so it can
     /// produce at most 255 HMAC blocks of HashLen bytes each.
-    OutputTooLong {
-        requested: usize,
-        maximum: usize,
-    },
+    OutputTooLong { requested: usize, maximum: usize },
     /// The requested output length is zero or negative.
     OutputTooShort,
+    /// A fixed-output Extract input exceeds the selected hash's encoded
+    /// message-length bound.
+    InputTooLong,
+    /// The fixed-output PRF rejected its key. Public Extract inputs cannot
+    /// cause this because an omitted salt is replaced with HashLen zero bytes;
+    /// this category preserves the underlying invariant without panicking.
+    PrfRejectedKey,
 }
 
 impl std::fmt::Display for HkdfError {
@@ -182,6 +243,12 @@ impl std::fmt::Display for HkdfError {
             HkdfError::OutputTooShort => {
                 write!(f, "HKDF output length must be positive")
             }
+            HkdfError::InputTooLong => {
+                write!(f, "HKDF input exceeds the selected hash length bound")
+            }
+            HkdfError::PrfRejectedKey => {
+                write!(f, "HKDF pseudorandom function rejected its key")
+            }
         }
     }
 }
@@ -189,6 +256,59 @@ impl std::fmt::Display for HkdfError {
 impl std::error::Error for HkdfError {}
 
 // ─── Extract ─────────────────────────────────────────────────────────────────
+
+fn map_fixed_hmac_error(error: HmacError) -> HkdfError {
+    match error {
+        HmacError::InputTooLong => HkdfError::InputTooLong,
+        HmacError::EmptyKey => HkdfError::PrfRejectedKey,
+    }
+}
+
+/// Fixed-memory HKDF-Extract for repository-owned SHA-256 and SHA-384.
+///
+/// Implements RFC 5869 Section 2.2 without heap allocation:
+///
+/// ```text
+/// PRK = HMAC-Hash(salt, IKM)
+/// ```
+///
+/// An empty `salt` is replaced by exactly HashLen zero bytes. The algorithm is
+/// selected explicitly through [`FixedHkdfHash`], and the returned [`HkdfPrk`]
+/// wipes its fixed backing storage on drop. Temporary HMAC outputs are also
+/// wipe-on-drop. The IKM is borrowed and never copied.
+///
+/// This function does not implement HKDF-Expand or a TLS key schedule.
+pub fn hkdf_extract_fixed(
+    salt: &[u8],
+    ikm: &[u8],
+    algorithm: FixedHkdfHash,
+) -> Result<HkdfPrk, HkdfError> {
+    let default_salt = [0u8; 48];
+    let effective_salt = if salt.is_empty() {
+        &default_salt[..algorithm.hash_len()]
+    } else {
+        salt
+    };
+
+    let mut prk = Zeroizing::new([0u8; 48]);
+    match algorithm {
+        FixedHkdfHash::Sha256 => {
+            let tag =
+                Zeroizing::new(hmac_sha256(effective_salt, ikm).map_err(map_fixed_hmac_error)?);
+            prk[..32].copy_from_slice(&tag[..]);
+        }
+        FixedHkdfHash::Sha384 => {
+            let tag =
+                Zeroizing::new(hmac_sha384(effective_salt, ikm).map_err(map_fixed_hmac_error)?);
+            prk[..48].copy_from_slice(&tag[..]);
+        }
+    }
+
+    Ok(HkdfPrk {
+        algorithm,
+        bytes: prk,
+    })
+}
 
 /// HKDF-Extract: concentrate entropy from IKM into a pseudorandom key.
 ///
@@ -386,6 +506,56 @@ mod tests {
     /// Helper: encode bytes to hex string.
     fn hex(bytes: &[u8]) -> String {
         bytes.iter().map(|b| format!("{b:02x}")).collect()
+    }
+
+    #[test]
+    fn fixed_extract_sha256_matches_rfc5869_tc1() {
+        let ikm = h("0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b");
+        let salt = h("000102030405060708090a0b0c");
+        let prk = hkdf_extract_fixed(&salt, &ikm, FixedHkdfHash::Sha256).unwrap();
+
+        assert_eq!(prk.algorithm(), FixedHkdfHash::Sha256);
+        assert_eq!(
+            hex(prk.as_bytes()),
+            "077709362c2e32df0ddc3f0dc47bba6390b6c73bb50f9c3122ec844ad7c2b3e5"
+        );
+    }
+
+    #[test]
+    fn fixed_extract_sha384_matches_rfc4231_tc2_prf() {
+        let prk = hkdf_extract_fixed(
+            b"Jefe",
+            b"what do ya want for nothing?",
+            FixedHkdfHash::Sha384,
+        )
+        .unwrap();
+
+        assert_eq!(prk.algorithm(), FixedHkdfHash::Sha384);
+        assert_eq!(
+            hex(prk.as_bytes()),
+            "af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649"
+        );
+    }
+
+    #[test]
+    fn fixed_extract_uses_hash_len_zero_default_salt() {
+        let sha256 = hkdf_extract_fixed(&[], b"ikm", FixedHkdfHash::Sha256).unwrap();
+        let legacy = hkdf_extract(&[], b"ikm", HashAlgorithm::Sha256);
+        assert_eq!(sha256.as_bytes(), legacy.as_slice());
+
+        let sha384 = hkdf_extract_fixed(&[], b"ikm", FixedHkdfHash::Sha384).unwrap();
+        let expected_sha384 = hmac_sha384(&[0u8; 48], b"ikm").unwrap();
+        assert_eq!(sha384.as_bytes(), expected_sha384.as_slice());
+    }
+
+    #[test]
+    fn fixed_prk_debug_redacts_secret_bytes() {
+        let prk = hkdf_extract_fixed(b"salt", b"secret-ikm", FixedHkdfHash::Sha256).unwrap();
+        let rendered = format!("{prk:?}");
+
+        assert!(rendered.contains("Sha256"));
+        assert!(rendered.contains("length: 32"));
+        assert!(!rendered.contains(&hex(prk.as_bytes())));
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -613,6 +783,12 @@ mod tests {
 
         let err = HkdfError::OutputTooShort;
         assert!(err.to_string().contains("positive"));
+
+        let err = HkdfError::InputTooLong;
+        assert!(err.to_string().contains("length bound"));
+
+        let err = HkdfError::PrfRejectedKey;
+        assert!(err.to_string().contains("rejected its key"));
     }
 
     // ═══════════════════════════════════════════════════════════════════════
