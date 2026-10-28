@@ -16,15 +16,13 @@
       "external-approval"
     ]
   },
-  "active_pr": 18527,
-  "active_prs": [
-    18527
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-10-28T15:27:51Z",
+    "observed_at": "2026-10-28T16:37:37Z",
     "pr_number": 18527,
-    "head_revision": "a48db410cdfac57de20de2d11b40fe83bc95b0d7",
-    "action": "Exact head a48db410cdfac57de20de2d11b40fe83bc95b0d7 of ready PR #18527 passed the Linux build and Go analysis but failed the repository metadata gate because the Haskell barcode-layout-1d target registry still pinned its pre-Windows-front package tree. Re-verify the unchanged lane at durable implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9, repoint its exact tree and PR owner, then publish an independently reviewed replacement head for a fresh matrix.",
+    "head_revision": "70f21eaf0b154c39490b19dd47ec5ae0cc1cf2de",
+    "action": "Every exact-head check for PR #18527 completed acceptably with zero failures and GitHub reported the reviewed head cleanly mergeable. Guarded squash auto-merge produced exact main revision 3fd9485da978aa6276aba825336f0962897fd456; its receipt is verified and the clean completed worktree and local branch are removed.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15249,6 +15247,9 @@
       "validation_notes": "The package-native suite passes six tests covering precision bounds, empty and duplicate behavior, exact UTF-8/byte identity, persistent updates and merges, stable validation failures including NaN equality, deterministic 10,000-element accuracy, helper calculations, the DT21 64-bit large-range correction, and safe UInt64 saturation; the production release build passes. Swift Format 6.3 strict lint and diff checks pass. LLVM coverage reports 98.68% lines, 96.00% functions, and 92.75% regions for the 152-line production source. The real Go build tool discovers the bounded sparse Swift package inventory, selects exactly hyperloglog and its hash-functions prerequisite, and records the intended dependency edge. Capability JSON parsing and the root changelog contract pass locally. Exact-head independent review, current-main reconciliation, and fresh hosted macOS, Linux, and Windows checks remain mandatory before merge.",
       "security_review_revision": "d9eff3c2776c4093894bc3544b996cb048019212",
       "security_review_notes": "Independent exact-head review found no remaining code, security, or test defect after requiring two fixes: DT21's large-range estimator now uses the full 64-bit hash domain with safe UInt64 saturation, and invalid desired-error values preserve reflexive stable-error equality for NaN. The final regression pins the exact corrected 64-bit estimate separately from saturation. A clean rebuild passes all six tests, the release build, and strict Swift Format. Lifecycle/current-main reconciliation, generated-artifact cleanup, and hosted checks remain publication work.",
+      "current_main_validation_notes": "After normally merging exact current main 3fd9485da978aa6276aba825336f0962897fd456, strict Swift Format, all six package tests, the release build, capability JSON, and diff checks pass. The real Go build tool again selects exactly swift/hyperloglog plus prerequisite swift/hash-functions in the bounded sparse inventory. Swift package reset removes the generated .build tree. Exact merge-head review confirms the approved package and root changelog are byte-identical to reviewed implementation d9eff3c2776c4093894bc3544b996cb048019212 and both merge histories are preserved.",
+      "final_review_revision": "03ca6ba7cd1fc2e11635457ffb0c628bf2b9b475",
+      "final_review_notes": "Independent exact merge-head review found the implementation unchanged and correct, both merge parents present, roadmap conflict resolution complete, and the Haskell PR #18527 receipt exact. It required clearing the obsolete active-PR/failed-CI pointers and removing the ignored SwiftPM build tree; both publication-hygiene findings are addressed in the following receipt commit. No open PR overlaps HyperLogLog.",
       "notes": "Preserve precision bounds, register, index and rank behavior, correction regimes, merge compatibility, stable errors, and deterministic hashing.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-hyperloglog-lane-parity"

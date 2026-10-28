@@ -19201,3 +19201,11 @@ acceptably and merged through guarded squash auto-merge from reviewed head
 The clean completed worktree and local branch were removed safely. Preserve the
 reviewed Swift preparation through a normal merge of that exact current main,
 then re-run its bounded validation before publication.
+
+Exact merge head `03ca6ba7cd1fc2e11635457ffb0c628bf2b9b475`
+preserves both histories and leaves the reviewed package and root changelog
+byte-identical to implementation `d9eff3c2776c4093894bc3544b996cb048019212`.
+All six tests, the release build, strict formatting, JSON and diff checks, and
+the bounded build-tool dependency plan pass again. Final review found no code,
+security, test, or merge-resolution defect; clear the now-merged Haskell PR
+from the active set and remove the ignored SwiftPM build tree before push.
