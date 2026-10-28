@@ -19285,3 +19285,85 @@ main `ae197369af5c6bfe8ab2768465f67e0119baac97`. Keep it draft only while
 this durable PR-number lifecycle receipt is committed and independently
 reviewed. Then push the receipt, mark the PR ready, and require a completely
 fresh exact-head hosted matrix before guarded auto-merge.
+
+Every exact-head check for PR #18533 completed acceptably: ten succeeded,
+twenty-nine were expected skips, and the CodeQL aggregate was neutral with no
+failure. GitHub reported independently reviewed head
+`541a9294cbad4b3dd3d0019dc048df151c212451` cleanly mergeable; guarded squash
+auto-merge landed `c85baee9a4b57105b7d1c57f71f8536b5379b164` at
+`2026-10-28T19:51:50Z`. Verify the exact receipt, remove the clean completed
+worktree and local branch, and reconcile the reviewed skip-list preparation
+through a normal merge of that current main.
+
+## October 28, 2026: Swift skip-list parallel selection
+
+After Swift HyperLogLog merged and while isolated Swift Bloom filter PR #18533
+runs exact-head CI, fresh prioritization selects
+`swift-skip-list-lane-parity` for local-only parallel implementation. It is
+dependency-free, adds one bounded missing non-Rust package, does not overlap
+Bloom filter paths, and removes one of the remaining package prerequisites
+from the Swift in-memory data-store engine.
+
+It ranks ahead of RESP and the protocol IR because its span-augmented
+rank/select invariants and caller-controlled level source are the highest-risk
+remaining pure data-structure prerequisite. Keep scope to DT20 ordered-map
+insert/update/delete, comparator semantics, rank, selection, range behavior,
+bounded caller-controlled level generation, package-native tests, native build
+fronts, documentation, and empty capabilities. Keep the branch local until
+Bloom's terminal lifecycle is reconciled from main and exact-head review
+passes.
+
+The implementation audit discovers a separate existing-lane gap:
+`skip-list-existing-lanes-dt20-contract-reconciliation`. DT20's one-based and
+`-1` prose conflicts with the zero-based optional behavior used by Python,
+Rust, and TypeScript; Rust and TypeScript are façades rather than skip-list
+towers, Go scans rank/select/range without spans, and Python consumes ambient
+randomness. Keep that neutral reconciliation pending and require it before any
+whole-family DT20 conformance claim. It does not block the selected Swift lane,
+which explicitly pins zero-based optional rank/select, a real span-augmented
+tower, injected level generation, and finite resource ceilings.
+
+The bounded Swift implementation is committed at
+`e2cfdff742b28bde6dcce0b73b2e7130fcf42eb9`. Seven native tests pass exact
+scripted spans, update and source-call semantics, invalid-level atomicity,
+capacity, deletion and top-level collapse, nullable presence, comparator
+profiles, bounded ranges, and a 200-key rank/select reference trace. The
+release build and strict formatting pass; production coverage is 98.38% of
+lines, 95.45% of functions, and 93.75% of regions. The closed empty capability
+profile and authority scan pass. A bounded real build-tool plan detects one
+changed and affected package and selects exactly `swift/skip-list`. Keep the
+branch local pending exact-head review and Bloom/current-main reconciliation.
+
+Independent review approves exact repaired head
+`f9d10c622dd36af0fe873afd4540a54d42be26e1` with no remaining code, security,
+test, authority, or publication finding. Review required a reachable discovery
+receipt, canonical H3/slug/digest changelog shard, and span-based wording that
+does not overclaim complexity under adversarial caller levels; all are fixed
+without changing the approved implementation. Preserve this reviewed delta
+through the normal current-main merge, re-run bounded validation, and require
+fresh exact merge-head review before publication.
+
+Normal merge head `3489fb88bf12f870c16fa2228a1860fde6230354`
+preserves reviewed skip-list parent
+`7a54e9c4c285f87ec0ae82f76f82985ee4c0ea9f` and exact current-main parent
+`c85baee9a4b57105b7d1c57f71f8536b5379b164`. All seven tests, the release
+build, strict formatting, JSON and diff checks pass with unchanged coverage.
+The bounded real build-tool plan now discovers 171 Swift packages, detects one
+changed and affected package, and selects exactly `swift/skip-list` while the
+newly merged Bloom filter remains skipped. Remove generated artifacts and
+require independent exact merge-head review before publication.
+
+Independent exact current-main review approves
+`c42ee26066b79dbdac5fd1d19fd32b8175fd06da` with no findings. Both merge
+parents and the approved package/changelog identity are exact; native
+validation, coverage, the one-package build plan, capability and authority
+boundaries, Bloom's terminal receipt and cleanup, the 1,554-owner graph, open
+PR overlap, merge-tree hygiene, and artifact-free status all pass. Seal this
+review receipt before publishing the draft PR.
+
+Publish independently reviewed receipt
+`a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d` as draft PR #18535 over exact
+main `c85baee9a4b57105b7d1c57f71f8536b5379b164`. Keep it draft only while
+this durable PR-number lifecycle receipt is committed and independently
+reviewed. Then push the receipt, mark the PR ready, and require a completely
+fresh exact-head hosted matrix before guarded auto-merge.

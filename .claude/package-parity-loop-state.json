@@ -21,10 +21,10 @@
     18535
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T19:04:15Z",
-    "pr_number": 18533,
-    "head_revision": "f8b5143724247eea549e60d27446f96f7887bf6d",
-    "action": "Published independently reviewed Swift Bloom filter receipt f8b5143724247eea549e60d27446f96f7887bf6d as draft PR #18533 over exact current main ae197369af5c6bfe8ab2768465f67e0119baac97. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
+    "observed_at": "2026-10-28T19:59:38Z",
+    "pr_number": 18535,
+    "head_revision": "a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d",
+    "action": "Published independently reviewed Swift skip-list receipt a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d as draft PR #18535 over exact current main c85baee9a4b57105b7d1c57f71f8536b5379b164. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15285,7 +15285,7 @@
     {
       "id": "swift-bloom-filter-lane-parity",
       "title": "Implement DT22 Bloom filter in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
@@ -15293,8 +15293,12 @@
       "pr_number": 18533,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18533",
       "opened_at": "2026-10-28T19:04:15Z",
-      "publication_head": "f8b5143724247eea549e60d27446f96f7887bf6d",
-      "publication_notes": "Draft PR #18533 opened from independently reviewed exact receipt head f8b5143724247eea549e60d27446f96f7887bf6d over exact main ae197369af5c6bfe8ab2768465f67e0119baac97. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for that new exact head, and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
+      "publication_head": "541a9294cbad4b3dd3d0019dc048df151c212451",
+      "publication_notes": "PR #18533 completed every exact-head hosted check acceptably on independently reviewed lifecycle head 541a9294cbad4b3dd3d0019dc048df151c212451. GitHub reported it cleanly mergeable and guarded squash auto-merge completed without a manual merge command.",
+      "merged_head_revision": "541a9294cbad4b3dd3d0019dc048df151c212451",
+      "merged_at": "2026-10-28T19:51:50Z",
+      "merge_revision": "c85baee9a4b57105b7d1c57f71f8536b5379b164",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion: ten successes, twenty-nine expected skips, and one neutral CodeQL aggregate with zero failures. GitHub reported the reviewed head cleanly mergeable; guarded squash auto-merge completed, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "selected_at": "2026-10-28T16:44:23Z",
       "selection_revision": "3fd9485da978aa6276aba825336f0962897fd456",
       "base_revision": "3fd9485da978aa6276aba825336f0962897fd456",
@@ -16907,13 +16911,44 @@
       "notes": "Discovered from non-parity PR #16296, which merged as 222ce7975e and added the TypeScript-only forme-plugin-runner-ts identity. PR #16323 later merged as f8494ae9bcd798b827c3096f4f6565ab1be567b0 and added the collision-free TypeScript forme-plugin-runner-conformance identity. The exact-main a960adc4 schema-3 refresh absorbs both singletons into this owner without collision or unowned debt. Inventory the runner with the existing Forme family and freeze only its process-free wire codec and framing, JSON-RPC identifier, bounded lifecycle/state-transition, stream-envelope, cancellation-projection, and pure SDK projection behavior. Keep stdin/stdout, argv, signals, timers, filesystem, network, storage, shell execution, native limits, sandbox, trust, and installation authority outside this owner. The overlap block is now cleared; normal dependencies and the one-active-PR rule still govern selection."
     },
     {
-      "id": "swift-skip-list-lane-parity",
-      "title": "Implement DT20 skip-list in Swift",
+      "id": "skip-list-existing-lanes-dt20-contract-reconciliation",
+      "title": "Reconcile DT20 rank semantics and actual span towers across existing lanes",
       "status": "pending",
+      "selection_blocked": false,
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "discovered_at": "2026-10-28T19:09:22Z",
+      "discovered_revision": "814c3abcc2d305b4e631e09c6060fbcf9d1a9325",
+      "notes": "Resolve DT20's one-based/-1 prose against the de facto zero-based optional contract in Python, Rust, and TypeScript; inventory every established lane for real span-augmented skip-list structure, caller-controlled level generation, bounded resources, nullable-value presence, and logarithmic rank/select. Rust and TypeScript currently use ordered-map/array facades, Go has a tower but scans rank/select/range without spans, and Python uses ambient global randomness. Ratify a neutral contract and derive bounded existing-lane remediations without blocking the separately truthful Swift implementation.",
+      "selection_notes": "Discovered during the exact-main Swift DT20 implementation audit. Keep pending while the already-selected Swift lane closes one real missing high-consensus package with an explicit zero-based optional profile and actual span tower; prioritize the reconciliation before claiming whole-family DT20 conformance or selecting façade remediation children."
+    },
+    {
+      "id": "swift-skip-list-lane-parity",
+      "title": "Implement DT20 skip-list in Swift",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/swift-skip-list-lane-parity",
+      "pr_number": 18535,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18535",
+      "opened_at": "2026-10-28T19:59:38Z",
+      "publication_head": "a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d",
+      "publication_notes": "Draft PR #18535 opened from independently reviewed exact receipt head a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d over exact main c85baee9a4b57105b7d1c57f71f8536b5379b164. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for that new exact head, and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
       "selection_blocked": false,
+      "selected_at": "2026-10-28T19:06:53Z",
+      "selection_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
+      "base_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
+      "reconciled_main_revision": "c85baee9a4b57105b7d1c57f71f8536b5379b164",
+      "reconciliation_notes": "Preserved the independently reviewed Swift skip-list preparation through a normal merge of exact current main after Swift Bloom filter PR #18533 merged. Main supplies the terminal Bloom lifecycle and package plus unrelated Punjabi A2 curriculum data; this branch retains the isolated DT20 package, DT20 reconciliation backlog owner, validation and review evidence, and canonical root changelog shard.",
+      "selection_notes": "Fresh prioritization after Swift HyperLogLog merged and while isolated Swift Bloom filter PR #18533 runs exact-head CI selects dependency-free DT20 skip-list for local-only parallel implementation. It is a bounded missing non-Rust package, does not overlap Bloom filter paths, and directly removes one of three remaining package prerequisites from the Swift in-memory data-store engine. It ranks ahead of RESP and the protocol IR because its span-augmented rank/select invariants and caller-controlled level source form the highest-risk remaining pure data-structure prerequisite. Keep the branch local until Bloom's terminal lifecycle is reconciled from main and exact-head review passes.",
+      "implementation_revision": "e2cfdff742b28bde6dcce0b73b2e7130fcf42eb9",
+      "validation_notes": "The package implements a real span-augmented tower with comparator-defined identity, exactly-once caller-controlled level generation for new keys, finite configuration/capacity/output limits, update/delete span repair, zero-based optional rank/select, endpoint-controlled ranges, shallow retained ownership, stable errors, and no ambient authority. Seven package-native tests pass exact scripted spans, update/source semantics, invalid-level atomicity, capacity, deletion/top-level collapse, optional-nil presence, custom and descending comparators, bounded ranges/snapshots, and a 200-key deterministic rank/select reference trace. The release build and strict Xcode Swift Format lint pass. LLVM coverage reports 98.38% production lines, 95.45% functions, and 93.75% regions for 308 source lines. The closed capability profile and authority scan pass, and the real Go build tool's bounded sparse dry plan detects one changed/affected package and selects exactly swift/skip-list. Exact-head independent review, active Bloom lifecycle reconciliation, fresh current-main validation, and hosted qualification remain mandatory before publication.",
+      "security_review_revision": "f9d10c622dd36af0fe873afd4540a54d42be26e1",
+      "security_review_notes": "Independent exact-head review approved the real span tower, span arithmetic, rank/select/range and nullable-presence semantics, callback invocation rules, resource bounds, atomic validation failures, stable errors, empty authority profile, tests, coverage, build fronts, documentation, state graph, and clean artifact-free worktree. Review required three publication-only repairs: a reachable discovery SHA, a canonical H3/slug/digest changelog shard, and wording that does not overclaim logarithmic complexity for adversarial caller levels. Exact repaired head f9d10c622dd36af0fe873afd4540a54d42be26e1 resolves all findings; implementation and roadmap remain byte-identical to the reviewed candidate. Bloom/current-main lifecycle reconciliation and fresh hosted qualification remain publication gates.",
+      "current_main_validation_revision": "3489fb88bf12f870c16fa2228a1860fde6230354",
+      "current_main_validation_notes": "After normally merging exact current main c85baee9a4b57105b7d1c57f71f8536b5379b164, all seven package tests, the release build, strict Xcode Swift Format, JSON and diff checks pass with unchanged 98.38% production line, 95.45% function, and 93.75% region coverage. The real Go build tool discovers 171 sparse Swift packages, detects one changed and affected package, and selects exactly swift/skip-list while the newly merged swift/bloom-filter remains skipped. Merge head 3489fb88bf12f870c16fa2228a1860fde6230354 preserves reviewed parent 7a54e9c4c285f87ec0ae82f76f82985ee4c0ea9f and current-main parent c85baee9a4b57105b7d1c57f71f8536b5379b164. Fresh exact merge-head review and hosted qualification remain mandatory before merge.",
+      "final_review_revision": "c42ee26066b79dbdac5fd1d19fd32b8175fd06da",
+      "final_review_notes": "Independent exact current-main publication review approved head c42ee26066b79dbdac5fd1d19fd32b8175fd06da with no findings. It confirms the normal merge preserves exact reviewed and current-main parents, the skip-list package and canonical 40c81bad changelog are byte-identical to approved f9d10c622dd36af0fe873afd4540a54d42be26e1, seven tests/release/format/coverage and the one-package build plan pass, the empty capability profile and authority boundary are sound, Bloom PR #18533's terminal receipt and cleanup match GitHub/filesystem state, the 1,554-owner graph is valid, no open PR overlaps the tranche, and the worktree is artifact-free.",
       "notes": "Implement the dependency-free span-augmented ordered map with insert, update, delete, rank, selection, range behavior, comparator semantics, caller-controlled level generation, package-native tests, and empty capabilities. This is a direct prerequisite of the Swift data-store engine.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-skip-list-lane-parity"
