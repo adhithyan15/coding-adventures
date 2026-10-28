@@ -19133,3 +19133,18 @@ because the build tool executes each line in a fresh process and stops at the
 first failure. Replace it with one PowerShell invocation that exits zero only
 for confirmed absence and propagates the real Cabal exit status. Cover absent,
 successful, and failing Cabal paths before exact-head re-review and publication.
+
+## October 28, 2026: Haskell ITF Windows-front draft publication
+
+Open draft PR #18527 from exact-current-main independently reviewed candidate
+`053cb27651a47c061bd2c4739b4657d5e9ac85d9`. The corrected fronts use one
+PowerShell process, and the focused build-tool regression pins both literal
+fronts while exercising absent, successful, and failing fake Cabal paths on
+Windows. The native GHC 9.6.7 closures pass 29 paint-instructions, 27
+barcode-layout-1d, 25 SHA-256 plus allocation budget, and 19 ITF examples.
+
+Keep the PR draft only while this durable lifecycle receipt is committed and
+independently reviewed. After the reviewed receipt is published, mark it ready
+and require a completely fresh exact-head hosted matrix; guarded auto-merge
+remains disabled until every final-head check is terminal acceptable and the
+merge state is clean.

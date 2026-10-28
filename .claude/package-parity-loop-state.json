@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18527,
+  "active_prs": [
+    18527
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T15:06:15Z",
-    "pr_number": 18511,
-    "head_revision": "20545a2563a2d921e61f4af51af28d3db059ef0a",
-    "action": "Haskell/Swift Bezier PR #18511 completed every exact-head check acceptably and merged through guarded squash auto-merge from independently reviewed head 20545a2563a2d921e61f4af51af28d3db059ef0a as 71ac0f0ab54aada8ed9a6da34b1140b546afbbc8. The receipt is exact current origin/main; its clean completed worktree and local branch were removed safely. Reprioritize before publishing the next reviewed parity item.",
+    "observed_at": "2026-10-28T15:12:00Z",
+    "pr_number": 18527,
+    "head_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
+    "action": "Opened draft Haskell ITF Windows-front PR #18527 from the exact-current-main independently reviewed candidate. The draft records the durable PR identity while its lifecycle receipt receives final review; guarded auto-merge remains disabled until the final exact head is non-draft, every hosted check is terminal acceptable, and GitHub reports a clean merge state.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -16393,12 +16395,16 @@
     {
       "id": "haskell-itf-stack-windows-build-front-coverage",
       "title": "Add Windows build fronts for the Haskell ITF stack",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [
         "itf-existing-lanes-v1-conformance"
       ],
       "branch": "codex/haskell-itf-stack-windows-build-front-coverage",
-      "pr_number": null,
+      "pr_number": 18527,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18527",
+      "pr_opened_at": "2026-10-28T15:12:00Z",
+      "publication_head": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
+      "publication_notes": "Draft PR #18527 opened from exact current main and independently reviewed candidate 053cb27651a47c061bd2c4739b4657d5e9ac85d9. The draft exists only to record its durable PR identity; publish this lifecycle receipt, review the exact resulting head, then mark ready and require a completely fresh hosted matrix before guarded auto-merge.",
       "selected_at": "2026-10-26T16:52:26Z",
       "selection_revision": "aa568304c93e44d733535cdb3209793041ff9503",
       "base_revision": "aa568304c93e44d733535cdb3209793041ff9503",
