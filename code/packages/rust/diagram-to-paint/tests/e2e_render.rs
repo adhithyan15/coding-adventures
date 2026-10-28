@@ -113,6 +113,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-element-colors-11.16.1-visual-corpus.json"
     ));
+    const C4_RELATIONSHIP_COLORS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-corpus.json"
+    ));
+    const C4_RELATIONSHIP_COLORS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-visual-corpus.json"
+    ));
     const SWIMLANE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -4903,6 +4911,58 @@ line "Target" [35, 50, 68, 82]"##,
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_c4_element_colors_{index}_e2e.png");
             write_png(&pixels, &path).expect("C4 element color PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_relationship_colors_to_png() {
+        let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_COLORS_CORPUS)
+            .expect("C4 relationship color corpus JSON");
+        let visual: Value = serde_json::from_str(C4_RELATIONSHIP_COLORS_VISUAL_CORPUS)
+            .expect("C4 relationship color visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"]
+            .as_array()
+            .expect("C4 relationship color fixtures");
+        let visual_names = visual["fixtures"]
+            .as_array()
+            .expect("C4 relationship color visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual_names[index], fixture["name"]);
+            let diagram = parse_c4_diagram(
+                fixture["source"]
+                    .as_str()
+                    .expect("C4 relationship color source"),
+            )
+            .expect("C4 relationship color fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            let relationship = &layout.relationships[0];
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Path(path)
+                    if path.stroke.as_deref() == Some(relationship.style.stroke.as_str())
+            )));
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_relationship_colors_{index}_e2e.png");
+            write_png(&pixels, &path).expect("C4 relationship color PNG write failed");
             assert!(pixels.width > 0 && pixels.height > 0);
         }
     }
