@@ -16,17 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": 18508,
+  "active_pr": 18516,
   "active_prs": [
-    18508,
     18511,
     18516
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T09:52:15Z",
-    "pr_number": 18506,
-    "head_revision": "133ed55bc690321aef534d18902b875353bedff9",
-    "action": "Verified dynamic Bezier PR #18506 merged through guarded squash auto-merge as e08ed142125a4441e2ca53470e6b584573b7e6ac and that exact receipt is current origin/main. Its clean completed worktree and local branch were removed. The published scripting and Haskell/Swift Bezier branches were reconciled normally and replacement exact-head CI is running.",
+    "observed_at": "2026-10-28T11:08:57Z",
+    "pr_number": 18508,
+    "head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
+    "action": "Verified scripting Bezier PR #18508 completed every exact-head check acceptably and merged through guarded squash auto-merge as fe057f18c6e8b62cae9921fee2538c091fae1bbb. The receipt is current origin/main and the clean completed worktree and local branch were removed. Normal current-main reconciliation is now required for the two remaining published parity PRs before fresh exact-head hosted checks.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -20802,13 +20801,28 @@
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
       "title": "Consume safe Bezier flattening contract in Python, Ruby, and Perl",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Exception-based scripting API slice. All three use midpoint flatness and unbounded recursion without explicit flattening-input validation. Consume nine neutral cases; test NaN/infinity and nonfinite controls natively, atomic budget failure, and same-language Arc2D regressions."
+      "branch": "codex/parity-bezier-scripting-flattening-20261025",
+      "pr_number": 18508,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18508",
+      "pr_opened_at": "2026-10-28T08:41:21Z",
+      "publication_head": "c780f49320552adab7eea83c283a6c7afbce17eb",
+      "publication_notes": "PR #18508 completed every exact-head hosted check acceptably and merged through guarded squash auto-merge from exact reconciliation head c780f49320552adab7eea83c283a6c7afbce17eb.",
+      "merged_head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
+      "merged_at": "2026-10-28T11:08:57Z",
+      "merge_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
+      "notes": "Exception-based scripting API slice. All three use midpoint flatness and unbounded recursion without explicit flattening-input validation. Consume nine neutral cases; test NaN/infinity and nonfinite controls natively, atomic budget failure, and same-language Arc2D regressions.",
+      "selection_notes": "Selected as the next independent implementation tranche while the three-PR publication ceiling is occupied. Its sole dependency, the G2D02 termination contract and nine-case neutral corpus, is merged. Python, Ruby, and Perl share the same exception-based API shape but have disjoint native sources and test fronts, so this removes three stale midpoint-recursive lanes without depending on the prepared C#/F# implementation. Keep shared build-tool selector work out of this branch until the C#/F# selector change lands, avoiding a conflict while preserving exact native fixture consumption and Arc2D regression coverage.",
+      "reconciled_main_revision": "e08ed142125a4441e2ca53470e6b584573b7e6ac",
+      "current_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main e08ed142125a4441e2ca53470e6b584573b7e6ac after dynamic Bezier PR #18506 merged from exact reviewed head 133ed55bc690321aef534d18902b875353bedff9. The merge retained every prior parity receipt and the complete Python/Ruby/Perl implementation, validation, publication, and review history. The production package delta remains unchanged from exact reviewed head ec16a6829e41cc5d5c0e1f3fbf747452faee8b7e; only lifecycle receipts changed. The live parity publication set is {18508, 18511}.",
+      "implementation_revision": "4f0ea830ec3e2a18eade21a4dac5f8233046717d",
+      "validation_notes": "All three native Bezier2D builds pass the dynamic nine-case corpus plus nonfinite, derived-overflow, atomic-failure, and subnormal-underflow regressions. Independent review added exact fixture-version, depth, and split-budget assertions to all three readers and repaired stale Ruby midpoint documentation. Python passes 35 tests at 95.73% production coverage; a one-test selection measures 22.56% and exits 1 against the raised 95% floor. Ruby passes 19 tests with 138 assertions on its Unix build, and its Windows front now loads the same complete test set. Perl passes 86 assertions across both native files. Dependent Arc2D builds remain green: Python 19 tests at 98.36%, Ruby 9 tests/25 assertions, and Perl 16 tests. Ruff passes for changed Python source/tests, Ruby and Perl syntax checks pass, strict state parsing finds 1,547 unique items, and 1,568 canonical lesson shards validate with zero problems. The branch is reconciled onto exact current main 5daf063f8aeaf4f2c40936ab579a00113706074b with all intervening parity receipts preserved and no production-package delta from exact reviewed head 6138482108a9535aed890eb76424c2bfe442275b. Refreshed native validation and exact merge-head review remain publication gates.",
+      "final_review_revision": "8e20119629ae0487a7e505c1ea97c08ac9a3ae4e",
+      "final_review_notes": "Exact merge-head review confirms the Python, Ruby, and Perl package delta is unchanged from prepared reviewed head 6138482108a9535aed890eb76424c2bfe442275b. Fresh post-merge builds pass Python Bezier2D 35 tests at 95.73% coverage and Arc2D 19 tests at 98.36%, Ruby Bezier2D 19 tests/138 assertions and Arc2D 9 tests/25 assertions, and Perl Bezier2D 86 assertions and Arc2D 16 assertions. The 17-path branch diff is clean, the state is strict JSON, and no live open PR overlaps any of the three package roots."
     },
     {
       "id": "geometry-bezier2d-flattening-go-rust",
@@ -20862,18 +20876,23 @@
     {
       "id": "geometry-bezier2d-flattening-haskell-swift",
       "title": "Consume safe Bezier flattening contract in Haskell and Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-bezier-haskell-swift-flattening-20261025",
+      "pr_number": 18511,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18511",
+      "pr_opened_at": "2026-10-28T09:20:52Z",
+      "publication_head": "2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a",
+      "publication_notes": "PR #18511 is open and non-draft at exact lifecycle head 2c202fe3613bfbb55b3fd9c7150a08d05ee6cb1a. Dynamic Bezier PR #18506 advanced main and made that head conflicting, so exact current main must be merged normally without rewriting history before replacement exact-head CI.",
+      "reconciled_main_revision": "98eac40cc0ebba14b6c4a22eebfd60419ea28777",
       "notes": "Resolve Either/throwing API for deterministic failure before source changes. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases; run native Bezier2D and Arc2D tests. Haskell Arc2D lacks a BUILD front and needs explicit cabal test all."
     },
     {
       "id": "geometry-bezier2d-flattening-typescript-elixir-lua",
       "title": "Consume safe Bezier flattening contract in TypeScript, Elixir, and Lua",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
@@ -20881,8 +20900,12 @@
       "pr_number": 18506,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18506",
       "pr_opened_at": "2026-10-28T08:01:01Z",
-      "publication_head": "2eaeaf8df458b9cd8eeb6277f78ab581d5c20adb",
-      "publication_notes": "PR #18506 is open and non-draft. Swift PaintVmAscii PR #18367 advanced main and made exact reconciliation head 2eaeaf8df458b9cd8eeb6277f78ab581d5c20adb conflicting, so exact current main is being merged normally without rewriting history. The resulting head requires exact delta review and fresh hosted checks before guarded auto-merge.",
+      "publication_head": "133ed55bc690321aef534d18902b875353bedff9",
+      "publication_notes": "PR #18506 merged through guarded squash auto-merge from exact independently reviewed reconciliation head 133ed55bc690321aef534d18902b875353bedff9 after every exact-head hosted check completed acceptably.",
+      "merged_head_revision": "133ed55bc690321aef534d18902b875353bedff9",
+      "merged_at": "2026-10-28T09:52:15Z",
+      "merge_revision": "e08ed142125a4441e2ca53470e6b584573b7e6ac",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "notes": "Remaining runtime API slice. All three use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite inputs, enforce finite-segment control bound and atomic budget error, and run Bezier2D/Arc2D package regressions.",
       "selection_notes": "Selected after local preparation completed for the C#/F# and Python/Ruby/Perl tranches while the three-PR publication ceiling remained occupied. Its sole dependency, the G2D02 termination contract, is merged. It advances three non-Rust lanes and therefore ranks ahead of the two-lane Haskell/Swift and Go/Rust successors; its package sources are disjoint from all active and prepared work. Carry the independently discovered subnormal-distance regression into all three implementations, preserve their public runtime API shapes, and defer shared Go selector edits to the prepared C#/F# owner.",
       "reconciled_main_revision": "98eac40cc0ebba14b6c4a22eebfd60419ea28777",
@@ -26165,7 +26188,7 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18516",
       "pr_opened_at": "2026-10-28T10:30:33Z",
       "publication_head": "af66b66094b0a62248189f542a5b8bedede9c18f",
-      "publication_notes": "Opened draft PR #18516 from clean, fresh-six-package-validated head af66b66094b0a62248189f542a5b8bedede9c18f after confirming the 17-path diff, strict JSON state, and zero live-PR overlap across all three directly changed package roots. The lifecycle-only follow-up will be pushed normally before readiness; guarded auto-merge remains disabled until every exact-head hosted check is terminal and acceptable.",
+      "publication_notes": "PR #18516 is open and non-draft. Scripting Bezier PR #18508 advanced main after exact lifecycle head 1dd64b41306c19801a3e009e7940ad6b60cbd3ff, so preserve the published history through a normal exact-main merge, re-run all six affected native suites, and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
       "delivery_class": "portable-lane-reconciliation",
       "selection_blocked": false,
       "registered_at": "2026-10-24T19:17:58Z",
@@ -26179,9 +26202,10 @@
       "selection_notes": "Selected locally as the smallest dependency-ready Swift GFM prerequisite after a 2026-10-26 reprioritization. The older codex/parity-gfm-swift-20261024 preparation predates the three-owner decomposition and combines this contract with downstream parser work, so it is retained only as implementation evidence and is not publishable as one PR. All prepared Bezier successors remain blocked on PR #18293, while hosted slots are full with live PRs #18293, #18355, and #18367; this owner therefore remains unpublished local-only preparation.",
       "base_revision": "79322a77c561c1c0cbe21a397a6cd7c41021c3a0",
       "validation_revision": "6501bf72b5efba02fc4746757ded9a08fcc4a19c",
-      "reconciled_main_revision": "c32d5acc15c3563487cce56a7976c754f62e4bd2",
-      "reconciliation_notes": "The owner remains a bounded local preparation until publication. Its prerequisite gfm-language-neutral-conformance-fixture is merged as PR #18118 at 83f1871e3d61e8151b0e9313337f5dc2c842a3e6. The branch normally merged exact current origin/main c32d5acc15c3563487cce56a7976c754f62e4bd2 without rewriting its seven-commit preparation history, preserving all intervening parity merge receipts and unrelated repository work. The production delta across the six-package Swift closure is unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. The live parity set is {18508, 18511}, leaving one publication slot after exact-head review.",
+      "reconciled_main_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
+      "reconciliation_notes": "Its prerequisite gfm-language-neutral-conformance-fixture is merged as PR #18118 at 83f1871e3d61e8151b0e9313337f5dc2c842a3e6. The published branch normally merged exact current origin/main fe057f18c6e8b62cae9921fee2538c091fae1bbb after scripting Bezier PR #18508 merged, without rewriting its preparation or publication history. The production delta across the six-package Swift closure is unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. The live parity set is {18511, 18516}, leaving one publication slot for the next dependency-ready, non-overlapping owner.",
       "validation_notes": "RED compilation proved the missing FencedBlockNode and BlockNode.fencedBlock surface. Fresh post-merge GREEN validation passes 96 document-AST tests, 62 CommonMark-parser tests, and 63 renderer tests; the complete affected Swift closure also passes 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests. Production coverage receipts remain patch-identical at 100% lines/functions for document-ast, 92.38% aggregate lines and 90.77% functions for document-ast-to-html with its AST dependency, and 81.91% aggregate lines for commonmark-parser including its pre-existing 77.66% InlineParser baseline; the changed BlockParser and Parser files measure 86.99% and 97.78% lines respectively. The three directly changed packages and six-package manifest-confirmed closure remain unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b after normally merging current main c32d5acc15c3563487cce56a7976c754f62e4bd2. The sixteen-case GFM reader, tasks, tables, strikethrough, 652-example reconciliation, missing parser root, and facade remain downstream. Exact merge-head review remains the publication gate.",
+      "post_scripting_merge_validation_notes": "After normally merging exact current main fe057f18c6e8b62cae9921fee2538c091fae1bbb, all six affected native suites pass again: 96 document-AST, 62 CommonMark-parser, 63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests. The production delta remains unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. Fresh exact-head hosted checks remain mandatory before guarded auto-merge.",
       "final_review_revision": "ceaf3495edeca23f92c0cac65d12319cd07b30ab",
       "final_review_notes": "Exact merge-head review confirms the six-package production delta is unchanged from prepared reviewed head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. All six native suites pass after current-main reconciliation, the 17-path diff is clean, strict JSON state parsing passes, and no live open PR overlaps any of the three directly changed package roots."
     },
