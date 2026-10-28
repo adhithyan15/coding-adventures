@@ -19394,3 +19394,27 @@ another RESP codec lane. Correct `swift-radix-tree-lane-parity` to depend on
 `radix-tree-dt14-neutral-conformance`; its Unicode and structural contract is
 not ready. Keep the selected Swift IR branch local until #18537's terminal
 lifecycle is reconciled from main.
+
+### Swift protocol IR local implementation
+
+Implementation revision `988ac240fc06960a7b0fc21455bfaa275fca1d8e`
+adds the dependency-free Swift package and an additive DT25 boundary. Commands
+use visible ASCII identity with bytewise lowercase folding and preserve ordered
+binary arguments. Responses retain exact UTF-8 identity, the complete nullable
+algebra, and deterministic order. Tighten-only command, argument, frame, depth,
+element, and payload budgets remain below fixed package ceilings; command text
+scanning stops one byte beyond its ceiling, and both response validation and
+equality use cursor stacks bounded by nesting depth.
+
+All ten native tests, the release build, strict Swift Format, the Unix BUILD,
+JSON/diff hygiene, and the empty capability profile pass; the reviewed Windows
+front awaits hosted execution. LLVM reports
+100% production line, function, and region coverage across 249 lines. A real
+bounded Go build-tool dry plan discovers 172 Swift packages, marks exactly the
+new protocol package changed and affected, and selects only
+`swift/in-memory-data-store-protocol`. Independent exact-head review approved
+the bounded command scan, iterative response operations, exact identities,
+authority boundary, tests, coverage, and artifact cleanup. Keep this validated
+work local until #18537's terminal lifecycle reconciliation; then merge current
+main, rerun the gates, and require fresh hosted qualification before guarded
+auto-merge.
