@@ -1624,6 +1624,7 @@ fn parse_architecture_edge(
         to_port: Some(parse_architecture_port(to_direction)),
         routing: StructuralRouting::Orthogonal,
         from_mult: None, to_mult: None, label,
+        style: None,
     })
 }
 
@@ -3962,6 +3963,7 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         from_mult: None,
         to_mult: None,
         label: Some(label),
+        style: None,
     })
 }
 
@@ -4585,6 +4587,7 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     from_mult: None,
                     to_mult: None,
                     label,
+                    style: None,
                 });
             }
         }
@@ -13680,6 +13683,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
                 label: Some(label),
+                style: None,
             });
         } else {
             let mut fields = Vec::new();
@@ -14083,8 +14087,12 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
             "CONFIG_MACRO" => {
                 let macro_token = cursor.advance().clone();
                 let args = parse_c4_arguments(&mut cursor)?;
-                if macro_token.value == "UpdateElementStyle" {
-                    apply_c4_element_style(&args, &mut nodes, &node_indices);
+                match macro_token.value.as_str() {
+                    "UpdateElementStyle" => {
+                        apply_c4_element_style(&args, &mut nodes, &node_indices);
+                    }
+                    "UpdateRelStyle" => apply_c4_relationship_style(&args, &mut relationships),
+                    _ => {}
                 }
             }
             "RBRACE" => {
@@ -14177,6 +14185,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     from_mult: None,
                     to_mult: None,
                     label: Some(args[2].clone()),
+                    style: None,
                 });
             }
             _ => return Err(token_error(cursor.current(), "unsupported C4 statement")),
@@ -14274,6 +14283,38 @@ fn apply_c4_element_style(
         }
     }
     nodes[index].style = Some(style);
+}
+
+fn apply_c4_relationship_style(args: &[String], relationships: &mut [StructuralRelationship]) {
+    let Some(relationship) = relationships.iter_mut().find(|relationship| {
+        args.first() == Some(&relationship.from) && args.get(1) == Some(&relationship.to)
+    }) else {
+        return;
+    };
+    let mut style = relationship.style.clone().unwrap_or_default();
+    for (position, argument) in args.iter().skip(2).enumerate() {
+        let (key, value) = argument
+            .split_once('=')
+            .map_or_else(|| (None, argument.as_str()), |(key, value)| (Some(key), value));
+        let color = sanitize_railroad_color(Some(value), "");
+        if color.is_empty() {
+            continue;
+        }
+        match key {
+            Some("$textColor") => style.text_color = Some(color),
+            Some("$lineColor") => {
+                style.fill = Some(color.clone());
+                style.stroke = Some(color);
+            }
+            None if position == 0 => style.text_color = Some(color),
+            None if position == 1 => {
+                style.fill = Some(color.clone());
+                style.stroke = Some(color);
+            }
+            _ => {}
+        }
+    }
+    relationship.style = Some(style);
 }
 
 fn upsert_c4_node(

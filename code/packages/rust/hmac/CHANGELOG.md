@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Added the fixed-memory `hmac_sha384` byte-array entry point and matching
+  `hmac_sha384_hex` convenience wrapper, backed by the repository SHA-384
+  stream with wipe-on-drop key-derived state and payload-free length failure.
 - `hmac_sha256` now uses fixed-memory repository SHA-256 streaming instead of
   the heap-allocating generic HMAC path. Its normalized key block, keyed pads,
   inner digest, and retained hash state are wiped at their ownership

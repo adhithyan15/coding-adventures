@@ -173,8 +173,9 @@ metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
 bidirectional and backward relationships also preserve their authored endpoint
 arrows through structural layout and backend-neutral PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
-pipeline for C4 elements. C4 remains partial while its remaining macro semantics
-and visual corpus are incomplete.
+pipeline for C4 elements. Core `UpdateRelStyle` text and line colors likewise
+survive semantic IR, layout, and backend-neutral PaintInstructions. C4 remains
+partial while its remaining macro semantics and visual corpus are incomplete.
 
 ## Required New Semantic Families
 
