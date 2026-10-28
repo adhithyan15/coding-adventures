@@ -7267,11 +7267,11 @@ where
             y: group.y,
             width: group.width,
             height: group.height,
-            fill: Some("#f8fafc".into()),
-            stroke: Some("#94a3b8".into()),
-            stroke_width: Some(1.5),
-            corner_radius: Some(8.0),
-            stroke_dash: Some(vec![6.0, 4.0]),
+            fill: Some(group.style.fill.clone()),
+            stroke: Some(group.style.stroke.clone()),
+            stroke_width: Some(group.style.stroke_width),
+            corner_radius: Some(group.style.corner_radius),
+            stroke_dash: group.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }));
         let label = match &group.stereotype {
@@ -7303,13 +7303,15 @@ where
             group.y + 6.0,
             label_width,
             ls * 1.3,
-            lf.clone(),
-            Color {
-                r: 71,
-                g: 85,
-                b: 105,
-                a: 255,
+            {
+                let mut font = lf.clone();
+                font.size = group.style.font_size;
+                font.weight = group.style.font_weight;
+                font.italic = group.style.font_italic;
+                font.family.clone_from(&group.style.font_family);
+                font
             },
+            css_to_color(&group.style.text_color),
         ));
     }
 
