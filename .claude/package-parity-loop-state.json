@@ -16,15 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": 18511,
+  "active_pr": 18525,
   "active_prs": [
-    18511
+    18511,
+    18525
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T13:29:40Z",
-    "pr_number": 18516,
-    "head_revision": "8a9ac79a9308df20e88c1def222967a51f3a1abb",
-    "action": "Verified Swift fenced-block PR #18516 completed every exact-head check acceptably and merged through guarded squash auto-merge as 7bb2f044fed05e25d8c1cfb330ccfd3c286e1550. The exact receipt is current origin/main and the clean completed worktree and local branch were removed. Haskell/Swift Bezier PR #18511 was reconciled normally, and the independent Swift hash-set owner remains the highest-priority local work item.",
+    "observed_at": "2026-10-28T13:44:36Z",
+    "pr_number": 18525,
+    "head_revision": "16a89f287a210f4262dc8af2dddbf16b3db60d8c",
+    "action": "Opened non-draft Swift hash-set PR #18525 from the clean, exact-current-main, independently reviewed publication head. The publication ceiling now contains #18511 and #18525. Guarded auto-merge remains disabled until every hosted check for the final exact head is terminal and acceptable and GitHub reports a clean merge state.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15201,13 +15202,17 @@
     {
       "id": "swift-hash-set-lane-parity",
       "title": "Implement DT19 hash-set in Swift",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "swift-hash-functions-lane-parity",
         "swift-hash-map-lane-parity"
       ],
       "branch": "codex/parity-swift-hash-set-20261028",
-      "pr_number": null,
+      "pr_number": 18525,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18525",
+      "pr_opened_at": "2026-10-28T13:44:36Z",
+      "publication_head": "16a89f287a210f4262dc8af2dddbf16b3db60d8c",
+      "publication_notes": "PR #18525 opened non-draft from exact current main after package validation and independent security review passed. The final lifecycle receipt commit must receive a completely fresh hosted matrix; do not enable guarded auto-merge until every exact-head check is terminal and acceptable and the PR is conflict-free.",
       "started_at": "2026-10-28T12:20:55Z",
       "selected_main_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
       "reconciled_main_revision": "7bb2f044fed05e25d8c1cfb330ccfd3c286e1550",

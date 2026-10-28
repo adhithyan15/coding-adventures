@@ -18921,3 +18921,13 @@ not a second selected owner. It remains 112 main revisions behind and must wait
 for a future prioritization, current-main reconciliation, validation, and
 review. Swift hash-set is the sole selected local owner; PR #18511 remains the
 sole live parity publication.
+
+## October 28, 2026: Swift hash-set publication
+
+Open non-draft PR #18525 from clean, independently reviewed publication head
+`16a89f287a210f4262dc8af2dddbf16b3db60d8c`. Its implementation is based on
+exact current main `7bb2f044fed05e25d8c1cfb330ccfd3c286e1550`; the new package
+root has no overlap with any other open PR. The live parity set is now
+{#18511, #18525}, leaving one publication slot open. Guarded auto-merge remains
+disabled until every hosted check for the final exact head is terminal and
+acceptable and GitHub reports a clean merge state.
