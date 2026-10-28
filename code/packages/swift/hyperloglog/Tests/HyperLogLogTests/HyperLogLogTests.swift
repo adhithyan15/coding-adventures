@@ -82,6 +82,11 @@ final class HyperLogLogTests: XCTestCase {
     XCTAssertThrowsError(try HyperLogLog.optimalPrecision(for: .infinity)) { error in
       XCTAssertEqual(error as? HyperLogLogError, .invalidDesiredError(.infinity))
     }
+    XCTAssertThrowsError(try HyperLogLog.optimalPrecision(for: .nan)) { error in
+      let expected = HyperLogLogError.invalidDesiredError(.nan)
+      XCTAssertEqual(error as? HyperLogLogError, expected)
+      XCTAssertEqual(expected, expected)
+    }
   }
 
   func testSmallAndLargeRangeCorrectionPaths() throws {

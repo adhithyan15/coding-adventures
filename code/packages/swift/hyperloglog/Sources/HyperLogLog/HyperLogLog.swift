@@ -6,6 +6,22 @@ public enum HyperLogLogError: Error, Equatable, Sendable {
   case invalidPrecision(Int)
   case precisionMismatch(left: Int, right: Int)
   case invalidDesiredError(Double)
+
+  public static func == (left: Self, right: Self) -> Bool {
+    switch (left, right) {
+    case (.invalidPrecision(let leftValue), .invalidPrecision(let rightValue)):
+      leftValue == rightValue
+    case (
+      .precisionMismatch(let leftPrecision, let leftOther),
+      .precisionMismatch(let rightPrecision, let rightOther)
+    ):
+      leftPrecision == rightPrecision && leftOther == rightOther
+    case (.invalidDesiredError(let leftValue), .invalidDesiredError(let rightValue)):
+      leftValue == rightValue || (leftValue.isNaN && rightValue.isNaN)
+    default:
+      false
+    }
+  }
 }
 
 /// Fixed production limits for precision and register allocation.
