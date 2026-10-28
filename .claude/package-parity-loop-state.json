@@ -19,13 +19,13 @@
   "active_pr": 18367,
   "active_prs": [
     18367,
-    18503
+    18506
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T07:21:45Z",
-    "pr_number": 18355,
-    "head_revision": "dac7bcee4255e286754d39a1e5bc33cb51430b19",
-    "action": "Verified Kotlin micro-qr PR #18355 merged through guarded squash auto-merge as 36178b3a0d81054cbaf4424b81aec7792f0bcfb0 and that exact receipt is current origin/main. Its merge advanced main and made the published Swift and Go/Rust parity branches conflicting; preserve their published histories with normal merges and require fresh exact-head validation and hosted checks.",
+    "observed_at": "2026-10-28T08:32:42Z",
+    "pr_number": 18503,
+    "head_revision": "ad3ba31a0d1ee7f8865fcdd0bdf31727afcd86a5",
+    "action": "Verified Go/Rust Bezier PR #18503 merged through guarded squash auto-merge as 5daf063f8aeaf4f2c40936ab579a00113706074b and that exact receipt is current origin/main. Its merge advanced main and made the published Swift and dynamic Bezier branches conflicting; preserve their published histories with normal merges and require fresh exact-head validation and hosted checks.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -10256,9 +10256,9 @@
       "pr_number": 18367,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18367",
       "pr_opened_at": "2026-10-26T15:52:35Z",
-      "publication_head": "feb75d936bbea733480ddee8fc06f0aa34849321",
+      "publication_head": "02d9825d1d03bd6cdbd857703b5281c5b0e5cf4f",
       "draft_creation_head": "0ecc1c018da921308dac726c91dab152d93bf753",
-      "publication_notes": "PR #18367 is open and non-draft at exact independently reviewed published head feb75d936bbea733480ddee8fc06f0aa34849321. Every replacement hosted check completed acceptably, but guarded auto-merge remained disabled. The guarded merge of Kotlin PR #18355 advanced main and made this published head conflicting, so exact current main is being merged normally without rewriting history; the resulting head requires fresh exact-head review and hosted checks before guarded auto-merge.",
+      "publication_notes": "PR #18367 is open and non-draft at exact independently reviewed published head 02d9825d1d03bd6cdbd857703b5281c5b0e5cf4f. Every replacement hosted check completed acceptably, but guarded auto-merge remained disabled. Go/Rust PR #18503 then advanced main and made this published head conflicting, so exact current main is being merged normally without rewriting history; the resulting head requires fresh exact-head review and hosted checks before guarded auto-merge.",
       "final_review_revision": "0ecc1c018da921308dac726c91dab152d93bf753",
       "final_review_notes": "Independent exact-head review passed the capability-only scope, empty authority declaration, package and downstream tests, exact planner closure, changelog identity, lifecycle metadata, state graph, lessons, diff hygiene, current-main relationship, and artifact-cleanliness gates with no findings.",
       "prepared_at": "2026-10-26T14:25:33Z",
@@ -10268,16 +10268,17 @@
       "implementation_revision": "6e1424d5e54f0861066f8e325f5dac6e7a2a1515",
       "unreleased_note_fix_revision": "1eadecdcf57c8fde6abf18fb9e8b6a7b245f39cf",
       "preparation_head_revision": "19dabb6971e7730971f6fe565e05b90ff0089eec",
-      "reconciled_main_revision": "36178b3a0d81054cbaf4424b81aec7792f0bcfb0",
+      "reconciled_main_revision": "5daf063f8aeaf4f2c40936ab579a00113706074b",
       "package_paths": [
         "code/packages/swift/PaintVmAscii"
       ],
       "preparation_notes": "Prepared locally without selection or publication because the three authorized parity slots are occupied by PRs #18293, #18324, and #18355. The bounded tranche adds only the truthful empty capability manifest plus package and changelog documentation for the already-merged Swift renderer; production source, public API, package dependencies, BUILD fronts, and caller-owned terminal output remain unchanged.",
       "selection_notes": "Selected only after verified guarded merge of Python gradient-descent PR #18324 opened a hosted slot. The already independently reviewed capability-only tranche is dependency-free and publication-ready after reconciliation, while every prepared Bezier successor remains blocked on live selector dependency PR #18293. Live PRs are now exactly {18293, 18355}; neither overlaps PaintVmAscii production, tests, package metadata, or its root changelog shard. Selection changes only lifecycle status from pending to in_progress and does not authorize publication before refreshed exact-head independent review.",
       "reconciliation_notes": "Rebased the three local preparation commits onto exact origin/main 1bb58a0d7ed8d818d622e69890234d96b6e26b3a, then refreshed the still-unpublished four-commit series onto exact origin/main de088e2ddfacd2372fab3677d38b969eea602c00 after unrelated PA-RISC PR #18342 merged. The append-only state and roadmap conflicts were resolved by preserving main's complete Swift-hash and Python preparation history together with this pending PaintVmAscii receipt and the canonical changelog filename repair; the later refresh was patch-identical and touched no parity files. Recorded verified Python PR #18324 final head d34af356d621175dd8cc307d953ecb7a99d1b79a, merge timestamp 2026-10-26T15:37:25Z, and merge commit 1bb58a0d7ed8d818d622e69890234d96b6e26b3a; removed it from active PRs and retained live PRs {18293, 18355}.",
-      "merge_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main 36178b3a0d81054cbaf4424b81aec7792f0bcfb0 after Kotlin PR #18355 merged from exact reviewed head dac7bcee4255e286754d39a1e5bc33cb51430b19 at 2026-10-28T07:21:45Z. Preserved the complete Python, .NET, and Kotlin merge receipts and the Swift preparation, selection, publication, and review history. The live parity set is now {18367, 18503}; both replacement heads require fresh exact-head review and hosted checks.",
+      "merge_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main 5daf063f8aeaf4f2c40936ab579a00113706074b after Go/Rust Bezier PR #18503 merged from exact reviewed head ad3ba31a0d1ee7f8865fcdd0bdf31727afcd86a5 at 2026-10-28T08:32:42Z. Preserved the complete Python, .NET, Kotlin, and Go/Rust merge receipts plus the Swift preparation, selection, publication, and review history. The live parity set is now {18367, 18506}; both replacement heads require fresh exact-head review and hosted checks.",
       "validation_notes": "On exact reconciled main, Swift 6.3.1 package validation passes all 34 PaintVmAscii tests and all 43 downstream cowsay tests. The production Go planner discovers 19 sparse-worktree packages, selects exactly the six-package Swift dependency closure {PaintInstructions, PaintVmAscii, cli-builder, directed-graph, cowsay, state-machine}, reports only the Swift toolchain and zero special suites, and executes all six BUILD fronts successfully from its emitted plan. The empty capability declaration validates against the repository schema. Strict duplicate-key JSON, 1,547 unique dependency-complete acyclic owners, 2,616 edges, zero merged-to-unfinished edges, exactly one in-progress owner, exactly two pr-open owners {18293, 18355}, 1,593 lesson shards with zero problems, canonical changelog slug/digest, and diff hygiene pass. The owner has no PR and remains unpublished pending independent exact-head review.",
       "post_kotlin_merge_validation_notes": "After normally merging exact origin/main 36178b3a0d81054cbaf4424b81aec7792f0bcfb0, all 34 PaintVmAscii tests and all 43 downstream cowsay tests pass again. The package production delta is unchanged; only lifecycle receipts were reconciled. Exact merge-head review and replacement hosted checks remain required before guarded auto-merge.",
+      "post_go_rust_merge_validation_notes": "After normally merging exact origin/main 5daf063f8aeaf4f2c40936ab579a00113706074b, all 34 PaintVmAscii tests and all 43 downstream cowsay tests pass again. The package production delta is unchanged from exact reviewed head 02d9825d1d03bd6cdbd857703b5281c5b0e5cf4f; only lifecycle receipts changed. Exact merge-head review and replacement hosted checks remain required before guarded auto-merge.",
       "notes": "The afa7975 inventory recorded new Dart, Java, and Kotlin paint-vm-ascii implementations, leaving Swift as the sole missing established slot. Merged external PR #12149 added the Swift implementation and closed the package-directory gap, but it omitted the required explicit empty capability metadata. Keep this owner pending until that truthful library profile is added and validated; do not duplicate the already merged renderer implementation or introduce terminal I/O into the library."
     },
     {
@@ -20787,7 +20788,7 @@
       "merged_head_revision": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
       "merged_at": "2026-10-26T23:13:55Z",
       "merge_revision": "960397b253474e002be8805103f1f0bca6d82e6c",
-      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, and the merge receipt is an ancestor of current origin/main.",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, and the exact receipt is an ancestor of current origin/main.",
       "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner.",
       "selection_notes": "Selected after the WasmOpcodes and C# document-AST build-quality tranches completed local preparation behind the occupied three-PR publication ceiling. The merged G2D02 termination contract is its only dependency. This two-lane tranche has higher parity leverage than another single build-front repair and no implementation overlap with active TypeScript GFM, CommonMark fixture, Haskell Starlark-provider, or the two prepared .NET branches. Preserve each public ToPolyline signature while replacing midpoint recursion with dynamic nine-case fixture adoption, finite-segment bounds, finite-input checks, deterministic 32-depth/65,535-split failure, 95% production line gates, and dependent Arc2D regression runs.",
       "validation_notes": "Clean BUILD runs execute 12 tests in each lane after independent review exposed and repaired a subnormal-distance underflow. Scaled norm and projection arithmetic makes the new Double.Epsilon regression fail closed; the production-only reports measure C# at 100% line, 96.96% branch and 100% method coverage and F# at 99.39% line, 90.9% branch and 100% method coverage. Earlier one-test selections reported 35.13% C# and 34.89% F# line coverage and exited 1 against the 95% floor, proving fail-closed enforcement. The dependent C# and F# Arc2D suites pass 10 tests each at 97.01% and 98.83% line coverage respectively. Direct and transitive NuGet vulnerability audits report none. Focused G2D02 exact-selection and atomic-plan tests plus Go vet pass. Strict state parsing, lesson validation, JSON, and diff hygiene pass. The branch preserves published history by normally merging exact main 0be03745d775ffa9ee8c66ffda1700baa76ba58f and then exact current main 1bb58a0d7ed8d818d622e69890234d96b6e26b3a; the shared lifecycle and append-only roadmap conflicts retain both owners' receipts, including Python PR #18324's verified merge. Fresh exact-merge-head validation, independent review, and hosted CI remain publication gates.",
@@ -20807,13 +20808,51 @@
     {
       "id": "geometry-bezier2d-flattening-go-rust",
       "title": "Consume safe Bezier flattening contract in Go and Rust",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
+      "branch": "codex/parity-bezier-go-rust-flattening-20261025",
+      "pr_number": 18503,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18503",
+      "pr_opened_at": "2026-10-28T07:20:44Z",
+      "publication_head": "ad3ba31a0d1ee7f8865fcdd0bdf31727afcd86a5",
+      "publication_notes": "PR #18503 merged through guarded squash auto-merge from exact independently reviewed reconciliation head ad3ba31a0d1ee7f8865fcdd0bdf31727afcd86a5 after every replacement hosted check completed acceptably.",
+      "merged_head_revision": "ad3ba31a0d1ee7f8865fcdd0bdf31727afcd86a5",
+      "merged_at": "2026-10-28T08:32:42Z",
+      "merge_revision": "5daf063f8aeaf4f2c40936ab579a00113706074b",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, and the exact receipt is current origin/main.",
+      "notes": "Explicit error-return API slice for bounded flattening failure. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite controls/tolerance, finite-segment bound, depth/work limit, and Bezier2D plus Arc2D tests; document any API compatibility adjustment.",
+      "selection_notes": "Selected as the final bounded existing-lane G2D02 implementation child after the C#/F#, Python/Ruby/Perl, TypeScript/Elixir/Lua, and Haskell/Swift tranches were implemented or prepared. Its neutral termination-contract dependency is merged, its Go and Rust package paths do not overlap the three active PRs or prepared branches, and it closes the last two stale midpoint-recursive implementations before the aggregate owner can be evaluated. Change the public flattening methods to explicit error returns, preserve evaluation/split/bounds behavior, consume all nine fixture rows dynamically, carry the subnormal-underflow regression, and run native Bezier2D plus same-language Arc2D suites. Shared selector integration remains sequenced behind PR #18293; no fourth PR opens while the publication ceiling is full.",
+      "started_at": "2026-10-25T22:12:00-07:00",
+      "base_revision": "396c0320b98e515279f3ba348392099fa769952d",
+      "reconciled_main_revision": "36178b3a0d81054cbaf4424b81aec7792f0bcfb0",
+      "reconciliation_revision": "327ea0a6100",
+      "implementation_revision": "f1b794083386aac5f3d3af1cfb96fc0fad0b4c2b",
+      "correction_revision": "d176c5ffb51c601dd2ae8da0813abba7075b78a3",
+      "validation_revision": "d176c5ffb51c601dd2ae8da0813abba7075b78a3",
+      "post_reconciliation_validation_revision": "17f4ee3b2202ae97f7c7669050791706a158cc66",
+      "merge_reconciliation_notes": "Preserved published history by normally merging exact origin/main 36178b3a0d81054cbaf4424b81aec7792f0bcfb0 after Kotlin PR #18355 merged. Preserved the complete Python, .NET, and Kotlin merge receipts plus the Go/Rust implementation, validation, publication, and review history. The production package delta is unchanged from exact reviewed head bc6cfe9123f1452e47b18c4a14c8ca3dc8e5c27a; only lifecycle receipts changed. The live parity set is {18367, 18503}.",
+      "package_paths": [
+        "code/packages/go/bezier2d",
+        "code/packages/rust/bezier2d"
+      ],
+      "validation_notes": "Local implementation is complete. Both public APIs return explicit errors, consume all nine neutral rows dynamically, use the finite-segment control bound and a left-first iterative stack, and fail atomically for invalid tolerance, non-finite control or derived geometry, depth 32, or 65,535 subdivisions. Independent review found that scaling both the chord and point vectors erased a 1e-16 perpendicular offset beside a 1e308 chord; correction d176c5ffb51c601dd2ae8da0813abba7075b78a3 uses chord-only scaling, compensated finite products, explicit floating-error widening, and outward-rounded magnitudes, with public-API regression tests in both lanes. After dependency PR #18293 merged, exact current origin/main cee485ce0a48464b35619f156ff7674b7c72ad58 was merged conflict-free. At exact receipt head 17f4ee3b2202ae97f7c7669050791706a158cc66, Go Bezier2D passes at 95.1% statement coverage, downstream Go Arc2D passes at 96.8%, Rust Bezier2D passes all 23 tests from an exact tracked-tree export, downstream Rust Arc2D passes all 20 tests and doc tests from an exact export, and both focused G2D02 exact-selection and atomic-plan tests pass. Temporary exports were moved to Trash after validation. The implementation delta is unchanged from the previously independently reviewed correction series; final receipt-only delta review remains required before publication."
+    },
+    {
+      "id": "geometry-bezier2d-go-rust-trig-dependency-contract",
+      "title": "Reconcile Go and Rust Bezier2D trig dependency with G2D02",
+      "status": "pending",
+      "depends_on": [
+        "geometry-bezier2d-flattening-go-rust"
+      ],
       "branch": null,
       "pr_number": null,
-      "notes": "Explicit error-return API slice for bounded flattening failure. Both use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite controls/tolerance, finite-segment bound, depth/work limit, and Bezier2D plus Arc2D tests; document any API compatibility adjustment."
+      "selection_blocked": true,
+      "discovered_at": "2026-10-26T10:28:42Z",
+      "discovered_revision": "c966cdb296f3541ce6550cd2bcfec9857da16575",
+      "scope": "Reconcile only the pre-existing dependency/documentation contradiction: G2D02 and package documentation say Bezier2D depends only on point2d and has no trig dependency, while the Go and Rust manifests and bounding-box implementations import same-lane trig solely for square root. Choose one reviewed contract across G2D02, manifests, source, build metadata, READMEs, and native tests: either standard-library square root with the trig edge removed, or an explicit documented trig edge. Do not alter flattening behavior, other language lanes, or Arc2D APIs.",
+      "notes": "Independent review discovered this mismatch while examining the local Go/Rust flattening tranche; it predates that tranche and exists at its origin/main base. It is a distinct pending owner because it changes the exact same Bezier2D package roots and must not broaden the in-progress termination-contract repair. After the flattening owner merges, validate both Bezier2D packages, downstream same-language Arc2D packages, manifests/build metadata, and focused build-planner closure before selection. No host, credential, network, filesystem, process-execution, or security authority is introduced by this classification owner."
     },
     {
       "id": "geometry-bezier2d-flattening-haskell-swift",

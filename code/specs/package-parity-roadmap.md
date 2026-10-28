@@ -18028,6 +18028,69 @@ fleet are out of scope. The active parity PRs touch none of these package or
 build-front files; shared bookkeeping will be reconciled only when a
 publication slot opens.
 
+## October 25, 2026: Go and Rust Bezier flattening selection
+
+The last bounded existing-lane G2D02 implementation child is
+`geometry-bezier2d-flattening-go-rust`. The termination contract is merged,
+the four other implementation tranches are active or locally prepared, and
+these two package trees do not overlap any current PR. Work can proceed on a
+sparse branch while the three publication slots remain occupied; no fourth PR
+opens before a slot is available.
+
+Both lanes still expose midpoint-only recursive flattening with no invalid
+input or work-budget result. This owner changes those public APIs to explicit
+error returns, measures every control point against the finite endpoint
+segment, walks a left-first bounded stack, and consumes all nine neutral rows
+dynamically. Native regressions must cover invalid tolerance, non-finite
+controls and derived geometry, deterministic depth/split exhaustion, and the
+subnormal-distance underflow boundary. Go and Rust Bezier2D plus their
+same-language Arc2D suites must remain green. Shared selector integration stays
+sequenced behind PR #18293, and the twelve-lane aggregate remains a later
+owner rather than a claim of this branch.
+
+The local implementation now returns explicit Go and Rust errors, uses the
+finite-segment convex-hull bound and a left-first iterative stack, and consumes
+all nine neutral rows. Go passes 22 top-level Bezier2D tests plus their dynamic
+subtests under race detection at 95.1% statement coverage; formatting, vet,
+and build pass. Its downstream Arc2D suite remains green at 96.8%. Rust passes
+23 Bezier2D tests at 96.02% source-line, 96.06% region, and 98.08% function
+coverage; formatting, strict all-target clippy, and release
+build pass. Its downstream Arc2D suite retains 20 tests and doc tests. A full
+tracked-tree search finds no external Go or Rust flattening callers requiring
+migration.
+
+Independent review found that globally scaling both the chord and point
+vectors erased a `1e-16` perpendicular offset beside a `1e308` chord. The
+corrected distance calculation scales only the chord, uses compensated finite
+products, widens for floating error, rounds nonzero magnitudes outward, and
+carries direct mixed-scale public-API regressions in both lanes. The root
+changelog shard now uses its
+heading-derived `HARDEN-GO-AND-RUST-BEZIER-FLATTENING` slug and `08c0edc5`
+digest. The exact neutral oracle validates all nine cases and its seven tests
+pass. The sparse focused planner selects the two changed Bezier2D packages and
+their six same-language prerequisites/dependents; its strict repository-wide
+orphan check is not meaningful in the sparse checkout, so publication still
+requires the normal full-tree CI gate.
+
+The branch is reconciled with `396c0320b98e515279f3ba348392099fa769952d`
+and remains local because PR #18293 owns the shared selector change. After that
+dependency lands, rebase current main, run the native and selector gates again,
+and require independent exact-head correctness/security review before
+publication. The refreshed 1,548-owner graph is unique, dependency-complete,
+acyclic, and has no merged-to-unfinished edge; all 1,587 lesson shards validate.
+
+A separate pending owner,
+`geometry-bezier2d-go-rust-trig-dependency-contract`, records a pre-existing
+contract mismatch deliberately excluded from this tranche: G2D02 and the
+package documentation say Bezier2D depends only on `point2d`, while both Go and
+Rust manifests and bounding-box implementations use their same-lane `trig`
+package solely for square root. That owner follows the flattening repair because
+it overlaps the same package roots. It must choose either standard-library
+square root with the dependency removed or an explicit documented `trig` edge,
+then reconcile the spec, manifests, source, build metadata, READMEs, native
+tests, downstream Arc2D suites, and focused planner closure without changing
+flattening behavior or widening authority.
+
 ## October 25, 2026: C# document-AST Windows-front preparation
 
 After locally completing the independent .NET WasmOpcodes coverage repair,
@@ -18434,6 +18497,50 @@ auto-merge can be enabled.
 
 The .NET merge receipt is an ancestor of exact reconciliation base
 `cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed
+
+## October 28, 2026: .NET Bezier merge and Go/Rust reprioritization
+
+`2026-10-26T23:13:55Z`. The exact receipt is an ancestor of current origin/main
+`cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed .NET worktree
+and local branch were removed safely.
+
+The merge unblocks all four prepared Bezier successors. A fresh prioritization
+selects the Go/Rust tranche first because it closes two established native lanes
+with explicit bounded-error APIs and completes the final reviewed implementation
+child needed before evaluating the aggregate owner. The branch normally merged
+exact current main as `327ea0a6100` without a textual conflict, preserving the
+dependency receipt and all intervening repository history. Kotlin micro-qr and
+Swift PaintVmAscii remain the two live published parity owners; this local
+tranche may use the open third slot only after fresh native, selector, planner,
+state, lesson, and exact-head independent review gates pass.
+
+Fresh validation at exact receipt head
+`17f4ee3b2202ae97f7c7669050791706a158cc66` passes Go Bezier2D at 95.1%
+statement coverage and downstream Go Arc2D at 96.8%. Exact tracked-tree exports
+avoid the sparse Rust workspace's intentionally omitted unrelated sources:
+Rust Bezier2D passes all 23 tests, and downstream Rust Arc2D passes all 20 tests
+plus doc tests. The focused G2D02 exact-selection and atomic-plan tests pass
+against the same tracked tree. Both temporary exports were moved to Trash after
+validation. The production delta is unchanged from the previously independently
+reviewed correction series; only the current-main and validation receipts need
+final exact-head review before publication.
+
+## October 28, 2026: Go/Rust Bezier draft publication
+
+The reconciled and revalidated tranche passed exact-head receipt review at
+`3d4de4a17994bf509021c29250580b9427a3ebf0`. The branch was pushed normally
+without rewriting history and opened as draft PR #18503 at
+`2026-10-28T07:20:44Z`. GitHub reports the exact draft head mergeable. This
+draft records the durable PR identity only; the lifecycle-only receipt requires
+exact delta review before readiness. Guarded auto-merge remains disabled until
+the final exact head is conflict-free and every hosted check reaches a terminal
+acceptable conclusion. The live parity set is now exactly {#18355, #18367,
+#18503}, filling the three-PR publication ceiling.
+
+## October 26, 2026: .NET Bezier merge and Kotlin conflict reconciliation
+
+The .NET merge receipt is an ancestor of exact current
+origin/main `cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed
 .NET worktree and local branch were removed safely.
 
 That base advance conflicts only with the Kotlin branch's append-only state and
@@ -18464,3 +18571,31 @@ Go/Rust Bezier PR #18503 is the other live parity owner. The live publication
 set is now {#18367, #18503}. The resulting Swift merge head must pass the 34
 PaintVmAscii tests, all 43 downstream cowsay tests, exact-head review, and fresh
 hosted checks before guarded auto-merge can be enabled.
+
+## October 28, 2026: Kotlin merge and Go/Rust conflict reconciliation
+
+That base advance conflicts only with the published Go/Rust branch's append-only
+lifecycle records. Preserve its published history by merging exact current main
+normally, retaining the complete Python, .NET, and Kotlin merge receipts plus
+the implementation, validation, publication, and review history. Swift
+PaintVmAscii PR #18367 is the other live parity owner. The live publication set
+is now {#18367, #18503}. The resulting Go/Rust merge head requires confirmation
+that the production delta is unchanged, exact-head review, and fresh hosted
+checks before guarded auto-merge can be enabled.
+
+## October 28, 2026: Go/Rust merge and Swift conflict reconciliation
+
+Go/Rust Bezier PR #18503 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact independently reviewed head
+`ad3ba31a0d1ee7f8865fcdd0bdf31727afcd86a5` as
+`5daf063f8aeaf4f2c40936ab579a00113706074b` at
+`2026-10-28T08:32:42Z`. The exact receipt is current origin/main, and the clean
+completed Go/Rust worktree and local branch were removed safely.
+
+That base advance conflicts only with the Swift branch's append-only lifecycle
+records. Preserve published history by merging exact current main normally,
+retaining the full Python, .NET, Kotlin, and Go/Rust merge receipts plus the
+PaintVmAscii preparation, publication, and review history. Dynamic Bezier PR
+#18506 is the other live parity owner. The live publication set is now
+{#18367, #18506}. The resulting Swift merge head must pass focused validation,
+exact-head review, and fresh hosted checks before guarded auto-merge.

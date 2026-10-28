@@ -4,6 +4,10 @@
 
 ### Changed
 
+- `hmac_sha256` now uses fixed-memory repository SHA-256 streaming instead of
+  the heap-allocating generic HMAC path. Its normalized key block, keyed pads,
+  inner digest, and retained hash state are wiped at their ownership
+  boundaries; length failure is a payload-free category.
 - `verify` now delegates equal-length tag comparison to the repository-owned
   `coding_adventures_ct_compare` compiler-preserved full-scan primitive. The
   external `subtle` executable dependency has been removed. Public length
