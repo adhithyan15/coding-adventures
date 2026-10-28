@@ -16,15 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18535,
+  "active_pr": 18537,
   "active_prs": [
-    18535
+    18537
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T19:59:38Z",
-    "pr_number": 18535,
-    "head_revision": "a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d",
-    "action": "Published independently reviewed Swift skip-list receipt a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d as draft PR #18535 over exact current main c85baee9a4b57105b7d1c57f71f8536b5379b164. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
+    "observed_at": "2026-10-28T20:53:48Z",
+    "pr_number": 18537,
+    "head_revision": "3d147429f868c416b2f0f18e70d4ec2c4ffe39f6",
+    "action": "Dart and Swift binary-tree PR #18537 is ready on independently reviewed exact head 3d147429f868c416b2f0f18e70d4ec2c4ffe39f6 over current main 729e0b761e339bcc8d5863550da644e5b3ccec24. Fresh hosted CI is required before guarded auto-merge; meanwhile continue only independent local work.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15106,10 +15106,12 @@
     {
       "id": "binary-tree-dart-swift-lane-parity",
       "title": "Complete DT03 binary-tree parity in Dart and Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/binary-tree-dart-swift-lane-parity",
+      "pr_number": 18537,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18537",
+      "publication_head": "3d147429f868c416b2f0f18e70d4ec2c4ffe39f6",
       "notes": "Implement the existing DT03 node, traversal, shape-predicate, height and depth, array conversion, boundary and error, ownership, and empty-capability contract with package-native tests. These are the exact two canonical gaps; DT03 already provides the governing neutral contract.",
       "bounded_decomposition_preparation": "dart-bst-prerequisite-validation-preparation.md: current ready owner includes two lanes, no registered per-lane leaves. Optional binary-tree-dart-lane-parity / binary-tree-swift-lane-parity IDs have zero exact/canonical collisions but intentionally partition existing parent scope. Any later materialization must preserve parent completion across both lanes; reviewed Dart-specific BST edge can target exact Dart child without erasing other obligations. DT03 existing governing contract is not a committed behavior corpus. Add independent structural/traversal/array/empty/error/ownership fixtures within existing scope, normal pure native validation permitted. No selection/decomposition/new owner in this audit.",
       "postmerge_preparation_evidence": [
@@ -16910,7 +16912,7 @@
     {
       "id": "swift-skip-list-lane-parity",
       "title": "Implement DT20 skip-list in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/swift-skip-list-lane-parity",
       "pr_number": 18535,
@@ -16918,6 +16920,10 @@
       "opened_at": "2026-10-28T19:59:38Z",
       "publication_head": "a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d",
       "publication_notes": "Draft PR #18535 opened from independently reviewed exact receipt head a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d over exact main c85baee9a4b57105b7d1c57f71f8536b5379b164. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for that new exact head, and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
+      "merged_head_revision": "9a02ab99d53e474410e3da7e3795a4739efab532",
+      "merged_at": "2026-10-28T20:46:16Z",
+      "merge_revision": "729e0b761e339bcc8d5863550da644e5b3ccec24",
+      "merge_notes": "Every exact-head check completed terminal acceptable. GitHub reported the reviewed head cleanly mergeable; guarded squash auto-merge completed and the clean worktree and local branch were removed.",
       "selection_blocked": false,
       "selected_at": "2026-10-28T19:06:53Z",
       "selection_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
@@ -16956,16 +16962,43 @@
     {
       "id": "swift-in-memory-data-store-protocol-lane-parity",
       "title": "Implement the in-memory data-store protocol IR in Swift",
-      "status": "pending",
+      "status": "in_progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/swift-in-memory-data-store-protocol-lane-parity",
       "pr_number": null,
       "selection_blocked": false,
+      "selected_at": "2026-10-28T20:53:48Z",
+      "selected_revision": "729e0b761e339bcc8d5863550da644e5b3ccec24",
+      "selection_notes": "Selected by independent post-binary-tree reprioritization while PR #18537 runs hosted CI. This dependency-free one-package value model has three direct and five total unfinished descendants, exceeding Swift RESP and radix tree at two/four each, with less parser, Unicode, resource, and authority risk. Keep command identity ASCII-only and RESP-independent, preserve binary arguments, provide the complete nullable response algebra with bounded iterative validation, and keep the branch local until the active PR terminal lifecycle is reconciled from main.",
       "notes": "Implement the dependency-free command-frame and engine-response IR with ASCII command normalization, binary-safe arguments, immutable value ownership, deterministic ordering, stable errors, package-native tests, and empty capabilities. Keep RESP conversion in the facade rather than coupling this IR owner to the wire codec.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-in-memory-data-store-protocol-lane-parity"
       ],
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+    },
+    {
+      "id": "in-memory-data-store-protocol-existing-lanes-contract-reconciliation",
+      "title": "Reconcile the data-store protocol IR across established lanes",
+      "status": "pending",
+      "selection_blocked": false,
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "discovered_at": "2026-10-28T20:53:48Z",
+      "discovered_revision": "729e0b761e339bcc8d5863550da644e5b3ccec24",
+      "notes": "Reconcile command-byte identity and ASCII normalization, RESP separation, binary argument ownership, empty-frame behavior, the complete nullable response algebra, integer width, stable errors, and finite validation budgets. Python and Rust are dependency-free and binary-safe; Go, Haskell, and Java are RESP-coupled; C#, F#, and TypeScript use text arguments or locale/trim behavior. Do not block the separately truthful Swift value-model package or absorb existing-lane remediations into it."
+    },
+    {
+      "id": "resp-protocol-dt23-bounded-streaming-contract-reconciliation",
+      "title": "Bound DT23 incremental RESP streaming and hostile-input behavior",
+      "status": "pending",
+      "selection_blocked": false,
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "discovered_at": "2026-10-28T20:53:48Z",
+      "discovered_revision": "729e0b761e339bcc8d5863550da644e5b3ccec24",
+      "notes": "Close DT23 line, buffer, bulk, array, nesting-depth, aggregate-element, and aggregate-byte ceilings for incremental decoders; specify checked arithmetic, failure atomicity, and stable hostile-input errors. Existing decoders diverge and Python explicitly permits an unbounded buffer. Require this neutral reconciliation before selecting another RESP lane, without changing the selected Swift protocol IR."
     },
     {
       "id": "swift-in-memory-data-store-engine-lane-parity",
@@ -17026,7 +17059,9 @@
       "id": "swift-radix-tree-lane-parity",
       "title": "Implement DT14 radix-tree in Swift",
       "status": "pending",
-      "depends_on": [],
+      "depends_on": [
+        "radix-tree-dt14-neutral-conformance"
+      ],
       "branch": null,
       "pr_number": null,
       "selection_blocked": false,

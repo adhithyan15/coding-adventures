@@ -19367,3 +19367,30 @@ main `c85baee9a4b57105b7d1c57f71f8536b5379b164`. Keep it draft only while
 this durable PR-number lifecycle receipt is committed and independently
 reviewed. Then push the receipt, mark the PR ready, and require a completely
 fresh exact-head hosted matrix before guarded auto-merge.
+
+Every exact-head check for PR #18535 completed acceptably and guarded squash
+auto-merge landed `729e0b761e339bcc8d5863550da644e5b3ccec24` at
+`2026-10-28T20:46:16Z`. The clean Swift skip-list worktree and local branch
+were removed. Dart and Swift binary-tree PR #18537 is now the sole active
+parity PR at independently reviewed head
+`3d147429f868c416b2f0f18e70d4ec2c4ffe39f6`; fresh hosted CI remains its
+merge gate.
+
+## October 28, 2026: Swift data-store protocol IR selection
+
+Without waiting on #18537, reprioritization selects the independent
+`swift-in-memory-data-store-protocol-lane-parity` owner locally. It has three
+direct and five total unfinished descendants versus two/four for RESP and
+radix tree, while remaining a bounded dependency-free value-model package.
+Keep it RESP-independent: normalize only ASCII command letters, preserve owned
+binary arguments, model the complete nullable ordered response algebra, and
+validate nested responses iteratively under checked depth/element/byte budgets.
+
+Register `in-memory-data-store-protocol-existing-lanes-contract-reconciliation`
+for established binary/text, normalization, RESP-coupling, ownership, nullable
+response, integer-width, error, and budget drift. Also register
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` before selecting
+another RESP codec lane. Correct `swift-radix-tree-lane-parity` to depend on
+`radix-tree-dt14-neutral-conformance`; its Unicode and structural contract is
+not ready. Keep the selected Swift IR branch local until #18537's terminal
+lifecycle is reconciled from main.
