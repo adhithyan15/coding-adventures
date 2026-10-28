@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18544,
+  "active_prs": [
+    18544
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T22:52:43Z",
-    "pr_number": 18540,
-    "head_revision": "9997c16d1f5c63994e981ef8a227e35833c6cf8d",
-    "action": "All 40 exact-head checks completed acceptably (10 success, 29 expected skips, and one neutral CodeQL result). GitHub reported the reviewed head clean and mergeable; guarded squash auto-merge was enabled only after the aggregate CI gate passed, and PR #18540 merged as 93ce1b4493a1ea5d781a047e86c658fc78483f59. The clean completed worktree and local branch were removed.",
+    "observed_at": "2026-10-28T23:49:20Z",
+    "pr_number": 18544,
+    "head_revision": "8256abf1447673df603e4c014d6fdb94300c5ddc",
+    "action": "Opened independently reviewed Elixir graph/diff receipt 8256abf1447673df603e4c014d6fdb94300c5ddc as draft PR #18544 over exact current main 5ca8d638258ff7100f0c077c587846dccbd85d03. Keep the PR draft while this durable PR-number lifecycle receipt receives focused delta review; then mark ready and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2618,7 +2620,7 @@
     {
       "id": "build-tool-elixir-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Elixir build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",
@@ -2629,7 +2631,12 @@
         "build-tool-shared-input-multiconsumer-diff-selection-fixture"
       ],
       "branch": "codex/build-tool-elixir-diff-selection-parity",
-      "pr_number": null,
+      "pr_number": 18544,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18544",
+      "opened_at": "2026-10-28T23:49:20Z",
+      "publication_head": "8256abf1447673df603e4c014d6fdb94300c5ddc",
+      "publication_base": "5ca8d638258ff7100f0c077c587846dccbd85d03",
+      "publication_notes": "Draft PR #18544 records the independently reviewed exact current-main head. GitHub reports the publication head mergeable over exact base 5ca8d638258ff7100f0c077c587846dccbd85d03. Keep it draft only while this PR-number lifecycle receipt is committed, pushed, and independently reviewed; then mark ready and require fresh hosted qualification at the resulting exact head.",
       "selected_at": "2026-10-28T22:53:00Z",
       "selection_revision": "93ce1b4493a1ea5d781a047e86c658fc78483f59",
       "selection_notes": "Selected after PR #18540 completed all 40 exact-head checks acceptably, merged through guarded squash auto-merge, and its clean worktree and local branch were removed. A fresh dependency/leverage pass ranked this ready process-free Elixir build-tool leaf first at three direct and five total unfinished descendants; every prerequisite is merged, its program paths are disjoint from the completed Swift package, and the existing directed-graph, Git-diff, and hardened Unicode-scalar matcher modules bound the tranche more tightly than from-scratch canonical-CBOR or Lua alternatives. The implementation must dynamically consume exactly eight graph and twelve diff-selection cases, preserve stable all-or-error behavior, and add no host authority.",

@@ -19559,3 +19559,14 @@ unrelated legacy Resolver and CLI modules retain pre-existing gaps; do not
 widen this bounded contract tranche into that separate debt. Publish only
 after one final exact-head lifecycle review, then require fresh hosted
 qualification before guarded auto-merge.
+
+#### Draft PR #18544 publication receipt
+
+Publish independently reviewed exact current-main head
+`8256abf1447673df603e4c014d6fdb94300c5ddc` as draft PR #18544 over exact
+base `5ca8d638258ff7100f0c077c587846dccbd85d03`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
