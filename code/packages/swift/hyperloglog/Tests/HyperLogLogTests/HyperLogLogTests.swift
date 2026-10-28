@@ -96,7 +96,7 @@ final class HyperLogLogTests: XCTestCase {
 
     let registers = [UInt8](repeating: 56, count: 16)
     let large = HyperLogLog(testingPrecision: 4, registers: registers)
-    XCTAssertGreaterThan(large.count(), 700_000_000_000_000_000)
+    XCTAssertEqual(large.count(), 792_707_196_380_113_664)
     XCTAssertEqual(large.registerValuesForTesting.count, 16)
 
     let saturated = HyperLogLog(
