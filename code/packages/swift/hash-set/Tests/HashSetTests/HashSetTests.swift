@@ -106,6 +106,32 @@ final class HashSetTests: XCTestCase {
     XCTAssertFalse(symmetric.contains(.string("beta")))
   }
 
+  func testEveryAlgebraResultRetainsTheReceiverProfile() throws {
+    let left = try HashSet.fromElements(
+      leftKeys,
+      capacity: 8,
+      strategy: .linearProbing,
+      hashAlgorithm: .murmur3(seed: 42)
+    )
+    let right = try HashSet.fromElements(
+      [.string("beta"), .string("delta")],
+      capacity: 4,
+      strategy: .separateChaining,
+      hashAlgorithm: .fnv1a32
+    )
+
+    let results = [
+      try left.union(right),
+      try left.intersection(right),
+      try left.difference(right),
+      try left.symmetricDifference(right),
+    ]
+    for result in results {
+      XCTAssertEqual(result.configuration.strategy, .linearProbing)
+      XCTAssertEqual(result.configuration.hashAlgorithm, .murmur3(seed: 42))
+    }
+  }
+
   func testRelationsIncludeEmptyAndReflexiveCases() throws {
     let empty = try HashSet()
     let left = try HashSet.fromElements([
