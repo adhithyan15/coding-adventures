@@ -1,0 +1,215 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "level": "A1",
+  "target": {
+    "name": "Coding Adventures Chinese A1 Four-Skill Assessment — HSK 3.0 Level 1-aligned project equivalent",
+    "basis": "project-defined"
+  },
+  "sources": [
+    {
+      "id": "ca-hl16-assessment-policy",
+      "title": "HL16 — Exam-ready books and the gentle writing ramp",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md",
+      "published": "2026-08-20",
+      "accessed": "2026-10-28"
+    },
+    {
+      "id": "ca-hl18-task-shapes",
+      "title": "HL18 — Four-skill task shapes",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md",
+      "published": "2026-08-20",
+      "accessed": "2026-10-28"
+    },
+    {
+      "id": "ca-chinese-assessment",
+      "title": "Coding Adventures Chinese Assessment Specification, A1 project envelope",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/chinese/assessment-spec.md#a1",
+      "published": "2026-10-28",
+      "accessed": "2026-10-28"
+    },
+    {
+      "id": "cti-hsk-level1-structure",
+      "title": "Chinese Test Service — currently displayed HSK Level 1 structure",
+      "url": "https://www.chinesetest.cn/HSK/1",
+      "published": "not stated; current page is not identified as the final HSK 3.0 form",
+      "accessed": "2026-10-28"
+    },
+    {
+      "id": "cti-hsk3-2026-trial",
+      "title": "Chinese Test Service — September 2026 HSK 3.0 trial notice",
+      "url": "https://www.chinesetest.cn/notice",
+      "published": "2026",
+      "accessed": "2026-10-28"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 47,
+    "speakingMinutes": 8,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 2,
+    "deliveryModes": ["project paper or controlled screen", "recorded project audio", "live individual interlocutor"]
+  },
+  "passRule": {
+    "maximumPoints": 400,
+    "passPoints": 240,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.6,
+      "listening": 0.6,
+      "writing": 0.6,
+      "speaking": 0.6
+    },
+    "note": "Four project papers carry 100 points each and every skill must reach 60; a 240-point total cannot compensate for a failed skill. This is not an official HSK 3.0 Level 1 paper, result, pass rule, or CEFR certificate. The currently displayed CTI Level 1 page reports a separate listening-plus-reading 120/200 rule; its final HSK 3.0 task details remain unverified."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 17,
+      "parts": [
+        {
+          "id": "a1-reading-signs-and-form-fields",
+          "promptModes": ["written Chinese script", "nonverbal picture or form context"],
+          "promptGenres": ["short sign", "familiar label", "personal form field"],
+          "responseModes": ["meaning selection", "field-to-label match"],
+          "items": 10,
+          "stimulusLength": { "unit": "items", "minimum": 1, "maximum": 4, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 50, "criteria": ["taught-character recognition", "practical meaning", "field interpretation"] },
+          "aids": { "allowed": ["printed nonverbal context"], "forbidden": ["dictionary", "translation tool", "pinyin over an assessed character"], "notPublished": ["final HSK 3.0 Level 1 aid policy"] },
+          "notPublished": ["final HSK 3.0 Level 1 stimulus length and item subtype are not published here; these are project choices"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment", "cti-hsk-level1-structure"]
+        },
+        {
+          "id": "a1-reading-short-messages",
+          "promptModes": ["written Chinese script"],
+          "promptGenres": ["brief personal message", "simple everyday notice", "rehearsed question-answer exchange"],
+          "responseModes": ["gist selection", "detail selection", "question-to-answer match"],
+          "items": 10,
+          "stimulusLength": { "unit": "items", "minimum": 1, "maximum": 3, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 50, "criteria": ["gist", "key detail", "appropriate response"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "translation tool", "pinyin over an assessed character"], "notPublished": ["final HSK 3.0 Level 1 aid policy"] },
+          "notPublished": ["final HSK 3.0 Level 1 stimulus length and item subtype are not published here; these are project choices"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment", "cti-hsk-level1-structure"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": 15,
+      "parts": [
+        {
+          "id": "a1-listening-familiar-cues",
+          "promptModes": ["recorded Mandarin speech", "nonverbal picture options"],
+          "promptGenres": ["short taught phrase", "personal identification", "simple practical cue"],
+          "responseModes": ["picture match", "meaning selection"],
+          "items": 10,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 10, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 50, "criteria": ["tone and word recognition", "gist", "practical interpretation"] },
+          "aids": { "allowed": ["nonverbal picture options"], "forbidden": ["transcript", "pinyin", "dictionary", "translation tool"], "notPublished": ["final HSK 3.0 Level 1 aid policy"] },
+          "notPublished": ["official HSK 3.0 Level 1 audio speed and stimulus length are not published here; duration and two-play rule are project choices"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment", "cti-hsk-level1-structure"]
+        },
+        {
+          "id": "a1-listening-short-exchanges",
+          "promptModes": ["recorded Mandarin speech"],
+          "promptGenres": ["greeting and reply", "routine request", "short personal exchange"],
+          "responseModes": ["appropriate-response selection", "detail selection"],
+          "items": 10,
+          "stimulusLength": { "unit": "seconds", "minimum": 4, "maximum": 18, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 50, "criteria": ["speaker intent", "key detail", "appropriate response"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "pinyin", "dictionary", "translation tool"], "notPublished": ["final HSK 3.0 Level 1 aid policy"] },
+          "notPublished": ["official HSK 3.0 Level 1 audio speed and stimulus length are not published here; duration and two-play rule are project choices"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment", "cti-hsk-level1-structure"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": 15,
+      "parts": [
+        {
+          "id": "a1-writing-practical-form",
+          "promptModes": ["written personal-form fields", "nonverbal context"],
+          "promptGenres": ["name field", "simple personal detail", "familiar practical label"],
+          "responseModes": ["independent handwritten field completion"],
+          "items": 1,
+          "stimulusLength": { "unit": "items", "minimum": 4, "maximum": 6, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 4, "maximum": 6, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 40, "criteria": ["field completion", "taught-character control", "legibility", "appropriate personal information"] },
+          "aids": { "allowed": ["blank form labels", "nonverbal context"], "forbidden": ["copyable answer model", "pinyin answer bank", "dictionary", "translation tool"], "notPublished": [] },
+          "notPublished": ["the CTI pages checked here do not specify a Level 1 writing paper; all measurements and scoring are project-defined"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment"]
+        },
+        {
+          "id": "a1-writing-short-message",
+          "promptModes": ["brief written situation", "nonverbal addressee cue"],
+          "promptGenres": ["greeting plus practical request", "short personal update", "simple invitation response"],
+          "responseModes": ["independently composed handwritten short message"],
+          "items": 1,
+          "stimulusLength": { "unit": "items", "minimum": 1, "maximum": 3, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 2, "maximum": 4, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 60, "criteria": ["communicative purpose", "addressee fit", "independent retrieval", "taught syntax and characters", "legibility"] },
+          "aids": { "allowed": ["nonverbal situation cue"], "forbidden": ["copyable answer model", "pinyin answer bank", "dictionary", "translation tool"], "notPublished": [] },
+          "notPublished": ["the CTI pages checked here do not specify a Level 1 writing paper; all measurements and scoring are project-defined"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": 8,
+      "parts": [
+        {
+          "id": "a1-speaking-personal-exchange",
+          "promptModes": ["live interlocutor speech"],
+          "promptGenres": ["greeting", "name and identity", "familiar personal question"],
+          "responseModes": ["spoken short answer", "spoken reciprocal question"],
+          "items": 5,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 10, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 2, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 40, "criteria": ["task completion", "intelligibility", "tone control", "appropriate reply and reciprocal move"] },
+          "aids": { "allowed": ["one slow repeat request"], "forbidden": ["written answer script", "pinyin answer prompt", "dictionary", "translation tool"], "notPublished": [] },
+          "notPublished": ["official HSK 3.0 Level 1 trial notice lists no paired speaking paper; all measurements and scoring are project-defined"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment"]
+        },
+        {
+          "id": "a1-speaking-rehearsed-role-play",
+          "promptModes": ["live interlocutor speech", "nonverbal role cue"],
+          "promptGenres": ["survival transaction", "simple invitation", "routine information request"],
+          "responseModes": ["short spoken exchange", "appropriate follow-up"],
+          "items": 1,
+          "stimulusLength": { "unit": "seconds", "minimum": 3, "maximum": 12, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 20, "maximum": 45, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 60, "criteria": ["communicative goal", "turn management", "intelligibility", "tone control", "appropriate register"] },
+          "aids": { "allowed": ["nonverbal role cue", "one slow repeat request"], "forbidden": ["written answer script", "pinyin answer prompt", "dictionary", "translation tool"], "notPublished": [] },
+          "notPublished": ["official HSK 3.0 Level 1 trial notice lists no paired speaking paper; all measurements and scoring are project-defined"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment"]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}
