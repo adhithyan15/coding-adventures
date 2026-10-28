@@ -19500,3 +19500,29 @@ build-tool plan still discovers 173 Swift packages and selects exactly
 and current-main delta is independently reviewed; then push the receipt, mark
 ready, and require a completely fresh exact-head hosted matrix before guarded
 auto-merge.
+
+### PR #18540 merge and Elixir graph/diff selection
+
+All 40 final-head checks for Swift protocol IR PR #18540 completed acceptably
+at `9997c16d1f5c63994e981ef8a227e35833c6cf8d`: 10 successes, 29 expected
+path-gated skips, and one neutral CodeQL result. GitHub reported the reviewed
+head clean and mergeable. Guarded squash auto-merge was enabled only after the
+aggregate CI gate passed, and GitHub merged the PR at
+`2026-10-28T22:52:43Z` as
+`93ce1b4493a1ea5d781a047e86c658fc78483f59`. The clean completed worktree
+and local branch were removed.
+
+The fresh dependency/leverage pass selects
+`build-tool-elixir-diff-selection-match-work-ceiling-adoption` on branch
+`codex/build-tool-elixir-diff-selection-parity` from that exact merged main.
+Its seven prerequisites are merged, and its three direct and five total
+unfinished descendants rank ahead of the other bounded ready leaves. The
+existing Elixir directed graph, Git-diff mapping, and hardened memoized
+Unicode-scalar matcher keep the implementation surface narrower than the
+from-scratch canonical-CBOR and Lua alternatives. Dynamically consume exactly
+the eight graph and twelve diff-selection neutral cases, including the shared
+input multi-consumer case and the 50,000,000-unit match-work ceiling; preserve
+stable all-or-error output and process-free authority. Keep lifecycle edits
+and the program implementation on the dedicated current-main worktree, require
+native validation plus independent exact-head security review before
+publication, and do not claim execution-adapter or host authority readiness.

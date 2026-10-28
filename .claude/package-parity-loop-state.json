@@ -16,15 +16,13 @@
       "external-approval"
     ]
   },
-  "active_pr": 18540,
-  "active_prs": [
-    18540
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-10-28T22:13:22Z",
+    "observed_at": "2026-10-28T22:52:43Z",
     "pr_number": 18540,
-    "head_revision": "b9cb795db6b14b85fbe52292b3a6a68e67e74cc9",
-    "action": "Opened independently reviewed Swift protocol IR receipt b9cb795db6b14b85fbe52292b3a6a68e67e74cc9 as draft PR #18540. GitHub recorded live base e2119773be5b8881191bcb5b8657946d2b51ed5f, revealing that main had advanced moments before creation and the draft head still required a normal current-main merge plus lifecycle review before being pushed and marked ready.",
+    "head_revision": "9997c16d1f5c63994e981ef8a227e35833c6cf8d",
+    "action": "All 40 exact-head checks completed acceptably (10 success, 29 expected skips, and one neutral CodeQL result). GitHub reported the reviewed head clean and mergeable; guarded squash auto-merge was enabled only after the aggregate CI gate passed, and PR #18540 merged as 93ce1b4493a1ea5d781a047e86c658fc78483f59. The clean completed worktree and local branch were removed.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2620,7 +2618,7 @@
     {
       "id": "build-tool-elixir-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Elixir build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",
@@ -2630,8 +2628,11 @@
         "build-tool-elixir-glob-matcher-complexity-hardening",
         "build-tool-shared-input-multiconsumer-diff-selection-fixture"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-elixir-diff-selection-parity",
       "pr_number": null,
+      "selected_at": "2026-10-28T22:53:00Z",
+      "selection_revision": "93ce1b4493a1ea5d781a047e86c658fc78483f59",
+      "selection_notes": "Selected after PR #18540 completed all 40 exact-head checks acceptably, merged through guarded squash auto-merge, and its clean worktree and local branch were removed. A fresh dependency/leverage pass ranked this ready process-free Elixir build-tool leaf first at three direct and five total unfinished descendants; every prerequisite is merged, its program paths are disjoint from the completed Swift package, and the existing directed-graph, Git-diff, and hardened Unicode-scalar matcher modules bound the tranche more tightly than from-scratch canonical-CBOR or Lua alternatives. The implementation must dynamically consume exactly eight graph and twelve diff-selection cases, preserve stable all-or-error behavior, and add no host authority.",
       "notes": "Dynamically consume all eight graph and twelve diff-selection cases, including shared-input multi-consumer selection, through production code with stable no-partial errors, closures, strict memoized Unicode-scalar matching, exact BUILD fronts, and unchanged process-free authority.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/build-tool-elixir-diff-selection-match-work-ceiling-adoption"
@@ -16989,7 +16990,7 @@
     {
       "id": "swift-in-memory-data-store-protocol-lane-parity",
       "title": "Implement the in-memory data-store protocol IR in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/swift-in-memory-data-store-protocol-lane-parity",
       "pr_number": 18540,
@@ -17015,6 +17016,10 @@
       "current_main_validation_notes": "After draft creation exposed newly advanced remote main, normal merge head 1d23920b2584877943a283eaf03770611c3fe680 preserves reviewed publication parent b9cb795db6b14b85fbe52292b3a6a68e67e74cc9 and exact current-main parent e2119773be5b8881191bcb5b8657946d2b51ed5f. Main adds one path-disjoint fixed-memory Rust HKDF change and four lessons. All ten protocol tests, strict Swift Format, release build, JSON/diff hygiene, and empty capabilities pass with unchanged 100% production line, function, and region coverage across 249 lines. The real Go build-tool dry plan still discovers 173 Swift packages and selects exactly swift/in-memory-data-store-protocol. Windows BUILD execution, full repository orphan validation, exact final receipt review, and hosted qualification remain publication/merge gates.",
       "final_review_revision": "b9cb795db6b14b85fbe52292b3a6a68e67e74cc9",
       "final_review_notes": "Independent exact current-main review approved b9cb795db6b14b85fbe52292b3a6a68e67e74cc9 with no findings. It verified byte-identical protocol implementation/spec/changelog, both normal-merge parents, PR #18537 terminal receipt and cleanup, the complete acyclic 1,557-owner graph, native validation and coverage, canonical changelog digest, lessons, merge-tree, diff, and artifact hygiene. The later path-disjoint current-main merge and PR-number lifecycle receipt require one focused final delta review before the draft is made ready.",
+      "merged_head_revision": "9997c16d1f5c63994e981ef8a227e35833c6cf8d",
+      "merged_at": "2026-10-28T22:52:43Z",
+      "merge_revision": "93ce1b4493a1ea5d781a047e86c658fc78483f59",
+      "merge_notes": "All 40 final-head checks completed acceptably: 10 successes, 29 expected path-gated skips, and one neutral CodeQL result. GitHub reported exact reviewed head 9997c16d1f5c63994e981ef8a227e35833c6cf8d clean and mergeable. Guarded squash auto-merge was enabled only after the final aggregate CI gate passed, and GitHub merged PR #18540 without a plain manual merge command. The clean completed worktree and local branch were removed after the merge receipt was verified on origin/main.",
       "notes": "Implement the dependency-free command-frame and engine-response IR with ASCII command normalization, binary-safe arguments, immutable value ownership, deterministic ordering, stable errors, package-native tests, and empty capabilities. Keep RESP conversion in the facade rather than coupling this IR owner to the wire codec.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-in-memory-data-store-protocol-lane-parity"
