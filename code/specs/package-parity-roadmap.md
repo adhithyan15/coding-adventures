@@ -18028,6 +18028,34 @@ fleet are out of scope. The active parity PRs touch none of these package or
 build-front files; shared bookkeeping will be reconciled only when a
 publication slot opens.
 
+## October 25, 2026: Swift fenced-block prerequisite selection
+
+The current dependency review selected
+`gfm-fenced-block-swift-contract-adoption` as the smallest unblocked Swift GFM
+prerequisite. The neutral TE04 fixture is merged, while the 652-example Swift
+CommonMark reconciliation, missing GFM parser, aggregate Swift GFM owner, and
+facade all remain downstream.
+
+An older local Swift GFM preparation predates that decomposition and combines
+the fenced-block contract with the missing parser and facade work. It is useful
+as implementation evidence but is not publishable as one bounded owner. The
+new branch therefore carries only the Document AST variant, existing
+CommonMark-parser projection, inert HTML fallback, focused native tests, and
+package documentation. It does not claim all sixteen GFM cases or any of the
+downstream owners.
+
+The focused RED phase failed on the missing AST type and enum case. The GREEN
+phase passes 96 document-AST, 62 parser, and 63 renderer tests. The complete
+manifest-confirmed dependent closure also passes 30 CommonMark facade, 45
+AsciiDoc parser, and 28 AsciiDoc facade tests, and all six packages build in
+release mode. Production line coverage is 100% for the AST, 92.38% for the
+renderer plus AST, and 81.91% for the parser plus AST; the parser total includes
+the pre-existing 77.66% `InlineParser` baseline, while the changed block and
+projection files measure 86.99% and 97.78%. Current-source diff discovery finds
+three direct packages and the same six-package closure. Its repository-wide
+orphan census is intentionally not credited from the sparse worktree because
+hidden package roots appear absent; hosted complete-checkout CI remains the
+publication gate.
 ## October 25, 2026: Go and Rust Bezier flattening selection
 
 The last bounded existing-lane G2D02 implementation child is
@@ -18523,6 +18551,45 @@ are #18293 at exact head `c7b1e98687d3c762a98a9beed61ad71f586ca484`
 and #18355 at exact head `f27058ffa18abe1fb7a7167237eb0b761414162f`;
 GitHub reports both open, non-draft, and mergeable. The live parity set is now
 exactly {18293, 18355, 18367}.
+## October 26, 2026: local Swift fenced-block rebase and reconciliation
+
+The `gfm-fenced-block-swift-contract-adoption` lifecycle mismatch is expected:
+origin/main still records the owner pending because neither its selection nor
+its implementation has ever been published, while this local-only preparation
+records it in progress. Its exact prerequisite,
+`gfm-language-neutral-conformance-fixture`, merged in PR #18118 as
+`83f1871e3d61e8151b0e9313337f5dc2c842a3e6`.
+
+All prepared Bezier successors remain blocked on PR #18293 and the three hosted
+slots are occupied by #18293 at
+`c7b1e98687d3c762a98a9beed61ad71f586ca484`, #18355 at
+`f27058ffa18abe1fb7a7167237eb0b761414162f`, and #18367 at
+`365f455bbaa57c41b1ff825f85fbca883d0cfb92`. The unpublished Swift branch was
+therefore rebased locally onto exact origin/main
+`79322a77c561c1c0cbe21a397a6cd7c41021c3a0` without opening a fourth PR. The
+rebase preserved current main, the verified Python #18324 merge receipt, and
+the complete append-only PaintVmAscii lifecycle history. The old C# receipt
+replay became empty because current main already carries its verified receipt.
+GitHub reports all three exact heads open, non-draft, and mergeable; their
+queued checks and merge responsibility remain outside this local preparation.
+
+Fresh native validation passes 96 document-AST, 62 CommonMark-parser, 63 HTML
+renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
+tests, plus release builds for all six packages. The production planner finds
+exactly three direct packages and their six-package Swift closure, selects only
+the Swift toolchain, and executes all six packages from its emitted plan. Its
+full repository orphan census still fails only because this intentionally
+sparse worktree omits unrelated roots listed by the shared exemption file; the
+bounded planner result remains exact when that global census is disabled.
+
+All three empty capability manifests validate against the current schema. The
+strict state graph has 1,547 unique owners and 2,616 complete acyclic edges,
+zero merged-to-unfinished edges, exactly one local in-progress owner, and the
+three exact live PR owners. All 1,595 lesson shards validate. Fresh root
+changelog validation also caught the preparation's old noncanonical shard
+name; the file now uses the uppercase heading slug and the exact SHA-256
+heading digest `7d765417`. This is preparation evidence only: independent
+exact-head review and a future hosted slot remain publication gates.
 ## October 26, 2026: Kotlin micro-qr build-front selection
 
 PR #18312 completed every reported final-head check acceptably and merged from
@@ -18883,6 +18950,24 @@ downstream Arc2D closure passes all 25 Arc2D examples as well. Publish the
 normal follow-up history and require a completely fresh exact-head hosted
 matrix before guarded auto-merge.
 
+## October 28, 2026: Swift fenced-block current-main reconciliation
+
+The bounded Swift fenced-block prerequisite first normally merged exact main
+`c32d5acc15c3563487cce56a7976c754f62e4bd2` without rewriting its prepared
+history. Scripting Bezier PR #18508 has now advanced current main to
+`fe057f18c6e8b62cae9921fee2538c091fae1bbb`; preserve the same published
+history through another normal merge. The six-package production delta remains
+unchanged from exact prepared head
+`47bcc00857695c53f9caeb9a0568b2d4cfb8356b`. Re-run the six native package
+suites and require a fresh exact-head hosted matrix before guarded auto-merge.
+The live parity set is {#18511, #18516}, leaving one publication slot for the
+next dependency-ready, non-overlapping backlog item.
+
+Post-reconciliation validation passes 96 document-AST, 62 CommonMark-parser,
+63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
+tests. The normal merge can now be published; the resulting exact head still
+needs its full replacement hosted matrix.
+
 ## October 28, 2026: Swift hash-map selection after scripting Bezier merge
 
 Scripting Bezier PR #18508 merged from exact reviewed head
@@ -18912,7 +18997,7 @@ Open PR #18517 from exact current-main reconciliation and lifecycle head
 remains disabled until every hosted check for this exact head is terminal and
 acceptable, including the Windows BUILD front.
 
-## October 28, 2026: Swift hash-map merge and Haskell/Swift reconciliation
+## October 28, 2026: Swift hash-map merge and published-PR reconciliation
 
 Swift hash-map PR #18517 completed every exact-head check acceptably and merged
 through guarded squash auto-merge from exact lifecycle head
@@ -18933,3 +19018,40 @@ closures (29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples), all 27
 Swift Bezier2D tests, and all 13 downstream Swift Arc2D tests. The normal merge
 can now be published; the resulting exact head still needs a full replacement
 hosted matrix.
+
+That base advance conflicts with Swift fenced-block PR #18516 only in shared
+lifecycle records. Preserve its published implementation and review history
+through a normal merge of exact current main. Re-run the six affected native
+Swift suites and require a completely fresh exact-head hosted matrix before
+guarded auto-merge. The live publication set is {#18511, #18516}; one slot is
+open, but the next publication must wait for a fresh backlog prioritization.
+
+Post-reconciliation validation passes 96 document-AST, 62 CommonMark-parser,
+63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
+tests. The production delta remains unchanged from exact prepared head
+`47bcc00857695c53f9caeb9a0568b2d4cfb8356b`; publish the normal merge and
+require a full replacement hosted matrix.
+
+## October 28, 2026: Swift fenced-block merge and Haskell/Swift reconciliation
+
+Swift fenced-block PR #18516 completed every exact-head check acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`8a9ac79a9308df20e88c1def222967a51f3a1abb` as
+`7bb2f044fed05e25d8c1cfb330ccfd3c286e1550` at
+`2026-10-28T13:29:40Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with Haskell/Swift PR #18511 only in shared
+lifecycle records. Preserve its published Bezier implementation and both
+macOS linker repairs through a normal merge of exact current main. Re-run the
+Haskell Bezier closure and Swift Bezier/Arc suites, then require a completely
+fresh exact-head hosted matrix before guarded auto-merge. PR #18511 is the
+only live parity owner while the independent Swift hash-set tranche advances
+locally.
+
+Post-reconciliation validation passes the complete Haskell Bezier2D and Arc2D
+closures (29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples), all 27
+Swift Bezier2D tests, and all 13 downstream Swift Arc2D tests. The production
+delta remains unchanged from the reviewed implementation apart from the
+bounded BUILD-front fixes. Publish the normal merge and require a full
+replacement exact-head hosted matrix.
