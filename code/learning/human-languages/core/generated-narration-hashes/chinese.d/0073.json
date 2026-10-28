@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:5ea43ceae1ae5f7d",
+  "lessonIds": [
+    "ZH-C73-xiache",
+    "ZH-W73-xia",
+    "ZH-C73-shangche",
+    "ZH-C73-huochezhan",
+    "ZH-C73-jichang",
+    "ZH-C73-piao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch73.txt",
+  "json": "chinese/narration/ch73.json",
+  "textHash": "fnv1a64:646f19c648511b83",
+  "jsonHash": "fnv1a64:b9332108576b1823",
+  "findings": []
+}

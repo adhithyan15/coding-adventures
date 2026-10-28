@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:1682780385a85d75",
+  "lessonIds": [
+    "ZH-C248-xueqi",
+    "ZH-C248-nianji",
+    "ZH-C248-xiaozhang",
+    "ZH-W248-xiao-school",
+    "ZH-C248-gaozhong",
+    "ZH-W248-gao-tall",
+    "ZH-C248-jiazhang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch248.txt",
+  "json": "chinese/narration/ch248.json",
+  "textHash": "fnv1a64:22f2260343ef3712",
+  "jsonHash": "fnv1a64:419fe4e3dd6ebe47",
+  "findings": []
+}

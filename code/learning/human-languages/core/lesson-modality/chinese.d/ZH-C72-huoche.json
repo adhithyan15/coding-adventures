@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C72-huoche",
+    "language": "chinese",
+    "chapter": 72,
+    "sequence": 5720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93fefe7a4ff1cf03"
+  },
+  "findings": []
+}

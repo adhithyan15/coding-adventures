@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:95315543b907c437",
+  "lessonIds": [
+    "ZH-C251-pian",
+    "ZH-C251-zuowen",
+    "ZH-W251-zuo-do",
+    "ZH-C251-xiezuo",
+    "ZH-W251-xie-write",
+    "ZH-C251-shengzi",
+    "ZH-C251-xiugai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch251.txt",
+  "json": "chinese/narration/ch251.json",
+  "textHash": "fnv1a64:3a1cc51b2bff4b4a",
+  "jsonHash": "fnv1a64:1d0808a8e69a1b54",
+  "findings": []
+}

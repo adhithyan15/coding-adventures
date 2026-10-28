@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:9fc623ff6dc5c974",
+  "lessonIds": [
+    "ZH-C252-kaixin",
+    "ZH-C252-gandao",
+    "ZH-C252-shangxin",
+    "ZH-C252-shiwang",
+    "ZH-C252-manyi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch252.txt",
+  "json": "chinese/narration/ch252.json",
+  "textHash": "fnv1a64:8219701c6ee860ee",
+  "jsonHash": "fnv1a64:6947ffdd3c21cdcf",
+  "findings": []
+}

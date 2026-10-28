@@ -1,6 +1,4 @@
 {
-  "omits": [
-    "VERB-WANT"
-  ],
+  "omits": [],
   "relocates": {}
 }

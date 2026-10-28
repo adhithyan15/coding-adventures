@@ -1,0 +1,20 @@
+{
+  "chapter": 130,
+  "title": "Feeling Ill",
+  "label": "ch:zh-feeling-ill",
+  "canDo": "I can say I am ill, have a cold or a fever, or that something hurts, and go to the doctor.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C130-kanbing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: I can say I am ill, have a cold or a fever, or that something hurts, and go to the doctor.",
+    "assesses": [
+      "ZH-LEX-C130-ILL130-03",
+      "ZH-LEX-C130-ILL130-04",
+      "ZH-LEX-C130-ILL130-05",
+      "ZH-SCRIPT-BING-ILL-01"
+    ]
+  }
+}

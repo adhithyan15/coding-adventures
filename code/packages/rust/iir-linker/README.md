@@ -51,13 +51,87 @@ assert!(merged.imports.is_empty()); // self-contained
 | `verify_imports(module, providers)` | Pre-flight: check imports without merging. |
 | `IIRLinker::new().link(modules)` | Struct API (same as `link`). |
 
+## Renaming and function references
+
+When two modules define the same private function name, the first module
+keeps the bare name and later ones are renamed to `"<module>::name"`.
+Renaming is only safe if every *reference* to the old name follows, so the
+linker rewrites each module's function-name operands through that module's
+rename map (its own renamed functions plus its imports):
+
+| Op | Operand rewritten |
+|----|-------------------|
+| `call` | `srcs[0]` — callee name (`Operand::Var`) |
+| `alloc_closure` | `srcs[0]` — closure body name (`Operand::Str`) |
+| `task_spawn` | `srcs[0]` — spawned function name |
+| `group_spawn` | `srcs[1]` — spawned function name |
+
+The merged `entry_point` is mapped the same way.  Data operands such as
+`const(Str(..))`, `global_load`/`global_store` names and `catch` kinds are
+left alone.  This matters for Twig in particular: every module numbers its
+lambdas from `__lambda_0`, so without the `alloc_closure` rewrite a second
+module's closures would run the first module's lambda body (issue #18421).
+
+The `fn` operand of `task_spawn` and `group_spawn` is a function *name*,
+never a register holding a closure (LANG28 pins this).  The rewrite matches
+operands by their text, so a register in that slot that happened to share
+a renamed function's name would be renamed too.
+
+## One owner per name
+
+Renaming only works if every name the merge pass sees has exactly one
+meaning.  Three inputs would break that, so `link` rejects them up front
+(issue #18429) instead of quietly running the wrong function:
+
+| Input | Why it is ambiguous | Error |
+|-------|---------------------|-------|
+| modules `left` and `right` both export `foo` | exports keep their bare name, so the merged module would hold two `foo`s and every `call foo` would run `left`'s | `ConflictingExport` |
+| two input modules are both named `util` | import rewrites are keyed by module name, so each would get the other's imports | `DuplicateModuleName` |
+| `app` has `entry_point = "start"` but no `start` | the bare name would bind to some other module's private `start` | `UnresolvedEntryPoint` |
+
+Things that are *not* errors: the same private name in several modules
+(renamed apart), one module holding two functions of the same name (Twig's
+user `main` beside its synthesized `main` — references bind to the first),
+and export aliases with distinct public names.
+
+## Private means private
+
+Every operand in the table above — every *function reference* — must name
+either a function its own module defines or the local name of one of its
+imports.  Anything else is `LinkError::UndeclaredCall` (issue #18432).
+Before that check existed such a name was simply left bare, so it bound to
+whichever function owned it after merging:
+
+```text
+  lib_a: private helper  ─┐   merged: helper          ← lib_a's (first)
+  lib_b: private helper  ─┤           lib_b::helper
+  app:   call helper     ─┘   app ran lib_a's private helper without importing it
+```
+
+Builtins are not function references: producers call them with
+`call_builtin`, which the linker never inspects, and neither VM resolves an
+unknown `call` target to a builtin.
+
+## Renaming never panics
+
+A renamed private function is called `<module>::<fn>`.  If that name is
+itself taken — an export alias can be spelled `b::c` — the merge pass adds
+`$0`, `$1`, … until the name is free.  The set of taken names is finite, so
+of `taken + 1` candidates one is always free; the search needs no bound.
+An earlier version `assert!`ed a bound of *functions + 1*, which a few
+crafted aliases (`b::c$0` … `b::c$3`, which claim names without adding
+functions) exceeded, panicking `link()` (issue #18432).
+
 ## Error types
 
 ```text
-LinkError::Unresolved         — import has no matching export
-LinkError::TypeMismatch       — import type annotations don't match export
-LinkError::DuplicateExport    — two modules export the same (module, name)
-LinkError::UndeclaredCall     — call instruction targets neither local nor import
+LinkError::Unresolved            — import has no matching export
+LinkError::TypeMismatch          — import type annotations don't match export
+LinkError::DuplicateExport       — one module exports the same public name twice
+LinkError::ConflictingExport     — two different modules export the same public name
+LinkError::DuplicateModuleName   — two input modules share a name
+LinkError::UnresolvedEntryPoint  — entry point neither defined nor imported by its module
+LinkError::UndeclaredCall        — call / closure / spawn names neither a local function nor an import
 ```
 
 ## Where it fits

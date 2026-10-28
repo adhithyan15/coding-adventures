@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C160-xiwan",
+    "language": "chinese",
+    "chapter": 160,
+    "sequence": 13110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc52b3f06c36b860"
+  },
+  "findings": []
+}

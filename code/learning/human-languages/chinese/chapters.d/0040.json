@@ -1,0 +1,19 @@
+{
+  "chapter": 40,
+  "title": "Fruit, Bread and Eggs",
+  "label": "ch:zh-fruit-bread-and-eggs",
+  "canDo": "I can say what I buy and name fruit, bread and eggs.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ZH-C40-jidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 40: I can say what I buy and name fruit, bread and eggs.",
+    "assesses": [
+      "ZH-LEX-C40-FRUIT40-03",
+      "ZH-LEX-C40-FRUIT40-04",
+      "ZH-LEX-C40-FRUIT40-05"
+    ]
+  }
+}

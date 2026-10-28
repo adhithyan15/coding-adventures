@@ -6,8 +6,12 @@
 //! licence). Both themes are measured.
 //!
 //! This gate is what makes the J3b-pre fixes (#15931) stick for this
-//! component: the multi-line body is the legacy `Input`, which silently drew
-//! one line on Flutter and was unnamed on React and SwiftUI before them.
+//! component. The multi-line body was first the legacy `Input`, which
+//! silently drew one line on Flutter and was unnamed on React and SwiftUI
+//! before them; it is now the kernel's `HostInput ( multiline : true )`, which
+//! lowers to the same text area. Since 0.2.0 the body's `placeholder` is bound
+//! to a slot, which EM-13 made lower on every backend: the gate proves that
+//! costs no capability and no new style drop.
 
 use mosaic_package_artifact_builder::{
     analyze_package_degradations, Backend, BuildOptions, BuildProfile,

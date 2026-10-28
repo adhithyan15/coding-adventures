@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C144-tebie",
+    "language": "chinese",
+    "chapter": 144,
+    "sequence": 11110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a061cb2dad8a9d6"
+  },
+  "findings": []
+}

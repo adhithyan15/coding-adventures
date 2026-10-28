@@ -6,6 +6,7 @@ import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -47,10 +48,12 @@ import org.junit.runner.RunWith
 // reads that screen through the semantics tree (assertExists). Asserting
 // what is visible on a compact screen is the compact layout's own test.
 //
-// Timeline rows are the toolkit RecordList's buttons, tagged
-// `record-list-title`. RecordList is mounted more than once ("On this day"
-// sits above the timeline) and a later mount's parts are suffixed `-m2`, so
-// rows are matched by tag PREFIX and by text, as on the desktop.
+// Timeline rows are mosaic-pkg-card Cards, each opened by the "Open" button
+// beside it, tagged `timeline-entry-open` (or `-selected`). Every row's
+// button reads "Open", so rows are matched by tag PREFIX and by the button's
+// accessible name, its `contentDescription` "Open {title}", as on the
+// desktop. (They were RecordList's `record-list-title` buttons, matched by
+// text, before the timeline became Cards.)
 
 private const val DRAFT_TITLE = "Drafted on Android"
 private const val KEPT_TITLE = "Kept across an Android relaunch"
@@ -62,9 +65,9 @@ private const val EMPTY = "No entries yet"
 private const val STARTUP_TIMEOUT_MS = 60_000L
 
 private fun timelineRow(title: String): SemanticsMatcher =
-    SemanticsMatcher("a RecordList row button") { node ->
-        node.config.getOrNull(SemanticsProperties.TestTag)?.startsWith("record-list-title") == true
-    } and hasText(title)
+    SemanticsMatcher("a timeline entry's Open button") { node ->
+        node.config.getOrNull(SemanticsProperties.TestTag)?.startsWith("timeline-entry-open") == true
+    } and hasContentDescription("Open $title")
 
 private fun SemanticsNodeInteraction.activate(): SemanticsNodeInteraction =
     performSemanticsAction(SemanticsActions.OnClick)

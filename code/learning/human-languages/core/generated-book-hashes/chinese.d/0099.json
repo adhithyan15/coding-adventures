@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:32d1f62b30e1600e",
+  "lessonIds": [
+    "ZH-C99-xi",
+    "ZH-W99-xi-wash",
+    "ZH-C99-shuaya",
+    "ZH-C99-xilian",
+    "ZH-C99-xizao",
+    "ZH-C99-shutou"
+  ],
+  "tex": "chinese/book/chapters/ch99-getting-washed.tex"
+}

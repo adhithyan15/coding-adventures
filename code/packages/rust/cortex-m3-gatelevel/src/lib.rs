@@ -6,6 +6,7 @@
 
 mod engine;
 pub mod gates;
+pub mod integration;
 mod state;
 
 pub use engine::{
@@ -260,13 +261,48 @@ impl CortexM3GateLevel {
     }
 
     pub fn read_register(&self, index: u8) -> Result<u32, CortexM3Error> {
-        engine::read_register(&self.get_state(), index)
+        let value = match index {
+            0..=12 => read_bits(&self.registers[index as usize]) as u32,
+            SP => {
+                let use_psp = and_gate(
+                    not_gate(self.handler_mode),
+                    gates::u8_to_bits(read_bits(&self.control) as u8)[1],
+                );
+                gates::select_32(
+                    read_bits(&self.msp) as u32,
+                    read_bits(&self.psp) as u32,
+                    use_psp,
+                )
+            }
+            LR => read_bits(&self.lr) as u32,
+            PC => read_bits(&self.pc) as u32,
+            _ => return Err(CortexM3Error::InvalidRegister { index }),
+        };
+        Ok(value)
     }
 
     pub fn write_register(&mut self, index: u8, value: u32) -> Result<(), CortexM3Error> {
-        let mut state = self.get_state();
-        engine::write_register(&mut state, index, value)?;
-        self.restore_registers_and_control(&state);
+        match index {
+            0..=12 => clock_bits(&mut self.registers[index as usize], u64::from(value)),
+            SP => {
+                let aligned = gates::bit_and_32(value, gates::bit_not_32(3));
+                let use_psp = and_gate(
+                    not_gate(self.handler_mode),
+                    gates::u8_to_bits(read_bits(&self.control) as u8)[1],
+                );
+                if use_psp == 1 {
+                    clock_bits(&mut self.psp, u64::from(aligned));
+                } else {
+                    clock_bits(&mut self.msp, u64::from(aligned));
+                }
+            }
+            LR => clock_bits(&mut self.lr, u64::from(value)),
+            PC => clock_bits(
+                &mut self.pc,
+                u64::from(gates::bit_and_32(value, gates::bit_not_32(1))),
+            ),
+            _ => return Err(CortexM3Error::InvalidRegister { index }),
+        }
         Ok(())
     }
 

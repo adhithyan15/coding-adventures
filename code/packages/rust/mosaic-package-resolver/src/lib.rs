@@ -81,6 +81,17 @@
 //!   `pkg::` graph is checked. [`LayoutPackageResolver::check_dependencies`]
 //!   checks the consuming package itself, which the inliner never sees.
 //!
+//! ## Declared dependencies (publishing-v1 §10 Phase 1b)
+//!
+//! A version check is only as good as the declaration it checks. The
+//! inliner finds `pkg::P::C`'s package by manifest name anywhere on the
+//! search path, so it also refuses a reference to a `P` that the
+//! referencing package does not declare:
+//! [`LayoutResolveError::UndeclaredPackageReference`]. A package
+//! component's references are checked against its own manifest. The
+//! layout being resolved is checked against the manifest passed to
+//! [`LayoutPackageResolver::with_consumer`], when one is.
+//!
 //! ## Error surface
 //!
 //! ```text
@@ -293,6 +304,46 @@ impl std::fmt::Display for VersionMismatch {
             self.found,
             self.found_at.display(),
             self.dependent_manifest.display()
+        )
+    }
+}
+
+/// The details of a [`LayoutResolveError::UndeclaredPackageReference`].
+#[derive(Debug, Clone, PartialEq)]
+pub struct UndeclaredPackageReference {
+    /// The component whose layout holds the call site, in
+    /// [`LayoutResolveError::SlotBindingMissing`]'s convention: the layout being
+    /// resolved (`JournalApp`), or `pkg::P::C` for a reference inside
+    /// another package component's own layout.
+    pub consumer: String,
+    /// The package referenced without being declared.
+    pub package: String,
+    /// The component of `package` that the call site mounts.
+    pub component: String,
+    /// Where the first such call site is in `consumer`'s layout, as in
+    /// [`LayoutResolveError::SlotBindingMissing`]. One error per manifest and package,
+    /// however many call sites name it: the fix is a single line.
+    pub call_site: String,
+    /// The manifest whose `[dependencies]` must list `package`.
+    pub manifest_path: PathBuf,
+    /// `package`'s `[package].version` on the search path, when it is
+    /// there: the requirement the message suggests adding.
+    pub found_version: Option<String>,
+}
+
+impl std::fmt::Display for UndeclaredPackageReference {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "`{}` mounts `pkg::{}::{}` at {}, but `{}` is not a declared dependency; add `{} = \"{}\"` to [dependencies] in {}",
+            self.consumer,
+            self.package,
+            self.component,
+            self.call_site,
+            self.package,
+            self.package,
+            self.found_version.as_deref().unwrap_or("<version>"),
+            self.manifest_path.display()
         )
     }
 }
@@ -715,6 +766,24 @@ pub enum LayoutResolveError {
         /// offers "or give it a default" as a fix.
         defaultable: bool,
     },
+    /// A `pkg::P::C` call site names a package `P` that is neither the
+    /// referencing package nor one of its declared `[dependencies]`
+    /// (mosaic-package-publishing-v1 §10 Phase 1b).
+    ///
+    /// ```text
+    /// # journal-app/mosaic-package.toml     // JournalApp.mll
+    /// [dependencies]                        pkg::mosaic-pkg-toolkit::Button ( … )
+    /// mosaic-pkg-sheet = "0.4.0"            ↑ mosaic-pkg-toolkit is not listed
+    /// ```
+    ///
+    /// The inliner finds `P` by manifest name anywhere on the search path,
+    /// so before this check such a reference compiled. But nothing compared
+    /// a version requirement for it (§7.4), because there was none, and the
+    /// build tool, which draws its edges from `[dependencies]`, never
+    /// rebuilt the consumer when `P` changed.
+    ///
+    /// Boxed, as [`Self::VersionMismatch`] is, to keep `Result`s small.
+    UndeclaredPackageReference(Box<UndeclaredPackageReference>),
     /// A package component's expression names something that is neither
     /// one of its slots nor a `For` binding in scope.
     ///
@@ -864,6 +933,7 @@ impl std::fmt::Display for LayoutResolveError {
                     write!(f, " (a slot of this type cannot have a default)")
                 }
             }
+            Self::UndeclaredPackageReference(reference) => write!(f, "{reference}"),
             Self::UndeclaredExpressionIdentifier {
                 package,
                 component,
@@ -922,6 +992,49 @@ pub struct LayoutPackageResolver {
     /// Packages whose own `[dependencies]` have already been checked, so a
     /// package inlined from many times is checked once.
     checked: Mutex<HashSet<String>>,
+    /// The `[dependencies]` of the package whose layout is being resolved,
+    /// when the caller supplied its manifest ([`Self::with_consumer`]).
+    /// `None` leaves the consumer's own `pkg::` references unchecked; the
+    /// references inside package components are checked regardless, against
+    /// each package's own manifest.
+    consumer: Option<DeclaredDependencies>,
+}
+
+/// What one manifest lets its layouts reference: the package itself and
+/// its declared dependencies (mosaic-package-publishing-v1 §10 Phase 1b).
+///
+/// ```text
+/// [package] name = "journal-app"     pkg::journal-app::Entry          → itself, fine
+/// [dependencies]                     pkg::mosaic-pkg-sheet::Sheet     → declared, fine
+/// mosaic-pkg-sheet = "0.4.0"         pkg::mosaic-pkg-toolkit::Button  → UNDECLARED
+/// ```
+///
+/// Self-references are allowed because authors never write them but the
+/// artifact builder does: it rewrites a package's bare sibling references
+/// to `pkg::<self>::C` before resolving.
+#[derive(Debug, Clone)]
+struct DeclaredDependencies {
+    /// `[package].name`.
+    package: String,
+    /// The `[dependencies]` keys, which are package names.
+    dependencies: HashSet<String>,
+    /// Where the manifest lives: the file an error tells the author to fix.
+    manifest_path: PathBuf,
+}
+
+impl DeclaredDependencies {
+    fn from_manifest(manifest: &MosaicPackage, manifest_path: &Path) -> Self {
+        Self {
+            package: manifest.package.name.clone(),
+            dependencies: manifest.dependencies.keys().cloned().collect(),
+            manifest_path: manifest_path.to_path_buf(),
+        }
+    }
+
+    /// Whether a layout governed by this manifest may reference `pkg`.
+    fn allows(&self, pkg: &str) -> bool {
+        pkg == self.package || self.dependencies.contains(pkg)
+    }
 }
 
 /// A component's declared slots, as its `.mil` lists them.
@@ -971,7 +1084,28 @@ impl LayoutPackageResolver {
             interfaces: Mutex::new(HashMap::new()),
             located: Mutex::new(HashMap::new()),
             checked: Mutex::new(HashSet::new()),
+            consumer: None,
         }
+    }
+
+    /// Name the package whose layouts this resolver resolves, so the
+    /// layouts' own `pkg::P::C` references are checked against its
+    /// `[dependencies]` (mosaic-package-publishing-v1 §10 Phase 1b).
+    ///
+    /// ```text
+    /// LayoutPackageResolver::new(search_paths)
+    ///     .with_consumer(&manifest, &package_root.join("mosaic-package.toml"))
+    /// ```
+    ///
+    /// Without it, only the references *inside* package components are
+    /// checked, each against its own package's manifest: a resolver handed
+    /// a bare layout has no `[dependencies]` to check that layout against.
+    /// `manifest_path` is where `manifest` was read from. An
+    /// [`LayoutResolveError::UndeclaredPackageReference`] names it as the
+    /// file to fix.
+    pub fn with_consumer(mut self, manifest: &MosaicPackage, manifest_path: &Path) -> Self {
+        self.consumer = Some(DeclaredDependencies::from_manifest(manifest, manifest_path));
+        self
     }
 
     /// Check a package's `[dependencies]` requirements against the packages
@@ -1147,6 +1281,15 @@ impl LayoutPackageResolver {
         let mut bindings = resolved.default_bindings;
         bindings.extend(build_binding_map(&declared));
         let one_of = one_of_literals(&resolved.slots, &mut bindings);
+        // The bound values and the caller's children are the consumer's
+        // names. A callee `For` that binds one of them would capture it once
+        // substitution puts it in the loop body, so such a binding is renamed
+        // first (§ "Hygiene" below, UI29 §3.4).
+        let mut children_names = HashSet::new();
+        for child in &call_children {
+            names_in_tree(child, &mut children_names);
+        }
+        self.rename_capturing_binders(target, pkg, &bindings, &children_names)?;
         rewrite_bindings(target, &bindings, &one_of, &HashSet::new());
         fold_constant_expressions(target);
         fold_constant_conditionals(target);
@@ -1306,6 +1449,42 @@ impl LayoutPackageResolver {
         Ok(nested)
     }
 
+    /// Rename every `For` binding in the callee tree `root` (package `pkg`)
+    /// that would capture a consumer name: one in a value of `bindings`
+    /// that lands in the loop body, or one of `children_names` when the
+    /// caller's children will be spliced into a mount inside the loop.
+    ///
+    /// Telling a loop variable from a literal at a nested call site needs the
+    /// mounted components' interfaces, so they are loaded only when there is
+    /// something to rename, which is almost never.
+    fn rename_capturing_binders(
+        &self,
+        root: &mut LayoutNode,
+        pkg: &str,
+        bindings: &HashMap<String, LayoutPropValue>,
+        children_names: &HashSet<String>,
+    ) -> Result<(), LayoutResolveError> {
+        let no_loops = HashSet::new();
+        if !any_capture(root, &no_loops, bindings, children_names) {
+            return Ok(());
+        }
+        let nested = self.nested_interfaces(pkg, root)?;
+        let mut taken = HashSet::new();
+        names_in_tree(root, &mut taken);
+        for value in bindings.values() {
+            names_in_value(value, &mut taken);
+        }
+        taken.extend(children_names.iter().cloned());
+        let mut hygiene = Hygiene {
+            bindings,
+            children_names,
+            nested: &nested,
+            taken,
+        };
+        hygiene.visit(root, &no_loops);
+        Ok(())
+    }
+
     fn load_component(
         &self,
         pkg: &str,
@@ -1331,10 +1510,12 @@ impl LayoutPackageResolver {
                 },
             )?;
 
-        // The layout validator treats an expression as opaque text, never
-        // asks whether a bare NAME is an identifier, and allows a mount slot
-        // to be read anywhere, so all three are checked here, once per
-        // component, before the layout is ever inlined.
+        // The layout validator treats an expression as opaque text, skips the
+        // bare NAMEs at call sites (it cannot see the mounted component's
+        // `one-of` values; outside call sites it rejects an unbound one as
+        // `UnboundName`), and allows a mount slot to be read anywhere, so all
+        // three are checked here, once per component, before the layout is
+        // ever inlined.
         let child_mount = find_child_mount(&layout_out.def.root);
         let nested = self.nested_interfaces(pkg, &layout_out.def.root)?;
         let (scope_errors, omitted) = check_callee_scope(
@@ -1396,20 +1577,32 @@ impl LayoutPackageResolver {
     // every package component reachable from it, so a missing binding deep
     // inside a package is found in the same build. Every miss is collected
     // and reported together.
+    //
+    // The same walk asks the one other question that must be asked of
+    // every call site, which package it names (Phase 1b). A layout may
+    // name only its own package or a declared dependency:
+    //
+    //   layout being walked          declared set it is checked against
+    //   ──────────────────────────   ─────────────────────────────────────
+    //   the consumer's               `with_consumer`'s manifest, or none
+    //   package P's component C      P's own mosaic-package.toml
 
-    /// Check every `pkg::P::C` call site reachable from `layout` binds every
-    /// required slot of `C`. Returns all misses (and any package that could
-    /// not be loaded along the way) as one error.
+    /// Check every `pkg::P::C` call site reachable from `layout`: that it
+    /// binds every required slot of `C`, and that `P` is declared by the
+    /// manifest governing the layout it appears in. Returns all misses (and
+    /// any package that could not be loaded along the way) as one error.
     fn check_required_bindings(&self, layout: &LayoutDef) -> Result<(), LayoutResolveError> {
         let mut walk = BindingCheck {
             errors: Vec::new(),
             omitted: 0,
             loads_reported: HashSet::new(),
             checked: HashSet::new(),
+            undeclared_reported: HashSet::new(),
         };
         let scope = CallScope {
             consumer: layout.component_name.clone(),
             local_package: None,
+            declared: self.consumer.clone(),
         };
         let mut path = Vec::new();
         self.check_tree(&layout.root, None, &scope, &mut path, &mut walk);
@@ -1433,6 +1626,7 @@ impl LayoutPackageResolver {
         path.push(call_site_segment(node, position));
 
         if let Some((pkg, comp)) = scope.call_target(node) {
+            self.check_declared(&pkg, &comp, scope, path, walk);
             match self.resolve_component(&pkg, &comp) {
                 Ok(resolved) => {
                     let missing = missing_required_slots(
@@ -1470,10 +1664,55 @@ impl LayoutPackageResolver {
         path.pop();
     }
 
+    /// Report the call site at `path`, which mounts `pkg::comp`, if the
+    /// manifest governing `scope` does not declare `pkg`. Once per manifest
+    /// and package: after the first call site, more add nothing to the fix.
+    ///
+    /// The binding check still runs on an undeclared call site, so one
+    /// build reports everything wrong with it.
+    fn check_declared(
+        &self,
+        pkg: &str,
+        comp: &str,
+        scope: &CallScope,
+        path: &[String],
+        walk: &mut BindingCheck,
+    ) {
+        let Some(declared) = &scope.declared else {
+            return;
+        };
+        if declared.allows(pkg)
+            || !walk
+                .undeclared_reported
+                .insert((declared.manifest_path.clone(), pkg.to_string()))
+        {
+            return;
+        }
+        // The version to suggest, when the package is there to read. A
+        // package that is not is also reported as `PackageNotFound`, by
+        // the load that follows.
+        let found_version = self
+            .locate_package(pkg)
+            .and_then(|root| self.read_manifest(pkg, &root))
+            .ok()
+            .map(|manifest| manifest.package.version);
+        walk.push(LayoutResolveError::UndeclaredPackageReference(Box::new(
+            UndeclaredPackageReference {
+                consumer: scope.consumer.clone(),
+                package: pkg.to_string(),
+                component: comp.to_string(),
+                call_site: path.join(" > "),
+                manifest_path: declared.manifest_path.clone(),
+                found_version,
+            },
+        )));
+    }
+
     /// Check the call sites inside package component `pkg::comp`'s own
     /// layout. Inside a package an unqualified tag naming one of the
     /// package's exports is a call site too: the inliner qualifies it
-    /// (`qualify_local_refs`) only after substitution.
+    /// (`qualify_local_refs`) only after substitution. Every call site is
+    /// checked against `pkg`'s own `[dependencies]`.
     fn check_component_layout(
         &self,
         pkg: &str,
@@ -1481,16 +1720,22 @@ impl LayoutPackageResolver {
         layout: &LayoutDef,
         walk: &mut BindingCheck,
     ) {
-        let exports = match self.package_exports(pkg) {
-            Ok(exports) => exports,
+        let (manifest, pkg_root) = match self
+            .locate_package(pkg)
+            .and_then(|root| Ok((self.read_manifest(pkg, &root)?, root)))
+        {
+            Ok(found) => found,
             Err(error) => {
                 walk.push_load(error, pkg, comp);
                 return;
             }
         };
+        let declared =
+            DeclaredDependencies::from_manifest(&manifest, &pkg_root.join("mosaic-package.toml"));
         let scope = CallScope {
             consumer: format!("pkg::{pkg}::{comp}"),
-            local_package: Some((pkg.to_string(), exports)),
+            local_package: Some((pkg.to_string(), manifest.components.exports)),
+            declared: Some(declared),
         };
         let mut path = Vec::new();
         self.check_tree(&layout.root, None, &scope, &mut path, walk);
@@ -1671,6 +1916,9 @@ struct BindingCheck {
     loads_reported: HashSet<(&'static str, String, String)>,
     /// The package components whose own layouts have been checked.
     checked: HashSet<(String, String)>,
+    /// The (manifest, package) pairs already reported as
+    /// `UndeclaredPackageReference`.
+    undeclared_reported: HashSet<(PathBuf, String)>,
 }
 
 impl BindingCheck {
@@ -1762,6 +2010,9 @@ struct CallScope {
     consumer: String,
     /// Inside a package component, that package and its exports.
     local_package: Option<(String, Vec<String>)>,
+    /// What this layout's manifest lets it reference. `None` for a
+    /// consumer resolved without [`LayoutPackageResolver::with_consumer`].
+    declared: Option<DeclaredDependencies>,
 }
 
 impl CallScope {
@@ -1960,6 +2211,285 @@ fn for_scope(node: &LayoutNode, scope: &HashSet<String>) -> HashSet<String> {
         }
     }
     inner
+}
+
+// ---------------------------------------------------------------------------
+// Hygiene: a callee `For` never captures a consumer name
+// ---------------------------------------------------------------------------
+//
+// Inlining is substitution, and substitution into a scope can capture. The
+// consumer below loops over its own `items` as `row` and passes `row` to
+// Card. Card loops over *its* rows, also as `row`, and shows its `title`:
+//
+//   consumer                                    Card
+//   ───────────────────────────────────────     ──────────────────────────────
+//   For ( each: slot: items , as: row ) {       For ( each: slot: rows , as: row ) {
+//     pkg::lib::Card ( title: row , … )           Text ( content: title )
+//   }                                           }
+//
+// Substituting `title` naively gives `Text ( content: row )` inside Card's
+// loop, where `row` is Card's loop variable: every line shows Card's row,
+// not the consumer's. UI29 §3.4 says names resolve lexically, and the
+// consumer's `row` was written in the consumer's scope, so it must keep
+// meaning the consumer's `row` after inlining.
+//
+// The fix is the textbook one, renaming the inner binder. Before
+// substitution, each callee `For` is asked what substitution would bring
+// into its body:
+//
+// - the names in the bound values its body reads (`slot: title`, an own
+//   slot's bare name, which `check_callee_scope` has already turned into
+//   `slot: title`, or a bare or `slot:` name in an expression); and
+// - when the caller's children will be spliced into a mount inside the
+//   loop, every name in those children.
+//
+// If its `as:` or `index:` binding is one of them, the binding and all its
+// uses in the body become a fresh name, `row-in1`:
+//
+//   For ( each: slot: rows , as: row-in1 ) { Text ( content: row ) }
+//                                                            └ the consumer's
+//
+// Names are compared in camelCase, because that is the identifier every
+// emitter writes: `as: my-row` and a consumer `myRow` are the same variable
+// in React. The fresh name is new to the callee, the bound values and the
+// children alike. A binding that captures nothing keeps its authored name,
+// so only output that was wrong changes.
+
+/// Every name `value` would bring into the tree it is substituted into, in
+/// camelCase. Literals (`"text"`, `3`, `true`) bring none.
+fn names_in_value(value: &LayoutPropValue, out: &mut HashSet<String>) {
+    let mut insert = |name: &str| {
+        if name != "true" && name != "false" {
+            out.insert(to_camel_case_first_lower(name));
+        }
+    };
+    match value {
+        LayoutPropValue::Keyword(name)
+        | LayoutPropValue::SlotRef(name)
+        | LayoutPropValue::EmitRef(name) => insert(name),
+        LayoutPropValue::Expr(text) => {
+            for piece in expression_pieces(text) {
+                if let ExprPiece::Name(
+                    name,
+                    NameRole::Bare | NameRole::SlotRef | NameRole::EmitRef,
+                ) = piece
+                {
+                    insert(name)
+                }
+            }
+        }
+        LayoutPropValue::String(_) | LayoutPropValue::Number(_) => {}
+    }
+}
+
+/// Every name anywhere in `node`'s subtree, in camelCase. Deliberately
+/// generous (an enum value such as `axis: horizontal` counts too): it is
+/// used for the caller's children, where a few extra names can only cause
+/// an unneeded rename, and for choosing fresh names, where extra names only
+/// make a name less likely to be chosen.
+fn names_in_tree(node: &LayoutNode, out: &mut HashSet<String>) {
+    for prop in &node.props {
+        names_in_value(&prop.value, out);
+    }
+    for child in &node.children {
+        names_in_tree(child, out);
+    }
+}
+
+/// The names that substituting `bindings` brings into `node`'s subtree,
+/// where `scope` holds the `For` bindings in scope. This mirrors what
+/// `rewrite_bindings` rewrites: `slot:` and `emit:` props, and bare or
+/// `slot:` names in expressions, except a bare name a loop binds.
+fn substituted_names(
+    node: &LayoutNode,
+    bindings: &HashMap<String, LayoutPropValue>,
+    scope: &HashSet<String>,
+    out: &mut HashSet<String>,
+) {
+    let mut read = |name: &str| {
+        if let Some(value) = bindings.get(name) {
+            names_in_value(value, out);
+        }
+    };
+    for prop in &node.props {
+        match &prop.value {
+            LayoutPropValue::SlotRef(name) | LayoutPropValue::EmitRef(name) => read(name),
+            LayoutPropValue::Expr(text) => {
+                for piece in expression_pieces(text) {
+                    match piece {
+                        ExprPiece::Name(name, NameRole::Bare) if !scope.contains(name) => {
+                            read(name)
+                        }
+                        ExprPiece::Name(name, NameRole::SlotRef) => read(name),
+                        _ => {}
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    let inner = for_scope(node, scope);
+    for child in &node.children {
+        substituted_names(child, bindings, &inner, out);
+    }
+}
+
+/// Whether `node`'s subtree holds the child mount (`slot: children`), where
+/// the caller's children will be spliced.
+fn contains_child_mount(node: &LayoutNode) -> bool {
+    node.is_child_slot_mount() || node.children.iter().any(contains_child_mount)
+}
+
+/// The indices of `node`'s props that are `For` bindings capturing a
+/// consumer name, with `scope` the bindings of the loops around `node`.
+/// Empty unless `node` is a `For`.
+fn capturing_binders(
+    node: &LayoutNode,
+    scope: &HashSet<String>,
+    bindings: &HashMap<String, LayoutPropValue>,
+    children_names: &HashSet<String>,
+) -> Vec<usize> {
+    if node.tag != "For" {
+        return Vec::new();
+    }
+    // The body sees this loop's own bindings: a bare `row` in the body of
+    // `For ( as: row )` is the loop variable, never substituted.
+    let body_scope = for_scope(node, scope);
+    let mut brought = HashSet::new();
+    for child in &node.children {
+        substituted_names(child, bindings, &body_scope, &mut brought);
+    }
+    if node.children.iter().any(contains_child_mount) {
+        brought.extend(children_names.iter().cloned());
+    }
+    node.props
+        .iter()
+        .enumerate()
+        .filter_map(|(i, prop)| match (prop.name.as_str(), &prop.value) {
+            ("as" | "index", LayoutPropValue::Keyword(binder))
+                if brought.contains(&to_camel_case_first_lower(binder)) =>
+            {
+                Some(i)
+            }
+            _ => None,
+        })
+        .collect()
+}
+
+/// Whether any `For` in `node`'s subtree captures a consumer name.
+fn any_capture(
+    node: &LayoutNode,
+    scope: &HashSet<String>,
+    bindings: &HashMap<String, LayoutPropValue>,
+    children_names: &HashSet<String>,
+) -> bool {
+    if !capturing_binders(node, scope, bindings, children_names).is_empty() {
+        return true;
+    }
+    let inner = for_scope(node, scope);
+    node.children
+        .iter()
+        .any(|child| any_capture(child, &inner, bindings, children_names))
+}
+
+/// The renaming pass of `LayoutPackageResolver::rename_capturing_binders`.
+struct Hygiene<'a> {
+    bindings: &'a HashMap<String, LayoutPropValue>,
+    children_names: &'a HashSet<String>,
+    nested: &'a NestedInterfaces,
+    /// Every name in use, camelCase; a fresh name must not be one of them.
+    taken: HashSet<String>,
+}
+
+impl Hygiene<'_> {
+    /// Rename the capturing bindings of every `For` in `node`'s subtree.
+    /// Outer loops first, so an inner loop is judged against the names its
+    /// enclosing loops ended up with.
+    fn visit(&mut self, node: &mut LayoutNode, scope: &HashSet<String>) {
+        for i in capturing_binders(node, scope, self.bindings, self.children_names) {
+            let LayoutPropValue::Keyword(binder) = &node.props[i].value else {
+                continue;
+            };
+            let binder = binder.clone();
+            let fresh = self.fresh(&binder);
+            for child in &mut node.children {
+                rename_loop_variable(child, &binder, &fresh, self.nested);
+            }
+            node.props[i].value = LayoutPropValue::Keyword(fresh);
+        }
+        let inner = for_scope(node, scope);
+        for child in &mut node.children {
+            self.visit(child, &inner);
+        }
+    }
+
+    /// `<binder>-in<n>`, with the smallest `n` whose camelCase spelling is
+    /// not taken, and now taken. `-in1`, not `-1`: a Mosaic identifier
+    /// segment cannot start with a digit (the `-m2` of a second mount
+    /// follows the same rule).
+    fn fresh(&mut self, binder: &str) -> String {
+        let mut n = 1usize;
+        loop {
+            let candidate = format!("{binder}-in{n}");
+            if self.taken.insert(to_camel_case_first_lower(&candidate)) {
+                return candidate;
+            }
+            n += 1;
+        }
+    }
+}
+
+/// Rename loop variable `from` to `to` throughout `node`'s subtree, which
+/// lies in the body of the `For` binding it.
+///
+/// A use is a bare name in a name position, by the same table as
+/// `check_callee_scope` (`is_bare_literal`): a literal of the same spelling
+/// (`kind: line` beside `as: line`) is not a use. A `slot: from` is the
+/// slot, not the loop variable, and stays. A nested `For` that binds `from`
+/// again shadows it: its `each:` is still renamed, since it is evaluated
+/// outside that loop, but its body is not.
+fn rename_loop_variable(node: &mut LayoutNode, from: &str, to: &str, nested: &NestedInterfaces) {
+    let target = nested.target(node);
+    let mut rebinds = false;
+    for prop in &mut node.props {
+        match &prop.value {
+            LayoutPropValue::Keyword(word) if word == from => {
+                if node.tag == "For" && (prop.name == "as" || prop.name == "index") {
+                    rebinds = true;
+                } else if !is_bare_literal(&node.tag, target.as_ref(), &prop.name, word, nested) {
+                    prop.value = LayoutPropValue::Keyword(to.to_string());
+                }
+            }
+            LayoutPropValue::Expr(text) => {
+                let renamed = rename_expression_name(text, from, to);
+                if renamed != *text {
+                    prop.value = LayoutPropValue::Expr(renamed);
+                }
+            }
+            _ => {}
+        }
+    }
+    if rebinds {
+        return;
+    }
+    for child in &mut node.children {
+        rename_loop_variable(child, from, to, nested);
+    }
+}
+
+/// `expr` with every bare operand `from` replaced by `to`. Member names
+/// (`item.from`), `slot: from` and string contents are copied as written.
+fn rename_expression_name(expr: &str, from: &str, to: &str) -> String {
+    let mut out = String::with_capacity(expr.len());
+    for piece in expression_pieces(expr) {
+        match piece {
+            ExprPiece::Name(name, NameRole::Bare) if name == from => out.push_str(to),
+            ExprPiece::Str(text) | ExprPiece::Name(text, _) | ExprPiece::Other(text) => {
+                out.push_str(text)
+            }
+        }
+    }
+    out
 }
 
 // ---------------------------------------------------------------------------
@@ -2687,6 +3217,28 @@ impl NestedInterfaces {
     }
 }
 
+/// Whether bare `word`, the value of `prop` on a node tagged `tag`, is a
+/// literal rather than a name: the table above. `target` is the component
+/// the node mounts when it is a call site. Shared by the scope check and the
+/// hygiene rename, so the two always agree on what is a name.
+fn is_bare_literal(
+    tag: &str,
+    target: Option<&(String, String)>,
+    prop: &str,
+    word: &str,
+    nested: &NestedInterfaces,
+) -> bool {
+    match target {
+        Some(target) => {
+            word == "true" || word == "false" || nested.is_one_of_value(target, prop, word)
+        }
+        None => {
+            (tag == "For" && (prop == "as" || prop == "index"))
+                || moslayout_compiler::is_keyword_literal(tag, prop, word)
+        }
+    }
+}
+
 /// Check package component `pkg::comp`'s layout `root`, and rewrite each
 /// bare NAME that names one of its slots to a `slot:` reference.
 ///
@@ -2806,14 +3358,8 @@ impl CalleeScope<'_> {
                     self.visit_expression(&text, loops)
                 }
                 LayoutPropValue::Keyword(word) => {
-                    let literal = if let Some(target) = &target {
-                        word == "true"
-                            || word == "false"
-                            || self.nested.is_one_of_value(target, &prop.name, word)
-                    } else {
-                        (tag == "For" && (prop.name == "as" || prop.name == "index"))
-                            || moslayout_compiler::is_keyword_literal(&tag, &prop.name, word)
-                    };
+                    let literal =
+                        is_bare_literal(&tag, target.as_ref(), &prop.name, word, self.nested);
                     if literal || loops.contains(word) {
                         continue;
                     }
@@ -4852,6 +5398,12 @@ version = "1"
 
     /// Deliberate read: `content: authToken` with no such slot would lower to
     /// React `{authToken}`, the consumer's variable. It is rejected.
+    ///
+    /// Outside a call site, the layout validator now rejects it first, as
+    /// `UnboundName` (UI29 §3.4, backlog 6f1p), so the component fails to
+    /// compile before `check_callee_scope` runs. The callee-scope check still
+    /// owns call-site values (see
+    /// `bare_names_at_a_nested_call_site_follow_the_mounted_slot_type`).
     #[test]
     fn a_bare_name_naming_nothing_is_rejected() {
         let (_tmp, resolver) = card_package(
@@ -4865,14 +5417,16 @@ version = "1"
                 .resolve(&mut layout)
                 .expect_err("authToken is free"),
         );
-        assert_eq!(
-            error,
-            LayoutResolveError::UndeclaredExpressionIdentifier {
-                package: "mosaic-pkg-lib".to_string(),
-                component: "Card".to_string(),
-                identifier: "authToken".to_string(),
-                expression: "content: authToken".to_string(),
-            }
+        assert!(
+            matches!(
+                &error,
+                LayoutResolveError::NestedCompileError { package, component, detail }
+                    if package == "mosaic-pkg-lib"
+                        && component == "Card"
+                        && detail.contains("UnboundName")
+                        && detail.contains("bare name `authToken` in `Text ( content: authToken )`")
+            ),
+            "{error:?}"
         );
     }
 
@@ -5248,6 +5802,403 @@ version = "1"
         );
     }
 
+    // ---- Bare names resolve lexically; inlining is hygienic (UI29 §3.4, 6f1m) ----
+    //
+    // A bare NAME means the nearest enclosing `For` binding, else the
+    // component's own slot. The consumer's names (bound values and spliced
+    // children) keep meaning the consumer's, even under a callee loop that
+    // binds the same name.
+
+    /// The `For` nodes of `node`'s subtree in document order, as their
+    /// `(as, index)` bindings. A `For` cannot carry a part name, so tests
+    /// find loops this way.
+    fn loop_binders(node: &LayoutNode, out: &mut Vec<(String, Option<String>)>) {
+        if node.tag == "For" {
+            let binding = |name: &str| {
+                node.props.iter().find_map(|p| match (&*p.name, &p.value) {
+                    (n, LayoutPropValue::Keyword(v)) if n == name => Some(v.clone()),
+                    _ => None,
+                })
+            };
+            out.push((binding("as").expect("as:"), binding("index")));
+        }
+        for child in &node.children {
+            loop_binders(child, out);
+        }
+    }
+
+    fn binders(layout: &LayoutDef) -> Vec<(String, Option<String>)> {
+        let mut out = Vec::new();
+        loop_binders(&layout.root, &mut out);
+        out
+    }
+
+    fn keyword(word: &str) -> Option<LayoutPropValue> {
+        Some(LayoutPropValue::Keyword(word.to_string()))
+    }
+
+    /// The headline of 6f1m: a bare NAME naming an own slot is that slot,
+    /// in either spelling and in any name position (here a primitive prop
+    /// and a nested call site), and takes the call site's value exactly as
+    /// `slot: NAME` would. Nothing named `display-name` survives inlining.
+    #[test]
+    fn an_own_slot_bare_name_takes_the_value_in_every_spelling_and_position() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let lib = make_pkg(&pkgs, "mosaic-pkg-lib", "mosaic-pkg-lib", &["Card", "Tag"]);
+        write_component(
+            &lib,
+            "Tag",
+            "component Tag { slot label : text ; }",
+            "layout Tag { Text [ tag ] ( content: label ) }",
+        );
+        write_component(
+            &lib,
+            "Card",
+            "component Card { slot display-name : text ; }",
+            r#"layout Card { Column [ card ] {
+  Text [ card-kebab ] ( content: display-name )
+  HostButton [ card-camel ] ( label: displayName )
+  Tag ( label: display-name )
+} }"#,
+        );
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( display-name: "Ada" ) }"#,
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        let ada = Some(LayoutPropValue::String("Ada".to_string()));
+        assert_eq!(prop_value(&layout.root, "card-kebab", "content"), ada);
+        assert_eq!(prop_value(&layout.root, "card-camel", "label"), ada);
+        assert_eq!(prop_value(&layout.root, "tag", "content"), ada);
+    }
+
+    /// Innermost wins: inside `For ( as: title )` the bare `title` is the
+    /// loop variable; outside it, Card's own slot. The binding captures no
+    /// consumer name, so it keeps its authored spelling.
+    #[test]
+    fn a_loop_binding_shadows_an_own_slot_bare_name_only_inside_its_body() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  Text [ card-title ] ( content: title )
+  For ( each: slot: rows , as: title ) { Text [ card-row ] ( content: title ) }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { pkg::mosaic-pkg-lib::Card ( title: "Inbox" , rows: slot: items ) }"#,
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            prop_value(&layout.root, "card-title", "content"),
+            Some(LayoutPropValue::String("Inbox".to_string()))
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-row", "content"),
+            keyword("title")
+        );
+        assert_eq!(binders(&layout), vec![("title".to_string(), None)]);
+    }
+
+    /// Hygiene: the consumer binds its loop variable `row` to Card's
+    /// `title`, and Card reads `title` (bare, and in an expression) inside
+    /// its own `For ( as: row )`. Card's binding is renamed, with its uses;
+    /// the consumer's `row` reaches the body intact. The same holds when the
+    /// value is the consumer's slot (`slot: row`), which every emitter
+    /// writes as the identifier `row` too.
+    #[test]
+    fn a_callee_loop_never_captures_a_consumer_value() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: rows , as: row ) {
+    Text [ card-title ] ( content: title )
+    Text [ card-row ] ( content: row )
+    HostButton [ card-match ] ( label: "m" , selected: ( row == title ) )
+  }
+} }"#,
+        );
+        for (value, landed) in [
+            ("row", LayoutPropValue::Keyword("row".to_string())),
+            ("slot: row", LayoutPropValue::SlotRef("row".to_string())),
+        ] {
+            let mut layout = consumer_layout(&format!(
+                "layout ProbeApp {{ Column {{ For ( each: slot: items , as: row ) {{
+  pkg::mosaic-pkg-lib::Card ( title: {value} , rows: slot: items )
+}} }} }}"
+            ));
+
+            resolver.resolve(&mut layout).expect("resolves");
+            assert_eq!(
+                binders(&layout),
+                vec![("row".to_string(), None), ("row-in1".to_string(), None)],
+                "{value}"
+            );
+            assert_eq!(
+                prop_value(&layout.root, "card-title", "content"),
+                Some(landed),
+                "{value}"
+            );
+            assert_eq!(
+                prop_value(&layout.root, "card-row", "content"),
+                keyword("row-in1")
+            );
+            assert_eq!(
+                prop_value(&layout.root, "card-match", "selected"),
+                Some(LayoutPropValue::Expr("( row-in1 == row )".to_string()))
+            );
+        }
+    }
+
+    /// The `index:` binding is renamed the same way, and on its own: `as:`
+    /// captures nothing here, so it keeps its name.
+    #[test]
+    fn a_capturing_index_binding_is_renamed_alone() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: rows , as: row , index: i ) {
+    Text [ card-title ] ( content: title )
+    Text [ card-index ] ( content: i )
+  }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column { For ( each: slot: items , as: item , index: i ) {
+  pkg::mosaic-pkg-lib::Card ( title: i , rows: slot: items )
+} } }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            binders(&layout),
+            vec![
+                ("item".to_string(), Some("i".to_string())),
+                ("row".to_string(), Some("i-in1".to_string())),
+            ]
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-title", "content"),
+            keyword("i")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-index", "content"),
+            keyword("i-in1")
+        );
+    }
+
+    /// Children the caller splices into a mount inside a callee loop are the
+    /// caller's, so they are not captured either. A mount outside every
+    /// loop needs no rename, and gets none.
+    #[test]
+    fn spliced_children_are_never_captured_by_a_callee_loop() {
+        let consumer = r#"layout ProbeApp { Column { For ( each: slot: items , as: row ) {
+  pkg::mosaic-pkg-lib::Card ( rows: slot: items ) { Text [ app-row ] ( content: row ) }
+} } }"#;
+        for (mount_in_loop, card_binder) in [(true, "row-in1"), (false, "row")] {
+            let body = if mount_in_loop {
+                "For ( each: slot: rows , as: row ) { Text [ card-row ] ( content: row ) Box { slot: children } }"
+            } else {
+                "For ( each: slot: rows , as: row ) { Text [ card-row ] ( content: row ) } Box { slot: children }"
+            };
+            let (_tmp, resolver) = card_package(
+                "component Card { slot rows : list<text> ; slot children : list<node> ; }",
+                &format!("layout Card {{ Column [ card ] {{ {body} }} }}"),
+            );
+            let mut layout = consumer_layout(consumer);
+
+            resolver.resolve(&mut layout).expect("resolves");
+            assert_eq!(
+                binders(&layout),
+                vec![("row".to_string(), None), (card_binder.to_string(), None)]
+            );
+            assert_eq!(
+                prop_value(&layout.root, "app-row", "content"),
+                keyword("row")
+            );
+            assert_eq!(
+                prop_value(&layout.root, "card-row", "content"),
+                keyword(card_binder)
+            );
+        }
+    }
+
+    /// What a rename leaves alone: a literal of the same spelling (`kind:
+    /// line`), a `slot:` reference, and the body of a nested `For` that binds
+    /// the name again. The nested loop's `each:` is evaluated outside it, so
+    /// it reads the renamed outer variable.
+    #[test]
+    fn a_rename_stops_at_literals_slot_refs_and_a_rebinding_loop() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot line : text = \"l\" ; slot grid : list<list<text>> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: grid , as: line ) {
+    Path [ card-path ] ( kind: line , x1: 0 , y1: 0 , x2: 1 , y2: 1 )
+    Text [ card-title ] ( content: title )
+    Text [ card-slot ] ( content: slot: line )
+    For ( each: line , as: line ) { Text [ card-inner ] ( content: line ) }
+  }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column { For ( each: slot: items , as: line ) {
+  pkg::mosaic-pkg-lib::Card ( title: line , grid: slot: cells )
+} } }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            binders(&layout),
+            vec![
+                ("line".to_string(), None),
+                ("line-in1".to_string(), None),
+                ("line".to_string(), None),
+            ]
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-path", "kind"),
+            keyword("line")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-title", "content"),
+            keyword("line")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-slot", "content"),
+            Some(LayoutPropValue::String("l".to_string()))
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-inner", "content"),
+            keyword("line")
+        );
+        let mut inner_each = None;
+        visit_nodes(&layout.root, &mut |node: &LayoutNode| {
+            if node.tag == "For"
+                && node
+                    .children
+                    .iter()
+                    .any(|c| c.part_name.as_deref() == Some("card-inner"))
+            {
+                inner_each = node
+                    .props
+                    .iter()
+                    .find(|p| p.name == "each")
+                    .map(|p| p.value.clone());
+            }
+        });
+        assert_eq!(inner_each, keyword("line-in1"));
+    }
+
+    /// Names match in camelCase, the identifier every emitter writes, so
+    /// `as: my-row` captures a consumer `myRow`. The fresh name skips one the
+    /// callee already uses (`my-row-in1`), and a loop that captures nothing
+    /// keeps its name.
+    #[test]
+    fn capture_is_judged_in_camel_case_and_fresh_names_are_unused() {
+        let (_tmp, resolver) = card_package(
+            "component Card { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Card { Column [ card ] {
+  For ( each: slot: rows , as: my-row ) {
+    Text [ card-a ] ( content: title )
+    Text [ card-b ] ( content: my-row )
+  }
+  For ( each: slot: rows , as: my-row-in1 ) { Text [ card-c ] ( content: my-row-in1 ) }
+} }"#,
+        );
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column { For ( each: slot: items , as: myRow ) {
+  pkg::mosaic-pkg-lib::Card ( title: myRow , rows: slot: items )
+} } }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            binders(&layout),
+            vec![
+                ("myRow".to_string(), None),
+                ("my-row-in2".to_string(), None),
+                ("my-row-in1".to_string(), None),
+            ]
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-a", "content"),
+            keyword("myRow")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-b", "content"),
+            keyword("my-row-in2")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "card-c", "content"),
+            keyword("my-row-in1")
+        );
+    }
+
+    /// Nested inlining: Panel's loop `calm` would capture the consumer's
+    /// `calm` that Panel passes on to Badge, so it is renamed. At Badge's
+    /// call site, `tone: calm` is a declared `one-of` value, a literal and
+    /// not a use of the loop variable, so it stays `calm` and reaches Badge
+    /// as the string.
+    #[test]
+    fn hygiene_holds_through_nested_inlining_and_skips_one_of_values() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let lib = make_pkg(
+            &pkgs,
+            "mosaic-pkg-lib",
+            "mosaic-pkg-lib",
+            &["Panel", "Badge"],
+        );
+        write_component(
+            &lib,
+            "Badge",
+            "component Badge { slot label : text ; slot tone : one-of calm loud ; }",
+            r#"layout Badge { Column [ badge ] {
+  Text [ badge-label ] ( content: label )
+  Text [ badge-tone ] ( content: tone )
+} }"#,
+        );
+        write_component(
+            &lib,
+            "Panel",
+            "component Panel { slot title : text ; slot rows : list<text> ; }",
+            r#"layout Panel { Column [ panel ] {
+  For ( each: slot: rows , as: calm ) {
+    Text [ panel-row ] ( content: calm )
+    Badge ( label: title , tone: calm )
+  }
+} }"#,
+        );
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column { For ( each: slot: items , as: calm ) {
+  pkg::mosaic-pkg-lib::Panel ( title: calm , rows: slot: items )
+} } }",
+        );
+
+        resolver.resolve(&mut layout).expect("resolves");
+        assert_eq!(
+            binders(&layout),
+            vec![("calm".to_string(), None), ("calm-in1".to_string(), None)]
+        );
+        assert_eq!(
+            prop_value(&layout.root, "panel-row", "content"),
+            keyword("calm-in1")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "badge-label", "content"),
+            keyword("calm")
+        );
+        assert_eq!(
+            prop_value(&layout.root, "badge-tone", "content"),
+            Some(LayoutPropValue::String("calm".to_string()))
+        );
+    }
+
     #[test]
     fn constant_expressions_fold_only_what_every_backend_agrees_on() {
         let cases = [
@@ -5496,6 +6447,305 @@ version = "1"
         }
     }
 
+    // ---- Undeclared package references (publishing-v1 §10 Phase 1b) ----
+    //
+    // Fixture: `packages/` holds `mosaic-pkg-lib` (exports `Card`, no slots)
+    // and `mosaic-pkg-other` (exports `Chip`), both at 0.1.0. The consumer
+    // is `probe-app` in `apps/probe-app`, whose `[dependencies]` each test
+    // chooses.
+
+    struct DeclFixture {
+        _tmp: TempDir,
+        pkgs: PathBuf,
+        app: PathBuf,
+    }
+
+    impl DeclFixture {
+        fn new() -> Self {
+            let tmp = TempDir::new().unwrap();
+            let pkgs = tmp.path().join("packages");
+            fs::create_dir_all(&pkgs).unwrap();
+            let lib = make_pkg(&pkgs, "mosaic-pkg-lib", "mosaic-pkg-lib", &["Card"]);
+            write_component(
+                &lib,
+                "Card",
+                "component Card { }",
+                "layout Card { Column [ card ] }",
+            );
+            let other = make_pkg(&pkgs, "mosaic-pkg-other", "mosaic-pkg-other", &["Chip"]);
+            write_component(
+                &other,
+                "Chip",
+                "component Chip { }",
+                "layout Chip { Row [ chip ] }",
+            );
+            let app = tmp.path().join("apps/probe-app");
+            fs::create_dir_all(&app).unwrap();
+            Self {
+                _tmp: tmp,
+                pkgs,
+                app,
+            }
+        }
+
+        /// A resolver whose consumer is `probe-app` declaring `deps`.
+        fn resolver(&self, deps: &[(&str, &str)]) -> LayoutPackageResolver {
+            write_manifest(&self.app, "probe-app", &["ProbeApp"], deps);
+            let manifest_path = self.app.join("mosaic-package.toml");
+            let manifest = mosaic_package_manifest::parse_path(&manifest_path).unwrap();
+            LayoutPackageResolver::new(vec![self.pkgs.clone()])
+                .with_consumer(&manifest, &manifest_path)
+        }
+
+        fn app_manifest(&self) -> PathBuf {
+            self.app.join("mosaic-package.toml")
+        }
+    }
+
+    /// The `(manifest, package)` of every `UndeclaredPackageReference` in
+    /// `error`, in report order, and how many other errors it holds.
+    fn undeclared(error: &LayoutResolveError) -> (Vec<(PathBuf, String)>, usize) {
+        let errors = match error {
+            LayoutResolveError::Multiple { errors, .. } => errors.as_slice(),
+            single => std::slice::from_ref(single),
+        };
+        let mut found = Vec::new();
+        let mut others = 0;
+        for error in errors {
+            match error {
+                LayoutResolveError::UndeclaredPackageReference(reference) => {
+                    found.push((reference.manifest_path.clone(), reference.package.clone()))
+                }
+                _ => others += 1,
+            }
+        }
+        (found, others)
+    }
+
+    /// A consumer that mounts a package its manifest does not declare is
+    /// refused, before anything is substituted, naming the manifest to fix
+    /// and the version on the search path.
+    #[test]
+    fn an_undeclared_package_reference_is_refused() {
+        let fixture = DeclFixture::new();
+        let resolver = fixture.resolver(&[]);
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column [ app-root ] { pkg::mosaic-pkg-lib::Card [ hero ] } }",
+        );
+
+        let error = resolver
+            .resolve(&mut layout)
+            .expect_err("lib is undeclared");
+        assert_eq!(
+            error,
+            LayoutResolveError::UndeclaredPackageReference(Box::new(UndeclaredPackageReference {
+                consumer: "ProbeApp".to_string(),
+                package: "mosaic-pkg-lib".to_string(),
+                component: "Card".to_string(),
+                call_site: "Column[app-root] > pkg::mosaic-pkg-lib::Card[hero]".to_string(),
+                manifest_path: fixture.app_manifest(),
+                found_version: Some("0.1.0".to_string()),
+            }))
+        );
+        assert_eq!(
+            error.to_string(),
+            format!(
+                "`ProbeApp` mounts `pkg::mosaic-pkg-lib::Card` at \
+                 Column[app-root] > pkg::mosaic-pkg-lib::Card[hero], but `mosaic-pkg-lib` \
+                 is not a declared dependency; add `mosaic-pkg-lib = \"0.1.0\"` to \
+                 [dependencies] in {}",
+                fixture.app_manifest().display()
+            )
+        );
+        assert_eq!(
+            first_qualified_tag(&layout.root),
+            Some("pkg::mosaic-pkg-lib::Card")
+        );
+    }
+
+    /// The same reference, declared, resolves.
+    #[test]
+    fn a_declared_package_reference_resolves() {
+        let fixture = DeclFixture::new();
+        let resolver = fixture.resolver(&[("mosaic-pkg-lib", "0.1.0")]);
+        let mut layout = consumer_layout(
+            "layout ProbeApp { Column [ app-root ] { pkg::mosaic-pkg-lib::Card } }",
+        );
+
+        resolver.resolve(&mut layout).expect("lib is declared");
+        assert_eq!(first_qualified_tag(&layout.root), None);
+    }
+
+    /// A package's own layout may name its own exports as `pkg::<self>::C`,
+    /// the form the artifact builder rewrites bare sibling references to,
+    /// and its components may mount siblings by bare name.
+    #[test]
+    fn a_self_reference_needs_no_declaration() {
+        let fixture = DeclFixture::new();
+        let lib = fixture.pkgs.join("mosaic-pkg-lib");
+        write_manifest(&lib, "mosaic-pkg-lib", &["Card", "Badge", "Panel"], &[]);
+        write_component(
+            &lib,
+            "Badge",
+            "component Badge { }",
+            "layout Badge { Text ( content: \"b\" ) }",
+        );
+        // Nested: a component of the package mounting a sibling bare.
+        write_component(
+            &lib,
+            "Panel",
+            "component Panel { }",
+            "layout Panel { Column { Badge } }",
+        );
+        let manifest_path = lib.join("mosaic-package.toml");
+        let manifest = mosaic_package_manifest::parse_path(&manifest_path).unwrap();
+        let resolver = LayoutPackageResolver::new(vec![fixture.pkgs.clone()])
+            .with_consumer(&manifest, &manifest_path);
+        let mut layout = consumer_layout(
+            "layout Card { Column [ card ] { pkg::mosaic-pkg-lib::Badge pkg::mosaic-pkg-lib::Panel } }",
+        );
+
+        resolver
+            .resolve(&mut layout)
+            .expect("self-references are allowed");
+        assert_eq!(first_qualified_tag(&layout.root), None);
+    }
+
+    /// A resolver with no consumer manifest has nothing to check the
+    /// consumer's own references against, so it accepts them, as before.
+    #[test]
+    fn without_a_consumer_manifest_the_consumer_is_unchecked() {
+        let fixture = DeclFixture::new();
+        let resolver = LayoutPackageResolver::new(vec![fixture.pkgs.clone()]);
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-lib::Card }");
+
+        resolver
+            .resolve(&mut layout)
+            .expect("no declared set to check against");
+    }
+
+    /// A reference inside a package component is checked against that
+    /// package's own manifest, with or without a consumer manifest, and
+    /// reported against that component.
+    #[test]
+    fn a_nested_undeclared_reference_names_the_nested_manifest() {
+        let fixture = DeclFixture::new();
+        let outer = make_pkg(
+            &fixture.pkgs,
+            "mosaic-pkg-outer",
+            "mosaic-pkg-outer",
+            &["Shell"],
+        );
+        write_component(
+            &outer,
+            "Shell",
+            "component Shell { }",
+            "layout Shell { Column [ shell ] { Row { pkg::mosaic-pkg-lib::Card } } }",
+        );
+        let outer_manifest = outer.join("mosaic-package.toml");
+        let expected =
+            LayoutResolveError::UndeclaredPackageReference(Box::new(UndeclaredPackageReference {
+                consumer: "pkg::mosaic-pkg-outer::Shell".to_string(),
+                package: "mosaic-pkg-lib".to_string(),
+                component: "Card".to_string(),
+                call_site: "Column[shell] > Row#1 > pkg::mosaic-pkg-lib::Card#1".to_string(),
+                manifest_path: outer_manifest.clone(),
+                found_version: Some("0.1.0".to_string()),
+            }));
+
+        // The consumer declares outer, which is fine; outer does not
+        // declare lib, which is not.
+        let resolver = fixture.resolver(&[("mosaic-pkg-outer", "0.1.0")]);
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-outer::Shell }");
+        assert_eq!(
+            resolver.resolve(&mut layout).expect_err("outer → lib"),
+            expected
+        );
+
+        // A resolver without a consumer manifest still checks the nested one.
+        let bare = LayoutPackageResolver::new(vec![fixture.pkgs.clone()]);
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-outer::Shell }");
+        assert_eq!(
+            bare.resolve(&mut layout).expect_err("outer → lib"),
+            expected
+        );
+
+        // Declaring it in outer's manifest fixes it.
+        write_manifest(
+            &outer,
+            "mosaic-pkg-outer",
+            &["Shell"],
+            &[("mosaic-pkg-lib", "0.1.0")],
+        );
+        let fixed = LayoutPackageResolver::new(vec![fixture.pkgs.clone()]);
+        let mut layout = consumer_layout("layout ProbeApp { pkg::mosaic-pkg-outer::Shell }");
+        fixed.resolve(&mut layout).expect("outer declares lib");
+    }
+
+    /// Every undeclared package is reported in one build, once per
+    /// manifest however many call sites name it, beside the other errors
+    /// the same walk finds: a missing package, and a missing binding.
+    #[test]
+    fn undeclared_references_are_reported_together_once_each() {
+        let fixture = DeclFixture::new();
+        let lib = fixture.pkgs.join("mosaic-pkg-lib");
+        write_component(
+            &lib,
+            "Card",
+            "component Card { slot title : text ; }",
+            "layout Card { Text ( content: slot: title ) }",
+        );
+        let resolver = fixture.resolver(&[]);
+        let mut layout = consumer_layout(
+            r#"layout ProbeApp { Column [ app-root ] {
+  pkg::mosaic-pkg-lib::Card ( title: "one" )
+  pkg::mosaic-pkg-other::Chip
+  pkg::mosaic-pkg-lib::Card
+  pkg::mosaic-pkg-other::Chip
+  pkg::mosaic-pkg-gone::Thing
+} }"#,
+        );
+
+        let error = resolver.resolve(&mut layout).expect_err("three undeclared");
+        let manifest = fixture.app_manifest();
+        assert_eq!(
+            undeclared(&error),
+            (
+                vec![
+                    (manifest.clone(), "mosaic-pkg-lib".to_string()),
+                    (manifest.clone(), "mosaic-pkg-other".to_string()),
+                    (manifest, "mosaic-pkg-gone".to_string()),
+                ],
+                // The unbound `title` of the second Card, and gone's
+                // PackageNotFound.
+                2
+            )
+        );
+        let LayoutResolveError::Multiple { errors, omitted } = &error else {
+            panic!("expected Multiple, got {error:?}");
+        };
+        assert_eq!(*omitted, 0);
+        assert!(matches!(
+            &errors[2],
+            LayoutResolveError::SlotBindingMissing { slot, .. } if slot == "title"
+        ));
+        // Gone is not on the search path, so no version can be suggested.
+        assert!(matches!(
+            &errors[3],
+            LayoutResolveError::UndeclaredPackageReference(reference)
+                if reference.package == "mosaic-pkg-gone" && reference.found_version.is_none()
+        ));
+        assert!(errors[3]
+            .to_string()
+            .contains("add `mosaic-pkg-gone = \"<version>\"`"));
+        assert_eq!(
+            errors[4],
+            LayoutResolveError::PackageNotFound {
+                package: "mosaic-pkg-gone".to_string()
+            }
+        );
+    }
+
     // ---- The repository's own packages, apps and manifests ----
 
     /// `code/` in this checkout: this crate is `code/packages/rust/<crate>`.
@@ -5553,6 +6803,14 @@ version = "1"
     ///
     /// When it was added, it found no layout in the repository relying on
     /// an unbound required slot, and no export with a scope error.
+    ///
+    /// It is also the undeclared-reference guard (publishing-v1 §10
+    /// Phase 1b): each layout is checked with its own package's manifest
+    /// as the consumer, and every package layout it reaches against that
+    /// package's manifest, so a `pkg::P::` reference that neither names its
+    /// own package nor a declared dependency fails here, naming the
+    /// manifest. When that check was added, every reference in the
+    /// repository was already declared.
     #[test]
     fn every_repository_layout_binds_every_required_slot() {
         let code = repository_code_root();
@@ -5578,11 +6836,15 @@ version = "1"
             };
             let package_root = manifest_path.parent().unwrap();
             let src = package_root.join("src");
+            // The package's own manifest is the consumer, so its layouts'
+            // `pkg::` references are checked against its `[dependencies]`
+            // (Phase 1b) as a package build checks them.
             let resolver = LayoutPackageResolver::new(vec![
                 package_root.parent().unwrap().to_path_buf(),
                 packages.clone(),
                 packages.join("mosaic"),
-            ]);
+            ])
+            .with_consumer(&manifest, manifest_path);
             for component in &manifest.components.exports {
                 // Every export, mounted or not, must pass the callee scope
                 // check: it is what any future consumer would inline.

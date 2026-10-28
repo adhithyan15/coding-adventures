@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C136-dalei",
+  "pathSegment": "ZH-PATH-136-WEATHER136",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-136-WEATHER136",
+      "order": 3
+    }
+  ]
+}

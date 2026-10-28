@@ -277,6 +277,7 @@ fn the_emitted_qt_host_answers_effects() {
         "active content and non-ASCII extensions are executable",
         "ordinary documents are not executable",
         "an earlier quarantine is never replaced",
+        "a directory at a quarantine name is skipped",
         "a rejected file moves to the first free name",
         "a file moved aside leaves saving on",
         "fresh state is saved once the rejected file is aside",

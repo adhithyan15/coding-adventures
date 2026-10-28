@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:053d773725359b66",
+  "lessonIds": [
+    "ZH-C174-gua",
+    "ZH-C174-nong",
+    "ZH-C174-tai",
+    "ZH-C174-tizi",
+    "ZH-C174-dengpao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch174.txt",
+  "json": "chinese/narration/ch174.json",
+  "textHash": "fnv1a64:c254c7e205aecce2",
+  "jsonHash": "fnv1a64:ba4cbbc3a1b24e16",
+  "findings": []
+}

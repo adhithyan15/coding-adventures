@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C128-yinyuehui",
+    "language": "chinese",
+    "chapter": 128,
+    "sequence": 10280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d4710b7f0369c36"
+  },
+  "findings": []
+}

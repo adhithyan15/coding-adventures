@@ -1,4 +1,58 @@
 # Changelog — iir-to-llvm
+## Unreleased — only the entry point is exported (#18416)
+
+- In a module with an entry point, every function except the entry is emitted `define internal`. Before, every program function was a global symbol, and the linker binds every reference to a global in the executable to that one definition. So a program that defined a function named like libc's replaced it for the linked C runtime and the collector too. With `(define (abort) 0)`, the pair guard's `abort()` returned. With `(define (malloc n) 0)`, gc-core-capi's allocations failed. With `(define (calloc a b) 0)`, `__dyn_pair_new` got a null cell. Nothing in the runtime calls a program function by name: closures dispatch through the module's own `__dyn_call_closure`. So the entry (`main`, called by the C start-up code) is the only function that must stay external. A module without an entry point is a library and keeps external linkage everywhere.
+- A program function named like a symbol the module itself `declare`s (`@abort`, `@printf`, `@putchar` …, when the module uses them) is a duplicate name in one module, so clang refuses it. That fails closed.
+- Tests: `only_the_entry_point_has_external_linkage`; the `@pick` and `@"Some?"` expectations now read `define internal`.
+## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
+
+- `DYN_BUILTINS` drops `dyn_equal`, `dyn_not`, `dyn_truthy` and `dyn_to_exit_code` (now compiler-emitted IIR: inline truthiness and `not`, module functions `@__lisp_equal` / `@__lisp_exit_code`).
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `DYN_BUILTINS`: `dyn_cons` / `dyn_car` / `dyn_cdr` / `dyn_pair_p` / `dyn_null_p` are renamed `dyn_pair_new` / `dyn_pair_first` / `dyn_pair_rest` / `dyn_is_pair` / `dyn_is_nil` (calls to `@__dyn_pair_new` …), and `dyn_tag` → `@__dyn_tag` is new.
+- `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives: `Lowered` for all but `dyn_symbol`, which is `Refused(SYMBOLS_ARE_INTERNED_CONSTANTS)`. `builtin_rows_agree_with_the_builtin_table` now reads both builtin tables (`SUPPORTED_BUILTINS` and `DYN_BUILTINS`).
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- `write_f64_py` / `write_f64_js` leave `SUPPORTED_BUILTINS` and
+  `OP_SUPPORT`, and `lang83_f64.rs` loses its writer half
+  (`LANG83_F64_WRITE_LL`: `@__iir_write_f64`, `@__iir_put_digits`, …). A
+  module that calls either is refused at lowering. The digit core and the
+  two PR7b wrappers (`LANG83_F64_DIGITS_LL`, all `internal`) are unchanged and
+  are emitted only for `f64_digits` / `f64_exp10`.
+- Tests: `retired_float_writers_are_refused` replaces the writer tests; the
+  PR6c edge table on real clang prints each result as `class digits exp10
+  signbit` instead of through `write_f64_js`.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- No code change: the trap message comes from
+  `exception_kind::trap_kind_name`, so kind 7's module-local
+  `@__iir_trap_msg.7` now holds `trap: Trap.Unbound\n` (was
+  `trap: Trap.ReferenceError\n`) after LANG83 PR7d renamed the kind.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- The module-local float IR is now two constants: `LANG83_F64_DIGITS_LL`
+  (big integers, the `@__iir_f64_digits` core and two new
+  wrappers `@__iir_f64_shortest_digits(double)` / `@__iir_f64_shortest_exp10(double)`)
+  and `LANG83_F64_WRITE_LL` (the PR6a layout and output). A module with
+  `f64_digits` / `f64_exp10` gets the first only (no `putchar`); a module
+  that prints a float gets both, with one copy of the core.
+- `f64_class` is inline: `bitcast`, mask, three `icmp`s `zext`ed and summed.
+- The reserved `__iir_` function-name check also covers the digit ops.
+- **Every float helper in `lang83_f64.rs` is now `define internal` (constants
+  `private`)** instead of PR6a's `linkonce_odr`. A `linkonce_odr` name is
+  global and interposable, so a strong symbol of the same name in a linked
+  runtime would replace it. That happened in review, when `twig_runtime.c`
+  defined a 1-argument `__iir_f64_digits` (since renamed `__twig_f64_digits`):
+  `write_f64_py` printed `0.0` for `0.1` and crashed on `123.456`. New
+  regression test: an LLVM program that also links the native runtime.
+- Tests: emitted shape, one core with both users, and the three ops on real
+  `clang` against host `python3`. The wrappers were also checked against
+  `python3` on a 122 108-value corpus at `-O0` and `-O2`.
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 - `real_to_int_trunc` / `real_to_int_floor`'s range-check failure block calls

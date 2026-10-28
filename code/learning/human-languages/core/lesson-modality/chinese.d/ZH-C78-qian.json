@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C78-qian",
+    "language": "chinese",
+    "chapter": 78,
+    "sequence": 6050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1891cd9e0dd7ef97"
+  },
+  "findings": []
+}

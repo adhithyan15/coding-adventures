@@ -1,0 +1,868 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 166,
+  "title": "Tea Time",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:5fc5ac774228dfbd",
+  "lessons": [
+    {
+      "id": "ZH-C166-kaishui",
+      "sequence": 13410,
+      "title": "开水 (kāishuǐ) — boiled water; boiling water",
+      "headword": "开水",
+      "romanization": "kāishuǐ",
+      "gloss": "boiled water; boiling water",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b920cf6353bad31f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a skirt, then the Mandarin for a scarf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 开水",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "开水 — kāishuǐ — \"boiled water; boiling water\"."
+            },
+            {
+              "kind": "speech",
+              "text": "中午我们吃米饭喝开水 zhōngwǔ wǒmen chī mǐfàn hē kāishuǐ — At midday we have rice and drink boiled water."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "开水 (kāishuǐ) is built from 开 'to open', here 'to come to the boil', and 水 'water', both inherited from Middle Chinese, khoj and sywijX (Guangyun, in Baxter's transcription); the boiling sense is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking for what I want."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāishuǐ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāishuǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāishuǐ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāishuǐ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōngwǔ wǒmen chī mǐfàn hē kāishuǐ — At midday we have rice and drink boiled water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōngwǔ wǒmen chī mǐfàn hē kāishuǐ* — At midday we have rice and drink boiled water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a skirt, then the Mandarin for a scarf, then say kāishuǐ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a skirt, then the Mandarin for a scarf, then say *kāishuǐ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 开水 (kāishuǐ) mean? (\"Boiled water; boiling water\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C166-xiawucha",
+      "sequence": 13420,
+      "title": "下午茶 (xiàwǔchá) — afternoon tea (a light meal)",
+      "headword": "下午茶",
+      "romanization": "xiàwǔchá",
+      "gloss": "afternoon tea (a light meal)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93a2910ac6513b20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a scarf, then the Mandarin for boiled water."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 下午茶",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "下午茶 — xiàwǔchá — \"afternoon tea (a light meal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们三点吃下午茶 wǒmen sān diǎn chī xiàwǔchá — We have afternoon tea at three."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 茶 (chá) — nine strokes in three pieces: the grass piece of 菜 on top, the two strokes of 人 under it, and at the foot a horizontal, a vertical with a hook, and two short strokes on either side of it. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "下午茶 (xiàwǔchá) is built from 下午 'afternoon' and 茶 (chá) 'tea'. All three parts are inherited from Middle Chinese, haeX, nguX and drae (Guangyun, in Baxter's transcription); the dictionary marks the tea character as a popular form. Tea with something to eat, as a light meal of its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking for what I want."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàwǔchá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàwǔchá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàwǔchá, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàwǔchá*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen sān diǎn chī xiàwǔchá — We have afternoon tea at three.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen sān diǎn chī xiàwǔchá* — We have afternoon tea at three.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a scarf, then the Mandarin for boiled water, then say xiàwǔchá again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a scarf, then the Mandarin for boiled water, then say *xiàwǔchá* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 下午茶 (xiàwǔchá) mean? (\"Afternoon tea (a light meal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W166-cha-tea",
+      "sequence": 13425,
+      "title": "茶 (chá) — grass, a roof, a small tree",
+      "headword": "茶",
+      "romanization": "chá",
+      "gloss": "茶 — the grass piece, 人, then a small tree at the foot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:307f2948a85bfc88",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — grass, a roof, a small tree",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — grass, a roof, a small tree and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiàwǔchá — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiàwǔchá* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "菜 人."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — cài, rén",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *cài*, *rén*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — grass, a roof, a small tree",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "茶 (chá)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, top to bottom. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The grass piece, three strokes, as in 菜: a horizontal, then two short verticals through it."
+            },
+            {
+              "kind": "speech",
+              "text": "Then 人, two strokes, spread wide like a roof."
+            },
+            {
+              "kind": "speech",
+              "text": "At the foot, four strokes: a horizontal, a vertical with a hook, then a short stroke falling to the left and a dot falling to the right, one on each side."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 2 + 4 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "茶 (chá), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 茶, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 茶 (chá)? (Nine.) What sits on top? (The grass piece of 菜.) What comes under it? (人, spread like a roof.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 茶 (chá), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C166-hongcha",
+      "sequence": 13430,
+      "title": "hóngchá — black tea",
+      "headword": "hóngchá",
+      "romanization": "hóngchá",
+      "gloss": "black tea",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1a218deb8965ce0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for boiled water, then the Mandarin for afternoon tea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hóngchá",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hóngchá — \"black tea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ yào hóngchá háishi lǜchá — Black tea or green tea?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "English calls this tea black; Mandarin calls it red."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hóngchá is built from hóng 'red' and 茶 (chá) 'tea', both inherited from Middle Chinese, huwng and drae (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking for what I want."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hóngchá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hóngchá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hóngchá, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hóngchá*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ yào hóngchá háishi lǜchá — Black tea or green tea?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ yào hóngchá háishi lǜchá* — Black tea or green tea?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for boiled water, then the Mandarin for afternoon tea, then say hóngchá again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for boiled water, then the Mandarin for afternoon tea, then say *hóngchá* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hóngchá mean? (\"Black tea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C166-chaye",
+      "sequence": 13440,
+      "title": "cháyè — tea leaves",
+      "headword": "cháyè",
+      "romanization": "cháyè",
+      "gloss": "tea leaves",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cdff59bf174f84f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for afternoon tea, then the Mandarin for black tea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cháyè",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cháyè — \"tea leaves\"."
+            },
+            {
+              "kind": "speech",
+              "text": "cháyè zài nǎr — Where are the tea leaves?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cháyè is built from 茶 (chá) 'tea' and yè 'leaf', both inherited from Middle Chinese, drae and yep (Guangyun, in Baxter's transcription), which glosses the second 'the leaves of a branch'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking for what I want."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cháyè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cháyè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cháyè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cháyè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cháyè zài nǎr — Where are the tea leaves?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cháyè zài nǎr* — Where are the tea leaves?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for afternoon tea, then the Mandarin for black tea, then say cháyè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for afternoon tea, then the Mandarin for black tea, then say *cháyè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cháyè mean? (\"Tea leaves\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C166-paocha",
+      "sequence": 13450,
+      "title": "pàochá — to make tea (to steep the leaves)",
+      "headword": "pàochá",
+      "romanization": "pàochá",
+      "gloss": "to make tea (to steep the leaves)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab71adf66785fb7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for black tea, then the Mandarin for tea leaves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pàochá",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pàochá — \"to make tea (to steep the leaves)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ yòng kāishuǐ pàochá — I make the tea with boiling water."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pàochá is built from pào 'to soak' and 茶 (chá) 'tea', both inherited from Middle Chinese, phaew and drae (Guangyun, in Baxter's transcription). The dictionary glosses the first 'bubbles on water'; soaking is not given there, and phaew would regularly give a first tone, so how pào came about is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking for what I want."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pàochá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pàochá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pàochá, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pàochá*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yòng kāishuǐ pàochá — I make the tea with boiling water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yòng kāishuǐ pàochá* — I make the tea with boiling water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for black tea, then the Mandarin for tea leaves, then say pàochá again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for black tea, then the Mandarin for tea leaves, then say *pàochá* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pàochá mean? (\"To make tea (to steep the leaves)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

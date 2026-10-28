@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C105-yagao",
+  "pathSegment": "ZH-PATH-105-BATH105",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-105-BATH105",
+      "order": 2
+    }
+  ]
+}

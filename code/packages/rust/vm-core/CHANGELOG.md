@@ -1,5 +1,89 @@
 # Changelog — vm-core
 
+## Unreleased — field ops require a block base address, not an interior pointer (#18471)
+
+- **Security fix (latent).** `gc_field_load` / `gc_field_store` bounds-checked
+  `idx*8 + 8` against `FlatHeap::payload_size(obj)`. That function resolves an
+  address *inside* a block, or one past its end, to the **whole** block's size,
+  so a `HeapRef` pointing into the middle of a 32-byte object passed the check
+  for indexes that reach up to 32 bytes past the object's end, for both reads
+  and writes. A store through it would also have run the write barrier with
+  `obj - 32` taken as the object's header. No IIR op creates an interior
+  `HeapRef`, so no program could reach this; a host passing a crafted
+  `Value::HeapRef` through `VMCore::execute`'s arguments could.
+- **Fix.** Both handlers now go through one helper, `checked_field_offset`,
+  which asks gc-core's new `FlatHeap::payload_size_at_base` (gc-core 0.37.0)
+  for the size of the object that starts *exactly* at `obj`. Anything else
+  traps with `"<op>: HeapRef is not the base address of a live heap object"`
+  before any memory is touched. The message deliberately does not include
+  the address, so VM errors never echo heap layout. Valid base addresses behave exactly as before,
+  including the `"index N out of bounds for a S-byte object"` trap.
+- **Visible change:** null, garbage and freed `HeapRef`s still trap, but with
+  the not-a-base message instead of `"out of bounds for a 0-byte object"`.
+- **32-bit index truncation closed (pre-existing).** The word index was
+  converted with `idx as usize`, which on a 32-bit target (wasm32) silently
+  truncates an index of `1 << 32` or more to a small one that then passes the
+  bounds check as a different field. It is now converted with
+  `usize::try_from` and traps on failure. On 64-bit targets every
+  non-negative `i64` fits, so nothing changes there; there is no 32-bit test
+  target in this workspace, so this is covered by a comment rather than a test.
+- Order of checks, all before any memory access: index non-negative and
+  fits in `usize`, then base address, then `idx*8 + 8 <= size`.
+- Tests (`tests/gc_heap.rs`), all with real heap allocations passed in as
+  host arguments: `gc_field_ops_accept_a_host_supplied_base_heap_ref`,
+  `gc_field_load_traps_on_an_interior_heap_ref`,
+  `gc_field_store_traps_on_an_interior_heap_ref_and_writes_nothing`,
+  `gc_field_ops_trap_on_a_one_past_the_end_heap_ref`,
+  `gc_field_ops_trap_on_null_and_garbage_heap_refs`. The interior probes stay
+  inside the block even when measured from the interior address, so on the
+  pre-fix code they fail (the op succeeds) without performing an
+  out-of-bounds access.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- `op_support` refuses the ten LANG83 PR7f dynamic-value primitives with `NO_TAGGED_WORD_RUNTIME`: the VM's dynamic values are structural heap cells (`alloc` / `field_*`), and it has no handler or default builtin for a `dyn_*` call. `every_standard_op_is_executed` pins that this is the only family the VM refuses.
+
+## Unreleased — LANG83 PR7e — no float writers
+
+- **Breaking:** the default builtins `write_f64_py` / `write_f64_js` are
+  removed, and with them `float_format::FloatLayout`, `format_f64`,
+  `python_repr` and `js_to_string` (the two languages' layouts). A VM builtin
+  may not carry one language's rules (LANG83 "PR7"); each compiler now prints
+  a float with its own helper. `shortest_digits`, `f64_class`, `f64_digits`
+  and `f64_exp10` (the PR7b ops' lowering, also the JIT's) are unchanged.
+- New `BuiltinRegistry::names()`: every registered builtin, sorted.
+- Tests: the float tests check the digits (`digits_match_host_python`, ties
+  to even, and a round-trip sweep that also checks no shorter digit string
+  reads back) instead of the layouts; `default_builtins_name_no_language`
+  checks every default builtin against
+  `op_registry::language_name_violation` and that the writers are gone.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`
+
+- The `trap` handler validates its kind with
+  `interpreter_ir::exception_kind::is_trap_kind`, since LANG83 PR7d removed
+  `is_registered_trap_kind` with the (always empty) `LANGUAGE_TRAP_KINDS`
+  table. Same accepted set: the seven built-in `Trap.*` leaves.
+- Kind 7 is now `Trap.Unbound` (was `Trap.ReferenceError`), so a program
+  that stops on it returns `VMError::Trap { kind: "Trap.Unbound" }`.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- **`float_format::shortest_digits(x) -> (u64, i32)`** now returns the
+  shortest round-trip digits as integers (`D`, `e10`); the string form it
+  returned before is the private `shortest_digit_string`, the one core both
+  it and `format_f64` use, so `python_repr` / `js_to_string` output is
+  unchanged (no caller outside this module used the old signature).
+- **`float_format::{f64_class, f64_digits, f64_exp10}`** — the PR7b
+  semantics on one `f64` (class 0/1/2/3 from `f64::classify`; `D` and `e10`,
+  or 0 for classes 0, 2, 3).
+- **Dispatch:** `f64_class` / `f64_digits` / `f64_exp10` handlers (a
+  `Value::Float` operand, a `Value::Int` result, never a trap), so
+  `op_support` derives `Lowered` for all three.
+- Tests: `neutral_primitives_match_the_layouts` (integer digits agree with
+  the laid-out strings and re-read as the same double) and
+  `neutral_float_primitives_dispatch`.
+
 ## Unreleased — a failed narrowing raises `Trap.ConvRange`
 
 - `real_to_i64_checked` now fails with LANG83's typed

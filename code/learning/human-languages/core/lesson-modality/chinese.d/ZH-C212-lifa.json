@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C212-lifa",
+    "language": "chinese",
+    "chapter": 212,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ab233c2266ce009"
+  },
+  "findings": []
+}

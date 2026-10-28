@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-134-THING134",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a thing is heavy, soft, hard, empty or full.",
+  "prerequisites": []
+}

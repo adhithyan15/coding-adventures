@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C84-liaotian",
+  "pathSegment": "ZH-PATH-84-TOGETHER84",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-84-TOGETHER84",
+      "order": 2
+    }
+  ]
+}

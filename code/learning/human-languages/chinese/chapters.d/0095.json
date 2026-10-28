@@ -1,0 +1,22 @@
+{
+  "chapter": 95,
+  "title": "Why?",
+  "label": "ch:zh-why",
+  "canDo": "I can ask why.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C95-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Asking why with 为什么, and three everyday answers to it, being busy, the traffic and forgetting, built on one new written character: 为.",
+    "assesses": [
+      "ZH-LEX-C95-WEISHENME-01",
+      "ZH-SCRIPT-WEI-FOR-01",
+      "ZH-LEX-C95-YOUSHI-01",
+      "ZH-LEX-C95-DUCHE-01",
+      "ZH-LEX-C95-WANG-01",
+      "ZH-PERFORMANCE-WHY-01"
+    ]
+  }
+}

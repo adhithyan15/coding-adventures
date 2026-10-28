@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:301042c07ce46c3a",
+  "lessonIds": [
+    "ZH-C265-haixiu",
+    "ZH-C265-yonggan",
+    "ZH-C265-dafang",
+    "ZH-C265-xiaoqi",
+    "ZH-C265-jinzhang",
+    "ZH-R265-review-260-265"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch265.txt",
+  "json": "chinese/narration/ch265.json",
+  "textHash": "fnv1a64:8221c2e595790a2a",
+  "jsonHash": "fnv1a64:3a110010db42f79e",
+  "findings": []
+}

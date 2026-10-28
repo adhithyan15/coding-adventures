@@ -1,0 +1,987 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 52,
+  "title": "Head, Hands and Feet",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:9fbdba82ea47f180",
+  "lessons": [
+    {
+      "id": "ZH-C52-shou",
+      "sequence": 4080,
+      "title": "手 (shǒu) — hand",
+      "headword": "手",
+      "romanization": "shǒu",
+      "gloss": "hand",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae23d6be1c029b04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for hot, then the Mandarin for to cry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 手",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "手 — shǒu — \"hand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我的手很小 wǒ de shǒu hěn xiǎo — My hands are small."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 手 (shǒu) — a short fall, two bars, and a vertical that hooks at the foot. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "手 (shǒu) is inherited from Middle Chinese syuwX (Guangyun, in Baxter's transcription), glossed with the pair 'hand and foot'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how you are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de shǒu hěn xiǎo — My hands are small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de shǒu hěn xiǎo* — My hands are small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for hot, then the Mandarin for to cry, then say shǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for hot, then the Mandarin for to cry, then say *shǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 手 (shǒu) mean? (\"Hand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W52-shou",
+      "sequence": 4085,
+      "title": "手 (shǒu) — a fall, two bars, a hook",
+      "headword": "手",
+      "romanization": "shǒu",
+      "gloss": "手 — a fall, two bars, a hooked vertical",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c90ea56e014eb5f6",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a fall, two bars, a hook",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a fall, two bars, a hook and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shǒu — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shǒu* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "看 小."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — kàn, xiǎo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *kàn*, *xiǎo*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a fall, two bars, a hook",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "手 (shǒu)."
+            },
+            {
+              "kind": "speech",
+              "text": "One piece, four strokes, top to bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "A short left-falling stroke across the top, from right to left."
+            },
+            {
+              "kind": "speech",
+              "text": "Two horizontals, the lower one longer."
+            },
+            {
+              "kind": "speech",
+              "text": "Last, a vertical down through both bars, hooking to the left at the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "The top of 看 is this hand, squeezed flat over the eye."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "手 (shǒu), all four, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 手, all four, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 手 (shǒu)? (Four.) Which way does the first stroke fall? (To the left.) Which character you know has a hand on top? (看.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 手 (shǒu), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C52-tou",
+      "sequence": 4090,
+      "title": "tóu — head",
+      "headword": "tóu",
+      "romanization": "tóu",
+      "gloss": "head",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f3c83b6b16dcb4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to cry, then the Mandarin for hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tóu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tóu — \"head\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā de tóu hěn dà — He's got a big head."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tóu is inherited from Middle Chinese duw (Guangyun, in Baxter's transcription), glossed 'head'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how you are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tóu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tóu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tóu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tóu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā de tóu hěn dà — He's got a big head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā de tóu hěn dà* — He's got a big head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to cry, then the Mandarin for hand, then say tóu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to cry, then the Mandarin for hand, then say *tóu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tóu mean? (\"Head\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C52-jiao",
+      "sequence": 4100,
+      "title": "jiǎo — foot",
+      "headword": "jiǎo",
+      "romanization": "jiǎo",
+      "gloss": "foot",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2444b933dd6a878",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for hand, then the Mandarin for head."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiǎo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiǎo — \"foot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de jiǎo hěn lěng — My feet are cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiǎo is inherited from Middle Chinese kjak (Guangyun, in Baxter's transcription), which the dictionary explains as the part that tucks back when you sit; whether that meant the leg or the foot is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how you are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de jiǎo hěn lěng — My feet are cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de jiǎo hěn lěng* — My feet are cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for hand, then the Mandarin for head, then say jiǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for hand, then the Mandarin for head, then say *jiǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiǎo mean? (\"Foot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C52-yanjing",
+      "sequence": 4110,
+      "title": "yǎnjing — eye",
+      "headword": "yǎnjing",
+      "romanization": "yǎnjing",
+      "gloss": "eye",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d38ca56c548e88ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for head, then the Mandarin for foot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yǎnjing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǎnjing — \"eye\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā de yǎnjing hěn hǎokàn — She has lovely eyes."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǎnjing is built from yǎn 'eye' and jing 'eyeball', both inherited from Middle Chinese, ngeanX and tsjeng (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how you are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǎnjing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǎnjing*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǎnjing, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǎnjing*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā de yǎnjing hěn hǎokàn — She has lovely eyes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā de yǎnjing hěn hǎokàn* — She has lovely eyes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for head, then the Mandarin for foot, then say yǎnjing again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for head, then the Mandarin for foot, then say *yǎnjing* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yǎnjing mean? (\"Eye\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C52-erduo",
+      "sequence": 4120,
+      "title": "ěrduo — ear",
+      "headword": "ěrduo",
+      "romanization": "ěrduo",
+      "gloss": "ear",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07d1bc03e8b75e00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for foot, then the Mandarin for eye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ěrduo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ěrduo — \"ear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "háizi de ěrduo hěn xiǎo — The child's ears are tiny."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ěrduo is built from ěr 'ear' and duo, both inherited from Middle Chinese, nyiX and twaX (Guangyun, in Baxter's transcription). The dictionary glosses the first as what hears and the second as something hanging from a tree; the second probably names the soft lobe that hangs, though that is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how you are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ěrduo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ěrduo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ěrduo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ěrduo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háizi de ěrduo hěn xiǎo — The child's ears are tiny.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háizi de ěrduo hěn xiǎo* — The child's ears are tiny.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for foot, then the Mandarin for eye, then say ěrduo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for foot, then the Mandarin for eye, then say *ěrduo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ěrduo mean? (\"Ear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R52-review-48-52",
+      "sequence": 4130,
+      "title": "Looking back: from Telling the Time to Head, Hands and Feet",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Telling the Time to Head, Hands and Feet",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eedfe32ad5656cff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for o'clock and minute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "o'clock, minute, half, how many, to wait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: o'clock, minute, half, how many, to wait]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "before noon, noon, evening, afternoon, good evening",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: before noon, noon, evening, afternoon, good evening]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sleep, to get up, to rest, health, to fall ill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sleep, to get up, to rest, health, to fall ill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "happy, to be afraid, cold, hot, to cry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: happy, to be afraid, cold, hot, to cry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hand, head, foot, eye, ear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hand, head, foot, eye, ear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "点 午 晚 手 (shǒu) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 点 午 晚 手 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "O'clock? (点, diǎn.) Minute? (fēn.) Half? (bàn.) How many? (jǐ.) To wait? (děng.) Before noon? (上午, shàngwǔ.) Noon? (中午, zhōngwǔ.) Evening? (晚上, wǎnshang.) Afternoon? (xiàwǔ.) Good evening? (晚上好, wǎnshang hǎo.) To sleep? (shuìjiào.) To get up? (qǐchuáng.) To rest? (xiūxi.) Health? (shēntǐ.) To fall ill? (bìng.) Happy? (gāoxìng.) To be afraid? (pà.) Cold? (lěng.) Hot? (rè.) To cry? (kū.) Hand? (手, shǒu.) Head? (tóu.) Foot? (jiǎo.) Eye? (yǎnjing.) Ear? (ěrduo.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

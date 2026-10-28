@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C85-zai",
+  "pathSegment": "ZH-PATH-85-LOCATION",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-85-LOCATION",
+      "order": 0
+    }
+  ]
+}

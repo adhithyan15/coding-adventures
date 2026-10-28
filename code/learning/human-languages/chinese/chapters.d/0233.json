@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "How People Look",
+  "label": "ch:zh-how-people-look",
+  "canDo": "I can describe someone's appearance: their glasses, a beard, a slim figure and their skin.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C233-pifu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can describe someone's appearance: their glasses, a beard, a slim figure and their skin.",
+    "assesses": [
+      "ZH-LEX-C233-LOOKS233-03",
+      "ZH-LEX-C233-LOOKS233-04",
+      "ZH-LEX-C233-LOOKS233-05"
+    ]
+  }
+}

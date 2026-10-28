@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 105,
+  "title": "In the Bathroom",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2243bea9bdce7445",
+  "lessons": [
+    {
+      "id": "ZH-C105-maojin",
+      "sequence": 8310,
+      "title": "máojīn — towel",
+      "headword": "máojīn",
+      "romanization": "máojīn",
+      "gloss": "towel",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a9177d6ba6f15a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for paper, then the Mandarin for dictionary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: máojīn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "máojīn — \"towel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de máojīn hěn gānjìng — My towel is clean."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "máojīn is built from máo and jīn, both inherited from Middle Chinese, maw and kin (Guangyun, in Baxter's transcription); the dictionary glosses the first as hair and fur and explains the second as a cloth worn on the head. How the pair came to mean a towel is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "máojīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *máojīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "máojīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *máojīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de máojīn hěn gānjìng — My towel is clean.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de máojīn hěn gānjìng* — My towel is clean.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for paper, then the Mandarin for dictionary, then say máojīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for paper, then the Mandarin for dictionary, then say *máojīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does máojīn mean? (\"Towel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C105-yashua",
+      "sequence": 8320,
+      "title": "yáshuā — toothbrush",
+      "headword": "yáshuā",
+      "romanization": "yáshuā",
+      "gloss": "toothbrush",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd3d4438f055071f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for dictionary, then the Mandarin for towel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yáshuā",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yáshuā — \"toothbrush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de yáshuā zài nǎr — Where's my toothbrush?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yáshuā is built from yá 'tooth' and shuā 'brush', both inherited from Middle Chinese, ngae and srwaet (Guangyun, in Baxter's transcription): the two parts of shuāyá, the other way round, make the thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yáshuā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yáshuā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yáshuā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yáshuā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de yáshuā zài nǎr — Where's my toothbrush?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de yáshuā zài nǎr* — Where's my toothbrush?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for dictionary, then the Mandarin for towel, then say yáshuā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for dictionary, then the Mandarin for towel, then say *yáshuā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yáshuā mean? (\"Toothbrush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C105-yagao",
+      "sequence": 8330,
+      "title": "yágāo — toothpaste",
+      "headword": "yágāo",
+      "romanization": "yágāo",
+      "gloss": "toothpaste",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db316262b914e4db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for towel, then the Mandarin for toothbrush."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yágāo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yágāo — \"toothpaste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "méiyǒu yágāo le — We're out of toothpaste."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yágāo is built from yá 'tooth' and gāo 'paste', both inherited from Middle Chinese, ngae and kaw (Guangyun, in Baxter's transcription); the dictionary glosses the second as fat or grease."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yágāo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yágāo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yágāo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yágāo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "méiyǒu yágāo le — We're out of toothpaste.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *méiyǒu yágāo le* — We're out of toothpaste.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for towel, then the Mandarin for toothbrush, then say yágāo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for towel, then the Mandarin for toothbrush, then say *yágāo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yágāo mean? (\"Toothpaste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C105-feizao",
+      "sequence": 8340,
+      "title": "féizào — soap",
+      "headword": "féizào",
+      "romanization": "féizào",
+      "gloss": "soap",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c67bada6fc605db9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for toothbrush, then the Mandarin for toothpaste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: féizào",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "féizào — \"soap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yòng féizào xǐ shǒu — Wash your hands with soap."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "féizào is built from féi 'fat' and zào, both inherited from Middle Chinese, bj+j and dzawX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'fleshy', and the second as black silk, among other senses; how the pair came to mean soap is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "féizào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *féizào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "féizào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *féizào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yòng féizào xǐ shǒu — Wash your hands with soap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yòng féizào xǐ shǒu* — Wash your hands with soap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for toothbrush, then the Mandarin for toothpaste, then say féizào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for toothbrush, then the Mandarin for toothpaste, then say *féizào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does féizào mean? (\"Soap\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C105-jingzi",
+      "sequence": 8350,
+      "title": "jìngzi — mirror",
+      "headword": "jìngzi",
+      "romanization": "jìngzi",
+      "gloss": "mirror",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:516797088454f604",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for toothpaste, then the Mandarin for soap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jìngzi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jìngzi — \"mirror\"."
+            },
+            {
+              "kind": "speech",
+              "text": "xǐshǒujiān lǐ yǒu jìngzi ma — Is there a mirror in the toilets?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jìngzi is built from jìng 'mirror' and the noun ending zi, both inherited from Middle Chinese, kjaengH and tsiX (Guangyun, in Baxter's transcription); the dictionary's entry tells of a mirror sent as a gift to a king of old."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday things."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìngzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìngzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìngzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìngzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xǐshǒujiān lǐ yǒu jìngzi ma — Is there a mirror in the toilets?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xǐshǒujiān lǐ yǒu jìngzi ma* — Is there a mirror in the toilets?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for toothpaste, then the Mandarin for soap, then say jìngzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for toothpaste, then the Mandarin for soap, then say *jìngzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jìngzi mean? (\"Mirror\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

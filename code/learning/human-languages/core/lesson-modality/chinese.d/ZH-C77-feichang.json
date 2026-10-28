@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C77-feichang",
+    "language": "chinese",
+    "chapter": 77,
+    "sequence": 6010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fa1c0f2ba7f8ae3"
+  },
+  "findings": []
+}

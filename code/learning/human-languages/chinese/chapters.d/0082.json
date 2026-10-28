@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Behind, Left and Right",
+  "label": "ch:zh-behind-left-and-right",
+  "canDo": "I can say after, left, right, in the middle and opposite.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ZH-C82-duimian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: I can say after, left, right, in the middle and opposite.",
+    "assesses": [
+      "ZH-LEX-C82-SIDES82-03",
+      "ZH-LEX-C82-SIDES82-04",
+      "ZH-LEX-C82-SIDES82-05"
+    ]
+  }
+}

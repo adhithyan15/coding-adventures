@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:e236ad95ec6a45f6",
+  "lessonIds": [
+    "ZH-C49-shangwu",
+    "ZH-W49-wu-noon",
+    "ZH-C49-zhongwu",
+    "ZH-C49-wanshang",
+    "ZH-W49-wan",
+    "ZH-C49-xiawu",
+    "ZH-C49-wanshanghao"
+  ],
+  "tex": "chinese/book/chapters/ch49-a-day-from-morning-to-night.tex"
+}

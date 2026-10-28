@@ -1,0 +1,4 @@
+## Unreleased — LANG83 PR7f follow-up — program functions are internal on LLVM (#18416)
+
+- `lang_matrix`: new `twig_programs_cannot_interpose_libc_on_the_llvm_column`. Twig programs that define `malloc`, `calloc`, `exit`, or `fflush` and `printf`, then `(car (cons 3 4))`, must exit 3 on LLVM, native x86-64 and the VM. Before the `iir-to-llvm` linkage fix, LLVM failed `malloc` (gc-core-capi's allocations got 0) and `calloc` (a null cons cell). `(define (abort) 0) (car 5)` must fail on every column, and on LLVM it must die of SIGABRT with the pair refusal on stderr. While the program's `abort` was the executable's, only the pair guard's backstop trap stopped it (SIGILL). The module's `abort` must be `define internal` and `main` external. Falsified: with every function external again, the test fails on LLVM (`malloc`).
+- `op_conformance`: the `@__lisp_equal` / `@__lisp_exit_code` definitions are now expected as `define internal`.

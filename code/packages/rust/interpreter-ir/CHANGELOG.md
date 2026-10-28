@@ -1,5 +1,105 @@
 # Changelog — interpreter-ir
 
+## Unreleased — #18417 — the JIT's Lisp `car` fails too
+
+- `op_registry`: the `Dynamic` family's comment drops its "one known exception". `lang_aot::jit_lisp`'s McCarthy callbacks now fail on a non-pair like every other implementation. Comment only.
+
+## Unreleased — LANG83 PR7f follow-up — a non-pair stops the program
+
+- `op_registry`: the `Dynamic` family's comment no longer calls `dyn_pair_first` / `dyn_pair_rest` of a non-pair undefined. Every implementation now stops the program (the VM's `TypeError`, `dynval-runtime`'s `extern "C"` panic, and `dynval_runtime.c`'s new tag check and abort). The traps list stays empty: a type error is not one of the closed `Trap.*` kinds. The comment names the one known exception, `lang_aot::jit_lisp`'s McCarthy callbacks, which answer nil. Comment only; no registry data changes. The quoted refusal is the tag-only message (`dyn_pair_first: argument with tag 0 (int) is not a pair`) adopted after the security review.
+
+## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
+
+- New registry family `OpFamily::Dynamic` and ten Builtins
+  (`introduced_by: "LANG83 PR7f"`, `LANG83_PR7F`, `OpSpec::is_pr7f`):
+  `dyn_box_int`, `dyn_unbox_int`, `dyn_tag`, `dyn_pair_new`,
+  `dyn_pair_first`, `dyn_pair_rest`, `dyn_is_pair`, `dyn_is_nil`, `dyn_nil`
+  and `dyn_symbol`. They are the tagged-word value representation that the
+  Lisp-family frontends' values already used; until now the ops were
+  unregistered builtins with Lisp names (`dyn_cons`, `dyn_car`, `dyn_cdr`,
+  `dyn_pair_p`, `dyn_null_p`, `make_nil`, `make_symbol`), renamed in the same
+  PR wherever they are lowered or handled. `dyn_tag` is new: the value's
+  three-bit tag as an integer.
+- New operand type `"dyn"` (a dynamic value) in `OpSpec::operand_types`.
+- `GRANDFATHERED_PREFIXED_NAMES` gains the ten names. Each starts with the
+  `dyn_` dispatch prefix on purpose: the native backends' `dyn_` arm (call
+  the runtime's `__dyn_<name>`) is their lowering, and it fires only for a
+  name in the backend's builtin table, so an unregistered `dyn_` name is
+  still refused. `dyn_new` is still a name-rule violation.
+- New shared refusal reasons `NO_TAGGED_WORD_RUNTIME` (the managed backends,
+  BEAM, vm-core and the generic JIT, whose dynamic values are structural)
+  and `SYMBOLS_ARE_INTERNED_CONSTANTS` (`dyn_symbol` on the tagged-word
+  backends).
+- Tests: `pr7f_set_is_exactly_the_dynamic_value_primitives` pins the set, its
+  shape, that the Lisp names and the language-semantic `dyn_truthy`,
+  `dyn_equal`, `dyn_not` and `dyn_to_exit_code` are unregistered;
+  `grandfathered_names_are_registered_comparisons_or_dynamic_values` replaces
+  `grandfathered_names_are_registered_comparisons`.
+
+## Unreleased — LANG83 PR7e — no float writers, and no language names
+
+- **Breaking:** `write_f64_py` and `write_f64_js` are removed from
+  `op_registry::STANDARD_OPS`, with `LANG83_PR6A` and `OpSpec::is_pr6a`.
+  They printed a float in Python's `repr` or JavaScript's `Number::toString`
+  layout, so every backend carried two languages' rules. Since LANG83
+  PR7c-js / PR7c-py each compiler prints a float with its own module-local
+  helper over `f64_class` / `f64_digits` / `f64_exp10`, so nothing emits them.
+- New `op_registry::language_name_violation(name)` and `LANGUAGE_TOKENS`
+  (LANG83 PR7's "no-language-names" rule): the name is split into words on
+  `_`, `.` and `-` and at camelCase boundaries (`toJSString` → `to`, `JS`,
+  `String`; the whole part is checked too, so `TypeScript` is one word), and
+  a word that is a language token, ignoring case and trailing digits
+  (`py`, `python`, `cpython`, `js`, `ecma`, `node`, `ts`, `typescript`,
+  `rb`, `ruby`, `pl`, `perl`, `php`, `lisp`, `scheme`, `clojure`, `twig`,
+  `basic`, `algol`, `cobol`, `fortran`, `ocaml`, `scala`, …) or that reads
+  as a language's exception class (it ends in `error` or `exception`, like
+  `ReferenceError`) is refused.
+- Tests: `no_registry_name_or_trap_kind_names_a_language` runs the rule over
+  every registry name and every trap kind;
+  `the_language_name_rule_rejects_the_retired_names` pins that
+  `write_f64_py`, `write_f64_js`, `py_print_float`, `Trap.ReferenceError`,
+  `Ruby.ZeroDivisionError` and others are caught, unregistered and not trap
+  kinds, as are `py-print`, `writeF64Py`, `toJSString`, `f64_to_str_js2`,
+  `CPythonRepr` and one name per added token, while `f64_digits`,
+  `Trap.Unbound`, `Trap.ConvRange`, `equal?`, `adjust_plus` (a token inside a
+  word is not a word), `list-nodes`, `toString` and `u8_to_f64` pass. `pr6a_set_is_exactly_the_two_float_writers`
+  is removed.
+
+## Unreleased — LANG83 PR7d — `Trap.Unbound`, and no language trap kinds
+
+- **Breaking:** `exception_kind::TRAP_REFERENCE_ERROR` (`"Trap.ReferenceError"`)
+  is renamed **`TRAP_UNBOUND`** (`"Trap.Unbound"`) and keeps the stable id 7.
+  A trap kind names a condition (the name is unbound), never one language's
+  exception class; JavaScript's `ReferenceError`, Python's `NameError` and a
+  Lisp's unbound variable all map onto it (LANG83 "PR7 — language
+  neutrality"). `"Trap.ReferenceError"` is no longer a kind.
+- **Breaking:** `LANGUAGE_TRAP_KINDS`, `LANGUAGE_TRAP_KIND_ID_BASE` and
+  `is_registered_trap_kind` are removed. The table was always empty;
+  `is_trap_kind` (the seven built-in leaves) is now the whole closed table
+  and the only trap-kind validation, so a `Ruby.ZeroDivisionError`-style kind
+  is refused, and `trap_kind_name` returns `None` for every id outside 1–7.
+  Callers in vm-core and the five backends that asked
+  `is_registered_trap_kind` now ask `is_trap_kind`; their behaviour is
+  unchanged, since the two functions accepted the same set.
+- Tests: `unbound_is_id_seven_and_its_old_name_is_not_a_kind` and
+  `language_namespaced_kinds_are_refused` replace
+  `language_kinds_stay_out_of_the_trap_namespace_and_id_range`; doctests on
+  `is_trap_kind` and `trap_kind_name`. The module docs gain a "Every kind is
+  language-neutral" section with the language-to-kind mapping.
+
+## Unreleased — LANG83 PR7b — the language-neutral float primitives
+
+- **Registry:** three new type-first Ops, `introduced_by: "LANG83 PR7b"`
+  (`LANG83_PR7B`, `OpSpec::is_pr7b`), each `f64 → i64`, pure and never
+  trapping: `f64_class` (0 for ±0, 1 finite non-zero, 2 ±Infinity, 3 NaN),
+  `f64_digits` (the shortest round-trip significand `D` of `|x|`, no
+  trailing zeros, 0 unless class 1) and `f64_exp10` (the exponent of `D`'s
+  leading digit, 0 unless class 1). They are the digits every PR6a float
+  writer already computes, exposed so a compiler can lay a float out in its
+  own language's style (spec "PR7 — language neutrality"). Family `Float`
+  with an integer result, like `f64_signbit`.
+- **New test `pr7b_set_is_exactly_the_neutral_float_primitives`.**
+
 ## Unreleased (LANG84 phase 6e — `Trap.ReferenceError`)
 
 - **`exception_kind::TRAP_REFERENCE_ERROR`** (`"Trap.ReferenceError"`) joins

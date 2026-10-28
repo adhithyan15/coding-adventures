@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Often and Sometimes",
+  "label": "ch:zh-often-and-sometimes",
+  "canDo": "I can say how often I do things, what I did before and what I did a moment ago.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C126-yijing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: I can say how often I do things, what I did before and what I did a moment ago.",
+    "assesses": [
+      "ZH-LEX-C126-OFTEN126-03",
+      "ZH-LEX-C126-OFTEN126-04",
+      "ZH-LEX-C126-OFTEN126-05"
+    ]
+  }
+}

@@ -1,20 +1,4 @@
 {
-  "omits": [
-    "VERB-DRINK",
-    "VERB-GIVE",
-    "VERB-PUT",
-    "VERB-DO-MAKE",
-    "VERB-BUY",
-    "VERB-OPEN",
-    "VERB-CLOSE",
-    "VERB-ASK",
-    "VERB-STAND",
-    "VERB-WRITE",
-    "VERB-WAIT",
-    "VERB-READ",
-    "VERB-BRING",
-    "VERB-COME",
-    "VERB-WALK"
-  ],
+  "omits": [],
   "relocates": {}
 }

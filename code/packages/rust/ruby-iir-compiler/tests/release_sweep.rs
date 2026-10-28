@@ -123,7 +123,7 @@ fn the_sweep_covers_every_claiming_release_in_inventory_order() {
     let sweep = run_sweep();
     let swept: Vec<&str> = sweep.cells.iter().map(|(r, _)| r.as_str()).collect();
     assert_eq!(swept, ["3.3.5", "3.3.6", "3.3.7"]);
-    assert_eq!(sweep.cases.len(), 14, "every positive rb-int-puts case");
+    assert_eq!(sweep.cases.len(), 15, "every positive rb-int-puts case");
 }
 
 /// Steps 1 and 2, compared with the committed `release_classes.csv`.

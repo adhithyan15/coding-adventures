@@ -1,10 +1,4 @@
 {
-  "omits": [
-    "QUESTION-HOW",
-    "STATE-HOW-ARE-YOU",
-    "WORD-GOOD",
-    "WORD-WELL",
-    "WORD-SOSO"
-  ],
+  "omits": [],
   "relocates": {}
 }
