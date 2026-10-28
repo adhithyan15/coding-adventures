@@ -1732,6 +1732,24 @@ check revocation, authorize HTTP or OAuth transport, or open a network
 connection. Fixed-output HMAC-SHA-384 and reviewed HKDF execution remain
 prerequisites, and concrete HTTPS remains unavailable.
 
+The Rust `hmac_sha384` entry point now supplies the corresponding bounded
+fixed-output HMAC-SHA-384 prerequisite. It uses the repository-owned
+fixed-memory SHA-384 stream twice, retains one 128-byte normalized key block on
+the stack, transforms that block from the inner pad to the outer pad in place,
+and wipes normalized key bytes, keyed pads, the inner digest, and both retained
+hash states at their ownership boundaries. Checked SHA-384 length failures are
+stable categories containing no caller bytes or lengths; the returned 48-byte
+tag remains caller-owned. RFC 4231 vectors and key/message boundary cases lock
+the result to the generic compatibility implementation.
+
+This primitive performs no credential access, edit, signing operation, audit,
+provider action, I/O, or external effect. It does not make generic HMAC
+fixed-memory, select a TLS cipher suite, implement or review HKDF execution,
+build a TLS key schedule, process handshake records or certificates, establish
+trust, check revocation, authorize HTTP or OAuth transport, or open a network
+connection. Reviewed HKDF execution remains a prerequisite, and concrete HTTPS
+remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

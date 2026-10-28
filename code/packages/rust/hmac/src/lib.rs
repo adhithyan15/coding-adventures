@@ -40,6 +40,7 @@
 //! | MD5       | 64           | 16             |
 //! | SHA-1     | 64           | 20             |
 //! | SHA-256   | 64           | 32             |
+//! | SHA-384   | 128          | 48             |
 //! | SHA-512   | 128          | 64             |
 //!
 //! ## RFC 4231 Test Vector (TC1, HMAC-SHA256)
@@ -57,6 +58,7 @@ use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_md5::sum_md5;
 use coding_adventures_sha1::sum1;
 use coding_adventures_sha256::{Sha256Error, Sha256Hasher};
+use coding_adventures_sha384::{Sha384, Sha384Error};
 use coding_adventures_sha512::sum512;
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 
@@ -71,6 +73,7 @@ use coding_adventures_zeroize::{Zeroize, Zeroizing};
 const IPAD: u8 = 0x36;
 const OPAD: u8 = 0x5C;
 const SHA256_BLOCK_LENGTH: usize = 64;
+const SHA384_BLOCK_LENGTH: usize = 128;
 
 // ─── Generic HMAC ─────────────────────────────────────────────────────────────
 
@@ -137,8 +140,8 @@ pub enum HmacError {
     /// The key was empty. HMAC requires a non-empty key; an empty key almost
     /// always indicates a misconfiguration (e.g. an unset environment variable).
     EmptyKey,
-    /// The complete HMAC-SHA256 input would exceed FIPS 180-4's 64-bit
-    /// encoded message-length field.
+    /// A fixed-output HMAC input would exceed its FIPS 180-4 encoded
+    /// message-length field.
     InputTooLong,
 }
 
@@ -155,6 +158,12 @@ impl std::error::Error for HmacError {}
 
 impl From<Sha256Error> for HmacError {
     fn from(_: Sha256Error) -> Self {
+        Self::InputTooLong
+    }
+}
+
+impl From<Sha384Error> for HmacError {
+    fn from(_: Sha384Error) -> Self {
         Self::InputTooLong
     }
 }
@@ -251,6 +260,54 @@ pub fn hmac_sha256(key: &[u8], message: &[u8]) -> Result<[u8; 32], HmacError> {
     Ok(outer_hasher.digest())
 }
 
+/// Fixed-memory HMAC-SHA384: 48-byte authentication tag.
+///
+/// This is the HMAC selected by TLS 1.3 cipher suites whose HKDF hash is
+/// SHA-384. The implementation uses two fixed-memory [`Sha384`] passes and one
+/// stack-resident normalized key block. It does not route through generic
+/// [`hmac`] or allocate heap storage. Normalized key bytes, keyed pads, the
+/// inner digest, and both hash states are wiped at their ownership boundaries.
+/// The returned tag belongs to the caller.
+///
+/// # Errors
+///
+/// Returns [`HmacError::EmptyKey`] if `key` is empty or
+/// [`HmacError::InputTooLong`] if key normalization or either SHA-384 pass
+/// would exceed the standard's encoded message-length bound.
+pub fn hmac_sha384(key: &[u8], message: &[u8]) -> Result<[u8; 48], HmacError> {
+    if key.is_empty() {
+        return Err(HmacError::EmptyKey);
+    }
+
+    let mut key_block = Zeroizing::new([0u8; SHA384_BLOCK_LENGTH]);
+    if key.len() > SHA384_BLOCK_LENGTH {
+        let mut key_hasher = Sha384::new();
+        key_hasher.update(key)?;
+        let key_digest = Zeroizing::new(key_hasher.digest());
+        key_block[..key_digest.len()].copy_from_slice(&key_digest[..]);
+    } else {
+        key_block[..key.len()].copy_from_slice(key);
+    }
+
+    for byte in key_block.iter_mut() {
+        *byte ^= IPAD;
+    }
+    let mut inner_hasher = Sha384::new();
+    inner_hasher.update(&key_block[..])?;
+    inner_hasher.update(message)?;
+    let inner_digest = Zeroizing::new(inner_hasher.digest());
+
+    // Transform K' XOR ipad into K' XOR opad in place, avoiding a second
+    // keyed pad and preserving one fixed 128-byte storage owner.
+    for byte in key_block.iter_mut() {
+        *byte ^= IPAD ^ OPAD;
+    }
+    let mut outer_hasher = Sha384::new();
+    outer_hasher.update(&key_block[..])?;
+    outer_hasher.update(&inner_digest[..])?;
+    Ok(outer_hasher.digest())
+}
+
 /// HMAC-SHA512: 64-byte authentication tag.
 ///
 /// Used in JWT HS512 and high-security configurations.
@@ -289,6 +346,12 @@ pub fn hmac_sha1_hex(key: &[u8], message: &[u8]) -> String {
 /// Panics if key is empty — use `hmac_sha256` if you need error handling.
 pub fn hmac_sha256_hex(key: &[u8], message: &[u8]) -> String {
     bytes_to_hex(&hmac_sha256(key, message).expect("hmac_sha256_hex: key must not be empty"))
+}
+
+/// HMAC-SHA384 as a 96-character lowercase hex string.
+/// Panics if key is empty — use `hmac_sha384` if you need error handling.
+pub fn hmac_sha384_hex(key: &[u8], message: &[u8]) -> String {
+    bytes_to_hex(&hmac_sha384(key, message).expect("hmac_sha384_hex: key must not be empty"))
 }
 
 /// HMAC-SHA512 as a 128-character lowercase hex string.
@@ -446,6 +509,75 @@ mod tests {
         );
     }
 
+    // RFC 4231 — HMAC-SHA384
+
+    #[test]
+    fn hmac_sha384_tc1() {
+        let key = vec![0x0bu8; 20];
+        assert_eq!(
+            hmac_sha384_hex(&key, b"Hi There"),
+            "afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6"
+        );
+    }
+
+    #[test]
+    fn hmac_sha384_tc2() {
+        assert_eq!(
+            hmac_sha384_hex(b"Jefe", b"what do ya want for nothing?"),
+            "af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649"
+        );
+    }
+
+    #[test]
+    fn hmac_sha384_tc3() {
+        let key = vec![0xaau8; 20];
+        let data = vec![0xddu8; 50];
+        assert_eq!(
+            hmac_sha384_hex(&key, &data),
+            "88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27"
+        );
+    }
+
+    #[test]
+    fn hmac_sha384_tc6_long_key() {
+        let key = vec![0xaau8; 131];
+        assert_eq!(
+            hmac_sha384_hex(
+                &key,
+                b"Test Using Larger Than Block-Size Key - Hash Key First"
+            ),
+            "4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952"
+        );
+    }
+
+    #[test]
+    fn hmac_sha384_tc7() {
+        let key = vec![0xaau8; 131];
+        let data = b"This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.";
+        assert_eq!(
+            hmac_sha384_hex(&key, data),
+            "6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e"
+        );
+    }
+
+    #[test]
+    fn fixed_memory_sha384_matches_generic_reference_across_boundaries() {
+        for key_length in [1, 48, 127, 128, 129, 256, 257] {
+            let key = vec![0xA5; key_length];
+            for message_length in [0, 1, 111, 112, 127, 128, 129, 255, 256, 257] {
+                let message = vec![0x5A; message_length];
+                let fixed = hmac_sha384(&key, &message).unwrap();
+                let reference = hmac(
+                    |data| coding_adventures_sha384::sha384(data).to_vec(),
+                    128,
+                    &key,
+                    &message,
+                );
+                assert_eq!(fixed.as_slice(), reference.as_slice());
+            }
+        }
+    }
+
     // RFC 4231 — HMAC-SHA512
 
     #[test]
@@ -543,6 +675,7 @@ mod tests {
         assert_eq!(hmac_md5(b"k", b"m").unwrap().len(), 16);
         assert_eq!(hmac_sha1(b"k", b"m").unwrap().len(), 20);
         assert_eq!(hmac_sha256(b"k", b"m").unwrap().len(), 32);
+        assert_eq!(hmac_sha384(b"k", b"m").unwrap().len(), 48);
         assert_eq!(hmac_sha512(b"k", b"m").unwrap().len(), 64);
     }
 
@@ -551,6 +684,7 @@ mod tests {
     #[test]
     fn empty_key_returns_error() {
         assert!(matches!(hmac_sha256(b"", b"msg"), Err(HmacError::EmptyKey)));
+        assert!(matches!(hmac_sha384(b"", b"msg"), Err(HmacError::EmptyKey)));
         assert!(matches!(hmac_sha512(b"", b"msg"), Err(HmacError::EmptyKey)));
         assert!(matches!(hmac_md5(b"", b"msg"), Err(HmacError::EmptyKey)));
         assert!(matches!(hmac_sha1(b"", b"msg"), Err(HmacError::EmptyKey)));
@@ -559,6 +693,7 @@ mod tests {
     #[test]
     fn empty_message_is_allowed() {
         assert_eq!(hmac_sha256(b"key", b"").unwrap().len(), 32);
+        assert_eq!(hmac_sha384(b"key", b"").unwrap().len(), 48);
         assert_eq!(hmac_sha512(b"key", b"").unwrap().len(), 64);
     }
 
