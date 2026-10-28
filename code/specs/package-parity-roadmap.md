@@ -19223,3 +19223,21 @@ is intentionally absent from fresh-clone ancestry after PR #18527's squash
 merge. Repoint the unchanged package tree and its lifecycle implementation
 receipt to reachable exact merge revision
 `3fd9485da978aa6276aba825336f0962897fd456`; require a fresh exact-head matrix.
+
+## October 28, 2026: Swift skip-list parallel selection
+
+After Swift HyperLogLog merged and while isolated Swift Bloom filter PR #18533
+runs exact-head CI, fresh prioritization selects
+`swift-skip-list-lane-parity` for local-only parallel implementation. It is
+dependency-free, adds one bounded missing non-Rust package, does not overlap
+Bloom filter paths, and removes one of the remaining package prerequisites
+from the Swift in-memory data-store engine.
+
+It ranks ahead of RESP and the protocol IR because its span-augmented
+rank/select invariants and caller-controlled level source are the highest-risk
+remaining pure data-structure prerequisite. Keep scope to DT20 ordered-map
+insert/update/delete, comparator semantics, rank, selection, range behavior,
+bounded caller-controlled level generation, package-native tests, native build
+fronts, documentation, and empty capabilities. Keep the branch local until
+Bloom's terminal lifecycle is reconciled from main and exact-head review
+passes.
