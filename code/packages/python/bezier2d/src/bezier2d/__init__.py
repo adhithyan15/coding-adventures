@@ -8,11 +8,84 @@ No trig dependency for curve evaluation (only trig.sqrt for bounding box).
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
-from typing import Optional
 
 import trig as _trig
 from point2d import Point, Rect
+
+_MAX_FLATTENING_DEPTH = 32
+_MAX_FLATTENING_SUBDIVISIONS = 65_535
+
+
+def _finite(value: float) -> float:
+    if not math.isfinite(value):
+        raise RuntimeError("Bezier subdivision produced nonfinite geometry")
+    return value
+
+
+def _scaled_distance(left: Point, right: Point) -> float:
+    dx = _finite(left.x - right.x)
+    dy = _finite(left.y - right.y)
+    scale = max(abs(dx), abs(dy))
+    if scale == 0.0:
+        return 0.0
+    nx = dx / scale
+    ny = dy / scale
+    return _finite(scale * math.sqrt(_finite(nx * nx + ny * ny)))
+
+
+def _distance_to_segment(point: Point, start: Point, end: Point) -> float:
+    dx = _finite(end.x - start.x)
+    dy = _finite(end.y - start.y)
+    scale = max(abs(dx), abs(dy))
+    if scale == 0.0:
+        return _scaled_distance(point, start)
+
+    nx = dx / scale
+    ny = dy / scale
+    denominator = _finite(nx * nx + ny * ny)
+    ox = _finite(point.x - start.x)
+    oy = _finite(point.y - start.y)
+    nox = _finite(ox / scale)
+    noy = _finite(oy / scale)
+    projection = _finite(_finite(nox * nx + noy * ny) / denominator)
+    projection = max(0.0, min(1.0, projection))
+    nearest = Point(
+        _finite(start.x + projection * dx),
+        _finite(start.y + projection * dy),
+    )
+    return _scaled_distance(point, nearest)
+
+
+def _flatten(curve, tolerance: float, control_points: tuple[Point, ...]) -> list[Point]:
+    if not math.isfinite(tolerance) or tolerance <= 0.0:
+        raise ValueError("tolerance must be finite and positive")
+    if any(not math.isfinite(value) for point in control_points for value in (point.x, point.y)):
+        raise ValueError("control points must be finite")
+
+    points = [control_points[0]]
+    pending = [(curve, 0)]
+    subdivisions = 0
+    while pending:
+        current, depth = pending.pop()
+        if isinstance(current, QuadraticBezier):
+            endpoint = current.p2
+            off_curve = (current.p1,)
+        else:
+            endpoint = current.p3
+            off_curve = (current.p1, current.p2)
+        error = max(_distance_to_segment(point, current.p0, endpoint) for point in off_curve)
+        if error <= tolerance:
+            points.append(endpoint)
+            continue
+        if depth >= _MAX_FLATTENING_DEPTH or subdivisions >= _MAX_FLATTENING_SUBDIVISIONS:
+            raise RuntimeError("Bezier flattening exceeded the depth or subdivision budget")
+        subdivisions += 1
+        left, right = current.split(0.5)
+        pending.append((right, depth + 1))
+        pending.append((left, depth + 1))
+    return points
 
 
 @dataclass(frozen=True)
@@ -35,7 +108,7 @@ class QuadraticBezier:
         d1 = self.p2.subtract(self.p1)
         return d0.lerp(d1, t).scale(2.0)
 
-    def split(self, t: float) -> tuple["QuadraticBezier", "QuadraticBezier"]:
+    def split(self, t: float) -> tuple[QuadraticBezier, QuadraticBezier]:
         """Split at t into (left, right) sub-curves."""
         q0 = self.p0.lerp(self.p1, t)
         q1 = self.p1.lerp(self.p2, t)
@@ -43,15 +116,8 @@ class QuadraticBezier:
         return QuadraticBezier(self.p0, q0, m), QuadraticBezier(m, q1, self.p2)
 
     def to_polyline(self, tolerance: float) -> list[Point]:
-        """Adaptive polyline approximation within tolerance."""
-        chord_mid = self.p0.lerp(self.p2, 0.5)
-        curve_mid = self.evaluate(0.5)
-        if chord_mid.distance(curve_mid) <= tolerance:
-            return [self.p0, self.p2]
-        left, right = self.split(0.5)
-        pts = left.to_polyline(tolerance)
-        pts.extend(right.to_polyline(tolerance)[1:])
-        return pts
+        """Conservative, bounded polyline approximation within tolerance."""
+        return _flatten(self, tolerance, (self.p0, self.p1, self.p2))
 
     def bounding_box(self) -> Rect:
         """Tight axis-aligned bounding box."""
@@ -76,7 +142,7 @@ class QuadraticBezier:
 
         return Rect(min_x, min_y, max_x - min_x, max_y - min_y)
 
-    def elevate(self) -> "CubicBezier":
+    def elevate(self) -> CubicBezier:
         """Degree elevation: convert to equivalent cubic."""
         q1 = self.p0.scale(1 / 3).add(self.p1.scale(2 / 3))
         q2 = self.p1.scale(2 / 3).add(self.p2.scale(1 / 3))
@@ -112,7 +178,7 @@ class CubicBezier:
              .add(d2.scale(t * t)))
         return r.scale(3.0)
 
-    def split(self, t: float) -> tuple["CubicBezier", "CubicBezier"]:
+    def split(self, t: float) -> tuple[CubicBezier, CubicBezier]:
         """Split at t via de Casteljau."""
         p01 = self.p0.lerp(self.p1, t)
         p12 = self.p1.lerp(self.p2, t)
@@ -126,15 +192,8 @@ class CubicBezier:
         )
 
     def to_polyline(self, tolerance: float) -> list[Point]:
-        """Adaptive polyline approximation."""
-        chord_mid = self.p0.lerp(self.p3, 0.5)
-        curve_mid = self.evaluate(0.5)
-        if chord_mid.distance(curve_mid) <= tolerance:
-            return [self.p0, self.p3]
-        left, right = self.split(0.5)
-        pts = left.to_polyline(tolerance)
-        pts.extend(right.to_polyline(tolerance)[1:])
-        return pts
+        """Conservative, bounded polyline approximation within tolerance."""
+        return _flatten(self, tolerance, (self.p0, self.p1, self.p2, self.p3))
 
     def bounding_box(self) -> Rect:
         """Tight bounding box via derivative root finding."""

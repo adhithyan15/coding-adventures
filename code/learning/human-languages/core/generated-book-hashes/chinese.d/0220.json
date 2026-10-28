@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:829a44ebc523b3d9",
+  "lessonIds": [
+    "ZH-C220-jianshen",
+    "ZH-C220-jianfei",
+    "ZH-C220-chuhan",
+    "ZH-C220-tiaosheng",
+    "ZH-C220-zuocao"
+  ],
+  "tex": "chinese/book/chapters/ch220-keeping-fit.tex"
+}

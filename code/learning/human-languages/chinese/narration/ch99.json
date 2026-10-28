@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Getting Washed",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2524a6d6f98f7424",
+  "sourceHash": "fnv1a64:f968fd26e7ad6379",
   "lessons": [
     {
       "id": "ZH-C99-xi",
@@ -446,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62306ddc349db5c9",
+      "sourceHash": "fnv1a64:5ef980333b4db3b1",
       "notice": null,
       "blocks": [
         {
@@ -496,7 +496,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "xǐliǎn is built from 洗 (xǐ) 'to wash' and liǎn 'face'. The first is inherited from Middle Chinese sejX (Guangyun, in Baxter's transcription); the dictionary has the second only as leamX, the name of a kind of stew, so how it came to mean face is not settled."
+              "text": "xǐliǎn is built from 洗 (xǐ) 'to wash' and liǎn 'face'. The first is inherited from Middle Chinese sejX (Guangyun, in Baxter's transcription); the dictionary glosses the second, leamX, as the name of a kind of stew, so how it came to mean face is not settled."
             }
           ]
         },

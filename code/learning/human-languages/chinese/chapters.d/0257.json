@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Music and Shows",
+  "label": "ch:zh-music-and-shows",
+  "canDo": "I can talk about musical instruments, drumming, performing and singers, and say people clapped.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C257-guzhang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can talk about musical instruments, drumming, performing and singers, and say people clapped.",
+    "assesses": [
+      "ZH-LEX-C257-SHOW257-03",
+      "ZH-LEX-C257-SHOW257-04",
+      "ZH-LEX-C257-SHOW257-05"
+    ]
+  }
+}

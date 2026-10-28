@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C218-chaoshi",
+  "pathSegment": "ZH-PATH-218-WIND218",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-218-WIND218",
+      "order": 5
+    }
+  ]
+}

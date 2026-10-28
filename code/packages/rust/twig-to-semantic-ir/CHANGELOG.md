@@ -1,5 +1,83 @@
 # Changelog
 
+## 0.2.1 — Call position resolves names lexically (issue #18456)
+
+**Bug fix.** TW00 gives one name-resolution order, whether a name is
+used as a value (`car`) or called (`(car p)`):
+
+```text
+row  the name is bound by…                    (name args…) lowers to
+1    param / let / let* / lambda param /       IndirectCall on the local
+     capture (innermost first)
+2    a top-level function define               DirectCall name
+3    a top-level value define                  IndirectCall on the Global
+4    the builtin table                         BuiltinCall name
+```
+
+Value position (`resolve_varref`) already followed it.  Call position
+(`lower_apply`) did not: it asked the builtin table first, then the
+top-level function names, and only then the locals and value defines.
+So three kinds of program called the wrong function:
+
+```scheme
+(define (car p) 42)
+(car (cons 1 2))                  ; was BuiltinCall car → 1;  now DirectCall car → 42
+
+(define (helper x) (* x 100))
+(define (f helper) (helper 1))    ; was DirectCall helper → 100;  now the parameter
+(f (lambda (x) (+ x 1)))          ;                                   → 2
+
+(define (f print) (print 5))      ; was __sys_write__;  now calls the parameter
+```
+
+The bug was memory-safe (every backend's `car` checks its argument's
+tag), but the program ran the wrong code.
+
+### Changed
+
+- `lower_apply` checks the four rows in order.  A lexical binding
+  (`FunctionCtx::is_lexical`) gives an `IndirectCall` on that local, a
+  top-level function a `DirectCall`, a top-level value an
+  `IndirectCall` on the `Global`, and only a name none of those bind
+  reaches the builtin table, including `print`'s SIR28 `__sys_write__`
+  lowering.  `(define car 5) (car p)` therefore calls 5, a run-time
+  "not a closure" error as in Scheme, rather than quietly calling the
+  builtin.
+- A call to a name bound nowhere is still the `unresolved name` error.
+  Value and call position now build it with one shared `unresolved`
+  helper.
+- The inline-lambda capture filter uses the same `is_lexical` test, so
+  capture analysis and call dispatch agree on what counts as a local.
+- Special forms (`if`, `let`, `let*`, `lambda`, `begin`, `quote`) are
+  unaffected: the parser turns them into their own AST nodes before
+  name resolution runs.  Records, unions and `match` are still
+  rejected, so their generated accessors cannot shadow a builtin yet.
+
+### Added
+
+- `tests/name_resolution.rs`: 24 tests that walk the lowered module
+  with a `semantic_ir::Visitor` and pin every call node.  They cover
+  `BUILTIN_SHADOWING_PROGRAMS`, ported from `twig-ir-compiler`
+  (#18438) to this frontend's builtin table.  Parameters, `let`,
+  `let*`, lambda parameters and captures named like builtins and like
+  user functions are covered, as are user value defines named like
+  builtins in call position, a parallel `let` whose right-hand side
+  still sees the outer builtin, a shadow ending with its scope, and
+  user `print`.
+- `semantic-ir-to-javascript/tests/twig_name_resolution.rs` runs 19 of
+  these programs under `node` and checks the printed answers.
+
+### Known gap (not changed here)
+
+The lowerer never declares `Feature::Pairs`, although SIR11's manifest
+rules say a `cons` / `car` / `cdr` / `pair?` builtin call should.  The
+validator, and every backend that validates, then rejects any Twig
+program that uses pairs.  The new tests tolerate that one validator
+issue (or declare the feature before compiling) and say why.  It
+needs its own fix.
+
+`twig-to-semantic-ir` 0.2.0 -> 0.2.1.
+
 ## 0.2.0 — SIR28 (final frontend): `print` lowers to `__sys_write__`
 
 Twig was the one frontend the SIR28 arc missed on its first pass —

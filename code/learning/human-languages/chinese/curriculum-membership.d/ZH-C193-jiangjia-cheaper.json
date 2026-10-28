@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C193-jiangjia-cheaper",
+  "pathSegment": "ZH-PATH-193-PRICE193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-193-PRICE193",
+      "order": 1
+    }
+  ]
+}

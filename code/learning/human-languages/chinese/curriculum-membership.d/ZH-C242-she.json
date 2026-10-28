@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C242-she",
+  "pathSegment": "ZH-PATH-242-FARMANIMAL242",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-242-FARMANIMAL242",
+      "order": 2
+    }
+  ]
+}

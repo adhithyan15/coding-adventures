@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C222-kesou",
+  "pathSegment": "ZH-PATH-222-CHILL222",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-222-CHILL222",
+      "order": 1
+    }
+  ]
+}

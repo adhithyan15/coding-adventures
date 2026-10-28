@@ -160,14 +160,17 @@ input string
 
 ## Testing
 
-```bash
+```sh
 cd code/packages/kotlin/micro-qr
-mise exec -- ./gradlew test
+sh BUILD
 ```
 
 Test coverage is comprehensive: symbol dimensions, auto-selection, all ECC
 levels, structural module patterns, RS encoder, mask conditions, penalty scorer,
 error handling, capacity boundaries, and cross-language corpus inputs.
+
+The package is pure in-memory computation. Its explicit empty capability
+profile is recorded in `required_capabilities.json`.
 
 ## Version
 

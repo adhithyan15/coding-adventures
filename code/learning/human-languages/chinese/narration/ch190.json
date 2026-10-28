@@ -1,0 +1,868 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 190,
+  "title": "Shops in Town",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3fb9ba7823c6983d",
+  "lessons": [
+    {
+      "id": "ZH-C190-shudian",
+      "sequence": 15100,
+      "title": "书店 (shūdiàn) — bookshop",
+      "headword": "书店",
+      "romanization": "shūdiàn",
+      "gloss": "bookshop",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fadc4cf0f76029e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to sign your name, then the Mandarin for identity card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 书店",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "书店 — shūdiàn — \"bookshop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这儿的书店很大 zhèr de shūdiàn hěn dà — The bookshops here are big."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 店 (diàn) — eight strokes: a roof of a dot, a bar and a long stroke falling to the left, and under it a vertical with a short stroke to its right, over 口. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "书店 (shūdiàn) is built from 书 'book' and 店 (diàn) 'shop', both inherited from Middle Chinese, syo and temH (Guangyun, in Baxter's transcription). The dictionary explains the second, after an older book, as a place where goods are set out for sale."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūdiàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūdiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūdiàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūdiàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr de shūdiàn hěn dà — The bookshops here are big.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr de shūdiàn hěn dà* — The bookshops here are big.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to sign your name, then the Mandarin for identity card, then say shūdiàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to sign your name, then the Mandarin for identity card, then say *shūdiàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 书店 (shūdiàn) mean? (\"Bookshop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W190-dian-shop",
+      "sequence": 15105,
+      "title": "店 (diàn) — a roof over a small piece and 口",
+      "headword": "店",
+      "romanization": "diàn",
+      "gloss": "店 — a roof of three strokes, over a small vertical piece and 口",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d74bae9bd2e4e30c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a roof over a small piece and 口",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a roof over a small piece and 口 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shūdiàn — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shūdiàn* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "书 口."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — shū, kǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *shū*, *kǒu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a roof over a small piece and 口",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "店 (diàn)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces: a roof, and under it a small piece over 口."
+            },
+            {
+              "kind": "speech",
+              "text": "The roof, three strokes. A dot at the top, a bar across, then a long stroke from the left end of the bar, falling down to the left all the way to the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "The small piece, two strokes. A vertical under the roof, then a short stroke from its middle out to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "口, three strokes: a short vertical, a stroke that runs right and turns down, then the bar that closes the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 2 + 3 = eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "店 (diàn), all eight, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 店, all eight, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 店 (diàn)? (Eight.) Which stroke falls all the way to the foot? (The third, the long one on the left.) What closes the character? (The foot bar of 口.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 店 (diàn), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C190-yaodian",
+      "sequence": 15110,
+      "title": "yàodiàn — chemist's; pharmacy",
+      "headword": "yàodiàn",
+      "romanization": "yàodiàn",
+      "gloss": "chemist's; pharmacy",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e28bbb40593c70ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for identity card, then the Mandarin for bookshop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yàodiàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yàodiàn — \"chemist's; pharmacy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàodiàn jǐ diǎn kāimén — What time does the chemist's open?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yàodiàn is built from yào 'medicine' and 店 (diàn) 'shop', both inherited from Middle Chinese, yak and temH (Guangyun, in Baxter's transcription); the dictionary glosses the first as a herb that cures illness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàodiàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàodiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàodiàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàodiàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàodiàn jǐ diǎn kāimén — What time does the chemist's open?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàodiàn jǐ diǎn kāimén* — What time does the chemist's open?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for identity card, then the Mandarin for bookshop, then say yàodiàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for identity card, then the Mandarin for bookshop, then say *yàodiàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yàodiàn mean? (\"Chemist's; pharmacy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C190-shangchang",
+      "sequence": 15120,
+      "title": "shāngchǎng — shopping centre",
+      "headword": "shāngchǎng",
+      "romanization": "shāngchǎng",
+      "gloss": "shopping centre",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2436e7c6e5f477c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for bookshop, then the Mandarin for chemist's."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shāngchǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shāngchǎng — \"shopping centre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhōumò de shāngchǎng hěn rènao — The shopping centre is busy at the weekend."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shāngchǎng is built from shāng 'trade' and chǎng 'an open ground', both inherited from Middle Chinese, syang and drjang (Guangyun, in Baxter's transcription). The dictionary glosses the second as a cleared ground for threshing grain, with a level tone, so the rising tone of chǎng is not the regular outcome; the sense 'trade' for the first is not given there either, so how both came is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāngchǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāngchǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāngchǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāngchǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōumò de shāngchǎng hěn rènao — The shopping centre is busy at the weekend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōumò de shāngchǎng hěn rènao* — The shopping centre is busy at the weekend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for bookshop, then the Mandarin for chemist's, then say shāngchǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for bookshop, then the Mandarin for chemist's, then say *shāngchǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shāngchǎng mean? (\"Shopping centre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C190-dianyingyuan",
+      "sequence": 15130,
+      "title": "diànyǐngyuàn — cinema",
+      "headword": "diànyǐngyuàn",
+      "romanization": "diànyǐngyuàn",
+      "gloss": "cinema",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ddc3ebad70e9966",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for chemist's, then the Mandarin for shopping centre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: diànyǐngyuàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diànyǐngyuàn — \"cinema\"."
+            },
+            {
+              "kind": "speech",
+              "text": "diànyǐngyuàn zài shāngchǎng lǐ — The cinema is inside the shopping centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diànyǐngyuàn is built from diànyǐng 'film' and yuàn 'a walled courtyard', the yuàn of yīyuàn; all three parts are inherited from Middle Chinese, denH, 'jaengX and hjwenH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diànyǐngyuàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diànyǐngyuàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diànyǐngyuàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diànyǐngyuàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diànyǐngyuàn zài shāngchǎng lǐ — The cinema is inside the shopping centre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diànyǐngyuàn zài shāngchǎng lǐ* — The cinema is inside the shopping centre.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for chemist's, then the Mandarin for shopping centre, then say diànyǐngyuàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for chemist's, then the Mandarin for shopping centre, then say *diànyǐngyuàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does diànyǐngyuàn mean? (\"Cinema\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C190-bowuguan",
+      "sequence": 15140,
+      "title": "bówùguǎn — museum",
+      "headword": "bówùguǎn",
+      "romanization": "bówùguǎn",
+      "gloss": "museum",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8844d7e6c926285d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for shopping centre, then the Mandarin for cinema."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bówùguǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bówùguǎn — \"museum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "bówùguǎn jīntiān bù kāimén — The museum is closed today."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bówùguǎn is built from bó 'broad', wù 'a thing' and guǎn 'a lodging, a hall', all inherited from Middle Chinese, pak, mjut and kwanH (Guangyun, in Baxter's transcription): a hall of all kinds of things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking where things are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bówùguǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bówùguǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bówùguǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bówùguǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bówùguǎn jīntiān bù kāimén — The museum is closed today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bówùguǎn jīntiān bù kāimén* — The museum is closed today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for shopping centre, then the Mandarin for cinema, then say bówùguǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for shopping centre, then the Mandarin for cinema, then say *bówùguǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bówùguǎn mean? (\"Museum\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

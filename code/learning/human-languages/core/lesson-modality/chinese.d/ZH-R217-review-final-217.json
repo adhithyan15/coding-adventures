@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R217-review-final-217",
+    "language": "chinese",
+    "chapter": 217,
+    "sequence": 16550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef4e1dd4d60cc839"
+  },
+  "findings": []
+}

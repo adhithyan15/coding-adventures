@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:31778a53de33edde",
+  "lessonIds": [
+    "ZH-C271-jidong",
+    "ZH-C271-gandong",
+    "ZH-C271-chijing",
+    "ZH-C271-wuliao",
+    "ZH-C271-xinshi",
+    "ZH-R271-review-266-271"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch271.txt",
+  "json": "chinese/narration/ch271.json",
+  "textHash": "fnv1a64:243884e5bf5b618d",
+  "jsonHash": "fnv1a64:c19e829979095e61",
+  "findings": []
+}

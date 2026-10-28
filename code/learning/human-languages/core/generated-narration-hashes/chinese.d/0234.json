@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:4575724806e64208",
+  "lessonIds": [
+    "ZH-C234-tuichi",
+    "ZH-C234-quxiao",
+    "ZH-C234-gaitian",
+    "ZH-C234-yuyi",
+    "ZH-C234-duoyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch234.txt",
+  "json": "chinese/narration/ch234.json",
+  "textHash": "fnv1a64:ae724e57862e1095",
+  "jsonHash": "fnv1a64:4085a44772ce9914",
+  "findings": []
+}

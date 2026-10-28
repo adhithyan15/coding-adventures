@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W224-hua-flower",
+  "pathSegment": "ZH-PATH-224-BLOOM224",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-224-BLOOM224",
+      "order": 1
+    }
+  ]
+}

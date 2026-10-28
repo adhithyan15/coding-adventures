@@ -11,7 +11,8 @@ use diagram_ir::{
     LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
-    StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRouting,
+    StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRelationship,
+    StructuralRouting,
 };
 use std::collections::{HashMap, HashSet};
 
@@ -147,6 +148,50 @@ fn structural_style(
             font_italic: false,
             font_family: "Helvetica".into(),
             corner_radius: 4.0,
+        },
+    )
+}
+
+fn structural_relationship_style(
+    relationship: &StructuralRelationship,
+) -> diagram_ir::ResolvedDiagramStyle {
+    resolve_style_with_base(
+        relationship.style.as_ref(),
+        diagram_ir::ResolvedDiagramStyle {
+            fill: if matches!(relationship.kind, diagram_ir::RelKind::Composition) {
+                "#374151".into()
+            } else {
+                "#6b7280".into()
+            },
+            stroke: "#6b7280".into(),
+            stroke_width: 1.5,
+            stroke_dash: None,
+            text_color: "#374151".into(),
+            font_size: 14.0,
+            font_weight: 400,
+            font_italic: false,
+            font_family: "Helvetica".into(),
+            corner_radius: 0.0,
+        },
+    )
+}
+
+fn structural_group_style(
+    group: &diagram_ir::StructuralGroup,
+) -> diagram_ir::ResolvedDiagramStyle {
+    resolve_style_with_base(
+        group.style.as_ref(),
+        diagram_ir::ResolvedDiagramStyle {
+            fill: "#f8fafc".into(),
+            stroke: "#94a3b8".into(),
+            stroke_width: 1.5,
+            stroke_dash: Some(vec![6.0, 4.0]),
+            text_color: "#475569".into(),
+            font_size: 14.0,
+            font_weight: 400,
+            font_italic: false,
+            font_family: "Helvetica".into(),
+            corner_radius: 8.0,
         },
     )
 }
@@ -588,6 +633,7 @@ fn layout_groups(
                 icon_name: group.metadata.as_ref().map(
                     |StructuralGroupMetadata::Architecture { icon_name }| icon_name.clone(),
                 ),
+                style: structural_group_style(group),
                 parent_group: group.parent_group.clone(),
             })
         })
@@ -1409,6 +1455,7 @@ fn layout_relationships(
                 from_mult: rel.from_mult.clone(),
                 to_mult: rel.to_mult.clone(),
                 label,
+                style: structural_relationship_style(rel),
             })
         })
         .collect()
@@ -1498,6 +1545,7 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: None,
+                style: None,
             }],
         }
     }
@@ -2012,6 +2060,7 @@ mod tests {
             label: "Domain".into(),
             stereotype: Some("System_Boundary".into()),
             metadata: None,
+            style: None,
             parent_group: None,
         });
 
@@ -2041,6 +2090,7 @@ mod tests {
             label: "Domain".into(),
             stereotype: None,
             metadata: None,
+            style: None,
             parent_group: None,
         });
         diagram.relationships[0].to_group = true;
@@ -2132,6 +2182,7 @@ mod tests {
             label: "Cache".into(),
             stereotype: None,
             metadata: None,
+            style: None,
             parent_group: None,
         });
         diagram.nodes.push(StructuralNode {
@@ -2253,6 +2304,7 @@ mod tests {
             label: "Platform".into(),
             stereotype: None,
             metadata: None,
+            style: None,
             parent_group: None,
         });
         diagram.alignments.push(StructuralAlignment {

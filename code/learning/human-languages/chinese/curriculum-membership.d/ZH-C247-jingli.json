@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C247-jingli",
+  "pathSegment": "ZH-PATH-247-TRIP247",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-247-TRIP247",
+      "order": 0
+    }
+  ]
+}

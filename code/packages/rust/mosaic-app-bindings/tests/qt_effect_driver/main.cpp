@@ -9,6 +9,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QTemporaryDir>
 #include <QVariantMap>
 #include <cstdio>
@@ -588,13 +589,15 @@ int main(int argc, char **argv) {
     {
         // A state file the runtime rejects moves to the first FREE quarantine
         // name, never over an earlier quarantine, which may be someone's real
-        // data. With all ten names taken it stays where it is, and nothing is
-        // saved over it.
+        // data. A directory takes a name as surely as a file does (Windows
+        // refuses an exclusive create onto one as access denied, not as
+        // "exists"). With all ten names taken the file stays where it is, and
+        // nothing is saved over it.
         //
-        //   launch | before                        | afterwards
-        //   -------+-------------------------------+------------------------------
-        //   first  | `{}`, `.corrupt` held         | `{}` in `.corrupt.1`, saving
-        //   second | `{}`, `.corrupt` to `.9` held | `{}` still live, not saving
+        //   launch | before                                  | afterwards
+        //   -------+-----------------------------------------+------------------------------
+        //   first  | `{}`, `.corrupt` file, `.corrupt.1` dir | `{}` in `.corrupt.2`, saving
+        //   second | `{}`, `.corrupt` to `.9` held           | `{}` still live, not saving
         const auto path = QString::fromLocal8Bit(qgetenv("MOSAIC_PROBE_STATE_K"));
         const auto write = [](const QString &file, const QByteArray &bytes) {
             QFile out(file);
@@ -620,19 +623,22 @@ int main(int argc, char **argv) {
         };
         qputenv("MOSAIC_APP_STATE_PATH", qgetenv("MOSAIC_PROBE_STATE_K"));
         write(corrupt(0), QByteArray("earlier"));
+        QDir().mkdir(corrupt(1));
         write(path, rejected);
         {
             MosaicHost first;
             const auto moved = warning(first.props());
             check(read(corrupt(0)) == QByteArray("earlier"), "an earlier quarantine is never replaced");
-            check(read(corrupt(1)) == rejected, "a rejected file moves to the first free name");
+            check(QFileInfo(corrupt(1)).isDir() && QDir(corrupt(1)).isEmpty(),
+                  "a directory at a quarantine name is skipped");
+            check(read(corrupt(2)) == rejected, "a rejected file moves to the first free name");
             check(!moved.isEmpty() && !moved.contains(QStringLiteral("will not be saved")),
                   "a file moved aside leaves saving on");
             first.handleEvent(increment);
             check(QFile::exists(path) && read(path) != rejected,
                   "fresh state is saved once the rejected file is aside");
         }
-        for (int index = 2; index < 10; ++index) {
+        for (int index = 3; index < 10; ++index) {
             write(corrupt(index), QByteArray("taken ") + QByteArray::number(index));
         }
         write(path, rejected);
@@ -645,8 +651,8 @@ int main(int argc, char **argv) {
             check(read(path) == rejected, "a file that could not move aside is not written over");
             check(!blocked.isEmpty() && warning(answer) == blocked,
                   "the warning stays showing after an event");
-            check(read(corrupt(0)) == QByteArray("earlier") && read(corrupt(1)) == rejected
-                      && read(corrupt(9)) == QByteArray("taken 9"),
+            check(read(corrupt(0)) == QByteArray("earlier") && QFileInfo(corrupt(1)).isDir()
+                      && read(corrupt(2)) == rejected && read(corrupt(9)) == QByteArray("taken 9"),
                   "no quarantine was replaced");
         }
     }

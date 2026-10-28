@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C224-kaihua",
+    "language": "chinese",
+    "chapter": 224,
+    "sequence": 17310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db475a440aafb7d1"
+  },
+  "findings": []
+}
