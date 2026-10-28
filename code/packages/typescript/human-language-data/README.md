@@ -72,6 +72,14 @@ The reading-reach ratchet uses
 `{ language, level, floor }` owner for every task-shape inventory. Zero owners
 preserve the historical absent-entry-zero behavior; the reconstructed public
 map contains only positive floors, and the former aggregate is forbidden.
+Level progression evidence uses
+`tests/level-gate-attainment/<language>.json`, one direct owner per registered
+track. Each owner pins the independently measured attained level, the highest
+spine level reached, and a bounded evidence note. Advancing one track updates
+that file rather than shared exact lists or chronological comments in
+`level-gate.test.ts` and `levels.test.ts`; those tests now contain only generic
+cross-track invariants and reject missing, extra, malformed, linked, or
+case-colliding owners before reading their bytes.
 Generated lesson modality uses the finer
 `core/lesson-modality/<language>.d/{_meta.json,<lesson-id>.json}` boundary. The
 metadata owner holds only stable derivation policy and each lesson file holds its
