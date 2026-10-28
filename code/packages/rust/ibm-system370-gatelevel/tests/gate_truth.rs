@@ -28,10 +28,37 @@ fn byte_comparator_exhausts_the_complete_truth_table() {
 }
 
 #[test]
+fn byte_and_register_selection_mux_truth_tables_are_exhaustive() {
+    for zero in 0_u8..=u8::MAX {
+        for one in 0_u8..=u8::MAX {
+            assert_eq!(gates::select_u8(zero, one, 0), zero);
+            assert_eq!(gates::select_u8(zero, one, 1), one);
+        }
+    }
+    for selected in 0_u8..=u8::MAX {
+        for index in 0..4 {
+            let mut bytes = [0x11, 0x55, 0xaa, 0xee];
+            bytes[index] = selected;
+            assert_eq!(
+                gates::select_register_byte(u32::from_be_bytes(bytes), index),
+                selected
+            );
+        }
+    }
+}
+
+#[test]
 fn twenty_four_bit_add_subtract_compare_and_overlap_boundaries_match() {
-    let values = [0, 1, 2, 0x7f, 0xff, 0x100, 0x7f_ffff, 0xff_fffe, 0xff_ffff];
-    for left in values {
-        for right in values {
+    let mut values = vec![
+        0, 1, 2, 0x7f, 0xff, 0x100, 0x0f_ffff, 0x10_0000, 0x7f_ffff, 0xff_fffe, 0xff_ffff,
+    ];
+    let mut sample = 0x00c0_ffee_u32;
+    for _ in 0..256 {
+        sample = sample.wrapping_mul(1_664_525).wrapping_add(1_013_904_223) & 0x00ff_ffff;
+        values.push(sample);
+    }
+    for &left in &values {
+        for &right in &values {
             assert_eq!(
                 gates::add_u24(left, right),
                 left.wrapping_add(right) & 0x00ff_ffff
@@ -88,14 +115,19 @@ fn mask_prefix_merge_and_icm_condition_truth_tables_are_exact() {
         };
         assert_eq!(gates::icm_condition_code(mask, source), expected_cc);
     }
-    for index in 0..4 {
-        assert_eq!(
-            gates::merge_register_byte(0x1122_3344, 0xaa, index, 0),
-            0x1122_3344
-        );
-        assert_eq!(
-            gates::merge_register_byte(0x1122_3344, 0xaa, index, 1),
-            (0x1122_3344 & !(0xff << (24 - index * 8))) | (0xaa << (24 - index * 8))
-        );
+    for original in [0, 1, u32::MAX, 0x1122_3344, 0x8000_0001, 0x55aa_c33c] {
+        for byte in 0_u8..=u8::MAX {
+            for index in 0..4 {
+                assert_eq!(
+                    gates::merge_register_byte(original, byte, index, 0),
+                    original
+                );
+                assert_eq!(
+                    gates::merge_register_byte(original, byte, index, 1),
+                    (original & !(0xff << (24 - index * 8)))
+                        | (u32::from(byte) << (24 - index * 8))
+                );
+            }
+        }
     }
 }

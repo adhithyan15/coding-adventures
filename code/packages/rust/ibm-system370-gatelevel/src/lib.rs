@@ -144,8 +144,9 @@ impl System370GateLevel {
         if self.core.halted_q() {
             return Err(System370Error::Halted);
         }
-        let before = self.try_state(AllocationSite::StateSnapshot)?;
-        let opcode = fetch_opcode(&before)?;
+        let _rollback_only = self.try_state(AllocationSite::StateSnapshot)?;
+        let pc = self.core.program_counter_q();
+        let opcode = self.fetch_opcode_q(pc)?;
         let Some(extension) = engine::classify_extension(opcode) else {
             return self
                 .core
@@ -154,15 +155,13 @@ impl System370GateLevel {
                 .map_err(map_system360_error);
         };
         let width = engine::instruction_width(opcode).expect("extension has a width") as usize;
-        let raw = fetch_exact(&before, width)?;
-        let settled_result = engine::settle(&before, raw, extension);
+        let raw = self.fetch_exact_q(pc, width)?;
+        let settled_result = engine::settle(&CoreQ(&self.core), pc, &raw[..width], extension);
         if matches!(&settled_result, Err(System370Error::AllocationFailed)) {
             return Err(System370Error::AllocationFailed);
         }
 
-        allocation::checkpoint(AllocationSite::OracleState)
-            .map_err(|()| System370Error::AllocationFailed)?;
-        let oracle_before = try_clone_state(&before)?;
+        let oracle_before = self.try_state(AllocationSite::OracleState)?;
         let mut oracle = System370Simulator::new();
         oracle.restore(oracle_before)?;
         let oracle_result = oracle.step();
@@ -184,7 +183,7 @@ impl System370GateLevel {
                     || settled.width != oracle_trace.width
                     || settled.mnemonic != oracle_trace.mnemonic
                     || settled.description != oracle_trace.description
-                    || before.pc != oracle_trace.pc_before
+                    || pc != oracle_trace.pc_before
                     || settled.pc != oracle_trace.pc_after
                 {
                     return gate_disagrees("gate trace and functional trace differ");
@@ -193,14 +192,13 @@ impl System370GateLevel {
             }
         };
 
-        let mut gate_next = try_clone_state(&before)?;
-        apply_to_state(&mut gate_next, &settled);
-        if gate_next != oracle.get_state() {
+        let oracle_next = oracle.get_state();
+        if !self.settled_matches_oracle(&settled, &oracle_next) {
             return gate_disagrees("settled gate transition diverged from functional oracle");
         }
-        self.commit_extension(&settled)?;
+        self.commit_extension(&settled);
         Ok(StepTrace {
-            pc_before: before.pc,
+            pc_before: pc,
             pc_after: settled.pc,
             raw: settled.raw,
             width: settled.width,
@@ -209,28 +207,90 @@ impl System370GateLevel {
         })
     }
 
-    fn commit_extension(
-        &mut self,
-        settled: &engine::SettledExtension,
-    ) -> Result<(), System370Error> {
+    fn commit_extension(&mut self, settled: &engine::SettledExtension) {
         for &(address, value) in &settled.memory_writes {
-            self.core
-                .write_memory(address as u32, &[value])
-                .map_err(map_system360_error)?;
+            self.core.clock_memory_q(address, value);
         }
         for &(register, value) in &settled.gpr_updates[..settled.gpr_count] {
-            self.core
-                .write_gpr(register, value)
-                .map_err(map_system360_error)?;
+            self.core.clock_gpr_q(register, value);
         }
         if let Some(condition_code) = settled.condition_code {
-            self.core
-                .write_condition_code(condition_code)
-                .map_err(map_system360_error)?;
+            self.core.clock_condition_code_q(condition_code);
         }
-        self.core
-            .set_program_counter(settled.pc)
-            .map_err(map_system360_error)
+        self.core.clock_program_counter_q(settled.pc);
+    }
+
+    fn fetch_opcode_q(&self, pc: u32) -> Result<u8, System370Error> {
+        if !pc.is_multiple_of(2) {
+            return Err(System370Error::InvalidState {
+                reason: "instruction address is not halfword aligned",
+            });
+        }
+        let (origin, len) = self.core.installed_range();
+        let start = pc as usize;
+        let low = origin as usize;
+        let high = low + len;
+        if start < low || start >= high {
+            return Err(System370Error::FetchOutsideProgram { pc });
+        }
+        Ok(self.core.memory_q(start))
+    }
+
+    fn fetch_exact_q(&self, pc: u32, width: usize) -> Result<[u8; 6], System370Error> {
+        let start = pc as usize;
+        let (origin, len) = self.core.installed_range();
+        let high = origin as usize + len;
+        if start + width > high {
+            return Err(System370Error::TruncatedInstruction { pc, needed: width });
+        }
+        let mut raw = [0; 6];
+        for (offset, byte) in raw[..width].iter_mut().enumerate() {
+            *byte = self.core.memory_q(start + offset);
+        }
+        Ok(raw)
+    }
+
+    fn settled_matches_oracle(
+        &self,
+        settled: &engine::SettledExtension,
+        oracle: &System370State,
+    ) -> bool {
+        for register in 0..16 {
+            let mut expected = self.core.gpr_q(register);
+            for &(updated, value) in &settled.gpr_updates[..settled.gpr_count] {
+                if updated == register {
+                    expected = value;
+                }
+            }
+            if oracle.gprs[register] != expected {
+                return false;
+            }
+        }
+        for slot in 0..4 {
+            if oracle.fprs[slot] != self.core.fpr_q(slot) {
+                return false;
+            }
+        }
+        let mut writes = settled.memory_writes.iter().peekable();
+        for address in 0..MEMORY_BYTES {
+            let expected = if writes.peek().is_some_and(|(next, _)| *next == address) {
+                writes.next().expect("peeked write exists").1
+            } else {
+                self.core.memory_q(address)
+            };
+            if oracle.memory[address] != expected {
+                return false;
+            }
+        }
+        let (origin, len) = self.core.installed_range();
+        oracle.pc == settled.pc
+            && oracle.condition_code
+                == settled
+                    .condition_code
+                    .unwrap_or_else(|| self.core.condition_code_q())
+            && oracle.halted == self.core.halted_q()
+            && oracle.loaded_origin == origin
+            && oracle.loaded_len == len
     }
 
     /// Execute until halt or the supplied bound, rolling back on every error.
@@ -312,62 +372,16 @@ impl System370GateLevel {
     }
 }
 
-fn apply_to_state(state: &mut System370State, settled: &engine::SettledExtension) {
-    for &(address, value) in &settled.memory_writes {
-        state.memory[address] = value;
-    }
-    for &(register, value) in &settled.gpr_updates[..settled.gpr_count] {
-        state.gprs[register] = value;
-    }
-    if let Some(condition_code) = settled.condition_code {
-        state.condition_code = condition_code;
-    }
-    state.pc = settled.pc;
-}
+struct CoreQ<'a>(&'a System360GateLevel);
 
-fn fetch_opcode(state: &System370State) -> Result<u8, System370Error> {
-    if !state.pc.is_multiple_of(2) {
-        return Err(System370Error::InvalidState {
-            reason: "instruction address is not halfword aligned",
-        });
+impl engine::StableQ for CoreQ<'_> {
+    fn gpr_q(&self, index: usize) -> u32 {
+        self.0.gpr_q(index)
     }
-    let start = state.pc as usize;
-    let low = state.loaded_origin as usize;
-    let high = low + state.loaded_len;
-    if start < low || start >= high {
-        return Err(System370Error::FetchOutsideProgram { pc: state.pc });
-    }
-    Ok(state.memory[start])
-}
 
-fn fetch_exact(state: &System370State, width: usize) -> Result<&[u8], System370Error> {
-    let start = state.pc as usize;
-    let high = state.loaded_origin as usize + state.loaded_len;
-    if start + width > high {
-        return Err(System370Error::TruncatedInstruction {
-            pc: state.pc,
-            needed: width,
-        });
+    fn memory_q(&self, index: usize) -> u8 {
+        self.0.memory_q(index)
     }
-    Ok(&state.memory[start..start + width])
-}
-
-fn try_clone_state(state: &System370State) -> Result<System370State, System370Error> {
-    let mut memory = Vec::new();
-    memory
-        .try_reserve_exact(state.memory.len())
-        .map_err(|_| System370Error::AllocationFailed)?;
-    memory.extend_from_slice(&state.memory);
-    Ok(System370State {
-        gprs: state.gprs,
-        fprs: state.fprs,
-        pc: state.pc,
-        condition_code: state.condition_code,
-        memory,
-        halted: state.halted,
-        loaded_origin: state.loaded_origin,
-        loaded_len: state.loaded_len,
-    })
 }
 
 fn validate_state(state: &System370State) -> Result<(), System370Error> {

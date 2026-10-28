@@ -238,8 +238,13 @@ Completion requires all of the following:
    validation, and exceeds 80% package line coverage with a 95% target.
 
 This repaired specification received independent review before implementation.
-The completed package has 18 release integration tests, including the literal
+The completed package has 21 release integration tests, including the literal
 1,536-case transport matrix, functional differentials, allocation rollback,
 gate truth tables, and compiler-checked complete hostile crates. Strict checks
-and 91.83% package-source line coverage (776/845) pass. Publication remains
-blocked on a different reviewer's exact-clean-head PASS.
+and 94.75% package-source line coverage (812/857) pass. The current-source
+affected closure is seven packages and all seven BUILD recipes pass, but the
+strict repository planner currently stops first on stale `BUILD-EXEMPTIONS`
+entries inherited unchanged from `origin/main`; this branch does not claim
+that unrelated orphan
+metadata validator as green. Publication remains blocked on a different
+reviewer's exact-clean-head PASS.

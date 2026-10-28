@@ -4,11 +4,11 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-const LIB_LOCK: u64 = 0xbcd4_3d04_ed76_9613;
-const ENGINE_LOCK: u64 = 0x11eb_a64e_49c4_a356;
-const GATES_LOCK: u64 = 0xbaf3_e7b9_6b27_0be7;
+const LIB_LOCK: u64 = 0x527e_0048_c4bf_262b;
+const ENGINE_LOCK: u64 = 0x5611_2a13_2c0b_238d;
+const GATES_LOCK: u64 = 0x6b10_8fb1_b7a0_9416;
 const ALLOCATION_LOCK: u64 = 0x3f36_1e28_b86a_11b3;
-const SYSTEM360_LIB_LOCK: u64 = 0xd8ce_128e_034c_c597;
+const SYSTEM360_LIB_LOCK: u64 = 0xda70_9b50_b74a_b1d5;
 const SYSTEM360_EXECUTOR_LOCK: u64 = 0x1f15_f8b4_d89f_a475;
 const SYSTEM360_GATES_LOCK: u64 = 0xf259_ae68_cdaf_fa3a;
 const SYSTEM360_HFP_LOCK: u64 = 0xd47e_243c_d4f6_e080;
@@ -217,12 +217,23 @@ impl Drop for TempCrate {
 fn every_complete_compiler_valid_hostile_crate_is_rejected() {
     let mutations = [
         ("src/lib.rs", "\nstruct HostStateMirror(System370State);\n"),
+        ("src/lib.rs", "\nfn direct_q_write(cpu: &mut System370GateLevel) { cpu.core.clock_gpr_q(0, 0); cpu.core.clock_memory_q(0, 0); }\n"),
+        ("src/lib.rs", "\nfn direct_q_read(cpu: &System370GateLevel) -> (u32, u8) { (cpu.core.gpr_q(0), cpu.core.memory_q(0)) }\n"),
         ("src/lib.rs", "\nfn post_commit_overwrite(cpu: &mut System370GateLevel) { let _ = cpu.set_program_counter(0); }\n"),
+        ("src/lib.rs", "\nfn post_trace_overwrite(trace: &mut StepTrace) { trace.pc_after = 0; }\n"),
+        ("src/lib.rs", "\nfn host_authored_final_state(cpu: &System370GateLevel) -> System370State { cpu.get_state() }\n"),
+        ("src/lib.rs", "\nuse engine as routed_engine;\n"),
+        ("src/lib.rs", "\nmacro_rules! discarded_route { () => { mod fake_engine; } }\n"),
         ("src/lib.rs", "\nfn oracle_authored_transition() -> System370State { System370Simulator::new().get_state() }\n"),
         ("src/engine.rs", "\nfn raw_host_dispatch(opcode: u8) -> bool { matches!(opcode, 0x0e | 0x0f | 0xbd..=0xbf) }\n"),
+        ("src/engine.rs", "\nfn native_architecture(a: u32, b: u32) -> bool { a.wrapping_add(1) < b && a != 0 }\n"),
+        ("src/engine.rs", "\nfn helper_indirection(opcode: u8) -> Option<Extension> { let helper = classify_extension; helper(opcode) }\n"),
+        ("src/engine.rs", "\n#[cfg(any())] fn inactive_decoder(opcode: u8) -> Option<Extension> { classify_extension(opcode) }\n"),
         ("src/engine.rs", "\nfn duplicate_decoder(opcode: u8) -> Option<Extension> { classify_extension(opcode) }\n"),
+        ("src/engine.rs", "\nfn post_datapath_overwrite(settled: &mut SettledExtension) { settled.pc = 0; }\n"),
         ("src/gates.rs", "\nfn host_ordering(left: u32, right: u32) -> bool { left < right }\n"),
         ("src/gates.rs", "\nfn shadow_gate_network(opcode: u8) -> [u8; 5] { decode_extension(opcode) }\n"),
+        ("src/gates.rs", "\nconst EXPECTATION_SHADOW: [u8; 5] = [1, 0, 0, 0, 0];\n"),
         ("src/allocation.rs", "\nfn bypass_allocation_preflight() -> bool { true }\n"),
         ("system360/src/lib.rs", "\nstruct PackedHostMirror(System360State);\n"),
         ("system360/src/executor.rs", "\nfn duplicate_inherited_executor(before: &System360State, trace: &StepTrace) -> Result<System360State, System360Error> { execute(before, trace) }\n"),
@@ -266,6 +277,28 @@ fn every_complete_compiler_valid_hostile_crate_is_rejected() {
         assert!(
             validate_sources(&hostile.0.join("src"), &hostile.0.join("system360/src")).is_err(),
             "active mutation in {file}"
+        );
+    }
+
+    for replacement in [
+        "pub mod engine;",
+        "#[path = \"engine.rs\"] mod engine;",
+        "mod engine { include!(\"engine.rs\"); }",
+        "macro_rules! declare_engine { () => { mod engine; } } declare_engine!();",
+    ] {
+        let hostile = TempCrate::new();
+        hostile.replace("src/lib.rs", "mod engine;", replacement);
+        if replacement.contains("include!") {
+            hostile.replace(
+                "src/engine.rs",
+                "//! Independent settled-wire engine for the five System/370 extension orders.",
+                "/// Independent settled-wire engine for the five System/370 extension orders.",
+            );
+        }
+        hostile.check_compiles();
+        assert!(
+            validate_sources(&hostile.0.join("src"), &hostile.0.join("system360/src")).is_err(),
+            "module route {replacement}"
         );
     }
 }

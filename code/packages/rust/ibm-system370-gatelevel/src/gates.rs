@@ -103,6 +103,15 @@ pub fn select_u32(zero: u32, one: u32, select: u8) -> u32 {
     })
 }
 
+/// Select one big-endian register byte through a two-level mux tree.
+#[must_use]
+pub fn select_register_byte(value: u32, byte_index: usize) -> u8 {
+    let bytes = value.to_be_bytes();
+    let low_pair = select_u8(bytes[0], bytes[1], (byte_index & 1) as u8);
+    let high_pair = select_u8(bytes[2], bytes[3], (byte_index & 1) as u8);
+    select_u8(low_pair, high_pair, ((byte_index >> 1) & 1) as u8)
+}
+
 #[must_use]
 pub fn destructive_overlap(destination: u32, source: u32, copied: u32) -> u8 {
     let destination_high = (compare_u24(destination, source) >> 1) & 1;

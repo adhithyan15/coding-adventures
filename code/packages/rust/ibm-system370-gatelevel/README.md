@@ -45,16 +45,21 @@ architectural data.
 
 ## Evidence
 
-- 18 release integration tests cover the literal 256-first-byte by installed
+- 21 release integration tests cover the literal 256-first-byte by installed
   length transport matrix, every inherited family, all extension masks and
   condition-code relations, corrected destructive-overlap `MVCL`, lifecycle
   rollback, allocation failures, independent truth tables, and structural
   authority.
 - Compiler-checked complete temporary crates prove each hostile mutation
   compiles before parsed-token structural validation rejects it.
-- Package-source line coverage is 91.83% (776/845), above the 80% requirement.
+- Package-source line coverage is 94.75% (812/857), above the 80% requirement.
 - Package-scoped Rustfmt, strict Clippy, strict rustdoc, and the exact BUILD
   recipe pass.
+- The current-source repository planner identifies seven affected packages;
+  those seven BUILD recipes pass. The repository's strict pre-build orphan
+  validator is presently blocked by stale `BUILD-EXEMPTIONS` entries already
+  present on `origin/main`, so this branch does not claim that unrelated
+  repository-wide metadata gate as green.
 
 ## Development
 

@@ -3,7 +3,7 @@
 use std::fmt::Write as _;
 
 use crate::allocation::{self, AllocationSite};
-use crate::{gates, System370Error, System370State, MEMORY_BYTES};
+use crate::{gates, System370Error, MEMORY_BYTES};
 
 const ADDRESS_MASK: u32 = 0x00ff_ffff;
 
@@ -27,6 +27,16 @@ pub(crate) struct SettledExtension {
     pub(crate) gpr_count: usize,
     pub(crate) memory_writes: Vec<(usize, u8)>,
     pub(crate) condition_code: Option<u8>,
+}
+
+/// Read-only scalar observations of the one stable-Q architectural bank.
+///
+/// This deliberately cannot expose an owned state or packed-memory snapshot:
+/// extension execution consumes only the Q values needed by the settled gate
+/// network.
+pub(crate) trait StableQ {
+    fn gpr_q(&self, index: usize) -> u32;
+    fn memory_q(&self, index: usize) -> u8;
 }
 
 #[must_use]
@@ -61,8 +71,9 @@ pub(crate) fn instruction_width(opcode: u8) -> Option<u8> {
     }
 }
 
-pub(crate) fn settle(
-    before: &System370State,
+pub(crate) fn settle<Q: StableQ>(
+    q: &Q,
+    pc: u32,
     raw: &[u8],
     extension: Extension,
 ) -> Result<SettledExtension, System370Error> {
@@ -79,18 +90,18 @@ pub(crate) fn settle(
         width,
         mnemonic: String::new(),
         description: String::new(),
-        pc: gates::add_u24(before.pc, u32::from(width)),
+        pc: gates::add_u24(pc, u32::from(width)),
         gpr_updates: [(0, 0); 4],
         gpr_count: 0,
         memory_writes: Vec::new(),
         condition_code: None,
     };
     match extension {
-        Extension::Mvcl => settle_mvcl(before, raw, &mut settled)?,
-        Extension::Clcl => settle_clcl(before, raw, &mut settled)?,
-        Extension::Clm => settle_clm(before, raw, &mut settled)?,
-        Extension::Stcm => settle_stcm(before, raw, &mut settled)?,
-        Extension::Icm => settle_icm(before, raw, &mut settled)?,
+        Extension::Mvcl => settle_mvcl(q, raw, &mut settled)?,
+        Extension::Clcl => settle_clcl(q, raw, &mut settled)?,
+        Extension::Clm => settle_clm(q, raw, &mut settled)?,
+        Extension::Stcm => settle_stcm(q, raw, &mut settled)?,
+        Extension::Icm => settle_icm(q, raw, &mut settled)?,
     }
     Ok(settled)
 }
@@ -121,19 +132,19 @@ fn push_gpr(settled: &mut SettledExtension, register: usize, value: u32) {
     settled.gpr_count += 1;
 }
 
-fn settle_mvcl(
-    before: &System370State,
+fn settle_mvcl<Q: StableQ>(
+    q: &Q,
     raw: &[u8],
     settled: &mut SettledExtension,
 ) -> Result<(), System370Error> {
     let r1 = usize::from(raw[1] >> 4);
     let r2 = usize::from(raw[1] & 15);
     require_pairs(r1, r2)?;
-    let destination = before.gprs[r1] & ADDRESS_MASK;
-    let destination_len = before.gprs[r1 + 1] & ADDRESS_MASK;
-    let source = before.gprs[r2] & ADDRESS_MASK;
-    let source_len = before.gprs[r2 + 1] & ADDRESS_MASK;
-    let pad = (before.gprs[r2 + 1] >> 24) as u8;
+    let destination = q.gpr_q(r1) & ADDRESS_MASK;
+    let destination_len = q.gpr_q(r1 + 1) & ADDRESS_MASK;
+    let source = q.gpr_q(r2) & ADDRESS_MASK;
+    let source_len = q.gpr_q(r2 + 1) & ADDRESS_MASK;
+    let pad = (q.gpr_q(r2 + 1) >> 24) as u8;
     let copied = gates::select_u24(
         destination_len,
         source_len,
@@ -162,7 +173,11 @@ fn settle_mvcl(
     let mut offset = 0;
     while gates::nonzero_u24(gates::sub_u24(destination_len, offset)) == 1 {
         let use_source = gates::compare_u24(offset, source_len) & 1;
-        let source_byte = before.memory[gates::add_u24(source, offset) as usize];
+        let source_byte = if use_source == 1 {
+            q.memory_q(gates::add_u24(source, offset) as usize)
+        } else {
+            0
+        };
         let byte = gates::select_u8(pad, source_byte, use_source);
         settled
             .memory_writes
@@ -170,12 +185,12 @@ fn settle_mvcl(
         offset = gates::add_u24(offset, 1);
     }
     push_gpr(settled, r1, gates::add_u24(destination, destination_len));
-    push_gpr(settled, r1 + 1, before.gprs[r1 + 1] & 0xff00_0000);
+    push_gpr(settled, r1 + 1, q.gpr_q(r1 + 1) & 0xff00_0000);
     push_gpr(settled, r2, gates::add_u24(source, copied));
     push_gpr(
         settled,
         r2 + 1,
-        (before.gprs[r2 + 1] & 0xff00_0000) | gates::sub_u24(source_len, copied),
+        (q.gpr_q(r2 + 1) & 0xff00_0000) | gates::sub_u24(source_len, copied),
     );
     settled.condition_code = Some(gates::compare_u24(destination_len, source_len));
     write!(description, "MVCL R{r1},R{r2}").expect("writing to String cannot fail");
@@ -183,19 +198,19 @@ fn settle_mvcl(
     Ok(())
 }
 
-fn settle_clcl(
-    before: &System370State,
+fn settle_clcl<Q: StableQ>(
+    q: &Q,
     raw: &[u8],
     settled: &mut SettledExtension,
 ) -> Result<(), System370Error> {
     let r1 = usize::from(raw[1] >> 4);
     let r2 = usize::from(raw[1] & 15);
     require_pairs(r1, r2)?;
-    let mut first_address = before.gprs[r1] & ADDRESS_MASK;
-    let mut first_len = before.gprs[r1 + 1] & ADDRESS_MASK;
-    let mut second_address = before.gprs[r2] & ADDRESS_MASK;
-    let mut second_len = before.gprs[r2 + 1] & ADDRESS_MASK;
-    let pad = (before.gprs[r2 + 1] >> 24) as u8;
+    let mut first_address = q.gpr_q(r1) & ADDRESS_MASK;
+    let mut first_len = q.gpr_q(r1 + 1) & ADDRESS_MASK;
+    let mut second_address = q.gpr_q(r2) & ADDRESS_MASK;
+    let mut second_len = q.gpr_q(r2 + 1) & ADDRESS_MASK;
+    let pad = (q.gpr_q(r2 + 1) >> 24) as u8;
     let mut condition_code = 0;
     while gates::nonzero_u24(first_len) | gates::nonzero_u24(second_len) == 1 {
         if gates::nonzero_u24(first_len) == 1 {
@@ -206,14 +221,14 @@ fn settle_clcl(
         }
         let first_present = gates::nonzero_u24(first_len);
         let first_value = if first_present == 1 {
-            before.memory[first_address as usize]
+            q.memory_q(first_address as usize)
         } else {
             0
         };
         let first = gates::select_u8(pad, first_value, first_present);
         let second_present = gates::nonzero_u24(second_len);
         let second_value = if second_present == 1 {
-            before.memory[second_address as usize]
+            q.memory_q(second_address as usize)
         } else {
             0
         };
@@ -236,16 +251,12 @@ fn settle_clcl(
         second_len = gates::select_u24(second_len, gates::sub_u24(second_len, 1), second_present);
     }
     push_gpr(settled, r1, first_address);
-    push_gpr(
-        settled,
-        r1 + 1,
-        (before.gprs[r1 + 1] & 0xff00_0000) | first_len,
-    );
+    push_gpr(settled, r1 + 1, (q.gpr_q(r1 + 1) & 0xff00_0000) | first_len);
     push_gpr(settled, r2, second_address);
     push_gpr(
         settled,
         r2 + 1,
-        (before.gprs[r2 + 1] & 0xff00_0000) | second_len,
+        (q.gpr_q(r2 + 1) & 0xff00_0000) | second_len,
     );
     settled.condition_code = Some(condition_code);
     settled.mnemonic = checked_mnemonic("CLCL")?;
@@ -255,14 +266,14 @@ fn settle_clcl(
     Ok(())
 }
 
-fn settle_clm(
-    before: &System370State,
+fn settle_clm<Q: StableQ>(
+    q: &Q,
     raw: &[u8],
     settled: &mut SettledExtension,
 ) -> Result<(), System370Error> {
     let register = usize::from(raw[1] >> 4);
     let mask = raw[1] & 15;
-    let address = effective_address(before, raw);
+    let address = effective_address(q, raw);
     if mask == 0 {
         checked_range(address, 1)?;
     }
@@ -274,8 +285,8 @@ fn settle_clm(
         }
         let storage = gates::add_u24(address, u32::from(gates::mask_prefix(mask, byte_index)));
         checked_range(storage, 1)?;
-        let register_byte = (before.gprs[register] >> (24 - byte_index * 8)) as u8;
-        cc = gates::compare_byte(register_byte, before.memory[storage as usize]);
+        let register_byte = gates::select_register_byte(q.gpr_q(register), byte_index);
+        cc = gates::compare_byte(register_byte, q.memory_q(storage as usize));
         if cc != 0 {
             break;
         }
@@ -289,14 +300,14 @@ fn settle_clm(
     Ok(())
 }
 
-fn settle_stcm(
-    before: &System370State,
+fn settle_stcm<Q: StableQ>(
+    q: &Q,
     raw: &[u8],
     settled: &mut SettledExtension,
 ) -> Result<(), System370Error> {
     let register = usize::from(raw[1] >> 4);
     let mask = raw[1] & 15;
-    let address = effective_address(before, raw);
+    let address = effective_address(q, raw);
     allocation::checkpoint(AllocationSite::MemoryWrites)
         .map_err(|()| System370Error::AllocationFailed)?;
     settled
@@ -312,7 +323,7 @@ fn settle_stcm(
         checked_range(storage, 1)?;
         settled.memory_writes.push((
             storage as usize,
-            (before.gprs[register] >> (24 - byte_index * 8)) as u8,
+            gates::select_register_byte(q.gpr_q(register), byte_index),
         ));
     }
     settled.mnemonic = checked_mnemonic("STCM")?;
@@ -323,19 +334,19 @@ fn settle_stcm(
     Ok(())
 }
 
-fn settle_icm(
-    before: &System370State,
+fn settle_icm<Q: StableQ>(
+    q: &Q,
     raw: &[u8],
     settled: &mut SettledExtension,
 ) -> Result<(), System370Error> {
     let register = usize::from(raw[1] >> 4);
     let mask = raw[1] & 15;
-    let address = effective_address(before, raw);
+    let address = effective_address(q, raw);
     if mask == 0 {
         checked_range(address, 1)?;
     }
     let mut bytes = [0; 4];
-    let mut value = before.gprs[register];
+    let mut value = q.gpr_q(register);
     for (byte_index, byte) in bytes.iter_mut().enumerate() {
         let enable = gates::mask_enabled(mask, byte_index);
         if enable == 0 {
@@ -343,7 +354,7 @@ fn settle_icm(
         }
         let storage = gates::add_u24(address, u32::from(gates::mask_prefix(mask, byte_index)));
         checked_range(storage, 1)?;
-        *byte = before.memory[storage as usize];
+        *byte = q.memory_q(storage as usize);
         value = gates::merge_register_byte(value, *byte, byte_index, enable);
     }
     if mask != 0 {
@@ -377,11 +388,11 @@ fn require_pairs(r1: usize, r2: usize) -> Result<(), System370Error> {
     }
 }
 
-fn effective_address(before: &System370State, raw: &[u8]) -> u32 {
+fn effective_address<Q: StableQ>(q: &Q, raw: &[u8]) -> u32 {
     let base = usize::from(raw[2] >> 4);
     let displacement = (u32::from(raw[2] & 15) << 8) | u32::from(raw[3]);
     let base_present = ibm_system360_gatelevel::gates::register_field_nonzero(base as u8);
-    let selected = gates::select_u24(0, before.gprs[base], base_present);
+    let selected = gates::select_u24(0, q.gpr_q(base), base_present);
     gates::add_u24(selected, displacement)
 }
 

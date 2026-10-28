@@ -13,6 +13,6 @@ All notable changes to this package will be documented in this file.
   condition-code networks.
 - System/370-owned public state, traces, results, typed transactional faults,
   checked allocation seams, and complete `step`/`run`/`execute` rollback.
-- Exhaustive transport, differential, truth-table, allocation, and
-  compiler-checked parsed-structure evidence with 91.83% line coverage
-  (776/845).
+- Twenty-one exhaustive transport, differential, truth-table, allocation, and
+  compiler-checked parsed-structure evidence with 94.75% line coverage
+  (812/857).

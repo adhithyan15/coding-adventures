@@ -1,6 +1,8 @@
 use ibm_system370_gatelevel::{
     clear_allocation_failure, fail_allocation, AllocationSite, System370Error, System370GateLevel,
+    System370State,
 };
+use ibm_system370_simulator::System370Simulator;
 
 struct Clear;
 
@@ -20,6 +22,13 @@ fn assert_allocation_failure(
     assert_eq!(operation(), System370Error::AllocationFailed);
 }
 
+fn assert_functional_parity(cpu: &System370GateLevel, entry: &System370State) {
+    let mut oracle = System370Simulator::new();
+    oracle.restore(entry.clone()).unwrap();
+    assert_eq!(cpu.get_state(), *entry);
+    assert_eq!(cpu.get_state(), oracle.get_state());
+}
+
 #[test]
 fn initial_load_restore_and_step_allocations_are_typed_and_atomic() {
     assert_allocation_failure(AllocationSite::InitialStorage, 0, || {
@@ -32,7 +41,7 @@ fn initial_load_restore_and_step_allocations_are_typed_and_atomic() {
     assert_allocation_failure(AllocationSite::LoadImage, 0, || {
         load.load(&[0x0a, 0], 0).unwrap_err()
     });
-    assert_eq!(load.get_state(), before);
+    assert_functional_parity(&load, &before);
 
     let mut restore = System370GateLevel::new();
     restore.load(&[0x0a, 0], 0).unwrap();
@@ -42,7 +51,7 @@ fn initial_load_restore_and_step_allocations_are_typed_and_atomic() {
     assert_allocation_failure(AllocationSite::RestoreMemory, 0, || {
         restore.restore(replacement).unwrap_err()
     });
-    assert_eq!(restore.get_state(), before);
+    assert_functional_parity(&restore, &before);
 
     for (site, skip, program) in [
         (AllocationSite::StateSnapshot, 0, vec![0x0e, 0x24]),
@@ -54,6 +63,7 @@ fn initial_load_restore_and_step_allocations_are_typed_and_atomic() {
             0,
             vec![0xbe, 0x2f, 0x01, 0x00],
         ),
+        (AllocationSite::MemoryWrites, 0, vec![0x0e, 0x24]),
         (AllocationSite::OracleState, 0, vec![0x0e, 0x24]),
     ] {
         let mut cpu = System370GateLevel::new();
@@ -65,7 +75,7 @@ fn initial_load_restore_and_step_allocations_are_typed_and_atomic() {
         cpu.write_memory(0x200, b"A").unwrap();
         let before = cpu.get_state();
         assert_allocation_failure(site, skip, || cpu.step().unwrap_err());
-        assert_eq!(cpu.get_state(), before, "site {site:?} skip {skip}");
+        assert_functional_parity(&cpu, &before);
     }
 }
 
@@ -80,7 +90,7 @@ fn run_and_execute_post_progress_failures_restore_complete_entry_state() {
     assert_allocation_failure(AllocationSite::TraceRetention, 1, || {
         run.run(3).unwrap_err()
     });
-    assert_eq!(run.get_state(), run_before);
+    assert_functional_parity(&run, &run_before);
 
     let mut execute = System370GateLevel::new();
     execute.write_gpr(1, 0x1234).unwrap();
@@ -89,18 +99,26 @@ fn run_and_execute_post_progress_failures_restore_complete_entry_state() {
     assert_allocation_failure(AllocationSite::TraceRetention, 1, || {
         execute.execute(&program, 0, 3).unwrap_err()
     });
-    assert_eq!(execute.get_state(), execute_before);
+    assert_functional_parity(&execute, &execute_before);
 }
 
 #[test]
 fn reservation_and_final_state_failures_are_atomic() {
+    let mut run_snapshot = System370GateLevel::new();
+    run_snapshot.load(&[0x0a, 0], 0).unwrap();
+    let before = run_snapshot.get_state();
+    assert_allocation_failure(AllocationSite::StateSnapshot, 0, || {
+        run_snapshot.run(1).unwrap_err()
+    });
+    assert_functional_parity(&run_snapshot, &before);
+
     let mut reservation = System370GateLevel::new();
     reservation.load(&[0x0a, 0], 0).unwrap();
     let before = reservation.get_state();
     assert_allocation_failure(AllocationSite::TraceReservation, 0, || {
         reservation.run(1).unwrap_err()
     });
-    assert_eq!(reservation.get_state(), before);
+    assert_functional_parity(&reservation, &before);
 
     let mut final_state = System370GateLevel::new();
     final_state.load(&[0x0a, 0], 0).unwrap();
@@ -108,5 +126,24 @@ fn reservation_and_final_state_failures_are_atomic() {
     assert_allocation_failure(AllocationSite::FinalState, 0, || {
         final_state.run(1).unwrap_err()
     });
-    assert_eq!(final_state.get_state(), before);
+    assert_functional_parity(&final_state, &before);
+
+    let program = [0x18, 0x12, 0x0a, 0];
+    for skip in [0, 1] {
+        let mut execute_snapshot = System370GateLevel::new();
+        execute_snapshot.write_gpr(1, 7).unwrap();
+        let before = execute_snapshot.get_state();
+        assert_allocation_failure(AllocationSite::StateSnapshot, skip, || {
+            execute_snapshot.execute(&program, 0, 2).unwrap_err()
+        });
+        assert_functional_parity(&execute_snapshot, &before);
+    }
+
+    let mut execute_final = System370GateLevel::new();
+    execute_final.write_gpr(1, 7).unwrap();
+    let before = execute_final.get_state();
+    assert_allocation_failure(AllocationSite::FinalState, 0, || {
+        execute_final.execute(&program, 0, 2).unwrap_err()
+    });
+    assert_functional_parity(&execute_final, &before);
 }

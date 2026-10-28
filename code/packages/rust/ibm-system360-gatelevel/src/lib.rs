@@ -158,6 +158,72 @@ impl System360GateLevel {
         self.halted != 0
     }
 
+    /// Read one general register directly from the stable-Q bank.
+    #[doc(hidden)]
+    #[must_use]
+    pub fn gpr_q(&self, index: usize) -> u32 {
+        read_bits(&self.gprs[index]) as u32
+    }
+
+    /// Read one floating-point register directly from the stable-Q bank.
+    #[doc(hidden)]
+    #[must_use]
+    pub fn fpr_q(&self, slot: usize) -> u64 {
+        read_bits(&self.fprs[slot])
+    }
+
+    /// Read the instruction address directly from the stable-Q bank.
+    #[doc(hidden)]
+    #[must_use]
+    pub fn program_counter_q(&self) -> u32 {
+        read_bits(&self.pc) as u32
+    }
+
+    /// Read the condition code directly from the stable-Q bank.
+    #[doc(hidden)]
+    #[must_use]
+    pub fn condition_code_q(&self) -> u8 {
+        read_bits(&self.condition_code) as u8
+    }
+
+    /// Read one storage byte directly from the stable-Q bank.
+    #[doc(hidden)]
+    #[must_use]
+    pub fn memory_q(&self, index: usize) -> u8 {
+        self.memory.read(index)
+    }
+
+    /// Read lifecycle metadata paired with the stable-Q bank.
+    #[doc(hidden)]
+    #[must_use]
+    pub const fn installed_range(&self) -> (u32, usize) {
+        (self.loaded_origin, self.loaded_len)
+    }
+
+    /// Clock one prevalidated general-register value.
+    #[doc(hidden)]
+    pub fn clock_gpr_q(&mut self, index: usize, value: u32) {
+        clock_bits(&mut self.gprs[index], u64::from(value));
+    }
+
+    /// Clock one prevalidated storage byte.
+    #[doc(hidden)]
+    pub fn clock_memory_q(&mut self, index: usize, value: u8) {
+        self.memory.write(index, value);
+    }
+
+    /// Clock a prevalidated condition code.
+    #[doc(hidden)]
+    pub fn clock_condition_code_q(&mut self, value: u8) {
+        clock_bits(&mut self.condition_code, u64::from(value));
+    }
+
+    /// Clock a prevalidated instruction address.
+    #[doc(hidden)]
+    pub fn clock_program_counter_q(&mut self, value: u32) {
+        clock_bits(&mut self.pc, u64::from(value));
+    }
+
     fn commit_transition(&mut self, next: &System360State) {
         for (address, value) in next.memory.iter().copied().enumerate() {
             if self.memory.read(address) != value {
