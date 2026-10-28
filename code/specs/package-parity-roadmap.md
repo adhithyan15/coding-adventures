@@ -18836,3 +18836,54 @@ Post-reconciliation validation passes 96 document-AST, 62 CommonMark-parser,
 63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
 tests. The normal merge can now be published; the resulting exact head still
 needs its full replacement hosted matrix.
+
+## October 28, 2026: Swift hash-map selection after scripting Bezier merge
+
+Scripting Bezier PR #18508 merged from exact reviewed head
+`c780f49320552adab7eea83c283a6c7afbce17eb` as
+`fe057f18c6e8b62cae9921fee2538c091fae1bbb`, opening the third publication
+slot. Reprioritization selects `swift-hash-map-lane-parity`: its hash-functions
+prerequisite is merged, the complete preparation has no open-PR path overlap,
+and landing one missing non-Rust package immediately unlocks the recorded
+Swift hash-set and HyperLogLog descendants. It ranks ahead of new documentary
+contracts and the lower-leverage Go/Rust Bezier dependency cleanup.
+
+The preparation normally merged exact current main without rewriting its four
+commits; merge head `e8d5e1897756bb0e012a3f01769ba5df03cf85dc`
+preserves the corrected implementation at
+`a04423e471cbcbd6e59f8e22738e98eefa658739`. The native BUILD passes all 17
+focused tests, including both collision strategies and exact UTF-8 identity,
+then completes a production release build. Keep scope to the prepared DT18
+package, exact DT17 hashing, persistent semantics, native build fronts, docs,
+capability declaration, and lifecycle receipts. Exact merge-head review and
+hosted Windows qualification remain before publication.
+
+## October 28, 2026: Swift hash-map draft publication
+
+Open PR #18517 from exact current-main reconciliation and lifecycle head
+`e8fed125d8e611f657bd358b2dc69bf5dffc4808`. The live publication set is now
+{#18511, #18516, #18517}; do not open a fourth parity PR. Guarded auto-merge
+remains disabled until every hosted check for this exact head is terminal and
+acceptable, including the Windows BUILD front.
+
+## October 28, 2026: Swift hash-map merge and fenced-block reconciliation
+
+Swift hash-map PR #18517 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact lifecycle head
+`6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc` as
+`031553c39dda7b68b9aa43d4abb4ab688ceff3a0` at
+`2026-10-28T12:21:19Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with Swift fenced-block PR #18516 only in shared
+lifecycle records. Preserve its published implementation and review history
+through a normal merge of exact current main. Re-run the six affected native
+Swift suites and require a completely fresh exact-head hosted matrix before
+guarded auto-merge. The live publication set is {#18511, #18516}; one slot is
+open, but the next publication must wait for a fresh backlog prioritization.
+
+Post-reconciliation validation passes 96 document-AST, 62 CommonMark-parser,
+63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
+tests. The production delta remains unchanged from exact prepared head
+`47bcc00857695c53f9caeb9a0568b2d4cfb8356b`; publish the normal merge and
+require a full replacement hosted matrix.

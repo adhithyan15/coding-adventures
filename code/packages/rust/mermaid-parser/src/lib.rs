@@ -1288,6 +1288,7 @@ pub fn parse_architecture(source: &str) -> Result<StructuralDiagram, ParseError>
                 metadata: declaration.icon.map(|icon_name| {
                     StructuralGroupMetadata::Architecture { icon_name }
                 }),
+                style: None,
                 parent_group: declaration.parent,
             });
         } else if let Some(value) = statement.strip_prefix("service ") {
@@ -14089,7 +14090,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 let args = parse_c4_arguments(&mut cursor)?;
                 match macro_token.value.as_str() {
                     "UpdateElementStyle" => {
-                        apply_c4_element_style(&args, &mut nodes, &node_indices);
+                        apply_c4_element_style(&args, &mut nodes, &node_indices, &mut groups);
                     }
                     "UpdateRelStyle" => apply_c4_relationship_style(&args, &mut relationships),
                     _ => {}
@@ -14116,6 +14117,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     label,
                     stereotype: Some(macro_token.value),
                     metadata: None,
+                    style: None,
                     parent_group: group_stack.last().cloned(),
                 });
                 cursor.skip_terminators();
@@ -14259,11 +14261,26 @@ fn apply_c4_element_style(
     args: &[String],
     nodes: &mut [StructuralNode],
     node_indices: &HashMap<String, usize>,
+    groups: &mut [StructuralGroup],
 ) {
-    let Some(index) = args.first().and_then(|id| node_indices.get(id)).copied() else {
+    let Some(id) = args.first() else {
         return;
     };
-    let mut style = nodes[index].style.clone().unwrap_or_default();
+    if let Some(index) = node_indices.get(id).copied() {
+        let mut style = nodes[index].style.clone().unwrap_or_default();
+        apply_c4_element_color_arguments(args, &mut style);
+        nodes[index].style = Some(style);
+        return;
+    }
+    let Some(group) = groups.iter_mut().find(|group| group.id == *id) else {
+        return;
+    };
+    let mut style = group.style.clone().unwrap_or_default();
+    apply_c4_element_color_arguments(args, &mut style);
+    group.style = Some(style);
+}
+
+fn apply_c4_element_color_arguments(args: &[String], style: &mut DiagramStyle) {
     for (position, argument) in args.iter().skip(1).enumerate() {
         let (key, value) = argument
             .split_once('=')
@@ -14282,7 +14299,6 @@ fn apply_c4_element_style(
             _ => {}
         }
     }
-    nodes[index].style = Some(style);
 }
 
 fn apply_c4_relationship_style(args: &[String], relationships: &mut [StructuralRelationship]) {

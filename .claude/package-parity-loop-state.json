@@ -22,10 +22,10 @@
     18516
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T11:08:57Z",
-    "pr_number": 18508,
-    "head_revision": "c780f49320552adab7eea83c283a6c7afbce17eb",
-    "action": "Verified scripting Bezier PR #18508 completed every exact-head check acceptably and merged through guarded squash auto-merge as fe057f18c6e8b62cae9921fee2538c091fae1bbb. The receipt is current origin/main and the clean completed worktree and local branch were removed. Normal current-main reconciliation is now required for the two remaining published parity PRs before fresh exact-head hosted checks.",
+    "observed_at": "2026-10-28T12:21:19Z",
+    "pr_number": 18517,
+    "head_revision": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+    "action": "Verified Swift hash-map PR #18517 completed all exact-head checks acceptably and merged through guarded squash auto-merge as 031553c39dda7b68b9aa43d4abb4ab688ceff3a0. The exact receipt is current origin/main and the clean completed worktree and local branch were removed. The base advance made Swift fenced-block PR #18516 conflicting, so preserve its published history with a normal current-main merge and require fresh exact-head checks.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -14809,6 +14809,17 @@
       "merge_notes": "All final-head checks reached terminal acceptable conclusions. GitHub reported the reviewed head clean and mergeable, guarded squash auto-merge was enabled only then, and GitHub merged PR #16153 automatically without a plain manual merge command."
     },
     {
+      "id": "itf-required-capability-metadata-reconciliation",
+      "title": "Reconcile required-capability metadata for existing ITF lanes",
+      "status": "pending",
+      "depends_on": [
+        "itf-existing-lanes-v1-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Metadata-only follow-up for the Haskell, Lua, Perl, Python, Rust, and Swift ITF packages whose merged conformance implementations still lack explicit required_capabilities.json files. Add schema-valid empty manifests and the package/archive inclusion needed to publish them; validate package contents and planner discovery. Do not change encoder behavior, public APIs, test semantics, build-front execution, or host authority, and do not absorb this pending owner into the selected Haskell Windows-front tranche."
+    },
+    {
       "id": "code39-existing-lanes-v1-conformance",
       "title": "Reconcile existing Code 39 lanes with the neutral v1 contract",
       "status": "pending",
@@ -15155,12 +15166,33 @@
     {
       "id": "swift-hash-map-lane-parity",
       "title": "Implement DT18 hash-map in Swift",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-swift-hash-map-20261026",
+      "pr_number": 18517,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18517",
+      "pr_opened_at": "2026-10-28T11:17:09Z",
+      "publication_head": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+      "publication_notes": "PR #18517 completed every exact-head hosted check acceptably and merged through guarded squash auto-merge from exact lifecycle head 6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc.",
+      "merged_head_revision": "6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc",
+      "merged_at": "2026-10-28T12:21:19Z",
+      "merge_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
+      "started_at": "2026-10-28T11:16:04Z",
+      "selected_main_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
+      "reconciliation_revision": "e8d5e1897756bb0e012a3f01769ba5df03cf85dc",
+      "selection_notes": "Reprioritized after scripting Bezier PR #18508 merged and opened the third publication slot. This dependency-ready Swift package directly advances a non-Rust lane, its sole hash-functions prerequisite is merged, its complete preparation has no open-PR path overlap, and it unlocks the recorded Swift hash-set and HyperLogLog descendants. It ranks ahead of new neutral-contract work and the Go/Rust Bezier dependency cleanup because it delivers an already-reviewed missing package with higher immediate non-Rust parity leverage. Keep scope to the prepared DT18 package, exact DT17 hashing, both collision strategies, persistent semantics, native build fronts, docs, capability declaration, and lifecycle receipts.",
+      "preparation_branch": "codex/parity-swift-hash-map-20261026",
+      "prepared_at": "2026-10-26T17:59:25Z",
+      "preparation_base_revision": "d096a82430b2aa67f768361c65001e8d13dcb2dd",
+      "preparation_head_revision": "a04423e471cbcbd6e59f8e22738e98eefa658739",
+      "preparation_notes": "A complete local-only preparation exists at exact implementation head a04423e471cbcbd6e59f8e22738e98eefa658739. Keep this owner pending and unpublished because haskell-itf-stack-windows-build-front-coverage is the sole selected local owner and the hosted ceiling is occupied by exact live PRs {18293: c7b1e98687d3c762a98a9beed61ad71f586ca484, 18355: f27058ffa18abe1fb7a7167237eb0b761414162f, 18367: 365f455bbaa57c41b1ff825f85fbca883d0cfb92}. The preparation preserves both separate pending ITF follow-ups and does not claim independent final review.",
+      "preparation_validation_notes": "Swift 6.3.1 passes all 17 focused tests, including exact UTF-8 identity and composed/decomposed coexistence, lookup, overwrite, and removal under both collision strategies; the deterministic 300-operation semantic trace under both strategies; package BUILD test plus release compilation; and a separate release-mode consumer importing only HashMap. Production HashMap.swift coverage is 96.86% of 318 lines, 95.71% of 163 regions, and 97.30% of 37 functions. Swift format lint is clean. The capability schema, exact changelog heading digest, strict duplicate-free JSON, 1,602 lesson shards, and the 1,549-owner unique dependency-complete acyclic graph with zero merged-to-unfinished edges pass. A real 167-package Swift planner selects only swift/hash-map as changed plus prerequisite-only swift/hash-functions. Windows execution remains a hosted-CI qualification; its required front exactly follows merged hash-functions and propagates toolchain/test/release failures.",
+      "current_main_validation_notes": "After normally merging exact current main fe057f18c6e8b62cae9921fee2538c091fae1bbb, the native BUILD passes all 17 focused tests plus production release compilation. The package delta remains unchanged from exact corrected implementation head a04423e471cbcbd6e59f8e22738e98eefa658739. Exact merge-head review, Windows hosted qualification, and fresh hosted checks remain publication gates.",
+      "final_review_revision": "e8d5e1897756bb0e012a3f01769ba5df03cf85dc",
+      "final_review_notes": "Exact current-main review confirms the production package delta is unchanged from corrected implementation head a04423e471cbcbd6e59f8e22738e98eefa658739. The 11 production/test/documentation paths plus lifecycle state are clean; strict JSON parsing and Swift format lint pass; all 17 tests and the release build pass; and no live open PR overlaps the hash-map package root. Hosted platforms remain the only publication qualification.",
       "notes": "Preserve both reviewed collision strategies, resizing and load-factor behavior, specified deterministic iteration guarantees, input ownership, empty capabilities, and exact DT17 hashing.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-hash-map-lane-parity"
@@ -16348,13 +16380,32 @@
     {
       "id": "haskell-itf-stack-windows-build-front-coverage",
       "title": "Add Windows build fronts for the Haskell ITF stack",
+      "status": "in_progress",
+      "depends_on": [
+        "itf-existing-lanes-v1-conformance"
+      ],
+      "branch": "codex/haskell-itf-stack-windows-build-front-coverage",
+      "pr_number": null,
+      "selected_at": "2026-10-26T16:52:26Z",
+      "selection_revision": "aa568304c93e44d733535cdb3209793041ff9503",
+      "base_revision": "aa568304c93e44d733535cdb3209793041ff9503",
+      "selection_notes": "Selected as the highest-leverage independent non-Rust local preparation after excluding every Bezier successor still blocked on live PR #18293 and every downstream GFM owner still blocked on the unpublished fenced-block preparation. This two-front repair immediately readies the Haskell one-dimensional symbology Windows-front owner and contributes to facade readiness; Swift hash-map ranks second behind merged Swift hash-functions with six unfinished descendants, while the broader binary-tree Dart/Swift pair ranks third. Hosted parity slots remain full with exact live heads {18293: c7b1e98687d3c762a98a9beed61ad71f586ca484, 18355: f27058ffa18abe1fb7a7167237eb0b761414162f, 18367: 365f455bbaa57c41b1ff825f85fbca883d0cfb92}, so this branch is local-only and must not be published yet.",
+      "reconciliation_notes": "Created one dedicated sparse worktree from exact origin/main aa568304c93e44d733535cdb3209793041ff9503. The selected scope is limited to replacing the two unconditional Windows skips with toolchain-optional Cabal routing that skips successfully when Cabal is unavailable and propagates cabal test failures when Cabal is present, while preserving each existing tests: True project and dependency closure. The newly discovered six-lane ITF capability-metadata gap is recorded as a separate pending owner and is not selected.",
+      "notes": "Add real BUILD_windows fronts for barcode-layout-1d and itf, preserve their exact Cabal closure and tests: True project metadata, and cover Windows-front precedence without absorbing the complete barcode-1d facade."
+    },
+    {
+      "id": "haskell-itf-stack-ghc-9-14-containers-bound-reconciliation",
+      "title": "Reconcile Haskell ITF stack containers bounds for GHC 9.14",
       "status": "pending",
       "depends_on": [
         "itf-existing-lanes-v1-conformance"
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Add real BUILD_windows fronts for barcode-layout-1d and itf, preserve their exact Cabal closure and tests: True project metadata, and cover Windows-front precedence without absorbing the complete barcode-1d facade."
+      "discovered_at": "2026-10-26T16:52:26Z",
+      "discovery_revision": "2fe55e3311bc8e755e2f18f2116543d5fd3710a3",
+      "discovery_notes": "Focused native validation of the Haskell ITF Windows-front preparation ran the unchanged barcode-layout-1d project with Cabal 3.16.1.0 and default GHC 9.14.1. Dependency solving failed before compilation because barcode-layout-1d requires containers >=0.6 && <0.8 while GHC 9.14.1 provides installed containers-0.8; the same upper bound appears in both library and test stanzas of barcode-layout-1d and itf. Re-running the complete closures with GHC 9.6.7 passed 29 paint-instructions, 27 barcode-layout-1d, 25 SHA-256, allocation-budget, and 19 ITF examples with zero failures. This is package-bound compatibility work, not a Windows command-routing defect.",
+      "notes": "Audit the containers APIs actually used by Haskell barcode-layout-1d and itf, then reconcile their library and test-suite upper bounds so Cabal can solve under GHC 9.14.1 with containers-0.8 while preserving GHC 9.6.7 compatibility, existing behavior, public APIs, fixtures, and test coverage. Do not change the Windows-front mechanics or select this owner as part of the current build-front tranche."
     },
     {
       "id": "haskell-barcode-1d-symbology-windows-build-front-coverage",
@@ -26188,11 +26239,13 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18516",
       "pr_opened_at": "2026-10-28T10:30:33Z",
       "publication_head": "af66b66094b0a62248189f542a5b8bedede9c18f",
-      "publication_notes": "PR #18516 is open and non-draft. Scripting Bezier PR #18508 advanced main after exact lifecycle head 1dd64b41306c19801a3e009e7940ad6b60cbd3ff, so preserve the published history through a normal exact-main merge, re-run all six affected native suites, and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
+      "publication_notes": "PR #18516 is open and non-draft. Swift hash-map PR #18517 advanced main after exact reconciliation head 4858782cc6ec82230530ab56e810801dd265a730, so preserve the published history through a normal exact-main merge, re-run all six affected native suites, and require a completely fresh exact-head hosted matrix before guarded auto-merge.",
       "delivery_class": "portable-lane-reconciliation",
       "selection_blocked": false,
       "registered_at": "2026-10-24T19:17:58Z",
       "selected_at": "2026-10-26T05:23:49Z",
+      "preparation_head_revision": "47bcc00857695c53f9caeb9a0568b2d4cfb8356b",
+      "preparation_notes": "A complete local preparation exists at exact clean head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b but remains unpublished. Keep this owner pending in shared lifecycle state; every downstream GFM owner remains blocked until this fenced-block prerequisite is published and merged.",
       "package_paths": [
         "code/packages/swift/document-ast",
         "code/packages/swift/commonmark-parser",
@@ -26202,10 +26255,11 @@
       "selection_notes": "Selected locally as the smallest dependency-ready Swift GFM prerequisite after a 2026-10-26 reprioritization. The older codex/parity-gfm-swift-20261024 preparation predates the three-owner decomposition and combines this contract with downstream parser work, so it is retained only as implementation evidence and is not publishable as one PR. All prepared Bezier successors remain blocked on PR #18293, while hosted slots are full with live PRs #18293, #18355, and #18367; this owner therefore remains unpublished local-only preparation.",
       "base_revision": "79322a77c561c1c0cbe21a397a6cd7c41021c3a0",
       "validation_revision": "6501bf72b5efba02fc4746757ded9a08fcc4a19c",
-      "reconciled_main_revision": "fe057f18c6e8b62cae9921fee2538c091fae1bbb",
-      "reconciliation_notes": "Its prerequisite gfm-language-neutral-conformance-fixture is merged as PR #18118 at 83f1871e3d61e8151b0e9313337f5dc2c842a3e6. The published branch normally merged exact current origin/main fe057f18c6e8b62cae9921fee2538c091fae1bbb after scripting Bezier PR #18508 merged, without rewriting its preparation or publication history. The production delta across the six-package Swift closure is unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. The live parity set is {18511, 18516}, leaving one publication slot for the next dependency-ready, non-overlapping owner.",
+      "reconciled_main_revision": "031553c39dda7b68b9aa43d4abb4ab688ceff3a0",
+      "reconciliation_notes": "Its prerequisite gfm-language-neutral-conformance-fixture is merged as PR #18118 at 83f1871e3d61e8151b0e9313337f5dc2c842a3e6. The published branch normally merged exact current origin/main 031553c39dda7b68b9aa43d4abb4ab688ceff3a0 after Swift hash-map PR #18517 merged, without rewriting its preparation or publication history. The production delta across the six-package Swift closure is unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. The live parity set is {18511, 18516}, leaving one publication slot after fresh backlog prioritization.",
       "validation_notes": "RED compilation proved the missing FencedBlockNode and BlockNode.fencedBlock surface. Fresh post-merge GREEN validation passes 96 document-AST tests, 62 CommonMark-parser tests, and 63 renderer tests; the complete affected Swift closure also passes 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests. Production coverage receipts remain patch-identical at 100% lines/functions for document-ast, 92.38% aggregate lines and 90.77% functions for document-ast-to-html with its AST dependency, and 81.91% aggregate lines for commonmark-parser including its pre-existing 77.66% InlineParser baseline; the changed BlockParser and Parser files measure 86.99% and 97.78% lines respectively. The three directly changed packages and six-package manifest-confirmed closure remain unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b after normally merging current main c32d5acc15c3563487cce56a7976c754f62e4bd2. The sixteen-case GFM reader, tasks, tables, strikethrough, 652-example reconciliation, missing parser root, and facade remain downstream. Exact merge-head review remains the publication gate.",
       "post_scripting_merge_validation_notes": "After normally merging exact current main fe057f18c6e8b62cae9921fee2538c091fae1bbb, all six affected native suites pass again: 96 document-AST, 62 CommonMark-parser, 63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests. The production delta remains unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. Fresh exact-head hosted checks remain mandatory before guarded auto-merge.",
+      "post_hash_map_merge_validation_notes": "After normally merging exact current main 031553c39dda7b68b9aa43d4abb4ab688ceff3a0, all six affected native suites pass again: 96 document-AST, 62 CommonMark-parser, 63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade tests. The production delta remains unchanged from exact prepared head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. Fresh exact-head hosted checks remain mandatory before guarded auto-merge.",
       "final_review_revision": "ceaf3495edeca23f92c0cac65d12319cd07b30ab",
       "final_review_notes": "Exact merge-head review confirms the six-package production delta is unchanged from prepared reviewed head 47bcc00857695c53f9caeb9a0568b2d4cfb8356b. All six native suites pass after current-main reconciliation, the 17-path diff is clean, strict JSON state parsing passes, and no live open PR overlaps any of the three directly changed package roots."
     },
