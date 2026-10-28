@@ -1,0 +1,11 @@
+{
+  "id": "SA-C510-utsarayati",
+  "pathSegment": "SA-PATH-510-AVAKARA510",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-510-AVAKARA510",
+      "order": 1
+    }
+  ]
+}

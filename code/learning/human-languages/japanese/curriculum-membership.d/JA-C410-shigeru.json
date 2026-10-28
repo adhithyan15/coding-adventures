@@ -1,0 +1,11 @@
+{
+  "id": "JA-C410-shigeru",
+  "pathSegment": "JA-PATH-410-JIMOTO410",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-410-JIMOTO410",
+      "order": 4
+    }
+  ]
+}

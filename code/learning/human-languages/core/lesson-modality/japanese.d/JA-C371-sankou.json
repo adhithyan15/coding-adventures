@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C371-sankou",
+    "language": "japanese",
+    "chapter": 371,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:625c1d2ccc14c78f"
+  },
+  "findings": []
+}

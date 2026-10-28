@@ -54,7 +54,11 @@ const CONFIGS = [
   // get rows once each is read in a word headword (言う in JA-C28-iu, 五 in
   // JA-C14-go, 口 in JA-C11-kuchi), so each can carry its KanjiVG stroke order
   // and a ductus.
-  { language: "japanese", script: "japanese", letters: 90, marks: 3, digits: 0 },
+  // 90 -> 95: the B1 core (chapters 252-257) adds 月 (U+6708), 年 (U+5E74),
+  // 出 (U+51FA), 人 (U+4EBA) and 中 (U+4E2D), each copied right after the
+  // word that holds it (月日, 年じゅう, 言い出す, 日本人, 日本中), with its
+  // KanjiVG stroke order and no ductus (copy-only).
+  { language: "japanese", script: "japanese", letters: 95, marks: 3, digits: 0 },
   // 24 -> 26: HL-C350 adds ج and ص as RECOGNITION-ONLY owners. panj (five) and
   // sad (a hundred) need them in a headword, and `uncoveredGlyphs` is a
   // headword check, so the numerals could not be taught without them. Both

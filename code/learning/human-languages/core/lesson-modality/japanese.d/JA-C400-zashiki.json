@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C400-zashiki",
+    "language": "japanese",
+    "chapter": 400,
+    "sequence": 23450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51c7e511b13b4750"
+  },
+  "findings": []
+}

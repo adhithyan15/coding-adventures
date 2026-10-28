@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:12ee5ca3dfc39042",
+  "lessonIds": [
+    "JA-C396-yukisaki",
+    "JA-C396-samayou",
+    "JA-C396-tadoritsuku",
+    "JA-C396-burabura",
+    "JA-C396-urouro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch396.txt",
+  "json": "japanese/narration/ch396.json",
+  "textHash": "fnv1a64:26fcc1098c87d5af",
+  "jsonHash": "fnv1a64:e7f7c46c3f681ffc",
+  "findings": []
+}

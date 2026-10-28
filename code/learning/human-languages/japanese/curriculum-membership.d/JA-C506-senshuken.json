@@ -1,0 +1,11 @@
+{
+  "id": "JA-C506-senshuken",
+  "pathSegment": "JA-PATH-506-RACE506",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-506-RACE506",
+      "order": 1
+    }
+  ]
+}

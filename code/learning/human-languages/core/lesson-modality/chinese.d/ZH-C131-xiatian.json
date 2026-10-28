@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C131-xiatian",
+    "language": "chinese",
+    "chapter": 131,
+    "sequence": 10420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc29c9d59d9f54a0"
+  },
+  "findings": []
+}

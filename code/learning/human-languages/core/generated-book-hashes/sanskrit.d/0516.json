@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:85b7ef5d4f9b9f10",
+  "lessonIds": [
+    "SA-C516-manoranjanam",
+    "SA-C516-hasyam",
+    "SA-C516-vinodayati",
+    "SA-C516-sangrahah",
+    "SA-C516-rucih"
+  ],
+  "tex": "sanskrit/book/chapters/ch516-free-time.tex"
+}

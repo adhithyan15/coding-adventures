@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Sorting and Keeping",
+  "label": "ch:ja-sorting-and-keeping",
+  "canDo": "I can explain how rubbish is sorted and things are kept.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "JA-C339-barabara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can explain how rubbish is sorted and things are kept.",
+    "assesses": [
+      "JA-LEX-C339-BUNBETSU339-03",
+      "JA-LEX-C339-BUNBETSU339-04",
+      "JA-LEX-C339-BUNBETSU339-05"
+    ]
+  }
+}

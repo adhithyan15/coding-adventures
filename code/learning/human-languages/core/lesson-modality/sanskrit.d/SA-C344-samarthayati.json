@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C344-samarthayati",
+    "language": "sanskrit",
+    "chapter": 344,
+    "sequence": 20220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b695a262f4d17c8"
+  },
+  "findings": []
+}

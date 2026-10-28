@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "A Trip Abroad",
+  "label": "ch:zh-a-trip-abroad",
+  "canDo": "I can talk about visas, tour guides, tourists and tickets, and wish someone a safe journey.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C213-yilupingan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can talk about visas, tour guides, tourists and tickets, and wish someone a safe journey.",
+    "assesses": [
+      "ZH-LEX-C213-TRIP213-03",
+      "ZH-LEX-C213-TRIP213-04",
+      "ZH-LEX-C213-TRIP213-05"
+    ]
+  }
+}

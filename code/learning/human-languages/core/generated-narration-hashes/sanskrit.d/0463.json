@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:607ef554f30a06b4",
+  "lessonIds": [
+    "SA-C463-bhisayate",
+    "SA-C463-vihvalah",
+    "SA-C463-bhiruh",
+    "SA-C463-trasyati",
+    "SA-C463-pragalbhah",
+    "SA-R463-review-456-463"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch463.txt",
+  "json": "sanskrit/narration/ch463.json",
+  "textHash": "fnv1a64:78d622050f4cf125",
+  "jsonHash": "fnv1a64:b0400009462069a2",
+  "findings": []
+}

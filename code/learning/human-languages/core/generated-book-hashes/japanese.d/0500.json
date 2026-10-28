@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:694786cb9c6aba65",
+  "lessonIds": [
+    "JA-C500-omocha",
+    "JA-C500-nawatobi",
+    "JA-C500-kakekko",
+    "JA-C500-nazonazo",
+    "JA-C500-suberidai"
+  ],
+  "tex": "japanese/book/chapters/ch500-toys-and-games.tex"
+}

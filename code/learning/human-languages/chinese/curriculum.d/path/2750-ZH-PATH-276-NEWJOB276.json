@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-276-NEWJOB276",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "ZH-EXT-276-NEWJOB276"
+  ],
+  "after": []
+}

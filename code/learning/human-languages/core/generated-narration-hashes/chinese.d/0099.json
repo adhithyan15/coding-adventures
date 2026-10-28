@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:f968fd26e7ad6379",
+  "lessonIds": [
+    "ZH-C99-xi",
+    "ZH-W99-xi-wash",
+    "ZH-C99-shuaya",
+    "ZH-C99-xilian",
+    "ZH-C99-xizao",
+    "ZH-C99-shutou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch99.txt",
+  "json": "chinese/narration/ch99.json",
+  "textHash": "fnv1a64:b4cf432a03c3ff35",
+  "jsonHash": "fnv1a64:9aa5d87f5c442b57",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C231-hushi",
+    "language": "chinese",
+    "chapter": 231,
+    "sequence": 17700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3332bfee8f24ba6c"
+  },
+  "findings": []
+}

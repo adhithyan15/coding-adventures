@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:207e47de232af48c",
+  "lessonIds": [
+    "JA-C473-nikomu",
+    "JA-C473-tokasu",
+    "JA-C473-kogasu",
+    "JA-C473-fukuramu",
+    "JA-C473-samasu",
+    "JA-R473-review-468-473"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch473.txt",
+  "json": "japanese/narration/ch473.json",
+  "textHash": "fnv1a64:04b3cbdf9181140b",
+  "jsonHash": "fnv1a64:3c80f8efc6e4724c",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:1eb34db84ca73673",
+  "lessonIds": [
+    "ZH-C111-qianbian",
+    "ZH-W111-bian",
+    "ZH-C111-houbian",
+    "ZH-C111-fujin",
+    "ZH-C111-lukou",
+    "ZH-C111-guai"
+  ],
+  "tex": "chinese/book/chapters/ch111-in-front-and-behind.tex"
+}

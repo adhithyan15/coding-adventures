@@ -3,7 +3,7 @@
   "automation_id": "package-parity-pr-loop",
   "started": "2026-07-29",
   "policy": {
-    "maximum_active_parity_prs": 1,
+    "maximum_active_parity_prs": 3,
     "merge_authority": "auto-merge-after-required-checks",
     "reprioritize_after_every_merge": true,
     "ocaml_denominator_status": "emerging-until-promotion-gates-pass",
@@ -16,12 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": 18174,
+  "active_pr": 18367,
+  "active_prs": [
+    18367,
+    18503
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-25T17:31:12.319405+00:00",
-    "pr_number": 18174,
-    "head_before_recovery": "3007c3fa8cae9bd4738afd2ab2e342e913b422e1",
-    "action": "Recover one existing CommonMark foundation PR after verified external18147merge; rebase source preserved and minimal observed CI toolchain repair. Private full-parity journal/audit checkpoint maintained separately.",
+    "observed_at": "2026-10-28T07:21:45Z",
+    "pr_number": 18355,
+    "head_revision": "dac7bcee4255e286754d39a1e5bc33cb51430b19",
+    "action": "Verified Kotlin micro-qr PR #18355 merged through guarded squash auto-merge as 36178b3a0d81054cbaf4424b81aec7792f0bcfb0 and that exact receipt is current origin/main. Reprioritized the now-unblocked prepared Bezier successors and selected the three-lane TypeScript/Elixir/Lua tranche for current-main reconciliation while Swift and Go/Rust replacement CI runs.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -14201,12 +14205,23 @@
     {
       "id": "swift-hash-functions-lane-parity",
       "title": "Implement the portable hash-functions package in Swift",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "hash-functions-dt17-vector-and-documentation-correction"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-swift-hash-functions-20261025",
+      "pr_number": 18312,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18312",
+      "pr_opened_at": "2026-10-26T06:59:52Z",
+      "publication_head": "b804a122612f4ae64d967efbff454af771bf6130",
+      "publication_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. GitHub reported the independently reviewed head conflict-free, and guarded squash merge completed without bypassing review or checks.",
+      "merged_head_revision": "b804a122612f4ae64d967efbff454af771bf6130",
+      "merged_at": "2026-10-26T11:52:29Z",
+      "merge_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
+      "merge_notes": "The merge receipt is an ancestor of current origin/main. The exact clean completed worktree and local branch were removed after receipt verification.",
+      "selection_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
+      "reconciled_main_revision": "263e05f201003afd0395e82e6b810fe25a1260b4",
+      "validation_notes": "The rebased Swift 6.3.1 front passed eight tests, all 64 upstream SipHash-2-4 vectors, release compilation, package-manifest evaluation, empty-capability validation, exact one-package planner selection, lesson validation, hosted Windows/macOS/Ubuntu builds, metadata contracts, Swift CodeQL, Human Languages, and final CI gate at exact head b804a122612f4ae64d967efbff454af771bf6130.",
       "notes": "First exact Swift high-consensus child materialized by the post-#14615 lane audit. Implement the existing deterministic hash-functions contract with package-native tests, empty capabilities, and no host authority. This dependency-shaped root unlocks the explicit Swift bloom-filter, hash-map, hash-set, and HyperLogLog children. The store engine remains separately gated on hash-map, hash-set, HyperLogLog, skip-list, protocol IR, and the neutral injected-clock contract. The remaining non-CT Swift high-consensus gaps stay owned by the selection-blocked classifier until decomposed into exact children.",
       "validation_plan": "swift-hash-foundation-native-validation-preparation.md: fourDT17 core families, explicit polynomial compatibility decision, upstream64 SipHash vectors, deterministic caller samples instead of OS randomness, native RED/full SwiftPM/Sources coverage/truthful fronts; actual SDK/link/native execution still unqualified despite resolved tool paths. Three direct pure leaves; no absent downstream execution claim.",
       "postmerge_preparation_evidence": [
@@ -16406,10 +16421,30 @@
     {
       "id": "kotlin-micro-qr-build-front-and-gradle-metadata-coverage",
       "title": "Restore Kotlin micro-qr Gradle metadata and build-front coverage",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-kotlin-micro-qr-build-front-20261026",
+      "pr_number": 18355,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18355",
+      "pr_opened_at": "2026-10-26T13:52:05Z",
+      "publication_head": "dac7bcee4255e286754d39a1e5bc33cb51430b19",
+      "publication_notes": "PR #18355 merged through guarded squash auto-merge from exact independently reviewed reconciliation head dac7bcee4255e286754d39a1e5bc33cb51430b19 after every replacement hosted check completed acceptably.",
+      "merged_head_revision": "dac7bcee4255e286754d39a1e5bc33cb51430b19",
+      "merged_at": "2026-10-28T07:21:45Z",
+      "merge_revision": "36178b3a0d81054cbaf4424b81aec7792f0bcfb0",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, and the exact receipt is current origin/main.",
+      "selected_at": "2026-10-26T12:35:04Z",
+      "base_revision": "9dce8120cfc6ed37c205d7a03f35de40b509260a",
+      "implementation_revision": "28a9c35b08fe59795913b3076e47b422df3de6d6",
+      "public_dependency_fix_revision": "dbf2b2f4c1b6255b5bdbcdef64e3aca7468f09cb",
+      "reconciled_main_revision": "cee485ce0a48464b35619f156ff7674b7c72ad58",
+      "package_paths": [
+        "code/packages/kotlin/micro-qr"
+      ],
+      "selection_notes": "Selected after verified guarded merge of PR #18312 opened a publication slot. This bounded build-front and Gradle-metadata repair restores an existing 123-test Kotlin package to repository discovery and scheduling and proves its public transitive ModuleGrid API from an external Gradle consumer, so it ranks ahead of the capability-only Swift PaintVmAscii repair. Prepared Bezier successors remain blocked on live selector dependency PR #18293. The only live parity PRs are #18293 and #18324; neither overlaps this Kotlin production/package root. PR #18324 also removes its own distinct code/BUILD-EXEMPTIONS line, so later append-only reconciliation must preserve both removals plus both owners' state/roadmap receipts.",
+      "reconciliation_notes": "Rebased the two local implementation commits conflict-free onto exact origin/main 9dce8120cfc6ed37c205d7a03f35de40b509260a. Preserved main's intervening package, roadmap, and lifecycle history; repaired the inherited duplicate merged_at key on the CommonMark fixture owner without changing its value; reconciled live PRs to {18293, 18324}; and recorded the verified #18312 final head, merge timestamp, merge commit, and acceptable terminal checks.",
+      "merge_reconciliation_notes": "Preserved published history through normal merges of main, most recently exact origin/main cee485ce0a48464b35619f156ff7674b7c72ad58 after .NET Bezier PR #18293 merged from exact reviewed head c7b1e98687d3c762a98a9beed61ad71f586ca484 at 2026-10-26T23:13:55Z as 960397b253474e002be8805103f1f0bca6d82e6c. Preserved the complete Python and .NET merge receipts, the Kotlin selection and publication history, and both distinct BUILD-exemption removals. The live parity set is now {18355, 18367}; both published branches require independent conflict reconciliation, fresh exact-head review, and replacement hosted checks.",
+      "validation_notes": "A clean package BUILD under Gradle 9.4.1 and JDK 25/JVM target 21 passes all 123 existing tests with zero failures, errors, or skips. A temporary external Gradle consumer depending only on com.codingadventures:micro-qr compiles while importing the public com.codingadventures.barcode2d.ModuleGrid return type, proving barcode-2d is correctly exposed as an api dependency; gf256 remains an implementation dependency. The production Go planner discovers 20 sparse-worktree packages, selects exactly one changed package and the four-package Kotlin closure {barcode-2d, gf256, micro-qr, paint-instructions}, reports only the Kotlin toolchain and no special suites, and executes exactly those four BUILD fronts successfully from the emitted plan. Go vet and build pass; the full Go test inventory is intentionally not a sparse-worktree gate because its cross-language source-reference tests require absent native roots and PowerShell. Capability schema validation passes for the empty authority declaration. The root changelog shard has the required level-3 heading, canonical 60-character slug, and exact SHA-256 heading digest 0ceccd50. lessons.py validates 1,587 unique shards with zero problems. Strict duplicate-key JSON parsing, 1,547 unique owners, dependency completeness, acyclicity, zero merged-to-unfinished edges, exactly one in-progress owner, exactly two pr-open owners {18293, 18324}, and diff hygiene pass. No encoder production source changed.",
       "notes": "Discovered by the post-PR #16133 structural package-root audit. `code/packages/kotlin/micro-qr` has production and test sources plus package documentation but no Gradle package metadata and no BUILD front, so established-lane discovery cannot schedule or validate it. Add lane-consistent Gradle metadata, fail-closed cross-platform BUILD fronts, execution of the existing test suite, capability metadata, and documentation without widening the portable Micro QR contract."
     },
     {
@@ -16506,10 +16541,28 @@
     {
       "id": "python-gradient-descent-build-front-coverage",
       "title": "Add tested BUILD fronts for Python gradient-descent",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-python-gradient-descent-front-20261025",
+      "pr_number": 18324,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18324",
+      "pr_opened_at": "2026-10-26T09:06:48Z",
+      "publication_head": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "publication_notes": "Draft PR #18324 opened from exact independently reviewed implementation head 773fb4cafe0033da22128682b3b14ae19a6cb4d2. After the Swift hash-functions main advance, current main was merged into the published Python branch without rewriting history; integrity-only head d34af356d621175dd8cc307d953ecb7a99d1b79a passed independent review and every hosted check before guarded squash merge.",
+      "merged_head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "merged_at": "2026-10-26T15:37:25Z",
+      "merge_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. GitHub reported the reviewed head conflict-free, and guarded squash auto-merge completed without a manual merge command. The merge receipt is present on current origin/main.",
+      "selection_revision": "27dc687739ac74e8f5bbab70916a03d62a609743",
+      "selection_notes": "Selected after the local Swift hash-functions tranche reached an exact-head independent PASS while the hosted parity queue remained full. Among dependency-ready portable owners, this bounded Python front ranks ahead of the Swift paint-vm-ascii capability-only repair because it removes one exact orphan exemption and unblocks two recorded descendants without changing SGD behavior. Scope is limited to truthful Unix and Windows BUILD fronts, production-only coverage, Ruff, existing ML02 behavior tests, publishable metadata, package documentation, and removal of the exact gradient-descent exemption. No training loop, randomness, convergence guarantee, model API, native runtime, or new host authority is introduced.",
+      "reconciled_main_revision": "0be03745d775ffa9ee8c66ffda1700baa76ba58f",
+      "queue_notes": "Rebased onto current origin/main after guarded auto-merge of Haskell Starlark provider PR #18183 freed one hosted slot. Fresh prioritization keeps this reviewed Python front ahead of the prepared Swift PaintVmAscii and Kotlin micro-qr metadata repairs because it retires an exact orphan exemption and unblocks two recorded descendants. The Bezier successors remain publication-blocked on PR #18293.",
+      "validation_notes": "Fresh post-rebase native validation uses Python 3.12.13 and passes Ruff lint, Ruff format checking, all 11 focused optimizer tests, and the production-only 95% coverage gate at 100% lines. Two consecutive clean source and wheel builds succeed while an intentionally hostile in-package validation environment points through an absolute Python symlink; the resulting source archive excludes every .venv variant, cache, coverage file, bytecode directory, and dist recursion. The empty required-capabilities declaration validates against the repository schema, and the exact gradient-descent exemption is absent. The root changelog filename digest matches its full heading. A real Go diff plan evaluates 12 Starlark BUILD files, discovers five Python packages, and selects only python/gradient-descent. All 1,576 lesson shards validate. The 1,547-owner state is JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges; only this local owner is in progress and exactly the three published owners are pr-open.",
+      "prepublication_revalidation_notes": "After rebasing onto 263e05f201003afd0395e82e6b810fe25a1260b4, Python 3.12.13 again passes Ruff, formatting, all 11 tests, and 100% production-line coverage. Two clean builds with an absolute-symlink .venv-review-absolute again exclude all validation environments, caches, coverage, bytecode, and dist recursion from the sdist. The capability schema, exact exemption removal, and root changelog digest pass. The real Go planner again selects only python/gradient-descent from five discovered Python packages. All 1,583 lesson shards validate. The 1,547-owner graph remains unique, dependency-complete, acyclic, and free of merged-to-unfinished edges with exactly this owner in_progress and the two remaining hosted owners pr-open.",
+      "merged_head_revision": "d34af356d621175dd8cc307d953ecb7a99d1b79a",
+      "merged_at": "2026-10-26T15:37:25Z",
+      "merge_revision": "1bb58a0d7ed8d818d622e69890234d96b6e26b3a",
+      "merge_notes": "Every final-head check reached an acceptable terminal conclusion. GitHub reported the reviewed head conflict-free, guarded squash merge completed without bypassing review or checks, and the exact receipt is current origin/main.",
       "notes": "Add an independent cross-platform front, run the existing optimizer suite and coverage/lint checks, and reconcile package documentation and metadata without changing the SGD API.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/python-gradient-descent-build-front-coverage"
@@ -20698,13 +20751,23 @@
     {
       "id": "geometry-bezier2d-flattening-csharp-fsharp",
       "title": "Consume safe Bezier flattening contract in C# and F#",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "geometry-bezier2d-flattening-termination-contract"
       ],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner."
+      "branch": "codex/parity-bezier-dotnet-flattening-20261025",
+      "pr_number": 18293,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18293",
+      "pr_opened_at": "2026-10-26T04:49:54Z",
+      "publication_head": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
+      "merged_head_revision": "c7b1e98687d3c762a98a9beed61ad71f586ca484",
+      "merged_at": "2026-10-26T23:13:55Z",
+      "merge_revision": "960397b253474e002be8805103f1f0bca6d82e6c",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. Guarded squash auto-merge completed without a manual merge command, and the merge receipt is an ancestor of current origin/main.",
+      "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner.",
+      "selection_notes": "Selected after the WasmOpcodes and C# document-AST build-quality tranches completed local preparation behind the occupied three-PR publication ceiling. The merged G2D02 termination contract is its only dependency. This two-lane tranche has higher parity leverage than another single build-front repair and no implementation overlap with active TypeScript GFM, CommonMark fixture, Haskell Starlark-provider, or the two prepared .NET branches. Preserve each public ToPolyline signature while replacing midpoint recursion with dynamic nine-case fixture adoption, finite-segment bounds, finite-input checks, deterministic 32-depth/65,535-split failure, 95% production line gates, and dependent Arc2D regression runs.",
+      "validation_notes": "Clean BUILD runs execute 12 tests in each lane after independent review exposed and repaired a subnormal-distance underflow. Scaled norm and projection arithmetic makes the new Double.Epsilon regression fail closed; the production-only reports measure C# at 100% line, 96.96% branch and 100% method coverage and F# at 99.39% line, 90.9% branch and 100% method coverage. Earlier one-test selections reported 35.13% C# and 34.89% F# line coverage and exited 1 against the 95% floor, proving fail-closed enforcement. The dependent C# and F# Arc2D suites pass 10 tests each at 97.01% and 98.83% line coverage respectively. Direct and transitive NuGet vulnerability audits report none. Focused G2D02 exact-selection and atomic-plan tests plus Go vet pass. Strict state parsing, lesson validation, JSON, and diff hygiene pass. The branch preserves published history by normally merging exact main 0be03745d775ffa9ee8c66ffda1700baa76ba58f and then exact current main 1bb58a0d7ed8d818d622e69890234d96b6e26b3a; the shared lifecycle and append-only roadmap conflicts retain both owners' receipts, including Python PR #18324's verified merge. Fresh exact-merge-head validation, independent review, and hosted CI remain publication gates.",
+      "publication_notes": "PR #18293 merged through guarded squash auto-merge from exact independently reviewed head c7b1e98687d3c762a98a9beed61ad71f586ca484 after every replacement hosted check completed acceptably. The exact merge receipt 960397b253474e002be8805103f1f0bca6d82e6c is present on current origin/main."
     },
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl",
@@ -20750,8 +20813,10 @@
       "pr_number": null,
       "notes": "Remaining runtime API slice. All three use midpoint flatness and unbounded recursion. Consume nine neutral cases, validate finite inputs, enforce finite-segment control bound and atomic budget error, and run Bezier2D/Arc2D package regressions.",
       "selection_notes": "Selected after local preparation completed for the C#/F# and Python/Ruby/Perl tranches while the three-PR publication ceiling remained occupied. Its sole dependency, the G2D02 termination contract, is merged. It advances three non-Rust lanes and therefore ranks ahead of the two-lane Haskell/Swift and Go/Rust successors; its package sources are disjoint from all active and prepared work. Carry the independently discovered subnormal-distance regression into all three implementations, preserve their public runtime API shapes, and defer shared Go selector edits to the prepared C#/F# owner.",
-      "reconciled_main_revision": "20ba82cbe644174616d85b05a314c8395772ad8f",
+      "reconciled_main_revision": "36178b3a0d81054cbaf4424b81aec7792f0bcfb0",
+      "current_reconciliation_notes": "After .NET Bezier PR #18293 and Kotlin micro-qr PR #18355 merged, exact current origin/main 36178b3a0d81054cbaf4424b81aec7792f0bcfb0 was merged into the still-unpublished prepared branch without rewriting its local implementation history. The live parity set is {18367, 18503}; the open third slot is reserved for this three-lane tranche only after refreshed native validation and exact-head review.",
       "implementation_revision": "792f5adc46ded181068622a1005536be78b2d23d",
+      "post_kotlin_merge_validation_notes": "After normally merging exact origin/main 36178b3a0d81054cbaf4424b81aec7792f0bcfb0, TypeScript Bezier2D passes all 36 tests at 100% production line and function coverage, Elixir Bezier2D passes all 16 tests, and Lua Bezier2D passes all 24 tests. The downstream TypeScript Arc2D front completes successfully, Elixir Arc2D passes all 9 tests, and Lua Arc2D passes all 9 tests. The production package delta is unchanged from the previously reviewed prepared head; final exact merge-head review remains required before publication.",
       "validation_notes": "All three native Bezier2D builds pass the dynamic nine-case corpus plus invalid-tolerance, derived-overflow, deterministic budget, and subnormal-underflow regressions. TypeScript passes 36 tests at 100% production line and function coverage with 90.74% branch coverage; a focused two-test selection measures 13.53% lines and exits 1 against the raised 95% floor. Elixir passes 16 tests, including the formatter-clean new fixture reader, and the changed production file compiles without warnings. Lua passes 24 tests after both build fronts pin test-only dkjson 2.8-2; luac accepts all changed source and tests. Repository-runner execution of TypeScript Arc2D previously passed 32 tests at 100% line and 95.23% branch coverage, and the Elixir and Lua Arc2D fronts pass nine tests each. Independent review confirmed that the build tool starts every BUILD line from the package directory, so successive dependency-install lines do not leak their working directories and no separate Arc2D repair exists. The TypeScript production audit reports zero vulnerabilities. Strict state parsing finds 1,547 unique and dependency-complete items, and 1,568 canonical lesson shards validate with zero problems. The branch is reconciled over the unrelated Mermaid receipt at exact main 20ba82cbe644174616d85b05a314c8395772ad8f. TypeScript, Elixir, and Lua Bezier2D plus Elixir and Lua Arc2D pass again afterward; the TypeScript Arc2D rerun reached its unchanged npm install front but hit the known repository-wide npm Arborist edgesOut transient, not a package or working-directory failure. Shared fixture-selector integration after the prepared C#/F# owner lands, a clean TypeScript Arc2D rerun, hosted platforms, and independent exact-head review remain publication gates."
     },
     {
@@ -22963,22 +23028,158 @@
     {
       "id": "starlark-compiler-haskell-opcode-provider-parity",
       "title": "Implement the pure Starlark opcode provider in haskell",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [
         "starlark-compiler-opcode-provider-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-haskell-starlark-opcodes-20261024",
+      "pr_number": 18183,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18183",
+      "pr_opened_at": "2026-10-25T00:34:48Z",
+      "publication_head": "17c40bca2a27f31ee1366bf123ab01978618c6fd",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T17:07:01.729291-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
       "notes": "One missing actual starlark-compiler provider package with complete public enum/byte/operator/map APIs and dynamic shared-corpus reader. Independent pure tables need no generic AST compiler/VM/frontend package. Match qualified provider profile, unknown/domain errors and fresh map ownership with actual native test/build/coverage receipts. Empty authority metadata must be valid, not guessed from presence. Existing AST compiler or VM root does not provide this distinct package; no runtime or host activation.",
+      "publication_notes": "Every exact-head check reached a terminal acceptable conclusion with zero failures. GitHub reported the independently reviewed head conflict-free, guarded squash auto-merge was enabled, and PR #18183 merged automatically without a manual merge command.",
+      "merged_head_revision": "17c40bca2a27f31ee1366bf123ab01978618c6fd",
+      "merged_at": "2026-10-26T08:35:36Z",
+      "merge_revision": "ab25faef874fdc7788b37eabc19b87b7c1c79835",
+      "merge_notes": "The merge receipt is an ancestor of current origin/main. The exact clean completed worktree and local branch were removed after receipt verification.",
       "classification_notes": "starlark-compiler-provider-classification-audit.md: exact/canonical/full-scope review against1361 pre-registration owners found no duplicate. Actual provider is inert opcode/operator data, distinct from AST emission, generic compiler framework and VM/runtime activation. Structural roots are not native qualification.",
       "validation_plan": "starlark-compiler-provider-classification-audit.md: versioned reviewed profile first; independent literal61opcode/34operator table, all256decode classifications, unknown/type/domain failures, byte/name/category constraints and fresh-map ownership; schema/data corruption tests without importing provider as oracle. Native lane production API corpus readers, package/downstream/actual BUILD fronts, measured production coverage/lint/build/capability/parity/security/diff on final source. Nothing executed by this audit.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/starlark-compiler-haskell-opcode-provider-parity"
       ],
-      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited.",
+      "historical_pre_recovery_delivery": {
+        "id": "starlark-compiler-haskell-opcode-provider-parity",
+        "title": "Implement the pure Starlark opcode provider in haskell",
+        "status": "pr-open",
+        "depends_on": [
+          "starlark-compiler-opcode-provider-neutral-conformance"
+        ],
+        "branch": "codex/parity-haskell-starlark-opcodes-20261024",
+        "pr_number": 18183,
+        "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18183",
+        "opened_at": "2026-10-25T00:34:48Z",
+        "publication_head": "7ce76c946ee9e163a8cc00f5d9f62351a83c9f6e",
+        "publication_notes": "Draft PR #18183 opened from the independently reviewed exact head over current main 2a2b36cd29. GitHub reports the branch mergeable. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, mark the PR ready and babysit exact-head CI. Guarded auto-merge remains disabled until every exact-head check is terminal acceptable and the head remains conflict-free.",
+        "delivery_class": "portable",
+        "selection_blocked": false,
+        "started_at": "2026-10-24T20:32:24Z",
+        "base_revision": "e9ea4be4fbdf1379918f401f6e9498f1563d04aa",
+        "reconciliation_revision": "78a3e07fd49eb916824c627c51fbf267c7736dd3",
+        "reconciled_main_revision": "2a2b36cd29974a2849ca4c75732281784961ea62",
+        "validation_revision": "78a3e07fd49eb916824c627c51fbf267c7736dd3",
+        "discovered_at": "2026-10-12T17:07:01.729291-07:00",
+        "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
+        "notes": "One missing actual starlark-compiler provider package with complete public enum/byte/operator/map APIs and dynamic shared-corpus reader. Independent pure tables need no generic AST compiler/VM/frontend package. Match qualified provider profile, unknown/domain errors and fresh map ownership with actual native test/build/coverage receipts. Empty authority metadata must be valid, not guessed from presence. Existing AST compiler or VM root does not provide this distinct package; no runtime or host activation.",
+        "selection_notes": "Selected first as a local-only independent tranche while three parity PR slots were occupied. After F# PR #18154 merged, reprioritization assigns its freed slot to this already-complete provider: the STP01 neutral prerequisite is merged, the Haskell package root is actually absent, and the scope is a pure inert table provider with no compiler, VM, host, or authority activation. It does not depend on or overlap open TypeScript PR #18147 or CommonMark foundation PR #18174. Swift remains blocked on #18147, and CommonMark reader migrations remain blocked on #18174.",
+        "classification_notes": "starlark-compiler-provider-classification-audit.md: exact/canonical/full-scope review against1361 pre-registration owners found no duplicate. Actual provider is inert opcode/operator data, distinct from AST emission, generic compiler framework and VM/runtime activation. Structural roots are not native qualification.",
+        "validation_plan": "starlark-compiler-provider-classification-audit.md: versioned reviewed profile first; independent literal61opcode/34operator table, all256decode classifications, unknown/type/domain failures, byte/name/category constraints and fresh-map ownership; schema/data corruption tests without importing provider as oracle. Native lane production API corpus readers, package/downstream/actual BUILD fronts, measured production coverage/lint/build/capability/parity/security/diff on final source. Nothing executed by this audit.",
+        "local_validation": {
+          "source_head": "78a3e07fd49eb916824c627c51fbf267c7736dd3",
+          "observed_at": "2026-10-25T00:32:58Z",
+          "scope": "Haskell STP01 provider publication candidate reconciled through current main 2a2b36cd29. The final intervening Closure Compiler fix changed no BUILD file, package root, Haskell, STP01, routing, state, roadmap or Haskell-tranche changelog path; focused native, Go routing/vet/build, lesson, JSON and diff validation pass after integration. The complete-checkout planner receipt remains current at 5,365 packages because the main delta adds no package root. Exact-head independent delta review and hosted CI remain required.",
+          "native_package": {
+            "tests": "10 examples, zero failures",
+            "corpus_records": 359,
+            "decode_records": 256,
+            "decode_holes": 195,
+            "coverage_expressions": "447/447 (100%)",
+            "coverage_alternatives": "61/61 (100%)",
+            "coverage_top_level_definitions": "17/39 (43%; not used as the expression-coverage gate)",
+            "cabal_check": "PASS",
+            "actual_BUILD": "PASS"
+          },
+          "build_tool": {
+            "focused_STP01_tests": "PASS for ten repeated runs across exact/all/single-language/lookalike/missing-consumer/atomic-plan cases",
+            "deterministic_affected_packages": "PASS; sorted at the map-to-list boundary across all platform overrides",
+            "full_suite": "PASS from a temporarily complete checkout: evaluated 86 Starlark BUILD files, discovered 5,365 packages, selected 14 affected/prerequisite/dependent packages as WOULD-BUILD, skipped 5,351, and kept both orphan gates clean with 38 reviewed pending exemptions."
+          },
+          "checks": {
+            "lessons": "1496 shards, zero problems",
+            "diff_check": "PASS",
+            "required_capability_manifest": "Valid JSON with an explicit empty production capability set; repository jsonschema gate deferred because jsonschema is unavailable in the local interpreter"
+          }
+        },
+        "discovered_work_notes": "The second STP01 fixture consumer exposed nondeterministic affected-package arrays copied directly from Go map iteration. Fixed in this tranche by sorting at the nil-preserving set-to-list boundary; added repeated exact-order and per-platform regression coverage plus a durable lesson shard.",
+        "postmerge_preparation_evidence": [
+          "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/starlark-compiler-haskell-opcode-provider-parity"
+        ],
+        "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
+      },
+      "recovery_original_head": "231de32b81482caebbdf484387263d86b13b2602",
+      "recovery_base": "9000beddee61a136cf5c0c6c5787f81d3d717834",
+      "recovery_note": "Sole serial recovery after externally verified18174merge. Original delivery fields remain historical. ExactGHC9.4.8/Cabal3.10.3.0 globalcoverage failure reproduced; package-scoped coverage repair passesnative13tests/all359records and productionHPC447/447expressions61/61alternatives. Source review80a01PASS; finaldocsdelta and freshhostedCI required.",
+      "lifecycle_events": [
+        {
+          "from": "pending",
+          "to": "in-progress",
+          "observed_at": "2026-10-25T19:27:52.636432+00:00",
+          "kind": "resume-existing-pr-serial-recovery",
+          "pr_number": 18183,
+          "head": "231de32b81482caebbdf484387263d86b13b2602"
+        },
+        {
+          "from": "in-progress",
+          "to": "pr-open",
+          "observed_at": "2026-10-25T19:27:52.636432+00:00",
+          "kind": "resume-existing-pr-serial-recovery",
+          "pr_number": 18183,
+          "head": "231de32b81482caebbdf484387263d86b13b2602"
+        }
+      ],
+      "recovery_validation": {
+        "status": "local-validation-pass-hosted-CI-required",
+        "toolchain": {
+          "ghc": "9.4.8",
+          "cabal": "3.10.3.0",
+          "host": "Windows amd64"
+        },
+        "native_examples": 13,
+        "corpus_records": 359,
+        "production_hpc": {
+          "expressions": "447/447",
+          "alternatives": "61/61",
+          "top_level_declarations": "17/39"
+        },
+        "cabal_check": "PASS",
+        "warning_as_error_build": "PASS",
+        "actual_BUILD": "PASS through verified short root junction using exact Cabal3.10.3.0, no modified arguments or wrapper",
+        "Windows_CI_front": "explicit skip, not native qualification",
+        "production_source": "unchanged from original231de32",
+        "recovery": "package-scoped coverageTrue; dependency ranges unchanged, no vector/attoparsec caps",
+        "limits": "Oversized-file IO rejection branch not executed by in-memory oversized transport witness. Historical local validation remains separately labeled.",
+        "go_build_tool": {
+          "packages": 15,
+          "coverage_total_percent": 84.6,
+          "main_package_percent": 62.8,
+          "vet_and_build": "PASS",
+          "real_powershell_no_skip": true,
+          "starlark_build_files": 45,
+          "packages_discovered": 5389,
+          "affected_closure": 14,
+          "pending_exemptions": 37
+        },
+        "go_provider_coverage_percent": 99.0,
+        "python_checks": {
+          "ci_registry": 19,
+          "haskell_capabilities": 6,
+          "parity_reporter": 10
+        },
+        "lesson_shards": 1573,
+        "final_structural_parity": {
+          "identities": 1562,
+          "slots": 4850,
+          "lanes": 15,
+          "collisions": 0,
+          "unknown_buckets": 0,
+          "ocaml_emerging": 5
+        },
+        "receipt": "code/packages/haskell/starlark-compiler/VALIDATION.md"
+      }
     },
     {
       "id": "starlark-compiler-java-opcode-provider-parity",
@@ -25707,12 +25908,21 @@
     {
       "id": "dotnet-wasm-opcodes-build-coverage-enforcement",
       "title": "Wire and prove C# and F# WasmOpcodes BUILD coverage gates",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [],
       "delivery_class": "portable",
       "selection_blocked": false,
       "scope": "Repair only repository-declared coverage instrumentation/report/threshold enforcement for the existing C# and F# wasm-opcodes packages and their Unix/Windows BUILD fronts. Wire a real reviewed MSBuild coverage provider or an explicitly selected collector plus independent fail-closed threshold evaluator; retain production-only reports and a negative threshold-enforcement witness. Preserve at least the declared80%line floor and enforce the governing library-quality target (currently95%) where applicable; do not lower thresholds or waive the governing target. No Wasm opcode/VM semantic expansion or all-.NET sweep.",
       "notes": "Both WasmOpcodes fronts pass CollectCoverage/Threshold/ThresholdType but no project/shared configuration wires the MSBuild coverage consumer. C# has no Coverlet package; F# has collector6.0.4 only and no --collect or runsettings selection/threshold evaluator. CtCompare already references CoverletMSBuild6.0.2; preserve its existing CT01 adoption owner. Static evidence only; no native failure or coverage percentage measured. Fresh main includes PR17830 artifact-output isolation via --artifacts-path; provider/report/threshold enforcement remains pending. Historical source pins in preparation are not a fresh native result.",
+      "branch": "codex/parity-dotnet-wasm-coverage-20261025",
+      "pr_number": 18260,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18260",
+      "selection_notes": "Selected as dependency-safe local preparation while three reviewed parity PRs consume the publication ceiling. The C# and F# WasmOpcodes packages already claim line thresholds in both platform fronts, but a clean C# baseline produces no coverage table because no MSBuild provider is wired. This bounded repair has no implementation overlap with the active TypeScript GFM, CommonMark fixture, or Haskell Starlark-provider tranches. Acceptance requires isolated clean artifacts, a production-assembly include filter, an actual coverage report, the governing 95% library threshold, and a deliberate incomplete-test failure witness on both languages and both platform command shapes; opcode behavior stays unchanged.",
+      "validation_notes": "A clean first run and warm repeat of each Unix BUILD front pass all seven native tests. Coverlet reports C# at 100% line, 75% branch and 100% method coverage and F# at 100% line, branch and method coverage, filtered to only the corresponding production assembly. Running only the version test under the same 95% line threshold returns exit 1 in both lanes with Coverlet's below-threshold error, proving fail-closed enforcement. Both test graphs report zero vulnerable direct or transitive NuGet packages. The complete Go build-tool suite passes with only its documented unavailable-pwsh generator round-trip excluded; vet and trimpath build pass. A real diff planner evaluates 86 Starlark BUILD files, discovers 5,367 packages, selects only the dotnet toolchain, propagates exactly 14 affected C#/F# WebAssembly packages from the two changed roots, and keeps both orphan gates clean with 38 reviewed exemptions. The 1,547-owner/2,616-edge state graph is unique, dependency-complete and acyclic with no merged-edge violations; 1,568 canonical lesson shards validate. The Windows fronts carry the same two-phase build/no-build instrumentation, isolated artifacts, production filter and 95% line threshold; hosted Windows execution remains a publication check. No opcode source or behavior changed.",
+      "merged_head_revision": "ae365a1cdcc7c98b7d575a07e91b04a577281924",
+      "merged_at": "2026-10-26T06:44:57Z",
+      "merge_revision": "fd5ee771aa2ae14e9bd639eba25e7b41baf8a4dc",
+      "merge_notes": "All exact-head checks reached terminal acceptable conclusions with zero failures. GitHub reported the reviewed head conflict-free; guarded squash auto-merge was enabled and PR #18260 merged without a manual merge command. The completed worktree was removed.",
       "report": "bf03-pending-dotnet-coverage-ownership-review.md",
       "registered_at": "2026-10-21T05:55:30.688172+00:00",
       "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
@@ -25948,7 +26158,7 @@
     {
       "id": "commonmark-language-neutral-fixture-foundation",
       "title": "Define the canonical CommonMark 0.31.2 conformance fixture",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-commonmark-fixture-20261024",
       "pr_number": 18174,
@@ -25967,8 +26177,12 @@
       "reader_inventory_correction_revision": "4ceb5fdd7fba42057f7cc2ccec1c3f710a57229c",
       "normative_inventory_correction_revision": "b1c6fcc21b4c66c788c6a1b8a08825e4e2438a52",
       "pr_opened_at": "2026-10-24T22:11:58Z",
-      "publication_head": "934910e860206fff8d8e0c5163d7e35321cadea1",
+      "publication_head": "c7ab39b38a363b1b5de267ee82a7e73317f6b96f",
       "publication_notes": "Draft PR #18174 was opened only to obtain the durable PR number after exact-head correctness, security, state-integrity, and CI-selection review passed. This lifecycle commit advances the owner from in-progress to pr-open; the PR remains draft until the receipt itself is pushed and independently reviewed.",
+      "merged_head_revision": "c7ab39b38a363b1b5de267ee82a7e73317f6b96f",
+      "merged_at": "2026-10-25T19:23:19Z",
+      "merge_revision": "bd533925647b7fbac74eba35e611a8ba3930757f",
+      "merge_notes": "GitHub reports PR #18174 merged from its exact final head as bd533925647b7fbac74eba35e611a8ba3930757f. Reader migrations and native adoption remain separate pending owners.",
       "validation_notes": "Merged current origin/main after PR #18143 freed a hosted slot, preserving the decomposed neutral-fixture owners, the C# merge receipt, and all post-#18118 audit owners. Independent review then found that the specs-and-scripts-only foundation selected no native package and was absent from the always-run hosted metadata checks. A RED workflow regression proved both commands were missing; the repair wires the direct validator and its dedicated falsification suite into the always-run Repo-wide metadata contracts step. Follow-up review rejected the initial substring-only self-test because commented commands or a conditional step could evade it; the commands now live in the existing external CI-registry guard, which scopes the unconditional contracts job and step, rejects shell control flow, and counts exact executable lines. Publication-time reader inventory then corrected the original identity-filtered count: all sixteen live CommonMark and GFM package readers across seven languages own byte-identical copies, and the normative TE01 profile and blocked migration aggregate name every one. After main advanced through merged F# renderer PR #18154 and unrelated Rust work, reconciliation at 67476ff501439127374c1c913438acecc7ebb6ed preserved that verified F# merge receipt, this CommonMark pr-open lifecycle, and the exact sixteen-reader census over main ed9fc44eaddd6f87d763073989a572702a78af4a. The dependency-free validator accepts all 652 official CommonMark 0.31.2 examples and 16 independently authored renderer vectors; 14 dedicated falsification tests and all 19 CI-registry tests pass. Ruff lint and focused format checks, compileall, strict changed-JSON validation, diff hygiene, and all 1,496 lesson shards pass. The complete Go build-tool suite passes except the explicitly isolated registry-generator round trip that requires unavailable PowerShell Core; with only that host-dependent test skipped, tests, vet, a temporary-output build, all 86 Starlark BUILD files, 5,364 discovered packages, orphan gates, and a real no-native-package dry plan pass. The 1,547-owner state graph is unique, dependency-complete, acyclic, and has no merged-to-unmerged edge. Fresh independent exact-head review remains the final publication gate.",
       "package_paths": [
         "code/specs/fixtures/commonmark-0.31.2"
@@ -25997,7 +26211,8 @@
       ],
       "recovery_source_revision": "23e5bd02f04f8da7b462630b939006af03c39eca",
       "recovery_validation_receipt": "code/specs/fixtures/commonmark-0.31.2/VALIDATION.md",
-      "recovery_notes": "Serially recover existing PR18174 after verified18147merge: reviewed net-tree rebase onto d6ce, Node/npm setup admission for Venture-only plans, exact source and real generatedReact/Electron validation. Historical three-PR selection and prior validation notes remain history; current operator ceiling is one. Native reader migration stays separate."
+      "recovery_notes": "Serially recover existing PR18174 after verified18147merge: reviewed net-tree rebase onto d6ce, Node/npm setup admission for Venture-only plans, exact source and real generatedReact/Electron validation. Historical three-PR selection and prior validation notes remain history; current operator ceiling is one. Native reader migration stays separate.",
+      "merge_commit": "bd533925647b7fbac74eba35e611a8ba3930757f"
     },
     {
       "id": "commonmark-language-neutral-reader-migrations",
@@ -26300,17 +26515,22 @@
     {
       "id": "csharp-document-ast-windows-build-repeatability",
       "title": "Make the existing C# document AST Windows build execute on repeated runs",
-      "status": "in_progress",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-csharp-document-ast-windows-20261025",
-      "pr_number": null,
+      "pr_number": 18259,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18259",
       "delivery_class": "portable-build-front",
       "package_paths": [
         "code/packages/csharp/document-ast"
       ],
       "notes": "Native validation of rendererPR18143 reproduced the existing document-ast BUILD_windows returning success with no output when .dotnet/.artifacts already exist, using a verified short PATH with dotnet9available. Its ungrouped if-not-exist setup captures the following command chain. Repair this existing package front separately and require real native tests/coverage on consecutive invocations. Four dependency tests passed directly; no repeat-front or measured dependency-coverage credit. New renderer BUILD_windows is repaired in18143; do not absorb unrelated package source here.",
       "selection_notes": "Selected after the independent dotnet WasmOpcodes coverage tranche completed local validation but remained behind the three-PR publication ceiling. This package is a C# Markdown prerequisite and has no implementation overlap with the active TypeScript GFM, CommonMark fixture, Haskell Starlark-provider, or prepared WasmOpcodes coverage branches. Fresh inspection also confirms that the test project has no Coverlet provider, so both existing CollectCoverage/Threshold properties are inert. The same bounded owner must group the Windows setup conditionals, wire production-only MSBuild coverage, enforce the 95% library line target, and prove clean plus warm execution without changing AST behavior.",
-      "validation_notes": "Activating the real provider first produced the expected RED: four passing tests covered only 56.25% of production lines and the 95% gate returned nonzero. Two focused public-API tests now exercise every remaining block and inline node family without changing production code. A clean run and immediate warm repeat each execute six tests and report 100% line, branch and method coverage for only CodingAdventures.DocumentAst. A one-test selection measures 14.58% line coverage and exits 1 with the below-threshold error, proving fail-closed enforcement. dotnet format reports no changes and the direct/transitive NuGet audit reports zero vulnerabilities. The grouped Windows command mirrors the same build/no-build instrumentation, filter and threshold; real hosted Windows execution remains the publication gate."
+      "validation_notes": "Activating the real provider first produced the expected RED: four passing tests covered only 56.25% of production lines and the 95% gate returned nonzero. Two focused public-API tests now exercise every remaining block and inline node family without changing production code. A clean run and immediate warm repeat each execute six tests and report 100% line, branch and method coverage for only CodingAdventures.DocumentAst. A one-test selection measures 14.58% line coverage and exits 1 with the below-threshold error, proving fail-closed enforcement. dotnet format reports no changes and the direct/transitive NuGet audit reports zero vulnerabilities. The grouped Windows command mirrors the same build/no-build instrumentation, filter and threshold; real hosted Windows execution remains the publication gate.",
+      "merged_head_revision": "9fe978f402d6ee29915d212fb9f33aec35045b24",
+      "merged_at": "2026-10-26T04:30:17Z",
+      "merge_revision": "bfc66cbaac24fea43af893c4a4a9cac5553ef115",
+      "merge_notes": "PR #18259 completed guarded squash auto-merge after its exact reviewed head passed the required checks and GitHub reported no merge conflict. This receipt closes the stale in-progress lifecycle entry."
     }
   ],
   "postmerge_refresh": {

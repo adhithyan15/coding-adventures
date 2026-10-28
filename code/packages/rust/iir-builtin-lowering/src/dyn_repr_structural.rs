@@ -67,7 +67,7 @@ const I31_MIN: i64 = -(1 << 30);
 /// not the scalar concretizer — owns it. Mirrors the `LISP_BUILTINS` list in
 /// `lang-aot::concretize_scalar_any_for_wasm` so the two passes partition the
 /// module's functions with no overlap or gap.
-const LISP_BUILTINS: &[&str] = &["pair?", "not", "equal?", "make_symbol", "make_nil", "null?"];
+const LISP_BUILTINS: &[&str] = &["pair?", "not", "equal?", "dyn_symbol", "dyn_nil", "null?"];
 
 /// The subset of [`LISP_BUILTINS`] whose **value** arguments are lisp values, so
 /// an integer atom flowing into one must be boxed as an `i31ref` (exactly as an
@@ -238,7 +238,7 @@ fn seeded_lisp_functions(module: &IIRModule, include_heap_bodies: bool) -> HashS
         // **nullary** tagged function — `((LAMBDA () (ATOM 7)))` has no params
         // to inspect, so its caller's `call` was not recognised as tagged and
         // the entry coerced the result with the static `dyn_unbox_int` (`>> 3`)
-        // instead of the runtime tag switch `dyn_to_exit_code`. `#t` is the
+        // instead of the run-time tag switch (`__lisp_exit_code` today). `#t` is the
         // whole word `0b101`, so `5 >> 3 = 0`: the program reported FALSE for a
         // true predicate, with no diagnostic. The declared return type is the
         // other half of the signature and says so.

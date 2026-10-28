@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C296-omairi",
+    "language": "japanese",
+    "chapter": 296,
+    "sequence": 17760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a77d4364a7c5370b"
+  },
+  "findings": []
+}

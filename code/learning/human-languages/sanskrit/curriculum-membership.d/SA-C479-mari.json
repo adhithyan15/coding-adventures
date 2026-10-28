@@ -1,0 +1,11 @@
+{
+  "id": "SA-C479-mari",
+  "pathSegment": "SA-PATH-479-VYADHI479",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-479-VYADHI479",
+      "order": 4
+    }
+  ]
+}

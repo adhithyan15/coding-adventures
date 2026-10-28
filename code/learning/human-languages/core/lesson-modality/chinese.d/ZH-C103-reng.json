@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C103-reng",
+    "language": "chinese",
+    "chapter": 103,
+    "sequence": 8220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffa784212eac1704"
+  },
+  "findings": []
+}

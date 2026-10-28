@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Born and Married",
+  "label": "ch:zh-born-and-married",
+  "canDo": "I can say a baby has been born, someone has married or finished school, and talk about a wedding and daily life.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ZH-C254-shenghuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say a baby has been born, someone has married or finished school, and talk about a wedding and daily life.",
+    "assesses": [
+      "ZH-LEX-C254-BORN254-03",
+      "ZH-LEX-C254-BORN254-04",
+      "ZH-LEX-C254-BORN254-05"
+    ]
+  }
+}

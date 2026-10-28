@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C306-sibiram",
+    "language": "sanskrit",
+    "chapter": 306,
+    "sequence": 18020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3c9d9d34bdf5915"
+  },
+  "findings": []
+}

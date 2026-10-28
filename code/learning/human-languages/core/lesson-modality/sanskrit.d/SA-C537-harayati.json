@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C537-harayati",
+    "language": "sanskrit",
+    "chapter": 537,
+    "sequence": 30800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2f2d8b139dfc30a"
+  },
+  "findings": []
+}

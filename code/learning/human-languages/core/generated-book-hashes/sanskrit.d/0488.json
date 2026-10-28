@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:e626be89720cef09",
+  "lessonIds": [
+    "SA-C488-pratibudhyate",
+    "SA-C488-tandra",
+    "SA-C488-prabodhayati",
+    "SA-C488-unnidrah",
+    "SA-C488-praharah"
+  ],
+  "tex": "sanskrit/book/chapters/ch488-sleep-and-waking.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:2dfb2ec9c24d9884",
+  "lessonIds": [
+    "JA-C330-chanto",
+    "JA-C330-shikkari",
+    "JA-C330-minarau",
+    "JA-C330-soroeru",
+    "JA-C330-aratameru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch330.txt",
+  "json": "japanese/narration/ch330.json",
+  "textHash": "fnv1a64:95662d9fee6207cb",
+  "jsonHash": "fnv1a64:f3c0436b73e4bcae",
+  "findings": []
+}

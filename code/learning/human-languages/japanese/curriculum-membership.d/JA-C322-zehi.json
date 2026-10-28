@@ -1,0 +1,11 @@
+{
+  "id": "JA-C322-zehi",
+  "pathSegment": "JA-PATH-322-SHOUCHI322",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-322-SHOUCHI322",
+      "order": 3
+    }
+  ]
+}

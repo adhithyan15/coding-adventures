@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Smell and Flavour",
+  "label": "ch:ja-smell-and-flavour",
+  "canDo": "I can describe how food smells and tastes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C495-assari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can describe how food smells and tastes.",
+    "assesses": [
+      "JA-LEX-C495-SMELL495-03",
+      "JA-LEX-C495-SMELL495-04",
+      "JA-LEX-C495-SMELL495-05"
+    ]
+  }
+}

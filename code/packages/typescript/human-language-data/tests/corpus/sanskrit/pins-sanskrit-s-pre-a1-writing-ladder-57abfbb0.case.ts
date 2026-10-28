@@ -46,6 +46,9 @@ it("pins Sanskrit's pre-A1 writing ladder", () => {
     ["SA-W65-kutra-controlled-question", "controlled-composition"],
     ["SA-W65-a1-timed-production", "timed-assessment-production"],
     ["SA-W258-a2-connected-composition", "connected-composition"],
+    // The B1 core's six-line task (chapter 285) is the track's second
+    // connected composition: a frame for every line and no model to copy.
+    ["SA-W285-six-lines", "connected-composition"],
   ]);
   expect(track.defects).toEqual([]);
   expect(track.levels[0]).toMatchObject({

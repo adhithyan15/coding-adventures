@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:e3291647bc52145a",
+  "lessonIds": [
+    "SA-C326-dipavalih",
+    "SA-C326-dipayati",
+    "SA-C326-mandayati",
+    "SA-C326-kautukam",
+    "SA-C326-sobha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch326.txt",
+  "json": "sanskrit/narration/ch326.json",
+  "textHash": "fnv1a64:c951a195489b47f3",
+  "jsonHash": "fnv1a64:50827266227acbe4",
+  "findings": []
+}

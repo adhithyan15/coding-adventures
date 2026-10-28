@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Healthy Habits",
+  "label": "ch:zh-healthy-habits",
+  "canDo": "I can talk about staying healthy, giving up smoking and drinking, breathing and having a check-up.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C239-tijian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can talk about staying healthy, giving up smoking and drinking, breathing and having a check-up.",
+    "assesses": [
+      "ZH-LEX-C239-HABIT239-03",
+      "ZH-LEX-C239-HABIT239-04",
+      "ZH-LEX-C239-HABIT239-05"
+    ]
+  }
+}

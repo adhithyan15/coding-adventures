@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C195-zhanghu",
+  "pathSegment": "ZH-PATH-195-BANK195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-195-BANK195",
+      "order": 4
+    }
+  ]
+}

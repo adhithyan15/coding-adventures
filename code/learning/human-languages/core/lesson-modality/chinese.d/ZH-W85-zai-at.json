@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W85-zai-at",
+    "language": "chinese",
+    "chapter": 85,
+    "sequence": 7010,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3321d000db8df91f",
+    "detachableSegments": [
+      "Script — the top of 有, a vertical, then 土"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C353-dansui",
+  "pathSegment": "JA-PATH-353-TENKEN353",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-353-TENKEN353",
+      "order": 3
+    }
+  ]
+}

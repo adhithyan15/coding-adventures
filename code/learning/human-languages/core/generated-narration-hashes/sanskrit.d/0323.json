@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:eced67c84ead67e4",
+  "lessonIds": [
+    "SA-C323-stupah",
+    "SA-C323-praciram",
+    "SA-C323-atitam",
+    "SA-C323-utkhanati",
+    "SA-C323-aviskaroti"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "sanskrit/narration/ch323.txt",
+  "json": "sanskrit/narration/ch323.json",
+  "textHash": "fnv1a64:3ee5435b975f4751",
+  "jsonHash": "fnv1a64:7b43306c423d3788",
+  "findings": []
+}

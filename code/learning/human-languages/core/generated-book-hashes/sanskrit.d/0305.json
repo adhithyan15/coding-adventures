@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:b3cf9740b52ddf9a",
+  "lessonIds": [
+    "SA-C305-uddharati",
+    "SA-C305-pranah",
+    "SA-C305-sahasam",
+    "SA-C305-avatarayati",
+    "SA-C305-trayate"
+  ],
+  "tex": "sanskrit/book/chapters/ch305-the-rescue.tex"
+}

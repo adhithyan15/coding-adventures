@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C218-ganzao",
+  "pathSegment": "ZH-PATH-218-WIND218",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-218-WIND218",
+      "order": 4
+    }
+  ]
+}

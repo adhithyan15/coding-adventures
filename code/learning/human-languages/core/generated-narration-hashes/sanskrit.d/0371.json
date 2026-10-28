@@ -1,0 +1,20 @@
+{
+  "language": "sanskrit",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:79df4f76da602c11",
+  "lessonIds": [
+    "SA-C371-vikalpah",
+    "SA-C371-pratyavartate",
+    "SA-C371-vilambate",
+    "SA-C371-avadhih",
+    "SA-C371-upakramate",
+    "SA-R371-review-364-371"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "sanskrit/narration/ch371.txt",
+  "json": "sanskrit/narration/ch371.json",
+  "textHash": "fnv1a64:d07e84031811d480",
+  "jsonHash": "fnv1a64:5f8da98013a4d349",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:2b58058dcceee1c2",
+  "lessonIds": [
+    "SA-C342-adharah",
+    "SA-C342-yuktih",
+    "SA-C342-arthat",
+    "SA-C342-phalatah",
+    "SA-C342-upapadayati"
+  ],
+  "tex": "sanskrit/book/chapters/ch342-on-what-grounds.tex"
+}

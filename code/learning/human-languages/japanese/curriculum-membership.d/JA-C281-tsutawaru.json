@@ -1,0 +1,11 @@
+{
+  "id": "JA-C281-tsutawaru",
+  "pathSegment": "JA-PATH-281-UWASA281",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-281-UWASA281",
+      "order": 1
+    }
+  ]
+}

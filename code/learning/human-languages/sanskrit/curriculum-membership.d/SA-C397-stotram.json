@@ -1,0 +1,11 @@
+{
+  "id": "SA-C397-stotram",
+  "pathSegment": "SA-PATH-397-DIPA397",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-397-DIPA397",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W132-qian-thousand",
+    "language": "chinese",
+    "chapter": 132,
+    "sequence": 10465,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7205ad2fb32222f4",
+    "detachableSegments": [
+      "Script — a short fall over 十"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

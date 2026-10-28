@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C466-geijutsu",
+    "language": "japanese",
+    "chapter": 466,
+    "sequence": 27100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4927f0780feebf3f"
+  },
+  "findings": []
+}

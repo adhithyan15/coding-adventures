@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Running a Business",
+  "label": "ch:ja-running-a-business",
+  "canDo": "I can talk about a shop and the people who work in it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "JA-C487-juugyouin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about a shop and the people who work in it.",
+    "assesses": [
+      "JA-LEX-C487-SHOP487-03",
+      "JA-LEX-C487-SHOP487-04",
+      "JA-LEX-C487-SHOP487-05"
+    ]
+  }
+}

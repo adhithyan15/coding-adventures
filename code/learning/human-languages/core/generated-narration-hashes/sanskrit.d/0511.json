@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:09496547053d34b3",
+  "lessonIds": [
+    "SA-C511-kastham",
+    "SA-C511-tapayati",
+    "SA-C511-uttarayati",
+    "SA-C511-pakah",
+    "SA-C511-bhrjjati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch511.txt",
+  "json": "sanskrit/narration/ch511.json",
+  "textHash": "fnv1a64:b715e546638eed75",
+  "jsonHash": "fnv1a64:6f95700a946ab9d7",
+  "findings": []
+}

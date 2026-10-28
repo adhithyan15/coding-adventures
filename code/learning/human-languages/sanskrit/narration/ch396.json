@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 396,
+  "title": "At the Shrine",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0d41c4b4d96a6181",
+  "lessons": [
+    {
+      "id": "SA-C396-dhvanati",
+      "sequence": 23100,
+      "title": "ध्वनति (dhvanati) — sounds; rings out",
+      "headword": "ध्वनति",
+      "romanization": "dhvanati",
+      "gloss": "sounds; rings out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7791f6e3049e85e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for takes leave, then the Sanskrit for a wandering ascetic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ध्वनति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ध्वनति — dhvanati — \"sounds; rings out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मन्दिरे शंखः ध्वनति। mandire śaṅkhaḥ dhvanati. A conch sounds in the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): शंखः ध्वनितवान्, śaṅkhaḥ dhvanitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ध्वनति (dhvanati) comes from the root √dhvan, \"to sound\", which also gives dhvani, \"a sound\"; KRM gives its participle dhvanita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhvanati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhvanati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhvanati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhvanati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandire śaṅkhaḥ dhvanati. — A conch sounds in the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandire śaṅkhaḥ dhvanati.* — A conch sounds in the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for takes leave, then the Sanskrit for a wandering ascetic, then say dhvanati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for takes leave, then the Sanskrit for a wandering ascetic, then say *dhvanati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ध्वनति (dhvanati) mean? (\"Sounds; rings out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C396-darsanam",
+      "sequence": 23110,
+      "title": "दर्शनम् (darśanam) — a sight of the deity; seeing",
+      "headword": "दर्शनम्",
+      "romanization": "darśanam",
+      "gloss": "a sight of the deity; seeing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d046878b38d1a7b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a wandering ascetic, then the Sanskrit for rings out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दर्शनम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दर्शनम् — darśanam — \"a sight of the deity; seeing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यात्रिकाः प्रातः मन्दिरे दर्शनं लभन्ते। yātrikāḥ prātaḥ mandire darśanaṃ labhante. In the morning the pilgrims are granted a sight of the deity in the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दर्शनम् (darśanam) is built on the root √dṛś, \"to see\", with the ending -ana; MW gives darśana as seeing, sight and an audience, and the sight of a deity at a shrine is that sense in pilgrims' use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darśanam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darśanam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darśanam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darśanam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātrikāḥ prātaḥ mandire darśanaṃ labhante. — In the morning the pilgrims are granted a sight of the deity in the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātrikāḥ prātaḥ mandire darśanaṃ labhante.* — In the morning the pilgrims are granted a sight of the deity in the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a wandering ascetic, then the Sanskrit for rings out, then say darśanam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a wandering ascetic, then the Sanskrit for rings out, then say *darśanam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दर्शनम् (darśanam) mean? (\"A sight of the deity; seeing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C396-pratima",
+      "sequence": 23120,
+      "title": "प्रतिमा (pratimā) — an image of a deity",
+      "headword": "प्रतिमा",
+      "romanization": "pratimā",
+      "gloss": "an image of a deity",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54732f270d5ac3be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for rings out, then the Sanskrit for a sight of the deity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रतिमा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिमा — pratimā — \"an image of a deity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मन्दिरे सुन्दरी प्रतिमा अस्ति। mandire sundarī pratimā asti. There is a beautiful image in the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रतिमा (pratimā) is built from prati, \"against, in return\", and the root √mā, \"to measure\": a thing measured against another, a likeness; MW gives pratimā as an image, a figure of a god (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratimā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratimā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratimā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratimā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandire sundarī pratimā asti. — There is a beautiful image in the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandire sundarī pratimā asti.* — There is a beautiful image in the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for rings out, then the Sanskrit for a sight of the deity, then say pratimā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for rings out, then the Sanskrit for a sight of the deity, then say *pratimā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रतिमा (pratimā) mean? (\"An image of a deity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C396-garbhagrham",
+      "sequence": 23130,
+      "title": "गर्भगृहम् (garbhagṛham) — an inner sanctum; the inner room of a temple",
+      "headword": "गर्भगृहम्",
+      "romanization": "garbhagṛham",
+      "gloss": "an inner sanctum; the inner room of a temple",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43c24192a4df5e5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a sight of the deity, then the Sanskrit for an image of a deity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गर्भगृहम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गर्भगृहम् — garbhagṛham — \"an inner sanctum; the inner room of a temple\"."
+            },
+            {
+              "kind": "speech",
+              "text": "प्रतिमा गर्भगृहे तिष्ठति। pratimā garbhagṛhe tiṣṭhati. The image stands in the inner sanctum."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गर्भगृहम् (garbhagṛham) is built from garbha, \"the womb, the inside\", and gṛha, \"a house\"; MW gives the compound as an inner room and as the sanctuary of a temple where the image stands (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garbhagṛham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garbhagṛham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garbhagṛham, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garbhagṛham*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratimā garbhagṛhe tiṣṭhati. — The image stands in the inner sanctum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratimā garbhagṛhe tiṣṭhati.* — The image stands in the inner sanctum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a sight of the deity, then the Sanskrit for an image of a deity, then say garbhagṛham again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a sight of the deity, then the Sanskrit for an image of a deity, then say *garbhagṛham* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गर्भगृहम् (garbhagṛham) mean? (\"An inner sanctum; the inner room of a temple\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C396-bhaktah",
+      "sequence": 23140,
+      "title": "भक्तः (bhaktaḥ) — a devotee",
+      "headword": "भक्तः",
+      "romanization": "bhaktaḥ",
+      "gloss": "a devotee",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e32e0ddd3b32fe0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an image of a deity, then the Sanskrit for an inner sanctum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भक्तः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भक्तः — bhaktaḥ — \"a devotee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भक्तः प्रतिमां नमति। bhaktaḥ pratimāṃ namati. The devotee bows to the image."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भक्तः (bhaktaḥ) comes from the root √bhaj, \"to share, to worship\", which also gives bhajati, \"shares, worships\": MW gives bhakta as devoted or attached to, and as a worshipper (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaktaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaktaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaktaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaktaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaktaḥ pratimāṃ namati. — The devotee bows to the image.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaktaḥ pratimāṃ namati.* — The devotee bows to the image.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an image of a deity, then the Sanskrit for an inner sanctum, then say bhaktaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an image of a deity, then the Sanskrit for an inner sanctum, then say *bhaktaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भक्तः (bhaktaḥ) mean? (\"A devotee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

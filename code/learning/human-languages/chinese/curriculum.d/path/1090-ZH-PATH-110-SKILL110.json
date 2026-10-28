@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-110-SKILL110",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "ZH-EXT-110-SKILL110"
+  ],
+  "after": []
+}

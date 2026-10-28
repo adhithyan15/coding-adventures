@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-378-MANIN378",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-378-MANIN378"
+  ],
+  "after": []
+}

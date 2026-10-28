@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Good Luck and Bad Luck",
+  "label": "ch:ja-good-luck-and-bad-luck",
+  "canDo": "I can say what might happen with a little luck.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "JA-C508-unmei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can say what might happen with a little luck.",
+    "assesses": [
+      "JA-LEX-C508-LUCK508-03",
+      "JA-LEX-C508-LUCK508-04",
+      "JA-LEX-C508-LUCK508-05"
+    ]
+  }
+}

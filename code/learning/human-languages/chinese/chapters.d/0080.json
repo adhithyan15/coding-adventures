@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Jobs",
+  "label": "ch:zh-jobs",
+  "canDo": "I can say who goes to work where: workers, drivers, doctors and companies.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "ZH-C80-gongsi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: I can say who goes to work where: workers, drivers, doctors and companies.",
+    "assesses": [
+      "ZH-LEX-C80-JOB80-03",
+      "ZH-LEX-C80-JOB80-04",
+      "ZH-LEX-C80-JOB80-05"
+    ]
+  }
+}

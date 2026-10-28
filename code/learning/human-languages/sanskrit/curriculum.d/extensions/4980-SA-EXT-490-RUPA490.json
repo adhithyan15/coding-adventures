@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-490-RUPA490",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe someone's age and appearance.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C483-limpati",
+  "pathSegment": "SA-PATH-483-GUTIKA483",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-483-GUTIKA483",
+      "order": 4
+    }
+  ]
+}

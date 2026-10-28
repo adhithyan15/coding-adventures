@@ -252,6 +252,14 @@ impl CortexM3Simulator {
         self.state.clone()
     }
 
+    /// Fallibly snapshot all architectural state and owned memory.
+    ///
+    /// Execution wrappers that promise typed allocation failures should use
+    /// this method instead of the infallible compatibility accessor.
+    pub fn try_get_state(&self) -> Result<CortexM3State, CortexM3Error> {
+        try_clone_state(&self.state)
+    }
+
     pub fn restore(&mut self, state: CortexM3State) -> Result<(), CortexM3Error> {
         validate_state(&state)?;
         self.state = state;
@@ -767,7 +775,7 @@ fn classify_at(
             return Ok(InstructionClass::TableBranch);
         }
         if first == 0xf3ef && second & 0xf000 == 0x8000
-            || first & 0xfff0 == 0xf380 && second & 0xff00 == 0x8800
+            || first & 0xfff0 == 0xf380 && valid_msr_second(second)
         {
             return Ok(InstructionClass::SpecialRegister);
         }
@@ -824,6 +832,14 @@ fn classify_at(
         return Ok(InstructionClass::UnconditionalBranch);
     }
     Err(CortexM3Error::UnknownInstruction16 { raw: first, pc })
+}
+
+fn valid_msr_second(second: u16) -> bool {
+    if second & 0xf300 != 0x8000 {
+        return false;
+    }
+    let mask = ((second >> 10) & 3) as u8;
+    mask == 2
 }
 
 fn execute_decoded(
@@ -1866,7 +1882,10 @@ fn execute_special_register(
     }
     let value = state.registers[rn as usize];
     if matches!(sysm, 0..=3) {
-        state.apsr = value & APSR_MASK;
+        let mask = ((second >> 10) & 3) as u8;
+        if mask & 2 != 0 {
+            state.apsr = value & APSR_MASK;
+        }
         return Ok("msr");
     }
     if matches!(sysm, 5..=7) || (state.control & 1 != 0 && !state.handler_mode) {
@@ -1903,6 +1922,18 @@ fn execute_special_register(
 
 /// Little-endian instruction encoding helpers for tests and downstream users.
 pub mod encoding {
+    /// Architecturally named APSR fields selected by an MSR mask.
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[repr(u8)]
+    pub enum ApsrMask {
+        /// `GE[3:0]` only; requires the DSP extension.
+        Ge = 1,
+        /// N, Z, C, V, and Q.
+        Nzcvq = 2,
+        /// N, Z, C, V, Q, and `GE[3:0]`; requires the DSP extension.
+        NzcvqGe = 3,
+    }
+
     #[must_use]
     pub const fn halfword(value: u16) -> [u8; 2] {
         value.to_le_bytes()
@@ -2000,7 +2031,16 @@ pub mod encoding {
 
     #[must_use]
     pub const fn msr(rn: u16, sysm: u8) -> [u16; 2] {
-        [0xf380 | (rn & 0xf), 0x8800 | sysm as u16]
+        msr_masked(rn, sysm, ApsrMask::Nzcvq)
+    }
+
+    /// Encode MSR with an explicit typed architectural APSR mask.
+    #[must_use]
+    pub const fn msr_masked(rn: u16, sysm: u8, mask: ApsrMask) -> [u16; 2] {
+        [
+            0xf380 | (rn & 0xf),
+            0x8000 | ((mask as u16) << 10) | sysm as u16,
+        ]
     }
 
     #[must_use]

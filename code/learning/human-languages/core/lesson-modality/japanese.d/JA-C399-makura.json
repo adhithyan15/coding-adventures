@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C399-makura",
+    "language": "japanese",
+    "chapter": 399,
+    "sequence": 23390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50be65c9bc8bebd1"
+  },
+  "findings": []
+}

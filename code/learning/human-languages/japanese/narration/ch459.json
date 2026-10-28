@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 459,
+  "title": "Studying Further",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1df5758f2f652807",
+  "lessons": [
+    {
+      "id": "JA-C459-daigaku",
+      "sequence": 26700,
+      "title": "だいがく (daigaku) — a university",
+      "headword": "だいがく",
+      "romanization": "daigaku",
+      "gloss": "a university",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d45934b80ff6df6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a novelist, then the Japanese for a craftsman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だいがく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいがく — daigaku — \"a university\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには だいがくで べんきょうしています。 — ani wa daigaku de benkyō shite imasu — \"My elder brother studies at university.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいがく (daigaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are dai, \"large\" (Middle Chinese dajH) and gaku, \"study\" (haewk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daigaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daigaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daigaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daigaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa daigaku de benkyō shite imasu — My elder brother studies at university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa daigaku de benkyō shite imasu* — My elder brother studies at university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a novelist, then the Japanese for a craftsman, then say daigaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a novelist, then the Japanese for a craftsman, then say *daigaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だいがく (daigaku) mean? (\"A university\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C459-daigaku-type",
+              "prompt": "Say the Japanese for 'a university'.",
+              "assesses": [
+                "JA-LEX-C459-STUDY459-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だいがく",
+                "daigaku"
+              ],
+              "feedback": {
+                "correct": "Right: だいがく (daigaku) is 'a university'.",
+                "incorrect": "'A university' is だいがく (daigaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C459-ryuugaku-suru",
+      "sequence": 26710,
+      "title": "りゅうがくする (ryūgaku suru) — to study abroad",
+      "headword": "りゅうがくする",
+      "romanization": "ryūgaku suru",
+      "gloss": "to study abroad",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a472b5b6ac1325b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a craftsman, then the Japanese for a university."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りゅうがくする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りゅうがくする — ryūgaku suru — \"to study abroad\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちは らいねん りゅうがくします。 — tomodachi wa rainen ryūgaku shimasu — \"My friend is studying abroad next year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite りゅうがくします, ryūgakushimasu; a する verb. Past (polite): あねが りゅうがくしました。, ane ga ryūgaku shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りゅうがくする (ryūgaku suru) is Sino-Japanese (kango) ryūgaku with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ryū, \"detain\" (Middle Chinese ljuw) and gaku, \"study\" (haewk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryūgaku suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryūgaku suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryūgaku suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryūgaku suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi wa rainen ryūgaku shimasu — My friend is studying abroad next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi wa rainen ryūgaku shimasu* — My friend is studying abroad next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a craftsman, then the Japanese for a university, then say ryūgaku suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a craftsman, then the Japanese for a university, then say *ryūgaku suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りゅうがくする (ryūgaku suru) mean? (\"To study abroad\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C459-ryuugaku-suru-type",
+              "prompt": "Say the Japanese for 'to study abroad'.",
+              "assesses": [
+                "JA-LEX-C459-STUDY459-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りゅうがくする",
+                "ryūgaku suru",
+                "ryuugaku suru",
+                "ryugaku suru"
+              ],
+              "feedback": {
+                "correct": "Right: りゅうがくする (ryūgaku suru) is 'to study abroad'.",
+                "incorrect": "'To study abroad' is りゅうがくする (ryūgaku suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C459-kenkyuu-suru",
+      "sequence": 26720,
+      "title": "けんきゅうする (kenkyū suru) — to do research",
+      "headword": "けんきゅうする",
+      "romanization": "kenkyū suru",
+      "gloss": "to do research",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:059266139196e3b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a university, then the Japanese for to study abroad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けんきゅうする",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんきゅうする — kenkyū suru — \"to do research\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは だいがくで しょくぶつを けんきゅうしています。 — kare wa daigaku de shokubutsu o kenkyū shite imasu — \"He does research on plants at a university.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite けんきゅうします, kenkyūshimasu; a する verb. Past (polite): せんせいが どうぶつを けんきゅうしました。, sensei ga dōbutsu o kenkyū shimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんきゅうする (kenkyū suru) is Sino-Japanese (kango) kenkyū with the native verb suru, \"to do\": two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ken, \"polish\" (Middle Chinese ngen) and kyū, \"research\" (kjuwH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkyū suru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkyū suru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkyū suru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkyū suru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa daigaku de shokubutsu o kenkyū shite imasu — He does research on plants at a university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa daigaku de shokubutsu o kenkyū shite imasu* — He does research on plants at a university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a university, then the Japanese for to study abroad, then say kenkyū suru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a university, then the Japanese for to study abroad, then say *kenkyū suru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けんきゅうする (kenkyū suru) mean? (\"To do research\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C459-kenkyuu-suru-type",
+              "prompt": "Say the Japanese for 'to do research'.",
+              "assesses": [
+                "JA-LEX-C459-STUDY459-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けんきゅうする",
+                "kenkyū suru",
+                "kenkyuu suru",
+                "kenkyu suru"
+              ],
+              "feedback": {
+                "correct": "Right: けんきゅうする (kenkyū suru) is 'to do research'.",
+                "incorrect": "'To do research' is けんきゅうする (kenkyū suru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C459-senmon",
+      "sequence": 26730,
+      "title": "せんもん (senmon) — one's field of study; a specialty",
+      "headword": "せんもん",
+      "romanization": "senmon",
+      "gloss": "one's field of study; a specialty",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fca169f4880d968",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to study abroad, then the Japanese for to do research."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せんもん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんもん — senmon — \"one's field of study; a specialty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あねの せんもんは おんがくです。 — ane no senmon wa ongaku desu — \"My elder sister's field is music.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんもん (senmon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"specialty\" (Middle Chinese tsywen) and mon, \"gate\" (mwon) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senmon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senmon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senmon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senmon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ane no senmon wa ongaku desu — My elder sister's field is music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ane no senmon wa ongaku desu* — My elder sister's field is music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to study abroad, then the Japanese for to do research, then say senmon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to study abroad, then the Japanese for to do research, then say *senmon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せんもん (senmon) mean? (\"One's field of study; a specialty\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C459-senmon-type",
+              "prompt": "Say the Japanese for 'one's field of study'.",
+              "assesses": [
+                "JA-LEX-C459-STUDY459-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せんもん",
+                "senmon"
+              ],
+              "feedback": {
+                "correct": "Right: せんもん (senmon) is 'one's field of study; a specialty'.",
+                "incorrect": "'One's field of study' is せんもん (senmon)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C459-shinro",
+      "sequence": 26740,
+      "title": "しんろ (shinro) — a career path; one's course",
+      "headword": "しんろ",
+      "romanization": "shinro",
+      "gloss": "a career path; one's course",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3424276bd74414fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to do research, then the Japanese for one's field of study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しんろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんろ — shinro — \"a career path; one's course\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんせいと しんろを はなしあいました。 — sensei to shinro o hanashiaimashita — \"I talked over my career path with my teacher.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんろ (shinro) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"advance\" (Middle Chinese tsinH) and ro, \"path\" (luH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shinro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shinro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensei to shinro o hanashiaimashita — I talked over my career path with my teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensei to shinro o hanashiaimashita* — I talked over my career path with my teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to do research, then the Japanese for one's field of study, then say shinro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to do research, then the Japanese for one's field of study, then say *shinro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しんろ (shinro) mean? (\"A career path; one's course\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C459-shinro-type",
+              "prompt": "Say the Japanese for 'a career path'.",
+              "assesses": [
+                "JA-LEX-C459-STUDY459-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しんろ",
+                "shinro"
+              ],
+              "feedback": {
+                "correct": "Right: しんろ (shinro) is 'a career path; one's course'.",
+                "incorrect": "'A career path' is しんろ (shinro)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

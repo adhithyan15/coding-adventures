@@ -63,6 +63,20 @@ simulator-owned writes reconstruct the latch state and clock both phases via
 `logic_gates::sequential::register`. Installed-program origin and length are
 lifecycle metadata and are not included in the DFF count.
 
+The HALT latch Q output is the sole architectural halt authority. State
+snapshots, execution control, checked preflight, result construction, and
+restore all read or clock that Q bit directly. The historical public
+`halted: bool` field remains only as a source-compatible observation mirror:
+simulator-owned mutable operations repair it from Q before use and refresh it
+after clocking Q, and caller mutation of the mirror cannot clock or otherwise
+alter architectural state. New callers must use `halted()` when they need the
+authoritative value.
+
+`physical_storage_inventory()` reports memory, register-file, and HALT DFF
+counts by inspecting the actual owned storage containers. Its independently
+summed total must equal `FLIP_FLOP_COUNT`; returning the topology constant as
+its own evidence is not a completion test.
+
 ## Normative Rust API
 
 ```rust
@@ -107,7 +121,10 @@ byte, and halt state; expected failures must leave the complete machine intact.
 
 Separate lifecycle tests cover exact topology, deterministic reset, complete
 restore, typed direct boundaries, R0, halt clocking, full results, invalid
-load/state atomicity, and transactional rollback.
+load/state atomicity, and transactional rollback. They also deliberately
+diverge the compatibility halt mirror in both directions and prove that Q
+continues to govern snapshots, post-halt rejection, execution, restore, and
+fault rollback.
 
 Completion requires:
 

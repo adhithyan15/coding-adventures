@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:424ea3d17c6d11ac",
+  "lessonIds": [
+    "JA-C397-minshuku",
+    "JA-C397-shukuhaku",
+    "JA-C397-ippaku",
+    "JA-C397-higaeri",
+    "JA-C397-azukaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch397.txt",
+  "json": "japanese/narration/ch397.json",
+  "textHash": "fnv1a64:2862420dd55b3961",
+  "jsonHash": "fnv1a64:7c68f96fddcc291d",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:06c6d8d5cf91c028",
+  "lessonIds": [
+    "SA-C338-punyam",
+    "SA-C338-papam",
+    "SA-C338-svargah",
+    "SA-C338-narakah",
+    "SA-C338-bhunkte"
+  ],
+  "tex": "sanskrit/book/chapters/ch338-heaven-and-hell.tex"
+}

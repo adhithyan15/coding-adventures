@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:c9c7d0562bc597bd",
+  "lessonIds": [
+    "SA-C469-indriyam",
+    "SA-C469-drstih",
+    "SA-C469-sparsah",
+    "SA-C469-gandhah",
+    "SA-C469-jighrati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch469.txt",
+  "json": "sanskrit/narration/ch469.json",
+  "textHash": "fnv1a64:3c0407e9f8d497b8",
+  "jsonHash": "fnv1a64:a3ff0773f626a45f",
+  "findings": []
+}

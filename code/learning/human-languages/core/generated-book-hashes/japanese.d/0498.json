@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:23a611c63f3c63e1",
+  "lessonIds": [
+    "JA-C498-kyuujitsu",
+    "JA-C498-fuyuyasumi",
+    "JA-C498-hirune",
+    "JA-C498-inemuri",
+    "JA-C498-yuukyuu"
+  ],
+  "tex": "japanese/book/chapters/ch498-a-day-off.tex"
+}

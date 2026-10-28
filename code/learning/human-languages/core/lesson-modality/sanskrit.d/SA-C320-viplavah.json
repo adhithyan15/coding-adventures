@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C320-viplavah",
+    "language": "sanskrit",
+    "chapter": 320,
+    "sequence": 18760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f15b9c8bf7cbeb0"
+  },
+  "findings": []
+}

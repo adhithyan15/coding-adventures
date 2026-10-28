@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C118-baoguo",
+    "language": "chinese",
+    "chapter": 118,
+    "sequence": 8980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8161055ef9aa6231"
+  },
+  "findings": []
+}

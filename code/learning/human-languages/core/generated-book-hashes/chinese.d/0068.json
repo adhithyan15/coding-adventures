@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:c10f05f6c56854af",
+  "lessonIds": [
+    "ZH-C68-shan",
+    "ZH-W68-shan",
+    "ZH-C68-xingxing",
+    "ZH-C68-cao",
+    "ZH-C68-hua",
+    "ZH-C68-taiyang"
+  ],
+  "tex": "chinese/book/chapters/ch68-out-of-town.tex"
+}

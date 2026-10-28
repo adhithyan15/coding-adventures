@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C75-song",
+  "pathSegment": "ZH-PATH-75-PARTY75",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-75-PARTY75",
+      "order": 5
+    }
+  ]
+}

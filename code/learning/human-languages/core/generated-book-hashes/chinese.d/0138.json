@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:3850fd0678a30cf3",
+  "lessonIds": [
+    "ZH-C138-mei",
+    "ZH-W138-mei-every",
+    "ZH-C138-ziji",
+    "ZH-C138-bieren",
+    "ZH-C138-suoyou",
+    "ZH-C138-qita"
+  ],
+  "tex": "chinese/book/chapters/ch138-every-and-other.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 543,
+  "title": "Free to Choose",
+  "label": "ch:sa-free-to-choose",
+  "canDo": "I can say whether someone acts freely, stubbornly or helplessly.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "SA-C543-svayam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 543: I can say whether someone acts freely, stubbornly or helplessly.",
+    "assesses": [
+      "SA-LEX-C543-HATHA543-03",
+      "SA-LEX-C543-HATHA543-04",
+      "SA-LEX-C543-HATHA543-05"
+    ]
+  }
+}

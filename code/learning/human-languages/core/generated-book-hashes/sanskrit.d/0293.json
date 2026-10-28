@@ -1,0 +1,14 @@
+{
+  "language": "sanskrit",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:9189534e758c42d3",
+  "lessonIds": [
+    "SA-C293-dosah",
+    "SA-C293-dandayati",
+    "SA-C293-mocayati",
+    "SA-C293-karagaram",
+    "SA-C293-srnkhala",
+    "SA-R293-review-286-293"
+  ],
+  "tex": "sanskrit/book/chapters/ch293-the-case-in-court.tex"
+}

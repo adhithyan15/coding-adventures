@@ -250,3 +250,40 @@ fn checked_ops_import_only_the_trap_host_function() {
     ]);
     assert_eq!(run(&m), ("42".to_string(), None, true));
 }
+
+// ── Trap.ConvRange: a failed real_to_int narrowing ──────────────────────────
+
+/// `write_i64(1)`, then `real_to_int_*` of `x`, then `write_i64` of the result.
+fn narrowing_program(op: &str, x: f64) -> IIRModule {
+    module(vec![
+        IIRInstr::new("const", Some("one".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("call_builtin", None, vec![v("write_i64"), v("one")], "void"),
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Float(x)], "f64"),
+        IIRInstr::new(op, Some("n".into()), vec![v("x")], "i64"),
+        IIRInstr::new("call_builtin", None, vec![v("write_i64"), v("n")], "void"),
+        IIRInstr::new("ret", None, vec![v("n")], "i64"),
+    ])
+}
+
+/// NaN, ±∞, 2⁶³ and −1e30 stop with `Trap.ConvRange` (id 4) through
+/// `env.__trap`, after the earlier output and never with an untyped WASM
+/// trap. The edges that fit, −2⁶³ and the values just inside, still convert.
+#[test]
+fn failed_narrowing_traps_conv_range_on_wasm() {
+    let two63 = 9_223_372_036_854_775_808.0_f64;
+    for op in ["real_to_int_trunc", "real_to_int_floor"] {
+        for x in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY, two63, -1e30] {
+            let (out, trap, done) = run(&narrowing_program(op, x));
+            assert_eq!((out.as_str(), trap, done), ("1", Some(4), false), "{op}({x})");
+        }
+        let (out, trap, done) = run(&narrowing_program(op, -two63));
+        assert_eq!((out.as_str(), trap, done), ("1-9223372036854775808", None, true), "{op}(-2^63)");
+        let (out, trap, done) = run(&narrowing_program(op, 9_223_372_036_854_774_784.0));
+        assert_eq!((out.as_str(), trap, done), ("19223372036854774784", None, true), "{op}(2^63 - 1024)");
+    }
+    // The rounding direction still differs once the check passes.
+    let (out, _, done) = run(&narrowing_program("real_to_int_floor", -2.5));
+    assert_eq!((out.as_str(), done), ("1-3", true));
+    let (out, _, done) = run(&narrowing_program("real_to_int_trunc", -2.5));
+    assert_eq!((out.as_str(), done), ("1-2", true));
+}

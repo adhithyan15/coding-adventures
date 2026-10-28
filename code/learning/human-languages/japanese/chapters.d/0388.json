@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "What the Journey Costs",
+  "label": "ch:ja-what-the-journey-costs",
+  "canDo": "I can talk about what a journey costs and what is free.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "JA-C388-yuuryou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can talk about what a journey costs and what is free.",
+    "assesses": [
+      "JA-LEX-C388-RYOHI388-03",
+      "JA-LEX-C388-RYOHI388-04",
+      "JA-LEX-C388-RYOHI388-05"
+    ]
+  }
+}

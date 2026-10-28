@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## Unreleased — LANG84 R1b: embedded documents, `__END__` and the refusals
+
+### Changed
+
+- **Security review (F1).** The CHAR classes no longer accept `?"`, `?'`,
+  `` ?` `` or `?#`. A new token, `QUESTION_OPENER` (`/\?["'`#]/`), is refused
+  in every mode, so a mode that disagrees with Ruby's lexer state (after
+  `.end`, after a local) cannot turn a quote or `#` into a string or comment
+  boundary Ruby does not have. 0.49 and 0.50 are unchanged: their `?` is
+  always a character literal.
+- **Security review (F2).** The other direction of mode disagreement: where
+  we read a character literal but Ruby reads a ternary `?` (after a local,
+  after a value in a `def` parameter list), `??`, `?%`, `?/` and `?<` open a
+  character literal, `%`-literal, regexp or heredoc on Ruby's side only.
+  Those four characters are out of every CHAR class too, and
+  `QUESTION_OPENER` is now `/\?["'`#?%\/<]/`. The CHAR class is
+  `[!$&(-.:;=>@\[\]^{|}~]`.
+- `src/_grammar.rs` is regenerated from the R1b pairs. The three 3.3.x token
+  grammars (still one deduplicated class) gain the following.
+  - **Skip patterns.** `EMBDOC` (`=begin` … `=end`) and `DATA_END` (a
+    `__END__` line plus the rest of the input), both guarded by
+    `@line_start` (LANG84 E1).
+  - **Refused tokens.** `HEREDOC_OPEN` and `EMBDOC_UNTERMINATED`.
+  - **Def-head modes.** `deffname`, `defn` and `defparams`, with their group
+    tokens.
+  - **Refusal rules.** E8 `-> refuse` rules for `/` `/=` `%` `%=` when no
+    whitespace follows, in `beg`, and in the def head.
+  - **NEWLINE.** A rule now resets the mode to `beg`.
+- 0.49 and 0.50 change only in comments: they have no embedded documents,
+  and their `__END__` predates R1b.
+- Every `TokenDefinition` literal carries `guard:` (239 of 239), and every
+  `ModeTransition` literal carries `conditions:` (85 of 85).
+
 ## Unreleased — LANG84 release token tables (R0)
 
 ### Added — LANG84 release token tables

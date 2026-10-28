@@ -1,0 +1,24 @@
+{
+  "chapter": 87,
+  "title": "Is There Any?",
+  "label": "ch:zh-is-there-any",
+  "canDo": "I can say what there is and is not, and that something did not happen.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C87-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what there is and is not with 没有, telling 不 from 没, and naming a bed, a light, a key and a fridge, built on one new written character: 没.",
+    "assesses": [
+      "ZH-LEX-C87-MEIYOU-01",
+      "ZH-SCRIPT-MEI-01",
+      "ZH-GRAMMAR-BU-MEI-01",
+      "ZH-LEX-C87-CHUANG-01",
+      "ZH-LEX-C87-DENG-01",
+      "ZH-LEX-C87-YAOSHI-01",
+      "ZH-LEX-C87-BINGXIANG-01",
+      "ZH-PERFORMANCE-HAVE-NOT-01"
+    ]
+  }
+}

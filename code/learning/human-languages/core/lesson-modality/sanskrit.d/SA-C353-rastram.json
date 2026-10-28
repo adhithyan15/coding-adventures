@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C353-rastram",
+    "language": "sanskrit",
+    "chapter": 353,
+    "sequence": 20680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c11c21079f2e7c1e"
+  },
+  "findings": []
+}

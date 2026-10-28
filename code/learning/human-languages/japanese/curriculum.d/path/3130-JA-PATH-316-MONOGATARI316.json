@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-316-MONOGATARI316",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-316-MONOGATARI316"
+  ],
+  "after": []
+}

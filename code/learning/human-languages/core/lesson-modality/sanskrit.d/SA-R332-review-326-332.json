@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R332-review-326-332",
+    "language": "sanskrit",
+    "chapter": 332,
+    "sequence": 19400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff00268b8247b591"
+  },
+  "findings": []
+}

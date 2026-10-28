@@ -1,0 +1,11 @@
+{
+  "id": "JA-C310-kanau",
+  "pathSegment": "JA-PATH-310-HENJI310",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-310-HENJI310",
+      "order": 3
+    }
+  ]
+}

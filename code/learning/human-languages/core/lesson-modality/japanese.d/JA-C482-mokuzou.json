@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C482-mokuzou",
+    "language": "japanese",
+    "chapter": 482,
+    "sequence": 28130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3d4e7d0a3b7f4ed"
+  },
+  "findings": []
+}

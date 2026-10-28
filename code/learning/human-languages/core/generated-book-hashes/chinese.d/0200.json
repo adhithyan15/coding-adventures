@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:ea5af49318fea64f",
+  "lessonIds": [
+    "ZH-C200-binguan",
+    "ZH-C200-yuding",
+    "ZH-C200-danrenjian",
+    "ZH-C200-ruzhu",
+    "ZH-C200-tuifang"
+  ],
+  "tex": "chinese/book/chapters/ch200-booking-a-room.tex"
+}

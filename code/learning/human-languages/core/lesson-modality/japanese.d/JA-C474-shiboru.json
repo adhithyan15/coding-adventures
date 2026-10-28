@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C474-shiboru",
+    "language": "japanese",
+    "chapter": 474,
+    "sequence": 27480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5a66c01c253a789"
+  },
+  "findings": []
+}

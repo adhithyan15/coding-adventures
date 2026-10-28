@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-66-WEATHER66",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "ZH-EXT-66-WEATHER66"
+  ],
+  "after": []
+}

@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 417,
+  "title": "Carrying the Luggage",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cf3f27757e0b7607",
+  "lessons": [
+    {
+      "id": "JA-C417-tenimotsu",
+      "sequence": 24320,
+      "title": "てにもつ (tenimotsu) — hand luggage",
+      "headword": "てにもつ",
+      "romanization": "tenimotsu",
+      "gloss": "hand luggage",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb723a13e321694d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to turn very cold, then the Japanese for to shine on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てにもつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てにもつ — tenimotsu — \"hand luggage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "てにもつを ひとつ もって、ひこうきに のりました。 — tenimotsu o hitotsu motte, hikōki ni norimashita — \"I got on the plane with one piece of hand luggage.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てにもつ (tenimotsu) is built from both layers of the vocabulary: the native Japanese (wago) te, \"hand\", inherited rather than borrowed; the native Japanese (wago) ni, \"load\", inherited rather than borrowed; and the Sino-Japanese motsu, \"thing\" (Middle Chinese mjut), an on'yomi borrowed from Chinese (JMdict; KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenimotsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenimotsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenimotsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenimotsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tenimotsu o hitotsu motte, hikōki ni norimashita — I got on the plane with one piece of hand luggage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tenimotsu o hitotsu motte, hikōki ni norimashita* — I got on the plane with one piece of hand luggage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to turn very cold, then the Japanese for to shine on, then say tenimotsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to turn very cold, then the Japanese for to shine on, then say *tenimotsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てにもつ (tenimotsu) mean? (\"Hand luggage\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C417-tenimotsu-type",
+              "prompt": "Say the Japanese for 'hand luggage'.",
+              "assesses": [
+                "JA-LEX-C417-TENIMOTSU417-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てにもつ",
+                "tenimotsu"
+              ],
+              "feedback": {
+                "correct": "Right: てにもつ (tenimotsu) is 'hand luggage'.",
+                "incorrect": "'Hand luggage' is てにもつ (tenimotsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C417-nifuda",
+      "sequence": 24330,
+      "title": "にふだ (nifuda) — a luggage tag",
+      "headword": "にふだ",
+      "romanization": "nifuda",
+      "gloss": "a luggage tag",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:975d185edd3fc6df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to shine on, then the Japanese for hand luggage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にふだ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にふだ — nifuda — \"a luggage tag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "にふだに なまえを かいて ください。 — nifuda ni namae o kaite kudasai — \"Please write your name on the luggage tag.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にふだ (nifuda) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from ni, \"load\" and fuda, \"tag\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nifuda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nifuda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nifuda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nifuda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nifuda ni namae o kaite kudasai — Please write your name on the luggage tag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nifuda ni namae o kaite kudasai* — Please write your name on the luggage tag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to shine on, then the Japanese for hand luggage, then say nifuda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to shine on, then the Japanese for hand luggage, then say *nifuda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にふだ (nifuda) mean? (\"A luggage tag\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C417-nifuda-type",
+              "prompt": "Say the Japanese for 'a luggage tag'.",
+              "assesses": [
+                "JA-LEX-C417-TENIMOTSU417-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にふだ",
+                "nifuda"
+              ],
+              "feedback": {
+                "correct": "Right: にふだ (nifuda) is 'a luggage tag'.",
+                "incorrect": "'A luggage tag' is にふだ (nifuda)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C417-seou",
+      "sequence": 24340,
+      "title": "せおう (seou) — to carry on one's back",
+      "headword": "せおう",
+      "romanization": "seou",
+      "gloss": "to carry on one's back",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdf0210d085d8f78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for hand luggage, then the Japanese for a luggage tag."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せおう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せおう — seou — \"to carry on one's back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おもい にもつを せおって、やまに のぼりました。 — omoi nimotsu o seotte, yama ni noborimashita — \"I climbed the mountain with a heavy load on my back.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite せおいます, seoimasu; a godan verb. Past (polite): あにが にもつを せおいました。, ani ga nimotsu o seoimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せおう (seou) is a native Japanese word (wago), inherited rather than borrowed from Chinese, built from se, \"back\", and ou, \"to carry on one's back\"; its kanji were attached later as kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *seou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omoi nimotsu o seotte, yama ni noborimashita — I climbed the mountain with a heavy load on my back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omoi nimotsu o seotte, yama ni noborimashita* — I climbed the mountain with a heavy load on my back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for hand luggage, then the Japanese for a luggage tag, then say seou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for hand luggage, then the Japanese for a luggage tag, then say *seou* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せおう (seou) mean? (\"To carry on one's back\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C417-seou-type",
+              "prompt": "Say the Japanese for 'to carry on one's back'.",
+              "assesses": [
+                "JA-LEX-C417-TENIMOTSU417-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せおう",
+                "seou"
+              ],
+              "feedback": {
+                "correct": "Right: せおう (seou) is 'to carry on one's back'.",
+                "incorrect": "'To carry on one's back' is せおう (seou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C417-kakaeru",
+      "sequence": 24350,
+      "title": "かかえる (kakaeru) — to carry in one's arms",
+      "headword": "かかえる",
+      "romanization": "kakaeru",
+      "gloss": "to carry in one's arms",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:570bd5db5f24b0af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a luggage tag, then the Japanese for to carry on one's back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かかえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かかえる — kakaeru — \"to carry in one's arms\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はこを かかえて、かいだんを のぼりました。 — hako o kakaete, kaidan o noborimashita — \"I carried a box up the stairs in my arms.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かかえます, kakaemasu; an ichidan verb. Past (polite): ちちが はこを かかえました。, chichi ga hako o kakaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かかえる (kakaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kakaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kakaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hako o kakaete, kaidan o noborimashita — I carried a box up the stairs in my arms.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hako o kakaete, kaidan o noborimashita* — I carried a box up the stairs in my arms.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a luggage tag, then the Japanese for to carry on one's back, then say kakaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a luggage tag, then the Japanese for to carry on one's back, then say *kakaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かかえる (kakaeru) mean? (\"To carry in one's arms\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C417-kakaeru-type",
+              "prompt": "Say the Japanese for 'to carry in one's arms'.",
+              "assesses": [
+                "JA-LEX-C417-TENIMOTSU417-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かかえる",
+                "kakaeru"
+              ],
+              "feedback": {
+                "correct": "Right: かかえる (kakaeru) is 'to carry in one's arms'.",
+                "incorrect": "'To carry in one's arms' is かかえる (kakaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C417-korogasu",
+      "sequence": 24360,
+      "title": "ころがす (korogasu) — to roll; to wheel",
+      "headword": "ころがす",
+      "romanization": "korogasu",
+      "gloss": "to roll; to wheel",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:065562317fce2d00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to carry on one's back, then the Japanese for to carry in one's arms."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ころがす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ころがす — korogasu — \"to roll; to wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かばんを ころがして、えきまで あるきました。 — kaban o korogashite, eki made arukimashita — \"I wheeled my case to the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ころがします, korogashimasu; a godan verb. Past (polite): あねが かばんを ころがしました。, ane ga kaban o korogashimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ころがす (korogasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korogasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korogasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "korogasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *korogasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaban o korogashite, eki made arukimashita — I wheeled my case to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaban o korogashite, eki made arukimashita* — I wheeled my case to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to carry on one's back, then the Japanese for to carry in one's arms, then say korogasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to carry on one's back, then the Japanese for to carry in one's arms, then say *korogasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ころがす (korogasu) mean? (\"To roll; to wheel\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C417-korogasu-type",
+              "prompt": "Say the Japanese for 'to wheel along'.",
+              "assesses": [
+                "JA-LEX-C417-TENIMOTSU417-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ころがす",
+                "korogasu"
+              ],
+              "feedback": {
+                "correct": "Right: ころがす (korogasu) is 'to roll; to wheel'.",
+                "incorrect": "'To wheel along' is ころがす (korogasu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

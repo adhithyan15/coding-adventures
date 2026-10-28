@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C526-ksiprah",
+    "language": "sanskrit",
+    "chapter": 526,
+    "sequence": 30250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98a1be8ddbc4a258"
+  },
+  "findings": []
+}

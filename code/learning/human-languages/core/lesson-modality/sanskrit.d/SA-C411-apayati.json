@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C411-apayati",
+    "language": "sanskrit",
+    "chapter": 411,
+    "sequence": 23880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43a95a360a90aa38"
+  },
+  "findings": []
+}

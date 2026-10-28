@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:4237a802bd4f1588",
+  "lessonIds": [
+    "ZH-C156-yuan",
+    "ZH-W156-yuan-money",
+    "ZH-C156-jiaqian",
+    "ZH-C156-mianfei",
+    "ZH-C156-guanggao",
+    "ZH-C156-reading",
+    "ZH-C156-practice"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch156.txt",
+  "json": "chinese/narration/ch156.json",
+  "textHash": "fnv1a64:e2a52c29faa6894c",
+  "jsonHash": "fnv1a64:9591daffc7c7da6a",
+  "findings": []
+}

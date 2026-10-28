@@ -58,21 +58,45 @@
 //! | [`TRAP_CONV_RANGE`] | `"Trap.ConvRange"` | `real_to_int_trunc`/`real_to_int_floor` on a non-finite or out-of-range value |
 //! | [`TRAP_OVERFLOW`] | `"Trap.Overflow"` | `i64_div_floor` of `MIN / -1` (LANG83 PR1b); the `i64_*_ovf` family (PR4) |
 //! | [`TRAP_USER`] | `"Trap.User"` | a frontend's explicit abort (`die`, a bare `raise`, …) via `trap` |
+//! | [`TRAP_UNBOUND`] | `"Trap.Unbound"` | reading a name that is not bound yet, or at all (JavaScript's `ReferenceError`, LANG84 6e) |
 //!
 //! # The closed trap-kind table (LANG83)
 //!
 //! The `trap kind` operation (LANG83) may only name a kind from a **closed**
-//! table: the six built-in `Trap.*` leaves above plus [`LANGUAGE_TRAP_KINDS`],
-//! where a language frontend registers its own kinds (for example a future
-//! `Ruby.ZeroDivisionError`) in the PR that first emits them. Each kind has a
+//! table: exactly the seven built-in `Trap.*` leaves above. Each kind has a
 //! **stable integer id** ([`trap_kind_id`]) — what a native backend passes to
 //! its runtime (`mov edi, id; call __twig_trap`) and what a runtime maps back
 //! to a name for the stderr report. Ids are append-only and never renumbered:
+//! a kind's id is its position in [`ALL_TRAP_KINDS`] plus one.
 //!
-//! | Range | Owner |
-//! |-------|-------|
-//! | 1–999 | built-in `Trap.*` kinds, in [`ALL_TRAP_KINDS`] order |
-//! | 1000+ | [`LANGUAGE_TRAP_KINDS`], in table order |
+//! # Every kind is language-neutral (LANG83 PR7d)
+//!
+//! A trap kind names a *machine-level condition* — a divisor is zero, an
+//! index is out of range, a name is unbound — never one source language's
+//! exception class. Each language's IIR compiler maps its errors onto the
+//! kind for their condition:
+//!
+//! ```text
+//! JavaScript  ReferenceError  ─┐
+//! Python      NameError        ├─▶  trap "Trap.Unbound"   (id 7)
+//! a Lisp      unbound variable ─┘
+//!
+//! Python      ZeroDivisionError ─┐
+//! Ruby        ZeroDivisionError  ├─▶  trap "Trap.DivZero"  (id 3)
+//! ```
+//!
+//! Two consequences shaped this table:
+//!
+//! - id 7 was first named `Trap.ReferenceError` (LANG84 6e, the first
+//!   frontend to need it). PR7d renamed it `Trap.Unbound` and **kept id 7**:
+//!   native code only ever passes the id, so a renamed row cannot strand a
+//!   compiled binary, it only changes the text a trap prints.
+//! - LANG83 PR1b once reserved ids from 1000 for a `LANGUAGE_TRAP_KINDS`
+//!   table of language-namespaced kinds (`Ruby.ZeroDivisionError`). Nothing
+//!   ever registered one, and PR7d retired the table: a language exception a
+//!   program can *catch* will be a value the frontend builds once AOT00 T2
+//!   exceptions land, never an IIR trap kind. So [`is_trap_kind`] is the
+//!   whole validation, and a `trap "Ruby.ZeroDivisionError"` is malformed.
 //!
 //! [`TRAP_KIND`] (`"Trap"`) is every built-in trap's common ancestor —
 //! `catch "Trap"` is the "catch any trap" idiom; [`CATCH_ANY`] (`"*"`) is the
@@ -107,9 +131,26 @@ pub const TRAP_OVERFLOW: &str = "Trap.Overflow";
 /// (Perl `die`, Ruby `raise "msg"`), emitted as `trap "Trap.User"` (LANG83).
 pub const TRAP_USER: &str = "Trap.User";
 
-/// The built-in trap kinds. The first four are in the order §6 of the T2 spec
-/// lists them; LANG83 appended `Trap.Overflow` and `Trap.User`. **Append
-/// only** — an entry's position (plus one) is its stable [`trap_kind_id`].
+/// A read of a name that is not bound yet, or at all, with *defined*
+/// trapping semantics (LANG84 phase 6e).
+///
+/// The condition is neutral: the name has no value here. JavaScript calls it
+/// a `ReferenceError` for both the temporal dead zone
+/// (`console.log(a); let a = 1;`) and an undeclared name, Python a
+/// `NameError`, a Lisp an unbound variable. `javascript-iir-compiler` lowers
+/// both JavaScript cases to `trap "Trap.Unbound"` after the output written
+/// so far, and keeps V8's own wording (`ReferenceError: z is not defined`)
+/// on its side of the boundary, since that sentence is JavaScript knowledge.
+///
+/// Stable id 7. Named `Trap.ReferenceError` until LANG83 PR7d renamed it for
+/// language neutrality; the id did not change.
+pub const TRAP_UNBOUND: &str = "Trap.Unbound";
+
+/// The built-in trap kinds — the whole closed table. The first four are in
+/// the order §6 of the T2 spec lists them; LANG83 appended `Trap.Overflow`
+/// and `Trap.User`, and LANG84 phase 6e `Trap.Unbound` (then called
+/// `Trap.ReferenceError`). **Append only** — an entry's position (plus one)
+/// is its stable [`trap_kind_id`].
 pub const ALL_TRAP_KINDS: &[&str] = &[
     TRAP_BOUNDS,
     TRAP_NULL,
@@ -117,19 +158,8 @@ pub const ALL_TRAP_KINDS: &[&str] = &[
     TRAP_CONV_RANGE,
     TRAP_OVERFLOW,
     TRAP_USER,
+    TRAP_UNBOUND,
 ];
-
-/// Language-specific trap kinds a frontend may name in `trap` (LANG83).
-///
-/// Empty today: the first language kind (e.g. `Ruby.ZeroDivisionError`) is
-/// added by the PR whose frontend first emits it. **Append only** — entry `i`
-/// has the stable id `LANGUAGE_TRAP_KIND_ID_BASE + i`. A kind here must not
-/// start with `"Trap."` (that namespace is the built-in table's).
-pub const LANGUAGE_TRAP_KINDS: &[&str] = &[];
-
-/// The first stable id handed to a [`LANGUAGE_TRAP_KINDS`] entry. Built-in kinds
-/// use `1..LANGUAGE_TRAP_KIND_ID_BASE`, so the two ranges can never collide.
-pub const LANGUAGE_TRAP_KIND_ID_BASE: u32 = 1000;
 
 /// Catch-anything sentinel — the spec's "all-ones mask" (§4.1). Matches every
 /// thrown kind, built-in or frontend-defined.
@@ -180,37 +210,32 @@ pub fn kind_matches(catch_kind: &str, thrown_kind: &str) -> bool {
         .is_some_and(|rest| rest.starts_with(KIND_SEPARATOR))
 }
 
-/// Return `true` if `kind` is one of the built-in [`ALL_TRAP_KINDS`].
+/// Return `true` if `kind` is one of the built-in [`ALL_TRAP_KINDS`] — the
+/// closed table, and so exactly the kinds a `trap` operation may name.
+///
+/// This is the only trap-kind validation: every backend's `trap` lowering,
+/// vm-core's `trap` handler and the LANG83 registry's `traps` lists all ask
+/// it. A language-namespaced kind is refused (LANG83 PR7d).
 ///
 /// ```
-/// use interpreter_ir::exception_kind::{is_trap_kind, TRAP_DIV_ZERO};
+/// use interpreter_ir::exception_kind::{is_trap_kind, TRAP_DIV_ZERO, TRAP_UNBOUND};
 /// assert!(is_trap_kind(TRAP_DIV_ZERO));
+/// assert!(is_trap_kind(TRAP_UNBOUND));
 /// assert!(!is_trap_kind("app.UserDefinedError"));
 /// // The family ancestor "Trap" itself is not one of the leaf kinds.
 /// assert!(!is_trap_kind("Trap"));
+/// // A language's exception class is never a trap kind.
+/// assert!(!is_trap_kind("Ruby.ZeroDivisionError"));
+/// assert!(!is_trap_kind("Trap.ReferenceError")); // id 7's name before PR7d
 /// ```
 pub fn is_trap_kind(kind: &str) -> bool {
     ALL_TRAP_KINDS.contains(&kind)
 }
 
-/// Return `true` if `kind` may be named by a `trap` operation: a built-in
-/// [`ALL_TRAP_KINDS`] leaf or a registered [`LANGUAGE_TRAP_KINDS`] entry.
+/// The stable integer id of a trap kind, or `None`.
 ///
-/// ```
-/// use interpreter_ir::exception_kind::{is_registered_trap_kind, TRAP_OVERFLOW};
-/// assert!(is_registered_trap_kind(TRAP_OVERFLOW));
-/// assert!(!is_registered_trap_kind("Trap"));            // a family, not a leaf
-/// assert!(!is_registered_trap_kind("Ruby.Unregistered")); // not in the table
-/// ```
-pub fn is_registered_trap_kind(kind: &str) -> bool {
-    is_trap_kind(kind) || LANGUAGE_TRAP_KINDS.contains(&kind)
-}
-
-/// The stable integer id of a registered trap kind, or `None`.
-///
-/// Built-in kinds are numbered from 1 in [`ALL_TRAP_KINDS`] order (0 is never
-/// an id, so a zeroed register can never masquerade as a valid kind);
-/// language kinds from [`LANGUAGE_TRAP_KIND_ID_BASE`].
+/// Kinds are numbered from 1 in [`ALL_TRAP_KINDS`] order (0 is never an id,
+/// so a zeroed register can never masquerade as a valid kind).
 ///
 /// ```
 /// use interpreter_ir::exception_kind::{trap_kind_id, trap_kind_name, TRAP_DIV_ZERO};
@@ -219,20 +244,18 @@ pub fn is_registered_trap_kind(kind: &str) -> bool {
 /// assert_eq!(trap_kind_id("nope"), None);
 /// ```
 pub fn trap_kind_id(kind: &str) -> Option<u32> {
-    if let Some(i) = ALL_TRAP_KINDS.iter().position(|k| *k == kind) {
-        return Some(i as u32 + 1);
-    }
-    LANGUAGE_TRAP_KINDS
-        .iter()
-        .position(|k| *k == kind)
-        .map(|i| LANGUAGE_TRAP_KIND_ID_BASE + i as u32)
+    ALL_TRAP_KINDS.iter().position(|k| *k == kind).map(|i| i as u32 + 1)
 }
 
 /// The kind name for a stable id — the inverse of [`trap_kind_id`].
+///
+/// ```
+/// use interpreter_ir::exception_kind::{trap_kind_name, TRAP_UNBOUND};
+/// assert_eq!(trap_kind_name(7), Some(TRAP_UNBOUND));
+/// assert_eq!(trap_kind_name(0), None);
+/// assert_eq!(trap_kind_name(1000), None); // the retired language-kind range
+/// ```
 pub fn trap_kind_name(id: u32) -> Option<&'static str> {
-    if id >= LANGUAGE_TRAP_KIND_ID_BASE {
-        return LANGUAGE_TRAP_KINDS.get((id - LANGUAGE_TRAP_KIND_ID_BASE) as usize).copied();
-    }
     id.checked_sub(1).and_then(|i| ALL_TRAP_KINDS.get(i as usize)).copied()
 }
 
@@ -299,7 +322,9 @@ mod tests {
         assert!(is_trap_kind(TRAP_USER));
         assert!(kind_matches(TRAP_KIND, TRAP_OVERFLOW));
         assert!(!kind_matches(TRAP_OVERFLOW, TRAP_DIV_ZERO));
-        assert_eq!(ALL_TRAP_KINDS.len(), 6);
+        assert!(is_trap_kind(TRAP_UNBOUND));
+        assert!(kind_matches(TRAP_KIND, TRAP_UNBOUND));
+        assert_eq!(ALL_TRAP_KINDS.len(), 7);
     }
 
     #[test]
@@ -312,28 +337,39 @@ mod tests {
             (TRAP_CONV_RANGE, 4),
             (TRAP_OVERFLOW, 5),
             (TRAP_USER, 6),
+            (TRAP_UNBOUND, 7),
         ];
         for (kind, id) in pinned {
             assert_eq!(trap_kind_id(kind), Some(id), "{kind}");
             assert_eq!(trap_kind_name(id), Some(kind));
         }
         assert_eq!(trap_kind_name(0), None);
-        assert_eq!(trap_kind_name(7), None);
-        assert_eq!(trap_kind_name(LANGUAGE_TRAP_KIND_ID_BASE), LANGUAGE_TRAP_KINDS.first().copied());
+        assert_eq!(trap_kind_name(8), None);
+        assert_eq!(trap_kind_name(1000), None);
         assert_eq!(trap_kind_id(TRAP_KIND), None);
         assert_eq!(trap_kind_id(CATCH_ANY), None);
     }
 
+    /// LANG83 PR7d: id 7 was renamed, not renumbered, and its old name is gone.
     #[test]
-    fn language_kinds_stay_out_of_the_trap_namespace_and_id_range() {
-        assert!((ALL_TRAP_KINDS.len() as u32) < LANGUAGE_TRAP_KIND_ID_BASE);
-        for (i, kind) in LANGUAGE_TRAP_KINDS.iter().enumerate() {
-            assert!(!kind.starts_with("Trap."), "{kind} must not use the built-in namespace");
-            assert!(kind.contains('.'), "{kind} should be a dotted Language.Kind path");
-            assert!(is_registered_trap_kind(kind));
-            assert_eq!(trap_kind_id(kind), Some(LANGUAGE_TRAP_KIND_ID_BASE + i as u32));
+    fn unbound_is_id_seven_and_its_old_name_is_not_a_kind() {
+        assert_eq!(TRAP_UNBOUND, "Trap.Unbound");
+        assert_eq!(trap_kind_id(TRAP_UNBOUND), Some(7));
+        assert!(!is_trap_kind("Trap.ReferenceError"));
+        assert_eq!(trap_kind_id("Trap.ReferenceError"), None);
+    }
+
+    /// LANG83 PR7d retired the language-kind table: a language's exception
+    /// class is never a trap kind, and no id outside `1..=7` names one.
+    #[test]
+    fn language_namespaced_kinds_are_refused() {
+        for kind in ["Ruby.ZeroDivisionError", "JavaScript.ReferenceError", "Python.NameError"] {
+            assert!(!is_trap_kind(kind), "{kind}");
+            assert_eq!(trap_kind_id(kind), None, "{kind}");
         }
-        assert!(!is_registered_trap_kind("Ruby.ZeroDivisionError"));
+        for id in [1000, 1001, u32::MAX] {
+            assert_eq!(trap_kind_name(id), None, "id {id}");
+        }
     }
 
     #[test]

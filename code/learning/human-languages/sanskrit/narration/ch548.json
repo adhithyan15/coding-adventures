@@ -1,0 +1,845 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 548,
+  "title": "Fears and Reassurance",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:813bc2dc14f09ec5",
+  "lessons": [
+    {
+      "id": "SA-C548-visvasayati",
+      "sequence": 31350,
+      "title": "विश्वासयति (viśvāsayati) — inspires confidence",
+      "headword": "विश्वासयति",
+      "romanization": "viśvāsayati",
+      "gloss": "inspires confidence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fa7b79f632638e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a climb, then the Sanskrit for springs up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विश्वासयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विश्वासयति — viśvāsayati — \"inspires confidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि बालः भीतः अस्ति, तर्हि माता तं विश्वासयति। yadi bālaḥ bhītaḥ asti, tarhi mātā taṃ viśvāsayati. If the child is afraid, my mother gives him confidence."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): सा बालं विश्वासितवती, sā bālaṃ viśvāsitavatī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विश्वासयति (viśvāsayati) is built on vi and the causative of the root √śvas, \"to breathe\", the root of viśvasiti, \"trusts\"; MW gives viśvāsayati as to cause to trust, to inspire with confidence, to console (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvāsayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvāsayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśvāsayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśvāsayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bālaḥ bhītaḥ asti, tarhi mātā taṃ viśvāsayati. — If the child is afraid, my mother gives him confidence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bālaḥ bhītaḥ asti, tarhi mātā taṃ viśvāsayati.* — If the child is afraid, my mother gives him confidence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a climb, then the Sanskrit for springs up, then say viśvāsayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a climb, then the Sanskrit for springs up, then say *viśvāsayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विश्वासयति (viśvāsayati) mean? (\"Inspires confidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C548-durdasa",
+      "sequence": 31360,
+      "title": "दुर्दशा (durdaśā) — a sorry plight",
+      "headword": "दुर्दशा",
+      "romanization": "durdaśā",
+      "gloss": "a sorry plight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0e2269befc66fc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for springs up, then the Sanskrit for inspires confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुर्दशा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्दशा — durdaśā — \"a sorry plight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि दुर्दशा आगच्छति, तर्हि मित्रं साहाय्यं करोति। yadi durdaśā āgacchati, tarhi mitraṃ sāhāyyaṃ karoti. If hard times come, a friend helps."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुर्दशा (durdaśā) is built on dur, \"bad\", and daśā, \"a state, a condition\"; MW gives durdaśā as a bad situation, misfortune (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durdaśā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durdaśā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durdaśā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durdaśā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi durdaśā āgacchati, tarhi mitraṃ sāhāyyaṃ karoti. — If hard times come, a friend helps.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi durdaśā āgacchati, tarhi mitraṃ sāhāyyaṃ karoti.* — If hard times come, a friend helps.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for springs up, then the Sanskrit for inspires confidence, then say durdaśā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for springs up, then the Sanskrit for inspires confidence, then say *durdaśā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुर्दशा (durdaśā) mean? (\"A sorry plight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C548-santvana",
+      "sequence": 31370,
+      "title": "सान्त्वना (sāntvanā) — consolation",
+      "headword": "सान्त्वना",
+      "romanization": "sāntvanā",
+      "gloss": "consolation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1beef20023ecee4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for inspires confidence, then the Sanskrit for a sorry plight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सान्त्वना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सान्त्वना — sāntvanā — \"consolation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भ्राता दुःखी अस्ति, तर्हि तस्मै सान्त्वनां ददातु। yadi bhrātā duḥkhī asti, tarhi tasmai sāntvanāṃ dadātu. If your brother is unhappy, offer him comfort."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सान्त्वना (sāntvanā) comes from the root √sāntv, \"to console, to conciliate\"; MW gives sāntvana, beside sāntvanā, as soothing with kind words, consolation (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāntvanā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāntvanā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāntvanā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāntvanā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhrātā duḥkhī asti, tarhi tasmai sāntvanāṃ dadātu. — If your brother is unhappy, offer him comfort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhrātā duḥkhī asti, tarhi tasmai sāntvanāṃ dadātu.* — If your brother is unhappy, offer him comfort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for inspires confidence, then the Sanskrit for a sorry plight, then say sāntvanā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for inspires confidence, then the Sanskrit for a sorry plight, then say *sāntvanā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सान्त्वना (sāntvanā) mean? (\"Consolation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C548-akulah",
+      "sequence": 31380,
+      "title": "आकुलः (ākulaḥ) — flustered; agitated",
+      "headword": "आकुलः",
+      "romanization": "ākulaḥ",
+      "gloss": "flustered; agitated",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a74c9b08970db4d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a sorry plight, then the Sanskrit for consolation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आकुलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकुलः — ākulaḥ — \"flustered; agitated\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् आकुलः अस्ति, तर्हि माम् आह्वयतु। yadi bhavān ākulaḥ asti, tarhi mām āhvayatu. If you are flustered, please call me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आकुलः (ākulaḥ) is a word MW traces, with a query, to ā and the root √kṝ, \"to scatter\"; MW gives ākula as confounded, confused, agitated, flurried, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākulaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākulaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākulaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākulaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān ākulaḥ asti, tarhi mām āhvayatu. — If you are flustered, please call me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān ākulaḥ asti, tarhi mām āhvayatu.* — If you are flustered, please call me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a sorry plight, then the Sanskrit for consolation, then say ākulaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a sorry plight, then the Sanskrit for consolation, then say *ākulaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आकुलः (ākulaḥ) mean? (\"Flustered; agitated\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C548-saranam",
+      "sequence": 31390,
+      "title": "शरणम् (śaraṇam) — a refuge; shelter",
+      "headword": "शरणम्",
+      "romanization": "śaraṇam",
+      "gloss": "a refuge; shelter",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37c3f832668eea80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for consolation, then the Sanskrit for flustered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शरणम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शरणम् — śaraṇam — \"a refuge; shelter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वात्या आगच्छति, तर्हि वयं शरणं गच्छामः। yadi vātyā āgacchati, tarhi vayaṃ śaraṇaṃ gacchāmaḥ. If a storm comes, we go to shelter."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शरणम् (śaraṇam) comes from the root √śri, \"to lean on, to resort to\", as MW derives it (through a form √śṛ); MW gives śaraṇa as protecting, and a shelter, a place of refuge or rest, a house (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaraṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaraṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śaraṇam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śaraṇam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi vātyā āgacchati, tarhi vayaṃ śaraṇaṃ gacchāmaḥ. — If a storm comes, we go to shelter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi vātyā āgacchati, tarhi vayaṃ śaraṇaṃ gacchāmaḥ.* — If a storm comes, we go to shelter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for consolation, then the Sanskrit for flustered, then say śaraṇam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for consolation, then the Sanskrit for flustered, then say *śaraṇam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शरणम् (śaraṇam) mean? (\"A refuge; shelter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R548-review-542-548",
+      "sequence": 31400,
+      "title": "Looking back: from Making Up One's Mind to Fears and Reassurance",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Making Up One's Mind to Fears and Reassurance",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:401973ea97d2517b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for acceptance and makes sure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "acceptance, makes sure, excellent, pleasing, neutral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: acceptance, makes sure, excellent, pleasing, neutral]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "free will, helpless, obstinacy, insistence, by oneself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: free will, helpless, obstinacy, insistence, by oneself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "each other, at the same time, together, separately, at present",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: each other, at the same time, together, separately, at present]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sequence, in due order, except, at first, reviews",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sequence, in due order, except, at first, reviews]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satisfied, completed, arises, an attainment, a consequence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: satisfied, completed, arises, an attainment, a consequence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rise, a decline, a fall, a climb, springs up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rise, a decline, a fall, a climb, springs up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inspires confidence, a sorry plight, consolation, flustered, a refuge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: inspires confidence, a sorry plight, consolation, flustered, a refuge]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Acceptance? (स्वीकारः, svīkāraḥ.) Makes sure? (अवधारयति, avadhārayati.) Excellent? (उत्कृष्टः, utkṛṣṭaḥ.) Pleasing? (रुचिरः, ruciraḥ.) Neutral? (तटस्थः, taṭasthaḥ.) Free will? (स्वेच्छा, svecchā.) Helpless? (विवशः, vivaśaḥ.) Obstinacy? (हठः, haṭhaḥ.) Insistence? (आग्रहः, āgrahaḥ.) By oneself? (स्वयम्, svayam.) Each other? (परस्परम्, parasparam.) At the same time? (युगपत्, yugapat.) Together? (मिथः, mithaḥ.) Separately? (पृथक्, pṛthak.) At present? (सम्प्रति, samprati.) A sequence? (अनुक्रमः, anukramaḥ.) In due order? (यथाक्रमम्, yathākramam.) Except? (ऋते, ṛte.) At first? (आदौ, ādau.) Reviews? (आलोचयति, ālocayati.) Satisfied? (सन्तुष्टः, santuṣṭaḥ.) Completed? (निष्पन्नः, niṣpannaḥ.) Arises? (उद्भवति, udbhavati.) An attainment? (प्राप्तिः, prāptiḥ.) A consequence? (विपाकः, vipākaḥ.) A rise? (उत्थानम्, utthānam.) A decline? (अवनतिः, avanatiḥ.) A fall? (पतनम्, patanam.) A climb? (आरोहः, ārohaḥ.) Springs up? (उच्छलति, ucchalati.) Inspires confidence? (विश्वासयति, viśvāsayati.) A sorry plight? (दुर्दशा, durdaśā.) Consolation? (सान्त्वना, sāntvanā.) Flustered? (आकुलः, ākulaḥ.) A refuge? (शरणम्, śaraṇam.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

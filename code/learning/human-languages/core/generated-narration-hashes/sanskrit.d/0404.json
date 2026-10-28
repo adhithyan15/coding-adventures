@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:d85ddede909ccf5f",
+  "lessonIds": [
+    "SA-C404-prantaram",
+    "SA-C404-kantarah",
+    "SA-C404-desatanam",
+    "SA-C404-niliyate",
+    "SA-C404-sunyah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch404.txt",
+  "json": "sanskrit/narration/ch404.json",
+  "textHash": "fnv1a64:729772323dfa6b02",
+  "jsonHash": "fnv1a64:703e347652fa7c91",
+  "findings": []
+}

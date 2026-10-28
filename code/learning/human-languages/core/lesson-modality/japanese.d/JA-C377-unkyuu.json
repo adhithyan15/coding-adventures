@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C377-unkyuu",
+    "language": "japanese",
+    "chapter": 377,
+    "sequence": 22260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82138bad1ef2a41a"
+  },
+  "findings": []
+}

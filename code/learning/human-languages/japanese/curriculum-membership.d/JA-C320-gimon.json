@@ -1,0 +1,11 @@
+{
+  "id": "JA-C320-gimon",
+  "pathSegment": "JA-PATH-320-TACHIBA320",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-320-TACHIBA320",
+      "order": 1
+    }
+  ]
+}

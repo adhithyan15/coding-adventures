@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C521-zuibun",
+    "language": "japanese",
+    "chapter": 521,
+    "sequence": 30150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2fc96743406ffcb"
+  },
+  "findings": []
+}

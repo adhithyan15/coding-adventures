@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:e3c2968decd5d5ab",
+  "lessonIds": [
+    "JA-C489-nougyou",
+    "JA-C489-shuukaku",
+    "JA-C489-tagayasu",
+    "JA-C489-minoru",
+    "JA-C489-komugi"
+  ],
+  "tex": "japanese/book/chapters/ch489-fields-and-harvests.tex"
+}

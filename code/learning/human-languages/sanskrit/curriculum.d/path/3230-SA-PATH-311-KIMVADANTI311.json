@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-311-KIMVADANTI311",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "SA-EXT-311-KIMVADANTI311"
+  ],
+  "after": []
+}

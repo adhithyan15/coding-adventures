@@ -124,6 +124,14 @@ impl RegisterFile32 {
         let (new_pc, _, _) = add_32bit(current, by, 0);
         clock_word(&mut self.pc, new_pc);
     }
+
+    /// Count the DFF cells in the concrete register storage arrays.
+    pub(crate) fn dff_count(&self) -> usize {
+        self.gprs.iter().map(|word| word.len()).sum::<usize>()
+            + self.hi.len()
+            + self.lo.len()
+            + self.pc.len()
+    }
 }
 
 impl Default for RegisterFile32 {

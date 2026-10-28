@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C66-xiayu",
+  "pathSegment": "ZH-PATH-66-WEATHER66",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-66-WEATHER66",
+      "order": 4
+    }
+  ]
+}

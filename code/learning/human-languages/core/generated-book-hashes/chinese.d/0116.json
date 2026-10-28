@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:59b76ec4adf205cb",
+  "lessonIds": [
+    "ZH-C116-qianbao",
+    "ZH-C116-huzhao",
+    "ZH-C116-shoubiao",
+    "ZH-C116-yusan",
+    "ZH-C116-diu",
+    "ZH-R116-review-111-116"
+  ],
+  "tex": "chinese/book/chapters/ch116-things-i-carry.tex"
+}

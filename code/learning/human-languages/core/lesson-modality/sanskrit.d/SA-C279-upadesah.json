@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C279-upadesah",
+    "language": "sanskrit",
+    "chapter": 279,
+    "sequence": 16410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c84c30fcd7b1e9b"
+  },
+  "findings": []
+}

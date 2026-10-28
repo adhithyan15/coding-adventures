@@ -46,6 +46,36 @@ const _COND_NAMES: [&str; 8] = ["NZ", "Z", "NC", "C", "PO", "PE", "P", "M"];
 /// Exact persistent-state topology of the complete machine.
 pub const FLIP_FLOP_COUNT: usize = DffMemory::DFF_COUNT + 128 + 32 + 32 + 16 + 5 + 2 * 256 * 8;
 
+/// Physical DFF counts derived from the machine's owned storage containers.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PhysicalStorageInventory {
+    /// DFFs in the 64 KiB memory.
+    pub memory_dffs: usize,
+    /// DFFs in both register banks, F/F', IX, and IY.
+    pub register_dffs: usize,
+    /// DFFs in SP, PC, I, R, IFF1, IFF2, and IM.
+    pub control_dffs: usize,
+    /// The authoritative one-bit HALT register.
+    pub halt_dffs: usize,
+    /// DFFs in the 256 input latches.
+    pub input_dffs: usize,
+    /// DFFs in the 256 output latches.
+    pub output_dffs: usize,
+}
+
+impl PhysicalStorageInventory {
+    /// Sum the independently inventoried physical banks.
+    #[must_use]
+    pub const fn total(self) -> usize {
+        self.memory_dffs
+            + self.register_dffs
+            + self.control_dffs
+            + self.halt_dffs
+            + self.input_dffs
+            + self.output_dffs
+    }
+}
+
 /// Gate-level Z80 simulator.
 #[derive(Clone)]
 pub struct GateLevelCpuZ80 {
@@ -58,6 +88,7 @@ pub struct GateLevelCpuZ80 {
     iff1: bool,
     iff2: bool,
     im: u8,
+    /// Non-authoritative compatibility observer, synchronized from HALT Q.
     halted: bool,
     sp_state: StateRegister,
     pc_state: StateRegister,
@@ -101,6 +132,7 @@ impl GateLevelCpuZ80 {
     /// Reset all CPU state, memory, and port latches to power-on values.
     pub fn reset(&mut self) {
         *self = Self::new();
+        self.clock_halted(false);
     }
 
     /// Load a checked program at `origin`, wrapping once through 16-bit memory.
@@ -116,7 +148,7 @@ impl GateLevelCpuZ80 {
             self.memory.write((base + i) & 0xFFFF, b);
         }
         self.pc = origin;
-        self.halted = false;
+        self.clock_halted(false);
         self.clock_wires_into_state();
         Ok(())
     }
@@ -133,9 +165,10 @@ impl GateLevelCpuZ80 {
 
     /// Run the already-loaded machine transactionally.
     pub fn run_loaded_with_limit(&mut self, max_steps: usize) -> Result<ExecutionResult, Z80Error> {
+        self.sync_halted_observer();
         let before = self.snapshot();
         let mut traces = Vec::new();
-        while !self.halted && traces.len() < max_steps {
+        while !self.halted() && traces.len() < max_steps {
             match self.step() {
                 Ok(trace) => traces.push(trace),
                 Err(error) => {
@@ -145,7 +178,7 @@ impl GateLevelCpuZ80 {
             }
         }
         Ok(ExecutionResult {
-            halted: self.halted,
+            halted: self.halted(),
             steps: traces.len(),
             pc: self.pc,
             traces,
@@ -194,7 +227,7 @@ impl GateLevelCpuZ80 {
             },
             memory: self.memory.snapshot(),
             pc: self.pc,
-            halted: self.halted,
+            halted: self.halted(),
             iff1: self.iff1,
             iff2: self.iff2,
             im: self.im,
@@ -242,13 +275,13 @@ impl GateLevelCpuZ80 {
         self.iff1 = state.iff1;
         self.iff2 = state.iff2;
         self.im = state.im;
-        self.halted = state.halted;
         self.memory.copy_from_slice(&state.memory);
         for port in 0..256 {
             self.input_ports[port].write(u16::from(state.input_ports[port]));
             self.output_ports[port].write(u16::from(state.output_ports[port]));
         }
         self.clock_wires_into_state();
+        self.clock_halted(state.halted);
         Ok(())
     }
 
@@ -278,7 +311,7 @@ impl GateLevelCpuZ80 {
         }
         self.iff1 = false;
         self.iff2 = false;
-        self.halted = false;
+        self.clock_halted(false);
         self.push16(self.pc);
         self.pc = match self.im {
             0 => u16::from(data & 0x38),
@@ -297,7 +330,7 @@ impl GateLevelCpuZ80 {
         self.load_wires_from_state();
         self.iff2 = self.iff1;
         self.iff1 = false;
-        self.halted = false;
+        self.clock_halted(false);
         self.push16(self.pc);
         self.pc = 0x0066;
         self.clock_wires_into_state();
@@ -311,7 +344,7 @@ impl GateLevelCpuZ80 {
         self.iff1 = self.iff1_state.read() != 0;
         self.iff2 = self.iff2_state.read() != 0;
         self.im = self.im_state.read() as u8;
-        self.halted = self.halt_state.read() != 0;
+        self.sync_halted_observer();
     }
 
     fn clock_wires_into_state(&mut self) {
@@ -322,7 +355,41 @@ impl GateLevelCpuZ80 {
         self.iff1_state.write(self.iff1 as u16);
         self.iff2_state.write(self.iff2 as u16);
         self.im_state.write(u16::from(self.im));
-        self.halt_state.write(self.halted as u16);
+        self.sync_halted_observer();
+    }
+
+    /// Observe the stable Q output of the physical HALT register.
+    #[must_use]
+    pub fn halted(&self) -> bool {
+        self.halt_state.read() != 0
+    }
+
+    fn clock_halted(&mut self, value: bool) {
+        self.halt_state.write(u16::from(value));
+        self.sync_halted_observer();
+    }
+
+    fn sync_halted_observer(&mut self) {
+        self.halted = self.halted();
+    }
+
+    /// Inventory physical storage from the concrete owned containers.
+    #[must_use]
+    pub fn physical_storage_inventory(&self) -> PhysicalStorageInventory {
+        PhysicalStorageInventory {
+            memory_dffs: self.memory.dff_count(),
+            register_dffs: self.rf.dff_count(),
+            control_dffs: self.sp_state.dff_count()
+                + self.pc_state.dff_count()
+                + self.i_state.dff_count()
+                + self.r_state.dff_count()
+                + self.iff1_state.dff_count()
+                + self.iff2_state.dff_count()
+                + self.im_state.dff_count(),
+            halt_dffs: self.halt_state.dff_count(),
+            input_dffs: self.input_ports.iter().map(StateRegister::dff_count).sum(),
+            output_dffs: self.output_ports.iter().map(StateRegister::dff_count).sum(),
+        }
     }
 
     // ── Memory helpers ────────────────────────────────────────────────────────
@@ -556,7 +623,7 @@ impl GateLevelCpuZ80 {
 
     pub fn step(&mut self) -> Result<StepTrace, Z80Error> {
         self.load_wires_from_state();
-        if self.halted {
+        if self.halted() {
             return Err(Z80Error::Halted);
         }
 
@@ -609,7 +676,7 @@ impl GateLevelCpuZ80 {
 
         // HALT
         if op == 0x76 {
-            self.halted = true;
+            self.clock_halted(true);
             return ("HALT", "HALT".into());
         }
 
@@ -1750,6 +1817,90 @@ mod tests {
         GateLevelCpuZ80::new()
     }
 
+    #[test]
+    fn halt_q_overrides_both_observer_divergences() {
+        let mut running = cpu();
+        running.load(&[0x00, 0x76], 0).unwrap();
+        running.halted = true;
+        assert!(!running.halted());
+        assert!(!running.snapshot().halted);
+        let result = running.run_loaded_with_limit(2).unwrap();
+        assert!(result.halted);
+        assert_eq!(result.steps, 2);
+        assert!(running.halted);
+
+        running.halted = false;
+        assert!(running.halted());
+        assert!(running.snapshot().halted);
+        let already_halted = running.run_loaded_with_limit(8).unwrap();
+        assert!(already_halted.halted);
+        assert_eq!(already_halted.steps, 0);
+        assert!(running.halted);
+
+        running.reset();
+        assert!(!running.halted());
+        assert!(!running.halted);
+        running.halted = true;
+        running.load(&[0x00], 0).unwrap();
+        assert!(!running.halted());
+        assert!(!running.halted);
+        let mut restored = running.snapshot();
+        restored.halted = true;
+        running.restore(&restored).unwrap();
+        assert!(running.halted());
+        assert!(running.halted);
+    }
+
+    #[test]
+    fn halt_q_interrupts_and_fault_rollback_repair_observer() {
+        let mut state = cpu().snapshot();
+        state.halted = true;
+        state.iff1 = true;
+        state.iff2 = true;
+        state.im = 1;
+        state.regs.sp = 0x1000;
+        state.pc = 0x3456;
+
+        let mut maskable = cpu();
+        maskable.restore(&state).unwrap();
+        maskable.halted = false;
+        assert!(maskable.interrupt(0));
+        assert!(!maskable.halted());
+        assert!(!maskable.halted);
+        assert_eq!(maskable.snapshot().pc, 0x0038);
+
+        let mut rejected = cpu();
+        state.iff1 = false;
+        rejected.restore(&state).unwrap();
+        rejected.halted = false;
+        assert!(!rejected.interrupt(0));
+        assert!(rejected.halted());
+        assert!(rejected.halted);
+
+        let mut non_maskable = cpu();
+        non_maskable.restore(&state).unwrap();
+        non_maskable.halted = false;
+        non_maskable.nmi();
+        assert!(!non_maskable.halted());
+        assert!(!non_maskable.halted);
+        assert_eq!(non_maskable.snapshot().pc, 0x0066);
+
+        let mut faulting = cpu();
+        faulting.load(&[0xED, 0x00], 0).unwrap();
+        faulting.halted = true;
+        let before = faulting.snapshot();
+        assert_eq!(
+            faulting.run_loaded_with_limit(1),
+            Err(Z80Error::UnknownOpcode {
+                address: 0,
+                raw: vec![0xED, 0x00],
+            })
+        );
+        assert_eq!(faulting.snapshot(), before);
+        assert!(!faulting.halted());
+        assert!(!faulting.halted);
+    }
+
     // ── Basic arithmetic ─────────────────────────────────────────────────────
 
     #[test]
@@ -1932,7 +2083,7 @@ mod tests {
         ];
         c.load(&prog, 0).unwrap();
         for _ in 0..50 {
-            if c.halted {
+            if c.halted() {
                 break;
             }
             c.step().unwrap();

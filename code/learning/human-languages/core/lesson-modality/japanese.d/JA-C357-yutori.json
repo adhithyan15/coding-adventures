@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C357-yutori",
+    "language": "japanese",
+    "chapter": 357,
+    "sequence": 21100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ef6e905ca72a167"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Grown-Ups and Children",
+  "label": "ch:zh-grown-ups-and-children",
+  "canDo": "I can talk about grown-ups, babies, boys and girls, and middle age.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "ZH-C266-zhongnian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can talk about grown-ups, babies, boys and girls, and middle age.",
+    "assesses": [
+      "ZH-LEX-C266-AGE266-03",
+      "ZH-LEX-C266-AGE266-04",
+      "ZH-LEX-C266-AGE266-05"
+    ]
+  }
+}

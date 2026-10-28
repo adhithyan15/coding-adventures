@@ -1,4 +1,4 @@
 subset,description,corpus_dir,spec
-py-float-print,LANG79 float print subset,corpus/py-float-print,LANG79
+py-float-print,LANG84 phase 7c slice 3 float print subset (named after LANG79's pilot): py-int-print plus float literals and / as true division and int/float mixing in + - * / and unary + - (IEEE binary64; a zero divisor traps) with a float printed as repr,corpus/py-float-print,LANG84
 py-int-print,LANG84 phase 7a integer print subset: print() and print(<expr>) with decimal int literals and parentheses and unary + - and binary + - * // % (i64 with trapping overflow),corpus/py-int-print,LANG84
 py2-int-print,LANG84 phase 7c slice 1 Python 2 integer print subset: the print statement (print and print <expr>) with decimal int literals and parentheses and unary + - and binary + - * / // % where / is classic (floor) division on ints (i64 with trapping overflow),corpus/py2-int-print,LANG84

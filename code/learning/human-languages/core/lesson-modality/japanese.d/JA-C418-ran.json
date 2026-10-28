@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C418-ran",
+    "language": "japanese",
+    "chapter": 418,
+    "sequence": 24400,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:911eb7713017d981"
+  },
+  "findings": []
+}

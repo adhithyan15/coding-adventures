@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.20)
+project(neural_framework_installed_consumer LANGUAGES C)
+find_package(neural_framework CONFIG REQUIRED)
+add_executable(installed_consumer ../install_client.c)
+target_link_libraries(installed_consumer PRIVATE coding_adventures::neural_framework)
+set_target_properties(installed_consumer PROPERTIES C_STANDARD 17 C_STANDARD_REQUIRED YES C_EXTENSIONS NO)

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-156-PRICES",
+  "stage": "A2",
+  "kind": "required",
+  "category": "reading",
+  "canDo": "I can find prices in a price list and an advert.",
+  "prerequisites": []
+}

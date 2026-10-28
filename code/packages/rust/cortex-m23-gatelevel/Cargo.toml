@@ -1,0 +1,19 @@
+[package]
+name = "cortex-m23-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed gate-level Arm Cortex-M23 simulator"
+license = "MIT"
+
+[lib]
+name = "cortex_m23_gatelevel"
+path = "src/lib.rs"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+
+[dev-dependencies]
+cortex-m23-simulator = { path = "../cortex-m23-simulator" }
+quote = "1"
+syn = { version = "2", features = ["full", "visit"] }

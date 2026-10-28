@@ -3401,6 +3401,8 @@ fn primitive_to_html_tag(node: &LayoutNode) -> Result<HtmlTag, PipelineEmitError
 /// - `content: slot: display-name` → `Some("${displayName}")` — the
 ///   template-literal interpolation that picks up the `const
 ///   displayName = ...` line from `_render()`.
+/// - `content: row-item` (bare)   → `Some("${escapeHtml(rowItem)}")` — the
+///   variable's value, never the text `row-item` (see the arm below).
 fn build_text_content(node: &LayoutNode) -> Option<String> {
     let prop = node.props.iter().find(|p| p.name == "content")?;
     Some(match &prop.value {
@@ -3413,7 +3415,36 @@ fn build_text_content(node: &LayoutNode) -> Option<String> {
                 String::new()
             }
         }
-        LayoutPropValue::Keyword(k) => escape_html_text(k),
+        // A bare NAME is a variable, not a string (UI29 §3.3
+        // `name_ref ::= NAME`). In
+        //
+        //     For ( each: slot: rows, as: row ) { Text ( content: row ) }
+        //
+        // each label must show that row's value, as React (`{row}`),
+        // HTML (`{{row}}`) and XAML (`{x:Bind Row}`) do. This arm used to
+        // escape the NAME as literal text, so every row read the word
+        // `row`.
+        //
+        // The interpolation sits inside the `.map((row, idx) => `…`)`
+        // arrow that `emit_for` writes, so JavaScript's own scoping gives
+        // UI29 §3.4's "For wins": the arrow parameter shadows the
+        // `const row = …` slot line at the top of `_render()`, and
+        // outside any loop the NAME reads that slot line, as React's
+        // destructured prop does. A NAME bound by neither throws a
+        // `ReferenceError` when `_render()` runs, the runtime form of the
+        // `tsc` error React gets.
+        //
+        // The value goes through `escapeHtml` like a slot's, never raw:
+        // it is host data on its way into `innerHTML`. A NAME whose
+        // camelCased spelling is not a safe identifier renders nothing,
+        // as the slot arm does (`template_identifier_body`).
+        //
+        //   authored                 emitted
+        //   ------------------------ ------------------------------
+        //   content: row             ${escapeHtml(row)}
+        //   content: row-item        ${escapeHtml(rowItem)}
+        //   content: display-name    ${escapeHtml(displayName)}
+        LayoutPropValue::Keyword(name) => template_identifier_body(name),
         LayoutPropValue::Number(n) => format!("{n}"),
         LayoutPropValue::EmitRef(_) => String::new(),
         // UI29 §3.4 — `Expr` DOES appear as a `Text` content prop when
@@ -4578,6 +4609,110 @@ mod tests {
             "got:\n{}",
             r.output
         );
+    }
+
+    fn bare_text(name: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::Keyword(name.to_string()),
+            }],
+            children: Vec::new(),
+        }
+    }
+
+    /// A bare NAME in `content:` reads the variable it names, HTML-escaped,
+    /// never its own spelling.
+    ///
+    /// | authored                      | bound by          | emitted                    |
+    /// |-------------------------------|-------------------|----------------------------|
+    /// | `For (…, as: row-item)` body  | arrow parameter   | `${escapeHtml(rowItem)}`   |
+    /// | `For (…, index: i)` body      | arrow parameter   | `${escapeHtml(i)}`         |
+    /// | `content: display-name`       | `const` slot line | `${escapeHtml(displayName)}` |
+    ///
+    /// Before the fix each was the escaped spelling, so every row of a list
+    /// read the word `row-item`.
+    #[test]
+    fn text_content_bare_name_reads_the_variable() {
+        let for_over_rows = |binding: &str, index: Option<&str>, body: LayoutNode| {
+            let mut props = vec![
+                LayoutProp {
+                    name: "each".to_string(),
+                    value: LayoutPropValue::SlotRef("rows".to_string()),
+                },
+                LayoutProp {
+                    name: "as".to_string(),
+                    value: LayoutPropValue::Keyword(binding.to_string()),
+                },
+            ];
+            if let Some(index) = index {
+                props.push(LayoutProp {
+                    name: "index".to_string(),
+                    value: LayoutPropValue::Keyword(index.to_string()),
+                });
+            }
+            LayoutNode {
+                tag: "For".to_string(),
+                part_name: None,
+                props,
+                children: vec![body],
+            }
+        };
+        let m = component(
+            "Ledger",
+            vec![
+                slot("rows", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("display-name", SlotType::Text, true),
+            ],
+            vec![],
+        );
+        let l = root_layout(
+            "Ledger",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    bare_text("display-name"),
+                    for_over_rows("row-item", None, bare_text("row-item")),
+                    for_over_rows("row", Some("i"), bare_text("i")),
+                ],
+            },
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Ledger"))
+            .unwrap()
+            .output;
+        for needle in [
+            "<span>${escapeHtml(displayName)}</span>",
+            "rows.map((rowItem, idx) => `<span>${escapeHtml(rowItem)}</span>`)",
+            "rows.map((row, i) => `<span>${escapeHtml(i)}</span>`)",
+        ] {
+            assert!(out.contains(needle), "missing `{needle}` in:\n{out}");
+        }
+        for spelling in ["display-name", "row-item", "i"] {
+            assert!(
+                !out.contains(&format!("<span>{spelling}</span>")),
+                "`{spelling}` must not be its own label:\n{out}"
+            );
+        }
+    }
+
+    /// A bare NAME whose camelCased spelling is not a JavaScript identifier
+    /// renders nothing, exactly as an unsafe slot name does
+    /// (`template_identifier_body`); it never reaches the template literal.
+    /// The moslayout lexer cannot produce such a NAME today; this pins the
+    /// defence if it ever loosens.
+    #[test]
+    fn text_bare_name_content_drops_an_unsafe_identifier() {
+        let m = component("Hostile", vec![], vec![]);
+        let l = root_layout("Hostile", bare_text("x}`; evil(`"));
+        let out = from_pipeline(&m, &l, &empty_style("Hostile"))
+            .unwrap()
+            .output;
+        assert!(out.contains("<span></span>"), "{out}");
+        assert!(!out.contains("evil"), "{out}");
     }
 
     fn path_node(part: Option<&str>, props: Vec<(&str, LayoutPropValue)>) -> LayoutNode {

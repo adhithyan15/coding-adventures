@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:af7d76b590dbc2e2",
+  "lessonIds": [
+    "JA-C533-yarigai",
+    "JA-C533-ikigai",
+    "JA-C533-netchuu-suru",
+    "JA-C533-uchikomu",
+    "JA-C533-joutatsu-suru",
+    "JA-R533-review-528-533",
+    "JA-R533-review-final-533"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch533.txt",
+  "json": "japanese/narration/ch533.json",
+  "textHash": "fnv1a64:d608e82b68d8143b",
+  "jsonHash": "fnv1a64:8072c7f1100df9d5",
+  "findings": []
+}

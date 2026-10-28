@@ -35,19 +35,19 @@ and current direction; it deliberately avoids a hand-maintained package
 inventory. Run the [package parity report](./code/scripts/package_parity_report.py)
 for a live cross-language view.
 
-### Repository snapshot — October 20, 2026
+### Repository snapshot — October 25, 2026
 
 | Surface | Current scale |
 |---|---:|
-| Package implementation directories | 5,209 |
+| Package implementation directories | 5,273 |
 | Program and application directories | 217 |
 | Grammar families | 57 |
-| Top-level Markdown specifications and roadmaps | 1,778 |
+| Top-level Markdown specifications and roadmaps | 1,856 |
 | Human-language curriculum tracks | 23 |
 | TypeScript Forme packages | 81 |
-| CI, release, and deployment workflows | 46 |
+| CI, release, and deployment workflows | 47 |
 
-Measured from tracked paths at `96d45dfff5` on `main`: packages and programs
+Measured from tracked paths at `c91b44a06e` on `main`: packages and programs
 count distinct `code/{packages,programs}/<ecosystem>/<name>` directories;
 grammars count `code/grammars/<family>` directories; specifications count
 `code/specs/*.md`; Forme counts TypeScript `forme-*` directories; workflows
@@ -59,8 +59,10 @@ longer a useful measure of lesson coverage.
 
 Current integration threads include Mosaic's native fidelity, Trestle's shared
 task engine, Forme's authoring product, language execution and conformance,
-circuit simulation, and the human-language books. The generated reports and
-project acceptance ledgers remain authoritative as those tracks grow.
+gate-level models of historical processors, circuit simulation, a Web PKI and
+TLS 1.3 foundation, native neural-network training across six languages, and
+the human-language books. The generated reports and project acceptance ledgers
+remain authoritative as those tracks grow.
 
 ## What Makes This Repo Different
 
@@ -116,8 +118,25 @@ transistors --> gates --> arithmetic --> CPU/microarchitecture --> ISA
 
 The repo includes transistor and gate models, ALUs, caches, branch prediction,
 pipelines, processor cores, and simulators for architectures including ARM,
-ARM1, RISC-V, WASM, Intel 4004/8008, JVM, and CLR. Several browser visualizers
-make those layers interactive.
+ARM1, classic AVR, RISC-V, IBM System/370, WASM, Intel 4004/8008, JVM, and CLR. Thirty-four
+Rust packages model processors at gate level, from the Manchester Baby, EDSAC,
+the IAS machine, and the PDP-8 through the Z80, 6502, 6800/6809, 8085,
+VAX-11/780, IBM System/360, and OpenRISC 1000 to ARMv7, AArch64, and x86-64;
+several have a functional simulator beside the gate-level model so the two can
+be compared. Several browser visualizers make those layers interactive.
+
+The independent functional-core queue also includes a checked bounded HP
+PA-RISC 1.1 problem-state integer simulator with big-endian transport, delayed
+branches, direction-sensitive nullification, calls, returns, and complete-state
+transactional traces. Its package and Spec 07au explicitly backlog the
+remaining problem-state, privileged, MMU, cache, FPU, and system facilities.
+
+The checked ZipCPU revision-3 functional core pins one no-CIS configuration
+with two complete register banks, exact CC/PC/interrupt/image state,
+big-endian memory transactions, typed transactional lifecycle operations, and
+separately reproducible C++-simulator and Verilated-RTL evidence corpora. Spec
+07be keeps caches, MMU, peripherals, bus timing and physical-device claims in
+later bounded cells.
 
 Start with the [architecture overview](./code/specs/00-architecture.md),
 [deep CPU architecture](./code/specs/D00-deep-cpu-architecture.md), and
@@ -160,6 +179,10 @@ The repository covers the whole path from source text to execution:
 - backend-independent IR validation, lowering, optimization, and conformance;
 - historical and experimental languages including BASIC, ALGOL, Nib, Twig,
   APL, FLOW-MATIC, COBOL-60, MATLAB/Octave, Wolfram, Macsyma/Maxima, and more;
+- grammar-driven, versioned frontends (for example Python 2 and JavaScript
+  edition selection) over a standard IIR operation registry, per
+  [LANG84](./code/specs/LANG84-grammar-driven-versioned-frontends.md) and
+  [LANG83](./code/specs/LANG83-iir-standard-operation-registry.md);
 - JavaScript parsing and Closure Compiler compatibility work.
 
 The FLOW-MATIC and COBOL code-generation track is building toward the intended
@@ -235,6 +258,18 @@ Security and encoding work includes hashes, HMAC, HKDF, PBKDF2, scrypt, AES,
 ChaCha20-Poly1305, Ed25519, X25519, compression formats, image/document
 decoders, barcodes, and strict bounds-checked binary parsing.
 
+A Rust Web PKI track builds toward from-scratch certificate validation. It
+parses X.509 certificates and extensions, constructs and constrains certificate
+paths (name constraints, path length, policy, and reviewed trust anchors from a
+[Web PKI roots snapshot](./code/specs/x509-webpki-roots-snapshot.md)), and checks
+OCSP revocation evidence down to RSA-SHA256 signatures, responder identity, and
+binding to the server path. Alongside it, TLS 1.3 building blocks cover record
+framing, inner plaintext, nonce state, HKDF label framing, and cipher-suite
+policy, with SHA-384 for the digest. These are components with their own
+acceptance gates, not yet a complete TLS stack: the OS-backed
+[TLS platform](./code/specs/tls-platform.md) remains the runtime seam for
+transport crates.
+
 The C and C++ lanes compile pure-ISO ports under GCC, Clang, Apple Clang, and
 MSVC with strict conformance flags. See the
 [C/C++ multi-compiler lane](./code/specs/CCPP01-c-cpp-iso-multicompiler-lane.md).
@@ -260,7 +295,11 @@ matrix.
 
 The content/rendering stack includes CommonMark, GFM, AsciiDoc, document ASTs,
 HTML sanitization, Office file formats, font parsing, image codecs, layout,
-draw/paint instruction systems, and native/GPU rendering backends.
+draw/paint instruction systems, and native/GPU rendering backends. Mermaid
+diagrams are parsed and drawn through the same paint pipeline, with
+entity-relationship and ZenUML compatibility tracked in
+[DG04](./code/specs/DG04-mermaid-compatibility.md) and
+[MD01](./code/specs/MD01-gfm-mermaid-paint-pipeline.md).
 
 Mosaic is the compile-time UI language. A typed UI description can be emitted
 to web components, React, SwiftUI, Jetpack Compose, Flutter, Qt, XAML, HTML,
@@ -311,9 +350,11 @@ Spanish leads the shared course spine and Tamil leads the script addendum;
 other tracks adapt that structure to their own sounds, grammar, and writing
 systems. Pre-A1 through C2 is the course design target. The strict level gate
 certifies a level only when every criterion holds there and at every level
-below it. It currently places Spanish, Italian, Portuguese, French, German, and
-Latin at B1, twelve tracks at A2, and four at A1; Chinese has not yet closed
-pre-A1. Chapter and assessment ledgers track the remaining coverage.
+below it. It currently places eighteen tracks at B1 (Spanish, Italian,
+Portuguese, French, German, Latin, Russian, Persian, Arabic, and nine Indic
+and Dravidian tracks), Japanese and Sanskrit at A2, and Marwadi and Punjabi at
+A1; Chinese has not yet closed pre-A1. Chapter and assessment ledgers track the
+remaining coverage.
 
 Start with the [human-language index](./code/learning/human-languages/README.md),
 [curriculum framework](./code/specs/HL00-human-language-curriculum-framework.md),
@@ -326,6 +367,14 @@ The ML packages cover losses, gradient descent, matrix operations, activations,
 normalization, and neural-network execution. The
 [neural graph VM](./code/specs/NN00-neural-graph-vm.md) connects models to a
 shared execution representation and backend implementations.
+
+A separate native dense-network framework trains small models directly in Rust,
+Python, TypeScript, Go, Ruby, and C rather than wrapping one shared engine. The
+ports exchange versioned JSON checkpoints and are held to one numerical and
+malformed-checkpoint conformance corpus ([NN40](./code/specs/NN40-shared-checkpoint-rejection-corpus.md),
+[NN46](./code/specs/NN46-five-native-dense-conformance.md),
+[NN48](./code/specs/NN48-native-c-dense-framework.md)), run by a dedicated
+neural-framework workflow that the main CI roll-up reuses.
 
 The [ML Learning Lab](./code/programs/typescript/ml-learning-visualizer/) has
 23 workbenches, including training and optimization microscopes, hidden layers,
@@ -490,7 +539,8 @@ The main CI workflow uses the same build planner:
 - CodeQL covers JavaScript/TypeScript, Python, Ruby, Go, and Swift;
 - Miri blocks on unsafe-bearing runtime crates, with deeper integration checks
   running after merge and nightly;
-- dedicated workflows test Rust-to-Node and Rust-to-Python native matrices;
+- dedicated workflows test Rust-to-Node and Rust-to-Python native matrices, and
+  a neural-framework conformance gate that CI reuses for the six native ports;
 - publish, release, and GitHub Pages workflows ship selected artifacts.
 
 Packages are expected to carry tests, a README, a changelog (often sharded),

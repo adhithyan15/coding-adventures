@@ -1,0 +1,11 @@
+{
+  "id": "JA-C321-mushiro",
+  "pathSegment": "JA-PATH-321-ZETTAI321",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-321-ZETTAI321",
+      "order": 3
+    }
+  ]
+}

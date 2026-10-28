@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 463,
+  "title": "Training Hard",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:44428d040781b3d0",
+  "lessons": [
+    {
+      "id": "JA-C463-kitaeru",
+      "sequence": 26910,
+      "title": "きたえる (kitaeru) — to toughen; to train (the body)",
+      "headword": "きたえる",
+      "romanization": "kitaeru",
+      "gloss": "to toughen; to train (the body)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c23d81dac6467bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a ranking, then the Japanese for a foul."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きたえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きたえる — kitaeru — \"to toughen; to train (the body)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいにち はしって、からだを きたえています。 — mainichi hashitte, karada o kitaete imasu — \"I run every day to toughen my body.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きたえます, kitaemasu; an ichidan verb. Past (polite): せんしゅが からだを きたえました。, senshu ga karada o kitaemashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きたえる (kitaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainichi hashitte, karada o kitaete imasu — I run every day to toughen my body.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainichi hashitte, karada o kitaete imasu* — I run every day to toughen my body.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a ranking, then the Japanese for a foul, then say kitaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a ranking, then the Japanese for a foul, then say *kitaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きたえる (kitaeru) mean? (\"To toughen; to train (the body)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C463-kitaeru-type",
+              "prompt": "Say the Japanese for 'to toughen'.",
+              "assesses": [
+                "JA-LEX-C463-TRAIN463-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きたえる",
+                "kitaeru"
+              ],
+              "feedback": {
+                "correct": "Right: きたえる (kitaeru) is 'to toughen; to train (the body)'.",
+                "incorrect": "'To toughen' is きたえる (kitaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C463-tairyoku",
+      "sequence": 26920,
+      "title": "たいりょく (tairyoku) — stamina; physical strength",
+      "headword": "たいりょく",
+      "romanization": "tairyoku",
+      "gloss": "stamina; physical strength",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a07fe7edaffb3690",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a foul, then the Japanese for to toughen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいりょく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいりょく — tairyoku — \"stamina; physical strength\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは たいりょくが あります。 — kare wa tairyoku ga arimasu — \"He has a lot of stamina.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいりょく (tairyoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"body\" (Middle Chinese thejX) and ryoku, \"power\" (lik) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tairyoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tairyoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tairyoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tairyoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa tairyoku ga arimasu — He has a lot of stamina.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa tairyoku ga arimasu* — He has a lot of stamina.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a foul, then the Japanese for to toughen, then say tairyoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a foul, then the Japanese for to toughen, then say *tairyoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいりょく (tairyoku) mean? (\"Stamina; physical strength\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C463-tairyoku-type",
+              "prompt": "Say the Japanese for 'stamina'.",
+              "assesses": [
+                "JA-LEX-C463-TRAIN463-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいりょく",
+                "tairyoku"
+              ],
+              "feedback": {
+                "correct": "Right: たいりょく (tairyoku) is 'stamina; physical strength'.",
+                "incorrect": "'Stamina' is たいりょく (tairyoku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C463-nerau",
+      "sequence": 26930,
+      "title": "ねらう (nerau) — to aim at",
+      "headword": "ねらう",
+      "romanization": "nerau",
+      "gloss": "to aim at",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cec3ab55c3062191",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to toughen, then the Japanese for stamina."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねらう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねらう — nerau — \"to aim at\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんしゅは ゆうしょうを ねらっています。 — senshu wa yūshō o neratte imasu — \"The players are aiming for the championship.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ねらいます, neraimasu; a godan verb. Past (polite): かれが まとを ねらいました。, kare ga mato o neraimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねらう (nerau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nerau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nerau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nerau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nerau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senshu wa yūshō o neratte imasu — The players are aiming for the championship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senshu wa yūshō o neratte imasu* — The players are aiming for the championship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to toughen, then the Japanese for stamina, then say nerau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to toughen, then the Japanese for stamina, then say *nerau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねらう (nerau) mean? (\"To aim at\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C463-nerau-type",
+              "prompt": "Say the Japanese for 'to aim at'.",
+              "assesses": [
+                "JA-LEX-C463-TRAIN463-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねらう",
+                "nerau"
+              ],
+              "feedback": {
+                "correct": "Right: ねらう (nerau) is 'to aim at'.",
+                "incorrect": "'To aim at' is ねらう (nerau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C463-hazumu",
+      "sequence": 26940,
+      "title": "はずむ (hazumu) — to bounce",
+      "headword": "はずむ",
+      "romanization": "hazumu",
+      "gloss": "to bounce",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fffd5e87d64b530c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for stamina, then the Japanese for to aim at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はずむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はずむ — hazumu — \"to bounce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この まりは よく はずみます。 — kono mari wa yoku hazumimasu — \"This ball bounces well.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はずみます, hazumimasu; a godan verb. Past (polite): まりが たかく はずみました。, mari ga takaku hazumimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はずむ (hazumu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hazumu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hazumu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hazumu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hazumu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono mari wa yoku hazumimasu — This ball bounces well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono mari wa yoku hazumimasu* — This ball bounces well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for stamina, then the Japanese for to aim at, then say hazumu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for stamina, then the Japanese for to aim at, then say *hazumu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はずむ (hazumu) mean? (\"To bounce\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C463-hazumu-type",
+              "prompt": "Say the Japanese for 'to bounce'.",
+              "assesses": [
+                "JA-LEX-C463-TRAIN463-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はずむ",
+                "hazumu"
+              ],
+              "feedback": {
+                "correct": "Right: はずむ (hazumu) is 'to bounce'.",
+                "incorrect": "'To bounce' is はずむ (hazumu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C463-kisou",
+      "sequence": 26950,
+      "title": "きそう (kisou) — to compete; to vie",
+      "headword": "きそう",
+      "romanization": "kisou",
+      "gloss": "to compete; to vie",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb078c699f9b4328",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to aim at, then the Japanese for to bounce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きそう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きそう — kisou — \"to compete; to vie\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふたりの せんしゅが ゆうしょうを きそっています。 — futari no senshu ga yūshō o kisotte imasu — \"Two players are competing for the championship.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きそいます, kisoimasu; a godan verb. Past (polite): がくせいが てんを きそいました。, gakusei ga ten o kisoimashita."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きそう (kisou) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji spelling was attached to it later (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futari no senshu ga yūshō o kisotte imasu — Two players are competing for the championship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futari no senshu ga yūshō o kisotte imasu* — Two players are competing for the championship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to aim at, then the Japanese for to bounce, then say kisou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to aim at, then the Japanese for to bounce, then say *kisou* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きそう (kisou) mean? (\"To compete; to vie\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C463-kisou-type",
+              "prompt": "Say the Japanese for 'to vie'.",
+              "assesses": [
+                "JA-LEX-C463-TRAIN463-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きそう",
+                "kisou"
+              ],
+              "feedback": {
+                "correct": "Right: きそう (kisou) is 'to compete; to vie'.",
+                "incorrect": "'To vie' is きそう (kisou)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

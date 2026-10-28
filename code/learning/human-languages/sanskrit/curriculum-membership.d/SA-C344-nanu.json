@@ -1,0 +1,11 @@
+{
+  "id": "SA-C344-nanu",
+  "pathSegment": "SA-PATH-344-PAKSHA344",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-344-PAKSHA344",
+      "order": 4
+    }
+  ]
+}

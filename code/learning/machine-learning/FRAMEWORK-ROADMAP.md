@@ -77,7 +77,24 @@ the actual open PR and its current-head CI logs, and revisit this ordering:
    passed. Reassess reliability, prerequisites, portability and smallest
    complete delivery: C matrix/math/ISO foundations exist, but C has no native
    JSON parser. [NN47 bounded C JSON](../../specs/NN47-c-bounded-json-foundation.md)
-   precedes a separate C dense implementation and later six-native exchange.
+   merged in [PR #18261](https://github.com/adhithyan15/coding-adventures/pull/18261)
+   at exact head `26bacfea3fd2` (squash `65aaf912bc7`), with actual C package
+   BUILDs on Linux/macOS/Windows, all selected workflows and required roll-up
+   successful. Reassess reliability, prerequisites, portability and smallest
+   delivery: [NN48 native C dense](../../specs/NN48-native-c-dense-framework.md)
+   merged in [PR #18285](https://github.com/adhithyan15/coding-adventures/pull/18285)
+   at exact head `437c4c2d01bb` (squash `c91b44a06e7`), with actual Linux/macOS/
+   Windows package BUILDs and all five selected workflows successful. Reassess
+   reliability, prerequisites, portability and smallest complete delivery:
+   [NN49 six-native conformance](../../specs/NN49-six-native-dense-conformance.md)
+   merged in [PR #18301](https://github.com/adhithyan15/coding-adventures/pull/18301)
+   at exact head `8e93a7917131` (squash `d555c1091cd`): all thirty exchanges,
+   three-platform package BUILDs and all selected/required checks passed.
+   Reassessed C++ foundations: matrix/math exist, but native bounded JSON does
+   not. Select [NN50 bounded C++ JSON](../../specs/NN50-cpp-bounded-json-foundation.md)
+   before a separate C++ dense port and seven-native exchange.
+   Generic C-only detection did not retain Windows until
+   NN47's scoped requirement; carry actual platform execution forward.
 5. **P2 — Optional Rust dense C ABI.** Specify ownership, shapes, errors,
    versioning, and resumable state before exposing binding consumers. Keep
    those consumers distinct from the native implementations.
@@ -168,14 +185,52 @@ SGD training, inspection, and portable save/reload/resume.
   processes, not a static registry entry (NN46 merged exact head `ff37a3e44e3`
   in #18252). All twenty directed pairs pass through 3002, with
   five native lanes, zero bindings and 55 actual child executions.
-- [ ] C bounded JSON prerequisite (NN47): owned, strict, resource-bounded C17
+- [x] C bounded JSON prerequisite (NN47): owned, strict, resource-bounded C17
   parser before accepting native dense checkpoints; not training or a binding.
   Implemented locally with 1605 GCC/Clang/MSVC checks, allocator-fault cleanup,
   ASan/UBSan and installed static-library consumer evidence; exact-head CI and
-  merge pending. Confirmed Windows ISO-harness prerequisite repairs retain the
-  existing scheduler and strict flags, with six cardinality regressions.
-- [ ] C native framework.
-- [ ] C++ native framework.
+  merge complete in #18261 at exact head `26bacfea3fd2`. Actual Linux/macOS/Windows
+  package BUILDs and all applicable checks passed. Confirmed Windows ISO-harness
+  repairs retain the scheduler and strict flags, add explicit clang-cl pedantic
+  diagnostics, and include six cardinality/four flag-policy regressions.
+- [x] C native framework (NN48): independent dense API/training/typed checkpoint
+  acceptance above matrix, float-math and bounded-json; six-native exchange later.
+  Local native core/command/installed-consumer validation passes; 6857 library
+  checks across GCC/Clang/cl/clang-cl, all 55 schema cases, bit-exact extreme and
+  signed-zero round trips, active all-parameter gradients, actual XOR training
+  and full baseline/resume comparison through 3002. Library line coverage is
+  97.11%; command is 100% and Python validator 95%. Scoped Windows planning and
+  required-build ownership are tested. Exact reviewed head `437c4c2d01bb` merged
+  in #18285 as `c91b44a06e7`, with actual three-platform package BUILDs, selected
+  five-native conformance and all five workflows/required gates passed. CodeQL
+  detection passed with no C analyzer configured; no C scanning is claimed.
+- [x] Required six-native conformance incorporating actual C checkpoint
+  exchanges (NN49): thirty directed pairs and return trips, 78 real children,
+  complete model comparisons through 3002, six native lanes and zero bindings.
+  Exact reviewed head `8e93a7917131` merged in #18301 as `d555c1091cd`.
+  Actual CI ran all thirty exchanges with XOR loss 0.00023307123378282047,
+  root Rust workspace, normal TypeScript npm scripts and native Ruby/C builds.
+  All three platform BUILDs, selected workflows and final required gates passed.
+  CodeQL had no configured C analyzer. See the
+  [teaching trace](./six-native-dense-conformance.md).
+- [x] C++ bounded JSON prerequisite (NN50): native owned, strict, resource-bounded
+  parser above the shared ISO harness, before native C++ checkpoint loading.
+  Specification committed before implementation; not training or a C binding.
+  Native parser passes local GCC/Clang, Clang ASan, 98.71% library line coverage
+  and an actual installed CMake consumer. Scoped Windows scheduling and existing
+  OCaml contract regressions pass; local MSVC is blocked by a missing SDK header.
+  Independent review passed exact head `099b92b29744`; #18333 merged it as
+  `cbf9c2e89534` after all five workflows and required gates passed. Actual
+  Windows cl/clang-cl each passed 498 checks; Linux/macOS package BUILDs each
+  reported 2.4s and Windows 4.3s. No C++ CodeQL analyzer was configured. ASan
+  passed locally; the separate UBSan attempt could not link its runtime.
+- [ ] C++ native framework (NN51): independent bounded dense API/training and
+  strict copied V1 checkpoints above native matrix/math/bounded-json. Specified
+  before implementation; native-local GCC/Clang, ASan, coverage, actual full-state
+  resume and installed-consumer validation pass. Scoped Windows CI ownership is
+  implemented; independent final review, publication and actual CI/merge remain
+  pending. See the [teaching trace](./native-cpp-dense-framework.md).
+  Seven-native exchange remains a separate tranche.
 - [ ] C# native framework.
 - [ ] F# native framework.
 - [ ] Java native framework.

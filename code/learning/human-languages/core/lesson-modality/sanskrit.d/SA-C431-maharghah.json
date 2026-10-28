@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C431-maharghah",
+    "language": "sanskrit",
+    "chapter": 431,
+    "sequence": 24900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c383b17494c6914"
+  },
+  "findings": []
+}

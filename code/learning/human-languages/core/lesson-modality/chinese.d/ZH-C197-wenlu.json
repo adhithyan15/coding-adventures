@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C197-wenlu",
+    "language": "chinese",
+    "chapter": 197,
+    "sequence": 15460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e1f0697ef705e76"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:7755df900892257e",
+  "lessonIds": [
+    "JA-C477-oya",
+    "JA-C477-oyako",
+    "JA-C477-suekko",
+    "JA-C477-mendou",
+    "JA-C477-shitsuke"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch477.txt",
+  "json": "japanese/narration/ch477.json",
+  "textHash": "fnv1a64:b57ef950bd466e64",
+  "jsonHash": "fnv1a64:21e990057ac58352",
+  "findings": []
+}

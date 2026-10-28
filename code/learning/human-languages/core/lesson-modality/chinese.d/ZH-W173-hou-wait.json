@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W173-hou-wait",
+    "language": "chinese",
+    "chapter": 173,
+    "sequence": 13785,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4591be6d4fdb5288",
+    "detachableSegments": [
+      "Script — the person piece, a thin stroke, then the right side"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

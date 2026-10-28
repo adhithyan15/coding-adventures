@@ -1,0 +1,11 @@
+{
+  "id": "JA-C344-junchou",
+  "pathSegment": "JA-PATH-344-KEIKAKU344",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-344-KEIKAKU344",
+      "order": 4
+    }
+  ]
+}

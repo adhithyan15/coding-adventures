@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C451-tsuukin-suru",
+    "language": "japanese",
+    "chapter": 451,
+    "sequence": 26300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4be3d12941edc2a2"
+  },
+  "findings": []
+}

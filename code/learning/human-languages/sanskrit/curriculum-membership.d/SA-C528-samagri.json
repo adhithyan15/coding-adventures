@@ -1,0 +1,11 @@
+{
+  "id": "SA-C528-samagri",
+  "pathSegment": "SA-PATH-528-AYOJAYATI528",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-528-AYOJAYATI528",
+      "order": 1
+    }
+  ]
+}

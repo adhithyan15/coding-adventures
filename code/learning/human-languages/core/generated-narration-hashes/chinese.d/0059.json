@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:1d8c1f6ef0ac769a",
+  "lessonIds": [
+    "ZH-C59-chuan",
+    "ZH-C59-xie",
+    "ZH-C59-maozi",
+    "ZH-C59-kuzi",
+    "ZH-C59-piaoliang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch59.txt",
+  "json": "chinese/narration/ch59.json",
+  "textHash": "fnv1a64:42ca3df6672a735d",
+  "jsonHash": "fnv1a64:cf2ee1244a4dc8ac",
+  "findings": []
+}

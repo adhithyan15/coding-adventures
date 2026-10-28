@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R42-review-37-42",
+    "language": "chinese",
+    "chapter": 42,
+    "sequence": 3610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcd4efaa5786a9f7"
+  },
+  "findings": []
+}

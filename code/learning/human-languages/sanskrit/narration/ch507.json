@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 507,
+  "title": "Metal and Gold",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6797a82ef2ad2d30",
+  "lessons": [
+    {
+      "id": "SA-C507-bhastra",
+      "sequence": 29250,
+      "title": "भस्त्रा (bhastrā) — a bellows",
+      "headword": "भस्त्रा",
+      "romanization": "bhastrā",
+      "gloss": "a bellows",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b33921c313370458",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for dyes, then the Sanskrit for a tailor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भस्त्रा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भस्त्रा — bhastrā — \"a bellows\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोहकारः भस्त्रां चालयति। lohakāraḥ bhastrāṃ cālayati. The blacksmith works the bellows."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भस्त्रा (bhastrā) is the word MW records for a leather bottle or bag, and so a bellows; MW gives no derivation, so its origin is uncertain (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhastrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhastrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhastrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhastrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohakāraḥ bhastrāṃ cālayati. — The blacksmith works the bellows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohakāraḥ bhastrāṃ cālayati.* — The blacksmith works the bellows.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for dyes, then the Sanskrit for a tailor, then say bhastrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for dyes, then the Sanskrit for a tailor, then say *bhastrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भस्त्रा (bhastrā) mean? (\"A bellows\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C507-sandamsah",
+      "sequence": 29260,
+      "title": "सन्दंशः (sandaṃśaḥ) — tongs",
+      "headword": "सन्दंशः",
+      "romanization": "sandaṃśaḥ",
+      "gloss": "tongs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9376d6a0d753e983",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a tailor, then the Sanskrit for a bellows."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सन्दंशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सन्दंशः — sandaṃśaḥ — \"tongs\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोहकारः सन्दंशेन अंगारं गृह्णाति। lohakāraḥ sandaṃśena aṅgāraṃ gṛhṇāti. The blacksmith picks up a live coal with the tongs."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सन्दंशः (sandaṃśaḥ) is built on sam, \"together\", and the root √daṃś, \"to bite\": a biting together; MW gives saṃdaṃśa as a pair of tongs or pincers (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandaṃśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandaṃśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandaṃśaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandaṃśaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohakāraḥ sandaṃśena aṅgāraṃ gṛhṇāti. — The blacksmith picks up a live coal with the tongs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohakāraḥ sandaṃśena aṅgāraṃ gṛhṇāti.* — The blacksmith picks up a live coal with the tongs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a tailor, then the Sanskrit for a bellows, then say sandaṃśaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a tailor, then the Sanskrit for a bellows, then say *sandaṃśaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सन्दंशः (sandaṃśaḥ) mean? (\"Tongs\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C507-vilapayati",
+      "sequence": 29270,
+      "title": "विलापयति (vilāpayati) — melts down",
+      "headword": "विलापयति",
+      "romanization": "vilāpayati",
+      "gloss": "melts down",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:019577bb7cd84c41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a bellows, then the Sanskrit for tongs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विलापयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विलापयति — vilāpayati — \"melts down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्वर्णकारः अग्नौ सुवर्णं विलापयति। svarṇakāraḥ agnau suvarṇaṃ vilāpayati. The goldsmith melts the gold in the fire."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः सुवर्णं विलापितवान्, saḥ suvarṇaṃ vilāpitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विलापयति (vilāpayati) is built on vi, \"apart\", and the causative of the root √lī, \"to cling, to dissolve\"; MW gives vilī the sense \"to melt\", and its causative vilāpayati makes a thing melt (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilāpayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilāpayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilāpayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilāpayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svarṇakāraḥ agnau suvarṇaṃ vilāpayati. — The goldsmith melts the gold in the fire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svarṇakāraḥ agnau suvarṇaṃ vilāpayati.* — The goldsmith melts the gold in the fire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a bellows, then the Sanskrit for tongs, then say vilāpayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a bellows, then the Sanskrit for tongs, then say *vilāpayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विलापयति (vilāpayati) mean? (\"Melts down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C507-dhamati",
+      "sequence": 29280,
+      "title": "धमति (dhamati) — blows on a fire",
+      "headword": "धमति",
+      "romanization": "dhamati",
+      "gloss": "blows on a fire",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5838b6116d7fc431",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for tongs, then the Sanskrit for melts down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धमति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धमति — dhamati — \"blows on a fire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोहकारः भस्त्रया अग्निं धमति। lohakāraḥ bhastrayā agniṃ dhamati. The blacksmith blows on the fire with the bellows."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः शंखं ध्मातवान्, saḥ śaṅkhaṃ dhmātavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धमति (dhamati) comes from the root √dham (or dhmā), \"to blow\", as one blows a fire, a conch or a bellows; its past participle is dhmāta (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhamati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhamati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lohakāraḥ bhastrayā agniṃ dhamati. — The blacksmith blows on the fire with the bellows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lohakāraḥ bhastrayā agniṃ dhamati.* — The blacksmith blows on the fire with the bellows.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for tongs, then the Sanskrit for melts down, then say dhamati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for tongs, then the Sanskrit for melts down, then say *dhamati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धमति (dhamati) mean? (\"Blows on a fire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C507-bhusanam",
+      "sequence": 29290,
+      "title": "भूषणम् (bhūṣaṇam) — an ornament",
+      "headword": "भूषणम्",
+      "romanization": "bhūṣaṇam",
+      "gloss": "an ornament",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fd9fee071951626",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for melts down, then the Sanskrit for blows on a fire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भूषणम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भूषणम् — bhūṣaṇam — \"an ornament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्वर्णकारः सुवर्णात् भूषणानि रचयति। svarṇakāraḥ suvarṇāt bhūṣaṇāni racayati. The goldsmith makes ornaments from gold."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भूषणम् (bhūṣaṇam) comes from the root √bhūṣ, \"to adorn\"; MW gives bhūṣaṇa as decorating, an ornament (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūṣaṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūṣaṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūṣaṇam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūṣaṇam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svarṇakāraḥ suvarṇāt bhūṣaṇāni racayati. — The goldsmith makes ornaments from gold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svarṇakāraḥ suvarṇāt bhūṣaṇāni racayati.* — The goldsmith makes ornaments from gold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for melts down, then the Sanskrit for blows on a fire, then say bhūṣaṇam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for melts down, then the Sanskrit for blows on a fire, then say *bhūṣaṇam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भूषणम् (bhūṣaṇam) mean? (\"An ornament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

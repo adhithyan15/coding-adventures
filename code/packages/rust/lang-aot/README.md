@@ -274,7 +274,7 @@ builds the archive in an isolated temporary target directory containing spaces.
 
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, Macsyma, Perl,
-and Python** to native executables through the shared LANG VM chain.
+Python and JavaScript** to native executables through the shared LANG VM chain.
 
 The language matrix compares text output using LF line endings, accepting the
 equivalent CRLF produced by Windows text runtimes. It preserves lone carriage
@@ -847,18 +847,23 @@ runs them at the i64 bounds and one step past them on every executable column.
 The JVM wide-model evidence for ops is now derived from the registry: every Op
 with an `i64` operand type keeps its module on `long`.
 
-Since LANG83 PR6a every backend lowers `write_f64_py` and `write_f64_js`. They
-print an `f64` the way Python's `repr` or JavaScript's `String(x)` does, as the
-shortest round-trip digits with no newline (`1e+16` vs `10000000000000000`,
-`-0.0` vs `0`, `inf` vs `Infinity`). Each backend derives the digits its own
-way:
+LANG83 PR6a gave every backend a shortest round-trip digit core:
 
 - the native runtime, LLVM and WASM carry a Burger–Dybvig core;
-- the JVM, CLR and BEAM re-lay out their host's shortest formatter;
+- the JVM, CLR and BEAM read their host's shortest formatter;
 - the VM and JIT use Rust's formatting, with ties corrected to even.
 
-There is no shared helper library. The conformance suite checks a 90-value
-table on every executable column against host `python3` and `node`.
+There is no shared helper library. PR6a used the cores in two float writers,
+`write_f64_py` and `write_f64_js`, which printed Python's `repr` or
+JavaScript's `String(x)` (`1e+16` vs `10000000000000000`, `-0.0` vs `0`,
+`inf` vs `Infinity`). LANG83 PR7e removed them: the IIR names no source
+language, so each compiler lays a float out itself, in a module-local helper
+(python-iir-compiler's `__py_write_float`, javascript-iir-compiler's
+`__js_write_number`), and every backend refuses a module that still calls a
+writer. The conformance suite keeps PR6a's 90-value table, checked against
+host `python3` and `node`, as the oracle: it prints the table through those
+two helpers on every executable column (BEAM compiles the finite rows). No
+builtin a VM or JIT harness registers may name a language either.
 
 Since LANG83 PR6c the eight IEEE backends lower `f64_add`, `f64_sub`,
 `f64_mul`, `f64_div` and `f64_neg`, which never trap (`1/0` is `Infinity`,
@@ -867,6 +872,13 @@ refuses the arithmetic at compile time with `UnsupportedOps`, because an
 Erlang float has no infinities or NaN. The conformance suite runs the IEEE
 edge table, the sign bit and an aliased-destination case on every executable
 column.
+
+Since LANG83 PR7b all nine backends lower the language-neutral float
+primitives `f64_class`, `f64_digits` and `f64_exp10`: a float's class and its
+shortest round-trip digits as integers, from the per-backend PR6a core. The conformance suite prints all three for the 90-value table
+(host `python3`'s `repr` split at the digits) on every executable column; BEAM
+runs the finite rows. A registry Op with an `f64` operand also keeps a JVM
+module on the wide model.
 
 ## Limitations
 
@@ -1378,7 +1390,7 @@ has so far and stops with `Trap.Overflow`: a stated divergence, with bignum
 promotion left for later. A zero divisor stops it with `Trap.DivZero`, like
 `ZeroDivisionError`.
 
-One hundred `lang_matrix` Python rows declare all eight executable columns:
+One hundred `lang_matrix` integer Python rows declare all eight executable columns:
 every accepted case of `code/grammars/python/corpus/py-int-print/` on the
 default 3.13.16 (eighteen), and, since phase 7b slice 2, every case each
 IIR-identity class representative of `python-iir-compiler`'s release sweep
@@ -1396,6 +1408,36 @@ trap *and* the kind each column reports. LANG79's
 float pilot (`python_iir_compiler::compile_source`) is a separate API and is
 not reachable from `lang-aot`.
 
+**Floats (phase 7c slice 3).** On 3.5.10 and later (the `py3` profile) the
+same entry point also compiles `py-float-print`: float literals, `/` as true
+division and `int`/`float` mixing, printed as Python `repr`:
+
+| Python | IIR |
+|---|---|
+| `1.5`, `.5`, `1e16` | `const x : f64` |
+| an `int` operand of a float op | `int_to_real` |
+| `+ - *` with a float, `/` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div` (PR6c, IEEE, never trap) |
+| `/` by a known `±0` | `trap "Trap.DivZero"` before the division |
+| `-a` (float) | `f64_neg` |
+| `print(a)` (float) | `call __py_write_float, a`, `putchar 10` |
+
+38 rows run `code/grammars/python/corpus/py-float-print/` on 3.13.16 and
+on its two class representatives, 3.6.0 and 3.5.10 (which refuses `_` in
+a float). The five literal-only rows declare all eight columns; the other
+33 declare `IEEE_COLUMNS`, because BEAM refuses the `f64_*` arithmetic at
+compile time (`UnsupportedOps`).
+
+Since LANG83 PR7c-py, `repr` is a function the compiler writes into the
+module, `__py_write_float`, built from the PR7b primitives `f64_class`,
+`f64_signbit`, `f64_digits` and `f64_exp10` plus integer helpers and
+`putchar`; it replaced the `write_f64_py` builtin, which LANG83 PR7e
+removed from every backend. A module that prints no
+float carries none of it. BEAM lowers the helpers, so only the arithmetic
+decides a row's columns (`python_float_prints_lower_on_beam_once_the_arithmetic_is_gone`).
+On the JIT, the two call-free helpers compile and write every significant
+digit; `main` calls the helper, and the generic JIT has no `call`
+bytecode, so `main` runs on its interpreter tier.
+
 Since phase 7b, `--lang python@<release>` selects any profiled release of
 `code/grammars/python/releases.csv` exactly, through the same release API as
 Perl and Ruby, and the module records it in `IIRModule::release`:
@@ -1410,3 +1452,51 @@ lang-aot prog.py --lang python@3.0a1 --emit=llvm-ir
 | `python@2.2`, `python@2.4`, `python@2.6`, `python@2.7.18` | compiled on that release as Python 2 (`py2-int-print`: `print 010 / 3`) |
 | `python@3.13` | `UnknownRelease`, nearest inventory IDs suggested |
 | `python@3.12.2` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |
+
+## JavaScript on every backend (LANG84 phase 6e)
+
+`--lang javascript` (or `js`, or a `.js` file) compiles the `es-number-log`
+subset: `console.log` of up to three numbers, with number literals (decimal,
+radix, separators where the edition has them), parentheses, unary `-`,
+`+ - * /` and top-level `let`/`const`. It goes through
+`javascript_iir_compiler::compile_source_at`, which walks the CST that the
+generic `GrammarLexer`/`GrammarParser` build from one edition's
+`es<edition>.tokens`/`.grammar`, and emits only LANG83 registry ops:
+
+| JavaScript | IIR |
+|---|---|
+| number literal | `const` (`f64`) |
+| `a + b`, `a - b`, `a * b`, `a / b`, `-a` | `f64_add`, `f64_sub`, `f64_mul`, `f64_div`, `f64_neg` (PR6c, IEEE, never a trap) |
+| `console.log(a, b)` | `call __js_write_number, a`, `putchar 32`, `call __js_write_number, b`, `putchar 10` |
+| `-0` | `putchar 45` behind `cmp_gt (f64_signbit x) (f64_class x)` |
+| reading an undeclared name, or a `let` before its declaration | `trap "Trap.Unbound"` (the neutral kind for an unbound name; LANG83 PR7d) |
+
+No backend has JavaScript code. Since LANG83 PR7c-js, `String(x)` is a
+function the compiler writes into the module, `__js_write_number`. It is built
+from the PR7b primitives `f64_class`, `f64_signbit`, `f64_digits` and
+`f64_exp10`, plus integer helpers and `putchar`; it replaced the
+`write_f64_js` builtin, which LANG83 PR7e removed from every backend. `1 / 0` is `Infinity` and `0 * -1` prints `-0` on
+every IEEE column. BEAM floats cannot hold an infinity or a NaN, so BEAM
+refuses the `f64_*` arithmetic at compile time with `UnsupportedOps`, which
+LANG84 stage B allows. Nothing else is refused (the `-0` class test and the
+helpers lower there), so a module without arithmetic runs on BEAM too.
+
+Thirty-eight `lang_matrix` rows run every accepted case of
+`code/grammars/ecmascript/corpus/es-number-log/` on es2016 and es2021, the two
+IIR-identity class representatives of `javascript-iir-compiler`'s release
+sweep, and on the default es2020: the 11 literal-only rows on all eight
+columns, the 27 with arithmetic on the seven IEEE columns. They prove stage B
+for es2016–es2025 (`release_inventory.py check --matrix`) and agree with host
+node v22. On the JIT, the two call-free number helpers compile and write
+every significant digit. `main` calls the helper, and the generic JIT has no
+`call` bytecode, so `main` runs on its interpreter tier.
+
+```sh
+lang-aot prog.js --lang javascript@es2016 --emit=llvm-ir
+```
+
+| Request | Result |
+|---|---|
+| `javascript`, `js@es2016` … `js@es2025` | compiled on that edition (`javascript` is `es2020`) |
+| `js@es20` | `UnknownRelease`, nearest inventory IDs suggested |
+| `js@es5`, `js@es2015` | `ReleaseNotAvailable` (no F10 table yet / no pinned source) |

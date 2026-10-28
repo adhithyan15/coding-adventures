@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C97-reading",
+    "language": "chinese",
+    "chapter": 97,
+    "sequence": 7810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f9747e433708c522"
+  },
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "japanese",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:d420668c12c1de77",
+  "lessonIds": [
+    "JA-C260-futtara",
+    "JA-C260-moshi",
+    "JA-C260-moshi-tara",
+    "JA-R260-if-it-rains"
+  ],
+  "tex": "japanese/book/chapters/ch260-if-it-rains.tex"
+}

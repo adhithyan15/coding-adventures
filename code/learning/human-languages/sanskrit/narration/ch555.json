@@ -1,0 +1,911 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 555,
+  "title": "The Road Ahead",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:aaae45291049a19c",
+  "lessons": [
+    {
+      "id": "SA-C555-prerana",
+      "sequence": 31710,
+      "title": "प्रेरणा (preraṇā) — inspiration; urging",
+      "headword": "प्रेरणा",
+      "romanization": "preraṇā",
+      "gloss": "inspiration; urging",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd0d0141e81cc45a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for the time ahead, then the Sanskrit for a start."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रेरणा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रेरणा — preraṇā — \"inspiration; urging\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि गुरोः प्रेरणा अस्ति, तर्हि शिष्यः उत्तमं कार्यं करोति। yadi guroḥ preraṇā asti, tarhi śiṣyaḥ uttamaṃ kāryaṃ karoti. With a teacher's urging, a pupil does fine work."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रेरणा (preraṇā) is built on pra, \"forth\", and the root √īr, \"to set in motion\"; MW gives preraṇa, also preraṇā, as setting in motion, urging, inciting; \"inspiration\" is its modern use (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preraṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preraṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preraṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preraṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi guroḥ preraṇā asti, tarhi śiṣyaḥ uttamaṃ kāryaṃ karoti. — With a teacher's urging, a pupil does fine work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi guroḥ preraṇā asti, tarhi śiṣyaḥ uttamaṃ kāryaṃ karoti.* — With a teacher's urging, a pupil does fine work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for the time ahead, then the Sanskrit for a start, then say preraṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for the time ahead, then the Sanskrit for a start, then say *preraṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रेरणा (preraṇā) mean? (\"Inspiration; urging\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C555-udyuktah",
+      "sequence": 31720,
+      "title": "उद्युक्तः (udyuktaḥ) — all set; prepared",
+      "headword": "उद्युक्तः",
+      "romanization": "udyuktaḥ",
+      "gloss": "all set; prepared",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d66e2fb3486b42be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a start, then the Sanskrit for inspiration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उद्युक्तः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्युक्तः — udyuktaḥ — \"all set; prepared\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सर्वे उद्युक्ताः सन्ति, तर्हि वयम् अधुना गच्छामः। yadi sarve udyuktāḥ santi, tarhi vayam adhunā gacchāmaḥ. If everyone is ready, we leave now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्युक्तः (udyuktaḥ) is built on ud, \"up\", and the root √yuj, \"to yoke\", as its past participle: yoked up; MW gives udyukta as prepared or ready for, zealously active (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyuktaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyuktaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyuktaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyuktaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi sarve udyuktāḥ santi, tarhi vayam adhunā gacchāmaḥ. — If everyone is ready, we leave now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi sarve udyuktāḥ santi, tarhi vayam adhunā gacchāmaḥ.* — If everyone is ready, we leave now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a start, then the Sanskrit for inspiration, then say udyuktaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a start, then the Sanskrit for inspiration, then say *udyuktaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उद्युक्तः (udyuktaḥ) mean? (\"All set; prepared\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C555-pratyuta",
+      "sequence": 31730,
+      "title": "प्रत्युत (pratyuta) — on the contrary",
+      "headword": "प्रत्युत",
+      "romanization": "pratyuta",
+      "gloss": "on the contrary",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb84407a2931f20b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for inspiration, then the Sanskrit for all set."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रत्युत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रत्युत — pratyuta — \"on the contrary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि वर्षा भवति, तर्हि हानिः न, प्रत्युत लाभः भवति। yadi varṣā bhavati, tarhi hāniḥ na, pratyuta lābhaḥ bhavati. If it rains, it is no loss; on the contrary, it is a gain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रत्युत (pratyuta) is built from prati, \"back, against\", and uta, \"and, even\"; MW gives pratyuta as on the contrary, rather (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyuta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyuta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyuta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyuta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi varṣā bhavati, tarhi hāniḥ na, pratyuta lābhaḥ bhavati. — If it rains, it is no loss; on the contrary, it is a gain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi varṣā bhavati, tarhi hāniḥ na, pratyuta lābhaḥ bhavati.* — If it rains, it is no loss; on the contrary, it is a gain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for inspiration, then the Sanskrit for all set, then say pratyuta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for inspiration, then the Sanskrit for all set, then say *pratyuta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रत्युत (pratyuta) mean? (\"On the contrary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C555-karmathah",
+      "sequence": 31740,
+      "title": "कर्मठः (karmaṭhaḥ) — hard-working",
+      "headword": "कर्मठः",
+      "romanization": "karmaṭhaḥ",
+      "gloss": "hard-working",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6debb5dc23b313a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for all set, then the Sanskrit for on the contrary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कर्मठः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर्मठः — karmaṭhaḥ — \"hard-working\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि त्वं कर्मठः असि, तर्हि तव कार्यं सम्यक् भविष्यति। yadi tvaṃ karmaṭhaḥ asi, tarhi tava kāryaṃ samyak bhaviṣyati. If you are hard-working, your work will go well."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर्मठः (karmaṭhaḥ) is built on karman, \"work, action\", with the ending -ṭha; MW gives karmaṭha as capable of work, clever in work, working diligently (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karmaṭhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karmaṭhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karmaṭhaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karmaṭhaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi tvaṃ karmaṭhaḥ asi, tarhi tava kāryaṃ samyak bhaviṣyati. — If you are hard-working, your work will go well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi tvaṃ karmaṭhaḥ asi, tarhi tava kāryaṃ samyak bhaviṣyati.* — If you are hard-working, your work will go well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for all set, then the Sanskrit for on the contrary, then say karmaṭhaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for all set, then the Sanskrit for on the contrary, then say *karmaṭhaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कर्मठः (karmaṭhaḥ) mean? (\"Hard-working\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C555-adhyavasyati",
+      "sequence": 31750,
+      "title": "अध्यवस्यति (adhyavasyati) — resolves",
+      "headword": "अध्यवस्यति",
+      "romanization": "adhyavasyati",
+      "gloss": "resolves",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:076964b6bd271a59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for on the contrary, then the Sanskrit for hard-working."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अध्यवस्यति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अध्यवस्यति — adhyavasyati — \"resolves\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः दृढम् अध्यवस्यति, तर्हि सः अवश्यं जयति। yadi saḥ dṛḍham adhyavasyati, tarhi saḥ avaśyaṃ jayati. If he resolves firmly, he surely wins."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गन्तुम् अध्यवसितवान्, saḥ gantum adhyavasitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अध्यवस्यति (adhyavasyati) is built on adhi, ava and the root √so, \"to bring to an end\"; MW gives adhyavaso as to undertake, to accomplish, to determine; its past participle is adhyavasita (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyavasyati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyavasyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyavasyati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyavasyati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ dṛḍham adhyavasyati, tarhi saḥ avaśyaṃ jayati. — If he resolves firmly, he surely wins.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ dṛḍham adhyavasyati, tarhi saḥ avaśyaṃ jayati.* — If he resolves firmly, he surely wins.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for on the contrary, then the Sanskrit for hard-working, then say adhyavasyati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for on the contrary, then the Sanskrit for hard-working, then say *adhyavasyati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अध्यवस्यति (adhyavasyati) mean? (\"Resolves\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R555-review-549-555",
+      "sequence": 31760,
+      "title": "Looking back: from Longings to The Road Ahead",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Longings to The Road Ahead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f96f6549c6fd041e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for is eager for and a craving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is eager for, a craving, a wait, a wish to see, strives for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: is eager for, a craving, a wait, a wish to see, strives for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "divides up, each one, an inheritance, puts to use, a handing out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: divides up, each one, an inheritance, puts to use, a handing out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leaves behind, regrets, remorse, detached, lets go of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: leaves behind, regrets, remorse, detached, lets go of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "practises regularly, a daily routine, exertion, makes use of, helpful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: practises regularly, a daily routine, exertion, makes use of, helpful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a slip, come now, guards well, a reversal, a reproach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a slip, come now, guards well, a reversal, a reproach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is possible, far-sighted, intends, the time ahead, a start",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: is possible, far-sighted, intends, the time ahead, a start]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inspiration, all set, on the contrary, hard-working, resolves",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: inspiration, all set, on the contrary, hard-working, resolves]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is eager for? (स्पृहयति, spṛhayati.) A craving? (लालसा, lālasā.) A wait? (प्रतीक्षा, pratīkṣā.) A wish to see? (दिदृक्षा, didṛkṣā.) Strives for? (समीहते, samīhate.) Divides up? (वण्टयति, vaṇṭayati.) Each one? (प्रत्येकम्, pratyekam.) An inheritance? (दायः, dāyaḥ.) Puts to use? (विनियुंक्ते, viniyuṅkte.) A handing out? (वितरणम्, vitaraṇam.) Leaves behind? (जहाति, jahāti.) Regrets? (अनुशोचति, anuśocati.) Remorse? (पश्चात्तापः, paścāttāpaḥ.) Detached? (विरक्तः, viraktaḥ.) Lets go of? (उत्सृजति, utsṛjati.) Practises regularly? (परिशीलयति, pariśīlayati.) A daily routine? (दिनचर्या, dinacaryā.) Exertion? (प्रयासः, prayāsaḥ.) Makes use of? (प्रयुंक्ते, prayuṅkte.) Helpful? (उपकारकः, upakārakaḥ.) A slip? (स्खलनम्, skhalanam.) Come now? (हन्त, hanta.) Guards well? (परिरक्षति, parirakṣati.) A reversal? (विपर्ययः, viparyayaḥ.) A reproach? (उपालम्भः, upālambhaḥ.) Is possible? (सम्भवति, sambhavati.) Far-sighted? (दीर्घदर्शी, dīrghadarśī.) Intends? (अभिप्रैति, abhipraiti.) The time ahead? (आयतिः, āyatiḥ.) A start? (आरम्भः, ārambhaḥ.) Inspiration? (प्रेरणा, preraṇā.) All set? (उद्युक्तः, udyuktaḥ.) On the contrary? (प्रत्युत, pratyuta.) Hard-working? (कर्मठः, karmaṭhaḥ.) Resolves? (अध्यवस्यति, adhyavasyati.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R555-review-final-555",
+      "sequence": 31770,
+      "title": "The Road Ahead — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1249f866f02dfd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Sanskrit for inspiration and all set."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inspiration, all set, on the contrary, hard-working, resolves",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: inspiration, all set, on the contrary, hard-working, resolves]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Inspiration? (प्रेरणा, preraṇā.) All set? (उद्युक्तः, udyuktaḥ.) On the contrary? (प्रत्युत, pratyuta.) Hard-working? (कर्मठः, karmaṭhaḥ.) Resolves? (अध्यवस्यति, adhyavasyati.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

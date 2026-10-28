@@ -1,0 +1,11 @@
+{
+  "id": "JA-C506-shouri",
+  "pathSegment": "JA-PATH-506-RACE506",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-506-RACE506",
+      "order": 2
+    }
+  ]
+}

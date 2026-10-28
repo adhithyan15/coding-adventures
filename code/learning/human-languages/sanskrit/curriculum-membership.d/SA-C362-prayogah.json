@@ -1,0 +1,11 @@
+{
+  "id": "SA-C362-prayogah",
+  "pathSegment": "SA-PATH-362-ANUSANDHANA362",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-362-ANUSANDHANA362",
+      "order": 1
+    }
+  ]
+}

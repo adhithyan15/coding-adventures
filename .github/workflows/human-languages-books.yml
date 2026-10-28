@@ -21,6 +21,7 @@ on:
       - "code/learning/human-languages/**"
       - "code/packages/typescript/human-language-data/**"
       - "code/scripts/build_human_language_book_catalog.py"
+      - "code/scripts/check_human_language_book_publication.py"
       - "code/scripts/scan_latex_log_warnings.py"
       # The compile gate and its hardening. These were absent from this list,
       # which meant a pull request editing the script that compiles every book
@@ -29,6 +30,7 @@ on:
       - "code/scripts/check_book_tree_hygiene.py"
       - "code/scripts/latexmk-safe.rc"
       - "code/scripts/tests/test_build_human_language_book_catalog.py"
+      - "code/scripts/tests/test_human_language_book_publication.py"
       - "code/scripts/tests/test_check_book_tree_hygiene.py"
       - "code/scripts/tests/test-check-book-compile-guards.sh"
       - "code/scripts/tests/test-check-book-compile-bash-compat.sh"
@@ -265,11 +267,13 @@ jobs:
             code/packages/typescript/human-language-data \
             code/programs/typescript/language-ladder/CHANGELOG.d \
             code/scripts/build_human_language_book_catalog.py \
+            code/scripts/check_human_language_book_publication.py \
             code/scripts/scan_latex_log_warnings.py \
             code/scripts/check-book-compile.sh \
             code/scripts/check_book_tree_hygiene.py \
             code/scripts/latexmk-safe.rc \
             code/scripts/tests/test_build_human_language_book_catalog.py \
+            code/scripts/tests/test_human_language_book_publication.py \
             code/scripts/tests/test_check_book_tree_hygiene.py \
             code/scripts/tests/test-check-book-compile-guards.sh \
             code/scripts/tests/test-check-book-compile-bash-compat.sh \
@@ -426,6 +430,12 @@ jobs:
           set -euo pipefail
           python3 -m unittest discover -s code/scripts/tests \
             -p 'test_build_human_language_book_catalog.py' -v
+
+      - name: Test replay-safe book publication decisions
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s code/scripts/tests \
+            -p 'test_human_language_book_publication.py' -v
 
       # The Unicode grid generator merges committed handwriting evidence and
       # later script extensions back into Telugu, Kannada, and Malayalam. Run
@@ -883,19 +893,61 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  # The only job that holds a write-scoped token, and it runs no repository code
-  # at all: it downloads the bundle the build job produced and hands it to two
-  # publishing actions. Gated at the JOB level on a push to `main`, so on a pull
-  # request it does not run — which means a pull request cannot reach a
-  # `contents: write` token through this workflow even if every check above it
-  # were somehow subverted.
+  # The preflight may run repository code, but its token can only READ. It
+  # checks the exact built bytes against any existing immutable release and
+  # compares the current Books Pages source with this run's main commit before
+  # the write-token job can mutate either destination. A rerun of an older
+  # source fails closed instead of rolling the shared gh-pages branch back.
+  publication_preflight:
+    name: Check book publication ancestry and release integrity
+    needs: [detect, build, bash_compat, windows_shard_boundary]
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.detect.outputs.books == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      pages: ${{ steps.check.outputs.pages }}
+      release: ${{ steps.check.outputs.release }}
+      tag: ${{ steps.check.outputs.tag }}
+      name: ${{ steps.check.outputs.name }}
+    steps:
+      - name: Checkout read-only preflight code
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: code/scripts
+
+      - name: Download the publication bundle
+        uses: actions/download-artifact@v8
+        with:
+          name: human-language-books
+          path: dist/human-languages/books
+
+      - name: Check ancestry and immutable release assets
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_NUMBER: ${{ github.run_number }}
+          RUN_ID: ${{ github.run_id }}
+        run: python3 code/scripts/check_human_language_book_publication.py
+
+  # The only job that holds a write-scoped token runs no repository code at
+  # all: it downloads the verified build bundle and hands it to publishing
+  # actions. Gated at the JOB level on a push to `main`, so pull requests never
+  # reach a `contents: write` token through this workflow.
   #
   # Note there is no `actions/checkout` here. `release-notes.md` is written from
   # the artifact's own contents and `github.sha`, so the working copy of the
   # repository — the thing a build turns into code — never enters this job.
   publish:
     name: Publish books to Pages and Releases
-    needs: [detect, build, bash_compat, windows_shard_boundary]
+    needs: [detect, build, bash_compat, windows_shard_boundary, publication_preflight]
     if: >-
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
@@ -917,28 +969,11 @@ jobs:
           test -s dist/human-languages/books/catalog.json
           test -n "$(find dist/human-languages/books -maxdepth 1 -name '*.pdf' -print -quit)"
 
-      - name: Publish books to GitHub Pages
-        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dist/human-languages/books
-          destination_dir: human-languages/books
-          keep_files: true
-
-      # Every main-branch build that reaches this point already built and
-      # verified every book PDF, so cut a dated GitHub Release from it. The
-      # tag combines a UTC date with the run number so same-day pushes still
-      # get distinct, monotonically increasing releases without any manual
-      # version bump.
-      - name: Determine release version
-        id: version
-        run: |
-          set -euo pipefail
-          version="v$(date -u +%Y.%m.%d).${{ github.run_number }}"
-          echo "tag=human-languages-$version" >> "$GITHUB_OUTPUT"
-          echo "name=Human Languages Books $version" >> "$GITHUB_OUTPUT"
-
+      # The release goes first. If GitHub refuses release creation, Pages does
+      # not move; if Pages later fails, a verified rerun skips the immutable
+      # release and retries only Pages.
       - name: Build release notes
+        if: needs.publication_preflight.outputs.release == 'true'
         env:
           # Via `env:` rather than inlined into the script. These particular
           # fields are not attacker-controlled, but interpolating `${{ }}`
@@ -964,16 +999,26 @@ jobs:
           cat release-notes.md
 
       - name: Publish GitHub Release
+        if: needs.publication_preflight.outputs.release == 'true'
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: ${{ steps.version.outputs.name }}
+          tag_name: ${{ needs.publication_preflight.outputs.tag }}
+          name: ${{ needs.publication_preflight.outputs.name }}
           target_commitish: ${{ github.sha }}
           body_path: release-notes.md
           make_latest: true
           files: dist/human-languages/books/*.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish books to GitHub Pages
+        if: needs.publication_preflight.outputs.pages == 'true'
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dist/human-languages/books
+          destination_dir: human-languages/books
+          keep_files: true
 
   books-gate:
     # Keep the required pull-request context distinct from the push context.

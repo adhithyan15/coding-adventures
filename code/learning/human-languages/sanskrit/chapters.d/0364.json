@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Ask an Expert",
+  "label": "ch:sa-ask-an-expert",
+  "canDo": "I can say who knows a subject best and what they found.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "SA-C364-nirupayati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say who knows a subject best and what they found.",
+    "assesses": [
+      "SA-LEX-C364-VISHESHAJNA364-03",
+      "SA-LEX-C364-VISHESHAJNA364-04",
+      "SA-LEX-C364-VISHESHAJNA364-05"
+    ]
+  }
+}

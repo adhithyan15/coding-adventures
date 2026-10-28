@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C81-waiguo",
+  "pathSegment": "ZH-PATH-81-CITY81",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-81-CITY81",
+      "order": 4
+    }
+  ]
+}

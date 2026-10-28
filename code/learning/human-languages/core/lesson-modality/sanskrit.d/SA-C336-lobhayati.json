@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C336-lobhayati",
+    "language": "sanskrit",
+    "chapter": 336,
+    "sequence": 19600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b5e4b768266f1f7"
+  },
+  "findings": []
+}

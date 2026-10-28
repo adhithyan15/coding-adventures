@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:7ae13aba01de4d7f",
+  "lessonIds": [
+    "ZH-C140-diyi",
+    "ZH-C140-yiban",
+    "ZH-W140-ban-half",
+    "ZH-C140-ci",
+    "ZH-C140-zui",
+    "ZH-C140-suan",
+    "ZH-R140-review-135-140"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch140.txt",
+  "json": "chinese/narration/ch140.json",
+  "textHash": "fnv1a64:24a85724a66f2095",
+  "jsonHash": "fnv1a64:267f32f9a13d45b7",
+  "findings": []
+}

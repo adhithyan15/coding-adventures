@@ -91,6 +91,10 @@ fn task_app_sources_compile() {
         "new-task-due-focus",
         "summary",
         "task-rows",
+        // A refused note Save's reason (E5).
+        "note-error",
+        // Notes 0.3.0: Delete only for a saved note (E3).
+        "note-delete-label",
         // Checklists (C3a, task-app-checklists-view-v1.md).
         "checklists-mode",
         "checklist-library-rows",
@@ -145,6 +149,7 @@ fn qt_board_columns_keep_their_width_floor_in_both_themes() {
         }).unwrap();
         let qml = fs::read_to_string(out.path().join("qt/TaskApp.qml")).unwrap();
         assert!(qml.contains("Layout.minimumWidth: 236"), "{theme}: rail must not shrink");
+        assert!(qml.contains("Layout.minimumWidth: 150"), "{theme}: timeline labels must not shrink");
         let board = qml.split_once("model: boardColumns").expect("board repeater").1;
         let (delegate, column) = board.split_once("Rectangle {").expect("board column");
         assert!(delegate.contains("Layout.minimumWidth: 260"), "{theme}: {delegate}");

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C313-vestayati",
+    "language": "sanskrit",
+    "chapter": 313,
+    "sequence": 18410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:072860689566257e"
+  },
+  "findings": []
+}

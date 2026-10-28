@@ -4,7 +4,7 @@ use diagram_ir::DiagramDirection;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_er_diagram, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
+    parse_c4_diagram, parse_cynefin, parse_er_diagram, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -12,6 +12,22 @@ use serde_json::Value;
 const COMPATIBILITY_MANIFEST: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/compatibility.json"
+));
+const C4_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-accessibility-11.16.1-corpus.json"
+));
+const C4_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
+));
+const C4_RELATIONSHIP_ARROWS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-corpus.json"
+));
+const C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
 ));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -188,6 +204,22 @@ const ER_FRONTMATTER_TITLE_CORPUS: &str = include_str!(concat!(
 const ER_FRONTMATTER_TITLE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-frontmatter-title-11.16.1-visual-corpus.json"
+));
+const ER_USE_MAX_WIDTH_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-use-max-width-11.16.1-corpus.json"
+));
+const ER_USE_MAX_WIDTH_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-use-max-width-11.16.1-visual-corpus.json"
+));
+const ER_HTML_LABELS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-html-labels-11.16.1-corpus.json"
+));
+const ER_HTML_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-html-labels-11.16.1-visual-corpus.json"
 ));
 const ER_VARIABLE_NODE_WIDTHS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -2406,6 +2438,53 @@ fn pinned_er_accessibility_metadata_reaches_semantic_ir() {
 }
 
 #[test]
+fn pinned_c4_accessibility_metadata_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ACCESSIBILITY_CORPUS)
+        .expect("C4 accessibility corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_ACCESSIBILITY_VISUAL_CORPUS)
+        .expect("C4 accessibility visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("C4 accessibility fixtures");
+
+    let single = parse_c4_diagram(fixtures[0]["source"].as_str().expect("single-line source"))
+        .expect("single-line C4 accessibility metadata must parse");
+    assert_eq!(single.accessibility_title.as_deref(), Some("C4 context demo"));
+    assert_eq!(single.accessibility_description.as_deref(), Some("Many large C4 diagrams"));
+
+    let multiline = parse_c4_diagram(fixtures[1]["source"].as_str().expect("multiline source"))
+        .expect("multiline C4 accessibility metadata must parse");
+    assert_eq!(multiline.accessibility_title.as_deref(), Some("C4 container demo"));
+    assert_eq!(
+        multiline.accessibility_description.as_deref(),
+        Some("Native C4 structure\nthrough shared paint metadata")
+    );
+}
+
+#[test]
+fn pinned_c4_relationship_arrows_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_ARROWS_CORPUS)
+        .expect("C4 relationship arrow corpus must be JSON");
+    let visual: Value = serde_json::from_str(C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS)
+        .expect("C4 relationship arrow visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("C4 relationship arrow fixtures");
+
+    let bidirectional = parse_c4_diagram(
+        fixtures[0]["source"].as_str().expect("bidirectional relationship source"),
+    )
+    .expect("C4 BiRel fixture must parse");
+    assert!(bidirectional.relationships[0].start_arrow);
+    assert!(bidirectional.relationships[0].end_arrow);
+
+    let backward = parse_c4_diagram(
+        fixtures[1]["source"].as_str().expect("backward relationship source"),
+    )
+    .expect("C4 Rel_Back fixture must parse");
+    assert!(backward.relationships[0].start_arrow);
+    assert!(!backward.relationships[0].end_arrow);
+}
+
+#[test]
 fn pinned_er_backtick_attributes_reach_semantic_ir() {
     let syntax: Value = serde_json::from_str(ER_BACKTICK_ATTRIBUTES_CORPUS)
         .expect("ER backtick attribute corpus must be JSON");
@@ -2840,6 +2919,44 @@ fn pinned_er_frontmatter_title_reaches_semantic_ir() {
     assert_eq!(diagram.title.as_deref(), Some("simple ER diagram"));
     assert_eq!(diagram.nodes.len(), 3);
     assert_eq!(diagram.relationships.len(), 2);
+}
+
+#[test]
+fn pinned_er_use_max_width_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_USE_MAX_WIDTH_CORPUS)
+        .expect("ER useMaxWidth corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_USE_MAX_WIDTH_VISUAL_CORPUS)
+        .expect("ER useMaxWidth visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+
+    for (index, fixture) in syntax["fixtures"].as_array().expect("ER fixtures").iter().enumerate() {
+        assert_eq!(visual["fixtures"][index], fixture["name"]);
+        let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER source"))
+            .expect("configured ER fixture must parse");
+        assert_eq!(
+            diagram.render_config.use_max_width,
+            fixture["use_max_width"].as_bool().expect("useMaxWidth expectation")
+        );
+    }
+}
+
+#[test]
+fn pinned_er_html_labels_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_HTML_LABELS_CORPUS)
+        .expect("ER htmlLabels corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_HTML_LABELS_VISUAL_CORPUS)
+        .expect("ER htmlLabels visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+
+    for (index, fixture) in syntax["fixtures"].as_array().expect("ER fixtures").iter().enumerate() {
+        assert_eq!(visual["fixtures"][index], fixture["name"]);
+        let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER source"))
+            .expect("configured ER fixture must parse");
+        assert_eq!(
+            diagram.render_config.html_labels,
+            fixture["html_labels"].as_bool().expect("htmlLabels expectation")
+        );
+    }
 }
 
 #[test]

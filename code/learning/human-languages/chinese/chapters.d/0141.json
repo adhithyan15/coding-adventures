@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Travel and Fun",
+  "label": "ch:zh-travel-and-fun",
+  "canDo": "I can talk about travelling, games, going round the shops, walks and fishing.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C141-diaoyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: I can talk about travelling, games, going round the shops, walks and fishing.",
+    "assesses": [
+      "ZH-LEX-C141-FUN141-03",
+      "ZH-LEX-C141-FUN141-04",
+      "ZH-LEX-C141-FUN141-05"
+    ]
+  }
+}

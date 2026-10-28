@@ -1,4 +1,16 @@
-use coding_adventures_powerpc601_gatelevel::{alu, bits, decoder, FLIP_FLOP_COUNT};
+use coding_adventures_powerpc601_gatelevel::{alu, bits, branch, decoder, FLIP_FLOP_COUNT};
+
+fn architectural_branch(ctr: u32, cr: u32, bo: u8, bi: u8) -> (u32, bool) {
+    let next_ctr = if bo & 0x10 == 0 {
+        ctr.wrapping_sub(1)
+    } else {
+        ctr
+    };
+    let ctr_ok = bo & 0x10 != 0 || ((next_ctr != 0) ^ (bo & 8 != 0));
+    let cr_bit = cr & (1 << (31 - u32::from(bi))) != 0;
+    let condition_ok = bo & 4 != 0 || cr_bit == (bo & 2 != 0);
+    (next_ctr, ctr_ok && condition_ok)
+}
 
 #[test]
 fn exact_topology_and_gate_arithmetic_are_stable() {
@@ -34,4 +46,29 @@ fn bit_networks_and_decoder_cover_edge_fields() {
     let decoded = decoder::decode(0x7c64_1a14);
     assert_eq!(decoded.opcode, 31);
     assert_eq!((decoded.rd, decoded.ra, decoded.rb), (3, 4, 3));
+}
+
+#[test]
+fn branch_network_covers_every_bo_cr_selector_and_boundary() {
+    let ctr_boundaries = [0, 1, 2, u32::MAX, 0x8000_0000];
+    for bo in 0_u8..32 {
+        for bi in 0_u8..32 {
+            for cr_high in [false, true] {
+                let cr = if cr_high {
+                    1_u32 << (31 - u32::from(bi))
+                } else {
+                    0
+                };
+                for ctr in ctr_boundaries {
+                    let expected = architectural_branch(ctr, cr, bo, bi);
+                    let actual = branch::evaluate(ctr, cr, bo, bi);
+                    assert_eq!(
+                        (actual.next_ctr, actual.taken),
+                        expected,
+                        "BO={bo:05b} BI={bi} CR={cr:08x} CTR={ctr:08x}"
+                    );
+                }
+            }
+        }
+    }
 }

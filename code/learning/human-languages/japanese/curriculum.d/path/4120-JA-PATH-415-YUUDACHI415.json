@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-415-YUUDACHI415",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "JA-EXT-415-YUUDACHI415"
+  ],
+  "after": []
+}

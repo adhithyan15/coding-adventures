@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:0e976893717b4b68",
+  "lessonIds": [
+    "JA-C412-touge",
+    "JA-C412-choujou",
+    "JA-C412-sanmyaku",
+    "JA-C412-kougen",
+    "JA-C412-tozan"
+  ],
+  "tex": "japanese/book/chapters/ch412-mountain-passes-and-high-plains.tex"
+}

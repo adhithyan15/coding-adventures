@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-67-ANIMALS67",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ZH-EXT-67-ANIMALS67"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C489-dhumapanam",
+  "pathSegment": "SA-PATH-489-VYASANA489",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-489-VYASANA489",
+      "order": 2
+    }
+  ]
+}

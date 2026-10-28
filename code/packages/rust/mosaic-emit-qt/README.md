@@ -1,5 +1,8 @@
 # mosaic-emit-qt
 
+Static scalar text widths paired with exact `flex-shrink: 0` also retain a
+minimum width. The conservative container exclusions and flex diagnostics apply.
+
 Static fixed-width Row/Column/Box containers paired with exact `flex-shrink: 0`
 retain a minimum width, including painted wrappers. State geometry overrides
 and conflicting min/max/flex constraints remain outside this narrow bridge;
@@ -461,6 +464,8 @@ Each deferred item is intentionally a focused, additive PR.
 - Multi-segment kebab→camel conversion for slots, emits, and params.
 - `Row` → `RowLayout`, `Column` → `ColumnLayout`.
 - `Text { content: slot: x }` → bare-identifier binding (not quoted).
+- `Text ( content: row )`, a bare NAME such as a `For` binding → `text: row`,
+  the variable (not quoted).
 - `Text { content: "..." }` → quoted literal with escape handling.
 - `Image { source: ... }` works for both literals and slot refs.
 - `Spacer` carries `Layout.fillWidth` and `Layout.fillHeight`.

@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 390,
+  "title": "Signs of What Is Coming",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:92f01e78af849097",
+  "lessons": [
+    {
+      "id": "SA-C390-laksanam",
+      "sequence": 22560,
+      "title": "लक्षणम् (lakṣaṇam) — a sign of something to come; a mark",
+      "headword": "लक्षणम्",
+      "romanization": "lakṣaṇam",
+      "gloss": "a sign of something to come; a mark",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3091c4ffab00f8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for imagination, then the Sanskrit for true to fact."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लक्षणम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लक्षणम् — lakṣaṇam — \"a sign of something to come; a mark\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि ज्वरस्य लक्षणम् अस्ति, तर्हि वैद्यं पश्यतु। yadi jvarasya lakṣaṇam asti, tarhi vaidyaṃ paśyatu. If there is a sign of fever, see a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लक्षणम् (lakṣaṇam) comes from the root √lakṣ, \"to mark, to perceive\"; MW gives lakṣaṇa \"a mark, a sign, a symbol, a token, a characteristic\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṣaṇam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṣaṇam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakṣaṇam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakṣaṇam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi jvarasya lakṣaṇam asti, tarhi vaidyaṃ paśyatu. — If there is a sign of fever, see a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi jvarasya lakṣaṇam asti, tarhi vaidyaṃ paśyatu.* — If there is a sign of fever, see a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for imagination, then the Sanskrit for true to fact, then say lakṣaṇam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for imagination, then the Sanskrit for true to fact, then say *lakṣaṇam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लक्षणम् (lakṣaṇam) mean? (\"A sign of something to come; a mark\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C390-pratyasa",
+      "sequence": 22570,
+      "title": "प्रत्याशा (pratyāśā) — an expectation; a hope",
+      "headword": "प्रत्याशा",
+      "romanization": "pratyāśā",
+      "gloss": "an expectation; a hope",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97cedb5164838e4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for true to fact, then the Sanskrit for a sign of something to come."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रत्याशा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रत्याशा — pratyāśā — \"an expectation; a hope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि प्रत्याशा अधिका, तर्हि दुःखम् अपि अधिकं भवति। yadi pratyāśā adhikā, tarhi duḥkham api adhikaṃ bhavati. If expectation is great, sorrow is great too."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रत्याशा (pratyāśā) is built from prati, \"towards\", and āśā, \"hope\"; MW gives praty-āśā \"confidence, trust, hope, expectation\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyāśā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyāśā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyāśā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyāśā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi pratyāśā adhikā, tarhi duḥkham api adhikaṃ bhavati. — If expectation is great, sorrow is great too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi pratyāśā adhikā, tarhi duḥkham api adhikaṃ bhavati.* — If expectation is great, sorrow is great too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for true to fact, then the Sanskrit for a sign of something to come, then say pratyāśā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for true to fact, then the Sanskrit for a sign of something to come, then say *pratyāśā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रत्याशा (pratyāśā) mean? (\"An expectation; a hope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C390-vyarthah",
+      "sequence": 22580,
+      "title": "व्यर्थः (vyarthaḥ) — useless; to no purpose",
+      "headword": "व्यर्थः",
+      "romanization": "vyarthaḥ",
+      "gloss": "useless; to no purpose",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:335680ee86a85074",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a sign of something to come, then the Sanskrit for an expectation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: व्यर्थः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्यर्थः — vyarthaḥ — \"useless; to no purpose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि यन्त्रं न चलति, तर्हि तत् व्यर्थम्। yadi yantraṃ na calati, tarhi tat vyartham. If the machine does not run, it is useless."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व्यर्थः (vyarthaḥ) is built from vi, \"without\", and artha, \"purpose, use\"; MW gives vy-artha \"useless, unavailing, unprofitable, vain\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyarthaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyarthaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vyarthaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vyarthaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi yantraṃ na calati, tarhi tat vyartham. — If the machine does not run, it is useless.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi yantraṃ na calati, tarhi tat vyartham.* — If the machine does not run, it is useless.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a sign of something to come, then the Sanskrit for an expectation, then say vyarthaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a sign of something to come, then the Sanskrit for an expectation, then say *vyarthaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does व्यर्थः (vyarthaḥ) mean? (\"Useless; to no purpose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C390-sarthakah",
+      "sequence": 22590,
+      "title": "सार्थकः (sārthakaḥ) — worthwhile; meaningful",
+      "headword": "सार्थकः",
+      "romanization": "sārthakaḥ",
+      "gloss": "worthwhile; meaningful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:990da8ec92cac0d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for an expectation, then the Sanskrit for useless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सार्थकः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सार्थकः — sārthakaḥ — \"worthwhile; meaningful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि प्रयत्नः फलं ददाति, तर्हि सः सार्थकः। yadi prayatnaḥ phalaṃ dadāti, tarhi saḥ sārthakaḥ. If an effort bears fruit, it is worthwhile."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सार्थकः (sārthakaḥ) is built from sa, \"with\", and artha, \"meaning, use\"; MW gives sārthaka \"having meaning, significant\" and \"serviceable, useful\" (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthakaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthakaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārthakaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārthakaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi prayatnaḥ phalaṃ dadāti, tarhi saḥ sārthakaḥ. — If an effort bears fruit, it is worthwhile.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi prayatnaḥ phalaṃ dadāti, tarhi saḥ sārthakaḥ.* — If an effort bears fruit, it is worthwhile.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for an expectation, then the Sanskrit for useless, then say sārthakaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for an expectation, then the Sanskrit for useless, then say *sārthakaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सार्थकः (sārthakaḥ) mean? (\"Worthwhile; meaningful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C390-anubhavati",
+      "sequence": 22600,
+      "title": "अनुभवति (anubhavati) — experiences; feels",
+      "headword": "अनुभवति",
+      "romanization": "anubhavati",
+      "gloss": "experiences; feels",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ca4786e17249907",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for useless, then the Sanskrit for worthwhile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अनुभवति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुभवति — anubhavati — \"experiences; feels\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि भवान् ध्यायति, तर्हि शान्तिम् अनुभवति। yadi bhavān dhyāyati, tarhi śāntim anubhavati. If you meditate, you feel peace."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः शान्तिम् अनुभूतवान्, saḥ śāntim anubhūtavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अनुभवति (anubhavati) is built on anu, \"after\", and the root √bhū, \"to be\"; MW gives anu-√bhū \"to attain, to equal\" and anu-bhūta \"perceived, understood\", and \"to experience\" grows from those senses (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anubhavati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anubhavati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anubhavati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anubhavati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi bhavān dhyāyati, tarhi śāntim anubhavati. — If you meditate, you feel peace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi bhavān dhyāyati, tarhi śāntim anubhavati.* — If you meditate, you feel peace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for useless, then the Sanskrit for worthwhile, then say anubhavati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for useless, then the Sanskrit for worthwhile, then say *anubhavati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अनुभवति (anubhavati) mean? (\"Experiences; feels\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

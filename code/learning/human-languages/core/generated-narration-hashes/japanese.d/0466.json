@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:4a83e8a8490c1942",
+  "lessonIds": [
+    "JA-C466-shodou",
+    "JA-C466-ikebana",
+    "JA-C466-sadou",
+    "JA-C466-origami",
+    "JA-C466-geijutsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch466.txt",
+  "json": "japanese/narration/ch466.json",
+  "textHash": "fnv1a64:0d0ea7ae409d7cc6",
+  "jsonHash": "fnv1a64:85f2b536502af2ec",
+  "findings": []
+}

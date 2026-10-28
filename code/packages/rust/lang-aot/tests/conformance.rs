@@ -368,7 +368,7 @@ fn run_llvm(src: &str) -> Option<i64> {
     let ll_path = dir.path().join("conf.ll");
     std::fs::write(&ll_path, &ll).expect("llvm: write conf.ll");
     let exe = dir.path().join("conf");
-    // `dynval_runtime.c`'s `__dyn_cons` calls `__gc_alloc_kind`/`__gc_register_kind`,
+    // `dynval_runtime.c`'s `__dyn_pair_new` calls `__gc_alloc_kind`/`__gc_register_kind`,
     // which moved into the `gc-core-capi` staticlib when `twig_gc.c` was retired
     // (#118b-2b). Without `gc_link_args()` the link fails with undefined symbols —
     // which, before `backend_failed`, silently removed the whole LLVM column from

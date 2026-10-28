@@ -1,0 +1,10 @@
+{
+  "id": "SA-EXT-275-FUTURE275",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what anyone will do, in every person and number (kariṣyāmi, kariṣyati, kariṣyanti), with each verb's own future stem (paṭhiṣyati, drakṣyati, dāsyati).",
+  "prerequisites": [
+    "SA-EXT-274-RENTAL274"
+  ]
+}

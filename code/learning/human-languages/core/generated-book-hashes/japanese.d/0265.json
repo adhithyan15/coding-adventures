@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:0faf3c53a88f95a6",
+  "lessonIds": [
+    "JA-C265-kemuri",
+    "JA-C265-hirogaru",
+    "JA-C265-shoubousha",
+    "JA-C265-nigemichi",
+    "JA-C265-kaketsukeru"
+  ],
+  "tex": "japanese/book/chapters/ch265-smoke-on-the-stairs.tex"
+}

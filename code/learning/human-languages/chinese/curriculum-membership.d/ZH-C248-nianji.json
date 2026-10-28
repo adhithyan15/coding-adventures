@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C248-nianji",
+  "pathSegment": "ZH-PATH-248-TERM248",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-248-TERM248",
+      "order": 1
+    }
+  ]
+}

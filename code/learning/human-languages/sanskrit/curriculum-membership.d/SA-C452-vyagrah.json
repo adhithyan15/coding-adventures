@@ -1,0 +1,11 @@
+{
+  "id": "SA-C452-vyagrah",
+  "pathSegment": "SA-PATH-452-UDVEGA452",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-452-UDVEGA452",
+      "order": 3
+    }
+  ]
+}

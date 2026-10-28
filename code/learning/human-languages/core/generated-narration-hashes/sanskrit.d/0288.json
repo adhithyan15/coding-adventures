@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:81822d2414fa5276",
+  "lessonIds": [
+    "SA-C288-aparadhah",
+    "SA-C288-sandehah",
+    "SA-C288-abhiyogah",
+    "SA-C288-tarjayati",
+    "SA-C288-sastram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch288.txt",
+  "json": "sanskrit/narration/ch288.json",
+  "textHash": "fnv1a64:92ba2f34a5bf1fce",
+  "jsonHash": "fnv1a64:e8267cda76b078e2",
+  "findings": []
+}

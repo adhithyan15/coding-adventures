@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:0aead649aa76d801",
+  "lessonIds": [
+    "JA-C455-kyouryoku-suru",
+    "JA-C455-shiji-suru",
+    "JA-C455-meirei",
+    "JA-C455-tantou",
+    "JA-C455-hikitsugu",
+    "JA-R455-review-450-455"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch455.txt",
+  "json": "japanese/narration/ch455.json",
+  "textHash": "fnv1a64:8a7e6e05c6f3b528",
+  "jsonHash": "fnv1a64:946bc4a806d57f86",
+  "findings": []
+}

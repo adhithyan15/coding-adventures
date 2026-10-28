@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 531,
+  "title": "Wishes and Prayers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dd62ad811e11dc47",
+  "lessons": [
+    {
+      "id": "SA-C531-vanchati",
+      "sequence": 30480,
+      "title": "वाञ्छति (vāñchati) — yearns for",
+      "headword": "वाञ्छति",
+      "romanization": "vāñchati",
+      "gloss": "yearns for",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00f3debbaffeec8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a sherbet, then the Sanskrit for stale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाञ्छति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाञ्छति — vāñchati — \"yearns for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि सः सुखं वाञ्छति, तर्हि सः परिश्रमं करोतु। yadi saḥ sukhaṃ vāñchati, tarhi saḥ pariśramaṃ karotu. If he wants happiness, let him work hard."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः सुखं वाञ्छितवान्, saḥ sukhaṃ vāñchitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाञ्छति (vāñchati) comes from the root √vāñch, \"to desire, to wish\"; MW compares German wünschen and English wish (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāñchati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāñchati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāñchati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāñchati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi saḥ sukhaṃ vāñchati, tarhi saḥ pariśramaṃ karotu. — If he wants happiness, let him work hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi saḥ sukhaṃ vāñchati, tarhi saḥ pariśramaṃ karotu.* — If he wants happiness, let him work hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a sherbet, then the Sanskrit for stale, then say vāñchati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a sherbet, then the Sanskrit for stale, then say *vāñchati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाञ्छति (vāñchati) mean? (\"Yearns for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C531-manorathah",
+      "sequence": 30490,
+      "title": "मनोरथः (manorathaḥ) — a heart's wish",
+      "headword": "मनोरथः",
+      "romanization": "manorathaḥ",
+      "gloss": "a heart's wish",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f14b73647ceac217",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for stale, then the Sanskrit for yearns for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मनोरथः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनोरथः — manorathaḥ — \"a heart's wish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि मनोरथः दृढः अस्ति, तर्हि मार्गः अपि भवति। yadi manorathaḥ dṛḍhaḥ asti, tarhi mārgaḥ api bhavati. If your wish is strong, a way appears too."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मनोरथः (manorathaḥ) is built from manas, \"the mind, the heart\", and ratha, which MW here takes as \"joy\": a heart's joy, a wish, a desire (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manorathaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manorathaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manorathaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manorathaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi manorathaḥ dṛḍhaḥ asti, tarhi mārgaḥ api bhavati. — If your wish is strong, a way appears too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi manorathaḥ dṛḍhaḥ asti, tarhi mārgaḥ api bhavati.* — If your wish is strong, a way appears too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for stale, then the Sanskrit for yearns for, then say manorathaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for stale, then the Sanskrit for yearns for, then say *manorathaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मनोरथः (manorathaḥ) mean? (\"A heart's wish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C531-aradhayati",
+      "sequence": 30500,
+      "title": "आराधयति (ārādhayati) — propitiates; honours",
+      "headword": "आराधयति",
+      "romanization": "ārādhayati",
+      "gloss": "propitiates; honours",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed00f13ed31a7c27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for yearns for, then the Sanskrit for a heart's wish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आराधयति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आराधयति — ārādhayati — \"propitiates; honours\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि त्वं गुरुम् आराधयसि, तर्हि सः प्रसन्नः भविष्यति। yadi tvaṃ gurum ārādhayasi, tarhi saḥ prasannaḥ bhaviṣyati. If you honour your teacher, he will be pleased."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): सः गुरुम् आराधितवान्, saḥ gurum ārādhitavān."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आराधयति (ārādhayati) is built on ā and the causative of the root √rādh, \"to succeed\"; MW gives ārādhayati as to conciliate, to propitiate, to honour, to worship (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārādhayati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārādhayati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārādhayati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārādhayati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi tvaṃ gurum ārādhayasi, tarhi saḥ prasannaḥ bhaviṣyati. — If you honour your teacher, he will be pleased.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi tvaṃ gurum ārādhayasi, tarhi saḥ prasannaḥ bhaviṣyati.* — If you honour your teacher, he will be pleased.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for yearns for, then the Sanskrit for a heart's wish, then say ārādhayati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for yearns for, then the Sanskrit for a heart's wish, then say *ārādhayati* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आराधयति (ārādhayati) mean? (\"Propitiates; honours\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C531-prarthana",
+      "sequence": 30510,
+      "title": "प्रार्थना (prārthanā) — a prayer; a request",
+      "headword": "प्रार्थना",
+      "romanization": "prārthanā",
+      "gloss": "a prayer; a request",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63c99ebe7a569b73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a heart's wish, then the Sanskrit for propitiates."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्रार्थना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रार्थना — prārthanā — \"a prayer; a request\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि प्रार्थना शुद्धा अस्ति, तर्हि मनः शान्तं भवति। yadi prārthanā śuddhā asti, tarhi manaḥ śāntaṃ bhavati. If the prayer is pure, the mind grows calm."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्रार्थना (prārthanā) is built on pra and the root √arth, \"to ask for\"; MW gives prārthanā as a request, a petition, and a prayer in worship (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prārthanā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prārthanā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prārthanā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prārthanā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi prārthanā śuddhā asti, tarhi manaḥ śāntaṃ bhavati. — If the prayer is pure, the mind grows calm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi prārthanā śuddhā asti, tarhi manaḥ śāntaṃ bhavati.* — If the prayer is pure, the mind grows calm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a heart's wish, then the Sanskrit for propitiates, then say prārthanā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a heart's wish, then the Sanskrit for propitiates, then say *prārthanā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्रार्थना (prārthanā) mean? (\"A prayer; a request\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C531-kamana",
+      "sequence": 30520,
+      "title": "कामना (kāmanā) — a desire",
+      "headword": "कामना",
+      "romanization": "kāmanā",
+      "gloss": "a desire",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b75e317386286d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for propitiates, then the Sanskrit for a prayer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कामना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कामना — kāmanā — \"a desire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यदि तव कामना उचिता अस्ति, तर्हि सा पूर्णा भविष्यति। yadi tava kāmanā ucitā asti, tarhi sā pūrṇā bhaviṣyati. If your desire is right, it will be fulfilled."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कामना (kāmanā) comes from the root √kam, \"to wish, to love\"; MW gives kāmanā as a wish, a desire (MW)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmanā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmanā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāmanā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāmanā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yadi tava kāmanā ucitā asti, tarhi sā pūrṇā bhaviṣyati. — If your desire is right, it will be fulfilled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yadi tava kāmanā ucitā asti, tarhi sā pūrṇā bhaviṣyati.* — If your desire is right, it will be fulfilled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for propitiates, then the Sanskrit for a prayer, then say kāmanā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for propitiates, then the Sanskrit for a prayer, then say *kāmanā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कामना (kāmanā) mean? (\"A desire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

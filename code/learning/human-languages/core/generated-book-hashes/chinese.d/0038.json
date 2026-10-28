@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:dfde41b24194b059",
+  "lessonIds": [
+    "ZH-C38-chi",
+    "ZH-W38-chi",
+    "ZH-C38-fan",
+    "ZH-W38-fan",
+    "ZH-C38-mifan",
+    "ZH-C38-e",
+    "ZH-C38-cai"
+  ],
+  "tex": "chinese/book/chapters/ch38-eating.tex"
+}
