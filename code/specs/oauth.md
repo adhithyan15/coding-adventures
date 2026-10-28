@@ -1786,6 +1786,28 @@ certificate processing, trust or revocation policy, HTTP, an OAuth transport,
 or a network connection. Reviewed fixed-memory Expand remains a prerequisite,
 and concrete HTTPS remains unavailable.
 
+The Rust `hkdf_expand_fixed` entry point now completes the bounded RFC 5869
+Expand half for the repository-owned SHA-256 and SHA-384 paths. It accepts an
+`HkdfPrk` directly, so the data-driven algorithm selected during Extract cannot
+disagree with Expand, and it derives into caller-provided output storage. Each
+HMAC receives borrowed `T(i-1)`, `info`, and counter segments without an
+aggregate message allocation. One fixed 48-byte previous-block owner and every
+temporary HMAC tag in its original result slot are wiped; an optimized-IR gate
+checks those scrubs and rejects allocator calls in the Expand boundary. Public
+output and encoded-message length checks occur before caller output changes,
+and an unexpected PRF failure wipes the destination before returning.
+Successful output remains caller-owned.
+
+This fixed-memory Expand slice performs secret derivation only inside the
+caller's process. It performs no credential access, credential edit, signing
+operation, provider action, audit or trace emission, I/O, or external effect.
+It does not implement `HKDF-Expand-Label`, select or compose a TLS cipher suite
+or key schedule, process handshake or record protection, parse or validate
+certificates, select trust roots, enforce revocation, authorize HTTP or OAuth
+transport, or open a network connection. Reviewed `HKDF-Expand-Label` and TLS
+key-schedule composition remain prerequisites, and concrete HTTPS remains
+unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
