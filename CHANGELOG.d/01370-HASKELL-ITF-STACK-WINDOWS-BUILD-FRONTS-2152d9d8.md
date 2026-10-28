@@ -6,3 +6,5 @@
   when Cabal is present.
 - Record the separate metadata-only follow-up for truthful empty ITF
   capability manifests without changing encoder behavior or public APIs.
+- Re-verify the unchanged Haskell barcode-layout-1d lane and repoint its
+  package-tree evidence after the Windows front changes outside lockfiles.

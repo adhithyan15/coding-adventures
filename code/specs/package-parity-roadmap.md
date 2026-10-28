@@ -19148,3 +19148,10 @@ independently reviewed. After the reviewed receipt is published, mark it ready
 and require a completely fresh exact-head hosted matrix; guarded auto-merge
 remains disabled until every final-head check is terminal acceptable and the
 merge state is clean.
+
+The first hosted matrix failed only the repository metadata gate: the Haskell
+barcode-layout-1d target registry still pinned the package tree from original
+adoption PR #16343, so the new `BUILD_windows` correctly appeared as unverified
+non-lockfile drift. Re-verify the unchanged Haskell lane at durable
+implementation `053cb27651a47c061bd2c4739b4657d5e9ac85d9`, repoint the exact package
+tree, and require another complete exact-head matrix.

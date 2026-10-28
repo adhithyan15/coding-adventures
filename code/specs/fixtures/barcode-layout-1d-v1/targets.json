@@ -128,10 +128,10 @@
       "metadata_projection": "Metadata adapter",
       "copy_semantics_hook": "immutable equality and repeat-call assertions",
       "known_divergences": [],
-      "verified_revision": "2a75d68df071c01cbe9cd76d791904afb19819a5",
-      "package_tree": "910d1de21a7167d132f29a9a85e09c8750e3f834",
+      "verified_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
+      "package_tree": "141d16aba4a61bca2cbc93b593db9f1d9d825ce9",
       "corpus_sha256": "be95aa0381041ef3bd729b36bb4292f7a20692e139b53adca97af4e157cb7388",
-      "adoption_pr": 16343,
+      "adoption_pr": 18527,
       "zero_authority_evidence": {"test_path": "code/packages/haskell/barcode-layout-1d/test/BarcodeLayout1DConformanceSpec.hs", "assertions": ["text-value-fails-before-native-resolution", "text-enabled-fails-before-native-resolution"]}
     },
     {

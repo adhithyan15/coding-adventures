@@ -21,10 +21,10 @@
     18527
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T15:14:20Z",
+    "observed_at": "2026-10-28T15:27:51Z",
     "pr_number": 18527,
-    "head_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
-    "action": "Opened draft Haskell ITF Windows-front PR #18527 from the exact-current-main independently reviewed candidate. The draft records the durable PR identity while its lifecycle receipt receives final review; guarded auto-merge remains disabled until the final exact head is non-draft, every hosted check is terminal acceptable, and GitHub reports a clean merge state.",
+    "head_revision": "a48db410cdfac57de20de2d11b40fe83bc95b0d7",
+    "action": "Exact head a48db410cdfac57de20de2d11b40fe83bc95b0d7 of ready PR #18527 passed the Linux build and Go analysis but failed the repository metadata gate because the Haskell barcode-layout-1d target registry still pinned its pre-Windows-front package tree. Re-verify the unchanged lane at durable implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9, repoint its exact tree and PR owner, then publish an independently reviewed replacement head for a fresh matrix.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -16404,7 +16404,11 @@
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18527",
       "pr_opened_at": "2026-10-28T15:14:20Z",
       "publication_head": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
-      "publication_notes": "Draft PR #18527 opened from exact current main and independently reviewed candidate 053cb27651a47c061bd2c4739b4657d5e9ac85d9. The draft exists only to record its durable PR identity; publish this lifecycle receipt, review the exact resulting head, then mark ready and require a completely fresh hosted matrix before guarded auto-merge.",
+      "publication_notes": "PR #18527 is open and non-draft. Exact head a48db410cdfac57de20de2d11b40fe83bc95b0d7 failed only the repository metadata gate because the Haskell barcode-layout-1d target registry still pinned its pre-Windows-front package tree. The unchanged lane is re-verified at durable implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9 and associated with this PR; exact replacement-head independent review and a completely fresh hosted matrix remain mandatory before guarded auto-merge.",
+      "implementation_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
+      "validation_revision": "053cb27651a47c061bd2c4739b4657d5e9ac85d9",
+      "reverification_notes": "This PR owns re-verification of the unchanged Haskell barcode-layout-1d lane after its BUILD_windows package tree changed. Exact durable implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9 retains the production API, native tests, dynamic 56-case conformance reader, empty capability manifest, and zero-authority evidence; GHC 9.6.7 passes 29 paint-instructions and 27 barcode-layout-1d examples. The target registry now associates the refreshed package tree with PR #18527 rather than rewriting historical adoption PR #16343.",
+      "ci_failure_notes": "Exact hosted head a48db410cdfac57de20de2d11b40fe83bc95b0d7 passed the Linux build and Go analysis but failed the repository metadata gate because the Haskell barcode-layout-1d target registry still pinned the package tree from original adoption PR #16343. Re-verify the unchanged lane against durable Windows-front implementation 053cb27651a47c061bd2c4739b4657d5e9ac85d9, update only its verified revision and package-tree hash, then require a fresh exact-head matrix.",
       "selected_at": "2026-10-26T16:52:26Z",
       "selection_revision": "aa568304c93e44d733535cdb3209793041ff9503",
       "base_revision": "aa568304c93e44d733535cdb3209793041ff9503",
