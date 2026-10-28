@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18535,
+  "active_prs": [
+    18535
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T19:51:50Z",
-    "pr_number": 18533,
-    "head_revision": "541a9294cbad4b3dd3d0019dc048df151c212451",
-    "action": "Every exact-head check for Swift Bloom filter PR #18533 completed acceptably and GitHub reported independently reviewed head 541a9294cbad4b3dd3d0019dc048df151c212451 cleanly mergeable. Guarded squash auto-merge produced exact current-main revision c85baee9a4b57105b7d1c57f71f8536b5379b164 without a manual merge command; its receipt is verified and the clean completed worktree and local branch are removed.",
+    "observed_at": "2026-10-28T19:59:38Z",
+    "pr_number": 18535,
+    "head_revision": "a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d",
+    "action": "Published independently reviewed Swift skip-list receipt a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d as draft PR #18535 over exact current main c85baee9a4b57105b7d1c57f71f8536b5379b164. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -16908,10 +16910,14 @@
     {
       "id": "swift-skip-list-lane-parity",
       "title": "Implement DT20 skip-list in Swift",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/swift-skip-list-lane-parity",
-      "pr_number": null,
+      "pr_number": 18535,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18535",
+      "opened_at": "2026-10-28T19:59:38Z",
+      "publication_head": "a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d",
+      "publication_notes": "Draft PR #18535 opened from independently reviewed exact receipt head a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d over exact main c85baee9a4b57105b7d1c57f71f8536b5379b164. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for that new exact head, and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
       "selection_blocked": false,
       "selected_at": "2026-10-28T19:06:53Z",
       "selection_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",

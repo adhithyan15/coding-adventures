@@ -19360,3 +19360,10 @@ validation, coverage, the one-package build plan, capability and authority
 boundaries, Bloom's terminal receipt and cleanup, the 1,554-owner graph, open
 PR overlap, merge-tree hygiene, and artifact-free status all pass. Seal this
 review receipt before publishing the draft PR.
+
+Publish independently reviewed receipt
+`a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d` as draft PR #18535 over exact
+main `c85baee9a4b57105b7d1c57f71f8536b5379b164`. Keep it draft only while
+this durable PR-number lifecycle receipt is committed and independently
+reviewed. Then push the receipt, mark the PR ready, and require a completely
+fresh exact-head hosted matrix before guarded auto-merge.
