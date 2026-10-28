@@ -19,6 +19,19 @@ resources. Values are case-insensitive. Preference lists, `normal`, cascade
 keywords and resource expressions are unsupported; they do not emit enum values.
 WinUI retains control of high-contrast behavior.
 
+## Conditional subtree lifecycle
+
+`If`/`Else` retain their outer layout wrappers and use a named `x:Load` Border
+for each branch body. Only the selected body is instantiated. Owner-model values
+survive branch changes; control-local focus, selection and other transient state
+are recreated after an inactive branch is selected again. Ordinary updates while
+a branch remains selected do not replace that subtree. This replaces the previous
+always-created collapsed controls and avoids updating every inactive editor.
+
+Native validation and compatibility work is tracked in
+`code/specs/mosaic-xaml-conditional-editor-20261028.md`. Small diagnostic samples
+are not complete performance or accessibility acceptance.
+
 ## Projection updates
 
 Generated `For` bindings retain their ItemsSource collection and reconcile rows
