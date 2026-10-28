@@ -16,15 +16,13 @@
       "external-approval"
     ]
   },
-  "active_pr": 18533,
-  "active_prs": [
-    18533
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-10-28T19:06:05Z",
+    "observed_at": "2026-10-28T19:51:50Z",
     "pr_number": 18533,
     "head_revision": "541a9294cbad4b3dd3d0019dc048df151c212451",
-    "action": "Pushed independently reviewed lifecycle head 541a9294cbad4b3dd3d0019dc048df151c212451 and marked Swift Bloom filter PR #18533 ready. GitHub reports the exact head mergeable while a completely fresh hosted matrix begins; guarded auto-merge remains disabled until every exact-head check is terminal acceptable and the head remains conflict-free.",
+    "action": "Every exact-head check for Swift Bloom filter PR #18533 completed acceptably and GitHub reported independently reviewed head 541a9294cbad4b3dd3d0019dc048df151c212451 cleanly mergeable. Guarded squash auto-merge produced exact current-main revision c85baee9a4b57105b7d1c57f71f8536b5379b164 without a manual merge command; its receipt is verified and the clean completed worktree and local branch are removed.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15269,7 +15267,7 @@
     {
       "id": "swift-bloom-filter-lane-parity",
       "title": "Implement DT22 Bloom filter in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "swift-hash-functions-lane-parity"
       ],
@@ -15277,8 +15275,12 @@
       "pr_number": 18533,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18533",
       "opened_at": "2026-10-28T19:04:15Z",
-      "publication_head": "f8b5143724247eea549e60d27446f96f7887bf6d",
-      "publication_notes": "Draft PR #18533 opened from independently reviewed exact receipt head f8b5143724247eea549e60d27446f96f7887bf6d over exact main ae197369af5c6bfe8ab2768465f67e0119baac97. Its independently reviewed lifecycle head 541a9294cbad4b3dd3d0019dc048df151c212451 is pushed and the PR is ready; require a completely fresh hosted matrix for that exact head, and leave guarded auto-merge disabled until every check is terminal acceptable and GitHub reports no conflict.",
+      "publication_head": "541a9294cbad4b3dd3d0019dc048df151c212451",
+      "publication_notes": "PR #18533 completed every exact-head hosted check acceptably on independently reviewed lifecycle head 541a9294cbad4b3dd3d0019dc048df151c212451. GitHub reported it cleanly mergeable and guarded squash auto-merge completed without a manual merge command.",
+      "merged_head_revision": "541a9294cbad4b3dd3d0019dc048df151c212451",
+      "merged_at": "2026-10-28T19:51:50Z",
+      "merge_revision": "c85baee9a4b57105b7d1c57f71f8536b5379b164",
+      "merge_notes": "Every exact-head check reached a terminal acceptable conclusion: ten successes, twenty-nine expected skips, and one neutral CodeQL aggregate with zero failures. GitHub reported the reviewed head cleanly mergeable; guarded squash auto-merge completed, the exact receipt is current origin/main, and the clean completed worktree and local branch were removed safely.",
       "selected_at": "2026-10-28T16:44:23Z",
       "selection_revision": "3fd9485da978aa6276aba825336f0962897fd456",
       "base_revision": "3fd9485da978aa6276aba825336f0962897fd456",
@@ -16914,6 +16916,8 @@
       "selected_at": "2026-10-28T19:06:53Z",
       "selection_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
       "base_revision": "ae197369af5c6bfe8ab2768465f67e0119baac97",
+      "reconciled_main_revision": "c85baee9a4b57105b7d1c57f71f8536b5379b164",
+      "reconciliation_notes": "Preserved the independently reviewed Swift skip-list preparation through a normal merge of exact current main after Swift Bloom filter PR #18533 merged. Main supplies the terminal Bloom lifecycle and package plus unrelated Punjabi A2 curriculum data; this branch retains the isolated DT20 package, DT20 reconciliation backlog owner, validation and review evidence, and canonical root changelog shard.",
       "selection_notes": "Fresh prioritization after Swift HyperLogLog merged and while isolated Swift Bloom filter PR #18533 runs exact-head CI selects dependency-free DT20 skip-list for local-only parallel implementation. It is a bounded missing non-Rust package, does not overlap Bloom filter paths, and directly removes one of three remaining package prerequisites from the Swift in-memory data-store engine. It ranks ahead of RESP and the protocol IR because its span-augmented rank/select invariants and caller-controlled level source form the highest-risk remaining pure data-structure prerequisite. Keep the branch local until Bloom's terminal lifecycle is reconciled from main and exact-head review passes.",
       "implementation_revision": "e2cfdff742b28bde6dcce0b73b2e7130fcf42eb9",
       "validation_notes": "The package implements a real span-augmented tower with comparator-defined identity, exactly-once caller-controlled level generation for new keys, finite configuration/capacity/output limits, update/delete span repair, zero-based optional rank/select, endpoint-controlled ranges, shallow retained ownership, stable errors, and no ambient authority. Seven package-native tests pass exact scripted spans, update/source semantics, invalid-level atomicity, capacity, deletion/top-level collapse, optional-nil presence, custom and descending comparators, bounded ranges/snapshots, and a 200-key deterministic rank/select reference trace. The release build and strict Xcode Swift Format lint pass. LLVM coverage reports 98.38% production lines, 95.45% functions, and 93.75% regions for 308 source lines. The closed capability profile and authority scan pass, and the real Go build tool's bounded sparse dry plan detects one changed/affected package and selects exactly swift/skip-list. Exact-head independent review, active Bloom lifecycle reconciliation, fresh current-main validation, and hosted qualification remain mandatory before publication.",
