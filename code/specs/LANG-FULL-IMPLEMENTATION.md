@@ -82,6 +82,9 @@ binary64 exact-integer ceiling while remaining within `i64::MAX` when a later
 static `div` or `mod` reduces the final result back below that ceiling before
 widening. Overflow and real `/` over an over-wide intermediate still fail
 closed.
+Integer-only additive subexpressions may use that same checked wider budget
+when nested inside the reducing `div` or `mod`; unreduced sums and real `/`
+over an over-wide sum remain outside the proof.
 Checked exact-integer normalizers may provide the sign-rooted transform's
 nonnegative exponent when the right-associative chain stays within the power
 unroll cap. A zero result proves the complete power is exactly one; negative,
