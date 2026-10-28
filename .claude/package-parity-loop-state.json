@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18537,
+  "active_prs": [
+    18537
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-28T20:46:16Z",
-    "pr_number": 18535,
-    "head_revision": "9a02ab99d53e474410e3da7e3795a4739efab532",
-    "action": "Every exact-head check for Swift skip-list PR #18535 completed acceptably with no failure or conflict. Guarded squash auto-merge landed 729e0b761e339bcc8d5863550da644e5b3ccec24 at 2026-10-28T20:46:16Z; the clean completed worktree and local branch were removed.",
+    "observed_at": "2026-10-28T20:52:00Z",
+    "pr_number": 18537,
+    "head_revision": "375212df3a2b40234660f6c8892fcd2f8981fade",
+    "action": "Published independently reviewed Dart and Swift binary-tree head 375212df3a2b40234660f6c8892fcd2f8981fade as draft PR #18537 over exact current main 729e0b761e339bcc8d5863550da644e5b3ccec24. Keep it draft only while this durable PR-number lifecycle receipt is committed and independently reviewed; then push the receipt, mark ready, and require completely fresh exact-head hosted CI before guarded auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -15104,10 +15106,14 @@
     {
       "id": "binary-tree-dart-swift-lane-parity",
       "title": "Complete DT03 binary-tree parity in Dart and Swift",
-      "status": "in_progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/binary-tree-dart-swift-lane-parity",
-      "pr_number": null,
+      "pr_number": 18537,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18537",
+      "opened_at": "2026-10-28T20:52:00Z",
+      "publication_head": "375212df3a2b40234660f6c8892fcd2f8981fade",
+      "publication_notes": "Draft PR #18537 opened from independently reviewed exact current-main head 375212df3a2b40234660f6c8892fcd2f8981fade. The draft exists only to record its durable PR identity; after this lifecycle-only commit receives independent delta review, push it and mark the PR ready. Require a completely fresh hosted matrix for the new exact head and leave guarded auto-merge disabled until every exact-head check is terminal acceptable and GitHub reports no conflict.",
       "notes": "Implement the existing DT03 node, traversal, shape-predicate, height and depth, array conversion, boundary and error, ownership, and empty-capability contract with package-native tests. These are the exact two canonical gaps; DT03 already provides the governing neutral contract.",
       "selected_at": "2026-10-28T20:37:00Z",
       "selected_revision": "c85baee9a4b57105b7d1c57f71f8536b5379b164",

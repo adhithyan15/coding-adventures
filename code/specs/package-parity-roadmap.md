@@ -19397,3 +19397,14 @@ checked 1,048,575-slot limits, failure-atomic admission, shallow ownership,
 cross-platform build fronts, and empty capability profiles. A bounded real
 build-tool plan selects exactly `dart/binary-tree` and `swift/binary-tree`.
 Require exact-head security review and fresh hosted qualification before merge.
+
+Independent exact current-main review approves publication head
+`375212df3a2b40234660f6c8892fcd2f8981fade` with no findings. The Dart, Swift,
+and DT03 trees are byte-identical to the approved implementation; Bloom and
+skip-list lifecycle receipts match GitHub; the 1,555-owner graph is valid; the
+canonical root changelog shard, lessons, JSON, ancestry, merge-tree, diff, and
+artifact hygiene all pass. Publish that receipt as draft PR #18537 over exact
+main `729e0b761e339bcc8d5863550da644e5b3ccec24`. Keep it draft only while this
+durable PR-number receipt receives independent delta review, then mark it ready
+and require a completely fresh exact-head hosted matrix before guarded
+auto-merge.
