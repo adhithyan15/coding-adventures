@@ -483,7 +483,10 @@ reviewable:
 
 - [x] Cargo manifests: normal, development, build, workspace and target-scoped
   dependency tables are checked against the exact current name set.
-- [ ] npm manifests and tool installs.
+- [x] npm manifests: runtime, development, peer and optional dependency tables
+  are checked against the exact current name set; only tracked in-repository
+  path edges are treated as local.
+- [ ] npm tool installs in scripts and workflows.
 - [ ] Python project files and tool installs.
 - [ ] Ruby Gemfiles and gemspecs.
 - [ ] Go modules and tool installs.
