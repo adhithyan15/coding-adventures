@@ -704,6 +704,19 @@ DigestInfo` form, at least eight `ff` padding bytes, the canonical SHA-256 DER
 trailer with present NULL parameters, and the complete caller-supplied digest.
 It performs no RSA arithmetic or hashing, and arbitrary caller-supplied bytes
 do not become an authenticated signature by passing this formatting gate.
+A sibling bounded `rsa-pkcs1-v1-5-sha512` prerequisite applies that same exact
+RFC 8017 encoded-message boundary to SHA-512. It accepts only the complete
+modulus-width `00 01 || PS || 00 || DigestInfo` value, at least eight `ff`
+padding bytes, the canonical `id-sha512` DER trailer with present NULL
+parameters, and all 64 expected digest octets. Trailer-derived boundaries
+prevent separator searching or padded/truncated acceptance. Stable failures
+retain no encoded-message bytes, digest bytes, mismatch position, or padding
+length. The allocation-free gate performs no hashing, RSA arithmetic, key or
+certificate parsing, algorithm routing, signature verdict, path validation,
+trust, revocation, TLS, HTTP, OAuth transport, or external effect. A later
+repository-owned X.509 composition must still bind it to an exact signed
+certificate, validated issuer key, RSA public operation, SHA-512 digest, and
+data-driven algorithm policy; concrete HTTPS remains unavailable.
 A bounded `rsa-pss-mgf1-sha256` prerequisite now implements only the RFC 8017
 MGF1 expansion required by the future SHA-256 EMSA-PSS verification path. It
 accepts the exact 32-byte PSS hash value as its seed, validates both the
