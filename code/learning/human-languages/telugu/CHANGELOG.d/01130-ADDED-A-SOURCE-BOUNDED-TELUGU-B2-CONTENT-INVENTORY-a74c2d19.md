@@ -14,6 +14,10 @@
 - Added a level-owned five-test contract for source boundaries, stable IDs,
   four-dimension balance, task-genre coverage, and the conservative 0/36 first
   coverage measurement.
+- The completion planner moves from 9,608 to 9,615 projected items: it removes
+  the single absent-inventory item, then exposes the 36 uncovered points as
+  eight five-point tranches. `exam-inventory/telugu/B2` intentionally remains
+  visible because a partial inventory is not complete.
 
 This inventory is not an external Telugu qualification, a finite Telugu B2
 grammar or word list, a complete mock, calibration evidence, or a learner
