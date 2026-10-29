@@ -36,6 +36,9 @@ Ruby's semantics already match the SIR's:
 - **Native values** — arbitrary-precision `Integer`, `Float`,
   `true`/`false`/`nil`, `String`, `Symbol`, and `Proc`/lambda closures are all
   built in.  Only a cons-`Pair` needs a shim (`SirPair = Struct.new(:car, :cdr)`).
+  A *strict* closure (SIR10's `lambda` marker — a Ruby lambda, every Twig
+  closure) starts with `sir_check_arity`, so a wrong argument count raises
+  `ArgumentError: arity mismatch: …` counting the closure's own parameters.
 
 So the emitter is thin and the inlined runtime is tiny (a `Pair`, a global
 store, a display path, equality, and a builtin-as-value dispatcher).

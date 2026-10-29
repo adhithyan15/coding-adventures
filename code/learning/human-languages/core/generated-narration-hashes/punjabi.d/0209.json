@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:faf3e24eb6c1caf8",
+  "lessonIds": [
+    "PA-C209-nila-return",
+    "PA-C209-nili",
+    "PA-C209-nili-review",
+    "PA-C209-blue-shoe",
+    "PA-C209-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch209.txt",
+  "json": "punjabi/narration/ch209.json",
+  "textHash": "fnv1a64:b843ee42533e08f3",
+  "jsonHash": "fnv1a64:7ab8fa465c3ec72a",
+  "findings": []
+}

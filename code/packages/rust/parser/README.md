@@ -79,6 +79,33 @@ are insignificant, `NEWLINE` tokens in front of the next token count as a line
 break. Using them does not make a grammar newline-significant. They read only
 tokens at the cursor, so packrat memoization stays exact.
 
+#### Automatic insertion: `@asi(T, C…)` (F11)
+
+```text
+expression_statement = expression statement_end ;
+statement_end        = SEMICOLON | @asi(SEMICOLON, RBRACE) ;
+```
+
+`@asi` inserts a zero-width `T` token. It does so when a line break precedes
+the next token, when that token is one of the closers, or at the end of the
+input:
+
+| Source | Statement tokens |
+| --- | --- |
+| `a; b` | `a` `;` · `b` + synthetic `;` |
+| `a ⏎ b` | `a` + synthetic `;` · `b` + synthetic `;` |
+| `{ a }` | `a` + synthetic `;` before `}` |
+| `a b` | error: Expected SEMICOLON |
+
+The synthetic token has the type fields the lexer would give `T`, an empty
+`value`, and the next token's position. Its `flags` are
+`Some(TOKEN_SYNTHETIC)`. Node spans skip it.
+
+`@asi` runs only after the expression has consumed all it can, so `a ⏎ (b)`
+is still a call. A failed `@asi` records no expectation. A finished tree may
+hold at most one synthetic token per input token, and more is an
+"automatic insertion budget exceeded" error.
+
 #### Recursion-depth guard (opt-in)
 
 The grammar-driven parser is recursive descent: nested rule references recurse

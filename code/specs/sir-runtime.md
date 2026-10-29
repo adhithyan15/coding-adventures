@@ -219,16 +219,19 @@ v0 eight). `TailCalls` and `Intrinsics` remain rejected.
   `def f(**opts)` receives that map as its last positional parameter. Remaining
   v0 cut-line: only explicit `**map` operands are merged — mixing inline
   `key: value` pairs with `**h` at one call site is not modelled.
-- **Proc-vs-lambda arity (Q10g) — Python implemented; TypeScript native.** Ruby
+- **Proc-vs-lambda arity (Q10g) — Python implemented; TypeScript native, strict lambdas enforced by the emitter.** Ruby
   blocks/procs adjust arity (extra args dropped, missing → `nil`) while lambdas
   are strict (`ArgumentError` on mismatch). In **Python** the runtime models
   this: `make_closure` records each block's fixed-positional arity and `apply`
   reshapes a block's arguments to it; the `lambda` builtin wraps its closure in
   `as_lambda(...)` so a lambda stays strict (mismatch raises). In **TypeScript**
   the JS calling convention is *already* proc-lenient (extra args ignored,
-  missing → `undefined`), so block arity needs no runtime work; remaining v0
-  cut-lines on the TS side are strict-lambda enforcement and `undefined`-vs-`nil`
-  for a missing block parameter. Shared v0 cut-line: optional/keyword block
+  missing → `undefined`), so block arity needs no runtime work.  Strict-lambda
+  enforcement no longer needs the runtime either: since issue #18461 the
+  emitter inlines the arity check into each `lambda`-marked closure (SIR10
+  "Strict closures"), so it holds with any published `sir-runtime-core`.  The
+  remaining v0 cut-line on the TS side is `undefined`-vs-`nil` for a missing
+  block parameter. Shared v0 cut-line: optional/keyword block
   params are treated as required positions; a `*rest` block is never trimmed.
 - **`defined?` runtime-presence fidelity.** Ruby `defined?(x)` reaches the
   backend as `BuiltinCall("defined?", [operand])` and must never evaluate its
