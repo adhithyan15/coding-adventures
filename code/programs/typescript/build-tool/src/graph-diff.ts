@@ -16,6 +16,7 @@
  */
 
 import { createHash } from "node:crypto";
+import { types as utilTypes } from "node:util";
 import {
   compilePatterns,
   matchCompiledPath,
@@ -149,6 +150,16 @@ type ValidatedPackage = Readonly<{
   compiledGlobs: readonly CompiledPattern[];
 }>;
 
+type SnapshottedDiffInput = Readonly<{
+  packages: readonly PackageSpec[];
+  edges: readonly (readonly string[])[];
+  forcedPackages: readonly string[];
+  unknownPathPolicy: string;
+  changedPaths: readonly string[];
+  boundarySha256?: string;
+  boundary?: unknown;
+}>;
+
 class ContractError extends Error {
   constructor(readonly code: string) {
     super(code);
@@ -171,8 +182,8 @@ function requireContract(condition: boolean, code: string): asserts condition {
 /** Validate and evaluate canonical graph edges and prerequisite-first levels. */
 export function evaluateGraph(input: GraphInput): Evaluation<GraphResult> {
   try {
-    requireContract(isRecord(input), "GRAPH_INPUT_INVALID");
-    const graph = validateGraph(input.packages, input.edges);
+    const snapshot = snapshotGraphInput(input);
+    const graph = validateGraph(snapshot.packages, snapshot.edges);
     const levels = graphLevels(graph);
     if (levels === null) return failure("GRAPH_CYCLE");
     return success(
@@ -196,24 +207,183 @@ export function evaluateDiffSelection(
   input: DiffSelectionInput,
 ): Evaluation<DiffSelectionResult> {
   try {
-    requireContract(isRecord(input), "DIFF_INPUT_INVALID");
+    const snapshot = snapshotDiffInput(input);
     requireContract(
-      Array.isArray(input.packages) &&
-        input.packages.length <= MAX_GRAPH_PACKAGES,
+      snapshot.packages.length <= MAX_GRAPH_PACKAGES,
       "DIFF_PACKAGE_INVALID",
     );
-    const packageNames = input.packages.map((item) =>
-      isRecord(item) ? item.name : undefined,
-    );
-    const graph = validateGraph(packageNames, input.edges);
+    const packageNames = snapshot.packages.map((item) => item.name);
+    const graph = validateGraph(packageNames, snapshot.edges);
     requireContract(graphLevels(graph) !== null, "DIFF_EDGE_CYCLE");
-    const packages = validateDiffInput(input, graph);
-    const boundaryConsumers = boundaryReverseIndex(input, packages);
-    preflightMatchWork(packages, input.changedPaths);
-    return success(selectDiff(input, packages, graph, boundaryConsumers));
+    const packages = validateDiffInput(snapshot, graph);
+    const boundaryConsumers = boundaryReverseIndex(snapshot, packages);
+    preflightMatchWork(packages, snapshot.changedPaths);
+    return success(selectDiff(snapshot, packages, graph, boundaryConsumers));
   } catch (error) {
     return failure(contractCode(error, "DIFF_INPUT_INVALID"));
   }
+}
+
+/** Copy public input through own data descriptors before validation. */
+function snapshotGraphInput(input: GraphInput): GraphInput {
+  const record = inertRecord(input, "GRAPH_INPUT_INVALID");
+  const packages = snapshotArray(
+    dataProperty(record, "packages", "GRAPH_INPUT_INVALID"),
+    "GRAPH_INPUT_INVALID",
+    (value) => value,
+  );
+  const edges = snapshotArray(
+    dataProperty(record, "edges", "GRAPH_INPUT_INVALID"),
+    "GRAPH_INPUT_INVALID",
+    (value) =>
+      snapshotArray(value, "GRAPH_INPUT_INVALID", (part) => part) as readonly string[],
+  );
+  return Object.freeze({
+    packages: packages as readonly string[],
+    edges: edges as readonly (readonly string[])[],
+  });
+}
+
+function snapshotDiffInput(input: DiffSelectionInput): SnapshottedDiffInput {
+  const record = inertRecord(input, "DIFF_INPUT_INVALID");
+  const packages = snapshotArray(
+    dataProperty(record, "packages", "DIFF_INPUT_INVALID"),
+    "DIFF_INPUT_INVALID",
+    (value) => {
+      const packageRecord = inertRecord(value, "DIFF_INPUT_INVALID");
+      return Object.freeze({
+        name: dataProperty(packageRecord, "name", "DIFF_INPUT_INVALID"),
+        relPath: dataProperty(packageRecord, "relPath", "DIFF_INPUT_INVALID"),
+        sourceMode: dataProperty(
+          packageRecord,
+          "sourceMode",
+          "DIFF_INPUT_INVALID",
+        ),
+        sourceGlobs: snapshotArray(
+          dataProperty(packageRecord, "sourceGlobs", "DIFF_INPUT_INVALID"),
+          "DIFF_INPUT_INVALID",
+          (glob) => glob,
+        ),
+      }) as PackageSpec;
+    },
+  );
+  const edges = snapshotArray(
+    dataProperty(record, "edges", "DIFF_INPUT_INVALID"),
+    "DIFF_INPUT_INVALID",
+    (value) =>
+      snapshotArray(value, "DIFF_INPUT_INVALID", (part) => part) as readonly string[],
+  );
+  const forcedPackages = snapshotArray(
+    dataProperty(record, "forcedPackages", "DIFF_INPUT_INVALID"),
+    "DIFF_INPUT_INVALID",
+    (value) => value,
+  );
+  const changedPaths = snapshotArray(
+    dataProperty(record, "changedPaths", "DIFF_INPUT_INVALID"),
+    "DIFF_INPUT_INVALID",
+    (value) => value,
+  );
+  const boundarySha256 = optionalDataProperty(
+    record,
+    "boundarySha256",
+    "DIFF_INPUT_INVALID",
+  );
+  const boundary = optionalDataProperty(
+    record,
+    "boundary",
+    "DIFF_INPUT_INVALID",
+  );
+  return Object.freeze({
+    packages: packages as readonly PackageSpec[],
+    edges: edges as readonly (readonly string[])[],
+    forcedPackages: forcedPackages as readonly string[],
+    unknownPathPolicy: dataProperty(
+      record,
+      "unknownPathPolicy",
+      "DIFF_INPUT_INVALID",
+    ) as string,
+    changedPaths: changedPaths as readonly string[],
+    ...(boundarySha256.present
+      ? { boundarySha256: boundarySha256.value as string }
+      : {}),
+    ...(boundary.present ? { boundary: boundary.value } : {}),
+  });
+}
+
+function inertRecord(value: unknown, code: string): Record<string, unknown> {
+  requireContract(
+    typeof value === "object" &&
+      value !== null &&
+      !utilTypes.isProxy(value) &&
+      !Array.isArray(value),
+    code,
+  );
+  const prototype = Object.getPrototypeOf(value);
+  requireContract(
+    prototype === Object.prototype || prototype === null,
+    code,
+  );
+  return value as Record<string, unknown>;
+}
+
+function dataProperty(
+  record: Record<string, unknown>,
+  key: string,
+  code: string,
+): unknown {
+  const descriptor = Object.getOwnPropertyDescriptor(record, key);
+  requireContract(
+    descriptor !== undefined &&
+      descriptor.enumerable === true &&
+      "value" in descriptor,
+    code,
+  );
+  return descriptor.value;
+}
+
+function optionalDataProperty(
+  record: Record<string, unknown>,
+  key: string,
+  code: string,
+): Readonly<{ present: boolean; value?: unknown }> {
+  const descriptor = Object.getOwnPropertyDescriptor(record, key);
+  if (descriptor === undefined) return Object.freeze({ present: false });
+  requireContract(
+    descriptor.enumerable === true && "value" in descriptor,
+    code,
+  );
+  return Object.freeze({ present: true, value: descriptor.value });
+}
+
+function snapshotArray<T>(
+  value: unknown,
+  code: string,
+  snapshotElement: (value: unknown) => T,
+): readonly T[] {
+  requireContract(
+    typeof value === "object" &&
+      value !== null &&
+      !utilTypes.isProxy(value) &&
+      Array.isArray(value),
+    code,
+  );
+  const keys = Reflect.ownKeys(value);
+  requireContract(
+    keys.length === value.length + 1 && keys.at(-1) === "length",
+    code,
+  );
+  const result: T[] = [];
+  for (let index = 0; index < value.length; index += 1) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+    requireContract(
+      descriptor !== undefined &&
+        descriptor.enumerable === true &&
+        "value" in descriptor,
+      code,
+    );
+    result.push(snapshotElement(descriptor.value));
+  }
+  return Object.freeze(result);
 }
 
 function contractCode(error: unknown, fallback: string): string {
@@ -515,8 +685,8 @@ function boundaryReverseIndex(
   }
   requireContract(DIGEST.test(digest), "DIFF_BOUNDARY_DIGEST_MISMATCH");
   requireContract(isRecord(suppliedBoundary), "DIFF_BOUNDARY_DIGEST_MISMATCH");
-  validateBoundaryObjectGraph(suppliedBoundary);
-  const encoded = new TextEncoder().encode(canonicalJson(suppliedBoundary));
+  const boundarySnapshot = snapshotBoundaryObjectGraph(suppliedBoundary);
+  const encoded = new TextEncoder().encode(canonicalJson(boundarySnapshot));
   const length = new Uint8Array(8);
   new DataView(length.buffer).setBigUint64(0, BigInt(encoded.length));
   const actual = createHash("sha256")
@@ -525,7 +695,7 @@ function boundaryReverseIndex(
     .update(encoded)
     .digest("hex");
   requireContract(actual === digest, "DIFF_BOUNDARY_DIGEST_MISMATCH");
-  const boundary = validateBoundary(suppliedBoundary);
+  const boundary = validateBoundary(boundarySnapshot);
 
   const result = new Map<string, Set<string>>();
   for (const packageValue of packages) {
@@ -717,25 +887,24 @@ function boundaryApplies(
 }
 
 /**
- * Validate a decoded JSON-like graph iteratively before canonicalization.
+ * Snapshot a decoded JSON-like graph under shallow bounded recursion before
+ * canonicalization.
  *
  * A WeakSet rejects cycles and shared containers.  JSON itself cannot express
  * aliases, so accepting one here would let a tiny direct-call DAG expand
  * exponentially when recursively encoded.  Accessor properties and exotic
  * prototypes are also outside the inert decoded-data contract.
  */
-function validateBoundaryObjectGraph(root: Record<string, unknown>): void {
-  const pending: Array<{ value: unknown; depth: number }> = [
-    { value: root, depth: 0 },
-  ];
+function snapshotBoundaryObjectGraph(
+  root: Record<string, unknown>,
+): Record<string, unknown> {
   const seen = new WeakSet<object>();
   let nodes = 0;
   let containers = 0;
   let stringBytes = 0;
   const encoder = new TextEncoder();
 
-  while (pending.length > 0) {
-    const { value, depth } = pending.pop()!;
+  function snapshot(value: unknown, depth: number): unknown {
     nodes += 1;
     requireContract(
       nodes <= MAX_BOUNDARY_NODES && depth <= MAX_BOUNDARY_DEPTH,
@@ -748,16 +917,21 @@ function validateBoundaryObjectGraph(root: Record<string, unknown>): void {
         stringBytes <= MAX_BOUNDARY_STRING_BYTES,
         "DIFF_BOUNDARY_INVALID",
       );
-      continue;
+      return value;
     }
     if (
       value === null ||
       typeof value === "boolean" ||
       (typeof value === "number" && Number.isFinite(value))
     ) {
-      continue;
+      return value;
     }
-    requireContract(typeof value === "object", "DIFF_BOUNDARY_INVALID");
+    requireContract(
+      typeof value === "object" &&
+        value !== null &&
+        !utilTypes.isProxy(value),
+      "DIFF_BOUNDARY_INVALID",
+    );
     requireContract(!seen.has(value), "DIFF_BOUNDARY_INVALID");
     seen.add(value);
     containers += 1;
@@ -773,13 +947,14 @@ function validateBoundaryObjectGraph(root: Record<string, unknown>): void {
         "DIFF_BOUNDARY_INVALID",
       );
       requireContract(
-        pending.length + value.length <= MAX_BOUNDARY_NODES - nodes,
+        value.length <= MAX_BOUNDARY_NODES - nodes,
         "DIFF_BOUNDARY_INVALID",
       );
       if (value.length > 0) {
         requireContract(depth < MAX_BOUNDARY_DEPTH, "DIFF_BOUNDARY_INVALID");
       }
-      for (let index = value.length - 1; index >= 0; index -= 1) {
+      const result: unknown[] = [];
+      for (let index = 0; index < value.length; index += 1) {
         const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
         requireContract(
           descriptor !== undefined &&
@@ -787,9 +962,9 @@ function validateBoundaryObjectGraph(root: Record<string, unknown>): void {
             "value" in descriptor,
           "DIFF_BOUNDARY_INVALID",
         );
-        pending.push({ value: descriptor.value, depth: depth + 1 });
+        result.push(snapshot(descriptor.value, depth + 1));
       }
-      continue;
+      return Object.freeze(result);
     }
 
     const prototype = Object.getPrototypeOf(value);
@@ -803,12 +978,13 @@ function validateBoundaryObjectGraph(root: Record<string, unknown>): void {
       "DIFF_BOUNDARY_INVALID",
     );
     requireContract(
-      pending.length + keys.length <= MAX_BOUNDARY_NODES - nodes,
+      keys.length <= MAX_BOUNDARY_NODES - nodes,
       "DIFF_BOUNDARY_INVALID",
     );
     if (keys.length > 0) {
       requireContract(depth < MAX_BOUNDARY_DEPTH, "DIFF_BOUNDARY_INVALID");
     }
+    const result = Object.create(null) as Record<string, unknown>;
     for (const key of keys) {
       requireContract(
         typeof key === "string" && wellFormed(key),
@@ -826,9 +1002,17 @@ function validateBoundaryObjectGraph(root: Record<string, unknown>): void {
           "value" in descriptor,
         "DIFF_BOUNDARY_INVALID",
       );
-      pending.push({ value: descriptor.value, depth: depth + 1 });
+      Object.defineProperty(result, key, {
+        configurable: false,
+        enumerable: true,
+        writable: false,
+        value: snapshot(descriptor.value, depth + 1),
+      });
     }
+    return Object.freeze(result);
   }
+
+  return snapshot(root, 0) as Record<string, unknown>;
 }
 
 function canonicalJson(value: unknown): string {

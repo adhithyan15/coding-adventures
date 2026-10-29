@@ -317,25 +317,158 @@ describe("process-free graph and diff selection", () => {
     expect(invoked).toBe(0);
   });
 
-  it("snapshots the caller's boundary property exactly once", () => {
-    const base = simpleDiff([packagePrefix("fixture/a", "code/a")]);
-    let reads = 0;
-    const input = { ...base } as DiffSelectionInput;
-    Object.defineProperty(input, "boundarySha256", {
-      enumerable: true,
-      value: "0".repeat(64),
-    });
-    Object.defineProperty(input, "boundary", {
+  it("rejects caller accessors before reading graph or diff values", () => {
+    let graphReads = 0;
+    const graphInput = { edges: [] } as unknown as {
+      packages: string[];
+      edges: string[][];
+    };
+    Object.defineProperty(graphInput, "packages", {
       enumerable: true,
       get() {
-        reads += 1;
-        return {};
+        graphReads += 1;
+        return ["fixture/a"];
       },
     });
-    expect(evaluateDiffSelection(input)).toEqual({
+    expect(evaluateGraph(graphInput)).toEqual({
       ok: false,
-      code: "DIFF_BOUNDARY_DIGEST_MISMATCH",
+      code: "GRAPH_INPUT_INVALID",
     });
-    expect(reads).toBe(1);
+
+    let edgeReads = 0;
+    const edge: string[] = [];
+    Object.defineProperty(edge, "0", {
+      enumerable: true,
+      configurable: true,
+      get() {
+        edgeReads += 1;
+        return "fixture/a";
+      },
+    });
+    Object.defineProperty(edge, "1", {
+      enumerable: true,
+      configurable: true,
+      value: "fixture/b",
+    });
+    Object.defineProperty(edge, "length", { value: 2 });
+    expect(
+      evaluateGraph({
+        packages: ["fixture/a", "fixture/b"],
+        edges: [edge],
+      }),
+    ).toEqual({ ok: false, code: "GRAPH_INPUT_INVALID" });
+
+    const base = simpleDiff([packagePrefix("fixture/a", "code/a")]);
+    let forcedReads = 0;
+    const forcedInput = { ...base } as DiffSelectionInput;
+    Object.defineProperty(forcedInput, "forcedPackages", {
+      enumerable: true,
+      get() {
+        forcedReads += 1;
+        return forcedReads === 1 ? [] : ["fixture/injected"];
+      },
+    });
+    expect(evaluateDiffSelection(forcedInput)).toEqual({
+      ok: false,
+      code: "DIFF_INPUT_INVALID",
+    });
+
+    let pathReads = 0;
+    const packageValue = {
+      name: "fixture/a",
+      sourceMode: "package_prefix",
+      sourceGlobs: [],
+    } as unknown as PackageSpec;
+    Object.defineProperty(packageValue, "relPath", {
+      enumerable: true,
+      get() {
+        pathReads += 1;
+        return pathReads === 1 ? "code/a" : "docs/injected";
+      },
+    });
+    expect(evaluateDiffSelection(simpleDiff([packageValue]))).toEqual({
+      ok: false,
+      code: "DIFF_INPUT_INVALID",
+    });
+
+    let changedReads = 0;
+    const changedPaths: string[] = [];
+    Object.defineProperty(changedPaths, "0", {
+      enumerable: true,
+      configurable: true,
+      get() {
+        changedReads += 1;
+        return "code/a/file.ts";
+      },
+    });
+    Object.defineProperty(changedPaths, "length", { value: 1 });
+    expect(evaluateDiffSelection({ ...base, changedPaths })).toEqual({
+      ok: false,
+      code: "DIFF_INPUT_INVALID",
+    });
+
+    let policyReads = 0;
+    const policyInput = { ...base } as DiffSelectionInput;
+    Object.defineProperty(policyInput, "unknownPathPolicy", {
+      enumerable: true,
+      get() {
+        policyReads += 1;
+        return "error";
+      },
+    });
+    expect(evaluateDiffSelection(policyInput)).toEqual({
+      ok: false,
+      code: "DIFF_INPUT_INVALID",
+    });
+
+    expect(graphReads).toBe(0);
+    expect(edgeReads).toBe(0);
+    expect(forcedReads).toBe(0);
+    expect(pathReads).toBe(0);
+    expect(changedReads).toBe(0);
+    expect(policyReads).toBe(0);
+  });
+
+  it("rejects a decoded boundary Proxy without invoking any trap", () => {
+    let traps = 0;
+    let explosive: unknown = { payload: "x" };
+    for (let level = 0; level < 12; level += 1) {
+      explosive = [explosive, explosive];
+    }
+    const proxy = new Proxy(
+      {
+        schema_version: 1,
+        language_source_input_registry_sha256: "0".repeat(64),
+        boundaries: [],
+      },
+      {
+        get(target, key, receiver) {
+          traps += 1;
+          if (key === "boundaries") return explosive;
+          return Reflect.get(target, key, receiver);
+        },
+        getOwnPropertyDescriptor(target, key) {
+          traps += 1;
+          return Reflect.getOwnPropertyDescriptor(target, key);
+        },
+        getPrototypeOf(target) {
+          traps += 1;
+          return Reflect.getPrototypeOf(target);
+        },
+        ownKeys(target) {
+          traps += 1;
+          return Reflect.ownKeys(target);
+        },
+      },
+    );
+    const base = simpleDiff([packagePrefix("fixture/a", "code/a")]);
+    expect(
+      evaluateDiffSelection({
+        ...base,
+        boundarySha256: "0".repeat(64),
+        boundary: proxy,
+      }),
+    ).toEqual({ ok: false, code: "DIFF_BOUNDARY_INVALID" });
+    expect(traps).toBe(0);
   });
 });
