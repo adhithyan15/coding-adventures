@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "ecosystem": "npm-tools",
+  "allowed_dependency_names": [
+    "@electron/asar",
+    "@vscode/vsce",
+    "electron-builder",
+    "esbuild",
+    "jest",
+    "npm",
+    "playwright",
+    "ts-node",
+    "tsc",
+    "tsx",
+    "vite",
+    "vitest"
+  ]
+}
