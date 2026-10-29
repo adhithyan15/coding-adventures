@@ -440,14 +440,10 @@ module BuildTool
         return Digest::SHA256.hexdigest("")
       end
 
-      transitive_deps = graph.transitive_dependents(package_name)
+      transitive_deps = bounded_transitive_dependencies(package_name, graph)
 
       if transitive_deps.empty?
         return Digest::SHA256.hexdigest("")
-      end
-
-      if transitive_deps.size > MAX_HASHING_IDENTITIES
-        raise ArgumentError, "dependency identity limit exceeded"
       end
 
       # Snapshot and validate every identity and digest before starting the
@@ -485,10 +481,33 @@ module BuildTool
 
     def canonical_package_identity(name)
       valid = name.is_a?(String) && name.bytesize <= MAX_PACKAGE_IDENTITY_BYTES &&
-        name.b.match?(%r{\A[a-z0-9][a-z0-9._-]*(?:/[a-z0-9][a-z0-9._-]*)+\z}n)
+        name.b.match?(
+          %r{\A[a-z0-9][a-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*\z}n
+        )
       raise ArgumentError, "invalid package identity" unless valid
 
       name.dup.freeze
+    end
+
+    def bounded_transitive_dependencies(package_name, graph)
+      visited = {}
+      stack = []
+      enqueue = lambda do |dependency|
+        next if visited.key?(dependency)
+
+        visited[dependency] = true
+        if visited.size > MAX_HASHING_IDENTITIES
+          raise ArgumentError, "dependency identity limit exceeded"
+        end
+        stack << dependency
+      end
+
+      graph.predecessors(package_name).each { |dependency| enqueue.call(dependency) }
+      until stack.empty?
+        dependency = stack.pop
+        graph.predecessors(dependency).each { |parent| enqueue.call(parent) }
+      end
+      visited.keys
     end
 
     def decode_sha256_digest(value, role)

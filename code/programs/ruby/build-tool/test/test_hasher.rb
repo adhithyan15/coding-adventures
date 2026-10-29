@@ -33,6 +33,25 @@ class TestHasher < Minitest::Test
     hashing-cache/failed-prior-record
   ].freeze
 
+  class CountingPredecessorChain
+    attr_reader :calls
+
+    def initialize(length)
+      @length = length
+      @calls = 0
+    end
+
+    def has_node?(_name)
+      true
+    end
+
+    def predecessors(name)
+      @calls += 1
+      index = (name == "ruby/app") ? 0 : Integer(name.delete_prefix("ruby/Node"), 10) + 1
+      (index < @length) ? ["ruby/Node#{index}"] : []
+    end
+  end
+
   def test_production_registry_equals_checked_neutral_registry
     checked = SOURCE_COLLECTION_CASES.parent / "language-source-input-registry.json"
     packaged = Pathname(__dir__).expand_path / "../lib/build_tool/language_source_input_registry.json"
@@ -559,6 +578,11 @@ class TestHasher < Minitest::Test
     fixtures = dependency_hashing_fixtures
     assert_equal DEPENDENCY_HASHING_FIXTURE_IDS,
       fixtures.map { |fixture| fixture.fetch("id") }.sort
+    snapshots_by_combined_digest = fixtures.to_h do |fixture|
+      result = fixture.dig("expected", "result")
+      [result.fetch("combined_digest"),
+        [result.fetch("package_digest"), result.fetch("dependencies_digest")]]
+    end
 
     fixtures.each do |fixture|
       options = fixture.dig("input", "options")
@@ -571,6 +595,9 @@ class TestHasher < Minitest::Test
       options.fetch("dependency_digests").reverse_each do |entry|
         graph.add_edge(entry.fetch("package"), options.fetch("package"))
       end
+      options.fetch("dependents").each do |dependent|
+        graph.add_edge(options.fetch("package"), dependent)
+      end
 
       dependencies_digest = BuildTool::Hasher.hash_deps(
         options.fetch("package"), graph, dependency_hashes
@@ -581,7 +608,36 @@ class TestHasher < Minitest::Test
       assert_equal expected.fetch("combined_digest"),
         BuildTool::Hasher.combine_hashes(expected.fetch("package_digest"), dependencies_digest),
         fixture.fetch("id")
+
+      prior = options.fetch("prior_cache")
+      assert_equal "record", prior.fetch("state"), fixture.fetch("id")
+      prior_package_digest, prior_dependencies_digest =
+        snapshots_by_combined_digest.fetch(prior.fetch("combined_digest"))
+      cache = BuildTool::BuildCache.new
+      cache.record(
+        options.fetch("package"), prior_package_digest, prior_dependencies_digest,
+        prior.fetch("status")
+      )
+      cache_miss = cache.needs_build?(
+        options.fetch("package"), expected.fetch("package_digest"), dependencies_digest
+      )
+      assert_equal expected.fetch("cache_status"), cache_miss ? "miss" : "hit", fixture.fetch("id")
+      invalidated = if cache_miss
+        [options.fetch("package"), *graph.transitive_closure(options.fetch("package"))].sort
+      else
+        []
+      end
+      assert_equal expected.fetch("invalidated_packages"), invalidated, fixture.fetch("id")
+      assert_equal [], fixture.dig("expected", "diagnostics"), fixture.fetch("id")
     end
+  end
+
+  def test_dependency_hash_accepts_case_preserving_package_identity
+    graph = BuildTool::DirectedGraph.new
+    graph.add_edge("swift/Code128", "ruby/app")
+    hashes = {"swift/Code128" => "11" * 32}
+
+    assert_equal expected_dependency_hash(hashes), BuildTool::Hasher.hash_deps("ruby/app", graph, hashes)
   end
 
   def test_dependency_hash_frames_identity_and_raw_digest_boundaries
@@ -636,6 +692,16 @@ class TestHasher < Minitest::Test
       BuildTool::Hasher.hash_deps("ruby/app", oversized, hashes)
     end
     assert_equal "dependency identity limit exceeded", error.message
+  end
+
+  def test_dependency_hash_stops_reverse_traversal_at_identity_limit
+    graph = CountingPredecessorChain.new(1_000_000)
+
+    error = assert_raises(ArgumentError) do
+      BuildTool::Hasher.hash_deps("ruby/app", graph, {})
+    end
+    assert_equal "dependency identity limit exceeded", error.message
+    assert_operator graph.calls, :<=, BuildTool::Hasher::MAX_HASHING_IDENTITIES + 1
   end
 
   def test_combined_hash_uses_decoded_digests_and_rejects_invalid_inputs
