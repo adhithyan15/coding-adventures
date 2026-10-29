@@ -15,23 +15,59 @@ import { sha512, sha512Hex, toHex, SHA512Hasher, VERSION, encodeBitLength } from
 
 const enc = new TextEncoder();
 
-const fixtureText = readFileSync(
-  new URL("../../../../specs/fixtures/sha512-v1/cases.txt", import.meta.url),
-  "utf8",
-);
-if (fixtureText.length === 0 || fixtureText.length > 4096) throw new Error("SHA-512 fixture exceeds bounds");
-const fixtureLines = fixtureText.split("\n").filter((line) => line.length > 0 && !line.startsWith("#"));
-if (fixtureLines.length === 0 || fixtureLines.length > 64) throw new Error("SHA-512 fixture row count exceeds bounds");
+function parseFixture(raw: Uint8Array): string[] {
+  if (raw.byteLength === 0 || raw.byteLength > 4096) throw new Error("SHA-512 fixture byte size exceeds bounds");
+  const text = new TextDecoder("utf-8", { fatal: true }).decode(raw);
+  const lines = text.split("\n").map((line) => line.replace(/\r$/, ""))
+    .filter((line) => line.length > 0 && !line.startsWith("#"));
+  if (lines.length === 0 || lines.length > 64) throw new Error("SHA-512 fixture row count exceeds bounds");
+  for (const line of lines) {
+    const fields = line.split("|");
+    if (fields.length !== 5 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(fields[1])) throw new Error("malformed fixture row");
+    if (fields[0] === "V") {
+      if (fields[2].length > 8192 || !/^(?:[0-9a-f]{2})*$/.test(fields[2]) || !/^[0-9a-f]{128}$/.test(fields[4])) {
+        throw new Error("malformed vector row");
+      }
+      const byteCount = fields[2].length / 2;
+      if (byteCount > 4096 || (byteCount === 0) !== (fields[3] === "")) throw new Error("malformed vector size");
+      let chunks: number[] = [];
+      if (fields[3] !== "") {
+        if (!/^[1-9][0-9]*(?:,[1-9][0-9]*)*$/.test(fields[3])) throw new Error("malformed chunks");
+        chunks = fields[3].split(",").map((value) => {
+          const size = Number(value);
+          if (!Number.isSafeInteger(size) || size > 4096) throw new Error("malformed chunk");
+          return size;
+        });
+      }
+      if (chunks.length > 64 || chunks.reduce((sum, size) => sum + size, 0) !== byteCount) throw new Error("malformed chunks");
+    } else if (fields[0] === "L") {
+      if (!/^[0-9a-f]{16}$/.test(fields[2]) || !/^[0-9a-f]{16}$/.test(fields[3]) ||
+          (fields[4] !== "ERROR" && !/^[0-9a-f]{32}$/.test(fields[4]))) throw new Error("malformed length row");
+    } else {
+      throw new Error("unknown fixture row tag");
+    }
+  }
+  return lines;
+}
+
+const fixtureBytes = readFileSync(new URL("../../../../specs/fixtures/sha512-v1/cases.txt", import.meta.url));
+const fixtureLines = parseFixture(fixtureBytes);
+if (fixtureLines.filter((row) => row.startsWith("V|")).length !== 9 ||
+    fixtureLines.filter((row) => row.startsWith("L|")).length !== 6) throw new Error("SHA-512 fixture corpus counts changed");
 
 describe("HF04 portable corpus", () => {
+  it("rejects malformed rows", () => {
+    const digest = "0".repeat(128);
+    for (const row of ["X|id|||", `V|UPPER|00|1|${digest}`, `V|bad|0|1|${digest}`, `V|bad|00|2|${digest}`,
+      "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC"]) {
+      expect(() => parseFixture(new TextEncoder().encode(row))).toThrow();
+    }
+  });
+
   it("matches one-shot and streaming APIs", () => {
     for (const line of fixtureLines.filter((row) => row.startsWith("V|"))) {
       const fields = line.split("|");
-      expect(fields).toHaveLength(5);
-      expect(fields[2].length).toBeLessThanOrEqual(8192);
-      expect(fields[4]).toHaveLength(128);
       const data = Uint8Array.from(fields[2].match(/../g) ?? [], (pair) => Number.parseInt(pair, 16));
-      expect(data.length).toBeLessThanOrEqual(4096);
       expect(sha512Hex(data)).toBe(fields[4]);
       const hasher = new SHA512Hasher();
       let offset = 0;

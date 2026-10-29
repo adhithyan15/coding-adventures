@@ -4,25 +4,59 @@ open System
 open System.Globalization
 open System.IO
 open System.Text
+open System.Text.RegularExpressions
 open Xunit
 open CodingAdventures.Sha512.FSharp
 
 module Sha512Tests =
+    let private matches (pattern: string) (value: string) = Regex.IsMatch(value, pattern, RegexOptions.CultureInvariant)
+
+    let private validateRow (line: string) =
+        let fields = line.Split('|')
+        if fields.Length <> 5 || not (matches "^[a-z0-9]+(?:-[a-z0-9]+)*$" fields[1]) then invalidArg "line" "malformed fixture row"
+        match fields[0] with
+        | "V" ->
+            if fields[2].Length > 8192 || not (matches "^(?:[0-9a-f]{2})*$" fields[2]) || not (matches "^[0-9a-f]{128}$" fields[4]) then
+                invalidArg "line" "malformed vector row"
+            let byteCount = fields[2].Length / 2
+            if byteCount > 4096 || ((byteCount = 0) <> (fields[3].Length = 0)) then invalidArg "line" "malformed vector size"
+            let chunks =
+                if fields[3].Length = 0 then [||]
+                elif matches "^[1-9][0-9]*(?:,[1-9][0-9]*)*$" fields[3] then
+                    fields[3].Split(',') |> Array.map (fun raw -> match Int32.TryParse raw with | true, value when value <= 4096 -> value | _ -> invalidArg "line" "malformed chunk")
+                else invalidArg "line" "malformed chunks"
+            if chunks.Length > 64 || Array.sum chunks <> byteCount then invalidArg "line" "malformed chunks"
+        | "L" ->
+            if not (matches "^[0-9a-f]{16}$" fields[2]) || not (matches "^[0-9a-f]{16}$" fields[3]) ||
+               (fields[4] <> "ERROR" && not (matches "^[0-9a-f]{32}$" fields[4])) then invalidArg "line" "malformed length row"
+        | _ -> invalidArg "line" "unknown fixture row tag"
+
+    let private parseFixture (raw: byte array) =
+        if raw.Length < 1 || raw.Length > 4096 then invalidArg "raw" "fixture byte size outside bounds"
+        let lines = UTF8Encoding(false, true).GetString(raw).Split('\n') |> Array.map (fun line -> line.TrimEnd('\r')) |> Array.filter (fun line -> line.Length > 0 && line[0] <> '#')
+        if lines.Length < 1 || lines.Length > 64 then invalidArg "raw" "fixture row count outside bounds"
+        lines |> Array.iter validateRow
+        lines
+
     let fixtureLines () =
         let path = "../../../../../../../../specs/fixtures/sha512-v1/cases.txt"
-        Assert.InRange(FileInfo(path).Length, 1L, 4096L)
-        let lines = File.ReadAllLines(path) |> Array.filter (fun line -> line.Length > 0 && line[0] <> '#')
-        Assert.InRange(lines.Length, 1, 64)
+        let lines = File.ReadAllBytes(path) |> parseFixture
+        Assert.Equal(9, lines |> Array.filter (fun line -> line.StartsWith("V|", StringComparison.Ordinal)) |> Array.length)
+        Assert.Equal(6, lines |> Array.filter (fun line -> line.StartsWith("L|", StringComparison.Ordinal)) |> Array.length)
         lines
+
+    [<Fact>]
+    let ``fixture reader rejects malformed rows`` () =
+        let digest = String('0', 128)
+        for row in [ "X|id|||"; $"V|UPPER|00|1|{digest}"; $"V|bad|0|1|{digest}"; $"V|bad|00|2|{digest}";
+                     "L|bad|000000000000000G|0000000000000000|ERROR"; "L|bad|0000000000000000|0000000000000000|ABC" ] do
+            Assert.Throws<ArgumentException>(fun () -> Encoding.ASCII.GetBytes(row) |> parseFixture |> ignore) |> ignore
 
     [<Fact>]
     let ``portable corpus matches one shot and streaming`` () =
         for line in fixtureLines () |> Array.filter (fun line -> line.StartsWith("V|", StringComparison.Ordinal)) do
             let fields = line.Split('|')
-            Assert.Equal(5, fields.Length)
             let data = Convert.FromHexString(fields[2])
-            Assert.InRange(data.Length, 0, 4096)
-            Assert.Equal(128, fields[4].Length)
             Assert.Equal(fields[4], Sha512.hashHex data)
             let hasher = Sha512Hasher()
             let mutable offset = 0

@@ -6,19 +6,6 @@
 package.path = "../src/?.lua;" .. "../src/?/init.lua;" .. package.path
 local m = require("coding_adventures.sha512")
 
-local function fixture_lines()
-    local handle = assert(io.open("../../../../specs/fixtures/sha512-v1/cases.txt", "rb"))
-    local raw = assert(handle:read("*a"))
-    handle:close()
-    assert.is_true(#raw > 0 and #raw <= 4096)
-    local lines = {}
-    for line in raw:gmatch("[^\r\n]+") do
-        if line:sub(1, 1) ~= "#" then lines[#lines + 1] = line end
-    end
-    assert.is_true(#lines > 0 and #lines <= 64)
-    return lines
-end
-
 local function fields(line)
     local result, start = {}, 1
     while true do
@@ -27,6 +14,59 @@ local function fields(line)
         result[#result + 1] = line:sub(start, stop - 1)
         start = stop + 1
     end
+end
+
+local function lower_hex(value, length)
+    return #value == length and value:match("^[0-9a-f]*$") ~= nil
+end
+
+local function parse_fixture(raw)
+    assert(#raw > 0 and #raw <= 4096, "fixture byte size outside bounds")
+    local lines = {}
+    for line in raw:gmatch("[^\r\n]+") do
+        if line:sub(1, 1) ~= "#" then lines[#lines + 1] = line end
+    end
+    assert(#lines > 0 and #lines <= 64, "fixture row count outside bounds")
+    for _, line in ipairs(lines) do
+        local row = fields(line)
+        assert(#row == 5 and row[2]:match("^[a-z0-9%-]+$") and not row[2]:match("^%-")
+            and not row[2]:match("%-$") and not row[2]:match("%-%-"), "malformed fixture row")
+        if row[1] == "V" then
+            assert(#row[3] <= 8192 and #row[3] % 2 == 0 and row[3]:match("^[0-9a-f]*$") and lower_hex(row[5], 128), "malformed vector row")
+            local byte_count = #row[3] / 2
+            assert(byte_count <= 4096 and ((byte_count == 0) == (row[4] == "")), "malformed vector size")
+            local count, sum = 0, 0
+            if row[4] ~= "" then
+                assert(row[4]:match("^[0-9,]+$") and not row[4]:match("^,") and not row[4]:match(",$") and not row[4]:match(",,"), "malformed chunks")
+                for raw_size in row[4]:gmatch("[^,]+") do
+                    assert(raw_size:match("^[1-9][0-9]*$") and #raw_size <= 4, "malformed chunk")
+                    local size = assert(tonumber(raw_size, 10))
+                    assert(size <= 4096, "malformed chunk")
+                    count, sum = count + 1, sum + size
+                end
+            end
+            assert(count <= 64 and sum == byte_count, "malformed chunks")
+        elseif row[1] == "L" then
+            assert(lower_hex(row[3], 16) and lower_hex(row[4], 16) and (row[5] == "ERROR" or lower_hex(row[5], 32)), "malformed length row")
+        else
+            error("unknown fixture row tag")
+        end
+    end
+    return lines
+end
+
+local function fixture_lines()
+    local handle = assert(io.open("../../../../specs/fixtures/sha512-v1/cases.txt", "rb"))
+    local raw = assert(handle:read("*a"))
+    handle:close()
+    local lines = parse_fixture(raw)
+    local vectors, lengths = 0, 0
+    for _, line in ipairs(lines) do
+        if line:sub(1, 2) == "V|" then vectors = vectors + 1 else lengths = lengths + 1 end
+    end
+    assert.equals(9, vectors)
+    assert.equals(6, lengths)
+    return lines
 end
 
 local function decode_hex(value)
@@ -42,14 +82,20 @@ end
 
 describe("sha512", function()
 
+    it("rejects malformed fixture rows", function()
+        local digest = string.rep("0", 128)
+        for _, row in ipairs({"X|id|||", "V|UPPER|00|1|" .. digest, "V|bad|0|1|" .. digest,
+            "V|bad|00|2|" .. digest, "L|bad|000000000000000G|0000000000000000|ERROR",
+            "L|bad|0000000000000000|0000000000000000|ABC"}) do
+            assert.has_error(function() parse_fixture(row) end)
+        end
+    end)
+
     it("matches the bounded HF04 portable corpus", function()
         for _, line in ipairs(fixture_lines()) do
             if line:sub(1, 2) == "V|" then
                 local row = fields(line)
-                assert.equals(5, #row)
-                assert.is_true(#row[3] <= 8192 and #row[5] == 128)
                 local input = decode_hex(row[3])
-                assert.is_true(#input <= 4096)
                 assert.equals(row[5], m.hex(input), row[2])
             end
         end

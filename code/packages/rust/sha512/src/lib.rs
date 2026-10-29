@@ -482,6 +482,91 @@ mod tests {
 
     const PORTABLE_FIXTURE: &str = include_str!("../../../../specs/fixtures/sha512-v1/cases.txt");
 
+    fn is_lower_hex(value: &str, length: usize) -> bool {
+        value.len() == length
+            && value
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    }
+
+    fn is_id(value: &str) -> bool {
+        !value.is_empty()
+            && value
+                .bytes()
+                .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || byte == b'-')
+            && !value.starts_with('-')
+            && !value.ends_with('-')
+            && !value.contains("--")
+    }
+
+    fn parse_fixture(value: &str) -> Result<Vec<&str>, &'static str> {
+        if value.is_empty() || value.len() > 4096 {
+            return Err("fixture byte size outside bounds");
+        }
+        let rows: Vec<_> = value
+            .lines()
+            .filter(|line| !line.is_empty() && !line.starts_with('#'))
+            .collect();
+        if rows.is_empty() || rows.len() > 64 {
+            return Err("fixture row count outside bounds");
+        }
+        for line in &rows {
+            let fields: Vec<_> = line.split('|').collect();
+            if fields.len() != 5 || !is_id(fields[1]) {
+                return Err("malformed fixture row");
+            }
+            match fields[0] {
+                "V" => {
+                    if fields[2].len() > 8192
+                        || fields[2].len() % 2 != 0
+                        || !fields[2]
+                            .bytes()
+                            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+                        || !is_lower_hex(fields[4], 128)
+                    {
+                        return Err("malformed vector row");
+                    }
+                    let byte_count = fields[2].len() / 2;
+                    if byte_count > 4096 || (byte_count == 0) != fields[3].is_empty() {
+                        return Err("malformed vector size");
+                    }
+                    let mut sum = 0usize;
+                    let chunks: Vec<_> = if fields[3].is_empty() {
+                        Vec::new()
+                    } else {
+                        fields[3].split(',').collect()
+                    };
+                    if chunks.len() > 64 {
+                        return Err("too many chunks");
+                    }
+                    for raw in chunks {
+                        if raw.starts_with('0') || !raw.bytes().all(|byte| byte.is_ascii_digit()) {
+                            return Err("malformed chunk");
+                        }
+                        let size: usize = raw.parse().map_err(|_| "malformed chunk")?;
+                        if size == 0 || size > 4096 {
+                            return Err("malformed chunk");
+                        }
+                        sum = sum.checked_add(size).ok_or("chunk sum overflow")?;
+                    }
+                    if sum != byte_count {
+                        return Err("malformed chunks");
+                    }
+                }
+                "L" => {
+                    if !is_lower_hex(fields[2], 16)
+                        || !is_lower_hex(fields[3], 16)
+                        || (fields[4] != "ERROR" && !is_lower_hex(fields[4], 32))
+                    {
+                        return Err("malformed length row");
+                    }
+                }
+                _ => return Err("unknown fixture row tag"),
+            }
+        }
+        Ok(rows)
+    }
+
     fn decode_hex(value: &str) -> Vec<u8> {
         assert_eq!(value.len() % 2, 0);
         (0..value.len())
@@ -492,18 +577,12 @@ mod tests {
 
     #[test]
     fn portable_corpus_matches_one_shot_and_streaming() {
-        assert!(PORTABLE_FIXTURE.len() <= 4096);
-        let rows: Vec<_> = PORTABLE_FIXTURE
-            .lines()
-            .filter(|line| !line.is_empty() && !line.starts_with('#'))
-            .collect();
-        assert!(!rows.is_empty() && rows.len() <= 64);
+        let rows = parse_fixture(PORTABLE_FIXTURE).unwrap();
+        assert_eq!(rows.iter().filter(|line| line.starts_with("V|")).count(), 9);
+        assert_eq!(rows.iter().filter(|line| line.starts_with("L|")).count(), 6);
         for line in rows.into_iter().filter(|line| line.starts_with("V|")) {
             let fields: Vec<_> = line.split('|').collect();
-            assert_eq!(fields.len(), 5);
-            assert!(fields[2].len() <= 8192 && fields[4].len() == 128);
             let data = decode_hex(fields[2]);
-            assert!(data.len() <= 4096);
             assert_eq!(hex_string(&data), fields[4], "{}", fields[1]);
             let mut digest = Digest::new();
             let mut offset = 0;
@@ -524,8 +603,9 @@ mod tests {
 
     #[test]
     fn portable_length_corpus_exercises_full_field() {
-        for line in PORTABLE_FIXTURE
-            .lines()
+        for line in parse_fixture(PORTABLE_FIXTURE)
+            .unwrap()
+            .into_iter()
             .filter(|line| line.starts_with("L|"))
         {
             let fields: Vec<_> = line.split('|').collect();
@@ -541,12 +621,36 @@ mod tests {
     }
 
     #[test]
+    fn fixture_reader_rejects_malformed_rows() {
+        let digest = "0".repeat(128);
+        for row in [
+            "X|id|||".to_owned(),
+            format!("V|UPPER|00|1|{digest}"),
+            format!("V|bad|0|1|{digest}"),
+            format!("V|bad|00|2|{digest}"),
+            "L|bad|000000000000000G|0000000000000000|ERROR".to_owned(),
+            "L|bad|0000000000000000|0000000000000000|ABC".to_owned(),
+        ] {
+            assert!(parse_fixture(&row).is_err(), "accepted {row}");
+        }
+    }
+
+    #[test]
     fn update_consumes_input_without_aliasing() {
         let mut input = *b"abc";
         let mut digest = Digest::new();
         digest.update(&input);
         input[0] = b'z';
         assert_eq!(input, *b"zbc");
+        assert_eq!(digest.sum512(), sum512(b"abc"));
+    }
+
+    #[test]
+    fn update_can_continue_after_snapshot() {
+        let mut digest = Digest::new();
+        digest.update(b"ab");
+        assert_eq!(digest.sum512(), sum512(b"ab"));
+        digest.update(b"c");
         assert_eq!(digest.sum512(), sum512(b"abc"));
     }
 

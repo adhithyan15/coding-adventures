@@ -14,21 +14,55 @@ class TestPortableConformance < Minitest::Test
   FIXTURE = File.expand_path("../../../../specs/fixtures/sha512-v1/cases.txt", __dir__)
 
   def fixture_lines
-    raw = File.binread(FIXTURE)
-    assert_operator raw.bytesize, :>, 0
-    assert_operator raw.bytesize, :<=, 4096
-    lines = raw.lines(chomp: true).reject { |line| line.empty? || line.start_with?("#") }
-    assert_operator lines.length, :<=, 64
+    lines = parse_fixture(File.binread(FIXTURE))
+    assert_equal 9, lines.count { |line| line.start_with?("V|") }
+    assert_equal 6, lines.count { |line| line.start_with?("L|") }
     lines
+  end
+
+  def parse_fixture(raw)
+    raise ArgumentError, "fixture byte size outside bounds" unless raw.bytesize.between?(1, 4096) && raw.ascii_only?
+    lines = raw.lines(chomp: true).map { |line| line.delete_suffix("\r") }.reject { |line| line.empty? || line.start_with?("#") }
+    raise ArgumentError, "fixture row count outside bounds" unless lines.length.between?(1, 64)
+    lines.each do |line|
+      fields = line.split("|", -1)
+      raise ArgumentError, "malformed fixture row" unless fields.length == 5 && fields[1].match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+      case fields[0]
+      when "V"
+        input_hex, chunks, digest = fields[2..4]
+        raise ArgumentError, "malformed vector row" unless input_hex.length <= 8192 && input_hex.match?(/\A(?:[0-9a-f]{2})*\z/) && digest.match?(/\A[0-9a-f]{128}\z/)
+        byte_count = input_hex.length / 2
+        raise ArgumentError, "malformed vector size" if byte_count > 4096 || (byte_count.zero? != chunks.empty?)
+        sizes = if chunks.empty?
+                  []
+                elsif chunks.match?(/\A[1-9][0-9]*(?:,[1-9][0-9]*)*\z/)
+                  chunks.split(",").map { |value| Integer(value, 10) }
+                else
+                  raise ArgumentError, "malformed chunks"
+                end
+        raise ArgumentError, "malformed chunks" if sizes.length > 64 || sizes.any? { |size| size > 4096 } || sizes.sum != byte_count
+      when "L"
+        raise ArgumentError, "malformed length row" unless fields[2].match?(/\A[0-9a-f]{16}\z/) && fields[3].match?(/\A[0-9a-f]{16}\z/) &&
+          (fields[4] == "ERROR" || fields[4].match?(/\A[0-9a-f]{32}\z/))
+      else
+        raise ArgumentError, "unknown fixture row tag"
+      end
+    end
+    lines
+  end
+
+  def test_fixture_reader_rejects_malformed_rows
+    digest = "0" * 128
+    ["X|id|||", "V|UPPER|00|1|#{digest}", "V|bad|0|1|#{digest}", "V|bad|00|2|#{digest}",
+     "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC"].each do |row|
+      assert_raises(ArgumentError) { parse_fixture(row) }
+    end
   end
 
   def test_portable_digest_corpus
     fixture_lines.grep(/^V\|/).each do |line|
       _, id, input_hex, chunk_csv, expected = line.split("|", -1)
-      assert_operator input_hex.length, :<=, 8192
-      assert_equal 128, expected.length
       data = [input_hex].pack("H*")
-      assert_operator data.bytesize, :<=, 4096
       assert_equal expected, SHA512.sha512_hex(data), id
       hasher = SHA512::Digest.new
       offset = 0

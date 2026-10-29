@@ -8,30 +8,104 @@ same results as the one-shot sha512() function, and test edge cases like empty
 input, exact block boundaries, and very long inputs.
 """
 
+import re
+from array import array
 from pathlib import Path
 
 import pytest
 
-from coding_adventures_sha512 import SHA512Hasher, _encode_bit_length, sha512, sha512_hex
+from coding_adventures_sha512 import (
+    SHA512Hasher,
+    _encode_bit_length,
+    sha512,
+    sha512_hex,
+)
 
 
 _FIXTURE = Path(__file__).resolve().parents[4] / "specs/fixtures/sha512-v1/cases.txt"
 
 
-def _fixture_lines() -> list[str]:
-    raw = _FIXTURE.read_bytes()
-    assert 0 < len(raw) <= 4096
-    lines = [line for line in raw.decode("ascii").splitlines() if line and not line.startswith("#")]
-    assert 0 < len(lines) <= 64
+def _parse_fixture(raw: bytes) -> list[str]:
+    if not 0 < len(raw) <= 4096:
+        raise ValueError("fixture byte size outside bounds")
+    lines = [
+        line
+        for line in raw.decode("ascii").splitlines()
+        if line and not line.startswith("#")
+    ]
+    if not 0 < len(lines) <= 64:
+        raise ValueError("fixture row count outside bounds")
+    for line in lines:
+        fields = line.split("|")
+        if (
+            len(fields) != 5
+            or re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", fields[1]) is None
+        ):
+            raise ValueError("malformed fixture row")
+        if fields[0] == "V":
+            input_hex, chunks, digest = fields[2:]
+            if (
+                len(input_hex) > 8192
+                or re.fullmatch(r"(?:[0-9a-f]{2})*", input_hex) is None
+                or re.fullmatch(r"[0-9a-f]{128}", digest) is None
+            ):
+                raise ValueError("malformed vector row")
+            byte_count = len(input_hex) // 2
+            if byte_count > 4096 or (byte_count == 0) != (chunks == ""):
+                raise ValueError("malformed vector size")
+            if chunks:
+                if re.fullmatch(r"[1-9][0-9]*(?:,[1-9][0-9]*)*", chunks) is None:
+                    raise ValueError("malformed chunks")
+                sizes = [int(value) for value in chunks.split(",")]
+            else:
+                sizes = []
+            if (
+                len(sizes) > 64
+                or any(size > 4096 for size in sizes)
+                or sum(sizes) != byte_count
+            ):
+                raise ValueError("malformed chunks")
+        elif fields[0] == "L":
+            if (
+                re.fullmatch(r"[0-9a-f]{16}", fields[2]) is None
+                or re.fullmatch(r"[0-9a-f]{16}", fields[3]) is None
+                or (
+                    fields[4] != "ERROR"
+                    and re.fullmatch(r"[0-9a-f]{32}", fields[4]) is None
+                )
+            ):
+                raise ValueError("malformed length row")
+        else:
+            raise ValueError("unknown fixture row tag")
     return lines
+
+
+def _fixture_lines() -> list[str]:
+    lines = _parse_fixture(_FIXTURE.read_bytes())
+    assert sum(line.startswith("V|") for line in lines) == 9
+    assert sum(line.startswith("L|") for line in lines) == 6
+    return lines
+
+
+def test_fixture_reader_rejects_malformed_rows() -> None:
+    digest = "0" * 128
+    rows = [
+        "X|id|||",
+        f"V|UPPER|00|1|{digest}",
+        f"V|bad|0|1|{digest}",
+        f"V|bad|00|2|{digest}",
+        "L|bad|000000000000000G|0000000000000000|ERROR",
+        "L|bad|0000000000000000|0000000000000000|ABC",
+    ]
+    for row in rows:
+        with pytest.raises(ValueError):
+            _parse_fixture(row.encode("ascii"))
 
 
 def test_portable_corpus() -> None:
     for line in (row for row in _fixture_lines() if row.startswith("V|")):
         _, case_id, input_hex, chunk_csv, expected = line.split("|")
-        assert len(input_hex) <= 8192 and len(expected) == 128
         data = bytes.fromhex(input_hex)
-        assert len(data) <= 4096
         assert sha512_hex(data) == expected, case_id
         hasher = SHA512Hasher()
         offset = 0
@@ -69,6 +143,24 @@ def test_invalid_update_is_atomic() -> None:
     hasher = SHA512Hasher().update(b"ab")
     with pytest.raises(TypeError, match="bytes-like object"):
         hasher.update("not bytes")  # type: ignore[arg-type]
+    assert hasher.update(b"c").digest() == sha512(b"abc")
+
+
+def test_multibyte_contiguous_memoryview_uses_byte_length() -> None:
+    words = array("I", [0x01020304, 0xA0B0C0D0])
+    view = memoryview(words)
+    expected = view.cast("B").tobytes()
+    assert sha512(view) == sha512(expected)
+    assert SHA512Hasher().update(view).digest() == sha512(expected)
+
+
+def test_noncontiguous_memoryview_failure_is_atomic() -> None:
+    view = memoryview(bytearray(b"abcdef"))[::2]
+    with pytest.raises(TypeError, match="contiguous bytes-like object"):
+        sha512(view)
+    hasher = SHA512Hasher().update(b"ab")
+    with pytest.raises(TypeError, match="contiguous bytes-like object"):
+        hasher.update(view)
     assert hasher.update(b"c").digest() == sha512(b"abc")
 
 

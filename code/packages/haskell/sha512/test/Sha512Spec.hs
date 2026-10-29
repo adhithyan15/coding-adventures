@@ -1,10 +1,13 @@
 module Sha512Spec (spec) where
 
-import Data.Char (ord)
+import Control.Exception (evaluate)
+import Data.Char (isDigit, ord)
+import Data.Either (isLeft)
 import Data.List (isPrefixOf)
 import Data.Word (Word8)
 import Numeric (readHex)
 import Sha512
+import System.IO (IOMode(ReadMode), hFileSize, hGetContents, withBinaryFile)
 import Test.Hspec
 
 spec :: Spec
@@ -16,6 +19,13 @@ spec = describe "Sha512" $ do
     it "encodes the full 128-bit length field without allocating messages" $ do
         rows <- fixtureRows
         mapM_ checkLength [row | row <- rows, "L|" `isPrefixOf` row]
+
+    it "rejects malformed fixture rows" $ do
+        let digest = replicate 128 '0'
+        mapM_ (\row -> parseFixture row `shouldSatisfy` isLeft)
+            ["X|id|||", "V|UPPER|00|1|" ++ digest, "V|bad|0|1|" ++ digest,
+             "V|bad|00|2|" ++ digest, "L|bad|000000000000000G|0000000000000000|ERROR",
+             "L|bad|0000000000000000|0000000000000000|ABC"]
 
     it "hashes abc to the FIPS vector" $ do
         sha512Hex (ascii "abc")
@@ -33,11 +43,65 @@ ascii = map (fromIntegral . ord)
 
 fixtureRows :: IO [String]
 fixtureRows = do
-    raw <- readFile "../../../specs/fixtures/sha512-v1/cases.txt"
-    length raw `shouldSatisfy` (\size -> size > 0 && size <= 4096)
-    let rows = filter (\line -> case line of { first : _ -> first /= '#'; [] -> False }) (lines raw)
-    length rows `shouldSatisfy` (\count -> count > 0 && count <= 64)
+    raw <- withBinaryFile "../../../specs/fixtures/sha512-v1/cases.txt" ReadMode $ \handle -> do
+        size <- hFileSize handle
+        size `shouldSatisfy` (\count -> count > 0 && count <= 4096)
+        contents <- hGetContents handle
+        _ <- evaluate (length contents)
+        pure contents
+    rows <- case parseFixture raw of
+        Left message -> expectationFailure message >> pure []
+        Right parsed -> pure parsed
+    length [row | row <- rows, "V|" `isPrefixOf` row] `shouldBe` 9
+    length [row | row <- rows, "L|" `isPrefixOf` row] `shouldBe` 6
     pure rows
+
+parseFixture :: String -> Either String [String]
+parseFixture raw
+    | null raw || length raw > 4096 || any ((> 127) . ord) raw = Left "fixture byte size or encoding outside bounds"
+    | null rows || length rows > 64 = Left "fixture row count outside bounds"
+    | otherwise = mapM validateRow rows
+  where rows = filter (\line -> case line of { first : _ -> first /= '#'; [] -> False }) (lines raw)
+
+validateRow :: String -> Either String String
+validateRow row = case splitPipe row of
+    ["V", caseId, inputHex, chunks, expected]
+        | not (validId caseId) || length inputHex > 8192 || odd (length inputHex) || not (all lowerHex inputHex)
+            || length expected /= 128 || not (all lowerHex expected) -> Left "malformed vector row"
+        | byteCount > 4096 || (byteCount == 0) /= null chunks -> Left "malformed vector size"
+        | otherwise -> case parseChunks chunks of
+            Just values | length values <= 64 && sum values == byteCount -> Right row
+            _ -> Left "malformed chunks"
+      where byteCount = length inputHex `div` 2
+    ["L", caseId, highHex, lowHex, expected]
+        | validId caseId && validHex 16 highHex && validHex 16 lowHex && (expected == "ERROR" || validHex 32 expected) -> Right row
+        | otherwise -> Left "malformed length row"
+    _ -> Left "unknown or malformed fixture row"
+
+lowerHex :: Char -> Bool
+lowerHex value = isDigit value || value >= 'a' && value <= 'f'
+
+validHex :: Int -> String -> Bool
+validHex size value = length value == size && all lowerHex value
+
+validId :: String -> Bool
+validId value = not (null parts) && all (\part -> not (null part) && all (\c -> isDigit c || c >= 'a' && c <= 'z') part) parts
+  where parts = splitOn '-' value
+
+splitOn :: Char -> String -> [String]
+splitOn _ [] = [""]
+splitOn delimiter value = case break (== delimiter) value of
+    (field, []) -> [field]
+    (field, _ : rest) -> field : splitOn delimiter rest
+
+parseChunks :: String -> Maybe [Int]
+parseChunks "" = Just []
+parseChunks value = mapM parseChunk (splitOn ',' value)
+  where
+    parseChunk raw@(first : _)
+        | first == '0' || length raw > 4 || not (all isDigit raw) = Nothing
+        | otherwise = let size = read raw in if size <= 4096 then Just size else Nothing
+    parseChunk [] = Nothing
 
 splitPipe :: String -> [String]
 splitPipe [] = [""]

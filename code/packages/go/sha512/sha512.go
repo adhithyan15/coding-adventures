@@ -268,7 +268,8 @@ func New() *Digest {
 	return result
 }
 
-// Write feeds more bytes into the hash computation. Always returns len(p), nil.
+// Write feeds more bytes into the hash computation. It returns 0 and
+// ErrMessageTooLong without changing the digest if p would exceed FIPS' limit.
 func (d *Digest) Write(p []byte) (int, error) {
 	added := uint64(len(p))
 	nextLow := d.byteCountLow + added

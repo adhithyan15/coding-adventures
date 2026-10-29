@@ -3,11 +3,78 @@ package sha512
 import (
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"testing"
+	"unicode/utf8"
 )
+
+var fixtureID = regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
+var fixtureEvenHex = regexp.MustCompile(`^(?:[0-9a-f]{2})*$`)
+var fixtureDigest = regexp.MustCompile(`^[0-9a-f]{128}$`)
+var fixtureWord = regexp.MustCompile(`^[0-9a-f]{16}$`)
+var fixtureLength = regexp.MustCompile(`^[0-9a-f]{32}$`)
+var fixtureChunks = regexp.MustCompile(`^[1-9][0-9]*(?:,[1-9][0-9]*)*$`)
+
+func parseFixture(data []byte) ([]string, error) {
+	if len(data) == 0 || len(data) > 4096 || !utf8.Valid(data) {
+		return nil, fmt.Errorf("fixture bytes outside bounds")
+	}
+	var lines []string
+	for _, line := range strings.Split(string(data), "\n") {
+		line = strings.TrimSuffix(line, "\r")
+		if line != "" && !strings.HasPrefix(line, "#") {
+			lines = append(lines, line)
+		}
+	}
+	if len(lines) == 0 || len(lines) > 64 {
+		return nil, fmt.Errorf("fixture row count outside bounds")
+	}
+	for _, line := range lines {
+		fields := strings.Split(line, "|")
+		if len(fields) != 5 || !fixtureID.MatchString(fields[1]) {
+			return nil, fmt.Errorf("malformed fixture row %q", line)
+		}
+		switch fields[0] {
+		case "V":
+			if len(fields[2]) > 8192 || !fixtureEvenHex.MatchString(fields[2]) || !fixtureDigest.MatchString(fields[4]) {
+				return nil, fmt.Errorf("malformed vector row %q", line)
+			}
+			byteCount := len(fields[2]) / 2
+			if byteCount > 4096 || (byteCount == 0) != (fields[3] == "") {
+				return nil, fmt.Errorf("malformed vector size")
+			}
+			sum, count := 0, 0
+			if fields[3] != "" {
+				if !fixtureChunks.MatchString(fields[3]) {
+					return nil, fmt.Errorf("malformed chunks")
+				}
+				for _, raw := range strings.Split(fields[3], ",") {
+					size, err := strconv.Atoi(raw)
+					if err != nil || size > 4096 {
+						return nil, fmt.Errorf("malformed chunk")
+					}
+					sum += size
+					count++
+				}
+			}
+			if count > 64 || sum != byteCount {
+				return nil, fmt.Errorf("malformed chunks")
+			}
+		case "L":
+			if !fixtureWord.MatchString(fields[2]) || !fixtureWord.MatchString(fields[3]) ||
+				(fields[4] != "ERROR" && !fixtureLength.MatchString(fields[4])) {
+				return nil, fmt.Errorf("malformed length row")
+			}
+		default:
+			return nil, fmt.Errorf("unknown fixture row tag")
+		}
+	}
+	return lines, nil
+}
 
 func fixtureLines(t *testing.T) []string {
 	t.Helper()
@@ -15,19 +82,33 @@ func fixtureLines(t *testing.T) []string {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(data) == 0 || len(data) > 4096 {
-		t.Fatalf("fixture size %d outside bounds", len(data))
+	lines, err := parseFixture(data)
+	if err != nil {
+		t.Fatal(err)
 	}
-	var lines []string
-	for _, line := range strings.Split(string(data), "\n") {
-		if line != "" && !strings.HasPrefix(line, "#") {
-			lines = append(lines, line)
+	vectors, lengths := 0, 0
+	for _, line := range lines {
+		if strings.HasPrefix(line, "V|") {
+			vectors++
+		} else {
+			lengths++
 		}
 	}
-	if len(lines) == 0 || len(lines) > 64 {
-		t.Fatalf("fixture row count %d outside bounds", len(lines))
+	if vectors != 9 || lengths != 6 {
+		t.Fatalf("fixture counts = %d V, %d L", vectors, lengths)
 	}
 	return lines
+}
+
+func TestFixtureReaderRejectsMalformedRows(t *testing.T) {
+	digest := strings.Repeat("0", 128)
+	for _, row := range []string{"X|id|||", "V|UPPER|00|1|" + digest, "V|bad|0|1|" + digest,
+		"V|bad|00|2|" + digest, "L|bad|000000000000000G|0000000000000000|ERROR",
+		"L|bad|0000000000000000|0000000000000000|ABC"} {
+		if _, err := parseFixture([]byte(row)); err == nil {
+			t.Fatalf("accepted malformed row %q", row)
+		}
+	}
 }
 
 func TestPortableCorpus(t *testing.T) {
@@ -112,6 +193,23 @@ func TestWriteConsumesInputWithoutAliasing(t *testing.T) {
 	input[0] = 'z'
 	if d.Sum512() != Sum512([]byte("abc")) {
 		t.Fatal("digest changed after caller mutation")
+	}
+}
+
+func TestWriteCanContinueAfterSnapshot(t *testing.T) {
+	d := New()
+	if _, err := d.Write([]byte("ab")); err != nil {
+		t.Fatal(err)
+	}
+	snapshot := d.Sum512()
+	if snapshot != Sum512([]byte("ab")) {
+		t.Fatal("snapshot mismatch")
+	}
+	if _, err := d.Write([]byte("c")); err != nil {
+		t.Fatal(err)
+	}
+	if d.Sum512() != Sum512([]byte("abc")) {
+		t.Fatal("continuation after snapshot mismatch")
 	}
 }
 

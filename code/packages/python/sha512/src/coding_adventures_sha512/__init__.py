@@ -330,6 +330,22 @@ def _compress(
 # ---- Public API ----
 
 
+def _owned_bytes(data: object, operation: str) -> bytes:
+    """Return an owned byte snapshot, rejecting strided/non-byte inputs."""
+    if not isinstance(data, (bytes, bytearray, memoryview)):
+        raise TypeError(f"{operation}: expected a bytes-like object")
+    try:
+        view = memoryview(data)
+    except (TypeError, ValueError) as error:
+        raise TypeError(f"{operation}: expected a bytes-like object") from error
+    if not view.c_contiguous:
+        raise TypeError(f"{operation}: expected a contiguous bytes-like object")
+    try:
+        return view.cast("B").tobytes()
+    except (TypeError, ValueError) as error:
+        raise TypeError(f"{operation}: expected a contiguous bytes-like object") from error
+
+
 def sha512(data: bytes) -> bytes:
     """Compute the SHA-512 digest of data.  Returns 64 bytes.
 
@@ -343,9 +359,8 @@ def sha512(data: bytes) -> bytes:
         >>> len(sha512(b""))
         64
     """
-    if not isinstance(data, (bytes, bytearray, memoryview)):
-        raise TypeError("sha512: expected a bytes-like object")
-    padded = _pad(data)
+    owned = _owned_bytes(data, "sha512")
+    padded = _pad(owned)
     state = _INIT
     for offset in range(0, len(padded), 128):
         state = _compress(state, padded[offset : offset + 128])
@@ -397,23 +412,22 @@ class SHA512Hasher:
 
     def update(self, data: bytes) -> "SHA512Hasher":
         """Feed more bytes into the hash.  Returns self for chaining."""
-        if not isinstance(data, (bytes, bytearray, memoryview)):
-            raise TypeError("sha512.update: expected a bytes-like object")
-        next_count = self._byte_count + len(data)
+        owned = _owned_bytes(data, "sha512.update")
+        next_count = self._byte_count + len(owned)
         _encode_bit_length(next_count)
         self._byte_count = next_count
         offset = 0
         if self._buffer:
-            copied = min(128 - len(self._buffer), len(data))
-            self._buffer.extend(data[:copied])
+            copied = min(128 - len(self._buffer), len(owned))
+            self._buffer.extend(owned[:copied])
             offset = copied
             if len(self._buffer) == 128:
                 self._state = _compress(self._state, bytes(self._buffer))
                 self._buffer.clear()
-        while offset + 128 <= len(data):
-            self._state = _compress(self._state, bytes(data[offset : offset + 128]))
+        while offset + 128 <= len(owned):
+            self._state = _compress(self._state, owned[offset : offset + 128])
             offset += 128
-        self._buffer.extend(data[offset:])
+        self._buffer.extend(owned[offset:])
         return self
 
     def digest(self) -> bytes:

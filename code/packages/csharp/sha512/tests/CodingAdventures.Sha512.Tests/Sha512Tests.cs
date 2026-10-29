@@ -1,18 +1,68 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using Sha512Algorithm = CodingAdventures.Sha512.Sha512;
 
 namespace CodingAdventures.Sha512.Tests;
 
 public sealed class Sha512Tests
 {
+    private static readonly Regex IdPattern = new("^[a-z0-9]+(?:-[a-z0-9]+)*$", RegexOptions.CultureInvariant);
+    private static readonly Regex EvenHexPattern = new("^(?:[0-9a-f]{2})*$", RegexOptions.CultureInvariant);
+    private static readonly Regex DigestPattern = new("^[0-9a-f]{128}$", RegexOptions.CultureInvariant);
+    private static readonly Regex WordPattern = new("^[0-9a-f]{16}$", RegexOptions.CultureInvariant);
+    private static readonly Regex ChunksPattern = new("^[1-9][0-9]*(?:,[1-9][0-9]*)*$", RegexOptions.CultureInvariant);
+
+    private static string[] ParseFixture(byte[] raw)
+    {
+        if (raw.Length is < 1 or > 4096) throw new InvalidDataException("fixture byte size outside bounds");
+        var text = new UTF8Encoding(false, true).GetString(raw);
+        var lines = text.Split('\n').Select(line => line.TrimEnd('\r'))
+            .Where(line => line.Length > 0 && line[0] != '#').ToArray();
+        if (lines.Length is < 1 or > 64) throw new InvalidDataException("fixture row count outside bounds");
+        foreach (var line in lines) ValidateFixtureRow(line);
+        return lines;
+    }
+
     private static string[] FixtureLines()
     {
         const string path = "../../../../../../../../specs/fixtures/sha512-v1/cases.txt";
-        var info = new FileInfo(path);
-        Assert.InRange(info.Length, 1, 4096);
-        var lines = File.ReadAllLines(path).Where(line => line.Length > 0 && line[0] != '#').ToArray();
-        Assert.InRange(lines.Length, 1, 64);
+        var lines = ParseFixture(File.ReadAllBytes(path));
+        Assert.Equal(9, lines.Count(line => line.StartsWith("V|", StringComparison.Ordinal)));
+        Assert.Equal(6, lines.Count(line => line.StartsWith("L|", StringComparison.Ordinal)));
         return lines;
+    }
+
+    private static void ValidateFixtureRow(string line)
+    {
+        var fields = line.Split('|');
+        if (fields.Length != 5 || !IdPattern.IsMatch(fields[1])) throw new InvalidDataException("malformed fixture row");
+        if (fields[0] == "V")
+        {
+            if (fields[2].Length > 8192 || !EvenHexPattern.IsMatch(fields[2]) || !DigestPattern.IsMatch(fields[4]))
+                throw new InvalidDataException("malformed vector row");
+            var byteCount = fields[2].Length / 2;
+            if (byteCount > 4096 || (byteCount == 0) != (fields[3].Length == 0)) throw new InvalidDataException("malformed vector size");
+            var chunks = fields[3].Length == 0 ? Array.Empty<int>() : fields[3].Split(',').Select(value =>
+                int.TryParse(value, out var size) && size <= 4096 ? size : throw new InvalidDataException("malformed chunk")).ToArray();
+            if (chunks.Length > 64 || (fields[3].Length > 0 && !ChunksPattern.IsMatch(fields[3])) || chunks.Sum() != byteCount)
+                throw new InvalidDataException("malformed chunks");
+        }
+        else if (fields[0] == "L")
+        {
+            if (!WordPattern.IsMatch(fields[2]) || !WordPattern.IsMatch(fields[3]) ||
+                (fields[4] != "ERROR" && !Regex.IsMatch(fields[4], "^[0-9a-f]{32}$", RegexOptions.CultureInvariant)))
+                throw new InvalidDataException("malformed length row");
+        }
+        else throw new InvalidDataException("unknown fixture row tag");
+    }
+
+    [Fact]
+    public void FixtureReaderRejectsMalformedRows()
+    {
+        foreach (var row in new[] { "X|id|||", "V|UPPER|00|1|" + new string('0', 128),
+                     "V|bad|0|1|" + new string('0', 128), "V|bad|00|2|" + new string('0', 128),
+                     "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC" })
+            Assert.Throws<InvalidDataException>(() => ParseFixture(Encoding.ASCII.GetBytes(row)));
     }
 
     [Fact]
@@ -21,11 +71,7 @@ public sealed class Sha512Tests
         foreach (var line in FixtureLines().Where(line => line.StartsWith("V|", StringComparison.Ordinal)))
         {
             var fields = line.Split('|');
-            Assert.Equal(5, fields.Length);
-            Assert.InRange(fields[2].Length, 0, 8192);
-            Assert.Equal(128, fields[4].Length);
             var data = Convert.FromHexString(fields[2]);
-            Assert.InRange(data.Length, 0, 4096);
             Assert.Equal(fields[4], Sha512Algorithm.HashHex(data));
 
             var hasher = new Sha512Hasher();

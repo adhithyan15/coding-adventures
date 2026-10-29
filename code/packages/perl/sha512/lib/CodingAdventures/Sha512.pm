@@ -239,7 +239,7 @@ sub digest {
         $msg = $_[0];   # function call: (message)
     }
     die "sha512.digest: expected byte string"
-        if !defined($msg) || ref($msg);
+        if !defined($msg) || ref($msg) || utf8::is_utf8($msg);
 
     # ------------------------------------------------------------------
     # Step 1: Padding (FIPS 180-4 Section 5.1.2)
