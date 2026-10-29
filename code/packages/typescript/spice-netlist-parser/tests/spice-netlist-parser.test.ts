@@ -15,6 +15,7 @@ import {
   parseNetlist,
   parseValue,
   runNetlist,
+  runNetlistJson,
 } from "../src/index.js";
 
 describe("parseNetlist", () => {
@@ -149,6 +150,40 @@ R2 out 0 1k
     expect(points.at(-1)?.result.voltage("out")).toBeCloseTo(testCase.expected.finalOut, 9);
     expect(parsed.selectOutputs(results)[0].rows.map((row) => [row.axisValue, row.secondaryAxisValue]))
       .toEqual(testCase.expected.points);
+  });
+
+  it("runs the shared LTspice .step v1 corpus", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/ltspice-step-v1-corpus.json", import.meta.url),
+      "utf8",
+    )) as { suite: string; cases: readonly { deck: string; expected: {
+      parameter: string;
+      values: readonly number[];
+      out: readonly number[];
+    } }[] };
+    expect(corpus.suite).toBe("ltspice-step-v1");
+    for (const testCase of corpus.cases) {
+      const parsed = parseNetlist(testCase.deck);
+      const card = parsed.stepCards[0]!;
+      expect(card.parameter).toBe(testCase.expected.parameter);
+      expect(card.values).toEqual(testCase.expected.values);
+      const results = parsed.runAnalysisPlan();
+      expect(results.map((result) => Object.fromEntries(result.stepValues ?? []))).toEqual(
+        testCase.expected.values.map((value) => ({ [testCase.expected.parameter]: value })),
+      );
+      expect(results.map((result) => (
+        result.result as { voltage(node: string): number | undefined }
+      ).voltage("out"))).toEqual(expect.arrayContaining(testCase.expected.out));
+      for (const [index, result] of results.entries()) {
+        expect((result.result as { voltage(node: string): number | undefined }).voltage("out"))
+          .toBeCloseTo(testCase.expected.out[index]!, 12);
+      }
+      const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+        analyses: readonly { stepValues: Record<string, number> }[];
+      };
+      expect(payload.analyses.map((analysis) => analysis.stepValues[testCase.expected.parameter]))
+        .toEqual(testCase.expected.values);
+    }
   });
 
   it("runs the shared Berkeley v1 core corpus", () => {
