@@ -1,0 +1,564 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 210,
+  "title": "Aman Did the Work",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:feef358f819e0576",
+  "lessons": [
+    {
+      "id": "PA-C210-perfective-return",
+      "sequence": 11380,
+      "title": "Return to a familiar completed action",
+      "headword": "ਅਮਨ · ਕੰਮ · ਕੀਤਾ",
+      "romanization": "Aman; kamm; kiitaa",
+      "gloss": "retrieve a practice name, work, and a completed form",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa25de2dc8f4940a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman; kamm; kiitaa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman; kamm; kiitaa*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ, ਕੰਮ, ਕੀਤਾ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੰਮ is familiar “work.” ਕੀਤਾ is the familiar completed form in ਮੈਂ ਕੰਮ ਕੀਤਾ. In that old frame it agrees with the unmarked work object. Keep those pieces ready; the next lesson adds one small marker to a named person's completed action."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the practice name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *the practice name*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *work*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੰਮ."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "did, completed form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *did, completed form*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀਤਾ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say only these familiar pieces. No new form is required yet."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C210-ne",
+      "sequence": 11390,
+      "title": "A small marker after the agent",
+      "headword": "ਨੇ",
+      "romanization": "ne",
+      "gloss": "agent marker after a named person in this completed-action frame",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:a3a2843add24fb74",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Grammar Lens: direct owner",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Grammar Lens: direct owner and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the practice name ਅਮਨ, “work” ਕੰਮ, and the completed form ਕੀਤਾ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨੇ — ne — marks the person who did the action in this frame ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ — Aman ne kamm kiitaa — Aman did the work."
+            },
+            {
+              "kind": "speech",
+              "text": "Put ਨੇ (ne) immediately after ਅਮਨ in this one third-person completed transitive action. The short marker points to the doer. Familiar ਕੀਤਾ still agrees with the unmarked masculine-singular object ਕੰਮ. Say the whole sentence once, then point to its doer, work, and action."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: source boundary",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Punjabi University Patiala's lesson 14 shows a comparable completed-action pattern and warns that usage varies by sentence. This is a safe small example; not every past sentence takes ਨੇ (ne). The same written sound can also be a present-tense auxiliary at the end of a different sentence; that is not today's marker. We do not generalise beyond this named-agent, third-person frame."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman ne kamm kiitaa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman ne kamm kiitaa*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy only ਨੇ (ne), checking ਨ then ੇ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy only **ਨੇ**, checking **ਨ** then **ੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the marker after the named doer."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C210-ne-review",
+      "sequence": 11400,
+      "title": "ਨੇ (ne)",
+      "headword": "ਨੇ",
+      "romanization": "ne",
+      "gloss": "retrieve the agent marker by sound, meaning, and script",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc1f7a29838d2ded",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Remember the tiny marker immediately after ਅਮਨ in the completed-action sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "ne, after the doer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *ne, after the doer*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਨੇ (ne)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨੇ (ne)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨੇ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ne."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਨੇ (ne) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਨੇ** once]"
+            },
+            {
+              "kind": "speech",
+              "text": "If it does not come yet, look back at the model and try again. The two visible pieces are familiar; the new work is where this whole marker sits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say where the marker belongs: after the named doer in today's completed-action frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C210-aman-did-work",
+      "sequence": 11410,
+      "title": "Build one completed-action sentence",
+      "headword": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ",
+      "romanization": "Aman ne kamm kiitaa",
+      "gloss": "Aman did the work",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:8072024c8e2c4d8e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ, then the new marker ਨੇ (ne). Recall ਕੰਮ ਕੀਤਾ from the earlier completed-action chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: bounded frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ — Aman ne kamm kiitaa — Aman did the work."
+            },
+            {
+              "kind": "speech",
+              "text": "Read left to right: named doer, small agent marker, work object, completed action. Keep this one frame; do not use it to guess a rule for every past sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman did the work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman did the work*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to the small marker after ਅਮਨ."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the model, rebuild the four pieces, and check the marker's position."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C210-payoff",
+      "sequence": 11420,
+      "title": "A bounded completed-action payoff",
+      "headword": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ",
+      "romanization": "Aman ne kamm kiitaa",
+      "gloss": "recognise and produce one named-agent completed-action frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91ccba3a7d3c42a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the small agent marker, then retrieve the full frame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman ne kamm kiitaa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman ne kamm kiitaa*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning: Aman did the work."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Check that ਨੇ (ne) is after the named doer, not the final auxiliary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce this one third-person completed-action sentence once more. This is not an A2 mock or mock readiness evidence. It does not, by itself, unblock Punjabi A2 mock 1; the full public-corpus closure must be rechecked."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

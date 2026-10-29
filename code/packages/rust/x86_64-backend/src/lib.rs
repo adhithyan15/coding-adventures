@@ -1678,7 +1678,7 @@ fn emit_instr(
     if let Some(ty) = op.strip_prefix("shl_") { return emit_shift(asm, alloc, instr, ShiftKind::Shl, ty); }
     // shr_<ty>: arithmetic for signed (SAR), logical for unsigned (SHR).
     if let Some(ty) = op.strip_prefix("shr_") {
-        let kind = if ty.starts_with('i') { ShiftKind::Sar } else { ShiftKind::Shr };
+        let kind = if is_signed_ty(ty) { ShiftKind::Sar } else { ShiftKind::Shr };
         return emit_shift(asm, alloc, instr, kind, ty);
     }
 
@@ -1782,7 +1782,7 @@ fn emit_divmod(
         .ok_or_else(|| BackendError::MalformedInstr("div/mod needs srcs[0]".into()))?;
     let rhs = instr.srcs.get(1)
         .ok_or_else(|| BackendError::MalformedInstr("div/mod needs srcs[1]".into()))?;
-    let signed = ty.starts_with('i');
+    let signed = is_signed_ty(ty);
 
     load_operand(asm, alloc, Reg::Rax, lhs);
     // Sign-/zero-extend RAX into RDX.
@@ -2274,6 +2274,27 @@ fn emit_fp_cmp(
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum CmpRel { Eq, Ne, Lt, Le, Gt, Ge }
 
+/// Is a CIR type suffix compared, divided and shifted as a **signed** integer?
+///
+/// `i*` types are signed and `u*` types unsigned, as the names say.  `bool`
+/// is signed too.  The suffix of a comparison is its *result* type when the
+/// frontend gave one (`aot-core`'s `spec_type` prefers the type hint), and
+/// Twig types every `<` / `string<?` result `bool` while its operands are
+/// `i64`s.  Treating `bool` as unsigned made `cmp_lt_bool -1, 0` an unsigned
+/// `0xFFFF_FFFF_FFFF_FFFF < 0` — false — so natively `(< -5 0)` was `#f` and
+/// `(string<? "a" "b")` (a `str_cmp` of -1 against 0) was `#f` (#18453).
+/// For genuine 0 / 1 booleans the signed and unsigned answers agree, so
+/// this costs nothing there.
+///
+/// | suffix          | signed? | `cmp_lt -1, 0` |
+/// |-----------------|---------|----------------|
+/// | `i8` … `i64`    | yes     | 1 (`setl`)     |
+/// | `bool`          | yes     | 1 (`setl`)     |
+/// | `u8` … `u64`    | no      | 0 (`setb`)     |
+fn is_signed_ty(ty: &str) -> bool {
+    ty.starts_with('i') || ty == "bool"
+}
+
 /// Parse the suffix after `cmp_` into a predicate + signedness flag.
 ///
 /// Accepts mnemonics like `eq_u8`, `lt_i64`, `ge_u32`, `ne_bool`.
@@ -2289,10 +2310,9 @@ fn parse_cmp_suffix(rest: &str) -> Option<(CmpRel, bool)> {
         "ge" => CmpRel::Ge,
         _ => return None,
     };
-    // Signedness flag: `i*` types signed; everything else unsigned.
-    // `bool` is treated as unsigned (it's 0 or 1).
-    let signed = ty.starts_with('i');
-    Some((rel, signed))
+    // Signedness flag: `i*` and `bool` signed; `u*` unsigned.  See
+    // [`is_signed_ty`] for why `bool` must be signed.
+    Some((rel, is_signed_ty(ty)))
 }
 
 fn emit_cmp(
@@ -3249,7 +3269,9 @@ mod tests {
         assert_eq!(parse_cmp_suffix("eq_u8"),  Some((CmpRel::Eq, false)));
         assert_eq!(parse_cmp_suffix("lt_i64"), Some((CmpRel::Lt, true)));
         assert_eq!(parse_cmp_suffix("ge_u32"), Some((CmpRel::Ge, false)));
-        assert_eq!(parse_cmp_suffix("ne_bool"), Some((CmpRel::Ne, false)));
+        assert_eq!(parse_cmp_suffix("ne_bool"), Some((CmpRel::Ne, true)));
+        assert_eq!(parse_cmp_suffix("lt_bool"), Some((CmpRel::Lt, true)));
+        assert_eq!(parse_cmp_suffix("gt_u64"), Some((CmpRel::Gt, false)));
         assert_eq!(parse_cmp_suffix("xx_u8"), None);
         assert_eq!(parse_cmp_suffix("eq"), None);
     }
@@ -3273,6 +3295,35 @@ mod tests {
         let has_sete = bytes.windows(3).any(|w| w == [0x40, 0x0F, 0x94]);
         assert!(has_cmp,  "expected cmp in {bytes:02X?}");
         assert!(has_sete, "expected sete in {bytes:02X?}");
+    }
+
+    #[test]
+    fn bool_typed_compare_is_signed() {
+        // #18453: Twig types `(< a b)` and `(string<? a b)` results `bool`
+        // over `i64` operands, so `cmp_lt_bool -1, 0` must be the signed
+        // `setl` (1), not the unsigned `setb` (0).  A `bool` compare emits
+        // exactly what the `i64` one does, for every relation.
+        let params = vec![
+            ("a".to_string(), "i64".to_string()),
+            ("b".to_string(), "i64".to_string()),
+        ];
+        let ctx = fn_ctx("lt", &params, "bool");
+        let body = |op: &str| {
+            let ir = vec![
+                instr(op, Some("r"), vec![Op::Var("a".into()), Op::Var("b".into())]),
+                instr("ret_bool", None, vec![Op::Var("r".into())]),
+            ];
+            compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap()
+        };
+        for rel in ["lt", "le", "gt", "ge"] {
+            assert_eq!(body(&format!("cmp_{rel}_bool")), body(&format!("cmp_{rel}_i64")), "{rel}");
+            assert_ne!(body(&format!("cmp_{rel}_bool")), body(&format!("cmp_{rel}_u64")), "{rel}");
+        }
+        // `setl` is `0F 9C`; the unsigned `setb` would be `0F 92`.
+        let lt = body("cmp_lt_bool");
+        assert!(lt.windows(2).any(|w| w == [0x0F, 0x9C]), "expected setl in {lt:02X?}");
+        assert!(!lt.windows(2).any(|w| w == [0x0F, 0x92]), "unexpected setb in {lt:02X?}");
+        assert!(is_signed_ty("bool") && is_signed_ty("i64") && !is_signed_ty("u64"));
     }
 
     // ---- Control flow ----

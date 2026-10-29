@@ -108,6 +108,71 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Cargo `[dev-dependencies]` now re-run the dependent's tests
+  (`internal/resolver/test_triggers.go`). Every Mosaic package and app is
+  tested by a Cargo smoke harness whose only in-repository dependencies are
+  dev-dependencies on the compilers and the artifact builder, so a change to
+  a `mosaic-emit-*` backend used to re-run none of those suites.
+  `mosaic-pkg-notes` and `engram-app` were not selected by a change to
+  `mosaic-emit-qt/src/pipeline.rs`; now they are.
+  - `ResolveWithTestTriggers` returns the build graph plus `TestTriggers`
+    (dependency → packages that dev-depend on it). `ResolveDependencies`
+    wraps it. Read for `rust` and `wasm` from `[dev-dependencies]` and every
+    `[target.<cfg>.dev-dependencies]` (union over targets); for a `mosaic`
+    harness also from `[dependencies]` and `[build-dependencies]` and their
+    target forms, since a Mosaic package has no Cargo graph edges.
+  - Path entries resolve by real directory (symlinks evaluated), not by
+    Cargo name or text: the discovered package at that path is the trigger.
+    A crate that is not a package root (an orphan, or one nested in another
+    package or in the dependent) has its own `[dependencies]` and
+    `[build-dependencies]` followed recursively (depth cap 16), and a
+    containing package is a trigger too. Package roots are followed the same
+    way, because the build graph records only a Rust or WASM package's
+    top-level `[dependencies]`, not its target or build dependencies or a
+    native extension's `Cargo.toml`. Each crate's closure is cached, and a
+    cycle among these tables is refused, as Cargo refuses it. An uncovered crate must be
+    listed exactly in `code/BUILD-EXEMPTIONS`. This is how `engram-app`
+    reaches `engram-core` through `engram-core-wasm`. Anything else
+    unresolvable (a case or Unicode-normalization alias, a crate under
+    `vendor/` or outside `code/`, a missing, absolute or empty path) is an
+    error. `-language` runs
+    resolve against every discovered package (`ResolveWithTestTriggersAgainst`).
+  - `[patch.<source>]` tables are triggers. `[replace]` is refused, as is a
+    `git` source that is not `https://` or `ssh://`, and a
+    `.cargo/config(.toml)` from the package up to the repository root that
+    sets `paths`, `[patch]` or `[source]`.
+  - The triggers stay out of the graph and are applied one hop past the build
+    closure, before prerequisite expansion (`withDevDependents`). A
+    dev-dependent's own dependents are not selected, and prerequisites
+    trigger nothing. The repository has real dev-dependency cycles
+    (`closure-pass-dce` ⇄ `closure-pass-fold-control-flow`,
+    `wolfram-to-semantic-ir` ⇄ `semantic-ir-to-javascript`); as graph edges
+    they would have failed every package's build.
+  - Fails closed (`CargoManifestError`) after a security review: any
+    multi-line string; an open string, mismatched brackets or a value open at
+    end of file; an undecodable header or key (quoted segments are decoded, so
+    `["dev-dependencies"]` is the table; backslashes are refused); a trigger
+    table as a sub-table, an array of tables, or spelled by a key or inline
+    table elsewhere; entries other than `key = "version"` or a one-line inline
+    table whose fields are bare, exactly-lowercase, unique keys with string,
+    boolean or string-array values (only an array may span lines; nested
+    tables, trailing commas, escapes and `workspace = true` are refused); a
+    non-regular or over-1 MiB manifest, or one entry continuing past 256
+    lines or 64 KiB (continuation lines are joined once, so a 1 MiB manifest
+    no longer takes half a minute). A leading BOM is stripped.
+  - Fan-out, accepted: a one-line change to `mosaic-emit-qt`,
+    `mosaic-emit-flutter` or `mosaic-package-artifact-builder` now selects 158
+    packages instead of 73 (`moslayout-compiler`: 160 instead of 74). That is
+    the 27–28 Mosaic suites, `rust/venture-browser-qt`, `-macos` and
+    `-windows`, and their prerequisites (about 51 for `-qt` alone). 151 was
+    accepted before target tables were read; they add the last 7. A change
+    to `engram-core` now selects 27 packages instead of 14.
+- `toolchainForPackageLanguage("mosaic")` now returns `rust`. Every Mosaic
+  package and app BUILD runs `cargo test` on its smoke harness, but the
+  language mapped to the unknown toolchain `mosaic`, so a plan whose only
+  affected packages were Mosaic ones did not ask CI for Rust (`needs_rust`).
+  It already worked whenever `rust/mosaic-package-resolver` was selected
+  alongside them, which hid the gap for most `.mil`/`.mll`/`.msl` edits.
 - The `global:luarocks-tree` lock now covers `luarocks install`, not only
   `make` and `remove`. LuaRocks takes an exclusive lock on the shared rocks
   tree for all three, so an unserialized install fails outright

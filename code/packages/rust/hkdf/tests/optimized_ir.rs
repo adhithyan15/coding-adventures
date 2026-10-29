@@ -1,10 +1,11 @@
-//! Release-codegen regression gate for the fixed-memory Expand boundary.
+//! Release-codegen regression gate for fixed-memory PRK ownership and Expand.
 //!
 //! Source-level ownership tests cannot prove that an ABI return slot containing
 //! `T(i)` was scrubbed after the tag was copied. This test asks the active Rust
-//! compiler for optimized LLVM IR and verifies that both HMAC result payloads
-//! and the previous-block owner reach the repository zeroize primitive, while
-//! the public Expand function contains no allocator call.
+//! compiler for optimized LLVM IR and verifies that PRK staging owners, HMAC
+//! result payloads, and the previous-block owner reach the repository zeroize
+//! primitive after their final copy. The public fixed-memory boundaries must
+//! also contain no allocator call.
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
@@ -13,7 +14,7 @@ use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 #[test]
-fn optimized_fixed_expand_scrubs_result_slots_without_allocating() {
+fn optimized_fixed_boundaries_scrub_secret_slots_without_allocating() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let workspace_dir = manifest_dir
         .parent()
@@ -65,19 +66,17 @@ fn optimized_fixed_expand_scrubs_result_slots_without_allocating() {
     let ir = fs::read_to_string(ir_path).expect("optimized LLVM IR must be readable");
     fs::remove_dir_all(&target_dir).expect("temporary codegen directory must be removable");
 
+    let extract = rust_function_body(&ir, "coding_adventures_hkdf::hkdf_extract_fixed");
+    let import = exported_function_body(&ir, "coding_adventures_hkdf_import_exact_ir_audit");
     let expand = rust_function_body(&ir, "coding_adventures_hkdf::hkdf_expand_fixed");
-    for forbidden in [
-        "__rust_alloc",
-        "__rust_realloc",
-        "alloc::alloc",
-        "exchange_malloc",
-        "RawVec",
-    ] {
-        assert!(
-            !expand.contains(forbidden),
-            "fixed Expand unexpectedly references allocator symbol {forbidden}:\n{expand}"
-        );
+    for function in [extract, import, expand] {
+        assert_no_allocator(function);
     }
+
+    assert_result_slot_wiped(extract, 33, 32);
+    assert_result_slot_wiped(extract, 49, 48);
+    assert_copied_alloca_owners_wiped(extract, 48, 1, 1);
+    assert_copied_alloca_owners_wiped(import, 48, 1, 1);
 
     let sha256_payload = assert_result_slot_wiped(expand, 33, 32);
     let sha384_payload = assert_result_slot_wiped(expand, 49, 48);
@@ -88,6 +87,45 @@ fn optimized_fixed_expand_scrubs_result_slots_without_allocating() {
         48,
         &[(&sha256_payload, 32), (&sha384_payload, 48)],
     );
+}
+
+fn assert_no_allocator(function: &str) {
+    for forbidden in [
+        "__rust_alloc",
+        "__rust_realloc",
+        "alloc::alloc",
+        "exchange_malloc",
+        "RawVec",
+    ] {
+        assert!(
+            !function.contains(forbidden),
+            "fixed-memory boundary unexpectedly references allocator symbol {forbidden}:\n{function}"
+        );
+    }
+}
+
+fn assert_copied_alloca_owners_wiped(
+    function: &str,
+    size: usize,
+    alignment: usize,
+    expected: usize,
+) {
+    let owners: Vec<String> = alloca_names(function, size, alignment)
+        .into_iter()
+        .filter(|owner| {
+            function
+                .lines()
+                .any(|line| is_full_tag_copy(line, owner, size))
+        })
+        .collect();
+    assert_eq!(
+        owners.len(),
+        expected,
+        "optimized boundary must have {expected} copied {size}-byte secret owners, found {owners:?}:\n{function}"
+    );
+    for owner in owners {
+        assert_owner_wiped(function, &owner, size, &[(&owner, size)]);
+    }
 }
 
 fn assert_result_slot_wiped(function: &str, result_size: usize, tag_size: usize) -> String {
@@ -111,20 +149,24 @@ fn assert_result_slot_wiped(function: &str, result_size: usize, tag_size: usize)
 }
 
 fn alloca_name(function: &str, size: usize, alignment: usize) -> String {
-    let alloca_suffix = format!(" = alloca [{size} x i8], align {alignment}");
-    let matches: Vec<String> = function
-        .lines()
-        .filter_map(|line| {
-            let line = line.trim();
-            line.strip_suffix(&alloca_suffix).map(str::to_owned)
-        })
-        .collect();
+    let matches = alloca_names(function, size, alignment);
     assert_eq!(
         matches.len(),
         1,
         "optimized Expand must have exactly one {size}-byte aligned-{alignment} slot, found {matches:?}"
     );
     matches.into_iter().next().expect("one slot was required")
+}
+
+fn alloca_names(function: &str, size: usize, alignment: usize) -> Vec<String> {
+    let alloca_suffix = format!(" = alloca [{size} x i8], align {alignment}");
+    function
+        .lines()
+        .filter_map(|line| {
+            let line = line.trim();
+            line.strip_suffix(&alloca_suffix).map(str::to_owned)
+        })
+        .collect()
 }
 
 fn assert_success_copies_are_wiped(function: &str, payload: &str, tag_size: usize) {
@@ -163,14 +205,15 @@ fn assert_owner_wiped(
         .iter()
         .map(|block| (block.label.as_str(), block))
         .collect();
-    let starts: Vec<&BasicBlock<'_>> = blocks
+    let starts: Vec<(&BasicBlock<'_>, usize)> = blocks
         .iter()
-        .filter(|block| {
-            block.lines.iter().any(|line| {
+        .filter_map(|block| {
+            block.lines.iter().rposition(|line| {
                 successful_payloads
                     .iter()
                     .any(|(payload, tag_size)| is_full_tag_copy(line, payload, *tag_size))
             })
+            .map(|copy_index| (block, copy_index))
         })
         .collect();
     assert!(
@@ -178,37 +221,38 @@ fn assert_owner_wiped(
         "optimized Expand has no successful tag-copy blocks"
     );
 
-    for start in starts {
-        let mut stack = vec![start.label.clone()];
+    for (start, copy_index) in starts {
+        // In the initial block, only a wipe after the last successful copy can
+        // satisfy the invariant. Successor blocks are considered in full.
+        let mut stack = vec![(start.label.clone(), copy_index + 1)];
         let mut visited = HashSet::new();
         let mut reached_wipe = false;
-        while let Some(label) = stack.pop() {
+        while let Some((label, line_offset)) = stack.pop() {
             if !visited.insert(label.clone()) {
                 continue;
             }
             let block = by_label
                 .get(label.as_str())
                 .unwrap_or_else(|| panic!("optimized Expand references missing block {label}"));
-            if block
-                .lines
+            let remaining = &block.lines[line_offset..];
+            if remaining
                 .iter()
                 .any(|line| is_zeroize_call(line, owner, size))
             {
                 reached_wipe = true;
                 continue;
             }
-            let successors = successor_labels(&block.lines);
+            let successors = successor_labels(remaining);
             if successors.is_empty() {
                 assert!(
-                    !block
-                        .lines
+                    !remaining
                         .iter()
                         .any(|line| line.trim_start().starts_with("ret ")),
                     "optimized Expand can return from successful copy block {} through terminal block {label} without scrubbing {owner}:\n{function}",
                     start.label
                 );
             }
-            stack.extend(successors);
+            stack.extend(successors.into_iter().map(|successor| (successor, 0)));
         }
         assert!(
             reached_wipe,
@@ -388,6 +432,13 @@ fn parser_rejects_an_owner_wipe_only_on_an_error_path() {
     assert_owner_wiped(function, "%previous", 48, &[("%tag", 32)]);
 }
 
+#[test]
+#[should_panic(expected = "return from successful copy block copy through terminal block copy")]
+fn parser_rejects_an_owner_wipe_before_the_successful_copy() {
+    let function = "define void @expand() {\ncopy:\n  call void @zeroize_bytes(ptr %previous, i64 48)\n  call void @llvm.memcpy.p0.p0.i64(ptr %result, ptr %previous, i64 48, i1 false)\n  ret void\n}";
+    assert_owner_wiped(function, "%previous", 48, &[("%previous", 48)]);
+}
+
 fn rust_function_body<'a>(ir: &'a str, rust_name: &str) -> &'a str {
     let marker = format!("; {rust_name}\n");
     let marker_start = ir
@@ -397,6 +448,26 @@ fn rust_function_body<'a>(ir: &'a str, rust_name: &str) -> &'a str {
         + ir[marker_start..]
             .find("define ")
             .expect("optimized function must have a definition");
+    let end = ir[definition..]
+        .find("\n}")
+        .map(|offset| definition + offset + 2)
+        .expect("optimized function must have a closing brace");
+    &ir[definition..end]
+}
+
+fn exported_function_body<'a>(ir: &'a str, symbol: &str) -> &'a str {
+    let marker = format!("@{symbol}(");
+    let definition = ir
+        .match_indices("define ")
+        .find_map(|(offset, _)| {
+            let signature_end = ir[offset..]
+                .find('\n')
+                .map_or(ir.len(), |line_end| offset + line_end);
+            ir[offset..signature_end]
+                .contains(&marker)
+                .then_some(offset)
+        })
+        .unwrap_or_else(|| panic!("optimized IR did not identify exported symbol {symbol}"));
     let end = ir[definition..]
         .find("\n}")
         .map(|offset| definition + offset + 2)

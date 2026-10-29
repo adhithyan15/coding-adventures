@@ -4,8 +4,9 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1 task inventory is checked in, while
-A1-C2 inventories, mocks, calibration, and human validation remain backlog
+**Status:** target specified; the pre-A1, A1, and B2 task inventories are
+checked in, while A2, B1, C1, C2, mocks, calibration, and human validation
+remain backlog
 
 This specification names the assessment that the complete Kannada book must
 eventually prepare a book-only learner to pass. It is not an external
@@ -56,6 +57,40 @@ Sources checked 2026-09-13:
 - [Council of Europe guidance on tests and examinations](https://www.coe.int/en/web/common-european-framework-reference-languages/tests-and-examinations)
 - [Council of Europe introduction and certification caveat](https://www.coe.int/en/web/common-european-framework-reference-languages/introduction-and-context)
 - [Kannada Sahitya Parishat's Kannada Exams — Star of Mysore](https://starofmysore.com/kannada-sahitya-parishats-kannada-exams/)
+
+### B2 content-inventory source plan
+
+The B2 task shape fixes **how** performance is sampled; it does not define the
+Kannada content a candidate must control. The first B2 content inventory uses
+four primary-source boundaries, checked 2026-10-29:
+
+- the [Council of Europe CEFR Companion Volume
+  (2020)](https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions)
+  for B2 reception, production, interaction, mediation, linguistic,
+  sociolinguistic, and pragmatic descriptors;
+- CIIL's [*Kannada madhyama prayogashala
+  pathya*](https://hdl.handle.net/20.500.14705/11825), an intermediate Kannada
+  L2 laboratory text explicitly designed to develop listening, speaking,
+  reading, and writing across varied genres;
+- [Unicode Standard 18.0, section 12.8
+  Kannada](https://unicode.org/versions/Unicode18.0.0/core-spec/chapter-12/#G6647)
+  for the normative character, virama, dead/live consonant, atomic-vowel, and
+  conjunct model; and
+- the official [LDC-IL release
+  documentation](https://www.ldcil.org/files/publication/LDCIL_Release_Documentation.pdf)
+  for the contemporary Kannada corpus and its six measured domains:
+  aesthetics, commerce, mass media, official documents, science and
+  technology, and social sciences.
+
+This evidence is enough to enumerate a useful, reviewable first inventory. It
+is **not** a closed Kannada B2 syllabus. CEFR closes a generic B2 functional
+boundary but does not select Kannada exponents; the CIIL text is an
+intermediate four-skill teaching source rather than a finite B2 grammar; LDC-IL
+measures domains rather than a level-bounded word list; and Unicode closes the
+encoding model rather than all spelling, punctuation, or pronunciation
+demands. Every HL20 dimension therefore remains `partial` in the first tranche.
+The planner must keep `exam-inventory/kannada/B2` visible until later primary
+evidence genuinely closes all four dimensions.
 
 ## Pass rule
 

@@ -1,5 +1,44 @@
 # TaskApp platform completion v1
 
+## Selected release checkpoint: v0.5.15 (#18581)
+
+The Qt empty Board drop-zone floor merged in #18562 with all checks passing.
+Prepare its compatible patch dated 2026-10-29. Retain the changelog's explicit
+three newly visible style drops and follow-up #18563; do not describe the
+diagnostic total as unchanged. Prioritize publication under #13543, require
+all existing payload validations after preparation merges, dispatch once from
+main, and audit immutable source/tag/manifest identity, inventory, checksums,
+and substantive notes before closing #18581. Preparation is not publication;
+artifact coverage and unsigned-platform limitations stay unchanged.
+
+## Selected fidelity slice: Qt empty Board drop-target floor (#18559)
+
+Preserve both themes' existing col-drop min-height 60 on Qt's outer
+HostDropTarget Item so an empty Board column retains a drop zone. Accept
+only finite nonnegative static numeric lengths; skip min-height state
+overrides. Keep drag callbacks, acceptance, shared styles,
+and release coverage unchanged. Require emitter positive/negative regressions
+and package-expanded assertions in both themes. General flex and root-scroll
+work remains in #18481. Record the audited v0.5.14 receipt in product docs.
+
+Release validation exposed a reporting blind spot: the first read of col-drop
+also reveals its existing display, flex-direction, and gap drops. Preserve that
+evidence and pin each to one occurrence (Qt total 76 to 79), with further
+increases rejected. #18563 owns lowering that debt. Do not reach calendar drop
+targets without a minimum height. This measured diagnostic change supersedes
+the initial unchanged-budget assumption; it does not claim a visual regression.
+
+## Selected release checkpoint: v0.5.14 (#18550)
+
+The due-date editor width floor merged in #18396. Prepare a compatible patch
+dated 2026-10-28, preserving every authoritative Unreleased Notes change and
+its substantive Markdown. Reprioritize the completion queue under #13543.
+Require release-helper tests, changelog validation, and independent security
+review before pushing. After preparation merges, dispatch publication once
+from main, require every existing payload check, and audit immutable source,
+tag, manifest, assets, checksums, and notes before closing #18550. Preparation
+is not publication; artifact coverage and unsigned limitations are unchanged.
+
 ## Selected fidelity slice: Qt input width floor (#18394)
 
 Preserve the due-date HostInput's existing scalar width 150 plus exact

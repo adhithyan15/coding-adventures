@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased — The runtime's and imports' names are reserved (issue #18466)
+
+The emitted file is one `package main`: the inlined runtime, its imports
+and the user's functions share one package scope, and a user's locals
+shadow all of them.  `sanitize_ident` now escapes every name the file
+declares or binds — `sir…`/`_sir…`/`__sir…` in any case (every runtime
+function and `Sir*`/`sir*` type, `_sir_user_main`, loop temporaries),
+`Value`, `Symbol`, `Pair`, `Closure`, `Seq`, `Map`, `MapEntry`, `NDArray`,
+`_missingMarker`, the imports `fmt`/`math`/`os`/`sort`/`strconv`/`strings`,
+`main`, `init`, the blank identifier `_`, and the temporaries `__l`,
+`__args`, `__lam`.  Before, `(define (_sir_user_main) 42)` redeclared the
+renamed SIR `main`, `(define (fmt x) x)` clashed with the import,
+`(define (init x) x)` was "func init must have no arguments", and a
+parameter named `_sir_plus` shadowed the runtime's `+`.  The unit test
+`every_runtime_declaration_is_reserved` scans the runtime source, so a new
+runtime type cannot be left spellable.  `tests/twig_generated_names.rs`
+runs the cross-backend table.
+
+Security-review follow-up:
+
+- **The recovered panic is `__sir_r`, not `r`.**  Every rescue clause runs
+  inside `if r := recover(); r != nil { … }`, so a user variable `r` read
+  the panic payload inside a rescue body, and writes to it were lost.
+- `sanitize_ident` also reserves the identifiers Go predeclared in 1.18 and
+  1.21 — `any` (the runtime declares `func _sir_exc_value(r any)`, so a
+  user function `any` broke the build), `comparable`, `clear`, `min`, `max`.
+
 ## Unreleased — Strict closures (issue #18461)
 
 The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) lowers

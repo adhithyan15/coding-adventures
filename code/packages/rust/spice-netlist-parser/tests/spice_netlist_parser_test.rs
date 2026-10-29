@@ -15,7 +15,7 @@ use spice_netlist_parser::{
     TfAnalysis, TranAnalysis, BERKELEY_APP_BOOTSTRAP_SCHEMA_VERSION,
     BERKELEY_APP_HOST_SURFACE_WIRE_SCHEMA_VERSION, BERKELEY_APP_LAUNCH_PLAN_SCHEMA_VERSION,
     BERKELEY_APP_PACKAGE_MANIFEST_SCHEMA_VERSION, BERKELEY_APP_PACKAGE_NAME,
-    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION,
+    BERKELEY_APP_READINESS_REPORT_SCHEMA_VERSION, run_netlist_json,
     BERKELEY_APP_SHELL_DASHBOARD_ACTION_DISPATCH_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_BREADCRUMBS_SCHEMA_VERSION,
     BERKELEY_APP_SHELL_DASHBOARD_CARDS_SCHEMA_VERSION,
@@ -289,6 +289,97 @@ fn runs_two_axis_dc_sweep_with_second_source_as_outer_axis() {
 }
 
 #[test]
+fn runs_shared_ltspice_step_v1_corpus() {
+    let corpus: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../grammars/spice/ltspice-step-v1-corpus.json"
+    ))
+    .unwrap();
+    assert_eq!(corpus["suite"], "ltspice-step-v1");
+    for case in corpus["cases"].as_array().unwrap() {
+        let expected = &case["expected"];
+        let parsed = parse_netlist(case["deck"].as_str().unwrap()).unwrap();
+        assert_eq!(
+            parsed
+                .step_cards
+                .iter()
+                .map(|card| serde_json::json!({"parameter": card.parameter, "values": card.values}))
+                .collect::<Vec<_>>(),
+            expected["stepCards"].as_array().unwrap().to_vec()
+        );
+        let results = parsed.run_analysis_plan().unwrap();
+        assert_eq!(results.len(), expected["stepValues"].as_array().unwrap().len());
+        for (index, result) in results.iter().enumerate() {
+            assert_eq!(
+                serde_json::json!(result.step_values),
+                expected["stepValues"][index]
+            );
+            let AnalysisResult::Op(op) = &result.result else {
+                panic!("expected .op result");
+            };
+            assert_close(
+                op.voltage("out").unwrap(),
+                expected["out"][index].as_f64().unwrap(),
+            );
+        }
+        let cli_payload: serde_json::Value =
+            serde_json::from_str(&run_netlist_json(case["deck"].as_str().unwrap()).unwrap())
+                .unwrap();
+        assert_eq!(
+            cli_payload["analyses"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|analysis| analysis["stepValues"].clone())
+                .collect::<Vec<_>>(),
+            expected["stepValues"].as_array().unwrap().to_vec(),
+        );
+    }
+}
+
+#[test]
+fn runs_shared_ngspice_control_parameter_corpus() {
+    let corpus: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../grammars/spice/ngspice-control-parameter-v1-corpus.json"
+    ))
+    .unwrap();
+    assert_eq!(corpus["suite"], "ngspice-control-parameter-v1");
+    for case in corpus["cases"].as_array().unwrap() {
+        let expected = &case["expected"];
+        let parsed = parse_netlist(case["deck"].as_str().unwrap()).unwrap();
+        assert_eq!(
+            parsed.step_cards.iter().map(|card| serde_json::json!({
+                "parameter": card.parameter,
+                "values": card.values,
+            })).collect::<Vec<_>>(),
+            expected["stepCards"].as_array().unwrap().to_vec(),
+        );
+        let results = parsed.run_analysis_plan().unwrap();
+        assert_eq!(results.len(), expected["stepValues"].as_array().unwrap().len());
+        for (index, result) in results.iter().enumerate() {
+            assert_eq!(serde_json::json!(result.step_values), expected["stepValues"][index]);
+            let AnalysisResult::Op(op) = &result.result else { panic!("expected .op result") };
+            assert_close(op.voltage("out").unwrap(), expected["out"][index].as_f64().unwrap());
+        }
+        let payload: serde_json::Value = serde_json::from_str(
+            &run_netlist_json(case["deck"].as_str().unwrap()).unwrap(),
+        ).unwrap();
+        assert_eq!(
+            payload["analyses"].as_array().unwrap().iter()
+                .map(|analysis| analysis["stepValues"].clone()).collect::<Vec<_>>(),
+            expected["stepValues"].as_array().unwrap().to_vec(),
+        );
+    }
+}
+
+#[test]
+fn ngspice_control_parameter_runs_require_alter_reset_run_order() {
+    assert!(parse_netlist(
+        ".param RLOAD=1k\n.control\nforeach load 1k 3k\n  reset\n  alterparam RLOAD=$load\n  run\nend\n.endc\n.end\n"
+    )
+    .is_err());
+}
+
+#[test]
 fn runs_shared_berkeley_v1_core_corpus() {
     let corpus: serde_json::Value = serde_json::from_str(include_str!(
         "../../../../grammars/spice/berkeley-v1-op-corpus.json"
@@ -433,6 +524,64 @@ fn runs_shared_berkeley_v1_syntax_corpus() {
                 .collect::<Vec<_>>(),
             "{case_id}"
         );
+    }
+}
+
+#[test]
+fn tool_compatibility_register_has_an_explicit_cross_tool_backlog() {
+    let register: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../grammars/spice/tool-compatibility-v1.json"
+    ))
+    .expect("tool compatibility register should be valid JSON");
+
+    assert_eq!(register["schemaVersion"], 1);
+    assert_eq!(register["suite"], "spice-tool-compatibility");
+    assert_eq!(register["compatibilityClaim"]["dropInEligible"], false);
+    let profiles = register["profiles"].as_array().unwrap();
+    let profile_ids = profiles
+        .iter()
+        .map(|profile| profile["id"].as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    assert_eq!(
+        profile_ids,
+        std::collections::HashSet::from(["berkeley-spice3f3", "ngspice-47", "ltspice-24"])
+    );
+    let statuses = profiles
+        .iter()
+        .map(|profile| profile["inventoryStatus"].as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    assert!(statuses.is_superset(&std::collections::HashSet::from([
+        "complete-core",
+        "in-progress"
+    ])));
+
+    let features = register["features"].as_array().unwrap();
+    assert!(features.len() >= 45);
+    let families = register["families"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|family| family.as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    let feature_families = features
+        .iter()
+        .map(|feature| feature["family"].as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    assert_eq!(feature_families, families);
+    let feature_ids = features
+        .iter()
+        .map(|feature| feature["id"].as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    assert_eq!(feature_ids.len(), features.len());
+    for feature in features {
+        let mapped_profiles = feature["profiles"].as_array().unwrap();
+        assert!(!mapped_profiles.is_empty());
+        assert!(mapped_profiles.iter().all(|profile| profile_ids.contains(profile.as_str().unwrap())));
+        assert!(matches!(
+            feature["state"].as_str(),
+            Some("supported" | "partial" | "planned" | "out-of-scope")
+        ));
+        assert!(!feature["evidence"].as_array().unwrap().is_empty());
     }
 }
 

@@ -2,9 +2,20 @@
 
 ## Unreleased
 
+- Add the allocation-free `poly1305_mac_fixed` boundary with caller-owned tag
+  output, a branchless five-limb block core and final reduction, wipe-on-drop
+  derived state, and RFC 8439, independent multi-block, plus block-edge
+  equivalence coverage.
+- Add the allocation-free `chacha20_xor_fixed` boundary with exact
+  caller-owned output, preflighted 32-bit counter exhaustion, stable
+  payload-free errors, and fixed-round secret processing.
+- Retain ChaCha20 original/working word states, keystream blocks, AEAD
+  one-time Poly1305 keys, and XChaCha20 subkeys in wipe-on-drop owners.
+- Add the repository-owned `coding_adventures_zeroize` runtime dependency;
+  no external production dependency is introduced.
 - Consume the versioned SE04 cross-language fixture for byte-identical
   HChaCha20, raw XChaCha20, AEAD, and authentication-failure conformance.
-- Add `serde_json` as a test-only dependency; runtime dependencies remain zero.
+- Add `serde_json` as a test-only dependency.
 
 ## 0.2.0 — 2026-04-20
 
