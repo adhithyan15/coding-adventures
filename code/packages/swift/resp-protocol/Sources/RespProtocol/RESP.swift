@@ -251,23 +251,30 @@ public enum RESP {
         let byteCount = try measureLine(text, limits: limits)
         try addSize(1 + byteCount + 2, to: &total, limits: limits)
       case .integer(let number):
-        try addSize(1 + String(number).utf8.count + 2, to: &total, limits: limits)
+        let headerByteCount = String(number).utf8.count
+        try requireHeader(headerByteCount, limits: limits)
+        try addSize(1 + headerByteCount + 2, to: &total, limits: limits)
       case .bulkString(let bytes):
         guard bytes.count <= limits.maximumBulkBytes else {
           throw RespProtocolError.bulkByteLimitExceeded(maximum: limits.maximumBulkBytes)
         }
+        let headerByteCount = String(bytes.count).utf8.count
+        try requireHeader(headerByteCount, limits: limits)
         try addSize(
-          1 + String(bytes.count).utf8.count + 2 + bytes.count + 2,
+          1 + headerByteCount + 2 + bytes.count + 2,
           to: &total,
           limits: limits)
       case .nullBulkString, .nullArray:
+        try requireHeader(2, limits: limits)
         try addSize(5, to: &total, limits: limits)
       case .array(let values):
         guard values.count <= limits.maximumArrayElements else {
           throw RespProtocolError.arrayElementLimitExceeded(
             maximum: limits.maximumArrayElements)
         }
-        try addSize(1 + String(values.count).utf8.count + 2, to: &total, limits: limits)
+        let headerByteCount = String(values.count).utf8.count
+        try requireHeader(headerByteCount, limits: limits)
+        try addSize(1 + headerByteCount + 2, to: &total, limits: limits)
         for child in values.reversed() {
           pending.append((child, depth + 1))
         }

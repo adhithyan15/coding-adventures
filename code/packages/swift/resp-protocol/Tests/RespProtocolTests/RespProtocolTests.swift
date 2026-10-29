@@ -267,6 +267,27 @@ private func errorCode(_ error: RespProtocolError) -> String {
   }
 }
 
+@Test func encoderEnforcesNumericHeaderBoundsBeforeOutputAllocation() throws {
+  let limits = try RespLimits(maximumHeaderBytes: 1)
+
+  let oversizedHeaders: [RespValue] = [
+    .integer(42),
+    .bulkString(Array(repeating: 0, count: 10)),
+    .nullBulkString,
+    .array(Array(repeating: .integer(0), count: 10)),
+    .nullArray,
+  ]
+  for value in oversizedHeaders {
+    #expect(throws: RespProtocolError.headerByteLimitExceeded(maximum: 1)) {
+      try RESP.encode(value, limits: limits)
+    }
+  }
+
+  #expect(try RESP.encode(.integer(1), limits: limits) == Array(":1\r\n".utf8))
+  #expect(try RESP.encode(.bulkString([]), limits: limits) == Array("$0\r\n\r\n".utf8))
+  #expect(try RESP.encode(.array([]), limits: limits) == Array("*0\r\n".utf8))
+}
+
 @Test func limitConfigurationIsTightenOnlyAndCoherent() {
   #expect(throws: RespProtocolError.invalidLimit(.lineBytes)) {
     try RespLimits(maximumLineBytes: 0)
