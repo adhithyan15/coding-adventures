@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.149.0";
+pub const VERSION: &str = "0.150.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -587,7 +587,8 @@ fn token_name(token: &Token) -> &str {
 // ============================================================================
 
 use diagram_ir::{
-    ArchitectureConfig, ArchitectureServiceMetadata, Axis, AxisKind, C4NodeMetadata, ChartDataPoint, ChartDiagram,
+    ArchitectureConfig, ArchitectureServiceMetadata, Axis, AxisKind, C4NodeMetadata,
+    C4RelationshipMetadata, ChartDataPoint, ChartDiagram,
     ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
@@ -602,7 +603,8 @@ use diagram_ir::{
     SeriesKind, StructuralAlignment, StructuralAlignmentAxis, StructuralDiagram, StructuralGroup,
     StructuralGroupMetadata, StructuralKind, StructuralNode,
     GanttTaskTags, StructuralNodeKind, StructuralNodeMetadata, StructuralPort,
-    StructuralRelationship, StructuralRouting, TaskEnd, TaskStart, TemporalBody, TemporalDiagram,
+    StructuralRelationship, StructuralRelationshipMetadata, StructuralRouting, TaskEnd, TaskStart,
+    TemporalBody, TemporalDiagram,
     TemporalKind, TimelineConfig, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennConfig, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
@@ -1627,6 +1629,7 @@ fn parse_architecture_edge(
         routing: StructuralRouting::Orthogonal,
         from_mult: None, to_mult: None, label,
         label_offset_x: 0.0, label_offset_y: 0.0,
+        metadata: None,
         style: None,
     })
 }
@@ -3968,6 +3971,7 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         label: Some(label),
         label_offset_x: 0.0,
         label_offset_y: 0.0,
+        metadata: None,
         style: None,
     })
 }
@@ -4594,6 +4598,7 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     label,
                     label_offset_x: 0.0,
                     label_offset_y: 0.0,
+                    metadata: None,
                     style: None,
                 });
             }
@@ -13692,6 +13697,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 label: Some(label),
                 label_offset_x: 0.0,
                 label_offset_y: 0.0,
+                metadata: None,
                 style: None,
             });
         } else {
@@ -14191,6 +14197,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     label: Some(args[2].clone()),
                     label_offset_x: 0.0,
                     label_offset_y: 0.0,
+                    metadata: Some(c4_relationship_metadata(&args)),
                     style: None,
                 });
             }
@@ -14317,6 +14324,26 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
     StructuralNodeMetadata::C4(C4NodeMetadata {
         technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
         description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
+    })
+}
+
+fn c4_relationship_metadata(args: &[String]) -> StructuralRelationshipMetadata {
+    let positional = |position: usize| {
+        args.get(position)
+            .filter(|value| !value.is_empty() && !value.starts_with('$'))
+            .cloned()
+    };
+    let keyed = |key: &str| {
+        args.iter().find_map(|argument| {
+            argument
+                .split_once('=')
+                .filter(|(argument_key, value)| *argument_key == key && !value.is_empty())
+                .map(|(_, value)| value.to_string())
+        })
+    };
+    StructuralRelationshipMetadata::C4(C4RelationshipMetadata {
+        technology: keyed("$techn").or_else(|| positional(3)),
+        description: keyed("$descr").or_else(|| positional(4)),
     })
 }
 
@@ -19856,7 +19883,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.149.0");
+        assert_eq!(crate::VERSION, "0.150.0");
     }
 
     #[test]
