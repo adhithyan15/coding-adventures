@@ -19753,3 +19753,40 @@ publication head/base, current remote head, mergeability, state graph,
 changelog rank and digest, diff, and artifact hygiene all match live evidence.
 Mark the PR ready and require every fresh hosted check on the final exact head
 to finish acceptably before enabling guarded auto-merge.
+
+### PR #18555 merge, indexing-ceiling discovery, and Swift publication selection
+
+Ruby dependency-hashing PR #18555 reached 42 terminal acceptable checks at
+final reviewed head `03fe2f56503918a3ca40256fde7f714dba9b8723`: 31
+successes, 10 expected path-gated skips, and one neutral CodeQL aggregate. An
+external squash merge landed `94e8baf5cd164714732535463625e2acee33027b` at
+`2026-10-29T07:25:20Z`. The merge is present on fetched main. GitHub removed
+the remote branch, and the clean completed worktree and local branch were
+removed safely.
+
+Parallel Lua and Rust graph/diff implementations completed independent local
+review. Lua exact head `7d6faa409b5b7a6295765b025da7f7b6f3f5c382`
+passes 144 tests with 99.29% focused line coverage. Rust exact head
+`dfacf49115d56c73cfb69d29ddb0c26be274af17` passes 245 tests and
+doc tests with graph/diff at 95.29% line, 95.17% region, and 100% function
+coverage. Split reviews forced bounded snapshots, content-memoized glob
+validation, lazy one-pattern compilation, allocation-free path indexes,
+changed-only boundary expansion, indexed exclusions, stable diagnostics, and
+maximum-shape CPU and memory regressions before issuing SHIP.
+
+Those reviews register
+`build-tool-cross-runtime-diff-selection-indexing-ceiling-hardening` before the
+next prioritization. The owner must freeze neutral adversarial cases for
+zero-path repeated-glob validation, package-by-path discovery,
+boundary-input-by-consumer expansion, and exclusion applicability; repair Go,
+Lua, and TypeScript; audit the remaining readers; and place explicit CPU and
+retained-memory ceilings ahead of aggregate graph/diff closure.
+
+After merging exact fetched main
+`8035689ac23a971a4e77215a3eb651c90f441da0` as
+`5729db118d09cf28e78f2ee700cc23db161d95f1`, the Swift RESP branch
+passes all 13 tests and release build again. Lua and Rust graph/diff retain
+greater raw leverage at three direct and five total unfinished descendants,
+but both still require shared Go routing that overlaps open PR #18495. The
+dependency-free, package-path-disjoint Swift RESP item is therefore the
+highest-leverage publication-safe candidate for the newly free parity slot.
