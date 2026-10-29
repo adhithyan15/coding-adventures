@@ -182,7 +182,9 @@ layout and backend-neutral PaintInstructions. C4 diagram subtypes are preserved
 in semantic configuration and PaintScene metadata. `C4Dynamic` relationships
 receive pinned Mermaid sequence numbers during layout, and legacy `RelIndex`
 arguments lower to the same relationship semantics without treating the authored
-index as an endpoint. Core `UpdateRelStyle` text and line
+index as an endpoint. Database and queue element macros preserve typed node
+kinds through structural layout and lower to backend-neutral cylinder and queue
+paths, with pinned Metal-to-PNG coverage. Core `UpdateRelStyle` text and line
 colors plus keyed or positional label offsets likewise survive semantic IR,
 layout, and backend-neutral PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
 semantic IR; shape row limits control structural layout while both values lower

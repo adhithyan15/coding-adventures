@@ -838,6 +838,7 @@ members = [
     "x509-certificate-policy",
     "x509-webpki-roots-snapshot",
     "x509-webpki-root-anchor-selection",
+    "tls13-handshake",
     "tls13-inner-plaintext",
     "tls13-record",
     "tls-server-identity",
@@ -1370,8 +1371,10 @@ members = [
   "x509-ocsp-issuer-bound-responder",
   "x509-ocsp-authenticated-target-revocation",
   "x509-ocsp-reviewed-server-revocation-binding",
+  "tls13-extension-block",
   "tls13-record-nonce",
   "tls13-cipher-suite-policy",
   "tls13-hkdf-label",
+  "tls13-supported-versions",
   "tls13-traffic-key-material",
 ]

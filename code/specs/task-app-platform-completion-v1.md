@@ -547,3 +547,8 @@ State overrides or unsupported display/direction/gap values remain reported;
 do not claim general CSS flex support. Test both themes and reduce the exact
 Qt diagnostic budget only by the three verified Board declarations.
 
+
+Upstream reconciliation: #18481 merged during this slice. Its net reporting
+change makes main total 80; removing the same three Board declarations yields
+77. Preserve Calendar gap 1, width 1, and flex-grow 5. Both-theme analysis
+verifies these combined counts; the earlier 79-to-76 expectation is superseded.

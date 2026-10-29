@@ -690,6 +690,10 @@ jobs:
           # Executable npm acquisition in workflows, build scripts, shell
           # entrypoints and package scripts has its own exact monotone set.
           python3 code/scripts/third_party_dependency_policy.py check --ecosystem npm-tools --base-ref origin/main
+          # Python build, runtime, optional and dependency-group declarations
+          # are normalized by distribution name. Only explicit tracked uv
+          # path/workspace sources are local.
+          python3 code/scripts/third_party_dependency_policy.py check --ecosystem python --base-ref origin/main
           python3 -m unittest discover -s code/scripts/tests -p 'test_third_party_dependency_policy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_neural_framework_windows_ci.py'
@@ -2473,6 +2477,20 @@ jobs:
           (
             cd "$navigation_split_output/qt"
             QT_QPA_PLATFORM=offscreen qml qt-navigation-split-render-check.qml
+          )
+
+          # UI21 §2.2 (EN-6 follow-up to #18477): a vertical HostScroll that
+          # grows inside a plain Column shell must actually scroll. It passed
+          # every gate while its ScrollView was as tall as its content: the
+          # Column root never reached the window and flex-grow had no
+          # lowering. So measure it the way #15833 measures the split.
+          column_shell_output="$RUNNER_TEMP/mosaic-qt-host-scroll-column-shell"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/host-scroll-column-shell --backend qt --output "$column_shell_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.styleDegradations | length == 0)' "$column_shell_output/qt/mosaic-degradations.json"
+          cp code/scripts/qt-column-shell-scroll-render-check.qml "$column_shell_output/qt/"
+          (
+            cd "$column_shell_output/qt"
+            QT_QPA_PLATFORM=offscreen qml qt-column-shell-scroll-render-check.qml
           )
 
           # qt_main_with_startup_states (this PR) made every native-complete Qt

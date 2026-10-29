@@ -414,7 +414,7 @@ above, and dispatch the workflow with a new matching version and tag.
 # Qt Board spacing checkpoint
 
 The next fidelity slice (#18563) preserves the Board drop target's authored
-9-pixel card gap and removes its three layout-style drops (Qt total 79 to 76).
+9-pixel card gap and removes its three layout-style drops (Qt total 80 to 77).
 This is source work pending CI and publication. v0.5.15 is published and audited
 under #18581: source `8819839dc63d78c4c5eeda21f833f51364746420`, 13 assets,
 12 checksums, and 11 manifest payloads. Artifact and signing limits are unchanged.

@@ -1564,6 +1564,26 @@ trust roots, check revocation, perform I/O, open a socket, authorize HTTP or
 OAuth transport, or replace `tls-platform`. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-extension-block` prerequisite now decodes the generic
+two-byte-length-prefixed extension-vector syntax shared by TLS 1.3 handshake
+messages. Caller-owned limits bound the complete payload and retained entry
+count, the exact declared length must consume all remaining input, and each
+entry retains one exact unclassified type plus borrowed opaque data in wire
+order. Duplicate extension types, truncated headers or data, trailing bytes,
+and resource-limit exhaustion fail closed with payload-free categories.
+Unknown types remain data rather than becoming implicitly supported, and
+diagnostics omit extension-data bytes.
+
+This syntax layer embeds no extension registry, decodes no extension value,
+and does not authorize, require, or forbid an extension in ClientHello,
+ServerHello, EncryptedExtensions, or another handshake context. It does not
+process a handshake, select a suite, derive keys, invoke cryptography, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Context-specific extension
+policy and decoding, handshake state, repository-owned record protection,
+certificate-path validation, revocation, TLS transport, and HTTP composition
+remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-inner-plaintext` prerequisite now specifies the
 authenticated cleartext syntax inside a protected TLS 1.3 record. Its decoder
 first bounds the complete caller-supplied cleartext, scans backward only within
@@ -1900,6 +1920,32 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-handshake` prerequisite now owns only the RFC 8446
+four-byte handshake-message envelope needed by a future repository-owned TLS
+state machine. It recognizes the ten core TLS 1.3 wire message types, while a
+caller-supplied non-empty, duplicate-free allowlist decides which recognized
+types the current protocol state may accept. A caller-selected body ceiling
+from zero through the protocol's 24-bit maximum bounds work before any body is
+borrowed. Exact decoding rejects trailing bytes; prefix decoding returns the
+unconsumed stream tail for a later reassembly loop. Successful decoding borrows
+both the declared body and the exact `type || uint24 length || body` bytes so a
+future transcript owner can hash the authenticated wire representation without
+re-encoding it. Encoding checks type policy, the complete 24-bit length, and
+caller-owned output capacity before changing output. Stable failures retain no
+message type, length, body, transcript, or output bytes.
+
+Recognition is deliberately separate from state authorization. This slice
+does not recognize synthetic transcript-only `message_hash` as a wire message,
+reassemble a message split across records, sequence handshake phases, own or
+update a transcript hash, parse any handshake body, negotiate parameters,
+derive keys, invoke an AEAD, process certificates, establish trust, enforce
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. The caller must first authenticate protected record contents and
+must retain incomplete bytes until one complete declared message is available.
+Complete transcript and handshake state, repository-owned AEAD composition,
+certificate-path validation, revocation policy, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS remains unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire
@@ -1912,16 +1958,50 @@ equivalence, failure atomicity, and final-counter tests cover the admitted
 surface. The caller remains responsible for preventing key, nonce, and counter
 position reuse; this primitive neither reserves nor persists nonce state.
 
-This is only an unauthenticated stream-cipher primitive. It does not provide a
-reviewed fixed-memory Poly1305 implementation or combined AEAD boundary, own
-traffic keys, construct or reserve record nonces, enforce the selected suite's
-per-key record ceiling, frame or protect records, process a handshake, validate
-certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
-or OAuth transport, or open a network connection. The allocation-returning
-legacy ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain compatibility and
-educational surfaces rather than production TLS composition. Fixed-memory
-Poly1305 and combined AEAD review remain prerequisites, and concrete HTTPS
+The repository-owned Poly1305 implementation now also exposes a bounded
+`poly1305_mac_fixed` prerequisite. It writes the 16-byte tag into exact
+caller-owned output, uses one reusable wipe-on-drop 16-byte block, and performs
+no allocation. The standard five 26-bit-limb core has one fixed multiplication
+and reduction schedule per admitted block; final conditional reduction uses
+mask selection rather than secret-dependent control flow. Clamped key limbs,
+accumulator limbs, the addition pad, multiplication products, and carry
+workspace share one wipe-on-drop owner. RFC 8439 evidence and block-edge
+equivalence plus an independently cross-checked multi-block vector cover the
+admitted surface. The caller remains responsible for never reusing a one-time
+Poly1305 key; this primitive neither derives nor reserves that key.
+
+These are still only separate stream-cipher and authenticator primitives. They
+do not provide a combined AEAD boundary, constant-time tag-verification API,
+own traffic keys, construct or reserve record nonces, enforce the selected
+suite's per-key record ceiling, frame or protect records, process a handshake,
+validate certificates, establish trust, enforce revocation, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. The
+allocation-returning legacy ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain
+compatibility and educational surfaces rather than production TLS composition.
+Combined fixed-memory AEAD review remains a prerequisite, and concrete HTTPS
 remains unavailable.
+
+An allocation-free `tls13-supported-versions` prerequisite now owns the exact
+RFC 8446 `supported_versions` extension data emitted and consumed by a future
+repository-owned TLS 1.3 client. A caller supplies a preference-ordered slice
+of one through 127 two-byte version identifiers. Construction rejects
+duplicates, requires TLS 1.3 (`0x0304`), and preserves explicitly configured
+unknown values for later reserved-value or future-version policy. Encoding
+emits the exact one-byte-length-prefixed ClientHello vector into caller-owned
+storage only after validating complete capacity. ServerHello and
+HelloRetryRequest validation accepts exactly one two-byte value, binds it to
+the original client offer, rejects versions before TLS 1.3, and admits only
+the exact TLS 1.3 value whose semantics this package implements. Stable
+failures retain no configured identifiers, input bytes, or output lengths.
+
+This slice receives already-delimited extension data. It does not locate or
+deduplicate extensions, decide whether an extension is authorized in a
+particular handshake message, construct a ClientHello, enforce the legacy
+version fields or downgrade sentinel, send alerts, negotiate a cipher suite,
+derive keys, protect records, process certificates, establish trust, check
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. Extension-block and handshake composition remain prerequisites,
+and concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

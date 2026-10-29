@@ -3765,6 +3765,8 @@ impl Compiler {
                 "+" => value.checked_add(rhs)?,
                 "-" => value.checked_sub(rhs)?,
                 "*" => value.checked_mul(rhs)?,
+                "div" => value.checked_div(rhs)?,
+                "mod" => value.checked_rem(rhs)?,
                 _ => return None,
             };
             index += 2;
@@ -17024,6 +17026,33 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "unreduced, overflowing, oversized, negative, and procedure-calling normalizer powers must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_reduced_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) div entier(5)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) mod entier(11)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "checked integer reductions may compose between exact integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(abs(entier(-9007199254740993) div entier(1)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(1) div entier(0)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(1) mod entier(0)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9223372036854775807 - 1) div entier(-1)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9223372036854775807 - 1) mod entier(-1)) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure divisor; divisor := 5; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) div divisor()) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, zero-divisor, overflowing, and procedure-calling normalizer reductions must fail closed",
             );
         }
     }

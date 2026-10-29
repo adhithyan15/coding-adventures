@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.151.0";
+pub const VERSION: &str = "0.152.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14350,6 +14350,16 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
     })
 }
 
+fn c4_node_kind(macro_name: &str) -> StructuralNodeKind {
+    if macro_name.contains("Db") {
+        StructuralNodeKind::Database
+    } else if macro_name.contains("Queue") {
+        StructuralNodeKind::Queue
+    } else {
+        StructuralNodeKind::Class
+    }
+}
+
 fn c4_relationship_metadata(args: &[String]) -> StructuralRelationshipMetadata {
     let positional = |position: usize| {
         args.get(position)
@@ -14481,11 +14491,12 @@ fn upsert_c4_node(
     }
     let index = nodes.len();
     indices.insert(id.clone(), index);
+    let node_kind = c4_node_kind(&stereotype);
     nodes.push(StructuralNode {
         id,
         label,
         stereotype: Some(stereotype),
-        node_kind: StructuralNodeKind::Class,
+        node_kind,
         metadata: Some(metadata),
         style: None,
         compartments: Vec::new(),
@@ -17339,6 +17350,17 @@ Rel(customer, web, \"Uses\", \"HTTPS\")";
     }
 
     #[test]
+    fn c4_preserves_database_and_queue_element_kinds() {
+        let diagram = parse_c4_diagram(
+            "C4Component\nSystemDb_Ext(catalog, \"Catalog\")\nContainerQueue(events, \"Events\", \"Kafka\")\nComponentDb(store, \"Store\", \"SQLite\")",
+        )
+        .unwrap();
+        assert_eq!(diagram.nodes[0].node_kind, StructuralNodeKind::Database);
+        assert_eq!(diagram.nodes[1].node_kind, StructuralNodeKind::Queue);
+        assert_eq!(diagram.nodes[2].node_kind, StructuralNodeKind::Database);
+    }
+
+    #[test]
     fn dispatch_flowchart() {
         let src = "flowchart LR\n  A --> B";
         match parse_any_mermaid(src).unwrap() {
@@ -19906,7 +19928,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.151.0");
+        assert_eq!(crate::VERSION, "0.152.0");
     }
 
     #[test]

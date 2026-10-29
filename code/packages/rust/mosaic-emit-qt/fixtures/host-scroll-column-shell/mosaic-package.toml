@@ -1,0 +1,13 @@
+[package]
+name = "mosaic-pkg-qt-host-scroll-column-shell-fixture"
+version = "0.1.0"
+description = "Qt fixture: a vertical HostScroll that grows inside a plain Column shell (UI21 §2.2)"
+license = "MIT OR Apache-2.0"
+
+[components]
+exports = ["Shell"]
+
+[dependencies]
+
+[kernel]
+version = "1"

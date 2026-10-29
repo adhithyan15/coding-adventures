@@ -6,6 +6,55 @@
   their existing ColumnLayout spacing (#18563). Unsupported values and state
   overrides remain reported; targets without min-height remain unchanged.
 
+- **A vertical `HostScroll` scrolls under a plain `Column` shell (UI21 §2.2,
+  the EN-6 follow-up to #18477).** Engram's screens scrolled on SwiftUI,
+  Compose, Flutter and XAML but not on Qt. Measured with the real Qt runtime
+  (offscreen, 900x600), the generated `ScrollView` was 0 px wide and exactly
+  as tall as its content (1646 px), so there was nothing to scroll. Four
+  changes fix it:
+  - *The layout root binds to the window.* A `Column` / `Row` root gets
+    `id: mosaicLayoutRoot`. A `Column` anchors its width always, and its
+    height only when a direct child fills it. Without a filler, Qt would
+    spread the spare height *between* the children (measured y = 50, 174
+    and 314 in a 400 px column). A `Row` binds its width only when a child
+    grows, and never its height, because `RowLayout` centres children
+    vertically. A padded / painted root binds both its wrapper `Rectangle`
+    and its content layout, and the padding becomes anchor margins.
+    Authored sizes and elevated roots are left alone.
+  - *The root `Item` reads `mosaicLayoutRoot.implicitWidth` / `Height`,*
+    not `childrenRect`. A component embedded in a consumer's layout
+    therefore cannot form a binding loop through the anchors. The
+    `childrenRect` / `x` / `y` wrapper shape is unchanged everywhere else.
+  - *`flex-grow` lowers* on a direct child of a `Row` / `Column` to
+    `Layout.fillWidth` / `Layout.fillHeight`. A value of `0` is consumed.
+    Negative values, values inside `If` / `For`, and unequal ratios between
+    siblings stay reported. A child that already fills that axis is not
+    given the line a second time.
+  - *An axis-pinned `HostScroll` fills its parent's cross axis* (a vertical
+    one in a `Column` gets `Layout.fillWidth`). Pinning
+    `contentWidth: availableWidth` had left it no implicit width.
+- **The drop report lists a lost `flex-grow` on a part nothing else asked
+  about.** Every emitted node now marks its part as reached.
+  `content-scroll { flex-grow: 1 }` on a `HostScroll` under a non-layout
+  parent used to be skipped whole. That marker is used only for the
+  parent-owned `flex-grow` for now. Used for every property, it would
+  surface about seventy real but uncounted drops (a `HostLink`'s whole
+  part, for example).
+- Visible output changes: every `Row` / `Column`-rooted component gets the
+  root id and binding (toolkit, the Engram-family packages, Calendar,
+  VisiCalc, Venture, PhotoPicker, Engram). Lowered `flex-grow` lines appear
+  in TaskApp (`content-scroll`, `task-name`, `calendar-cell-drop`), in
+  Calendar (`calendar-cell-drop`), in Engram and DeckStats
+  (`deck-option-button`), and in Venture (seven parts, including
+  `content-surface`, so Venture's root now fills the window).
+- Drop reports: TaskApp 79 → 80 (`flex-grow` −1, `gap` +1, `width` +1,
+  because `calendar-cell-drop` is now reached), Calendar 2 → 4, Engram
+  40 → 38, DeckStats 2 → 1, Venture 15 → 8.
+- New `fixtures/host-scroll-column-shell` and
+  `code/scripts/qt-column-shell-scroll-render-check.qml`. CI emits the
+  fixture and measures it with `qml`. The check passes on this emitter
+  (519 px viewport over 1646 px of content) and fails 4 of its 5
+  assertions on the previous one.
 - Preserve finite nonnegative static `min-height` on the outer HostDropTarget
   Item so empty landing zones retain their layout floor (#18559). Skip state
   overrides; drag acceptance and callback routing are unchanged.

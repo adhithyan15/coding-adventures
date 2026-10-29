@@ -8,7 +8,7 @@ All notable changes to the `task-app` web program are documented here.
 
 - Preserve the Board card drop target's authored 9-pixel spacing on Qt
   (#18563). Lower its static column-flex declarations, removing three verified
-  drops (79 to 76); keep unsupported values and state overrides explicit.
+  drops (80 to 77); keep unsupported values and state overrides explicit.
 
 Entries added after `task-app-v0.5.15` accumulate here until the next version is
 cut.

@@ -200,8 +200,8 @@ fn qt_board_drop_layout_removes_its_three_style_drops() {
             output_root: out.path().to_path_buf(), backend: Backend::Qt,
             emit_project: false, theme: Some(theme.to_string()),
         }, BuildProfile::NativeComplete).unwrap();
-        assert_eq!(report.style_degradations.len(), 76, "{theme}: measured Qt drop total");
-        for (property, expected) in [("display", 0), ("flex-direction", 0), ("gap", 0), ("flex-grow", 6), ("width", 0)] {
+        assert_eq!(report.style_degradations.len(), 77, "{theme}: measured Qt drop total");
+        for (property, expected) in [("display", 0), ("flex-direction", 0), ("gap", 1), ("flex-grow", 5), ("width", 1)] {
             let count = report.style_degradations.iter().filter(|d| d.primitive.as_deref() == Some(property)).count();
             assert_eq!(count, expected, "{theme}: {property}");
         }

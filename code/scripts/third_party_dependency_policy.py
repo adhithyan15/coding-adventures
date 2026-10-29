@@ -29,7 +29,12 @@ DEFAULT_ALLOWLISTS = {
     "npm-tools": Path(
         "code/specs/data/third-party-dependencies/npm-tool-allowlist.json"
     ),
+    "python": Path("code/specs/data/third-party-dependencies/python-allowlist.json"),
 }
+PYTHON_NAME = re.compile(
+    r"([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
+    r"(?=\s*(?:\[|@|[<>=!~;(]|$))"
+)
 NPM_TOOL_SOURCE_PATHS = (
     ":(glob).github/**/*.yml",
     ":(glob).github/**/*.yaml",
@@ -107,6 +112,22 @@ def git_npm_manifests(root: Path) -> list[Path]:
 
     result = subprocess.run(
         ["git", "ls-files", "-z", "--", ":(glob)**/package.json"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return sorted(
+        root / raw_path.decode("utf-8", errors="surrogateescape")
+        for raw_path in result.stdout.split(b"\0")
+        if raw_path
+    )
+
+
+def git_python_manifests(root: Path) -> list[Path]:
+    """Return every tracked Python project manifest."""
+
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", ":(glob)**/pyproject.toml"],
         cwd=root,
         check=True,
         capture_output=True,
@@ -635,6 +656,188 @@ def build_npm_tool_inventory(
     return {name: sorted(paths) for name, paths in sorted(inventory.items())}
 
 
+def canonical_python_name(name: str) -> str:
+    """Return the PEP 503 normalized Python distribution name."""
+
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def python_requirement_name(requirement: Any, label: str) -> str:
+    """Extract and normalize the distribution name from a PEP 508 string."""
+
+    if not isinstance(requirement, str):
+        raise PolicyError(f"{label} must contain requirement strings")
+    match = PYTHON_NAME.match(requirement.strip())
+    if match is None:
+        raise PolicyError(f"{label} has an invalid requirement {requirement!r}")
+    return canonical_python_name(match.group())
+
+
+def python_requirement_groups(
+    document: Mapping[str, Any], path: Path
+) -> Iterable[tuple[str, list[Any]]]:
+    """Yield standard Python requirement arrays with descriptive labels."""
+
+    build_system = document.get("build-system")
+    if build_system is not None:
+        if not isinstance(build_system, Mapping):
+            raise PolicyError(f"{path} build-system must be a TOML table")
+        requires = build_system.get("requires", [])
+        if not isinstance(requires, list):
+            raise PolicyError(f"{path} build-system.requires must be an array")
+        yield "build-system.requires", requires
+
+    project = document.get("project")
+    if project is not None:
+        if not isinstance(project, Mapping):
+            raise PolicyError(f"{path} project must be a TOML table")
+        dependencies = project.get("dependencies", [])
+        if not isinstance(dependencies, list):
+            raise PolicyError(f"{path} project.dependencies must be an array")
+        yield "project.dependencies", dependencies
+        optional = project.get("optional-dependencies", {})
+        if not isinstance(optional, Mapping):
+            raise PolicyError(
+                f"{path} project.optional-dependencies must be a TOML table"
+            )
+        for group, requirements in optional.items():
+            if not isinstance(group, str) or not isinstance(requirements, list):
+                raise PolicyError(
+                    f"{path} project.optional-dependencies must map names to arrays"
+                )
+            yield f"project.optional-dependencies.{group}", requirements
+
+    dependency_groups = document.get("dependency-groups", {})
+    if not isinstance(dependency_groups, Mapping):
+        raise PolicyError(f"{path} dependency-groups must be a TOML table")
+    for group, requirements in dependency_groups.items():
+        if not isinstance(group, str) or not isinstance(requirements, list):
+            raise PolicyError(f"{path} dependency-groups must map names to arrays")
+        strings: list[Any] = []
+        for entry in requirements:
+            if isinstance(entry, Mapping):
+                if (
+                    set(entry) != {"include-group"}
+                    or not isinstance(entry["include-group"], str)
+                    or not entry["include-group"]
+                ):
+                    raise PolicyError(
+                        f"{path} dependency-groups.{group} has an invalid include"
+                    )
+                continue
+            strings.append(entry)
+        yield f"dependency-groups.{group}", strings
+
+
+def python_local_source_names(
+    root: Path,
+    documents: Mapping[Path, Mapping[str, Any]],
+) -> dict[Path, set[str]]:
+    """Map projects to names explicitly sourced from tracked local projects."""
+
+    tracked_manifests = {path.resolve() for path in documents}
+    local_names = {path.resolve(): set() for path in documents}
+    for manifest, document in documents.items():
+        tool = document.get("tool", {})
+        if not isinstance(tool, Mapping):
+            raise PolicyError(f"{manifest} tool must be a TOML table")
+        uv = tool.get("uv", {})
+        if not isinstance(uv, Mapping):
+            raise PolicyError(f"{manifest} tool.uv must be a TOML table")
+        workspace = uv.get("workspace", {})
+        if not isinstance(workspace, Mapping):
+            raise PolicyError(f"{manifest} tool.uv.workspace must be a TOML table")
+        members = workspace.get("members", [])
+        if not isinstance(members, list) or not all(
+            isinstance(member, str) and member for member in members
+        ):
+            raise PolicyError(f"{manifest} tool.uv.workspace.members must be strings")
+        workspace_names: dict[str, Path] = {}
+        for member in members:
+            candidate = (manifest.parent / member / "pyproject.toml").resolve()
+            if candidate not in tracked_manifests:
+                raise PolicyError(
+                    f"{manifest} workspace member {member!r} is not a tracked project"
+                )
+            member_project = documents[candidate].get("project", {})
+            member_name = (
+                member_project.get("name")
+                if isinstance(member_project, Mapping)
+                else None
+            )
+            if not isinstance(member_name, str) or not member_name:
+                raise PolicyError(f"{candidate} has no valid project.name")
+            workspace_names[canonical_python_name(member_name)] = candidate
+
+        sources = uv.get("sources", {})
+        if not isinstance(sources, Mapping):
+            raise PolicyError(f"{manifest} tool.uv.sources must be a TOML table")
+        for source_name, source in sources.items():
+            if not isinstance(source_name, str) or not isinstance(source, Mapping):
+                raise PolicyError(f"{manifest} tool.uv.sources has an invalid source")
+            if PYTHON_NAME.fullmatch(source_name) is None:
+                raise PolicyError(
+                    f"{manifest} tool.uv.sources has an invalid distribution name"
+                )
+            normalized_name = canonical_python_name(source_name)
+            dependency_path = source.get("path")
+            if dependency_path is not None:
+                if not isinstance(dependency_path, str) or not dependency_path:
+                    raise PolicyError(
+                        f"{manifest} source {source_name!r} has an invalid path"
+                    )
+                candidate = (
+                    manifest.parent / dependency_path / "pyproject.toml"
+                ).resolve()
+                try:
+                    candidate.relative_to(root.resolve())
+                except ValueError:
+                    continue
+                if set(source).issubset({"path", "editable"}) and (
+                    candidate in tracked_manifests
+                ):
+                    local_names[manifest.resolve()].add(normalized_name)
+            elif source == {"workspace": True}:
+                if normalized_name not in workspace_names:
+                    raise PolicyError(
+                        f"{manifest} source {source_name!r} is not a workspace member"
+                    )
+                local_names[manifest.resolve()].add(normalized_name)
+                for member_manifest in workspace_names.values():
+                    local_names[member_manifest].add(normalized_name)
+    return local_names
+
+
+def build_python_inventory(
+    root: Path, manifests: Iterable[Path]
+) -> dict[str, list[str]]:
+    """Map third-party Python names to the manifests declaring them."""
+
+    manifest_list = list(manifests)
+    texts = tracked_text_documents(manifest_list, root)
+    documents: dict[Path, Mapping[str, Any]] = {}
+    for manifest, text in texts.items():
+        try:
+            document = tomllib.loads(text)
+        except tomllib.TOMLDecodeError as error:
+            raise PolicyError(f"cannot parse {manifest}: {error}") from error
+        documents[manifest.resolve()] = document
+
+    local_names = python_local_source_names(root, documents)
+    inventory: dict[str, list[str]] = {}
+    for manifest in manifest_list:
+        resolved = manifest.resolve()
+        display_path = manifest.relative_to(root).as_posix()
+        for label, requirements in python_requirement_groups(
+            documents[resolved], manifest
+        ):
+            for requirement in requirements:
+                name = python_requirement_name(requirement, f"{manifest} {label}")
+                if name not in local_names[resolved]:
+                    inventory.setdefault(name, []).append(display_path)
+    return {name: sorted(set(paths)) for name, paths in sorted(inventory.items())}
+
+
 def validate_allowlist(
     document: Any, label: str, ecosystem: str = "cargo"
 ) -> list[str]:
@@ -742,7 +945,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("check", "inventory"))
     parser.add_argument(
-        "--ecosystem", choices=("cargo", "npm", "npm-tools"), default="cargo"
+        "--ecosystem",
+        choices=("cargo", "npm", "npm-tools", "python"),
+        default="cargo",
     )
     parser.add_argument(
         "--root", type=Path, default=Path(__file__).resolve().parents[2]
@@ -770,12 +975,17 @@ def main(argv: list[str] | None = None) -> int:
             inventory = build_npm_inventory(root, manifests)
             input_count = len(manifests)
             input_label = "manifests"
-        else:
+        elif args.ecosystem == "npm-tools":
             sources = git_npm_tool_sources(root)
             manifests = git_npm_manifests(root)
             inventory = build_npm_tool_inventory(root, sources, manifests)
             input_count = len(sources) + len(manifests)
             input_label = "automation inputs"
+        else:
+            manifests = git_python_manifests(root)
+            inventory = build_python_inventory(root, manifests)
+            input_count = len(manifests)
+            input_label = "manifests"
     except (PolicyError, subprocess.CalledProcessError) as error:
         print(error, file=sys.stderr)
         return 1

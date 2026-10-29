@@ -94,6 +94,16 @@
 //! (`Mosaic.Foo { anchors.fill: parent }`) sizes from the anchor and
 //! never consults `implicitWidth` — which is why this went unnoticed for
 //! so long: the in-tree Qt host does exactly that.
+//!
+//! ### …and the size it is told must reach the layout root
+//!
+//! The other direction matters too. When the window (or a consumer's
+//! anchor) sizes the root `Item`, nothing below it follows unless it is
+//! bound. A `Row` / `Column` layout root is therefore anchored to the root
+//! `Item` (UI21 §2.2), and the root then reads that layout's *implicit*
+//! size instead of `childrenRect`, which would loop through the anchors.
+//! Without it a `HostScroll` in a `Column` shell was as tall as its content
+//! and never scrolled (EN-6, #18477). See [`component_root_binding_lines`].
 
 use std::cell::{Cell, RefCell};
 use std::fmt::Write as _;
@@ -1883,6 +1893,39 @@ impl Drop for StyleReadRecorder {
     }
 }
 
+/// The name recorded for a part whose node the emit rendered (UI21 §2.2,
+/// rule 5). No CSS property can be spelled with parentheses, so it never
+/// matches a declared property and is never itself reported.
+const PART_REACHED: &str = "(reached)";
+
+/// Properties only the *enclosing* layout can consume (UI21 §2.2, rule 3).
+///
+/// They are reported from any rendered part, even one whose own lowering
+/// asked about nothing. `flex-shrink`, `flex` and `align-self` belong here
+/// too by the same argument; they join once their counts are re-measured
+/// against every pinned gate.
+const PARENT_OWNED_PROPERTIES: &[&str] = &["flex-grow"];
+
+/// Note that the emit rendered a node carrying this part.
+///
+/// The drop reporter skips a part the emit never asked about, because
+/// such a part was usually never rendered at all. But a rendered part whose
+/// lowering simply ignores every one of its properties looked the same.
+/// `content-scroll { flex-grow: 1 }` on a `HostScroll` was one: nothing in the
+/// emit read it, so the lost `flex-grow` was missing from the report
+/// (EN-6, #18477). Marking the part reached whenever its node is emitted
+/// separates "not rendered" from "rendered, and every property dropped".
+///
+/// Today the reporter uses that distinction for
+/// [`PARENT_OWNED_PROPERTIES`] only. Applied to every property, it surfaces
+/// about seventy drops that are real but were never counted (a `HostLink`'s
+/// whole part, for one), and every pinned gate would have to move with it.
+fn record_part_reached(node: &LayoutNode, ctx: &EmitCtx) {
+    if let Some(props) = part_style_props(node, ctx) {
+        record_style_read(props, PART_REACHED);
+    }
+}
+
 /// Note that the emitter asked `props` about `name`.
 ///
 /// Records the name ASKED, not the property found. That is the whole
@@ -2004,8 +2047,18 @@ pub fn dropped_style_properties(
         let Some(asked) = reads.get(&part.addr) else {
             continue;
         };
+        // UI21 §2.2, rule 5 -- a part that was rendered but never asked
+        // about is still not trusted as reached for the node's OWN
+        // properties: that broader report is its own, separately pinned
+        // change. Only a parent-owned property is reported from it, because
+        // whether the node's own lowering asked anything says nothing about
+        // a property only the enclosing layout can consume.
+        let only_rendered = asked.len() == 1 && asked.contains(PART_REACHED);
         for (name, value) in part.props {
             if asked.contains(&name) {
+                continue;
+            }
+            if only_rendered && !PARENT_OWNED_PROPERTIES.contains(&name.as_str()) {
                 continue;
             }
             if !seen.insert((part.name.clone(), name.clone())) {
@@ -2040,7 +2093,15 @@ fn qt_drop_reason(name: &str) -> &'static str {
              lower to QtQuick.Effects.MultiEffect"
         }
         "transform" => "only a single finite rotate(Ndeg) lowers to centered Qt Item rotation",
-        "flex-grow" | "flex-shrink" | "flex" => {
+        // UI21 §2.2, rule 3 -- what remains reported after the lowering.
+        "flex-grow" => {
+            "Qt lowers flex-grow only on a direct child of a Row or Column, \
+             as Layout.fillWidth / Layout.fillHeight; inside If/Else/For, \
+             under a Box or Stack, or with a negative value it has no \
+             target, and Qt fills split space equally, so unequal ratios \
+             between growing siblings are lost"
+        }
+        "flex-shrink" | "flex" => {
             "Qt distributes space with Layout.fillWidth / Layout.preferredWidth \
              inside a RowLayout or ColumnLayout, chosen where the child is \
              built rather than applied to a finished element"
@@ -3673,19 +3734,28 @@ fn emit_styled_layout_container_qml(
             return Ok(None);
         }
 
-        let mut out = String::new();
-        writeln!(out, "{pad}{element_name} {{").unwrap();
-        for line in &layout_lines {
-            writeln!(out, "{inner_pad}{line}").unwrap();
-        }
         let is_stack = node.tag == "Stack";
-        out.push_str(&emit_qml_children_with_line(
+        let children_qml = emit_qml_children_with_line(
             &node.children,
             depth + 1,
             is_stack,
             child_alignment.as_deref(),
+            MainAxis::of_container(&node.tag),
             child_ctx,
-        )?);
+        )?;
+        let mut out = String::new();
+        writeln!(out, "{pad}{element_name} {{").unwrap();
+        // UI21 §2.2, rule 1 -- a bare layout root binds to the component
+        // root directly; there is no wrapper to stand between them.
+        if binds_component_root(node, depth, ctx.part_styles) {
+            for line in component_root_binding_lines(node, props, &children_qml, depth + 1) {
+                writeln!(out, "{inner_pad}{line}").unwrap();
+            }
+        }
+        for line in &layout_lines {
+            writeln!(out, "{inner_pad}{line}").unwrap();
+        }
+        out.push_str(&children_qml);
         writeln!(out, "{pad}}}").unwrap();
         return Ok(Some(out));
     }
@@ -3715,10 +3785,37 @@ fn emit_styled_layout_container_qml(
     // Naming the content layout and sizing from it breaks the cycle:
     // content -> strip -> childrenRect, with nothing feeding back.
     let content_id = has_per_edge_border(props).then(|| next_content_id(ctx));
+    // UI21 §2.2, rules 1 and 2 -- a wrapped layout root binds the WRAPPER to
+    // the component root, and the content layout to the wrapper, inset by
+    // the padding. Both then size from the content's *implicit* size: with
+    // `childrenRect` (or the content's actual geometry), wrapper size <-
+    // content size <- wrapper size would loop whenever a consumer sizes the
+    // component from its implicit size. The content needs an id for that;
+    // the strip id is reused when there is one, and otherwise the root gets
+    // a fixed name (there is only one root), so the numbered ids every
+    // other wrapper allocates do not shift.
+    let binds_root = binds_component_root(node, depth, ctx.part_styles);
+    let content_id = match content_id {
+        None if binds_root => Some(format!("{LAYOUT_ROOT_ID}Content")),
+        other => other,
+    };
+    let children_qml = emit_qml_children_with_line(
+        &node.children,
+        depth + 2,
+        node.tag == "Stack",
+        child_alignment.as_deref(),
+        MainAxis::of_container(&node.tag),
+        child_ctx,
+    )?;
     let mut out = String::new();
     writeln!(out, "{pad}Rectangle {{").unwrap();
     if let Some(id) = &elevation_id {
         writeln!(out, "{inner_pad}id: {id}").unwrap();
+    }
+    if binds_root {
+        for line in component_root_binding_lines(node, props, &children_qml, depth + 2) {
+            writeln!(out, "{inner_pad}{line}").unwrap();
+        }
     }
     for line in qml_layout_size_lines_with_states(props, &state_layers) {
         writeln!(out, "{inner_pad}{line}").unwrap();
@@ -3727,6 +3824,10 @@ fn emit_styled_layout_container_qml(
         writeln!(out, "{inner_pad}Layout.minimumWidth: {width}").unwrap();
     }
     let (w_src, h_src) = match &content_id {
+        Some(id) if binds_root => (
+            format!("{id}.implicitWidth + {pad_left}"),
+            format!("{id}.implicitHeight + {pad_top}"),
+        ),
         Some(id) => (format!("{id}.x + {id}.width"), format!("{id}.y + {id}.height")),
         None => (
             "childrenRect.x + childrenRect.width".to_string(),
@@ -3752,21 +3853,26 @@ fn emit_styled_layout_container_qml(
     if let Some(id) = &content_id {
         writeln!(out, "{inner_pad}    id: {id}").unwrap();
     }
-    writeln!(out, "{inner_pad}    x: {pad_left}").unwrap();
-    writeln!(out, "{inner_pad}    y: {pad_top}").unwrap();
+    if binds_root {
+        // The padding as margins: the content fills the wrapper's padding
+        // box, the CSS content box, so whatever the wrapper is given
+        // reaches the content's children.
+        writeln!(out, "{inner_pad}    anchors.fill: parent").unwrap();
+        writeln!(out, "{inner_pad}    anchors.leftMargin: {pad_left}").unwrap();
+        writeln!(out, "{inner_pad}    anchors.topMargin: {pad_top}").unwrap();
+        writeln!(out, "{inner_pad}    anchors.rightMargin: {pad_right}").unwrap();
+        writeln!(out, "{inner_pad}    anchors.bottomMargin: {pad_bottom}").unwrap();
+    } else {
+        writeln!(out, "{inner_pad}    x: {pad_left}").unwrap();
+        writeln!(out, "{inner_pad}    y: {pad_top}").unwrap();
+    }
     for line in qml_layout_container_lines(props)
         .into_iter()
         .filter(|line| line.starts_with("spacing:"))
     {
         writeln!(out, "{inner_pad}    {line}").unwrap();
     }
-    out.push_str(&emit_qml_children_with_line(
-        &node.children,
-        depth + 2,
-        node.tag == "Stack",
-        child_alignment.as_deref(),
-        child_ctx,
-    )?);
+    out.push_str(&children_qml);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
     if let Some(id) = &elevation_id {
@@ -4225,7 +4331,16 @@ fn emit_root(
         .iter()
         .map(|s| to_camel_case_first_lower(&s.name))
         .collect();
-    out.push_str(&content_sizing_lines_avoiding(1, &root_declared));
+    // The part-style map is needed this early only to ask whether the
+    // layout root binds to this `Item` (UI21 §2.2): a bound root is read
+    // through its implicit size, an unbound one through `childrenRect`.
+    let mut part_styles = build_part_style_map(style);
+    populate_slot_state_styles(&mut part_styles, style, &interface.slots);
+    if binds_component_root(&layout.root, COMPONENT_ROOT_DEPTH, &part_styles) {
+        out.push_str(&layout_root_sizing_lines_avoiding(&root_declared));
+    } else {
+        out.push_str(&content_sizing_lines_avoiding(1, &root_declared));
+    }
     if require_runtime {
         writeln!(out, "    required property var mosaicHost").unwrap();
     } else {
@@ -4337,11 +4452,10 @@ fn emit_root(
         }
     }
 
-    // 6. The layout tree. Build the part-style map up front and seed the
+    // 6. The layout tree. The part-style map built above seeds the
     // walker's context so styled `Box [part]` containers can inline their
     // mosstyle properties (geometry, border, background, text styling).
-    let mut part_styles = build_part_style_map(style);
-    populate_slot_state_styles(&mut part_styles, style, &interface.slots);
+    //
     // #13007: a literal `group:` value shared by 2+ HostRadios anywhere
     // in the component gets a synthesized `ButtonGroup`. Computed once,
     // up front, so `emit_host_radio_qml` (deep in the recursive walk)
@@ -4370,7 +4484,7 @@ fn emit_root(
         radio_group_slugs: &radio_group_slugs,
     };
     writeln!(out).unwrap();
-    out.push_str(&emit_qml_tree(&layout.root, 1, &ctx)?);
+    out.push_str(&emit_qml_tree(&layout.root, COMPONENT_ROOT_DEPTH, &ctx)?);
 
     // One `ButtonGroup { id: ... }` per qualifying group (#13007) — a
     // non-visual object, so declaring it as an extra child of the root
@@ -4509,6 +4623,7 @@ fn emit_qml_tree(
     // structural walker below can express. Those primitives get their
     // own emitter functions, mirroring the React backend's
     // `emit_input_jsx` carve-out for `Input`.
+    record_part_reached(node, ctx);
     match node.tag.as_str() {
         "Input" => return emit_legacy_input_qml(node, depth, ctx),
         "HostInput" => return emit_host_input_qml(node, depth, ctx),
@@ -4678,6 +4793,33 @@ fn emit_qml_tree(
     // child-side anchor is the canonical QML pattern.)
     let is_stack = node.tag == "Stack";
 
+    // Children are emitted before this node's own header, because a layout
+    // root's anchors depend on whether one of its children fills the main
+    // axis (UI21 §2.2, rule 1). They are still written last.
+    //
+    // If this node is a `Stack`, each child must occupy the full parent
+    // overlay area. We can't reach inside the child's generated block
+    // from here without re-parsing, so we insert the anchor line as a
+    // sibling using QML's `anchors.fill` *binding from the parent* —
+    // but that doesn't exist; the property lives on the child. The
+    // workable approach is to recurse normally and then post-process
+    // each child block, inserting `anchors.fill: parent` immediately
+    // after the child's opening `{`. This is mechanical string editing
+    // on already-trusted output (we generated it), so it's safe.
+    //
+    // Children are walked through `emit_qml_children_with_line` rather
+    // than a bare `for` so that `If`+`Else` sibling pairs are recognised
+    // (UI29 §3.2), and so that a `Row` / `Column` hands its children the
+    // `Layout.fill*` lines their styles ask of it (UI21 §2.2).
+    let children_qml = emit_qml_children_with_line(
+        &node.children,
+        depth + 1,
+        is_stack,
+        None,
+        MainAxis::of_container(&node.tag),
+        ctx,
+    )?;
+
     let mut out = String::new();
 
     // Self-closing leaf with no children and no special handling — emit a
@@ -4686,6 +4828,12 @@ fn emit_qml_tree(
     // The branch exists for safety / future use.
 
     writeln!(out, "{pad}{element_name} {{").unwrap();
+    if binds_component_root(node, depth, ctx.part_styles) {
+        let props = part_style_props(node, ctx).unwrap_or(&[]);
+        for line in component_root_binding_lines(node, props, &children_qml, depth + 1) {
+            writeln!(out, "{pad}    {line}").unwrap();
+        }
+    }
 
     // An unstyled `Box` lowers to a bare `Item`, which has no intrinsic
     // size — the same gap the component root had (see
@@ -4810,27 +4958,8 @@ fn emit_qml_tree(
         }
     }
 
-    // Children — recurse, indented one level deeper.
-    //
-    // If this node is a `Stack`, each child must occupy the full parent
-    // overlay area. We can't reach inside the child's generated block
-    // from here without re-parsing, so we insert the anchor line as a
-    // sibling using QML's `anchors.fill` *binding from the parent* —
-    // but that doesn't exist; the property lives on the child. The
-    // workable approach is to recurse normally and then post-process
-    // each child block, inserting `anchors.fill: parent` immediately
-    // after the child's opening `{`. This is mechanical string editing
-    // on already-trusted output (we generated it), so it's safe.
-    //
-    // Children are walked through `emit_qml_children` rather than a
-    // bare `for` so that `If`+`Else` sibling pairs are recognised
-    // (UI29 §3.2).
-    out.push_str(&emit_qml_children(
-        &node.children,
-        depth + 1,
-        is_stack,
-        ctx,
-    )?);
+    // Children — emitted above, indented one level deeper.
+    out.push_str(&children_qml);
 
     writeln!(out, "{pad}}}").unwrap();
     if is_text {
@@ -4900,17 +5029,34 @@ fn emit_qml_children(
     is_stack: bool,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
-    emit_qml_children_with_line(children, depth, is_stack, None, ctx)
+    emit_qml_children_with_line(children, depth, is_stack, None, None, ctx)
 }
 
+/// [`emit_qml_children`], plus the two things only a layout parent knows.
+///
+/// - `child_line` -- one line every child receives (the parent's
+///   `Layout.alignment`).
+/// - `main_axis` -- `Some` when the parent is a `RowLayout` /
+///   `ColumnLayout`. Each child then also receives the fills its own style
+///   asks of that layout ([`layout_child_fill_lines`]): a lowered
+///   `flex-grow`, and an axis-pinned `HostScroll`'s cross-axis fill
+///   (UI21 §2.2, rules 3 and 4).
+///
+/// Why the parent writes these lines, not the child: `Layout.fillHeight`
+/// is an attached property of the *enclosing* layout. The same `flex-grow`
+/// under a `Box` (a plain `Item`) means nothing to QML, which accepts the
+/// line and ignores it. Only the walker over a layout's children knows
+/// that a layout is there to read it.
 fn emit_qml_children_with_line(
     children: &[LayoutNode],
     depth: usize,
     is_stack: bool,
     child_line: Option<&str>,
+    main_axis: Option<MainAxis>,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
+    let shared_grow = main_axis.and_then(|_| shared_flex_grow(children, ctx));
     let mut i = 0;
     while i < children.len() {
         let child = &children[i];
@@ -4943,6 +5089,18 @@ fn emit_qml_children_with_line(
         if let Some(line) = child_line {
             child_qml = inject_qml_child_line(&child_qml, depth, line);
         }
+        if let Some(axis) = main_axis {
+            for line in layout_child_fill_lines(child, axis, shared_grow, ctx) {
+                // A child that already fills this axis (a `Spacer`, a
+                // `HostSurface`, a `width: 100%` control) keeps its own
+                // line: QML refuses a property assigned twice on one
+                // object, and the meaning is the same either way.
+                let property = line.split_once(':').map_or(line, |(name, _)| name);
+                if !qml_block_assigns(&child_qml, depth, property) {
+                    child_qml = inject_qml_child_line(&child_qml, depth, line);
+                }
+            }
+        }
         if is_stack && child.tag != "Path" {
             out.push_str(&inject_anchors_fill_parent(&child_qml, depth));
         } else {
@@ -4951,6 +5109,284 @@ fn emit_qml_children_with_line(
         i += 1;
     }
     Ok(out)
+}
+
+// =====================================================================
+// Layout growth and the component root (UI21 §2.2)
+// =====================================================================
+//
+// A vertical `HostScroll` scrolls only inside a viewport shorter than its
+// content. QML hands an item a size in exactly two ways -- anchors bind it to
+// its parent, or a `RowLayout` / `ColumnLayout` sizes it through `Layout.*`
+// attached properties -- and an item with neither keeps its implicit size,
+// which for a `ScrollView` is its content's height. So the chain from the
+// window down to the viewport must be bounded at every link:
+//
+// ```text
+//   window ── SizeRootObjectToView ──► root Item            (the shell)
+//   root Item ── anchors ──► mosaicLayoutRoot               (rule 1)
+//   ColumnLayout ── Layout.fillHeight ──► ScrollView        (rule 3)
+//   ColumnLayout ── Layout.fillWidth  ──► ScrollView        (rule 4)
+// ```
+//
+// Before these rules only the first link existed for a `Column` shell, so
+// Engram's screens (EN-6, #18477) laid out as tall as their content and never
+// scrolled, while the same layout scrolled on every other native backend.
+
+/// The axis a `RowLayout` / `ColumnLayout` stacks its children along.
+///
+/// The *main* axis is the one a CSS `flex-grow` grows along; the *cross*
+/// axis is the other one.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum MainAxis {
+    /// A `Row`: children side by side, growing in width.
+    Horizontal,
+    /// A `Column`: children stacked, growing in height.
+    Vertical,
+}
+
+impl MainAxis {
+    /// The axis of the layout a moslayout container lowers to, or `None`
+    /// for a container that is not a Qt layout (`Box` and `Stack` are plain
+    /// `Item`s, where `Layout.*` lines are accepted and ignored).
+    fn of_container(tag: &str) -> Option<Self> {
+        match tag {
+            "Row" => Some(Self::Horizontal),
+            "Column" => Some(Self::Vertical),
+            _ => None,
+        }
+    }
+
+    /// The attached-property line that makes a layout child take this
+    /// axis's surplus.
+    fn fill_line(self) -> &'static str {
+        match self {
+            Self::Horizontal => "Layout.fillWidth: true",
+            Self::Vertical => "Layout.fillHeight: true",
+        }
+    }
+}
+
+/// A `flex-grow` value, parsed as CSS reads it: a finite number, which may
+/// be zero. `None` for anything else (`auto`, `-1`, `NaN`), which has no
+/// lowering and stays in the drop report.
+fn flex_grow_value(props: &[StyleProp]) -> Option<f64> {
+    props
+        .iter()
+        .find(|prop| prop.name == "flex-grow")?
+        .value
+        .trim()
+        .parse::<f64>()
+        .ok()
+        .filter(|value| value.is_finite() && *value >= 0.0)
+}
+
+/// Does this child sit in the layout itself, or behind a wrapper?
+///
+/// `If` / `Else` lower to `Loader`s and `For` to a `Repeater` whose
+/// delegates are the layout's real children. A `flex-grow` authored on a
+/// node *inside* one of them cannot reach the layout, so it is not lowered.
+fn is_direct_layout_child(child: &LayoutNode) -> bool {
+    !matches!(child.tag.as_str(), "If" | "Else" | "For")
+}
+
+/// Whether every growing direct child of one layout authors the same
+/// `flex-grow`.
+///
+/// Qt's fills are all-or-nothing: two filling siblings split the surplus
+/// equally whatever CSS ratio they asked for. So `1` beside `1` is
+/// expressed exactly, but `1` beside `2` is not -- both still fill, and the
+/// property stays in the drop report because the 1:2 split is lost.
+///
+/// Returns `None` when nothing grows, `Some(true)` when the growers agree,
+/// `Some(false)` when they do not.
+fn shared_flex_grow(children: &[LayoutNode], ctx: &EmitCtx) -> Option<bool> {
+    let mut grows = children
+        .iter()
+        .filter(|child| is_direct_layout_child(child))
+        .filter_map(|child| part_style_props(child, ctx).and_then(flex_grow_value))
+        .filter(|value| *value > 0.0);
+    let first = grows.next()?;
+    Some(grows.all(|value| value == first))
+}
+
+/// The `Layout.*` lines a direct child of a `RowLayout` / `ColumnLayout`
+/// needs from its parent (UI21 §2.2, rules 3 and 4).
+///
+/// **`flex-grow`.**
+///
+/// | value               | lowering                        | report   |
+/// |---------------------|---------------------------------|----------|
+/// | positive, finite    | fill the layout's main axis     | consumed |
+/// | same, unequal sibs  | fill the layout's main axis     | dropped  |
+/// | `0`                 | nothing -- Qt does not grow     | consumed |
+/// | negative / not a number | nothing                     | dropped  |
+///
+/// **An axis-pinned `HostScroll`.** UI61 pins a vertical viewport's content
+/// to its own width (`contentWidth: availableWidth`). That makes its
+/// implicit width a function of its width, which a layout resolves to 0, so
+/// the viewport is laid out zero pixels wide. Filling the parent's *cross*
+/// axis is the only width it can have -- and it is what CSS's default
+/// `align-items: stretch` gives it on the web. The same holds for a
+/// horizontal viewport in a `Row`. A viewport pinned along its parent's
+/// *main* axis (a horizontal `HostScroll` in a `Column`) must not fill:
+/// that would swallow the column's whole height (#16949). It is left as it
+/// was.
+fn layout_child_fill_lines(
+    child: &LayoutNode,
+    axis: MainAxis,
+    shared_grow: Option<bool>,
+    ctx: &EmitCtx,
+) -> Vec<&'static str> {
+    let mut lines = Vec::new();
+    if !is_direct_layout_child(child) {
+        return lines;
+    }
+    if let Some(props) = part_style_props(child, ctx) {
+        match flex_grow_value(props) {
+            Some(value) if value > 0.0 => {
+                lines.push(axis.fill_line());
+                // Unequal ratios fill but are not *expressed*; leaving the
+                // property unread keeps that loss in the report.
+                if shared_grow == Some(true) {
+                    record_style_read(props, "flex-grow");
+                }
+            }
+            // `flex-grow: 0` asks for exactly what a Qt layout child does by
+            // default, so emitting nothing IS the lowering.
+            Some(_) => record_style_read(props, "flex-grow"),
+            None => {}
+        }
+    }
+    if child.tag == "HostScroll" {
+        match (ScrollAxis::of(child), axis) {
+            (ScrollAxis::Vertical, MainAxis::Vertical) => lines.push("Layout.fillWidth: true"),
+            (ScrollAxis::Horizontal, MainAxis::Horizontal) => lines.push("Layout.fillHeight: true"),
+            _ => {}
+        }
+    }
+    lines
+}
+
+/// Does any top-level block of an emitted child assign `property`?
+///
+/// `child_qml` is a child block the walker produced at `depth`, so its own
+/// property lines sit at exactly `depth + 1` levels of indentation; anything
+/// deeper belongs to a nested object. Mechanical, like
+/// [`inject_qml_child_line`], and safe for the same reason: the emitter
+/// wrote this text itself, one property per line.
+fn qml_block_assigns(child_qml: &str, depth: usize, property: &str) -> bool {
+    let inner_pad = "    ".repeat(depth + 1);
+    child_qml.lines().any(|line| {
+        line.strip_prefix(&inner_pad)
+            .and_then(qml_top_level_property)
+            .is_some_and(|name| name == property)
+    })
+}
+
+/// The depth [`emit_root`] emits the layout root at: the one child of the
+/// component's root `Item`. Nothing else in the walker starts there.
+const COMPONENT_ROOT_DEPTH: usize = 1;
+
+/// The QML id a bound layout root carries, so the root `Item` can read its
+/// implicit size (UI21 §2.2, rule 2).
+const LAYOUT_ROOT_ID: &str = "mosaicLayoutRoot";
+
+/// Is this node the layout root, and one that binds to the component root
+/// (UI21 §2.2, rule 1)?
+///
+/// Only a `Row` or `Column`: those lower to a Qt layout, whose implicit size
+/// is computed from its children and so can be read back without a loop. An
+/// `elevation` tier wraps the root in a `MultiEffect` host `Item` that owns
+/// the root slot, so an elevated root keeps its old, unbound shape. Every
+/// other root tag is unchanged.
+fn binds_component_root(node: &LayoutNode, depth: usize, part_styles: &PartStyleMap) -> bool {
+    depth == COMPONENT_ROOT_DEPTH
+        && MainAxis::of_container(&node.tag).is_some()
+        && node
+            .part_name
+            .as_deref()
+            .and_then(|part| part_styles.get(part))
+            .and_then(|props| part_elevation_tier(props))
+            .is_none()
+}
+
+/// Does a direct child, among `children_qml` emitted at `child_depth`, fill
+/// `axis`?
+///
+/// That is what decides whether the root may take the window's extent on
+/// its main axis. A Qt layout with spare room and no child willing to grow
+/// does not leave the room at the end, as CSS does: it spreads it *between*
+/// the children. Three short children of an anchored 400px `ColumnLayout`
+/// were measured at y = 50, 174 and 314. Binding is only safe when some
+/// child absorbs the surplus.
+fn direct_child_fills(children_qml: &str, child_depth: usize, axis: MainAxis) -> bool {
+    let inner_pad = "    ".repeat(child_depth + 1);
+    let line = axis.fill_line();
+    children_qml
+        .lines()
+        .any(|l| l.strip_prefix(&inner_pad) == Some(line))
+}
+
+/// The lines that bind a layout root to the component root (UI21 §2.2,
+/// rule 1): its id, then its anchors.
+///
+/// | root     | width (cross for a Column)  | height                          |
+/// |----------|-----------------------------|---------------------------------|
+/// | `Column` | always                      | when a direct child fills it    |
+/// | `Row`    | when a direct child fills it| never                           |
+///
+/// A `Row` never takes the window's height because `RowLayout` centres its
+/// children vertically: stretching the row would move them all to the
+/// window's middle. An axis the author sized (`width` / `max-width`,
+/// `height` / `max-height`) is the author's, so it is not bound either.
+fn component_root_binding_lines(
+    node: &LayoutNode,
+    props: &[StyleProp],
+    children_qml: &str,
+    child_depth: usize,
+) -> Vec<String> {
+    let Some(axis) = MainAxis::of_container(&node.tag) else {
+        return Vec::new();
+    };
+    let authored = |names: [&str; 2]| props.iter().any(|p| names.contains(&p.name.as_str()));
+    let grows = direct_child_fills(children_qml, child_depth, axis);
+    let width = !authored(["width", "max-width"]) && (axis == MainAxis::Vertical || grows);
+    let height = !authored(["height", "max-height"]) && axis == MainAxis::Vertical && grows;
+
+    let mut lines = vec![format!("id: {LAYOUT_ROOT_ID}")];
+    if width && height {
+        lines.push("anchors.fill: parent".to_string());
+    } else if width {
+        lines.push("anchors.left: parent.left".to_string());
+        lines.push("anchors.right: parent.right".to_string());
+    } else if height {
+        lines.push("anchors.top: parent.top".to_string());
+        lines.push("anchors.bottom: parent.bottom".to_string());
+    }
+    lines
+}
+
+/// The root `Item`'s implicit size when its layout root is bound (UI21
+/// §2.2, rule 2).
+///
+/// It reads the layout root's *implicit* size, never `childrenRect`. A
+/// consumer that places the component in its own layout sizes the root from
+/// this value, and with `childrenRect` the chain would be a loop: root size
+/// ← `childrenRect` ← the anchored child's size ← root size. A layout's
+/// implicit size comes from its children's implicit sizes and never from
+/// its own geometry, so this chain has no cycle.
+///
+/// Like [`content_sizing_lines_avoiding`], a dimension a slot already
+/// declares on the root is skipped.
+fn layout_root_sizing_lines_avoiding(declared: &HashSet<String>) -> String {
+    let mut out = String::new();
+    for dimension in ["implicitWidth", "implicitHeight"] {
+        if !declared.contains(dimension) {
+            writeln!(out, "    {dimension}: {LAYOUT_ROOT_ID}.{dimension}").unwrap();
+        }
+    }
+    out
 }
 
 /// The element decomposition for one moslayout primitive.
@@ -10254,6 +10690,21 @@ mod tests {
         }
     }
 
+    /// Nest `node` under an unstyled `Box`, so it is not the layout root.
+    ///
+    /// A `Row` / `Column` root binds to the component root (UI21 §2.2): its
+    /// wrapper is anchored and its content inset by margins instead of
+    /// `x`/`y`. Tests about the ordinary, nested wrapper shape use this so
+    /// they keep testing that shape.
+    fn under_box(node: LayoutNode) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![node],
+        }
+    }
+
     fn single_box_layout(component: &str) -> LayoutDef {
         LayoutDef {
             component_name: component.to_string(),
@@ -10329,7 +10780,7 @@ mod tests {
         };
         let l = LayoutDef {
             component_name: "X".into(),
-            root: LayoutNode {
+            root: under_box(LayoutNode {
                 tag: "Column".into(),
                 part_name: Some("detail".into()),
                 props: vec![],
@@ -10341,7 +10792,7 @@ mod tests {
                     props: vec![lp("content", LayoutPropValue::String("hi".into()))],
                     children: vec![],
                 }],
-            },
+            }),
         };
         let out = from_pipeline(&m, &l, &style).unwrap().output;
         assert!(out.contains("x: 47"), "left inset:\n{out}");
@@ -10398,7 +10849,7 @@ mod tests {
         };
         let l = LayoutDef {
             component_name: "X".into(),
-            root: LayoutNode {
+            root: under_box(LayoutNode {
                 tag: "Column".into(),
                 part_name: Some("detail".into()),
                 props: vec![],
@@ -10408,7 +10859,7 @@ mod tests {
                     props: vec![lp("content", LayoutPropValue::String("hi".into()))],
                     children: vec![],
                 }],
-            },
+            }),
         };
         let out = from_pipeline(&m, &l, &style).unwrap().output;
         assert!(out.contains("x: 12"), "the longhand must reach the inset:\n{out}");
@@ -17718,14 +18169,17 @@ mod tests {
         .output;
 
         // The sizing lines must sit on the root, i.e. before the layout
-        // tree opens — at one indent level inside `Item {`.
+        // tree opens — at one indent level inside `Item {`. A `Column` root
+        // is bound to the root `Item` (UI21 §2.2), so the root reads the
+        // layout's implicit size rather than `childrenRect`, which would
+        // loop through the anchors.
         let root_open = out.find("Item {").expect("root Item");
         let tree_open = out.find("    ColumnLayout {").expect("layout root");
         let width_line = out
-            .find("    implicitWidth: childrenRect.x + childrenRect.width")
+            .find("    implicitWidth: mosaicLayoutRoot.implicitWidth")
             .expect("root implicitWidth");
         let height_line = out
-            .find("    implicitHeight: childrenRect.y + childrenRect.height")
+            .find("    implicitHeight: mosaicLayoutRoot.implicitHeight")
             .expect("root implicitHeight");
         assert!(
             root_open < width_line && width_line < tree_open,
@@ -17772,8 +18226,10 @@ mod tests {
         .unwrap()
         .output;
 
+        // The root is a `Column`, so the root `Item` reads its layout's
+        // implicit size (UI21 §2.2) -- and still yields to the slot.
         assert!(
-            !out.contains("implicitWidth: childrenRect"),
+            !out.contains("implicitWidth: mosaicLayoutRoot"),
             "must not bind a dimension the slot already declares:\n{out}"
         );
         assert!(
@@ -17782,7 +18238,7 @@ mod tests {
         );
         // The uncontested dimension is still sized.
         assert!(
-            out.contains("implicitHeight: childrenRect.y + childrenRect.height"),
+            out.contains("implicitHeight: mosaicLayoutRoot.implicitHeight"),
             "the other dimension must still be content-sized:\n{out}"
         );
     }
@@ -17857,12 +18313,18 @@ mod tests {
             out.contains("Layout.fillWidth: true"),
             "Spacer should still fill:\n{out}"
         );
-        // Only the root is content-sized.
+        // Nothing is content-sized from `childrenRect`: the Spacer must not
+        // be, and the root `Item` reads its bound `Row`'s implicit size
+        // instead (UI21 §2.2).
         assert_eq!(
             out.matches("implicitWidth: childrenRect.x + childrenRect.width")
                 .count(),
-            1,
+            0,
             "Spacer must not be content-sized:\n{out}"
+        );
+        assert!(
+            out.contains("    implicitWidth: mosaicLayoutRoot.implicitWidth"),
+            "{out}"
         );
     }
 
@@ -18711,7 +19173,7 @@ mod tests {
         };
         let layout = LayoutDef {
             component_name: "Header".to_string(),
-            root: LayoutNode {
+            root: under_box(LayoutNode {
                 tag: "Row".to_string(),
                 part_name: Some("app-header".to_string()),
                 props: vec![],
@@ -18721,7 +19183,7 @@ mod tests {
                     props: vec![lp("content", LayoutPropValue::String("Header".to_string()))],
                     children: vec![],
                 }],
-            },
+            }),
         };
         let out = from_pipeline(&component("Header", vec![], vec![]), &layout, &style)
             .unwrap()
@@ -19406,14 +19868,13 @@ mod tests {
             .unwrap()
             .output;
 
-        // The component root always carries one content-derived
-        // `implicitWidth`/`implicitHeight` pair (see
-        // `content_sizing_lines`). This test is about the *styled
-        // wrapper* below it, which must contribute exactly one more —
+        // The component root always carries one `implicitWidth` /
+        // `implicitHeight` pair; for this bound `Column` root it reads the
+        // wrapper's implicit size (UI21 §2.2). This test is about the
+        // *styled wrapper* below it, which must contribute exactly one more —
         // the fixed dimension from the part — and must NOT additionally
-        // emit a `childrenRect`-derived one on top of it. So: two
-        // `implicitWidth:` lines in total, of which exactly one is the
-        // root's `childrenRect` form.
+        // emit a content-derived one on top of it. So: two `implicitWidth:`
+        // lines in total, and none in the `childrenRect` form.
         assert_eq!(
             out.matches("implicitWidth:").count(),
             2,
@@ -19428,13 +19889,17 @@ mod tests {
         );
         assert_eq!(
             out.matches("implicitWidth: childrenRect").count(),
-            1,
-            "only the root should be content-sized here:\n{out}"
+            0,
+            "nothing should be content-sized from childrenRect here:\n{out}"
         );
         assert_eq!(
             out.matches("implicitHeight: childrenRect").count(),
-            1,
-            "only the root should be content-sized here:\n{out}"
+            0,
+            "nothing should be content-sized from childrenRect here:\n{out}"
+        );
+        assert!(
+            out.contains("    implicitWidth: mosaicLayoutRoot.implicitWidth"),
+            "{out}"
         );
         assert!(out.contains("implicitWidth: 236"));
         assert!(out.contains("Layout.preferredWidth: 236"));
@@ -21172,5 +21637,384 @@ mod layout_variant_tests {
                 "MosaicTableModel and MosaicLayoutRule:\n{main}"
             );
         }
+    }
+}
+
+/// UI21 §2.2: the component root binds to the window, `flex-grow` fills a
+/// layout's main axis, an axis-pinned `HostScroll` fills its cross axis, and
+/// a rendered part whose `flex-grow` nothing consumed is reported.
+///
+/// The runtime half of this contract -- that the bound shell really does
+/// scroll -- is measured by `code/scripts/qt-column-shell-scroll-render-check.qml`
+/// against the `host-scroll-column-shell` fixture in CI; these tests pin the
+/// emitted text that measurement depends on.
+#[cfg(test)]
+mod layout_growth_tests {
+    use super::*;
+
+    /// Compile a component from source, the way `mosaic-compile` does.
+    fn compile(mil: &str, mll: &str, msl: &str) -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let model = mosmodel_compiler::compile(mil).expect("mil");
+        let layout = moslayout_compiler::compile(mll, Some(&model.descriptor_json)).expect("mll");
+        let style = mosstyle_compiler::compile(msl, Some(&layout.part_map_json))
+            .expect("msl")
+            .def;
+        (model.component, layout.def, style)
+    }
+
+    fn qml(mll: &str, msl: &str) -> String {
+        let (model, layout, style) = compile("component X { slot title : text ; }", mll, msl);
+        from_pipeline(&model, &layout, &style).expect("emit").output
+    }
+
+    /// The `(part, property)` pairs the drop report names.
+    fn dropped(mll: &str, msl: &str) -> Vec<(String, String)> {
+        let (model, layout, style) = compile("component X { slot title : text ; }", mll, msl);
+        dropped_style_properties(&model, &layout, &style)
+            .into_iter()
+            .map(|d| (d.part, d.name))
+            .collect()
+    }
+
+    /// The block QML opened for the first line containing `opening`, up to
+    /// its closing brace -- so an assertion about a line is an assertion
+    /// about ONE element, not the whole file.
+    fn block<'a>(qml: &'a str, opening: &str) -> &'a str {
+        let start = qml
+            .find(opening)
+            .unwrap_or_else(|| panic!("{opening}:\n{qml}"));
+        let line_start = qml[..start].rfind('\n').map_or(0, |i| i + 1);
+        let indent = &qml[line_start..start];
+        let close = format!("\n{indent}}}\n");
+        let end = qml[start..].find(&close).expect("closing brace") + start + close.len();
+        &qml[line_start..end]
+    }
+
+    /// The property lines that belong to the block itself, one level in.
+    fn own_lines(block: &str) -> Vec<&str> {
+        let first = block.lines().next().unwrap();
+        let indent = first.len() - first.trim_start().len();
+        let own = " ".repeat(indent + 4);
+        block
+            .lines()
+            .filter_map(|line| line.strip_prefix(own.as_str()))
+            .filter(|line| !line.starts_with(' '))
+            .collect()
+    }
+
+    /// The window binding the CHILD of the root `Item` carries.
+    fn root_item_lines(qml: &str) -> Vec<&str> {
+        own_lines(block(qml, "Item {\n    id: mosaicRoot"))
+    }
+
+    #[test]
+    fn a_column_root_binds_its_width_and_keeps_its_content_height_without_a_grower() {
+        let out = qml(
+            "layout X { Column { Text ( content : \"a\" ) Text ( content : \"b\" ) } }",
+            "style X { }",
+        );
+        let root = own_lines(block(&out, "    ColumnLayout {"));
+        assert!(root.contains(&"id: mosaicLayoutRoot"), "{out}");
+        assert!(root.contains(&"anchors.left: parent.left"), "{out}");
+        assert!(root.contains(&"anchors.right: parent.right"), "{out}");
+        // No grower: binding the height would let Qt spread the two Texts
+        // across the window instead of packing them at the top.
+        assert!(!root.iter().any(|l| l.starts_with("anchors.top")), "{out}");
+        assert!(!root.contains(&"anchors.fill: parent"), "{out}");
+
+        let item = root_item_lines(&out);
+        assert!(
+            item.contains(&"implicitWidth: mosaicLayoutRoot.implicitWidth"),
+            "{out}"
+        );
+        assert!(
+            item.contains(&"implicitHeight: mosaicLayoutRoot.implicitHeight"),
+            "{out}"
+        );
+        assert!(!item.iter().any(|l| l.contains("childrenRect")), "{out}");
+    }
+
+    #[test]
+    fn a_column_root_with_a_growing_child_fills_the_window() {
+        let out = qml(
+            "layout X { Column { Text ( content : \"head\" ) HostScroll [ body ] { Column { Text ( content : \"x\" ) } } } }",
+            "style X { part body { flex-grow : 1 ; } }",
+        );
+        let root = own_lines(block(&out, "    ColumnLayout {"));
+        assert!(root.contains(&"anchors.fill: parent"), "{out}");
+        let scroll = own_lines(block(&out, "        ScrollView {"));
+        assert!(scroll.contains(&"Layout.fillHeight: true"), "{out}");
+        assert!(scroll.contains(&"Layout.fillWidth: true"), "{out}");
+    }
+
+    /// The EN-6 shape: a padded, painted shell. The wrapper binds to the
+    /// root, the content layout binds to the wrapper inset by the padding,
+    /// and both size from the content's implicit size, never its geometry.
+    #[test]
+    fn a_padded_column_root_binds_the_wrapper_and_its_content() {
+        let out = qml(
+            "layout X { Column [ shell ] { Text ( content : slot: title ) HostScroll [ body ] { Column { Text ( content : \"x\" ) } } } }",
+            "style X { part shell { padding : 24 ; background : #f8fafc ; } part body { flex-grow : 1 ; } }",
+        );
+        let wrapper = own_lines(block(&out, "    Rectangle {"));
+        assert!(wrapper.contains(&"id: mosaicLayoutRoot"), "{out}");
+        assert!(wrapper.contains(&"anchors.fill: parent"), "{out}");
+        assert!(
+            wrapper.contains(&"implicitHeight: mosaicLayoutRootContent.implicitHeight + 24 + 24"),
+            "{out}"
+        );
+        assert!(!wrapper.iter().any(|l| l.contains("childrenRect")), "{out}");
+
+        let content = own_lines(block(&out, "        ColumnLayout {"));
+        assert!(content.contains(&"id: mosaicLayoutRootContent"), "{out}");
+        for line in [
+            "anchors.fill: parent",
+            "anchors.leftMargin: 24",
+            "anchors.topMargin: 24",
+            "anchors.rightMargin: 24",
+            "anchors.bottomMargin: 24",
+        ] {
+            assert!(content.contains(&line), "{line}:\n{out}");
+        }
+        assert!(
+            !content
+                .iter()
+                .any(|l| l.starts_with("x:") || l.starts_with("y:")),
+            "{out}"
+        );
+    }
+
+    #[test]
+    fn a_row_root_never_binds_its_height() {
+        // RowLayout centres its children vertically; a window-tall row
+        // would move them to the window's middle.
+        let still = qml(
+            "layout X { Row { Text ( content : \"a\" ) } }",
+            "style X { }",
+        );
+        let root = own_lines(block(&still, "    RowLayout {"));
+        assert!(root.contains(&"id: mosaicLayoutRoot"), "{still}");
+        assert!(!root.iter().any(|l| l.starts_with("anchors.")), "{still}");
+
+        let grows = qml(
+            "layout X { Row { Text [ a ] ( content : \"a\" ) Text ( content : \"b\" ) } }",
+            "style X { part a { flex-grow : 1 ; } }",
+        );
+        let root = own_lines(block(&grows, "    RowLayout {"));
+        assert!(root.contains(&"anchors.left: parent.left"), "{grows}");
+        assert!(root.contains(&"anchors.right: parent.right"), "{grows}");
+        assert!(
+            !root
+                .iter()
+                .any(|l| l.starts_with("anchors.top") || l.starts_with("anchors.fill")),
+            "{grows}"
+        );
+    }
+
+    #[test]
+    fn an_authored_size_elevation_or_other_root_tag_is_left_unbound() {
+        // An authored width is the author's: only the unauthored axis binds.
+        let sized = qml(
+            "layout X { Column [ shell ] { Text ( content : \"a\" ) Box [ grow ] { } } }",
+            "style X { part shell { width : 300 ; } part grow { flex-grow : 1 ; } }",
+        );
+        let root = own_lines(block(&sized, "    ColumnLayout {"));
+        assert!(root.contains(&"anchors.top: parent.top"), "{sized}");
+        assert!(
+            !root.iter().any(|l| l.starts_with("anchors.left")),
+            "{sized}"
+        );
+
+        // An elevated root keeps its MultiEffect wrapper and its old shape.
+        let raised = qml(
+            "layout X { Column [ shell ] { Text ( content : \"a\" ) } }",
+            "style X { part shell { elevation : raised ; background : #ffffff ; } }",
+        );
+        assert!(!raised.contains("mosaicLayoutRoot"), "{raised}");
+        assert!(
+            raised.contains("    implicitWidth: childrenRect.x + childrenRect.width"),
+            "{raised}"
+        );
+
+        // Only Row and Column bind.
+        let boxed = qml(
+            "layout X { Box { Text ( content : \"a\" ) } }",
+            "style X { }",
+        );
+        assert!(!boxed.contains("mosaicLayoutRoot"), "{boxed}");
+    }
+
+    /// A nested Column is not the root: it neither binds nor gets an id.
+    #[test]
+    fn only_the_root_layout_binds() {
+        let out = qml(
+            "layout X { Column { Column { Text ( content : \"a\" ) } } }",
+            "style X { }",
+        );
+        assert_eq!(out.matches("mosaicLayoutRoot").count(), 3, "{out}");
+        let inner = own_lines(block(&out, "        ColumnLayout {"));
+        assert!(
+            !inner
+                .iter()
+                .any(|l| l.starts_with("anchors.") || l.starts_with("id:")),
+            "{out}"
+        );
+    }
+
+    #[test]
+    fn flex_grow_lowers_to_the_main_axis_fill() {
+        let column = qml(
+            "layout X { Box { Column { Text [ a ] ( content : \"a\" ) } Row { Text [ b ] ( content : \"b\" ) } } }",
+            "style X { part a { flex-grow : 1 ; } part b { flex-grow : 2 ; } }",
+        );
+        let text_a = own_lines(block(
+            &column,
+            "            Text {\n                Layout.fillHeight",
+        ));
+        assert!(text_a.contains(&"text: \"a\""), "{column}");
+        let text_b = own_lines(block(
+            &column,
+            "            Text {\n                Layout.fillWidth",
+        ));
+        assert!(text_b.contains(&"text: \"b\""), "{column}");
+        assert!(dropped(
+            "layout X { Box { Column { Text [ a ] ( content : \"a\" ) } Row { Text [ b ] ( content : \"b\" ) } } }",
+            "style X { part a { flex-grow : 1 ; } part b { flex-grow : 2 ; } }",
+        )
+        .is_empty());
+    }
+
+    #[test]
+    fn zero_negative_and_unequal_flex_grow() {
+        let mll = "layout X { Column { Text [ zero ] ( content : \"z\" ) Text [ neg ] ( content : \"n\" ) } }";
+        let msl = "style X { part zero { flex-grow : 0 ; } part neg { flex-grow : \"-1\" ; } }";
+        let out = qml(mll, msl);
+        assert!(!out.contains("Layout.fillHeight"), "{out}");
+        // `0` is Qt's default and so consumed; `-1` has no lowering.
+        assert_eq!(
+            dropped(mll, msl),
+            vec![("neg".to_string(), "flex-grow".to_string())]
+        );
+
+        // Both fill, but Qt splits the surplus equally, so the 1:2 ratio
+        // is lost and both stay reported.
+        let mll = "layout X { Column { Text [ one ] ( content : \"1\" ) Text [ two ] ( content : \"2\" ) } }";
+        let msl = "style X { part one { flex-grow : 1 ; } part two { flex-grow : 2 ; } }";
+        assert_eq!(qml(mll, msl).matches("Layout.fillHeight: true").count(), 2);
+        assert_eq!(
+            dropped(mll, msl),
+            vec![
+                ("one".to_string(), "flex-grow".to_string()),
+                ("two".to_string(), "flex-grow".to_string()),
+            ]
+        );
+    }
+
+    #[test]
+    fn a_child_that_already_fills_is_not_given_the_line_twice() {
+        // `width: 100%` already lowers to Layout.fillWidth on a Text; a
+        // second assignment would fail to load ("Property value set
+        // multiple times").
+        let mll = "layout X { Row { Text [ name ] ( content : \"n\" ) } }";
+        let msl = "style X { part name { width : 100% ; flex-grow : 1 ; } }";
+        let out = qml(mll, msl);
+        assert_eq!(out.matches("Layout.fillWidth: true").count(), 1, "{out}");
+        assert!(dropped(mll, msl)
+            .iter()
+            .all(|(_, name)| name != "flex-grow"));
+    }
+
+    #[test]
+    fn flex_grow_inside_a_conditional_is_not_lowered_and_stays_reported() {
+        // The `If` lowers to a Loader; the Loader, not the Text, is the
+        // layout's child, so a fill on the Text would be inert.
+        let mll =
+            "layout X { Column { If ( when: slot: title ) { Text [ t ] ( content : \"t\" ) } } }";
+        let msl = "style X { part t { flex-grow : 1 ; color : #111111 ; } }";
+        assert!(!qml(mll, msl).contains("Layout.fillHeight"));
+        assert!(dropped(mll, msl).contains(&("t".to_string(), "flex-grow".to_string())));
+    }
+
+    #[test]
+    fn an_axis_pinned_host_scroll_fills_its_cross_axis_only() {
+        let vertical_in_column = qml(
+            "layout X { Box { Column { HostScroll { Text ( content : \"a\" ) } } } }",
+            "style X { }",
+        );
+        let scroll = own_lines(block(&vertical_in_column, "ScrollView {"));
+        assert!(
+            scroll.contains(&"Layout.fillWidth: true"),
+            "{vertical_in_column}"
+        );
+        assert!(
+            !scroll.contains(&"Layout.fillHeight: true"),
+            "{vertical_in_column}"
+        );
+
+        let horizontal_in_row = qml(
+            "layout X { Box { Row { HostScroll ( axis : horizontal ) { Text ( content : \"a\" ) } } } }",
+            "style X { }",
+        );
+        let scroll = own_lines(block(&horizontal_in_row, "ScrollView {"));
+        assert!(
+            scroll.contains(&"Layout.fillHeight: true"),
+            "{horizontal_in_row}"
+        );
+
+        // Pinned along the column's MAIN axis: filling would swallow the
+        // column's height (#16949), so nothing is added.
+        let horizontal_in_column = qml(
+            "layout X { Box { Column { HostScroll ( axis : horizontal ) { Text ( content : \"a\" ) } } } }",
+            "style X { }",
+        );
+        let scroll = own_lines(block(&horizontal_in_column, "ScrollView {"));
+        assert!(
+            !scroll.iter().any(|l| l.starts_with("Layout.fill")),
+            "{horizontal_in_column}"
+        );
+    }
+
+    /// Rule 5: a rendered part whose lowering asks about nothing used to be
+    /// skipped whole, which is how Engram's `content-scroll { flex-grow: 1 }`
+    /// went unreported. A parent-owned `flex-grow` is now reported from it,
+    /// while its own properties still wait for the broader pass.
+    #[test]
+    fn a_part_with_only_flex_grow_is_reported_when_dropped() {
+        let under_box = dropped(
+            "layout X { Box { HostScroll [ s ] { Text ( content : \"a\" ) } } }",
+            "style X { part s { flex-grow : 1 ; } }",
+        );
+        assert_eq!(under_box, vec![("s".to_string(), "flex-grow".to_string())]);
+
+        let under_column = dropped(
+            "layout X { Column { HostScroll [ s ] { Text ( content : \"a\" ) } } }",
+            "style X { part s { flex-grow : 1 ; } }",
+        );
+        assert!(under_column.is_empty(), "{under_column:?}");
+
+        // Deliberately narrow: a never-asked part's OWN properties are not
+        // reported yet (see PARENT_OWNED_PROPERTIES).
+        let own_property = dropped(
+            "layout X { Box { HostScroll [ s ] { Text ( content : \"a\" ) } } }",
+            "style X { part s { padding : 8 ; } }",
+        );
+        assert!(own_property.is_empty(), "{own_property:?}");
+    }
+
+    /// The fixture CI measures, emitted exactly as CI emits it.
+    #[test]
+    fn the_column_shell_fixture_emits_a_bounded_scroll() {
+        let (model, layout, style) = compile(
+            include_str!("../fixtures/host-scroll-column-shell/src/Shell.mil"),
+            include_str!("../fixtures/host-scroll-column-shell/src/Shell.mll"),
+            include_str!("../fixtures/host-scroll-column-shell/src/Shell.msl"),
+        );
+        let out = from_pipeline(&model, &layout, &style).expect("emit").output;
+        let wrapper = own_lines(block(&out, "    Rectangle {"));
+        assert!(wrapper.contains(&"anchors.fill: parent"), "{out}");
+        let scroll = own_lines(block(&out, "            ScrollView {"));
+        assert!(scroll.contains(&"Layout.fillHeight: true"), "{out}");
+        assert!(scroll.contains(&"Layout.fillWidth: true"), "{out}");
+        assert!(dropped_style_properties(&model, &layout, &style).is_empty());
     }
 }

@@ -71,7 +71,7 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 **Next: #18563 — lower the Qt Board drop-target layout styles.**
 The selected bounded slice preserves the authored 9-pixel gap through the
-existing ColumnLayout and removes exactly three drops (79 to 76), retaining
+existing ColumnLayout and removes exactly three drops (80 to 77), retaining
 state and unsupported-value exclusions. #18481 owns broader root/flex growth.
 
 **Completed: #18581 — published and audited v0.5.15.**
