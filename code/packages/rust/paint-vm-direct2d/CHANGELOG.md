@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Changed
+
+- `Cargo.toml` declares the `windows` dependency as an inline table
+  (`windows = { version = "0.58", features = [...] }`) instead of a
+  `[dependencies.windows]` sub-table. The parsed manifest is identical. The
+  build tool's Cargo trigger reader, which follows every crate a dev-dependency
+  links, accepts only the plain one-entry-per-key form and refuses sub-tables
+  rather than guessing at them.
+
 ### Fixed
 
 - Cleared all 8 `cargo clippy --all-targets -- -D warnings` errors in this
