@@ -4,9 +4,9 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1 and A1 task inventories are checked
-in, while A2-C2 inventories, mocks, calibration, and human validation remain
-backlog
+**Status:** target specified; the pre-A1, A1, and B2 task inventories are
+checked in, while A2, B1, C1, and C2 inventories, mocks, calibration, and human
+validation remain backlog
 
 This specification names the assessment that the complete Telugu book must
 eventually prepare a book-only learner to pass. It is not an external
