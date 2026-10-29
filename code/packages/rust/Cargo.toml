@@ -1374,4 +1374,5 @@ members = [
   "tls13-cipher-suite-policy",
   "tls13-hkdf-label",
   "tls13-traffic-key-material",
+  "tls13-finished",
 ]

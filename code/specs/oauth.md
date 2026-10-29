@@ -1900,6 +1900,36 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+A bounded `tls13-finished` prerequisite now composes the repository-owned
+fixed-memory HKDF and HMAC paths for RFC 8446 Finished verify-data. It derives
+the fixed `"finished"` label with empty context from one already-derived
+BaseKey, rejecting a SHA-256/SHA-384 mismatch against the exact
+policy-authorized cipher suite before derivation. The resulting key occupies
+caller-owned non-cloneable fixed wipe-on-drop storage and is exposed only by a
+success-only borrowed view, so secret bytes do not cross the ABI return slot
+by value. It has no byte accessor and retains only public suite metadata in
+Debug output. An explicit client/server sender role remains bound to that key
+storage and to successful verification evidence. Generation accepts an exact
+Hash.length transcript hash and writes verify-data into exact caller-owned
+storage only after all public checks and HMAC computation succeed.
+
+Peer verification separately checks the public transcript-hash and
+verify-data lengths, computes the expected value in wipe-on-drop storage, and
+uses the repository-owned compiler-preserved full scan. Success returns
+non-cloneable evidence retaining the selected suite, sender role, and exact
+public transcript hash; mismatch is a stable redacted category. RFC 8448 SHA-256 key
+evidence plus independently generated SHA-256 and SHA-384 verify-data vectors
+cover the admitted algorithms.
+
+The caller remains responsible for constructing the transcript hash, choosing
+the correct client/server BaseKey, sequencing the Finished transition, and
+consuming verification evidence in a complete handshake state machine. This
+slice does not compose the early/handshake/master key schedule, parse or
+sequence handshake messages, authenticate certificates, establish trust,
+enforce revocation, invoke an AEAD, protect records, perform I/O, authorize
+HTTP or OAuth transport, or open a network connection. Concrete HTTPS remains
+unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire
