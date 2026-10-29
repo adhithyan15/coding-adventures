@@ -2040,6 +2040,39 @@ compatibility and educational surfaces rather than production TLS composition.
 Combined fixed-memory AEAD review remains a prerequisite, and concrete HTTPS
 remains unavailable.
 
+The repository-owned ChaCha20-Poly1305 implementation now also exposes a
+bounded fixed-memory RFC 8439 section 2.8 AEAD composition. Encryption accepts
+caller-owned plaintext, exact-length ciphertext output, a 256-bit key, a
+96-bit nonce, associated data, and caller-owned 16-byte tag output. It derives
+the one-time Poly1305 key from ChaCha20 block counter zero, encrypts only with
+counter one and above, and authenticates the exact
+`AAD || pad16(AAD) || ciphertext || pad16(ciphertext) || le64(AAD length) ||
+le64(ciphertext length)` layout without constructing an allocation-backed MAC
+buffer. Decryption recomputes and compares all 16 tag bytes before decrypting,
+so authentication failure leaves caller-owned plaintext output unchanged.
+Exact output length, 64-bit encoded lengths, and the complete ChaCha20 counter
+range are validated before encryption changes either ciphertext or tag.
+Stable failures retain no key, nonce, plaintext, ciphertext, tag, associated
+data, or observed lengths.
+
+The ChaCha20 block used to derive the one-time key, that copied Poly1305 key,
+the Poly1305 limb state, its reusable block, and the recomputed tag all have
+wipe-on-drop ownership. The fixed boundary allocates no heap memory and its tag
+comparison has a fixed 16-byte schedule with no secret-dependent early exit.
+The original key, nonce, inputs, and successful outputs remain caller-owned.
+The existing allocation-returning AEAD and XChaCha20 APIs remain compatibility
+and educational surfaces rather than production TLS entry points.
+
+This composition performs only pure in-process cryptography and has no
+credential access, edit, signing, provider action, audit or trace emission,
+I/O, or external effect. It does not select a TLS cipher suite, derive or own a
+traffic key, construct or reserve a record nonce, enforce a per-key record
+ceiling, frame or protect a TLS record, reset record sequence state after a key
+change, process a handshake, validate certificates, establish trust, enforce
+revocation, perform HTTP, authorize OAuth transport, or open a network
+connection. Repository-owned TLS record-protection composition and state
+remain prerequisites, and concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-supported-versions` prerequisite now owns the exact
 RFC 8446 `supported_versions` extension data emitted and consumed by a future
 repository-owned TLS 1.3 client. A caller supplies a preference-ordered slice
