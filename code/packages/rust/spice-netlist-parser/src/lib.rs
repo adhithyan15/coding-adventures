@@ -520,6 +520,15 @@ pub struct StepCard {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+struct TableParameter {
+    parameter: String,
+    selector: String,
+    entries: Vec<(f64, f64)>,
+}
+
+type ParameterControls = (BTreeMap<String, f64>, Vec<StepCard>, Vec<TableParameter>);
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct ParsedNetlist {
     pub circuit: Circuit,
     pub analyses: Vec<Analysis>,
@@ -918,18 +927,14 @@ fn parse_netlist_with_parameters(
     parameter_overrides: &BTreeMap<String, f64>,
     capture_steps: bool,
 ) -> Result<ParsedNetlist, NetlistParseError> {
-    let (mut parameters, step_cards) = parameter_controls(text)?;
-    if step_cards.len() > 1 {
-        return Err(NetlistParseError::new(
-            "LTspice v1 supports one .step param card per deck",
-        ));
-    }
-    if let Some(card) = step_cards.first() {
+    let (mut parameters, step_cards, table_parameters) = parameter_controls(text)?;
+    for card in &step_cards {
         parameters
             .entry(card.parameter.clone())
             .or_insert(card.values[0]);
     }
     parameters.extend(parameter_overrides.clone());
+    resolve_table_parameters(&table_parameters, &mut parameters)?;
     let materialized_text = materialize_parameter_text(text, &parameters)?;
     let syntax = syntax::parse_berkeley_syntax(&without_control_blocks(&materialized_text));
     if let Some(diagnostic) = syntax
@@ -1063,9 +1068,7 @@ fn parse_netlist_with_parameters(
     })
 }
 
-fn parameter_controls(
-    text: &str,
-) -> Result<(BTreeMap<String, f64>, Vec<StepCard>), NetlistParseError> {
+fn parameter_controls(text: &str) -> Result<ParameterControls, NetlistParseError> {
     let syntax = syntax::parse_berkeley_syntax(&without_control_blocks(text));
     if let Some(diagnostic) = syntax
         .diagnostics
@@ -1076,6 +1079,7 @@ fn parameter_controls(
     }
     let mut parameters = BTreeMap::new();
     let mut step_cards = Vec::new();
+    let mut table_parameters = Vec::new();
     for card in syntax.cards {
         let fields =
             split_fields(&card.text).map_err(|err| line_error(card.span.start_line, err))?;
@@ -1083,21 +1087,28 @@ fn parameter_controls(
             continue;
         }
         match fields[0].to_ascii_lowercase().as_str() {
-            ".param" => parse_parameter_card(&fields, &mut parameters)
-                .map_err(|err| line_error(card.span.start_line, err))?,
+            ".param" => {
+                parse_parameter_card(&card.text, &fields, &mut parameters, &mut table_parameters)
+                    .map_err(|err| line_error(card.span.start_line, err))?
+            }
             ".step" => step_cards.push(
                 parse_step_card(&fields).map_err(|err| line_error(card.span.start_line, err))?,
             ),
             _ => {}
         }
     }
-    Ok((parameters, step_cards))
+    Ok((parameters, step_cards, table_parameters))
 }
 
 fn parse_parameter_card(
+    card: &str,
     fields: &[String],
     parameters: &mut BTreeMap<String, f64>,
+    table_parameters: &mut Vec<TableParameter>,
 ) -> Result<(), NetlistParseError> {
+    if parse_table_parameter_card(card, parameters, table_parameters)? {
+        return Ok(());
+    }
     require_min_fields(fields, 2, ".param")?;
     let mut index = 1;
     while index < fields.len() {
@@ -1122,6 +1133,90 @@ fn parse_parameter_card(
             )));
         }
         parameters.insert(name, parse_value(value)?);
+    }
+    Ok(())
+}
+
+fn parse_table_parameter_card(
+    card: &str,
+    parameters: &BTreeMap<String, f64>,
+    table_parameters: &mut Vec<TableParameter>,
+) -> Result<bool, NetlistParseError> {
+    let trimmed = card.trim();
+    let Some((directive, assignment)) = trimmed.split_once(char::is_whitespace) else {
+        return Ok(false);
+    };
+    if !directive.eq_ignore_ascii_case(".param") {
+        return Ok(false);
+    }
+    let Some((name, expression)) = assignment.trim().split_once('=') else {
+        return Ok(false);
+    };
+    let expression = expression.trim();
+    if expression.len() < 7 || !expression[..5].eq_ignore_ascii_case("table") {
+        return Ok(false);
+    }
+    let arguments = expression[5..].trim();
+    if !arguments.starts_with('(') || !arguments.ends_with(')') {
+        return Ok(false);
+    }
+    let values = arguments[1..arguments.len() - 1]
+        .split(',')
+        .map(str::trim)
+        .collect::<Vec<_>>();
+    if values.len() < 3 || values.len() % 2 == 0 {
+        return Err(NetlistParseError::new(
+            ".param table requires a selector and key/value pairs",
+        ));
+    }
+    let parameter = parameter_name(name.trim())?;
+    if parameters.contains_key(&parameter)
+        || table_parameters
+            .iter()
+            .any(|table| table.parameter == parameter)
+    {
+        return Err(NetlistParseError::new(format!(
+            "duplicate .param definition {name:?}"
+        )));
+    }
+    let selector = parameter_name(values[0])?;
+    let (pairs, remainder) = values[1..].as_chunks::<2>();
+    debug_assert!(remainder.is_empty());
+    let entries = pairs
+        .iter()
+        .map(|[key, value]| Ok((parse_value(key)?, parse_value(value)?)))
+        .collect::<Result<Vec<_>, NetlistParseError>>()?;
+    table_parameters.push(TableParameter {
+        parameter,
+        selector,
+        entries,
+    });
+    Ok(true)
+}
+
+fn resolve_table_parameters(
+    table_parameters: &[TableParameter],
+    parameters: &mut BTreeMap<String, f64>,
+) -> Result<(), NetlistParseError> {
+    for table in table_parameters {
+        let Some(selector) = parameters.get(&table.selector).copied() else {
+            return Err(NetlistParseError::new(format!(
+                ".param table selector {:?} is not a numeric parameter",
+                table.selector
+            )));
+        };
+        let tolerance = selector.abs().max(1.0) * 1e-12;
+        let Some((_, value)) = table
+            .entries
+            .iter()
+            .find(|(key, _)| (selector - *key).abs() <= tolerance)
+        else {
+            return Err(NetlistParseError::new(format!(
+                ".param table has no value for selector {:?}={selector}",
+                table.selector
+            )));
+        };
+        parameters.insert(table.parameter.clone(), *value);
     }
     Ok(())
 }
@@ -1285,14 +1380,13 @@ pub fn build_analysis_plan(parsed: &ParsedNetlist) -> Vec<AnalysisPlanStep> {
 pub fn run_analysis_plan(
     parsed: &ParsedNetlist,
 ) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
-    if let Some(step_card) = parsed.step_cards.first() {
+    if !parsed.step_cards.is_empty() {
         let mut results = Vec::new();
-        for value in &step_card.values {
-            let overrides = BTreeMap::from([(step_card.parameter.clone(), *value)]);
+        for overrides in step_value_combinations(&parsed.step_cards) {
             let materialized =
                 parse_netlist_with_parameters(&parsed.source_text, &overrides, false)?;
             for mut result in run_analysis_plan(&materialized)? {
-                result.step_values = BTreeMap::from([(step_card.parameter.clone(), *value)]);
+                result.step_values = overrides.clone();
                 results.push(result);
             }
         }
@@ -1321,6 +1415,23 @@ pub fn run_analysis_plan(
     Ok(results)
 }
 
+fn step_value_combinations(step_cards: &[StepCard]) -> Vec<BTreeMap<String, f64>> {
+    step_cards
+        .iter()
+        .fold(vec![BTreeMap::new()], |combinations, card| {
+            combinations
+                .into_iter()
+                .flat_map(|combination| {
+                    card.values.iter().map(move |value| {
+                        let mut next = combination.clone();
+                        next.insert(card.parameter.clone(), *value);
+                        next
+                    })
+                })
+                .collect()
+        })
+}
+
 pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
     let parsed = parse_netlist(text)?;
     run_analysis_plan(&parsed)
@@ -1339,11 +1450,10 @@ pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
     let mut analyses = Vec::new();
     let mut rawfiles = Vec::new();
     let mut wrdata = Vec::new();
-    let step_runs = if let Some(card) = parsed.step_cards.first() {
-        card.values
-            .iter()
-            .map(|value| {
-                let step_values = BTreeMap::from([(card.parameter.clone(), *value)]);
+    let step_runs = if !parsed.step_cards.is_empty() {
+        step_value_combinations(&parsed.step_cards)
+            .into_iter()
+            .map(|step_values| {
                 let materialized =
                     parse_netlist_with_parameters(&parsed.source_text, &step_values, false)?;
                 Ok((Some(step_values), materialized))

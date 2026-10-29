@@ -138,14 +138,24 @@ model-card parameter, or a UI artifact is not a completion signal.
      interchange, advanced nonlinear convergence, mixed-signal coupling, and
      Mosaic/LTspice-style workflow compatibility by contract family rather than
      by individual parameter or presentation detail.
-   - LTspice stepping phase: single `.step param` cards now execute `LIST` and
-     linear-range values with static numeric `.param` substitution and emit
-     per-analysis `stepValues` across Python, Rust, TypeScript, and CLI JSON.
-     Reprioritized next: Cartesian multi-card steps and `table()` expressions;
-     then ngspice `.control` parameter loops; then temperature/corner/Monte
-     Carlo sweep semantics. These remain separate compatibility rows because
-     ngspice's manual treats repeated parameter runs as control-language work,
-     while LTspice gives `.step` a deck-level contract.
+   - LTspice stepping phase: `.step param` cards now execute `LIST` and
+     linear-range values as source-order Cartesian products, with static
+     numeric `.param` substitution and exact numeric
+     `table(selector, key, value, ...)` parameter mappings. Every run emits its
+     full `stepValues` map across Python, Rust, TypeScript, and CLI JSON. The
+     shared corpus covers both a four-run two-card sweep and a selector-driven
+     two-parameter table. Interpolation, file/string tables, logarithmic
+     stepping, and general expression evaluation remain explicitly partial.
+     Reprioritized next: ngspice `.control` parameter loops; then
+     temperature/corner/Monte Carlo sweep semantics; then the remaining
+     LTspice expression/table forms. These remain separate compatibility rows
+     because ngspice's manual treats repeated parameter runs as
+     control-language work, while LTspice gives `.step` a deck-level contract.
+   - Discovery: fresh sparse verification of the TypeScript parser must include
+     the adjacent `code/packages/typescript/spice-engine` workspace dependency;
+     otherwise the package's normal file dependency cannot compile. Include it
+     in future focused SPICE worktrees before treating a missing `tsc` import as
+     a product failure.
    - Discovery: align the Rust Mosaic app facade's runnable-analysis inventory
      with parser-plan `.tf` execution during the UI/API phase. This is not a
      Berkeley corpus blocker because the cross-language parser plans already

@@ -284,6 +284,12 @@ export interface StepCard {
   readonly values: readonly number[];
 }
 
+interface TableParameter {
+  readonly parameter: string;
+  readonly selector: string;
+  readonly entries: readonly (readonly [number, number])[];
+}
+
 export class ParsedNetlist {
   constructor(
     readonly circuit = new Circuit(),
@@ -584,16 +590,16 @@ function parseNetlistWithParameters(
   parameterOverrides: ReadonlyMap<string, number>,
   captureSteps: boolean,
 ): ParsedNetlist {
-  const { parameters, stepCards } = parameterControls(text);
-  if (stepCards.length > 1) {
-    throw new NetlistParseError("LTspice v1 supports one .step param card per deck");
-  }
-  if (stepCards[0] !== undefined && !parameters.has(stepCards[0].parameter)) {
-    parameters.set(stepCards[0].parameter, stepCards[0].values[0]!);
+  const { parameters, stepCards, tableParameters } = parameterControls(text);
+  for (const stepCard of stepCards) {
+    if (!parameters.has(stepCard.parameter)) {
+      parameters.set(stepCard.parameter, stepCard.values[0]!);
+    }
   }
   for (const [name, value] of parameterOverrides) {
     parameters.set(name.toLowerCase(), value);
   }
+  resolveTableParameters(tableParameters, parameters);
   const materializedText = materializeParameterText(text, parameters);
   const circuit = new Circuit();
   const analyses: Analysis[] = [];
@@ -692,9 +698,14 @@ function parseNetlistWithParameters(
   return new ParsedNetlist(circuit, analyses, models, title, text, parameters, captureSteps ? stepCards : []);
 }
 
-function parameterControls(text: string): { parameters: Map<string, number>; stepCards: StepCard[] } {
+function parameterControls(text: string): {
+  parameters: Map<string, number>;
+  stepCards: StepCard[];
+  tableParameters: TableParameter[];
+} {
   const parameters = new Map<string, number>();
   const stepCards: StepCard[] = [];
+  const tableParameters: TableParameter[] = [];
   const { cards } = berkeleyLogicalCards(withoutControlBlocks(text));
   for (const card of cards) {
     const fields = splitFields(card.text);
@@ -703,7 +714,7 @@ function parameterControls(text: string): { parameters: Map<string, number>; ste
     }
     try {
       if (fields[0]!.toLowerCase() === ".param") {
-        parseParameterCard(fields, parameters);
+        parseParameterCard(card.text, fields, parameters, tableParameters);
       } else if (fields[0]!.toLowerCase() === ".step") {
         stepCards.push(parseStepCard(fields));
       }
@@ -711,10 +722,18 @@ function parameterControls(text: string): { parameters: Map<string, number>; ste
       throw lineError(card.lineNumber, error);
     }
   }
-  return { parameters, stepCards };
+  return { parameters, stepCards, tableParameters };
 }
 
-function parseParameterCard(fields: readonly string[], parameters: Map<string, number>): void {
+function parseParameterCard(
+  card: string,
+  fields: readonly string[],
+  parameters: Map<string, number>,
+  tableParameters: TableParameter[],
+): void {
+  if (parseTableParameterCard(card, parameters, tableParameters)) {
+    return;
+  }
   requireMinFields(fields, 2, ".param");
   for (let index = 1; index < fields.length;) {
     let name: string;
@@ -736,6 +755,51 @@ function parseParameterCard(fields: readonly string[], parameters: Map<string, n
       throw new NetlistParseError(`duplicate .param definition ${JSON.stringify(name)}`);
     }
     parameters.set(normalized, parseValue(value));
+  }
+}
+
+function parseTableParameterCard(
+  card: string,
+  parameters: ReadonlyMap<string, number>,
+  tableParameters: TableParameter[],
+): boolean {
+  const match = /^\.param\s+([A-Za-z_][A-Za-z0-9_]*)\s*=\s*table\s*\((.*)\)\s*$/i.exec(card.trim());
+  if (match === null) {
+    return false;
+  }
+  const parameter = parameterName(match[1]!);
+  if (parameters.has(parameter) || tableParameters.some((table) => table.parameter === parameter)) {
+    throw new NetlistParseError(`duplicate .param definition ${JSON.stringify(match[1])}`);
+  }
+  const values = match[2]!.split(",").map((value) => value.trim());
+  if (values.length < 3 || values.length % 2 === 0) {
+    throw new NetlistParseError(".param table requires a selector and key/value pairs");
+  }
+  tableParameters.push({
+    parameter,
+    selector: parameterName(values[0]!),
+    entries: values.slice(1).reduce<readonly (readonly [number, number])[]>((entries, _value, index, source) => (
+      index % 2 === 0 ? [...entries, [parseValue(source[index]!), parseValue(source[index + 1]!)] as const] : entries
+    ), []),
+  });
+  return true;
+}
+
+function resolveTableParameters(
+  tableParameters: readonly TableParameter[],
+  parameters: Map<string, number>,
+): void {
+  for (const table of tableParameters) {
+    const selector = parameters.get(table.selector);
+    if (selector === undefined) {
+      throw new NetlistParseError(`.param table selector ${JSON.stringify(table.selector)} is not a numeric parameter`);
+    }
+    const tolerance = Math.max(Math.abs(selector), 1) * 1e-12;
+    const entry = table.entries.find(([key]) => Math.abs(selector - key) <= tolerance);
+    if (entry === undefined) {
+      throw new NetlistParseError(`.param table has no value for selector ${JSON.stringify(table.selector)}=${selector}`);
+    }
+    parameters.set(table.parameter, entry[1]);
   }
 }
 
@@ -827,10 +891,8 @@ export function runAnalysisPlan(
   parsed: ParsedNetlist,
   plan: readonly AnalysisPlanStep[] = buildAnalysisPlan(parsed),
 ): AnalysisExecutionResult[] {
-  if (parsed.stepCards[0] !== undefined) {
-    const stepCard = parsed.stepCards[0];
-    return stepCard.values.flatMap((value) => {
-      const stepValues = new Map([[stepCard.parameter, value]]);
+  if (parsed.stepCards.length > 0) {
+    return stepValueCombinations(parsed.stepCards).flatMap((stepValues) => {
       const materialized = parseNetlistWithParameters(parsed.sourceText, stepValues, false);
       return runAnalysisPlan(materialized).map((result) => ({ ...result, stepValues }));
     });
@@ -849,6 +911,15 @@ export function runAnalysisPlan(
   });
 }
 
+function stepValueCombinations(stepCards: readonly StepCard[]): Map<string, number>[] {
+  return stepCards.reduce<Map<string, number>[]>((combinations, card) => (
+    combinations.flatMap((combination) => card.values.map((value) => new Map([
+      ...combination,
+      [card.parameter, value],
+    ])))
+  ), [new Map()]);
+}
+
 export function runNetlist(text: string): AnalysisExecutionResult[] {
   return runAnalysisPlan(parseNetlist(text));
 }
@@ -863,10 +934,9 @@ export function runNetlistJson(text: string): string {
   const plan = buildAnalysisPlan(parsed);
   const rawfiles: Record<string, unknown>[] = [];
   const wrdata: Record<string, unknown>[] = [];
-  const stepRuns = parsed.stepCards[0] === undefined
+  const stepRuns = parsed.stepCards.length === 0
     ? [{ stepValues: undefined, materialized: parsed }]
-    : parsed.stepCards[0].values.map((value) => {
-      const stepValues = new Map([[parsed.stepCards[0]!.parameter, value]]);
+    : stepValueCombinations(parsed.stepCards).map((stepValues) => {
       return { stepValues, materialized: parseNetlistWithParameters(parsed.sourceText, stepValues, false) };
     });
   const analyses = stepRuns.flatMap(({ stepValues, materialized }) => materialized.analysisTemperaturesKelvin().flatMap((temperatureKelvin) => {

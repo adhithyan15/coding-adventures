@@ -189,17 +189,15 @@ def test_runs_shared_ltspice_step_v1_corpus() -> None:
     for case in corpus["cases"]:
         expected = case["expected"]
         parsed = parse_netlist(case["deck"])
-        assert parsed.step_cards[0].parameter == expected["parameter"]
-        assert parsed.step_cards[0].values == tuple(expected["values"])
+        assert [
+            {"parameter": card.parameter, "values": list(card.values)}
+            for card in parsed.step_cards
+        ] == expected["stepCards"]
         results = parsed.run_analysis_plan()
-        assert [result.step_values for result in results] == [
-            {expected["parameter"]: value} for value in expected["values"]
-        ]
+        assert [result.step_values for result in results] == expected["stepValues"]
         assert [result.result.node_voltages["out"] for result in results] == pytest.approx(expected["out"])
         cli_payload = json.loads(run_netlist_json(case["deck"]))
-        assert [analysis["stepValues"] for analysis in cli_payload["analyses"]] == [
-            {expected["parameter"]: value} for value in expected["values"]
-        ]
+        assert [analysis["stepValues"] for analysis in cli_payload["analyses"]] == expected["stepValues"]
 
 
 def test_runs_shared_berkeley_v1_core_corpus() -> None:
