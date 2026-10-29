@@ -1134,6 +1134,14 @@ fn dispatch(
                 exec_str_eq(instr, &mut frame)?;
                 pc += 1;
             }
+            "str_cmp" => {
+                exec_str_cmp(instr, &mut frame)?;
+                pc += 1;
+            }
+            "str_slice" => {
+                exec_str_slice(instr, &mut frame)?;
+                pc += 1;
+            }
             "print_str" => {
                 exec_print_str(instr, &frame)?;
                 pc += 1;
@@ -1533,6 +1541,81 @@ fn exec_str_eq(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     let lhs = e4_string_arg("str_eq", instr, frame, 0)?;
     let rhs = e4_string_arg("str_eq", instr, frame, 1)?;
     frame.set(dest.clone(), LispyValue::bool(lhs == rhs))?;
+    Ok(())
+}
+
+/// `str_cmp dest, a, b [i64]` — three-way byte-wise comparison: `-1`, `0` or
+/// `1` as `a` sorts before, equal to or after `b`.
+///
+/// The Twig compiler lowers a `(string<? a b)` / `(string>? a b)` whose
+/// operands are statically strings to this op followed by `cmp_lt` /
+/// `cmp_gt` against 0 (the same shape `vm-core` and every native backend
+/// run), so the three-way integer never reaches Twig code as a value:
+///
+/// | `a` vs `b` | `str_cmp` | `string<?` (`< r 0`) | `string>?` (`> r 0`) |
+/// |------------|-----------|----------------------|----------------------|
+/// | `"a"` `"b"`| -1        | #t                   | #f                   |
+/// | `"b"` `"b"`| 0         | #f                   | #f                   |
+/// | `"c"` `"b"`| 1         | #f                   | #t                   |
+///
+/// Until #18453 twig-vm had no `str_cmp` arm, so those programs stopped with
+/// `UnsupportedOpcode("str_cmp")`.
+fn exec_str_cmp(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_cmp")?;
+    let lhs = e4_string_arg("str_cmp", instr, frame, 0)?;
+    let rhs = e4_string_arg("str_cmp", instr, frame, 1)?;
+    let ordering = match lhs.cmp(&rhs) {
+        std::cmp::Ordering::Less => -1,
+        std::cmp::Ordering::Equal => 0,
+        std::cmp::Ordering::Greater => 1,
+    };
+    frame.set(dest.clone(), LispyValue::int(ordering))?;
+    Ok(())
+}
+
+/// `str_slice dest, s, start, end [str]` — a new string holding the bytes
+/// `s[start..end]`.
+///
+/// The Twig compiler lowers a `(substring s a b)` whose operands are
+/// statically a string and two integers to this op.  Like the other E4
+/// string ops (`str_len`, `str_index`) it counts **bytes**, as `vm-core`'s
+/// `handle_str_slice` and the native backends do.  The range must satisfy
+///
+/// ```text
+/// 0 <= start <= end <= len(s)
+/// ```
+///
+/// and, when `s` is UTF-8, both ends must fall on character boundaries so
+/// the result is UTF-8 too; anything else is a `TypeError`, never a panic
+/// or an out-of-bounds read.  Until #18453 twig-vm had no `str_slice` arm,
+/// so even `(substring "abcde" 1 3)` stopped with
+/// `UnsupportedOpcode("str_slice")`.
+fn exec_str_slice(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
+    let dest = e4_dest(instr, "str_slice")?;
+    let bytes = e4_string_arg("str_slice", instr, frame, 0)?;
+    let start = e4_int_arg("str_slice", instr, frame, 1)?;
+    let end = e4_int_arg("str_slice", instr, frame, 2)?;
+    let out_of_range = || {
+        RunError::Runtime(RuntimeError::TypeError(format!(
+            "str_slice: range {start}..{end} out of bounds for string of length {}",
+            bytes.len()
+        )))
+    };
+    // `usize::try_from` rejects a negative `start`; the comparisons then
+    // order the range and bound it by the length.
+    let lo = usize::try_from(start).map_err(|_| out_of_range())?;
+    let hi = usize::try_from(end).map_err(|_| out_of_range())?;
+    if lo > hi || hi > bytes.len() {
+        return Err(out_of_range());
+    }
+    if let Ok(text) = std::str::from_utf8(&bytes) {
+        if !text.is_char_boundary(lo) || !text.is_char_boundary(hi) {
+            return Err(RunError::Runtime(RuntimeError::TypeError(format!(
+                "str_slice: range {start}..{end} splits a UTF-8 character"
+            ))));
+        }
+    }
+    frame.set(dest.clone(), dynval_runtime::heap::alloc_string(&bytes[lo..hi]))?;
     Ok(())
 }
 
@@ -4270,6 +4353,227 @@ mod tests {
         ] {
             assert_eq!(run_int(src), Some(want), "{src}");
         }
+    }
+
+    // ── `and` / `or` inside a lambda; `string<?` is a bool (#18453) ──
+    //
+    // A lambda whose body used `and` / `or` failed to compile (`unbound
+    // name "or" captured by lambda`), and `string<?` / `string>?` wrote
+    // their result with an `i64` hint.  The twig-ir-compiler tests check
+    // the same programs' IR.
+
+    #[test]
+    fn and_or_inside_a_lambda_run() {
+        for (src, want) in [
+            ("(let ((f (lambda () (or \"a\" 1)))) (string-length (f)))", 1),
+            ("(let ((f (lambda () (and #t 5)))) (f))", 5),
+            ("((lambda (c) (+ (and c 5) 1)) #t)", 6),
+            ("((lambda (c) (let ((s (or (and c \"ab\") 7))) (string-length s))) #t)", 2),
+            ("((lambda (c) (let ((s (or (and c \"ab\") 7))) s)) #f)", 7),
+            ("(let ((y 5)) ((lambda () (+ (or #f y) 1))))", 6),
+            ("((lambda () ((lambda (x) (if (and (< x 2) (or #f x)) 10 20)) 1)))", 10),
+            ("(define (mk) (lambda (c) (if (or (and c (< 1 2)) #f) 3 4))) ((mk) #f)", 4),
+            ("(define (mk) (lambda (c) (if (or (and c (< 1 2)) #f) 3 4))) ((mk) #t)", 3),
+            // A local named `or` is captured in value position, while the
+            // call `(or …)` beside it is still the special form.
+            ("(let ((or 7)) ((lambda () (or #f or))))", 7),
+            ("(let ((and 3)) ((lambda () (and 1 and))))", 3),
+            ("(define or 9) ((lambda () (or #f or)))", 9),
+        ] {
+            assert_eq!(run_int(src), Some(want), "{src}");
+        }
+        assert!(run_source("((lambda () (or)))").is_ok_and(|v| v == LispyValue::FALSE));
+    }
+
+    #[test]
+    fn literal_substring_runs_as_str_slice() {
+        // #18453 review: twig-vm had no `str_slice` arm, so a `substring`
+        // the compiler could type stopped with `UnsupportedOpcode`.
+        for src in [
+            "(substring \"abcde\" 1 3)",
+            "(define (f s) (substring s 0 1)) (f \"abc\")",
+        ] {
+            assert!(
+                compile_source(src, "test").unwrap().functions.iter()
+                    .any(|f| f.instructions.iter().any(|i| i.op == "str_slice")),
+                "{src}: expected the typed str_slice"
+            );
+        }
+        let s = run_source("(substring \"abcde\" 1 3)").unwrap();
+        // SAFETY: `s` came from the VM's tagged value space.
+        assert_eq!(unsafe { dynval_runtime::heap::string_bytes(s) }, Some(&b"bc"[..]));
+        let s = run_source("(define (f s) (substring s 0 1)) (f \"abc\")").unwrap();
+        // SAFETY: as above.
+        assert_eq!(unsafe { dynval_runtime::heap::string_bytes(s) }, Some(&b"a"[..]));
+        assert_eq!(run_int("(string-length (substring \"abc\" 0 (string-length \"abc\")))"), Some(3));
+        assert_eq!(run_int("(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))"), Some(67));
+        assert_eq!(run_int("(string-length (substring \"abc\" 1 1))"), Some(0));
+    }
+
+    #[test]
+    fn str_slice_rejects_a_bad_range() {
+        // Hand-built, so the range reaches `str_slice` unchecked.
+        for (start, end) in [(-1, 2), (2, 1), (0, 4), (4, 4), (1, 1 << 40)] {
+            let instrs = vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("abc".into())], "str"),
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(start)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(end)], "i64"),
+                IIRInstr::new(
+                    "str_slice",
+                    Some("r".into()),
+                    vec![Operand::Var("s".into()), Operand::Var("a".into()), Operand::Var("b".into())],
+                    "str",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "str"),
+            ];
+            let e = run(&module_with_main(instrs, 4)).expect_err(&format!("{start}..{end}"));
+            assert!(format!("{e:?}").contains("str_slice"), "{start}..{end}: {e:?}");
+        }
+        // A range that splits a UTF-8 character is rejected too.
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("é".into())], "str"),
+            IIRInstr::new(
+                "str_slice",
+                Some("r".into()),
+                vec![Operand::Var("s".into()), Operand::Int(0), Operand::Int(1)],
+                "str",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "str"),
+        ];
+        let e = run(&module_with_main(instrs, 2)).unwrap_err();
+        assert!(format!("{e:?}").contains("UTF-8"), "{e:?}");
+    }
+
+    #[test]
+    fn string_order_results_are_right_in_joins() {
+        for (src, want) in [
+            ("(if (and (string<? \"ALPHA\" \"BETA\") (string>? \"BETA\" \"ALPHA\")) 42 0)", 42),
+            ("(if (string<? \"b\" \"a\") 1 2)", 2),
+            ("(if (string>? \"b\" \"b\") 1 2)", 2),
+            ("(if (string<? \"b\" \"b\") 1 2)", 2),
+            ("(if (or (string>? \"a\" \"b\") (< 1 2)) 1 2)", 1),
+            ("(+ (or (string<? \"b\" \"a\") 5) 1)", 6),
+            ("(define (f s) (string<? s \"m\")) (if (f \"a\") 1 2)", 1),
+        ] {
+            assert_eq!(run_int(src), Some(want), "{src}");
+        }
+        for (src, want) in [
+            ("(string<? \"a\" \"b\")", true),
+            ("(string>? \"a\" \"b\")", false),
+            ("(let ((y (or (string>? \"a\" \"b\") (< 2 1)))) y)", false),
+        ] {
+            assert_eq!(run_source(src).unwrap(), LispyValue::bool(want), "{src}");
+        }
+    }
+
+    // ── A top-level definition shadows a builtin (#18438) ───────────
+    //
+    // A user's top-level `define` beats a builtin of the same name in
+    // call position as well as value position, and the typed fast paths
+    // no longer assume the builtin ran.  The twig-ir-compiler tests check
+    // the same programs' IR.
+
+    #[test]
+    fn user_definition_named_like_a_builtin_is_what_runs() {
+        for (src, want) in [
+            // The issue body: both positions agree.
+            ("(define car 5) car", 5),
+            ("(define (car p) 42) (car (cons 1 2))", 42),
+            ("(define car (let ((k 7)) (lambda (p) k))) (car (cons 1 2))", 7),
+            (
+                "(define (g p) (car p)) (define car (let ((k 7)) (lambda (p) k))) \
+                 (g (cons 1 2))",
+                7,
+            ),
+            // A user function named like each name-recognised builtin.
+            ("(define (string-length s) 7) (string-length \"abc\")", 7),
+            ("(define (string-append a b) 6) (string-append \"a\" \"b\")", 6),
+            ("(define (substring s a b) 5) (substring \"abc\" 0 1)", 5),
+            ("(define (string-ref s i) 6) (string-ref \"abc\" 0)", 6),
+            ("(define (+ a b) 0) (+ 5 1)", 0),
+            ("(define (- a b) 0) (- 5 1)", 0),
+            ("(define (* a b) 0) (* 5 2)", 0),
+            ("(define (< a b) 1) (< 5 2)", 1),
+            ("(define (= a b) 2) (= 1 1)", 2),
+            ("(define (cons a b) 9) (+ (cons 1 2) 1)", 10),
+            ("(define (car p) \"s\") (string-length (car (cons 1 2)))", 1),
+            // The user's result feeds a builtin that has a typed fast path.
+            ("(define (string-append a b) \"xyz\") (string-length (string-append \"a\" \"b\"))", 3),
+            (
+                "(define (string-length s) 1) \
+                 (string-length (substring \"abc\" 0 (string-length \"abc\")))",
+                1,
+            ),
+            // A user VALUE named like a builtin, called.
+            ("(define + (let ((k 100)) (lambda (a b) k))) (+ 1 2)", 100),
+            (
+                "(define string-append (let ((k \"xyz\")) (lambda (a b) k))) \
+                 (string-length (string-append \"a\" \"b\"))",
+                3,
+            ),
+            // `match` takes values apart with the builtin `=` / `car`, which
+            // a user definition does not change.
+            ("(define (= a b) #f) (union T (A) (B)) (match (B) ((A) 1) ((B) 2))", 2),
+            ("(define (car p) 0) (union T (A (v : int))) (match (A 5) ((A v) v))", 5),
+            // `and` stays the special form in call position.
+            ("(define (and a b) 99) (if (and #f 5) 1 0)", 0),
+            ("(define (and a b) 99) ((lambda (f) (f 1 2)) and)", 99),
+        ] {
+            assert_eq!(run_int(src), Some(want), "{src}");
+        }
+    }
+
+    #[test]
+    fn shadowing_definition_result_reaches_the_dynamic_builtin() {
+        // Each user definition returns the wrong kind for the builtin that
+        // consumes it, so the program must fail — but in the dynamic
+        // builtin, which checks, not in a typed op a native backend would
+        // run unchecked.
+        for (src, builtin, typed_op) in [
+            // The issue comment.
+            (
+                "(define (string-append a b) 5) (string-length (string-append \"a\" \"b\"))",
+                "string-length",
+                "str_len",
+            ),
+            ("(define (+ a b) \"zz\") (string-ref \"abc\" (+ 0 1))", "string-ref", "str_index"),
+            (
+                "(define (f x) (string-length x)) (define (string-append a b) 5) \
+                 (f (string-append \"a\" \"b\"))",
+                "string-length",
+                "str_len",
+            ),
+            // More fast-path builtins, and a user VALUE.
+            (
+                "(define (string-length s) \"x\") (substring \"abc\" 0 (string-length \"abc\"))",
+                "substring",
+                "str_slice",
+            ),
+            (
+                "(define (substring s a b) 5) (string-length (substring \"abc\" 0 1))",
+                "string-length",
+                "str_len",
+            ),
+            ("(define (* a b) \"zz\") (string-ref \"abc\" (* 1 1))", "string-ref", "str_index"),
+            (
+                "(define string-append (let ((k 5)) (lambda (a b) k))) \
+                 (string-length (string-append \"a\" \"b\"))",
+                "string-length",
+                "str_len",
+            ),
+            (
+                "(define (f x) (string-length x)) (define (substring s a b) 5) \
+                 (f (substring \"abc\" 0 1))",
+                "string-length",
+                "str_len",
+            ),
+        ] {
+            let e = run_err(src);
+            assert!(e.contains(builtin), "{src}: {e}");
+            assert!(!e.contains(typed_op), "{src}: {e}");
+        }
+        // `(define car 5)`: calling `car` calls 5, which is an error.
+        run_err("(define car 5) (car (cons 1 2))");
     }
 
     // ── Error paths ─────────────────────────────────────────────────

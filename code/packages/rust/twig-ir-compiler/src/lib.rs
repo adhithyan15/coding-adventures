@@ -1871,6 +1871,21 @@ mod tests {
         "(let ((y (and #f 5))) y)",
         "(let ((s (and (< 1 2) \"abc\"))) (string-length s))",
         "(define (f) (and #f 5)) (f)",
+        // Joins inside anonymous lambdas (#18453), which did not compile
+        // before: `free_vars` took the `and` / `or` heads for names.
+        "(let ((f (lambda () (or \"a\" 1)))) (f))",
+        "(let ((f (lambda () (or \"a\" 1)))) (string-length (f)))",
+        "((lambda (c) (+ (and c 5) 1)) #t)",
+        "((lambda (c) (let ((s (or (and c \"a\") 7))) (string-length s))) #t)",
+        "(let ((y 5)) ((lambda () (+ (or #f y) 1))))",
+        "((lambda () ((lambda (x) (+ (or (< x 2) 5) 1)) 1)))",
+        "(define (mk) (lambda (c) (or (and c (< 1 2)) \"s\"))) ((mk) #t)",
+        // `string<?` / `string>?` results in joins: a `bool` like `(< a b)`.
+        "(if (and (string<? \"ALPHA\" \"BETA\") (string>? \"BETA\" \"ALPHA\")) 42 0)",
+        "(+ (or (string<? \"b\" \"a\") 5) 1)",
+        "(let ((y (or (string>? \"a\" \"b\") (< 1 2)))) y)",
+        "(let ((y (if (string<? \"a\" \"b\") (string>? \"a\" \"b\") 7))) y)",
+        "(define (f s) (string<? s \"m\")) (f \"a\")",
     ];
 
     #[test]
@@ -1949,6 +1964,409 @@ mod tests {
             );
             assert_registers_sound(src);
         }
+    }
+
+    // ---- `and` / `or` inside a lambda (#18453) ---------------------------
+    //
+    // `and` / `or` are special forms written in call position, so the
+    // parser hands them over as an ordinary application whose head is the
+    // name `and`.  The lambda free-variable walk used to visit that head
+    // like any other name, decide `or` was free, and fail the compile:
+    //
+    // ```text
+    // (let ((f (lambda () (or "a" 1)))) (f))
+    //   before: unbound name "or" captured by lambda
+    //   after:  __lambda_0 captures nothing; its body is the usual `or` join
+    // ```
+
+    /// The anonymous lambda `src` compiles to.
+    fn lambda_fn(src: &str) -> IIRFunction {
+        module(src)
+            .functions
+            .into_iter()
+            .find(|f| f.name.starts_with("__lambda_"))
+            .unwrap_or_else(|| panic!("{src}: no lambda"))
+    }
+
+    #[test]
+    fn and_or_inside_a_lambda_compile_and_capture_nothing() {
+        for src in [
+            "(let ((f (lambda () (or \"a\" 1)))) (f))",
+            "(let ((f (lambda () (and #t 5)))) (f))",
+            // Nested joins, and a lambda inside a lambda.
+            "((lambda (c) (let ((s (or (and c \"a\") 7))) (string-length s))) #t)",
+            "((lambda () ((lambda (x) (and (< x 2) (or #f x))) 1)))",
+        ] {
+            let f = lambda_fn(src);
+            assert!(
+                f.params.iter().all(|(p, _)| p != "and" && p != "or"),
+                "{src}: {f:#?}"
+            );
+            assert!(f.instructions.iter().any(|i| i.op == "jmp_if_false"), "{src}: {f:#?}");
+            assert_registers_sound(src);
+        }
+        // The empty forms are constants, and capture nothing either.
+        for src in ["((lambda () (or)))", "((lambda () (and)))"] {
+            assert!(lambda_fn(src).params.is_empty(), "{src}");
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn and_or_arguments_inside_a_lambda_are_still_captured() {
+        // The head is syntax, but the arguments are ordinary expressions.
+        let f = lambda_fn("(let ((y 5)) ((lambda () (or #f y))))");
+        assert_eq!(f.params[0].0, "y", "{f:#?}");
+        let f = lambda_fn("(let ((a 1) (b 2)) ((lambda () (and a (or b #f)))))");
+        let names: Vec<&str> = f.params.iter().map(|(p, _)| p.as_str()).collect();
+        assert_eq!(names, ["a", "b"], "{f:#?}");
+    }
+
+    #[test]
+    fn a_local_named_and_or_is_captured_in_value_position() {
+        // A local may be named `and` / `or` (#18457): in value position it
+        // is that local, and a lambda captures it — even when the same
+        // lambda also uses the special form of that name.
+        for src in [
+            "(let ((or 7)) ((lambda () (+ or 1))))",
+            "(let ((or 7)) ((lambda () (or #f or))))",
+            "(let ((and 3)) ((lambda () (and 1 and))))",
+            "(define (f and) (lambda () and)) ((f 4))",
+        ] {
+            let f = lambda_fn(src);
+            assert!(
+                f.params.iter().any(|(p, _)| p == "and" || p == "or"),
+                "{src}: {f:#?}"
+            );
+            assert_registers_sound(src);
+        }
+        // A top-level value define is a global, not a capture; the lambda
+        // reads it from the global table.
+        let src = "(define or 7) ((lambda () (or #f or)))";
+        assert!(lambda_fn(src).params.is_empty(), "{src}");
+        assert_registers_sound(src);
+    }
+
+    #[test]
+    fn an_unbound_and_or_value_inside_a_lambda_is_still_an_error() {
+        // In value position `or` is a name like any other; with nothing
+        // bound to it, the lambda's capture of it is unbound.
+        let e = compile_source("((lambda () or))", "test").unwrap_err();
+        assert!(e.message.contains("\"or\""), "{e:?}");
+    }
+
+    // ---- `string<?` / `string>?` produce a `bool` (#18453) ---------------
+    //
+    // `(string<? a b)` lowers to a three-way `str_cmp` and a `cmp_lt` of
+    // that against 0.  The `cmp_lt` was emitted `[i64]` while its register
+    // was recorded as `bool`, so a typed `mov` / `ret [bool]` read a
+    // register whose only writer said `i64`.  It is now `[bool]`, as
+    // `(< a b)` is; `str_cmp` itself stays a three-way `i64`.
+
+    #[test]
+    fn string_order_result_is_written_as_a_bool() {
+        for (src, op) in [
+            ("(string<? \"a\" \"b\")", "cmp_lt"),
+            ("(string>? \"a\" \"b\")", "cmp_gt"),
+        ] {
+            let main = main_instrs(src);
+            let cmp = main.iter().find(|i| i.op == op).unwrap();
+            assert_eq!(cmp.type_hint, "bool", "{src}: {main:#?}");
+            let three_way = main.iter().find(|i| i.op == "str_cmp").unwrap();
+            assert_eq!(three_way.type_hint, "i64", "{src}: {main:#?}");
+            assert_eq!(main_ret_type(src), "bool", "{src}");
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn string_order_in_a_join_agrees_with_other_bools_only() {
+        // With `(< a b)`: both `bool`, so the join stays `bool`.
+        for src in [
+            "(or (string<? \"b\" \"a\") (< 1 2))",
+            "(and (string>? \"b\" \"a\") (string<? \"a\" \"b\"))",
+            "(if (< 1 2) (string<? \"a\" \"b\") #f)",
+        ] {
+            assert_eq!(main_ret_type(src), "bool", "{src}");
+            assert_registers_sound(src);
+        }
+        // With an integer: no consensus, so `+` is the dynamic builtin.
+        let src = "(+ (or (string<? \"b\" \"a\") 5) 1)";
+        assert!(!main_instrs(src).iter().any(|i| i.op == "add"), "{src}");
+        assert_eq!(main_ret_type("(if (string<? \"a\" \"b\") (string>? \"a\" \"b\") 7)"), "any");
+        assert_registers_sound(src);
+    }
+
+    // ---- A top-level definition shadows a builtin (#18438) -------------
+    //
+    // A user's top-level `define` beats a builtin of the same name, in
+    // call position exactly as in value position — as in Scheme, and as a
+    // lexical binding already did (#18435).  The typed fast paths used to
+    // recognise `string-append`, `substring`, `string-length` and `+ - * /`
+    // by name alone, so a user function with one of those names was
+    // *called*, but the code around the call was typed as if the builtin
+    // had run:
+    //
+    // ```text
+    // (define (string-append a b) 5)
+    // (string-length (string-append "a" "b"))
+    //   before:  r = call string-append "a", "b"   ; returns 5
+    //            str_len r                          ; a native backend reads 5 as a string
+    //   after:   call_builtin string-length, r     ; checks the kind at run time
+    // ```
+    //
+    // A *value* define named like a builtin was worse: `(define car 5)`
+    // made `car` read as 5, but `(car p)` still called the builtin.
+
+    /// Every program from #18438 and its comment, a user function named
+    /// like each builtin the typed fast paths recognise, user *values*
+    /// named like builtins, and string-parameter evidence through a
+    /// shadowing definition.  The twig-vm tests (`dispatch.rs`) run the
+    /// same shapes end to end.
+    const BUILTIN_SHADOWING_PROGRAMS: &[&str] = &[
+        // The issue body: a value define and a function define named `car`.
+        "(define car 5) car",
+        "(define car 5) (car (cons 1 2))",
+        "(define (car p) 42) (car (cons 1 2))",
+        "(define car (let ((k 7)) (lambda (p) k))) (car (cons 1 2))",
+        // The comment: code around the call was typed as the builtin.
+        "(define (string-append a b) 5) (string-length (string-append \"a\" \"b\"))",
+        "(define (+ a b) \"zz\") (string-ref \"abc\" (+ 0 1))",
+        "(define (f x) (string-length x)) (define (string-append a b) 5) \
+         (f (string-append \"a\" \"b\"))",
+        // A user function named like each name-recognised builtin.
+        "(define (string-length s) \"x\") (substring \"abc\" 0 (string-length \"abc\"))",
+        "(define (string-length s) \"x\") (string-ref \"abc\" (string-length \"a\"))",
+        "(define (substring s a b) 5) (string-length (substring \"abc\" 0 1))",
+        "(define (substring s a b) 5) (string-append (substring \"abc\" 0 1) \"d\")",
+        "(define (string-append a b) 5) (string=? (string-append \"a\" \"b\") \"ab\")",
+        "(define (string-append a b) 5) (string<? (string-append \"a\" \"b\") \"b\")",
+        "(define (string-append a b) 5) (substring (string-append \"ab\" \"c\") 0 1)",
+        "(define (string-ref s i) \"q\") (string-length (string-ref \"abc\" 0))",
+        "(define (- a b) \"zz\") (substring \"abc\" 0 (- 3 1))",
+        "(define (* a b) \"zz\") (string-ref \"abc\" (* 1 1))",
+        "(define (/ a b) \"zz\") (string-ref \"abc\" (/ 2 2))",
+        "(define (< a b) \"lt\") (string-length (< 1 2))",
+        "(define (= a b) 7) (+ (= 1 1) 1)",
+        "(define (car p) \"s\") (string-length (car (cons 1 2)))",
+        "(define (cons a b) 9) (+ (cons 1 2) 1)",
+        // A user VALUE named like a builtin, called.
+        "(define string-append (let ((k \"xyz\")) (lambda (a b) k))) \
+         (string-length (string-append \"a\" \"b\"))",
+        "(define + (let ((k 100)) (lambda (a b) k))) (+ 1 2)",
+        "(define string-length (let ((k \"x\")) (lambda (s) k))) \
+         (substring \"abc\" 0 (string-length \"abc\"))",
+        // String-parameter evidence through a shadowing definition.
+        "(define (f x) (string-length x)) (define (substring s a b) 5) \
+         (f (substring \"abc\" 0 1))",
+        "(define (f x) (string-length x)) (define (string-append a b) 5) \
+         (define s (string-append \"a\" \"b\")) (f s)",
+        "(define (f x) (string-length x)) \
+         (define string-append (let ((k 5)) (lambda (a b) k))) \
+         (f (string-append \"a\" \"b\"))",
+        // The use comes before the definition, and inside a function body
+        // and a lambda.
+        "(define (g) (string-length (string-append \"a\" \"b\"))) \
+         (define (string-append a b) 5) (g)",
+        "(define (string-append a b) 5) (define (g) (string-length (string-append \"a\" \"b\"))) (g)",
+        "(define (string-append a b) 5) ((lambda () (string-length (string-append \"a\" \"b\"))))",
+    ];
+
+    #[test]
+    fn builtin_shadowing_programs_never_feed_a_typed_op_the_wrong_kind() {
+        for src in BUILTIN_SHADOWING_PROGRAMS {
+            assert_registers_sound(src);
+        }
+    }
+
+    /// True when some function in `m` emits `call_builtin <name>`.
+    fn module_calls_builtin(m: &IIRModule, name: &str) -> bool {
+        m.functions.iter().any(|f| {
+            f.instructions.iter().any(|i| {
+                i.op == "call_builtin" && matches!(&i.srcs[0], Operand::Var(s) if s == name)
+            })
+        })
+    }
+
+    /// The typed string ops — the ones a native backend runs unchecked.
+    const TYPED_STRING_OPS: [&str; 5] = ["str_len", "str_concat", "str_slice", "str_index", "str_eq"];
+
+    #[test]
+    fn user_function_named_like_a_builtin_wins_in_both_positions() {
+        // Call position: a direct `call car`, never the builtin.
+        let m = module("(define (car p) 42) (car (cons 1 2))");
+        let main = &m.functions.iter().find(|f| f.name == "main").unwrap().instructions;
+        assert!(has_direct_call(main, "car"), "{main:?}");
+        assert!(!module_calls_builtin(&m, "car"), "{m:#?}");
+        // Value position: a closure over the user's function.
+        let main = main_instrs("(define (car p) 42) car");
+        assert!(
+            main.iter().any(|i| i.op == "alloc_closure" && i.srcs[0] == Operand::Str("car".into())),
+            "{main:?}"
+        );
+        assert!(!main.iter().any(|i| i.op == "call_builtin"), "{main:?}");
+    }
+
+    #[test]
+    fn user_value_named_like_a_builtin_wins_in_both_positions() {
+        // `(define car 5)`: `car` reads 5, and `(car p)` calls that 5 — a
+        // run-time "not a closure" error, as in Scheme — instead of
+        // quietly calling the builtin `car`.
+        for src in [
+            "(define car 5) (car (cons 1 2))",
+            "(define car (let ((k 7)) (lambda (p) k))) (car (cons 1 2))",
+            "(define + (let ((k 100)) (lambda (a b) k))) (+ 1 2)",
+            "(define (g p) (car p)) (define car (let ((k 7)) (lambda (p) k))) (g (cons 1 2))",
+        ] {
+            let m = module(src);
+            for name in ["car", "+"] {
+                assert!(!module_calls_builtin(&m, name), "{src}: {m:#?}");
+            }
+            assert!(!m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == "add")), "{src}: {m:#?}");
+            assert!(
+                m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == "call_closure")),
+                "{src}: {m:#?}"
+            );
+        }
+    }
+
+    #[test]
+    fn typed_fast_paths_do_not_trust_a_shadowing_definition() {
+        // Each user definition below is called, and no typed string op
+        // reads its result: the consumer is the dynamic builtin.
+        for src in [
+            "(define (string-append a b) 5) (string-length (string-append \"a\" \"b\"))",
+            "(define (+ a b) \"zz\") (string-ref \"abc\" (+ 0 1))",
+            "(define (string-length s) \"x\") (substring \"abc\" 0 (string-length \"abc\"))",
+            "(define (substring s a b) 5) (string-length (substring \"abc\" 0 1))",
+            "(define (- a b) \"zz\") (substring \"abc\" 0 (- 3 1))",
+            "(define (* a b) \"zz\") (string-ref \"abc\" (* 1 1))",
+            "(define (/ a b) \"zz\") (string-ref \"abc\" (/ 2 2))",
+            "(define (string-append a b) 5) (string=? (string-append \"a\" \"b\") \"ab\")",
+            "(define string-append (let ((k \"xyz\")) (lambda (a b) k))) \
+             (string-length (string-append \"a\" \"b\"))",
+            "(define string-length (let ((k \"x\")) (lambda (s) k))) \
+             (substring \"abc\" 0 (string-length \"abc\"))",
+        ] {
+            let main = main_instrs(src);
+            assert!(
+                !main.iter().any(|i| TYPED_STRING_OPS.contains(&i.op.as_str())),
+                "{src}: {main:#?}"
+            );
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn unshadowed_builtins_keep_their_fast_paths() {
+        // Control: only the shadowed NAME loses its fast path.  Defining
+        // `car` leaves `string-append` and `string-length` typed.
+        let main = main_instrs("(define (car p) 1) (string-length (string-append \"a\" \"b\"))");
+        assert!(main.iter().any(|i| i.op == "str_len"), "{main:?}");
+        let main = main_instrs("(define (car p) 1) (string-length (string-append (substring \"abc\" 0 1) \"d\"))");
+        assert!(main.iter().any(|i| i.op == "str_concat"), "{main:?}");
+        assert!(main.iter().any(|i| i.op == "str_slice"), "{main:?}");
+    }
+
+    #[test]
+    fn string_param_evidence_ignores_a_shadowing_definition() {
+        // `(string-append "a" "b")` is not a string when `string-append`
+        // is the user's: it is no evidence that `f`'s `x` is a `str`.
+        for src in [
+            "(define (f x) (string-length x)) (define (string-append a b) 5) \
+             (f (string-append \"a\" \"b\"))",
+            "(define (f x) (string-length x)) (define (substring s a b) 5) \
+             (f (substring \"abc\" 0 1))",
+            "(define (f x) (string-length x)) (define (string-append a b) 5) \
+             (define s (string-append \"a\" \"b\")) (f s)",
+            "(define (f x) (string-length x)) \
+             (define string-append (let ((k 5)) (lambda (a b) k))) \
+             (f (string-append \"a\" \"b\"))",
+        ] {
+            let m = module(src);
+            let f = m.functions.iter().find(|f| f.name == "f").unwrap();
+            assert_eq!(f.params, vec![("x".to_string(), "any".to_string())], "{src}");
+            assert!(!f.instructions.iter().any(|i| i.op == "str_len"), "{src}: {f:#?}");
+        }
+    }
+
+    #[test]
+    fn extern_named_like_a_builtin_is_not_typed_as_the_builtin() {
+        // Another module's `string-append` is an extern here: `call`ed, so
+        // its result is not a known string.
+        let cst = parse_to_ast("(string-length (string-append \"a\" \"b\"))").unwrap();
+        let m = compile_ast_with_externs(&cst, "test", &["string-append"]).unwrap();
+        let main = &m.functions.iter().find(|f| f.name == "main").unwrap().instructions;
+        assert!(has_direct_call(main, "string-append"), "{main:?}");
+        assert!(
+            !main.iter().any(|i| TYPED_STRING_OPS.contains(&i.op.as_str())),
+            "{main:#?}"
+        );
+    }
+
+    #[test]
+    fn and_or_stay_special_forms_when_defined() {
+        // `and` / `or` are syntax, not bindings.  A top-level define of one
+        // is accepted and is what the name means as a VALUE, but a call
+        // `(and …)` is still the short-circuit form (see TW00 "Name
+        // resolution").
+        for (src, name) in [
+            ("(define (and a b) 99) (and #f 5)", "and"),
+            ("(define (or a b) 99) (or 5 #f)", "or"),
+            ("(define and 99) (and #f 5)", "and"),
+        ] {
+            let main = main_instrs(src);
+            assert!(!has_direct_call(&main, name), "{src}: {main:?}");
+            assert!(!main.iter().any(|i| i.op == "call_closure"), "{src}: {main:?}");
+            assert!(main.iter().any(|i| i.op == "jmp_if_false"), "{src}: {main:?}");
+        }
+        let main = main_instrs("(define (and a b) 99) and");
+        assert!(
+            main.iter().any(|i| i.op == "alloc_closure" && i.srcs[0] == Operand::Str("and".into())),
+            "{main:?}"
+        );
+    }
+
+    #[test]
+    fn and_or_calls_are_no_string_evidence_for_a_user_and_or() {
+        // `(and "x" "y")` is the special form, not a call to the user's
+        // `and`, so it says nothing about that function's parameters.
+        for (src, name) in [
+            ("(define (and a b) (string-length a)) (and \"x\" \"y\")", "and"),
+            ("(define (or a b) (string-length a)) (or \"x\" \"y\")", "or"),
+        ] {
+            let m = module(src);
+            let f = m.functions.iter().find(|f| f.name == name).unwrap();
+            assert_eq!(
+                f.params,
+                vec![("a".to_string(), "any".to_string()), ("b".to_string(), "any".to_string())],
+                "{src}"
+            );
+            assert!(!f.instructions.iter().any(|i| i.op == "str_len"), "{src}: {f:#?}");
+        }
+    }
+
+    #[test]
+    fn keyword_special_forms_cannot_be_defined() {
+        // The other special forms are keywords: defining one is a parse
+        // error that carries a source position.
+        for src in [
+            "(define (if a) a)",
+            "(define (let a) a)",
+            "(define (let* a) a)",
+            "(define (lambda a) a)",
+            "(define (define a) a)",
+            "(define (quote a) a)",
+            "(define (begin a) a)",
+            "(define (match a) a)",
+            "(define if 5)",
+            "\n  (define (begin a) a)",
+        ] {
+            let e = compile_source(src, "test").expect_err(src);
+            assert!(e.line >= 1 && e.column >= 1, "{src}: {e:?}");
+        }
+        let e = compile_source("\n  (define (begin a) a)", "test").unwrap_err();
+        assert_eq!(e.line, 2, "{e:?}");
     }
 
     // ---- Module code gets no call-site string inference ---------------
