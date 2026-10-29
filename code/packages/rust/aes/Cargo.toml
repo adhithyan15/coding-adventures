@@ -5,4 +5,5 @@ edition = "2021"
 description = "AES block cipher (FIPS 197) implemented from scratch using GF(2^8) arithmetic"
 
 [dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }
 gf256 = { path = "../gf256" }

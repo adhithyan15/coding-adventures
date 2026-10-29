@@ -29,7 +29,7 @@
 //! ciphertext (16 bytes)
 //! ```
 //!
-//! The state is a 4×4 matrix of bytes, indexed state[row][col].
+//! The state is a 4×4 matrix of bytes, indexed `state[row][col]`.
 //!
 //! ## GF(2^8) Connection
 //!
@@ -64,8 +64,11 @@
 //! assert_eq!(decrypt_block(&ct, &key).unwrap(), plain);
 //! ```
 
-use std::sync::OnceLock;
+#![deny(unsafe_code)]
+
+use coding_adventures_zeroize::Zeroizing;
 use gf256::Field;
+use std::sync::OnceLock;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AES GF(2^8) field — polynomial 0x11B = x^8 + x^4 + x^3 + x + 1
@@ -90,14 +93,14 @@ fn get_sboxes() -> &'static ([u8; 256], [u8; 256]) {
 /// Access via the `sbox()` helper, or read `SBOX` static after calling any
 /// encrypt/decrypt function (which triggers initialization).
 ///
-/// SBOX[0x00] == 0x63, SBOX[0x01] == 0x7c, etc. (FIPS 197 Figure 7)
+/// `SBOX[0x00] == 0x63`, `SBOX[0x01] == 0x7c`, etc. (FIPS 197 Figure 7)
 pub fn sbox() -> &'static [u8; 256] {
     &get_sboxes().0
 }
 
 /// The AES inverse S-box (256 bytes).
 ///
-/// INV_SBOX[SBOX[b]] == b for all b in 0..256.
+/// `INV_SBOX[SBOX[b]] == b` for all b in 0..256.
 pub fn inv_sbox() -> &'static [u8; 256] {
     &get_sboxes().1
 }
@@ -165,8 +168,7 @@ fn build_sboxes() -> ([u8; 256], [u8; 256]) {
 /// Rcon[i] = x^{i-1} in GF(2^8) with polynomial 0x11B.
 const RCON: [u8; 15] = [
     0x00, // index 0 unused
-    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36,
-    0x6C, 0xD8, 0xAB, 0x4D,
+    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36, 0x6C, 0xD8, 0xAB, 0x4D,
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -184,9 +186,9 @@ const RCON: [u8; 15] = [
 /// - Nk = key length in 32-bit words (4, 6, or 8)
 /// - Nr = number of rounds (10, 12, or 14)
 /// - Total words needed = 4 × (Nr + 1)
-/// - W[i] = W[i-1] XOR W[i-Nk]  for i not a multiple of Nk
-/// - W[i] = SubWord(RotWord(W[i-1])) XOR Rcon[i/Nk] XOR W[i-Nk]  when i mod Nk == 0
-/// - W[i] = SubWord(W[i-1]) XOR W[i-Nk]  when Nk=8 and i mod Nk == 4
+/// - `W[i] = W[i-1] XOR W[i-Nk]` for i not a multiple of Nk
+/// - `W[i] = SubWord(RotWord(W[i-1])) XOR Rcon[i/Nk] XOR W[i-Nk]` when i mod Nk == 0
+/// - `W[i] = SubWord(W[i-1]) XOR W[i-Nk]` when Nk=8 and i mod Nk == 4
 ///
 /// ## Errors
 ///
@@ -225,15 +227,30 @@ pub fn expand_key(key: &[u8]) -> Result<Vec<[[u8; 4]; 4]>, String> {
             // RotWord: left-rotate the 4 bytes
             temp = [temp[1], temp[2], temp[3], temp[0]];
             // SubWord: apply S-box to each byte
-            temp = [sb[temp[0] as usize], sb[temp[1] as usize], sb[temp[2] as usize], sb[temp[3] as usize]];
+            temp = [
+                sb[temp[0] as usize],
+                sb[temp[1] as usize],
+                sb[temp[2] as usize],
+                sb[temp[3] as usize],
+            ];
             // XOR with round constant
             temp[0] ^= RCON[i / nk];
         } else if nk == 8 && i % nk == 4 {
             // Extra SubWord for AES-256
-            temp = [sb[temp[0] as usize], sb[temp[1] as usize], sb[temp[2] as usize], sb[temp[3] as usize]];
+            temp = [
+                sb[temp[0] as usize],
+                sb[temp[1] as usize],
+                sb[temp[2] as usize],
+                sb[temp[3] as usize],
+            ];
         }
         let prev = w[i - nk];
-        w.push([prev[0] ^ temp[0], prev[1] ^ temp[1], prev[2] ^ temp[2], prev[3] ^ temp[3]]);
+        w.push([
+            prev[0] ^ temp[0],
+            prev[1] ^ temp[1],
+            prev[2] ^ temp[2],
+            prev[3] ^ temp[3],
+        ]);
     }
 
     // Pack into (Nr+1) round keys, each a 4×4 state (column-major layout).
@@ -360,7 +377,11 @@ fn inv_shift_rows(state: &[[u8; 4]; 4]) -> [[u8; 4]; 4] {
 fn xtime(b: u8) -> u8 {
     let hi = b & 0x80;
     let shifted = b << 1;
-    if hi != 0 { shifted ^ 0x1B } else { shifted }
+    if hi != 0 {
+        shifted ^ 0x1B
+    } else {
+        shifted
+    }
 }
 
 /// Apply MixColumns to one 4-byte column.
@@ -445,6 +466,197 @@ fn inv_mix_columns(state: &[[u8; 4]; 4]) -> [[u8; 4]; 4] {
         }
     }
     out
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fixed-memory AES-128 encryption boundary
+//
+// The compatibility implementation above is intentionally close to the FIPS
+// pseudocode, but its Vec-backed key schedule and secret-indexed S-box are not
+// suitable for record protection. This second path keeps the same mathematics
+// while making ownership and address patterns explicit: every copied secret has
+// one fixed wipe-on-drop owner, and SubBytes performs fixed-work arithmetic
+// instead of a table lookup.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Multiply two bytes in AES's GF(2^8) field without data-dependent control
+/// flow or memory access.
+///
+/// Each of the eight iterations consumes one multiplier bit. Turning that bit
+/// into either `0x00` or `0xff` selects the multiplicand with arithmetic rather
+/// than a branch. Reduction by `x^8 + x^4 + x^3 + x + 1` uses the same mask
+/// construction for the previous high bit.
+#[inline(always)]
+fn gf256_mul_fixed(mut left: u8, mut right: u8) -> u8 {
+    let mut product = 0u8;
+    for _ in 0..8 {
+        let multiplier_mask = 0u8.wrapping_sub(right & 1);
+        product ^= left & multiplier_mask;
+
+        let reduction_mask = 0u8.wrapping_sub(left >> 7);
+        left = (left << 1) ^ (0x1b & reduction_mask);
+        right >>= 1;
+    }
+    product
+}
+
+/// Compute the AES S-box without indexing a table.
+///
+/// In a field of 256 elements, every non-zero `x` has inverse `x^254`. The
+/// fixed square-and-multiply chain below also maps zero to zero, matching the
+/// FIPS convention. The affine transform is the same rotation/XOR circuit used
+/// by the educational table builder.
+#[inline(always)]
+fn sbox_fixed(value: u8) -> u8 {
+    let x2 = gf256_mul_fixed(value, value);
+    let x4 = gf256_mul_fixed(x2, x2);
+    let x8 = gf256_mul_fixed(x4, x4);
+    let x16 = gf256_mul_fixed(x8, x8);
+    let x32 = gf256_mul_fixed(x16, x16);
+    let x64 = gf256_mul_fixed(x32, x32);
+    let x128 = gf256_mul_fixed(x64, x64);
+
+    let x6 = gf256_mul_fixed(x2, x4);
+    let x14 = gf256_mul_fixed(x6, x8);
+    let x30 = gf256_mul_fixed(x14, x16);
+    let x62 = gf256_mul_fixed(x30, x32);
+    let x126 = gf256_mul_fixed(x62, x64);
+    let inverse = gf256_mul_fixed(x126, x128);
+    affine_transform(inverse)
+}
+
+/// Double one byte in AES's field without branching on its high bit.
+#[inline(always)]
+fn xtime_fixed(value: u8) -> u8 {
+    (value << 1) ^ (0x1b & 0u8.wrapping_sub(value >> 7))
+}
+
+/// Expand a 16-byte AES-128 key into eleven contiguous 16-byte round keys.
+///
+/// `generated` and its divisibility test are public key-size bookkeeping. The
+/// only secret transform is `sbox_fixed`, whose instruction and address pattern
+/// is independent of the byte value.
+fn expand_aes128_key_fixed(key: &[u8; 16], expanded: &mut [u8; 176], temp: &mut [u8; 4]) {
+    expanded[..16].copy_from_slice(key);
+    let mut generated = 16usize;
+    let mut round_constant = 1u8;
+
+    while generated < expanded.len() {
+        temp.copy_from_slice(&expanded[generated - 4..generated]);
+        if generated.is_multiple_of(16) {
+            temp.rotate_left(1);
+            for byte in temp.iter_mut() {
+                *byte = sbox_fixed(*byte);
+            }
+            temp[0] ^= round_constant;
+            round_constant = xtime_fixed(round_constant);
+        }
+
+        for &byte in temp.iter() {
+            expanded[generated] = expanded[generated - 16] ^ byte;
+            generated += 1;
+        }
+    }
+}
+
+#[inline(always)]
+fn add_round_key_fixed(state: &mut [u8; 16], round_key: &[u8]) {
+    for index in 0..16 {
+        state[index] ^= round_key[index];
+    }
+}
+
+#[inline(always)]
+fn sub_bytes_fixed(state: &mut [u8; 16]) {
+    for byte in state.iter_mut() {
+        *byte = sbox_fixed(*byte);
+    }
+}
+
+/// Rotate the three non-zero AES rows using one reusable protected scratch
+/// block. AES's flat representation is column-major: index = `4*column+row`.
+#[inline(always)]
+fn shift_rows_fixed(state: &mut [u8; 16], scratch: &mut [u8; 16]) {
+    scratch.copy_from_slice(state);
+
+    state[1] = scratch[5];
+    state[5] = scratch[9];
+    state[9] = scratch[13];
+    state[13] = scratch[1];
+
+    state[2] = scratch[10];
+    state[6] = scratch[14];
+    state[10] = scratch[2];
+    state[14] = scratch[6];
+
+    state[3] = scratch[15];
+    state[7] = scratch[3];
+    state[11] = scratch[7];
+    state[15] = scratch[11];
+}
+
+/// Apply the fixed AES MixColumns matrix to all four columns.
+#[inline(always)]
+fn mix_columns_fixed(state: &mut [u8; 16], column: &mut [u8; 4]) {
+    for start in (0..16).step_by(4) {
+        column.copy_from_slice(&state[start..start + 4]);
+        let s0 = column[0];
+        let s1 = column[1];
+        let s2 = column[2];
+        let s3 = column[3];
+
+        state[start] = xtime_fixed(s0) ^ (xtime_fixed(s1) ^ s1) ^ s2 ^ s3;
+        state[start + 1] = s0 ^ xtime_fixed(s1) ^ (xtime_fixed(s2) ^ s2) ^ s3;
+        state[start + 2] = s0 ^ s1 ^ xtime_fixed(s2) ^ (xtime_fixed(s3) ^ s3);
+        state[start + 3] = (xtime_fixed(s0) ^ s0) ^ s1 ^ s2 ^ xtime_fixed(s3);
+    }
+}
+
+/// Encrypt exactly one block with AES-128 using fixed memory and caller-owned
+/// output.
+///
+/// This boundary is deliberately narrower than [`encrypt_block`]: exact array
+/// types admit only a 16-byte key and one 16-byte block, so there is no failure
+/// path or algorithm negotiation. It performs no allocation. The copied state,
+/// 176-byte expanded key, and all reusable scratch buffers live in
+/// [`Zeroizing`] owners and are observably scrubbed on normal return and panic.
+/// The borrowed plaintext and key remain caller-owned and are not wiped here.
+///
+/// SubBytes uses a fixed-work arithmetic circuit, not the compatibility path's
+/// secret-indexed global S-box. The ciphertext is copied directly into
+/// `output`, so it never crosses the ABI return slot by value.
+///
+/// This is only AES-128 block encryption. It does not authenticate data,
+/// construct nonces, compose GHASH/AES-GCM, enforce TLS record limits, or
+/// provide TLS or HTTPS.
+// Keep one stable Rust-ABI symbol for the optimized-IR security gate. This is
+// not a promised C ABI.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_aes128_encrypt_fixed_ir_audit")]
+#[inline(never)]
+pub fn aes128_encrypt_block_fixed(plaintext: &[u8; 16], key: &[u8; 16], output: &mut [u8; 16]) {
+    let mut expanded = Zeroizing::new([0u8; 176]);
+    let mut state = Zeroizing::new([0u8; 16]);
+    let mut key_temp = Zeroizing::new([0u8; 4]);
+    let mut row_scratch = Zeroizing::new([0u8; 16]);
+    let mut column = Zeroizing::new([0u8; 4]);
+
+    state.copy_from_slice(plaintext);
+    expand_aes128_key_fixed(key, &mut expanded, &mut key_temp);
+    add_round_key_fixed(&mut state, &expanded[..16]);
+
+    for round in 1..10 {
+        sub_bytes_fixed(&mut state);
+        shift_rows_fixed(&mut state, &mut row_scratch);
+        mix_columns_fixed(&mut state, &mut column);
+        let start = round * 16;
+        add_round_key_fixed(&mut state, &expanded[start..start + 16]);
+    }
+
+    sub_bytes_fixed(&mut state);
+    shift_rows_fixed(&mut state, &mut row_scratch);
+    add_round_key_fixed(&mut state, &expanded[160..176]);
+    output.copy_from_slice(&state[..]);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -590,6 +802,46 @@ mod tests {
             encrypt_block(&plain, &key).unwrap(),
             h16("69c4e0d86a7b0430d8cdb78070b4c55a")
         );
+    }
+
+    #[test]
+    fn aes128_fixed_matches_existing_fips_vector() {
+        // Reuse the existing FIPS 197 Appendix C.1 oracle rather than
+        // introducing a separately generated expected value.
+        let key = h16("000102030405060708090a0b0c0d0e0f");
+        let plain = h16("00112233445566778899aabbccddeeff");
+        let expected = h16("69c4e0d86a7b0430d8cdb78070b4c55a");
+        let mut output = [0u8; 16];
+
+        aes128_encrypt_block_fixed(&plain, &key, &mut output);
+
+        assert_eq!(output, expected);
+    }
+
+    #[test]
+    fn aes128_fixed_sbox_matches_all_legacy_table_entries() {
+        for input in 0u8..=255 {
+            assert_eq!(sbox_fixed(input), sbox()[input as usize]);
+        }
+    }
+
+    #[test]
+    fn aes128_fixed_matches_legacy_across_varied_inputs() {
+        for seed in 0u8..=63 {
+            let key = core::array::from_fn(|index| {
+                seed.wrapping_mul(17)
+                    .wrapping_add((index as u8).wrapping_mul(29))
+            });
+            let plain = core::array::from_fn(|index| {
+                seed.rotate_left((index % 8) as u32)
+                    .wrapping_add((index as u8).wrapping_mul(11))
+            });
+            let mut fixed = [0u8; 16];
+
+            aes128_encrypt_block_fixed(&plain, &key, &mut fixed);
+
+            assert_eq!(fixed, encrypt_block(&plain, &key).unwrap());
+        }
     }
 
     #[test]
@@ -748,7 +1000,9 @@ mod tests {
         let key = h("2b7e151628aed2a6abf7158809cf4f3c");
         let rks = expand_key(&key).unwrap();
         let rk0 = rks[0];
-        let reconstructed: Vec<u8> = (0..4).flat_map(|col| (0..4).map(move |row| rk0[row][col])).collect();
+        let reconstructed: Vec<u8> = (0..4)
+            .flat_map(|col| (0..4).map(move |row| rk0[row][col]))
+            .collect();
         assert_eq!(reconstructed, key);
     }
 
@@ -835,8 +1089,16 @@ mod tests {
         plain2[0] = 0x01;
         let ct1 = encrypt_block(&plain1, &key).unwrap();
         let ct2 = encrypt_block(&plain2, &key).unwrap();
-        let diff_bits: u32 = ct1.iter().zip(ct2.iter()).map(|(&a, &b)| (a ^ b).count_ones()).sum();
-        assert!(diff_bits > 32, "Only {} bits differ — poor diffusion", diff_bits);
+        let diff_bits: u32 = ct1
+            .iter()
+            .zip(ct2.iter())
+            .map(|(&a, &b)| (a ^ b).count_ones())
+            .sum();
+        assert!(
+            diff_bits > 32,
+            "Only {} bits differ — poor diffusion",
+            diff_bits
+        );
     }
 
     // ─── Error handling ──────────────────────────────────────────────────────

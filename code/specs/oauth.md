@@ -1900,6 +1900,32 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+The repository-owned AES implementation now also exposes an AES-128-only
+fixed-memory block-encryption prerequisite for the
+`TLS_AES_128_GCM_SHA256` path. It accepts exact caller-owned 16-byte key,
+plaintext, and output buffers, expands exactly eleven round keys into fixed
+wipe-on-drop storage, and writes the ciphertext only after all ten rounds
+complete. SubBytes computes the FIPS 197 multiplicative inverse and affine
+transform with fixed-work GF(2^8) arithmetic rather than indexing a
+secret-dependent S-box table. The round count, key-schedule branches, and
+memory addresses depend only on AES-128's public fixed dimensions. The copied
+state, expanded key, key-schedule scratch, row scratch, and column scratch are
+wiped on return, while the borrowed inputs remain caller-owned. The boundary
+does not allocate and does not move ciphertext through an ABI return slot.
+It performs no credential access, edit, signing, provider action, audit or
+trace emission, I/O, or external effect.
+
+This is one block-cipher primitive, not AES-GCM or TLS record protection. It
+does not support fixed-memory AES-192 or AES-256, authenticate ciphertext,
+compose GHASH, construct or reserve record nonces, enforce a selected suite's
+per-key record ceiling, own traffic keys, frame or protect records, process a
+handshake, validate certificates, establish trust, enforce revocation, perform
+I/O, authorize HTTP or OAuth transport, or open a network connection. The
+allocation-returning and table-indexing legacy AES APIs remain compatibility
+and educational surfaces rather than production TLS composition. Reviewed
+AES-GCM composition remains a prerequisite, and concrete HTTPS remains
+unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire
