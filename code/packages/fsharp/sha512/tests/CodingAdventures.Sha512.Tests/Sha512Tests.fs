@@ -38,12 +38,29 @@ module Sha512Tests =
         lines |> Array.iter validateRow
         lines
 
-    let fixtureLines () =
-        let path = "../../../../../../../../specs/fixtures/sha512-v1/cases.txt"
-        let lines = File.ReadAllBytes(path) |> parseFixture
+    let private fixtureLinesFrom path =
+        use stream = File.OpenRead(path)
+        let raw = Array.zeroCreate<byte> 4097
+        let mutable length = 0
+        let mutable reading = true
+        while reading && length < raw.Length do
+            let count = stream.Read(raw, length, raw.Length - length)
+            if count = 0 then reading <- false else length <- length + count
+        let lines = raw |> Array.take length |> parseFixture
         Assert.Equal(9, lines |> Array.filter (fun line -> line.StartsWith("V|", StringComparison.Ordinal)) |> Array.length)
         Assert.Equal(6, lines |> Array.filter (fun line -> line.StartsWith("L|", StringComparison.Ordinal)) |> Array.length)
         lines
+
+    let fixtureLines () = fixtureLinesFrom "../../../../../../../../specs/fixtures/sha512-v1/cases.txt"
+
+    [<Fact>]
+    let ``fixture reader rejects oversized file`` () =
+        let path = Path.GetTempFileName()
+        try
+            File.WriteAllBytes(path, Array.zeroCreate 4097)
+            Assert.Throws<ArgumentException>(fun () -> fixtureLinesFrom path |> ignore) |> ignore
+        finally
+            File.Delete(path)
 
     [<Fact>]
     let ``fixture reader rejects malformed rows`` () =

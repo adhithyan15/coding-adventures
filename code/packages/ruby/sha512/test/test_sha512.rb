@@ -7,14 +7,16 @@
 
 require "minitest/autorun"
 require "coding_adventures_sha512"
+require "tempfile"
 
 SHA512 = CodingAdventures::Sha512
 
 class TestPortableConformance < Minitest::Test
   FIXTURE = File.expand_path("../../../../specs/fixtures/sha512-v1/cases.txt", __dir__)
 
-  def fixture_lines
-    lines = parse_fixture(File.binread(FIXTURE))
+  def fixture_lines(path = FIXTURE)
+    raw = File.open(path, "rb") { |file| file.read(4097) || "".b }
+    lines = parse_fixture(raw)
     assert_equal 9, lines.count { |line| line.start_with?("V|") }
     assert_equal 6, lines.count { |line| line.start_with?("L|") }
     lines
@@ -56,6 +58,15 @@ class TestPortableConformance < Minitest::Test
     ["X|id|||", "V|UPPER|00|1|#{digest}", "V|bad|0|1|#{digest}", "V|bad|00|2|#{digest}",
      "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC"].each do |row|
       assert_raises(ArgumentError) { parse_fixture(row) }
+    end
+  end
+
+  def test_fixture_reader_rejects_oversized_file
+    Tempfile.create("sha512-fixture") do |file|
+      file.binmode
+      file.write("x" * 4097)
+      file.flush
+      assert_raises(ArgumentError) { fixture_lines(file.path) }
     end
   end
 

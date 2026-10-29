@@ -1,13 +1,15 @@
 module Sha512Spec (spec) where
 
-import Control.Exception (evaluate)
+import Control.Exception (finally)
+import qualified Data.ByteString as BS
 import Data.Char (isDigit, ord)
 import Data.Either (isLeft)
 import Data.List (isPrefixOf)
 import Data.Word (Word8)
 import Numeric (readHex)
 import Sha512
-import System.IO (IOMode(ReadMode), hFileSize, hGetContents, withBinaryFile)
+import System.Directory (getTemporaryDirectory, removeFile)
+import System.IO (IOMode(ReadMode), hClose, openBinaryTempFile, withBinaryFile)
 import Test.Hspec
 
 spec :: Spec
@@ -27,6 +29,16 @@ spec = describe "Sha512" $ do
              "V|bad|00|2|" ++ digest, "L|bad|000000000000000G|0000000000000000|ERROR",
              "L|bad|0000000000000000|0000000000000000|ABC"]
 
+    it "rejects an oversized fixture through the real file reader" $ do
+        temporary <- getTemporaryDirectory
+        (path, handle) <- openBinaryTempFile temporary "sha512-fixture.txt"
+        (do
+            BS.hPut handle (BS.replicate 4097 0)
+            hClose handle
+            result <- readFixtureRows path
+            result `shouldSatisfy` isLeft
+          ) `finally` removeFile path
+
     it "hashes abc to the FIPS vector" $ do
         sha512Hex (ascii "abc")
             `shouldBe` "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f"
@@ -43,18 +55,20 @@ ascii = map (fromIntegral . ord)
 
 fixtureRows :: IO [String]
 fixtureRows = do
-    raw <- withBinaryFile "../../../specs/fixtures/sha512-v1/cases.txt" ReadMode $ \handle -> do
-        size <- hFileSize handle
-        size `shouldSatisfy` (\count -> count > 0 && count <= 4096)
-        contents <- hGetContents handle
-        _ <- evaluate (length contents)
-        pure contents
-    rows <- case parseFixture raw of
+    result <- readFixtureRows "../../../specs/fixtures/sha512-v1/cases.txt"
+    rows <- case result of
         Left message -> expectationFailure message >> pure []
         Right parsed -> pure parsed
     length [row | row <- rows, "V|" `isPrefixOf` row] `shouldBe` 9
     length [row | row <- rows, "L|" `isPrefixOf` row] `shouldBe` 6
     pure rows
+
+readFixtureRows :: FilePath -> IO (Either String [String])
+readFixtureRows path = withBinaryFile path ReadMode $ \handle -> do
+    raw <- BS.hGet handle 4097
+    if BS.length raw > 4096
+        then pure (Left "fixture byte size or encoding outside bounds")
+        else pure (parseFixture (map (toEnum . fromIntegral) (BS.unpack raw)))
 
 parseFixture :: String -> Either String [String]
 parseFixture raw

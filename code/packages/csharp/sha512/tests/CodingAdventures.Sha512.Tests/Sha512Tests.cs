@@ -23,13 +23,36 @@ public sealed class Sha512Tests
         return lines;
     }
 
-    private static string[] FixtureLines()
+    private static string[] FixtureLines(string path = "../../../../../../../../specs/fixtures/sha512-v1/cases.txt")
     {
-        const string path = "../../../../../../../../specs/fixtures/sha512-v1/cases.txt";
-        var lines = ParseFixture(File.ReadAllBytes(path));
+        using var stream = File.OpenRead(path);
+        var raw = new byte[4097];
+        var length = 0;
+        while (length < raw.Length)
+        {
+            var count = stream.Read(raw, length, raw.Length - length);
+            if (count == 0) break;
+            length += count;
+        }
+        var lines = ParseFixture(raw[..length]);
         Assert.Equal(9, lines.Count(line => line.StartsWith("V|", StringComparison.Ordinal)));
         Assert.Equal(6, lines.Count(line => line.StartsWith("L|", StringComparison.Ordinal)));
         return lines;
+    }
+
+    [Fact]
+    public void FixtureReaderRejectsOversizedFile()
+    {
+        var path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllBytes(path, new byte[4097]);
+            Assert.Throws<InvalidDataException>(() => FixtureLines(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 
     private static void ValidateFixtureRow(string line)

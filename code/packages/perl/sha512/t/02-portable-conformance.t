@@ -3,14 +3,11 @@ use warnings;
 use Test::More;
 use FindBin;
 use Math::BigInt;
+use File::Temp qw(tempfile);
 use lib "$FindBin::Bin/../lib";
 use CodingAdventures::Sha512;
 
 my $path = "$FindBin::Bin/../../../../specs/fixtures/sha512-v1/cases.txt";
-open my $handle, '<:raw', $path or die "open $path: $!";
-local $/;
-my $raw = <$handle>;
-close $handle;
 
 sub parse_fixture {
     my ($source) = @_;
@@ -43,7 +40,17 @@ sub parse_fixture {
     return @parsed;
 }
 
-my @rows = parse_fixture($raw);
+sub load_fixture {
+    my ($fixture_path) = @_;
+    open my $handle, '<:raw', $fixture_path or die "open $fixture_path: $!";
+    my $raw = '';
+    my $read = read $handle, $raw, 4097;
+    die "read $fixture_path: $!" unless defined $read;
+    close $handle or die "close $fixture_path: $!";
+    return parse_fixture($raw);
+}
+
+my @rows = load_fixture($path);
 is(scalar(grep { /^V\|/ } @rows), 9, 'fixture retains nine vector rows');
 is(scalar(grep { /^L\|/ } @rows), 6, 'fixture retains six length rows');
 
@@ -53,6 +60,14 @@ for my $bad ('X|id|||', "V|UPPER|00|1|$zero_digest", "V|bad|0|1|$zero_digest", "
     my $ok = eval { parse_fixture($bad); 1 };
     ok(!$ok, "rejects malformed fixture row: $bad");
 }
+
+my ($oversized, $oversized_path) = tempfile();
+binmode $oversized;
+print {$oversized} 'x' x 4097;
+close $oversized;
+my $oversized_ok = eval { load_fixture($oversized_path); 1 };
+ok(!$oversized_ok, 'rejects oversized fixture through real file reader');
+unlink $oversized_path;
 
 for my $row (grep { /^V\|/ } @rows) {
     my (undef, $id, $input_hex, undef, $expected) = split /\|/, $row, -1;

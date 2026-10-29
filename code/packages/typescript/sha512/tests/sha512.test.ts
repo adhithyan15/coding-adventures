@@ -10,7 +10,9 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { closeSync, mkdtempSync, openSync, readSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { sha512, sha512Hex, toHex, SHA512Hasher, VERSION, encodeBitLength } from "../src/index.js";
 
 const enc = new TextEncoder();
@@ -50,12 +52,38 @@ function parseFixture(raw: Uint8Array): string[] {
   return lines;
 }
 
-const fixtureBytes = readFileSync(new URL("../../../../specs/fixtures/sha512-v1/cases.txt", import.meta.url));
-const fixtureLines = parseFixture(fixtureBytes);
+function readFixture(path: URL | string): string[] {
+  const handle = openSync(path, "r");
+  const raw = Buffer.alloc(4097);
+  let length = 0;
+  try {
+    while (length < raw.length) {
+      const count = readSync(handle, raw, length, raw.length - length, null);
+      if (count === 0) break;
+      length += count;
+    }
+  } finally {
+    closeSync(handle);
+  }
+  return parseFixture(raw.subarray(0, length));
+}
+
+const fixtureLines = readFixture(new URL("../../../../specs/fixtures/sha512-v1/cases.txt", import.meta.url));
 if (fixtureLines.filter((row) => row.startsWith("V|")).length !== 9 ||
     fixtureLines.filter((row) => row.startsWith("L|")).length !== 6) throw new Error("SHA-512 fixture corpus counts changed");
 
 describe("HF04 portable corpus", () => {
+  it("rejects an oversized file through the bounded reader", () => {
+    const directory = mkdtempSync(join(tmpdir(), "sha512-fixture-"));
+    const path = join(directory, "oversized.txt");
+    try {
+      writeFileSync(path, Buffer.alloc(4097, 0x78));
+      expect(() => readFixture(path)).toThrow(/byte size exceeds bounds/);
+    } finally {
+      rmSync(directory, { recursive: true });
+    }
+  });
+
   it("rejects malformed rows", () => {
     const digest = "0".repeat(128);
     for (const row of ["X|id|||", `V|UPPER|00|1|${digest}`, `V|bad|0|1|${digest}`, `V|bad|00|2|${digest}`,

@@ -17,8 +17,16 @@ defmodule CodingAdventures.Sha512Test do
 
   @fixture Path.expand("../../../../specs/fixtures/sha512-v1/cases.txt", __DIR__)
 
-  defp fixture_lines do
-    lines = File.read!(@fixture) |> parse_fixture()
+  defp fixture_lines(path \\ @fixture) do
+    lines =
+      File.open!(path, [:read, :binary], fn file ->
+        case IO.binread(file, 4097) do
+          :eof -> <<>>
+          raw -> raw
+        end
+      end)
+      |> parse_fixture()
+
     assert Enum.count(lines, &String.starts_with?(&1, "V|")) == 9
     assert Enum.count(lines, &String.starts_with?(&1, "L|")) == 6
     lines
@@ -94,6 +102,13 @@ defmodule CodingAdventures.Sha512Test do
         ] do
       assert_raise ArgumentError, fn -> parse_fixture(row) end
     end
+  end
+
+  test "fixture reader rejects oversized file" do
+    path = Path.join(System.tmp_dir!(), "sha512-fixture-#{System.unique_integer([:positive])}")
+    File.write!(path, :binary.copy(<<0>>, 4097))
+    on_exit(fn -> File.rm(path) end)
+    assert_raise ArgumentError, fn -> fixture_lines(path) end
   end
 
   test "HF04 portable digest corpus" do

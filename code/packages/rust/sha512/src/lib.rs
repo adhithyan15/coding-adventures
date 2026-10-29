@@ -479,9 +479,20 @@ impl Default for Digest {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs::{self, File, OpenOptions};
+    use std::io::{Read, Write};
+    use std::path::{Path, PathBuf};
+    use std::time::{SystemTime, UNIX_EPOCH};
 
-    const PORTABLE_FIXTURE: &[u8] =
-        include_bytes!("../../../../specs/fixtures/sha512-v1/cases.txt");
+    fn fixture_path() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../specs/fixtures/sha512-v1/cases.txt")
+    }
+
+    fn read_fixture(path: &Path) -> std::io::Result<Vec<u8>> {
+        let mut raw = Vec::with_capacity(4097);
+        File::open(path)?.take(4097).read_to_end(&mut raw)?;
+        Ok(raw)
+    }
 
     fn is_lower_hex(value: &str, length: usize) -> bool {
         value.len() == length
@@ -579,7 +590,8 @@ mod tests {
 
     #[test]
     fn portable_corpus_matches_one_shot_and_streaming() {
-        let rows = parse_fixture(PORTABLE_FIXTURE).unwrap();
+        let raw = read_fixture(&fixture_path()).unwrap();
+        let rows = parse_fixture(&raw).unwrap();
         assert_eq!(rows.iter().filter(|line| line.starts_with("V|")).count(), 9);
         assert_eq!(rows.iter().filter(|line| line.starts_with("L|")).count(), 6);
         for line in rows.into_iter().filter(|line| line.starts_with("V|")) {
@@ -605,7 +617,8 @@ mod tests {
 
     #[test]
     fn portable_length_corpus_exercises_full_field() {
-        for line in parse_fixture(PORTABLE_FIXTURE)
+        let raw = read_fixture(&fixture_path()).unwrap();
+        for line in parse_fixture(&raw)
             .unwrap()
             .into_iter()
             .filter(|line| line.starts_with("L|"))
@@ -635,6 +648,30 @@ mod tests {
         ] {
             assert!(parse_fixture(row.as_bytes()).is_err(), "accepted {row}");
         }
+    }
+
+    #[test]
+    fn fixture_reader_rejects_oversized_file() {
+        let suffix = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "sha512-fixture-{}-{suffix}.txt",
+            std::process::id()
+        ));
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)
+            .unwrap();
+        file.write_all(&[0; 4097]).unwrap();
+        drop(file);
+        let raw = read_fixture(&path).unwrap();
+        let result = parse_fixture(&raw);
+        fs::remove_file(path).unwrap();
+        assert_eq!(raw.len(), 4097);
+        assert!(result.is_err());
     }
 
     #[test]

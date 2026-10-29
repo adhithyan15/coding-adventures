@@ -4,7 +4,9 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -76,13 +78,22 @@ func parseFixture(data []byte) ([]string, error) {
 	return lines, nil
 }
 
+func loadFixture(path string) ([]string, error) {
+	handle, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer handle.Close()
+	data, err := io.ReadAll(io.LimitReader(handle, 4097))
+	if err != nil {
+		return nil, err
+	}
+	return parseFixture(data)
+}
+
 func fixtureLines(t *testing.T) []string {
 	t.Helper()
-	data, err := os.ReadFile("../../../specs/fixtures/sha512-v1/cases.txt")
-	if err != nil {
-		t.Fatal(err)
-	}
-	lines, err := parseFixture(data)
+	lines, err := loadFixture("../../../specs/fixtures/sha512-v1/cases.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -98,6 +109,16 @@ func fixtureLines(t *testing.T) []string {
 		t.Fatalf("fixture counts = %d V, %d L", vectors, lengths)
 	}
 	return lines
+}
+
+func TestFixtureReaderRejectsOversizedFile(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "oversized.txt")
+	if err := os.WriteFile(path, make([]byte, 4097), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := loadFixture(path); err == nil {
+		t.Fatal("accepted oversized fixture")
+	}
 }
 
 func TestFixtureReaderRejectsMalformedRows(t *testing.T) {

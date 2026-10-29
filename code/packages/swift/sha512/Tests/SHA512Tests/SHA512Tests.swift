@@ -54,12 +54,14 @@ final class SHA512Tests: XCTestCase {
         return lines
     }
 
-    private func fixtureLines() throws -> [String] {
-        let url = URL(fileURLWithPath: #filePath)
+    private func fixtureLines(at suppliedURL: URL? = nil) throws -> [String] {
+        let url = suppliedURL ?? URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .appendingPathComponent("../../../../../specs/fixtures/sha512-v1/cases.txt")
             .standardizedFileURL
-        let data = try Data(contentsOf: url)
+        let handle = try FileHandle(forReadingFrom: url)
+        defer { try? handle.close() }
+        let data = try handle.read(upToCount: 4097) ?? Data()
         let lines = try parseFixture(data)
         XCTAssertEqual(lines.filter { $0.hasPrefix("V|") }.count, 9)
         XCTAssertEqual(lines.filter { $0.hasPrefix("L|") }.count, 6)
@@ -72,6 +74,14 @@ final class SHA512Tests: XCTestCase {
                     "L|bad|000000000000000G|0000000000000000|ERROR", "L|bad|0000000000000000|0000000000000000|ABC"] {
             XCTAssertThrowsError(try parseFixture(Data(row.utf8)))
         }
+    }
+
+    func testFixtureReaderRejectsOversizedFile() throws {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("sha512-fixture-\(UUID().uuidString)")
+        defer { try? FileManager.default.removeItem(at: url) }
+        try Data(repeating: 0, count: 4097).write(to: url)
+        XCTAssertThrowsError(try fixtureLines(at: url))
     }
 
     private func decodeHex(_ value: String) -> Data {

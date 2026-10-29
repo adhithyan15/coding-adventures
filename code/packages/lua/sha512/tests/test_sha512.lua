@@ -55,9 +55,9 @@ local function parse_fixture(raw)
     return lines
 end
 
-local function fixture_lines()
-    local handle = assert(io.open("../../../../specs/fixtures/sha512-v1/cases.txt", "rb"))
-    local raw = assert(handle:read("*a"))
+local function fixture_lines(path)
+    local handle = assert(io.open(path or "../../../../specs/fixtures/sha512-v1/cases.txt", "rb"))
+    local raw = handle:read(4097) or ""
     handle:close()
     local lines = parse_fixture(raw)
     local vectors, lengths = 0, 0
@@ -89,6 +89,16 @@ describe("sha512", function()
             "L|bad|0000000000000000|0000000000000000|ABC"}) do
             assert.has_error(function() parse_fixture(row) end)
         end
+    end)
+
+    it("rejects an oversized fixture through the real file reader", function()
+        local path = os.tmpname()
+        local handle = assert(io.open(path, "wb"))
+        assert(handle:write(string.rep("x", 4097)))
+        handle:close()
+        local ok = pcall(fixture_lines, path)
+        os.remove(path)
+        assert.is_false(ok)
     end)
 
     it("matches the bounded HF04 portable corpus", function()

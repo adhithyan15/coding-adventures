@@ -79,11 +79,20 @@ def _parse_fixture(raw: bytes) -> list[str]:
     return lines
 
 
-def _fixture_lines() -> list[str]:
-    lines = _parse_fixture(_FIXTURE.read_bytes())
+def _fixture_lines(path: Path = _FIXTURE) -> list[str]:
+    with path.open("rb") as handle:
+        raw = handle.read(4097)
+    lines = _parse_fixture(raw)
     assert sum(line.startswith("V|") for line in lines) == 9
     assert sum(line.startswith("L|") for line in lines) == 6
     return lines
+
+
+def test_fixture_reader_rejects_oversized_file(tmp_path: Path) -> None:
+    path = tmp_path / "oversized.txt"
+    path.write_bytes(b"x" * 4097)
+    with pytest.raises(ValueError, match="byte size outside bounds"):
+        _fixture_lines(path)
 
 
 def test_fixture_reader_rejects_malformed_rows() -> None:
