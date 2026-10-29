@@ -19895,7 +19895,7 @@ Go's `Write` contract documents overflow.
 
 Native results at the repaired head are C# 15 tests at 100% line, Elixir 25 at
 100%, F# 15 at 100% line, Go 31 at 89.2%, Haskell 6, Lua 25, Perl 64
-assertions, Python 46 at 96.52%, Ruby 42 runs/148 assertions, Rust 33 plus four
+assertions, Python 46 at 95.69%, Ruby 42 runs/148 assertions, Rust 33 plus four
 doc tests, Swift 31, and TypeScript 44 at 100%. Python Ruff and mypy,
 TypeScript build, and Rust Clippy with warnings denied pass. Package-native
 cleans plus exact artifact deletion leave no SHA-512 build/test residue, without cleaning the
