@@ -41,10 +41,10 @@ reviews_of: [PA-C210-ne-review, PA-C210-aman-did-work]
 ## Guided Practice: four skills
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-AGENT-NE-210, PA-FORM-NAME-AMAN-01, PA-LEX-KAMM-05, PA-FORM-KITA-190] -->
 
-- [YOU HEAR: *Aman ne kamm kiitaa*; YOU SAY: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]
-- [YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**; YOU MEAN: Aman did the work]
+- [YOU HEAR: *Aman ne kamm kiitaa*] Say **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**.
+- [YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**] Give its meaning: Aman did the work.
 - [YOU WRITE: cover the line and write **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]
-- [YOU CHECK: **ਨੇ** is after the named doer, not the final auxiliary]
+- Check that **ਨੇ** is after the named doer, not the final auxiliary.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-AGENT-NE-210] -->

@@ -64,7 +64,7 @@ generalise beyond this named-agent, third-person frame.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-AGENT-NE-210] -->
 
-- [YOU HEAR: *Aman ne kamm kiitaa*; YOU SAY: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]
+- [YOU HEAR: *Aman ne kamm kiitaa*] Say **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**.
 - [YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]
 - [YOU WRITE: copy only **ਨੇ**, checking **ਨ** then **ੇ**]
 

@@ -103,6 +103,7 @@ it("owns one bounded third-person agent marker without mock-readiness credit", (
   expect(ownerSection).toBeGreaterThan(0);
   expect(generatedBook.slice(0, ownerSection)).not.toContain(target);
   expect(generatedBook).not.toMatch(/\[(?:YOU HEAR|YOU SAY|YOU READ|YOU WRITE):/u);
+  expect(generatedBook).not.toMatch(/YOU [A-Z]+:/u);
 
   const narration = JSON.parse(readFileSync(new URL(
     "../../../../../../learning/human-languages/punjabi/narration/ch210.json",

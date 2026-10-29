@@ -42,8 +42,8 @@ completed-action sentence.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-AGENT-NE-210] -->
 
-- [YOU HEAR: *ne, after the doer*; YOU SAY: **ਨੇ**]
-- [YOU READ: **ਨੇ**; YOU SAY: *ne*]
+- [YOU HEAR: *ne, after the doer*] Say **ਨੇ**.
+- [YOU READ: **ਨੇ**] Say *ne*.
 - [YOU WRITE: cover the model and write **ਨੇ** once]
 
 If it does not come yet, look back at the model and try again. The two visible

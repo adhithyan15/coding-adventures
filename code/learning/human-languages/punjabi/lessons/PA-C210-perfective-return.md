@@ -36,7 +36,7 @@ reviews_of: [PA-W02-aman, PA-C190-kamm-kita]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-AMAN-01, PA-LEX-KAMM-05, PA-FORM-KITA-190] -->
 
-[YOU HEAR: *Aman; kamm; kiitaa*; YOU SAY: **ਅਮਨ · ਕੰਮ · ਕੀਤਾ**]
+[YOU HEAR: *Aman; kamm; kiitaa*] Say **ਅਮਨ · ਕੰਮ · ਕੀਤਾ**.
 
 ## Grammar Lens
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KAMM-05, PA-FORM-KITA-190] -->
@@ -49,9 +49,9 @@ person's completed action.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-AMAN-01, PA-LEX-KAMM-05, PA-FORM-KITA-190] -->
 
-- [YOU HEAR: *the practice name*; YOU SAY: **ਅਮਨ**]
-- [YOU HEAR: *work*; YOU SAY: **ਕੰਮ**]
-- [YOU HEAR: *did, completed form*; YOU SAY: **ਕੀਤਾ**]
+- [YOU HEAR: *the practice name*] Say **ਅਮਨ**.
+- [YOU HEAR: *work*] Say **ਕੰਮ**.
+- [YOU HEAR: *did, completed form*] Say **ਕੀਤਾ**.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-AMAN-01, PA-LEX-KAMM-05, PA-FORM-KITA-190] -->

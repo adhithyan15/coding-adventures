@@ -4,7 +4,7 @@
   "chapter": 210,
   "title": "Aman Did the Work",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f6b20ebd16542435",
+  "sourceHash": "fnv1a64:feef358f819e0576",
   "lessons": [
     {
       "id": "PA-C210-perfective-return",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1da5608ae3b42a08",
+      "sourceHash": "fnv1a64:fa25de2dc8f4940a",
       "notice": null,
       "blocks": [
         {
@@ -30,11 +30,15 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "Aman; kamm; kiitaa; YOU SAY: ਅਮਨ, ਕੰਮ, ਕੀਤਾ",
+              "instruction": "Aman; kamm; kiitaa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *Aman; kamm; kiitaa*; YOU SAY: **ਅਮਨ · ਕੰਮ · ਕੀਤਾ**]"
+              "source": "[YOU HEAR: *Aman; kamm; kiitaa*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ, ਕੰਮ, ਕੀਤਾ."
             }
           ]
         },
@@ -57,29 +61,41 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "the practice name; YOU SAY: ਅਮਨ",
+              "instruction": "the practice name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *the practice name*; YOU SAY: **ਅਮਨ**]"
+              "source": "[YOU HEAR: *the practice name*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ."
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "work; YOU SAY: ਕੰਮ",
+              "instruction": "work",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *work*; YOU SAY: **ਕੰਮ**]"
+              "source": "[YOU HEAR: *work*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੰਮ."
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "did, completed form; YOU SAY: ਕੀਤਾ",
+              "instruction": "did, completed form",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *did, completed form*; YOU SAY: **ਕੀਤਾ**]"
+              "source": "[YOU HEAR: *did, completed form*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੀਤਾ."
             }
           ]
         },
@@ -115,7 +131,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:0ec7e9858a50e1f8",
+      "sourceHash": "fnv1a64:a3a2843add24fb74",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -179,11 +195,15 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "Aman ne kamm kiitaa; YOU SAY: ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ",
+              "instruction": "Aman ne kamm kiitaa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *Aman ne kamm kiitaa*; YOU SAY: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+              "source": "[YOU HEAR: *Aman ne kamm kiitaa*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)."
             },
             {
               "kind": "prompt",
@@ -237,7 +257,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dadcde02e5632dcd",
+      "sourceHash": "fnv1a64:bc1f7a29838d2ded",
       "notice": null,
       "blocks": [
         {
@@ -265,20 +285,28 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ne, after the doer; YOU SAY: ਨੇ",
+              "instruction": "ne, after the doer",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ne, after the doer*; YOU SAY: **ਨੇ**]"
+              "source": "[YOU HEAR: *ne, after the doer*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਨੇ (ne)."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ਨੇ; YOU SAY: ne",
+              "instruction": "ਨੇ (ne)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **ਨੇ**; YOU SAY: *ne*]"
+              "source": "[YOU READ: **ਨੇ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ne."
             },
             {
               "kind": "prompt",
@@ -327,7 +355,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b3891a4b4a1a4c34",
+      "sourceHash": "fnv1a64:8072024c8e2c4d8e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -380,20 +408,28 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "Aman did the work; YOU SAY: ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)",
+              "instruction": "Aman did the work",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *Aman did the work*; YOU SAY: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+              "source": "[YOU HEAR: *Aman did the work*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa); YOU POINT: the small marker follows ਅਮਨ",
+              "instruction": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**; YOU POINT: the small marker follows **ਅਮਨ**]"
+              "source": "[YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to the small marker after ਅਮਨ."
             },
             {
               "kind": "prompt",
@@ -438,7 +474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:982f00ca6bb3f3b3",
+      "sourceHash": "fnv1a64:91ccba3a7d3c42a7",
       "notice": null,
       "blocks": [
         {
@@ -466,20 +502,28 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "Aman ne kamm kiitaa; YOU SAY: ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ",
+              "instruction": "Aman ne kamm kiitaa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *Aman ne kamm kiitaa*; YOU SAY: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+              "source": "[YOU HEAR: *Aman ne kamm kiitaa*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa); YOU MEAN: Aman did the work",
+              "instruction": "ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ (Aman ne kamm kiitaa)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**; YOU MEAN: Aman did the work]"
+              "source": "[YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning: Aman did the work."
             },
             {
               "kind": "prompt",
@@ -491,13 +535,8 @@
               "source": "[YOU WRITE: cover the line and write **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]"
             },
             {
-              "kind": "prompt",
-              "action": "CHECK",
-              "instruction": "ਨੇ (ne) is after the named doer, not the final auxiliary",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CHECK: **ਨੇ** is after the named doer, not the final auxiliary]"
+              "kind": "speech",
+              "text": "Check that ਨੇ (ne) is after the named doer, not the final auxiliary."
             }
           ]
         },

@@ -51,8 +51,8 @@ sentence.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-AGENT-NE-210, PA-FORM-NAME-AMAN-01, PA-LEX-KAMM-05, PA-FORM-KITA-190] -->
 
-- [YOU HEAR: *Aman did the work*; YOU SAY: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**]
-- [YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**; YOU POINT: the small marker follows **ਅਮਨ**]
+- [YOU HEAR: *Aman did the work*] Say **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**.
+- [YOU READ: **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ**] Point to the small marker after **ਅਮਨ**.
 - [YOU WRITE: copy **ਅਮਨ ਨੇ ਕੰਮ ਕੀਤਾ** once]
 
 ## Wrap-up Recall
