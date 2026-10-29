@@ -197,6 +197,8 @@ class TestExecutor < Minitest::Test
     dep_hashes = {}
     packages.each do |pkg|
       pkg_hashes[pkg.name] = BuildTool::Hasher.hash_package(pkg)
+    end
+    packages.each do |pkg|
       dep_hashes[pkg.name] = BuildTool::Hasher.hash_deps(pkg.name, graph, pkg_hashes)
     end
 
