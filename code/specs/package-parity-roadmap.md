@@ -19906,3 +19906,48 @@ outside this owner. No additional backlog identity was discovered: every
 repair belongs to this selected owner, so no new work needs registration
 before exact-head review. This branch remains local and unpublished pending
 that review.
+
+### SHA-512 bounded-reader repair and current-main inventory refresh
+
+The final corpus-reader review found a resource-bound gap shared by all twelve
+test lanes: each parser capped decoded bytes, but its file front could first
+materialize an unbounded file. Exact repair head
+`e7b9b097a7e66b2ea89548ef9eedbd0d821af8f0` now reads at most 4,097 bytes
+through every real file loader and rejects the extra byte before unbounded
+allocation. Rust no longer embeds the fixture at compile time and exercises the
+on-disk runtime reader; Haskell uses one strict bounded read and therefore has
+no file-size/read mutation window. Every lane adds a real oversized-file
+regression while retaining strict whole-corpus validation and the nine V/six L
+witnesses.
+
+Native results are now C# 16 tests at 100% line, Elixir 26 at 100%, F# 16 at
+100% line, Go 32 at 89.2%, Haskell 7, Lua 26, Perl 65 assertions, Python 47 at
+95.69%, Ruby 43 runs/149 assertions, Rust 34 plus four doc tests, Swift 32, and
+TypeScript 45 at 100%. The Haskell test suite gains only strict bytestring and
+temporary-file support; production capabilities and authority remain empty.
+Package-native cleans plus explicit bounded artifact deletion leave all twelve
+SHA-512 package paths clean while preserving the shared Rust target.
+
+Current `origin/main` advanced from the stored exact
+`9d0843dc86975a0442bcc86c9ccd765eed3c20a8` inventory to
+`f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0`. A normal merge records both
+histories at `865d3ec36d6cf1c16ac44bda5c52b8c369bc383c`. The complete intervening
+BUILD delta is one added root and one new established identity:
+`code/packages/rust/tls13-traffic-key-material`. It is a Rust-only fixed-memory
+suite-bound traffic-key/static-IV derivation boundary and is registered under
+the existing blocked `tls13-fixed-memory-record-prerequisite-stack-classification`
+owner. It requires neutral decomposition and exact SHA-384, HMAC, HKDF,
+suite-policy, zeroization, and AEAD prerequisites before any portable delivery;
+it grants no TLS, HTTPS, handshake, custody, trust, constant-time, network, or
+deployment qualification.
+
+The exact schema-3 refresh records 1,606 established identities, 4,905
+established slots, and 1,648 all-reported identities. Completion bands are
+1,123 singletons with 15,722 missing slots, 181 two-to-four-lane identities
+with 2,282 gaps, 123 five-to-nine-lane identities with 937 gaps, and 179
+ten-to-fifteen-lane identities with 244 gaps. OCaml remains emerging at five
+packages; collisions and unknown buckets remain zero. The durable receipt is
+`package-parity-audits/20261029-sha512-main-merge-inventory.json`. No other
+intervening BUILD identity exists, and the new blocked TLS owner does not alter
+the in-progress SHA-512 selection or its two direct/eighteen total unfinished
+descendants.

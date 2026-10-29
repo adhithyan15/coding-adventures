@@ -26,16 +26,16 @@
     "manual_merge": false
   },
   "last_inventory": {
-    "revision": "9d0843dc86975a0442bcc86c9ccd765eed3c20a8",
+    "revision": "f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1605,
-    "implementation_package_slots": 4904,
-    "all_reported_identities": 1647,
+    "implementation_identities": 1606,
+    "implementation_package_slots": 4905,
+    "all_reported_identities": 1648,
     "completion_bands": {
       "1": {
-        "missing_slots": 15708,
-        "packages": 1122
+        "missing_slots": 15722,
+        "packages": 1123
       },
       "10-15": {
         "missing_slots": 244,
@@ -53,8 +53,8 @@
     "canonical_collisions": 0,
     "unknown_language_buckets": 0,
     "ocaml_packages": 5,
-    "evidence": "code/specs/package-parity-audits/20261029-swift-resp-postmerge-inventory.json",
-    "audit_notes": "Exact post-PR18566 schema-3 reporter refresh. Relative to stored revision 83f1871e3d61e8151b0e9313337f5dc2c842a3e6, 93 BUILD roots across 84 identity names were added and none removed. Fifteen names are lane/front additions under existing owners; 69 are new established implementation identities mapped to one expanded CPU-family owner and four newly registered bounded owners. C/C++/OCaml remain emerging; package presence grants no behavioral, native, authority, or reviewed-exception credit."
+    "evidence": "code/specs/package-parity-audits/20261029-sha512-main-merge-inventory.json",
+    "audit_notes": "Exact schema-3 refresh after normally merging current main into the in-progress SHA-512 owner. Relative to the prior exact 9d0843dc inventory, main adds only the Rust tls13-traffic-key-material BUILD root and identity. It is registered under the existing blocked fixed-memory TLS record-prerequisite classifier; no other intervening BUILD identity exists. C/C++/OCaml remain emerging; package presence grants no behavioral, native, security, authority, or reviewed-exception credit."
   },
   "items": [
     {
@@ -14884,8 +14884,10 @@
       "pr_number": null,
       "selected_at": "2026-10-29T10:07:04Z",
       "selection_revision": "16d1607e3a784a732e9a3580f7669e6180526460",
-      "implementation_revision": "f2efcaebbbd8c403ee4af3544420f72385ca46cd",
-      "validation_notes": "Local repaired implementation complete at exact head f2efcaebbbd8c403ee4af3544420f72385ca46cd, following bounded HF04 corpus commit 8b3c1073806ba431a47a4bb6daf15de66ca0e83b, initial twelve-lane implementation ead3c5829b6d7463c7c2f16d88b3efc53c823ed0, whole-corpus repair 43ae6d23523632c459f001f70316b6a1f5de5894, and Rust pre-decode byte bounding b8695d393ea405b3498231653608b03df4c26d99. Every lane now validates the complete bounded corpus before decoding: exact V/L tags and five-field rows, portable identifiers, strict lowercase even input hex, exact digest and 128-bit length syntax, positive canonical chunks, bounded chunk counts and values, and exact chunk sums. Each loader asserts the unchanged nine digest and six allocation-free length witnesses and rejects shared malformed-row classes. Python now snapshots supported contiguous byte views before preflight or mutation, handles multi-byte contiguous memoryviews by byte length, and rejects non-contiguous views failure-atomically; Perl rejects UTF-8-flagged text with the stable byte-string diagnostic; Go and Rust prove continuation after a digest snapshot, and Go's Write contract documents overflow. Native results are C# 15 tests at 100% line, Elixir 25 at 100%, F# 15 at 100% line, Go 31 at 89.2%, Haskell 6, Lua 25, Perl 64 assertions, Python 46 at 95.69%, Ruby 42 runs/148 assertions, Rust 33 plus four doc tests, Swift 31, and TypeScript 44 at 100%; Python Ruff and mypy, TypeScript build, and Rust Clippy with warnings denied also pass. Package-native cleans plus exact artifact deletion leave no SHA-512 build/test residue, while the shared Rust target and unrelated worktrees remain untouched. Existing capability profiles remain empty and no dependency, host-crypto, secret, filesystem, network, process, environment, clock, randomness, or authority surface was added. The work is committed locally only and still requires independent exact-head review before publication.",
+      "implementation_revision": "e7b9b097a7e66b2ea89548ef9eedbd0d821af8f0",
+      "main_refresh_revision": "f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0",
+      "main_merge_revision": "865d3ec36d6cf1c16ac44bda5c52b8c369bc383c",
+      "validation_notes": "Local repaired implementation is complete through exact bounded-reader head e7b9b097a7e66b2ea89548ef9eedbd0d821af8f0. Every lane validates exact V/L tags and fields, portable identifiers, strict lowercase even hex, digest and 128-bit length syntax, canonical bounded chunks, and exact sums before decoding. Every real file loader reads no more than 4,097 bytes and rejects the extra byte before unbounded allocation; Rust exercises the on-disk runtime path and Haskell uses one strict bounded read without a mutable-file size/read gap. Python handles contiguous multi-byte memoryviews by byte length and rejects non-contiguous views failure-atomically; Perl rejects UTF-8-flagged text; Go and Rust prove continuation after snapshot. Native results are C# 16 tests at 100% line, Elixir 26 at 100%, F# 16 at 100% line, Go 32 at 89.2%, Haskell 7, Lua 26, Perl 65 assertions, Python 47 at 95.69%, Ruby 43 runs/149 assertions, Rust 34 plus four doc tests, Swift 32, and TypeScript 45 at 100%. Existing capability profiles remain empty; Haskell's strict bytestring and directory additions are test-only. Package-native cleans plus explicit bounded artifact deletion leave every SHA-512 package path clean while preserving the shared Rust target. The work is local and unpublished pending independent exact-head review.",
       "selection_notes": "Selected only after the exact Swift RESP merge receipt, full 93-root post-inventory classification, and independent review of the durable reconciliation. This bounded portable owner has zero unfinished prerequisites, two direct unfinished children, and eighteen total unfinished descendants, the strongest safe leverage among dependency-ready items. Its HF04 spec, new shared fixture, and twelve established SHA-512 package paths have no exact overlap with open PR #18495, prepared Lua/Rust graph-diff work, or other live PRs. Keep C, C++, and OCaml emerging lanes, Java/Kotlin/Dart ports, HMAC composition, host-crypto substitution, secret custody, and authority outside this audit.",
       "notes": "Audit all twelve established SHA-512 implementations against shared HF04 vectors, incremental/finalization behavior, large-length accounting, input ownership, exact output, empty capability profiles, and stable bounded errors before using them as the HMAC-family foundation.",
       "postmerge_prioritization_notes": "After verified Swift RESP merge and the exact 9d0843dc inventory reconciliation, this remains the highest-leverage dependency-ready bounded portable owner: zero unfinished prerequisites, two direct unfinished children, and eighteen total unfinished descendants. Its HF04, shared-fixture, and twelve established SHA-512 package paths are disjoint from open PR #18495 and the prepared Lua/Rust graph-diff work. The newly registered inventory owners have no unfinished descendants yet; broader CPU, TLS, X.509, secure-channel, VM, and singleton umbrellas require decomposition or carry higher authority/coordination risk. Advance only in a dedicated worktree after the reconciliation commit is reviewed; package presence and installed toolchains are not conformance credit.",
@@ -27146,10 +27148,11 @@
         "code/packages/rust/tls13-hkdf-label",
         "code/packages/rust/tls13-inner-plaintext",
         "code/packages/rust/tls13-record",
-        "code/packages/rust/tls13-record-nonce"
+        "code/packages/rust/tls13-record-nonce",
+        "code/packages/rust/tls13-traffic-key-material"
       ],
       "discovered_revision": "9d0843dc86975a0442bcc86c9ccd765eed3c20a8",
-      "notes": "The post-83f1871 inventory adds five Rust-only allocation-free TLS 1.3 prerequisite identities. Preserve their separate contracts: outer record framing, authenticated inner-plaintext padding and content type, sequence-number nonce derivation, cipher-suite routing policy, and HKDF-Expand-Label framing. Before delivery, decompose language-neutral fixture owners and exact SHA-384/HMAC/HKDF/AEAD prerequisites; classify resource ceilings, stable redacted failures, key-material ownership, sequence exhaustion, and failure atomicity. This grouping is inventory ownership only and does not claim a TLS connection, handshake, network, credential-custody, constant-time, or production-security qualification."
+      "notes": "The post-83f1871 inventory adds five Rust-only allocation-free TLS 1.3 record prerequisite identities, and exact main f22aa379 adds tls13-traffic-key-material as a sixth fixed-memory prerequisite. Preserve their separate contracts: outer record framing, authenticated inner-plaintext padding and content type, sequence-number nonce derivation, cipher-suite routing policy, HKDF-Expand-Label framing, and suite-bound traffic-key/static-IV derivation from caller-supplied secrets. Before delivery, decompose language-neutral fixture owners and exact SHA-384/HMAC/HKDF/AEAD/zeroization prerequisites; classify resource ceilings, stable redacted failures, key-material ownership, sequence exhaustion, and failure atomicity. This grouping is inventory ownership only and does not claim a TLS connection, handshake, network, credential-custody, constant-time, or production-security qualification."
     },
     {
       "id": "x509-ocsp-authenticated-revocation-binding-stack-classification",
