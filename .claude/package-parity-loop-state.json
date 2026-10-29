@@ -26,7 +26,7 @@
     "manual_merge": false
   },
   "last_inventory": {
-    "revision": "f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0",
+    "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1606,
@@ -14885,8 +14885,10 @@
       "selected_at": "2026-10-29T10:07:04Z",
       "selection_revision": "16d1607e3a784a732e9a3580f7669e6180526460",
       "implementation_revision": "e7b9b097a7e66b2ea89548ef9eedbd0d821af8f0",
-      "main_refresh_revision": "f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0",
-      "main_merge_revision": "865d3ec36d6cf1c16ac44bda5c52b8c369bc383c",
+      "prior_main_refresh_revision": "f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0",
+      "prior_main_merge_revision": "865d3ec36d6cf1c16ac44bda5c52b8c369bc383c",
+      "main_refresh_revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
+      "main_merge_revision": "1686ebbb6650537850629512fa8bf11ef5a59e05",
       "validation_notes": "Local repaired implementation is complete through exact bounded-reader head e7b9b097a7e66b2ea89548ef9eedbd0d821af8f0. Every lane validates exact V/L tags and fields, portable identifiers, strict lowercase even hex, digest and 128-bit length syntax, canonical bounded chunks, and exact sums before decoding. Every real file loader reads no more than 4,097 bytes and rejects the extra byte before unbounded allocation; Rust exercises the on-disk runtime path and Haskell uses one strict bounded read without a mutable-file size/read gap. Python handles contiguous multi-byte memoryviews by byte length and rejects non-contiguous views failure-atomically; Perl rejects UTF-8-flagged text; Go and Rust prove continuation after snapshot. Native results are C# 16 tests at 100% line, Elixir 26 at 100%, F# 16 at 100% line, Go 32 at 89.2%, Haskell 7, Lua 26, Perl 65 assertions, Python 47 at 95.69%, Ruby 43 runs/149 assertions, Rust 34 plus four doc tests, Swift 32, and TypeScript 45 at 100%. Existing capability profiles remain empty; Haskell's strict bytestring and directory additions are test-only. Package-native cleans plus explicit bounded artifact deletion leave every SHA-512 package path clean while preserving the shared Rust target. The work is local and unpublished pending independent exact-head review.",
       "selection_notes": "Selected only after the exact Swift RESP merge receipt, full 93-root post-inventory classification, and independent review of the durable reconciliation. This bounded portable owner has zero unfinished prerequisites, two direct unfinished children, and eighteen total unfinished descendants, the strongest safe leverage among dependency-ready items. Its HF04 spec, new shared fixture, and twelve established SHA-512 package paths have no exact overlap with open PR #18495, prepared Lua/Rust graph-diff work, or other live PRs. Keep C, C++, and OCaml emerging lanes, Java/Kotlin/Dart ports, HMAC composition, host-crypto substitution, secret custody, and authority outside this audit.",
       "notes": "Audit all twelve established SHA-512 implementations against shared HF04 vectors, incremental/finalization behavior, large-length accounting, input ownership, exact output, empty capability profiles, and stable bounded errors before using them as the HMAC-family foundation.",

@@ -19928,11 +19928,14 @@ temporary-file support; production capabilities and authority remain empty.
 Package-native cleans plus explicit bounded artifact deletion leave all twelve
 SHA-512 package paths clean while preserving the shared Rust target.
 
-Current `origin/main` advanced from the stored exact
+Current `origin/main` first advanced from the stored exact
 `9d0843dc86975a0442bcc86c9ccd765eed3c20a8` inventory to
-`f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0`. A normal merge records both
-histories at `865d3ec36d6cf1c16ac44bda5c52b8c369bc383c`. The complete intervening
-BUILD delta is one added root and one new established identity:
+`f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0`, merged normally as
+`865d3ec36d6cf1c16ac44bda5c52b8c369bc383c`. A final fetch found main at
+`4f7cc78855a816ee944b22b0b73fd425bab596c2`; the second normal merge
+`1686ebbb6650537850629512fa8bf11ef5a59e05` preserves both histories and adds
+no further BUILD root. The complete intervening BUILD delta is therefore one
+added root and one new established identity:
 `code/packages/rust/tls13-traffic-key-material`. It is a Rust-only fixed-memory
 suite-bound traffic-key/static-IV derivation boundary and is registered under
 the existing blocked `tls13-fixed-memory-record-prerequisite-stack-classification`

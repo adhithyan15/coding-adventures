@@ -1,9 +1,14 @@
 {
   "kind": "in-progress-owner-main-merge-inventory-reconciliation",
-  "observed_at": "2026-10-29T12:17:33Z",
-  "inventory_revision": "f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0",
+  "observed_at": "2026-10-29T12:20:35Z",
+  "inventory_revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
   "previous_inventory_revision": "9d0843dc86975a0442bcc86c9ccd765eed3c20a8",
-  "branch_merge_revision": "865d3ec36d6cf1c16ac44bda5c52b8c369bc383c",
+  "branch_merge_revision": "1686ebbb6650537850629512fa8bf11ef5a59e05",
+  "intermediate_main_refresh": {
+    "revision": "f22aa37985d4e04b5cb61e9aa69dc827c8f5bdb0",
+    "branch_merge_revision": "865d3ec36d6cf1c16ac44bda5c52b8c369bc383c",
+    "note": "The first normal refresh introduced tls13-traffic-key-material. A final fetch found main had advanced again; the second normal merge preserves that history and adds no BUILD root or implementation identity."
+  },
   "main_delta": {
     "added_build_roots": 1,
     "removed_build_roots": 0,
