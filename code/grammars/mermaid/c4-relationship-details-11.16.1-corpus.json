@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 relationship technology and description vertical slice",
+  "fixtures": [
+    {
+      "name": "positional-relationship-details",
+      "source": "C4Context\nPerson(customer, \"Customer\")\nSystem(bank, \"Bank\")\nRel(customer, bank, \"Uses\", \"HTTPS\", \"Calls the public API\")"
+    },
+    {
+      "name": "keyed-relationship-details",
+      "source": "C4Container\nContainer(app, \"Application\")\nContainerDb(db, \"Database\")\nRel(app, db, \"Reads\", $techn=\"JDBC\", $descr=\"Queries account records\")"
+    }
+  ]
+}

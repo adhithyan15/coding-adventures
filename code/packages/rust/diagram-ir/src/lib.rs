@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-pub const VERSION: &str = "0.87.0";
+pub const VERSION: &str = "0.88.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -2440,6 +2440,17 @@ pub enum StructuralRouting {
     Orthogonal,
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct C4RelationshipMetadata {
+    pub technology: Option<String>,
+    pub description: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum StructuralRelationshipMetadata {
+    C4(C4RelationshipMetadata),
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralRelationship {
     pub from: String,
@@ -2457,6 +2468,7 @@ pub struct StructuralRelationship {
     pub label: Option<String>,
     pub label_offset_x: f64,
     pub label_offset_y: f64,
+    pub metadata: Option<StructuralRelationshipMetadata>,
     pub style: Option<DiagramStyle>,
 }
 
@@ -3205,7 +3217,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.87.0");
+        assert_eq!(VERSION, "0.88.0");
     }
     #[test]
     fn default_direction_is_tb() {
