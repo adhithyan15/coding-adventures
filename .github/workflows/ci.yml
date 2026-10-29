@@ -706,6 +706,11 @@ jobs:
           # automation and go:generate directives is frozen separately.
           python3 code/scripts/third_party_dependency_policy.py check --ecosystem go --base-ref origin/main
           python3 code/scripts/third_party_dependency_policy.py check --ecosystem go-tools --base-ref origin/main
+          # Mix dependencies are local only through tracked path targets with
+          # matching app identities. Ad-hoc Mix installers are frozen in their
+          # own currently-empty monotone inventory.
+          python3 code/scripts/third_party_dependency_policy.py check --ecosystem elixir --base-ref origin/main
+          python3 code/scripts/third_party_dependency_policy.py check --ecosystem elixir-tools --base-ref origin/main
           python3 -m unittest discover -s code/scripts/tests -p 'test_third_party_dependency_policy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_neural_framework_windows_ci.py'

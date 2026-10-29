@@ -501,7 +501,9 @@ reviewable:
 - [x] Go modules and tool installs: requirements are local only through a
   tracked replacement whose target declares the same module path; remote tool
   acquisition in automation and `go:generate` directives is frozen at zero.
-- [ ] Elixir Mix manifests and tool installs.
+- [x] Elixir Mix manifests and tool installs: path dependencies are local only
+  when a tracked target declares the same app identity; executable Mix
+  installer commands are frozen at zero.
 
 Each slice rejects both additions and stale allowlist entries. The second rule
 turns "may only shrink" into an executable guarantee: when the final use of a
