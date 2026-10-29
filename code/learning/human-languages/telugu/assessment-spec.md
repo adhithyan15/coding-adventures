@@ -4,8 +4,9 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1 task inventory is checked in, while
-A1-C2 inventories, mocks, calibration, and human validation remain backlog
+**Status:** target specified; the pre-A1 and A1 task inventories are checked
+in, while A2-C2 inventories, mocks, calibration, and human validation remain
+backlog
 
 This specification names the assessment that the complete Telugu book must
 eventually prepare a book-only learner to pass. It is not an external
@@ -67,6 +68,24 @@ Sources checked 2026-09-13:
 - [Council of Europe guidance on tests and examinations](https://www.coe.int/en/web/common-european-framework-reference-languages/tests-and-examinations)
 - [Council of Europe introduction and certification caveat](https://www.coe.int/en/web/common-european-framework-reference-languages/introduction-and-context)
 - [SiliconAndhra ManaBadi — Potti Sreeramulu Telugu University affiliation and course levels](https://manabadi.siliconandhra.org/potti-sreeramulu-telugu-university/)
+
+### B2 task-shape source boundary
+
+The B2 task shape is an executable form of this project's own envelope, not a
+transcription of a published Telugu B2 examination. The Council of Europe CEFR
+Companion Volume supplies the B2 proficiency backbone and examination-design
+context. SiliconAndhra ManaBadi documents a real PSTU-affiliated Telugu ladder
+whose annual examination assesses reading, writing, listening, speaking, and
+comprehension. Neither checked source publishes a CEFR-mapped Telugu B2 paper
+with part counts, timings, input speed, text or response lengths, replay rules,
+regional-voice requirements, aid rules, or per-skill validation measurements.
+
+HL16, HL18, and this specification therefore own the numeric B2 envelope as a
+transparent project choice. The machine-readable inventory must repeat that
+source boundary at the part or administration field it qualifies instead of
+letting a precise project value look externally measured. Publishing the shape
+does not establish an external qualification, a complete mock, calibration,
+human validation, learner readiness, or learner attainment.
 
 ## Pass rule
 
