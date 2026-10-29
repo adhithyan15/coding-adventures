@@ -731,7 +731,7 @@ func hasExactPathSpelling(fromDir, path string) bool {
 
 		entries, err := os.ReadDir(current)
 		if err != nil {
-			return true
+			return false
 		}
 		exact := false
 		caseVariant := false
