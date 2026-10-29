@@ -107,7 +107,14 @@ public enum RESP {
 
       switch prefix {
       case 43, 45:  // '+' simple string, '-' error
-        guard let line = try readLine(bytes, from: cursor, start: start, limits: limits)
+        guard
+          let line = try readLine(
+            bytes,
+            from: cursor,
+            start: start,
+            maximumContentBytes: limits.maximumLineBytes,
+            limitError: .lineByteLimitExceeded(maximum: limits.maximumLineBytes),
+            limits: limits)
         else { return .incomplete }
         cursor = line.next
         let text = String(decoding: line.bytes, as: UTF8.self)
@@ -117,14 +124,28 @@ public enum RESP {
         completed = prefix == 43 ? .simpleString(text) : .error(text)
 
       case 58:  // ':' signed integer
-        guard let line = try readLine(bytes, from: cursor, start: start, limits: limits)
+        guard
+          let line = try readLine(
+            bytes,
+            from: cursor,
+            start: start,
+            maximumContentBytes: limits.maximumHeaderBytes,
+            limitError: .headerByteLimitExceeded(maximum: limits.maximumHeaderBytes),
+            limits: limits)
         else { return .incomplete }
         try requireHeader(line.bytes.count, limits: limits)
         cursor = line.next
         completed = .integer(try parseInteger(line.bytes))
 
       case 36:  // '$' bulk string
-        guard let line = try readLine(bytes, from: cursor, start: start, limits: limits)
+        guard
+          let line = try readLine(
+            bytes,
+            from: cursor,
+            start: start,
+            maximumContentBytes: limits.maximumHeaderBytes,
+            limitError: .headerByteLimitExceeded(maximum: limits.maximumHeaderBytes),
+            limits: limits)
         else { return .incomplete }
         try requireHeader(line.bytes.count, limits: limits)
         cursor = line.next
@@ -154,7 +175,14 @@ public enum RESP {
         cursor = requiredEnd
 
       case 42:  // '*' array
-        guard let line = try readLine(bytes, from: cursor, start: start, limits: limits)
+        guard
+          let line = try readLine(
+            bytes,
+            from: cursor,
+            start: start,
+            maximumContentBytes: limits.maximumHeaderBytes,
+            limitError: .headerByteLimitExceeded(maximum: limits.maximumHeaderBytes),
+            limits: limits)
         else { return .incomplete }
         try requireHeader(line.bytes.count, limits: limits)
         cursor = line.next
@@ -220,14 +248,8 @@ public enum RESP {
       }
       switch current {
       case .simpleString(let text), .error(let text):
-        let bytes = Array(text.utf8)
-        guard !bytes.contains(13) && !bytes.contains(10) else {
-          throw RespProtocolError.invalidLineTerminator
-        }
-        guard bytes.count <= limits.maximumLineBytes else {
-          throw RespProtocolError.lineByteLimitExceeded(maximum: limits.maximumLineBytes)
-        }
-        try addSize(1 + bytes.count + 2, to: &total, limits: limits)
+        let byteCount = try measureLine(text, limits: limits)
+        try addSize(1 + byteCount + 2, to: &total, limits: limits)
       case .integer(let number):
         try addSize(1 + String(number).utf8.count + 2, to: &total, limits: limits)
       case .bulkString(let bytes):
@@ -265,19 +287,25 @@ public enum RESP {
   }
 
   private static func readLine(
-    _ bytes: [UInt8], from start: Int, start frameStart: Int, limits: RespLimits
+    _ bytes: [UInt8],
+    from start: Int,
+    start frameStart: Int,
+    maximumContentBytes: Int,
+    limitError: RespProtocolError,
+    limits: RespLimits
   ) throws -> (bytes: [UInt8], next: Int)? {
     var cursor = start
     while cursor < bytes.count {
       let length = cursor - start
-      guard length <= limits.maximumLineBytes else {
-        throw RespProtocolError.lineByteLimitExceeded(maximum: limits.maximumLineBytes)
+      let byte = bytes[cursor]
+      if byte != 13 && byte != 10 && length >= maximumContentBytes {
+        throw limitError
       }
       try requireFrame(cursor - frameStart + 1, limits: limits)
-      if bytes[cursor] == 10 {
+      if byte == 10 {
         throw RespProtocolError.invalidLineTerminator
       }
-      if bytes[cursor] == 13 {
+      if byte == 13 {
         guard cursor + 1 < bytes.count else { return nil }
         guard bytes[cursor + 1] == 10 else {
           throw RespProtocolError.invalidLineTerminator
@@ -287,10 +315,21 @@ public enum RESP {
       }
       cursor += 1
     }
-    if cursor - start > limits.maximumLineBytes {
-      throw RespProtocolError.lineByteLimitExceeded(maximum: limits.maximumLineBytes)
-    }
     return nil
+  }
+
+  private static func measureLine(_ text: String, limits: RespLimits) throws -> Int {
+    var count = 0
+    for byte in text.utf8 {
+      guard byte != 13 && byte != 10 else {
+        throw RespProtocolError.invalidLineTerminator
+      }
+      guard count < limits.maximumLineBytes else {
+        throw RespProtocolError.lineByteLimitExceeded(maximum: limits.maximumLineBytes)
+      }
+      count += 1
+    }
+    return count
   }
 
   private static func parseInteger(_ bytes: [UInt8]) throws -> Int64 {

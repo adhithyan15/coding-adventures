@@ -234,6 +234,9 @@ private func errorCode(_ error: RespProtocolError) -> String {
   #expect(throws: RespProtocolError.outputByteLimitExceeded(maximum: 16)) {
     try RESP.encode(.array([.bulkString([1, 2, 3, 4]), .bulkString([5, 6])]), limits: limits)
   }
+  #expect(throws: RespProtocolError.lineByteLimitExceeded(maximum: 8)) {
+    try RESP.encode(.simpleString(String(repeating: "é", count: 5)), limits: limits)
+  }
 
   let headerFrame = try RespLimits(
     maximumLineBytes: 2, maximumHeaderBytes: 2, maximumBulkBytes: 0,
@@ -241,6 +244,26 @@ private func errorCode(_ error: RespProtocolError) -> String {
     maximumBufferedBytes: 8)
   #expect(throws: RespProtocolError.frameByteLimitExceeded(maximum: 3)) {
     try RESP.decode(Array("*1\r\n".utf8), limits: headerFrame)
+  }
+}
+
+@Test func numericHeadersEnforceTheirBoundBeforeTerminationOrAllocation() throws {
+  let limits = try RespLimits(maximumLineBytes: 8, maximumHeaderBytes: 2)
+
+  for prefix: UInt8 in [36, 42, 58] {  // '$', '*', ':'
+    #expect(throws: RespProtocolError.headerByteLimitExceeded(maximum: 2)) {
+      try RESP.decode([prefix] + Array("123\r\n".utf8), limits: limits)
+    }
+    #expect(throws: RespProtocolError.headerByteLimitExceeded(maximum: 2)) {
+      try RESP.decode([prefix] + Array("123".utf8), limits: limits)
+    }
+  }
+
+  let competingFrameLimit = try RespLimits(
+    maximumLineBytes: 2, maximumHeaderBytes: 2, maximumBulkBytes: 0,
+    maximumFrameBytes: 3, maximumOutputBytes: 3, maximumBufferedBytes: 8)
+  #expect(throws: RespProtocolError.headerByteLimitExceeded(maximum: 2)) {
+    try RESP.decode(Array("$123".utf8), limits: competingFrameLimit)
   }
 }
 
