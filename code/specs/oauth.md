@@ -1900,6 +1900,34 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-transcript` prerequisite now owns the data-driven
+SHA-256/SHA-384 transcript-hash state needed around TLS 1.3 cipher-suite
+selection. Before selection it hashes each exact byte segment from a
+caller-accepted handshake message encoding through both repository-owned hash
+implementations. A
+caller-selected nonzero cumulative wire-byte ceiling, itself no larger than
+SHA-256's FIPS 180-4 message bound, limits work before either state changes.
+Selection consumes one policy-authorized cipher suite and retains only the
+suite-bound hash state; later snapshots carry that exact hash identifier and
+length together with the public digest bytes. Snapshots are non-destructive,
+and a failed cumulative-limit check leaves the transcript unchanged.
+
+The selected transcript also supports RFC 8446's one-shot HelloRetryRequest
+rewrite. It snapshots the first ClientHello transcript, builds the synthetic
+`message_hash(254) || uint24(Hash.length) || Hash(ClientHello1)` input in fixed
+storage, replaces the selected hash state only after the rewrite succeeds, and
+rejects a repeated rewrite. The caller remains responsible for invoking that
+operation at the correct state transition and then hashing the exact
+caller-accepted HelloRetryRequest encoding. This slice does not parse or
+authenticate handshake framing, prove segment boundaries, sequence handshake
+messages, select a suite,
+derive or retain TLS secrets, invoke an AEAD, process certificates, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Complete handshake and key-schedule state,
+repository-owned AEAD composition, certificate-path validation, revocation
+policy, TLS transport, and HTTP composition remain blockers. Concrete HTTPS
+remains unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire

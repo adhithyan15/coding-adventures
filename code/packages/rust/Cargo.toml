@@ -838,6 +838,7 @@ members = [
     "x509-certificate-policy",
     "x509-webpki-roots-snapshot",
     "x509-webpki-root-anchor-selection",
+    "tls13-transcript",
     "tls13-inner-plaintext",
     "tls13-record",
     "tls-server-identity",
