@@ -41,6 +41,8 @@ domain for wide static arguments until the same enclosing reduction. User
 overrides and procedure-calling arguments remain outside the proof.
 Pure nested chains of those built-ins receive the same treatment when their
 root is call-free; shadowing or any other nested call still fails closed.
+Checked unary signs may separate the nested normalizers, with `i64::MIN`
+negation and every other overflow remaining outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
