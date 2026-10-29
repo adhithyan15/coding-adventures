@@ -326,6 +326,9 @@ overrides, other calls, and unreduced wide results remain conservative.
 Bounded nonnegative right-associative powers may connect them too. Exponents
 use the existing 4,096 cap and every powered intermediate is checked in `i64`;
 negative or oversized exponents and overflow remain conservative.
+Checked integer `div` and `mod` may connect nested normalizers too. Zero
+divisors, `i64::MIN div -1`, procedure-calling divisors, and unreduced wide
+results remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
