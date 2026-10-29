@@ -40,6 +40,12 @@ closure) is wrapped in `__sir::strict_arity(<closure>, N)`, which raises
 `ArgumentError: arity mismatch: …` for any other argument count; a plain
 closure pads a missing argument with `nil`.
 
+`sanitize_ident` escapes every name the emitter binds — `__sir…`, the
+capture temporaries `__cap_…`, `__args`, `__it`, `__l`, `__r`, `__payload`,
+`__exc`, the prelude's `Some`/`None`/`Ok`/`Err` and the wildcard `_` — into
+`__sir_esc_v<name>`, so a user variable can never be shadowed by one (SIR10
+"Generated names", issue #18466).
+
 Accepts (SIR16 / v1 — **all six** features, full v1 parity): `Floats`,
 `ShortCircuit`, `MutableBindings`, `Loops`, `Sequences`, `Maps`.
 
