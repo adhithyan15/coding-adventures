@@ -711,6 +711,53 @@ func realDirectory(path string) (string, error) {
 	return filepath.Clean(real), nil
 }
 
+// hasExactPathSpelling reports whether every named component in path has the
+// same spelling as its directory entry. filepath.EvalSymlinks deliberately
+// follows the host filesystem, so on Windows (and case-insensitive macOS
+// volumes) ../Compiler can otherwise resolve to an existing ../compiler.
+// Dot and dot-dot components name no directory entry and are only traversed.
+// Missing paths are left for realDirectory to diagnose below.
+func hasExactPathSpelling(fromDir, path string) bool {
+	current := filepath.Clean(fromDir)
+	components := strings.Split(filepath.Clean(filepath.FromSlash(path)), string(filepath.Separator))
+	for _, component := range components {
+		switch component {
+		case "", ".":
+			continue
+		case "..":
+			current = filepath.Dir(current)
+			continue
+		}
+
+		entries, err := os.ReadDir(current)
+		if err != nil {
+			return true
+		}
+		exact := false
+		caseVariant := false
+		for _, entry := range entries {
+			if entry.Name() == component {
+				exact = true
+				break
+			}
+			if strings.EqualFold(entry.Name(), component) {
+				caseVariant = true
+			}
+		}
+		if !exact {
+			// Inspect the directory entries instead of asking the host whether
+			// the misspelling resolves. That makes the result identical on
+			// case-sensitive and case-insensitive filesystems.
+			if caseVariant {
+				return false
+			}
+			return true
+		}
+		current = filepath.Join(current, component)
+	}
+	return true
+}
+
 func newTriggerWalk(known []discovery.Package) *triggerWalk {
 	walk := &triggerWalk{
 		index:     make(map[string]string, len(known)),
@@ -805,6 +852,9 @@ func (walk *triggerWalk) containing(real string) string {
 func (walk *triggerWalk) follow(fromDir, manifest, path, root string, depth int, out map[string]bool) error {
 	refuse := func(format string, args ...any) error {
 		return &CargoManifestError{Path: manifest, Reason: fmt.Sprintf(format, args...)}
+	}
+	if !hasExactPathSpelling(fromDir, path) {
+		return refuse("the path dependency %q does not use the directory's exact spelling", path)
 	}
 	target := filepath.Clean(filepath.Join(fromDir, filepath.FromSlash(path)))
 	real, err := realDirectory(target)
