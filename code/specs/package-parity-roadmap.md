@@ -19989,3 +19989,15 @@ through the TaskApp Qt empty-board drop-zone repair. Normal merge
 lesson paths. It adds no BUILD root or identity and overlaps no SHA-512,
 state, roadmap, or root changelog-rank path; inventory and selection receipts
 remain exact.
+
+#### Draft PR #18583 publication receipt
+
+Publish independently reviewed exact current-main head
+`46eef47d8c74786e5ebee9c2c87a7b74c6e4f163` as draft PR #18583 over exact
+base `e54161212491f94f0e141910dacf8f2913aa32b6` at
+`2026-10-29T14:38:24Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.
