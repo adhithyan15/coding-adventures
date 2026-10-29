@@ -4,6 +4,12 @@
 
 ### Added
 
+- A process-free bounded graph and diff-selection core now dynamically
+  consumes all eight graph and twelve diff-selection neutral fixtures. It
+  provides canonical levels and closures, stable all-or-error diagnostics,
+  Unicode-scalar strict-glob matching with a 50,000,000-unit preflight, exact
+  BUILD-front handling, and domain-separated repository-boundary reverse
+  selection including shared-input multi-consumer fanout.
 - Process-free dependency and combined SHA-256 digests plus inert cache-hit,
   miss, and corrupt-recovery decisions now consume all 11 neutral
   `hashing-cache-*` fixtures, including dependency-only changes and shared

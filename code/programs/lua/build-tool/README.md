@@ -53,9 +53,8 @@ The build tool follows a pipeline:
    runtime does not look for a fixture in the checkout.
 
    This is a process-free library surface, not yet incremental CLI execution.
-   Repository-boundary union and reverse-diff selection, native no-follow and
-   stable-identity reads, and persistent cache behavior have separate owners
-   and are not claimed here. For a caller-supplied
+   Native no-follow and stable-identity reads and persistent cache behavior
+   have separate owners and are not claimed here. For a caller-supplied
    snapshot, `collect_source_files` accepts `language`, canonical
    `package_root`, `mode` (`extension` or `declared_sources`), the checked
    `registry_sha256`, `declared_srcs`, and candidate `{path, kind, content_hex}`
@@ -71,6 +70,22 @@ The build tool follows a pipeline:
    The packaged projection is checked by native tests against the complete
    reviewed neutral registry and its domain-separated SHA-256 digest. Changes
    to that registry require a reviewed update to the packaged Lua data.
+
+9. **Graph and Diff Selection** (`lib/build_tool/graph_diff.lua`): Validate and
+   evaluate caller-supplied package graphs and changed repository paths without
+   reading a checkout or invoking Git. The core emits canonical dependency
+   edges and prerequisite-first levels, computes deterministic affected and
+   prerequisite closures, recognizes only exact BUILD fronts, and supports
+   package-prefix and strict portable-glob source modes.
+
+   Strict globs compile to Unicode-scalar tokens and run through bounded
+   dynamic programs. Before the first match, the evaluator charges the full
+   pattern/path cross product against one 50,000,000-unit operation ceiling.
+   Optional repository source-boundary data is bounded as an inert decoded
+   object graph, verified with its domain-separated SHA-256 digest, and
+   reversed so one shared input can select every registered consumer. The
+   native suite dynamically consumes and pins all eight graph and twelve
+   diff-selection fixtures; CLI activation remains a separate tranche.
 
 ## OCaml and Dune Discovery
 
