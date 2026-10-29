@@ -1373,5 +1373,6 @@ members = [
   "tls13-record-nonce",
   "tls13-cipher-suite-policy",
   "tls13-hkdf-label",
+  "tls13-supported-versions",
   "tls13-traffic-key-material",
 ]

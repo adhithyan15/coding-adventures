@@ -1935,6 +1935,28 @@ compatibility and educational surfaces rather than production TLS composition.
 Combined fixed-memory AEAD review remains a prerequisite, and concrete HTTPS
 remains unavailable.
 
+An allocation-free `tls13-supported-versions` prerequisite now owns the exact
+RFC 8446 `supported_versions` extension data emitted and consumed by a future
+repository-owned TLS 1.3 client. A caller supplies a preference-ordered slice
+of one through 127 two-byte version identifiers. Construction rejects
+duplicates, requires TLS 1.3 (`0x0304`), and preserves explicitly configured
+unknown values for later reserved-value or future-version policy. Encoding
+emits the exact one-byte-length-prefixed ClientHello vector into caller-owned
+storage only after validating complete capacity. ServerHello and
+HelloRetryRequest validation accepts exactly one two-byte value, binds it to
+the original client offer, rejects versions before TLS 1.3, and admits only
+the exact TLS 1.3 value whose semantics this package implements. Stable
+failures retain no configured identifiers, input bytes, or output lengths.
+
+This slice receives already-delimited extension data. It does not locate or
+deduplicate extensions, decide whether an extension is authorized in a
+particular handshake message, construct a ClientHello, enforce the legacy
+version fields or downgrade sentinel, send alerts, negotiate a cipher suite,
+derive keys, protect records, process certificates, establish trust, check
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. Extension-block and handshake composition remain prerequisites,
+and concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
