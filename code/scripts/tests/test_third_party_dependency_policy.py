@@ -121,6 +121,132 @@ libc = "0.2"
             self.assertEqual(inventory, {"serde": ["nested/Cargo.toml"]})
 
 
+class NpmManifestTests(unittest.TestCase):
+    def test_collects_all_dependency_tables_and_normalizes_aliases(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            app = root / "app" / "package.json"
+            local = root / "local" / "package.json"
+            app.parent.mkdir()
+            local.parent.mkdir()
+            app.write_text(
+                json.dumps(
+                    {
+                        "name": "app",
+                        "dependencies": {
+                            "local": "file:../local",
+                            "renamed": "npm:actual-package@^1.0.0",
+                        },
+                        "devDependencies": {"typescript": "^5.0.0"},
+                        "peerDependencies": {
+                            "scoped-alias": "npm:@scope/actual@2"
+                        },
+                        "optionalDependencies": {"optional-tool": "3"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            local.write_text(
+                json.dumps({"name": "local", "dependencies": {}}),
+                encoding="utf-8",
+            )
+            tracked = {app.resolve(), local.resolve()}
+
+            self.assertEqual(
+                policy.npm_manifest_dependency_names(
+                    app,
+                    root,
+                    tracked,
+                    {"app", "local"},
+                ),
+                {
+                    "@scope/actual",
+                    "actual-package",
+                    "optional-tool",
+                    "typescript",
+                },
+            )
+
+    def test_only_tracked_in_repository_file_edges_are_local(self) -> None:
+        root = Path("/repo").resolve()
+        manifest = root / "app" / "package.json"
+
+        self.assertEqual(
+            policy.npm_third_party_name(
+                "outside",
+                "file:../../../outside",
+                manifest_path=manifest,
+                repository_root=root,
+                tracked_manifests={manifest},
+                local_package_names={"outside"},
+            ),
+            "outside",
+        )
+        self.assertEqual(
+            policy.npm_third_party_name(
+                "vendored",
+                "file:../vendor",
+                manifest_path=manifest,
+                repository_root=root,
+                tracked_manifests={manifest},
+                local_package_names={"vendored"},
+            ),
+            "vendored",
+        )
+
+    def test_rejects_an_invalid_npm_specifier(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "invalid npm specifier"):
+            policy.npm_third_party_name(
+                "broken",
+                42,
+                manifest_path=Path("/repo/app/package.json"),
+                repository_root=Path("/repo"),
+                tracked_manifests=set(),
+                local_package_names=set(),
+            )
+
+    def test_rejects_duplicate_json_keys(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "package.json"
+            path.write_text(
+                '{"dependencies":{"safe":"1","safe":"file:../safe"}}',
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "duplicate JSON key"):
+                policy.npm_manifest_dependency_names(
+                    path,
+                    root,
+                    {path.resolve()},
+                    set(),
+                )
+
+    def test_sparse_inventory_discovers_an_absent_npm_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            path = root / "nested" / "package.json"
+            path.parent.mkdir()
+            path.write_text(
+                json.dumps(
+                    {
+                        "name": "nested",
+                        "devDependencies": {"typescript": "5"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            path.unlink()
+
+            manifests = policy.git_npm_manifests(root)
+            inventory = policy.build_npm_inventory(root, manifests)
+
+            self.assertEqual(manifests, [path])
+            self.assertEqual(inventory, {"typescript": ["nested/package.json"]})
+
+
 class DependencyPolicyTests(unittest.TestCase):
     def test_inventory_records_each_declaring_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -263,6 +389,87 @@ class DependencyPolicyTests(unittest.TestCase):
             self.assertIn("approved dependency set may only shrink", errors.getvalue())
             self.assertIn("toml", errors.getvalue())
 
+    def test_npm_command_rejects_allowlist_growth(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            manifest = root / "package.json"
+            allowlist = root / "policy" / "npm-allowlist.json"
+            allowlist.parent.mkdir()
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "name": "app",
+                        "devDependencies": {"typescript": "5"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            allowlist.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "ecosystem": "npm",
+                        "allowed_dependency_names": ["typescript"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "user.name=Dependency Policy Test",
+                    "-c",
+                    "user.email=dependency-policy@example.invalid",
+                    "commit",
+                    "-qm",
+                    "baseline",
+                ],
+                cwd=root,
+                check=True,
+            )
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "name": "app",
+                        "devDependencies": {"typescript": "5", "vitest": "4"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            allowlist.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "ecosystem": "npm",
+                        "allowed_dependency_names": ["typescript", "vitest"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            errors = io.StringIO()
+            with contextlib.redirect_stderr(errors):
+                result = policy.main(
+                    [
+                        "check",
+                        "--ecosystem",
+                        "npm",
+                        "--root",
+                        str(root),
+                        "--allowlist",
+                        str(allowlist),
+                        "--base-ref",
+                        "HEAD",
+                    ]
+                )
+
+            self.assertEqual(result, 1)
+            self.assertIn("approved dependency set may only shrink", errors.getvalue())
+            self.assertIn("vitest", errors.getvalue())
+
     def test_allowlist_requires_sorted_unique_names(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "allowlist.json"
@@ -279,6 +486,23 @@ class DependencyPolicyTests(unittest.TestCase):
 
             with self.assertRaisesRegex(policy.PolicyError, "sorted and unique"):
                 policy.load_allowlist(path)
+
+    def test_allowlist_requires_the_selected_ecosystem(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "allowlist.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "ecosystem": "cargo",
+                        "allowed_dependency_names": ["serde"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "npm allowlist"):
+                policy.load_allowlist(path, "npm")
 
 
 if __name__ == "__main__":
