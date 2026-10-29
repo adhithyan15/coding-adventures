@@ -4,6 +4,12 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Preserve the Board empty-column drop zone's authored 60-pixel minimum height
+  on Qt's outer drop target (#18559), without changing shared styles, drag
+  routing, diagnostic budgets, or artifact coverage.
+
 Entries added after `task-app-v0.5.14` accumulate here until the next version is
 cut.
 

@@ -1,5 +1,8 @@
 # mosaic-emit-qt
 
+HostDropTarget retains a finite nonnegative static `min-height` on its outer
+Item, which owns the DropArea bounds. State-dependent minima remain excluded.
+
 Host controls also retain a static scalar non-shrinking width floor, using the
 same conservative bridge as text and containers. Fill widths, conflicts, and
 state geometry remain excluded; general flex support is not claimed.
