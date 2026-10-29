@@ -19605,7 +19605,7 @@ bulk and null array values, strict canonical grammar, iterative bounded
 encoding and decoding, failure-atomic fragmented input, stable errors, BUILD
 fronts, package documentation, and an empty authority profile. UTF-8 line
 preflight and numeric-header scanning enforce their limits before proportional
-allocation, including fragmented unterminated headers. Twelve tests,
+allocation, including fragmented unterminated headers. Thirteen tests,
 release build, strict Swift formatting, manifest and JSON checks, lessons,
 diff, and artifact hygiene pass. Independent LLVM measurement reports 96.84%
 production lines with all 37 functions executed. Exact-head review first
@@ -19613,8 +19613,13 @@ rejected proportional UTF-8 line allocation and late numeric-header limits;
 the repaired bounded scans close both defects, and re-review issued SHIP with
 no findings. Merge `aec006f2c4a3f43e876a16f842709d00a6bd37f2`
 reconciles exact fetched main `6fe513ee903ff2ef56279783ccbd59a0b8100788`;
-all twelve tests and the release build pass again. Publication remains deferred
-while Ruby dependency hashing PR #18555 occupies the active-PR slot.
+current-main review then found that encode-side integer, bulk-length, null, and
+array-count headers ignored tightened `maximumHeaderBytes`. Repaired head
+`d0a724afffae3f0db919505a531e56f5877dc709` preflights every numeric header
+before output allocation and pins oversize failures plus one-byte successes.
+Re-review issued SHIP; all thirteen tests, release build, and strict formatting
+pass. Publication remains deferred while Ruby dependency hashing PR #18555
+occupies the active-PR slot.
 
 The implementation audit enriches the existing
 `resp-protocol-dt23-bounded-streaming-contract-reconciliation` backlog owner:
