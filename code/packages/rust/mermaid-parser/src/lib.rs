@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.148.0";
+pub const VERSION: &str = "0.149.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -1626,6 +1626,7 @@ fn parse_architecture_edge(
         to_port: Some(parse_architecture_port(to_direction)),
         routing: StructuralRouting::Orthogonal,
         from_mult: None, to_mult: None, label,
+        label_offset_x: 0.0, label_offset_y: 0.0,
         style: None,
     })
 }
@@ -3965,6 +3966,8 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         from_mult: None,
         to_mult: None,
         label: Some(label),
+        label_offset_x: 0.0,
+        label_offset_y: 0.0,
         style: None,
     })
 }
@@ -4589,6 +4592,8 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     from_mult: None,
                     to_mult: None,
                     label,
+                    label_offset_x: 0.0,
+                    label_offset_y: 0.0,
                     style: None,
                 });
             }
@@ -13685,6 +13690,8 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
                 label: Some(label),
+                label_offset_x: 0.0,
+                label_offset_y: 0.0,
                 style: None,
             });
         } else {
@@ -14182,6 +14189,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     from_mult: None,
                     to_mult: None,
                     label: Some(args[2].clone()),
+                    label_offset_x: 0.0,
+                    label_offset_y: 0.0,
                     style: None,
                 });
             }
@@ -14375,6 +14384,18 @@ fn apply_c4_relationship_style(args: &[String], relationships: &mut [StructuralR
         let (key, value) = argument
             .split_once('=')
             .map_or_else(|| (None, argument.as_str()), |(key, value)| (Some(key), value));
+        if key == Some("$offsetX") || (key.is_none() && position == 2) {
+            if let Ok(offset) = value.parse::<i64>() {
+                relationship.label_offset_x = offset as f64;
+            }
+            continue;
+        }
+        if key == Some("$offsetY") || (key.is_none() && position == 3) {
+            if let Ok(offset) = value.parse::<i64>() {
+                relationship.label_offset_y = offset as f64;
+            }
+            continue;
+        }
         let color = sanitize_railroad_color(Some(value), "");
         if color.is_empty() {
             continue;
@@ -19835,7 +19856,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.148.0");
+        assert_eq!(crate::VERSION, "0.149.0");
     }
 
     #[test]

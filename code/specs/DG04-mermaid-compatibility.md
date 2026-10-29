@@ -176,8 +176,8 @@ arrows through structural layout and backend-neutral PaintInstructions. Core
 pipeline for C4 elements and boundaries. Element technology and description
 are distinct in semantic IR, and keyed or positional `UpdateElementStyle`
 technology overrides replace the rendered technology without losing the
-description. Core `UpdateRelStyle` text and line
-colors likewise survive semantic IR, layout, and backend-neutral
+description. Core `UpdateRelStyle` text and line colors plus keyed or positional
+label offsets likewise survive semantic IR, layout, and backend-neutral
 PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
 semantic IR; shape row limits control structural layout while both values lower
 to backend-neutral PaintScene metadata. C4 remains partial while its remaining

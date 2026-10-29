@@ -53,6 +53,14 @@ const C4_RELATIONSHIP_COLORS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-visual-corpus.json"
 ));
+const C4_RELATIONSHIP_OFFSETS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-offsets-11.16.1-corpus.json"
+));
+const C4_RELATIONSHIP_OFFSETS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-offsets-11.16.1-visual-corpus.json"
+));
 const C4_LAYOUT_CONFIG_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-layout-config-11.16.1-corpus.json"
@@ -2611,6 +2619,20 @@ fn pinned_c4_relationship_colors_reach_semantic_ir() {
     assert_eq!(positional_style.text_color.as_deref(), Some("#14532d"));
     assert_eq!(positional_style.fill.as_deref(), Some("#166534"));
     assert_eq!(positional_style.stroke.as_deref(), Some("#166534"));
+}
+
+#[test]
+fn pinned_c4_relationship_offsets_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_OFFSETS_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_RELATIONSHIP_OFFSETS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let keyed = parse_c4_diagram(fixtures[0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(keyed.relationships[0].label_offset_x, 24.0);
+    assert_eq!(keyed.relationships[0].label_offset_y, -12.0);
+    let positional = parse_c4_diagram(fixtures[1]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(positional.relationships[0].label_offset_x, -18.0);
+    assert_eq!(positional.relationships[0].label_offset_y, 16.0);
 }
 
 #[test]
