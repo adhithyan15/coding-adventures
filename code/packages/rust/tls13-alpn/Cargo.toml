@@ -1,0 +1,7 @@
+[package]
+name = "tls13-alpn"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS ALPN extension data and selection binding"
+
+[dependencies]

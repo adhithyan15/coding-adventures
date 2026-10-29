@@ -2048,6 +2048,28 @@ revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
 connection. Extension-block and handshake composition remain prerequisites,
 and concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-alpn` prerequisite now owns the RFC 7301
+`application_layer_protocol_negotiation` extension data needed to bind a
+future repository-owned TLS client to one application protocol. A client
+offer contains one through 64 caller-ordered, opaque, non-empty protocol names,
+each from one through 255 bytes, inside the exact non-empty 16-bit-length
+vector. Construction rejects duplicate names and validates the complete
+encoded size before changing caller-owned output. Decoding checks the caller's
+explicit one-through-64 protocol-count ceiling before borrowing each exact
+name. A server selection must contain exactly one protocol name and must equal
+one member of the original validated client offer; the returned borrowed value
+therefore cannot authorize an unsolicited protocol. Stable failures retain no
+protocol bytes, names, counts, or encoded lengths.
+
+This slice treats protocol identifiers as opaque policy data. It does not
+register or enable HTTP/1.1, HTTP/2, or any other application protocol; locate
+or authorize the ALPN extension in a handshake message; enforce that a server
+sent ALPN; sequence a handshake; validate certificates; establish trust; check
+revocation; protect records; perform I/O; authorize HTTP or OAuth transport; or
+open a network connection. Extension-context, handshake-state, certificate,
+TLS-record, and HTTP composition remain prerequisites, and concrete HTTPS
+remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
