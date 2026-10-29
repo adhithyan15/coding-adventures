@@ -392,6 +392,70 @@ OK
 
 ## Representation
 
+### Portable Command/Response IR Boundary
+
+The protocol intermediate representation sits between a wire-format facade and
+the command engine. It is deliberately **not** RESP: a TCP/RESP adapter converts
+decoded wire values into this model, and converts engine responses back out.
+New portable lanes use this closed profile; established-lane drift is handled
+by the separate protocol-reconciliation owner rather than silently changed here.
+
+```
+CommandFrame:
+  command: ASCII string, non-empty
+  arguments: ordered list of owned byte strings
+
+EngineResponse:
+  SimpleString(Unicode string)
+  Error(Unicode string)
+  Integer(signed 64-bit integer)
+  BulkString(null | owned bytes)
+  Array(null | ordered list of EngineResponse)
+```
+
+Command construction accepts raw byte parts. An empty parts list and an empty
+first part are different failures. Every command byte must be visible ASCII
+`0x21...0x7e`; failures identify the exact byte index and value. Only bytes `a`
+through `z` are normalized, by subtracting `0x20`; no locale case mapping,
+trimming, Unicode decoding, or argument decoding is allowed. Arguments are
+copied into persistent value storage and may contain NUL or invalid UTF-8.
+Exporting parts returns fresh value collections.
+
+Portable command limits are 256 command bytes, 1,024 arguments, 16,777,216
+bytes per argument, and 67,108,864 aggregate bytes across the command and all
+arguments. These values are also hard package ceilings: callers may tighten
+them but may not raise them. Limit profiles must keep the command and
+per-argument maxima within the aggregate frame maximum. Counts and byte totals
+are checked before constructing the frame.
+
+Bulk-string null, array null, empty bulk bytes, and an empty array are four
+different values. Array order is observable. Convenience constructors such as
+`OK`, null bulk, zero, and one are aliases for the corresponding enum cases,
+not additional response kinds.
+
+Simple/error strings preserve exact UTF-8 identity: canonically equivalent but
+byte-distinct strings are different values. They may not contain CR or LF.
+Response validation is iterative and takes explicit limits. The portable
+defaults and hard ceilings are depth `128`, response elements `65,536`, and
+payload bytes `67,108,864`; callers may only tighten them. The root has depth
+one and counts as one element. Every nested response counts as one more
+element. UTF-8 bytes of simple/error strings and raw bulk-string bytes count
+toward the byte budget; every integer counts as eight payload bytes; null and
+array containers add zero payload bytes. Validation returns the observed
+element count, maximum depth, and payload-byte count.
+
+Traversal uses an explicit cursor stack whose auxiliary storage is bounded by
+nesting depth rather than array width. String scanning stops once the remaining
+budget is exceeded. All aggregate arithmetic is checked before addition, and
+stable failures identify the offending limit. Wire framing bytes are outside
+this model. Validation never partially mutates or publishes a different
+response.
+
+The IR owns no filesystem, network, process, clock, entropy, environment,
+credential, or host authority. Wire framing, incremental decode buffers,
+sockets, expiry clocks, persistence, and command execution remain in their
+separate layers.
+
 ```
 Store (the in-memory database):
   keyspace: HashMap[str, Entry]      # O(1) access by key

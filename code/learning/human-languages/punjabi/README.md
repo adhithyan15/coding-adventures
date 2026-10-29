@@ -43,6 +43,12 @@ attempt and do not count as either full mock or human validation.
 
 ## Progress
 
+- **Chapter 209 — This Is a Blue Shoe**
+  ([`lessons/PA-C209-*`](./lessons/)): a voice-first return to familiar
+  **ਨੀਲਾ** and **ਜੁੱਤੀ**, followed by exact feminine singular direct **ਨੀਲੀ**,
+  delayed retrieval, and the one bounded frame **ਇਹ ਨੀਲੀ ਜੁੱਤੀ ਹੈ**. This is
+  one A2 mock-draft prerequisite, not mock readiness, attainment, or a wider
+  adjective-agreement paradigm. In the book.
 - **Chapter 208 — I Had to Go**
   ([`lessons/PA-C208-*`](./lessons/)): a voice-first return to familiar
   **ਮੈਨੂੰ** and **ਜਾਣਾ**, followed by auxiliary base **ਪੈਣਾ**, exact masculine

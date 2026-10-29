@@ -45,14 +45,54 @@
 //! The compiler decides at compile time whether each `(fn args...)` is a
 //! direct call, a builtin, or an indirect closure call:
 //!
-//! | Function position           | Emitted IIR                                 |
-//! |-----------------------------|---------------------------------------------|
-//! | Top-level user fn name      | `call <name>, ...args`                      |
-//! | Builtin name (`+`, `cons`)  | `call_builtin <name>, ...args`              |
-//! | Anything else (locals etc.) | `call_closure h, ...args` (LANG34)          |
+//! | Function position (first match wins)   | Emitted IIR                       |
+//! |----------------------------------------|-----------------------------------|
+//! | `and` / `or` (special forms)           | inline `jmp_if_false` chain       |
+//! | Lexically bound name (param, `let`,    | `call_closure h, ...args`         |
+//! | `let*`, lambda param, `match` binding) |                                   |
+//! | Top-level user fn name / extern        | `call <name>, ...args`            |
+//! | Builtin name (`+`, `cons`)             | `call_builtin <name>, ...args`    |
+//! | Anything else (any other expression)   | `call_closure h, ...args` (LANG34)|
 //!
 //! Top-level recursion stays on the fast `call` path; only locals
 //! holding closures pay the indirect cost.
+//!
+//! ### Lexical scope wins (#18435)
+//!
+//! The *order* of that table is the language's scoping rule, so it is
+//! worth spelling out.  Twig is lexically scoped like Scheme: the
+//! innermost binding of a name is the one a use refers to, whether the
+//! use is in value position (`helper`) or in call position
+//! (`(helper 1)`).  Until #18435 the call-position lookup asked "is this a
+//! top-level function?" *before* "is this a local?", so
+//!
+//! ```text
+//! (define (helper x) (* x 100))
+//! (define (f helper) (helper 1))   ; helper is f's PARAMETER here
+//! (f (lambda (x) (+ x 1)))
+//! ```
+//!
+//! compiled `f`'s body to `call helper` — the global — and returned 100
+//! instead of 2.  Every name lookup in this file now consults the current
+//! lexical frame first:
+//!
+//! | Site                                  | Lexical check                         |
+//! |---------------------------------------|---------------------------------------|
+//! | `compile_apply` direct / builtin call | `ctx.locals` before `fn_globals` /    |
+//! |                                       | `BUILTINS`                            |
+//! | `compile_var_ref` (value position)    | `ctx.locals` first (always was)       |
+//! | lambda free-variable analysis         | a local that shares a global's name   |
+//! |                                       | is captured, not skipped as global    |
+//! | E4 string fast paths                  | a shadowed `string-append` etc. is    |
+//! |                                       | not lowered to `str_concat` etc.      |
+//! | `main` direct-call string evidence    | a shadowed call is not evidence about |
+//! |                                       | the global it happens to share a name |
+//! |                                       | with                                  |
+//!
+//! The shadowed global loses *everything* at that site — its direct
+//! `call`, its statically-known return type and parameter types — because
+//! the callee is simply a different value.  `and` / `or` are special
+//! forms, not bindings, and are not shadowable.
 //!
 //! ## LANG34 closure opcodes
 //!
@@ -171,6 +211,18 @@ impl StaticParamEvidence {
     }
 }
 
+/// Where a direct call sits, for the string-parameter evidence pre-pass
+/// ([`Compiler::collect_direct_string_call_evidence`]).
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum EvidenceMode {
+    /// A top-level expression or value-`define` RHS in `main`: a call here
+    /// may establish `Str` evidence.
+    Main,
+    /// A function body, lambda body or `match` arm: a call here may only
+    /// turn evidence into `Conflict`, never establish `Str`.
+    Elsewhere,
+}
+
 /// Maximum AST-nesting depth the compiler will descend.
 ///
 /// Mirrors [`twig_parser::MAX_AST_DEPTH`].  The parser and
@@ -267,6 +319,22 @@ fn typed_arith_op_for(name: &str) -> Option<&'static str> {
 // Per-function compilation context
 // ---------------------------------------------------------------------------
 
+/// What a name meant just before a scope rebound it — returned by
+/// [`FnCtx::shadow`] and consumed by [`FnCtx::unshadow`].
+struct OuterBinding {
+    name: String,
+    /// Was the name already a local (parameter or enclosing binding)?
+    was_local: bool,
+    /// The outer binding's E4 alias register, if it had one.
+    alias: Option<String>,
+    /// The outer binding's statically-known type, if any.
+    ty: Option<String>,
+    /// How many times register `name` had been written when the scope
+    /// opened ([`FnCtx::writes`]).  If the count has moved by the time the
+    /// scope closes, the register no longer holds the outer value.
+    writes: u64,
+}
+
 /// Mutable state while lowering one [`IIRFunction`].
 ///
 /// `instrs` accumulates the body in emission order; `locals` records
@@ -305,6 +373,11 @@ struct FnCtx {
     /// backends (wasm/jvm/clr/beam) actually accept the result.
     /// See [`crate::lib`]'s "Twig path A" notes for the larger story.
     var_types: HashMap<String, String>,
+    /// How many instructions have written each register (`dest == reg`),
+    /// bumped by [`FnCtx::emit`].  Same-name locals share one register
+    /// (#18439), so this is how [`FnCtx::unshadow`] tells whether a nested
+    /// binding overwrote the register an outer binding's type fact is about.
+    writes: HashMap<String, u64>,
 }
 
 impl FnCtx {
@@ -318,6 +391,7 @@ impl FnCtx {
             label_counter: 0,
             depth: 0,
             var_types: HashMap::new(),
+            writes: HashMap::new(),
         }
     }
 
@@ -351,8 +425,16 @@ impl FnCtx {
     /// construction.  See [`SourceLoc::SYNTHETIC`] for instructions
     /// the compiler synthesises with no real source counterpart.
     fn emit(&mut self, instr: IIRInstr, loc: SourceLoc) {
+        if let Some(dest) = &instr.dest {
+            *self.writes.entry(dest.clone()).or_insert(0) += 1;
+        }
         self.instrs.push(instr);
         self.source_map.push(loc);
+    }
+
+    /// How many instructions so far have written register `reg`.
+    fn write_count(&self, reg: &str) -> u64 {
+        self.writes.get(reg).copied().unwrap_or(0)
     }
 
     /// Record that `var` was statically inferred to have type `ty`.
@@ -390,6 +472,97 @@ impl FnCtx {
     /// (just one that the IIR-to-* backends reject).
     fn type_of(&self, var: &str) -> &str {
         self.var_types.get(var).map(|s| s.as_str()).unwrap_or("any")
+    }
+
+    /// Open a lexical binding of `name` (a `let` / `let*` / `match` name)
+    /// and return what the name meant before, for [`Self::unshadow`].
+    ///
+    /// Everything the compiler knows about a name lives in three tables:
+    /// `locals` (is it bound?), `local_aliases` (is it an E4 string held in
+    /// another register?) and `var_types`.  `var_types` is keyed by
+    /// REGISTER and describes what that register currently holds; an
+    /// aliased name's type is its alias register's (see
+    /// `Compiler::is_known_value_type`).  A new binding starts with *no*
+    /// alias and *no* type: the caller records whatever the new value
+    /// supports.  Without this, an inner `x` bound to `(car l)`
+    /// inherited an outer `x`'s `i64` and lowered `(+ x 1)` to a typed `add`,
+    /// and an inner `s` bound to 5 still read the outer string's alias.
+    fn shadow(&mut self, name: &str) -> OuterBinding {
+        let outer = OuterBinding {
+            name: name.to_string(),
+            was_local: self.locals.contains(name),
+            alias: self.local_aliases.remove(name),
+            ty: self.var_types.remove(name),
+            writes: self.write_count(name),
+        };
+        self.locals.insert(name.to_string());
+        outer
+    }
+
+    /// Close a binding opened by [`Self::shadow`], restoring the outer meaning.
+    ///
+    /// Local-ness and the outer alias come back exactly.  The type is a
+    /// fact about REGISTER `name`, and same-name locals share that register
+    /// (#18439): a binding written with `mov` / `str_const` — this scope's,
+    /// or any nested same-name binding's, or a `match` arm's — overwrites it.
+    /// So the write counter decides, not the shape of the bindings:
+    ///
+    /// | Register `name` rewritten while the scope was open? | `var_types[name]` after       |
+    /// |-----------------------------------------------------|-------------------------------|
+    /// | no  (e.g. the inner binding was an E4 alias)        | the outer type, restored      |
+    /// | yes, and `name` has an outer binding                | none — dynamic `any`          |
+    /// | yes, no outer binding, this binding was the         | what the register now holds,  |
+    /// | register's FIRST write ever (`writes == 0`)         | as its last writer recorded it|
+    /// | yes, no outer binding, register written before      | none — dynamic `any`          |
+    ///
+    /// The second row never restores a stale `str` onto a register that a
+    /// nested binding filled with 5 (the outer *value* is lost too until
+    /// #18439 gives each binding its own register — but `any` keeps that a
+    /// wrong-value bug rather than type confusion in a typed op).
+    ///
+    /// The last two rows exist because a scope can RETURN its named
+    /// register: `(let ((x 1)) x)` evaluates to register `x`, and that value
+    /// is consumed after `x` is out of scope.  Keeping the type is what lets
+    /// that stay a typed `i64` register — but it is only safe on the
+    /// register's first write.  If an earlier sibling scope already wrote
+    /// register `x`, its result may still be live and in use, and this
+    /// binding's type would be stamped onto it:
+    ///
+    /// ```text
+    /// (+ (let ((x "s")) x)            ; operand 1 = register x, "s"
+    ///    (if c (let ((x 1)) x) 3))    ; rewrites x, records i64
+    ///                                 ; → typed `add` on "s" if kept
+    /// ```
+    ///
+    /// The branch may not even run, so no single type describes the
+    /// register afterwards; it drops to `any`.
+    ///
+    /// The restored outer alias needs no such check: a read of an aliased
+    /// name goes through the alias register's own `var_types` entry, and a
+    /// named register is only ever written right after a `shadow` cleared
+    /// its entry, so that entry always describes the register's contents.
+    fn unshadow(&mut self, outer: OuterBinding) {
+        let OuterBinding { name, was_local, alias, ty, writes } = outer;
+        self.local_aliases.remove(&name);
+        let current_ty = self.var_types.remove(&name);
+        let register_rewritten = self.write_count(&name) != writes;
+        let ty = match (register_rewritten, was_local) {
+            (false, _) => ty,
+            (true, true) => None,
+            // `writes` is the count recorded at `shadow` time: 0 means this
+            // binding made the register's first-ever write.
+            (true, false) if writes == 0 => current_ty,
+            (true, false) => None,
+        };
+        if let Some(ty) = ty {
+            self.var_types.insert(name.clone(), ty);
+        }
+        if let Some(alias) = alias {
+            self.local_aliases.insert(name.clone(), alias);
+        }
+        if !was_local {
+            self.locals.remove(&name);
+        }
     }
 
     /// Path-A increment 3: emit a typed `mov dst = src` instruction,
@@ -483,6 +656,11 @@ pub struct Compiler {
     /// pattern whose name is in this map is a variant pattern;
     /// otherwise it is a bare-name binding.
     variant_tags: HashMap<String, usize>,
+    /// True once [`Self::with_extern_fns`] registered at least one extern —
+    /// i.e. this program is one module of a `twig-module-driver` tree, where
+    /// other modules can call its functions (see
+    /// [`Self::infer_main_direct_string_param_types`]).
+    has_externs: bool,
 }
 
 impl Compiler {
@@ -499,6 +677,7 @@ impl Compiler {
             functions: Vec::new(),
             lambda_counter: 0,
             variant_tags: HashMap::new(),
+            has_externs: false,
         }
     }
 
@@ -520,6 +699,7 @@ impl Compiler {
         for name in extern_fns {
             self.fn_globals.insert((*name).to_string());
         }
+        self.has_externs |= !extern_fns.is_empty();
         self
     }
 
@@ -789,6 +969,24 @@ impl Compiler {
     }
 
     fn infer_main_direct_string_param_types(&mut self, program: ProgramView<'_>) {
+        // Module code gets no call-site inference at all.  `twig-module-driver`
+        // registers EVERY module's function names — private ones included —
+        // as externs of every other module, so no single module sees all the
+        // call sites of its functions:
+        //
+        //   lib.tw   (module lib (export run))
+        //            (define (strlen x) (string-length x))   ; private
+        //            (define n (strlen "abc"))               ; only call here
+        //   main.tw  (module main (import lib)) (strlen 5)   ; ← an integer
+        //
+        // Inferring `x : str` from lib alone would lower `strlen` to `str_len`
+        // and then hand it 5.  A `(module …)` declaration, or any extern
+        // registered by the driver, marks the program as module code; every
+        // parameter then stays dynamic (`fn_inferred_param_types` is left
+        // empty).  Explicit `(x : str)` annotations still apply.
+        if self.has_externs || program.module().is_some() {
+            return;
+        }
         let mut evidence: HashMap<String, Vec<StaticParamEvidence>> = HashMap::new();
         let mut known_static_string_values: HashSet<String> = HashSet::new();
         let mut defined_value_globals: HashSet<String> = HashSet::new();
@@ -814,14 +1012,20 @@ impl Compiler {
                         &mut forward_referenced_values,
                         &HashSet::new(),
                     );
-                    self.collect_main_direct_string_call_evidence(
+                    self.collect_direct_string_call_evidence(
                         expr,
                         &mut evidence,
                         &known_static_string_values,
+                        &HashSet::new(),
+                        EvidenceMode::Main,
                     );
                 }
                 FormKind::Define(def) if def.lambda().is_some() => {
                     known_static_string_values.remove(def.name());
+                    // A function body is not `main`: calls in it may only
+                    // *weaken* evidence (see `EvidenceMode::Elsewhere`).
+                    let lam = def.lambda().expect("guarded by is_some()");
+                    self.collect_lambda_string_call_evidence(lam, &mut evidence, &HashSet::new());
                 }
                 FormKind::Define(def) => {
                     let Some(value) = def.value() else { continue };
@@ -831,10 +1035,12 @@ impl Compiler {
                         &mut forward_referenced_values,
                         &HashSet::new(),
                     );
-                    self.collect_main_direct_string_call_evidence(
+                    self.collect_direct_string_call_evidence(
                         value,
                         &mut evidence,
                         &known_static_string_values,
+                        &HashSet::new(),
+                        EvidenceMode::Main,
                     );
                     let name = def.name();
                     if !self.escaping_value_globals.contains(name)
@@ -842,6 +1048,7 @@ impl Compiler {
                         && Self::is_syntax_static_e4_string_expr(
                             value,
                             &known_static_string_values,
+                            &HashSet::new(),
                         )
                     {
                         known_static_string_values.insert(name.to_string());
@@ -952,89 +1159,182 @@ impl Compiler {
         }
     }
 
-    fn collect_main_direct_string_call_evidence(
+    /// Walk one expression and record, for every *direct* call `(f a…)` to a
+    /// top-level function `f`, whether each actual argument is a static E4
+    /// string — the evidence that lets `f`'s unannotated parameters be typed
+    /// `str`.
+    ///
+    /// ## Soundness: every route into `f` must be seen
+    ///
+    /// Typing a parameter `str` is a promise that *every* value reaching it
+    /// is a string (the body then lowers to `str_len`, `str_concat`, …).  So
+    /// the walk covers the whole program — `main`, every function body,
+    /// every lambda and `match` arm — and two rules guard the routes a
+    /// syntactic walk cannot follow:
+    ///
+    /// | Use of top-level `f`                              | Effect on `f`'s slots    |
+    /// |---------------------------------------------------|--------------------------|
+    /// | direct call in `main` (`EvidenceMode::Main`)      | `observe` each argument  |
+    /// | direct call anywhere else (`Elsewhere`)           | non-string arg ⇒ Conflict|
+    /// | wrong number of arguments                         | all ⇒ Conflict           |
+    /// | `f` as a value: `(let ((g f)) …)`, `(define h f)`,| all ⇒ Conflict (escape:  |
+    /// | `(map f xs)`, returning `f`, …                    | callers are unknowable)  |
+    /// | program is module code (`(module …)` or externs)  | no inference at all      |
+    ///
+    /// Only `main` may *establish* `Str`; everywhere else can only weaken it.
+    /// That keeps the old behaviour for the programs the fast path was built
+    /// for while making every other route conservative.
+    ///
+    /// ## Shadowing (#18435)
+    ///
+    /// `shadowed` holds the names bound by enclosing parameters, `let` /
+    /// `let*`, lambdas and `match` arms.  A call whose head is one of them
+    /// calls that local closure, not the top-level function of the same
+    /// name, and a shadowed `string-append` / `substring` inside an argument
+    /// is no longer a string builtin.
+    fn collect_direct_string_call_evidence(
         &self,
         expr: ExprNode<'_>,
         evidence: &mut HashMap<String, Vec<StaticParamEvidence>>,
         known_static_string_values: &HashSet<String>,
+        shadowed: &HashSet<String>,
+        mode: EvidenceMode,
     ) {
         match expr.kind() {
             ExprKind::If(i) => {
-                self.collect_main_direct_string_call_evidence(i.cond, evidence, known_static_string_values);
-                self.collect_main_direct_string_call_evidence(i.then_branch, evidence, known_static_string_values);
-                self.collect_main_direct_string_call_evidence(i.else_branch, evidence, known_static_string_values);
+                self.collect_direct_string_call_evidence(i.cond, evidence, known_static_string_values, shadowed, mode);
+                self.collect_direct_string_call_evidence(i.then_branch, evidence, known_static_string_values, shadowed, mode);
+                self.collect_direct_string_call_evidence(i.else_branch, evidence, known_static_string_values, shadowed, mode);
             }
             ExprKind::Begin(exprs) => {
                 for e in exprs.iter() {
-                    self.collect_main_direct_string_call_evidence(e, evidence, known_static_string_values);
+                    self.collect_direct_string_call_evidence(e, evidence, known_static_string_values, shadowed, mode);
                 }
             }
             ExprKind::Let(l) => {
+                // RHSs see the OUTER scope (Scheme `let`); the body sees the
+                // bindings, which shadow any global of the same name.
                 for (_, rhs) in l.bindings() {
-                    self.collect_main_direct_string_call_evidence(rhs, evidence, known_static_string_values);
+                    self.collect_direct_string_call_evidence(rhs, evidence, known_static_string_values, shadowed, mode);
                 }
                 let mut body_static_string_values = known_static_string_values.clone();
+                let mut body_shadowed = shadowed.clone();
                 for (name, _) in l.bindings() {
                     body_static_string_values.remove(name);
+                    body_shadowed.insert(name.to_string());
                 }
                 for (name, rhs) in l.bindings() {
-                    if Self::is_syntax_static_e4_string_expr(rhs, known_static_string_values) {
+                    if Self::is_syntax_static_e4_string_expr(rhs, known_static_string_values, shadowed) {
                         body_static_string_values.insert(name.to_string());
                     }
                 }
                 for e in l.body().iter() {
-                    self.collect_main_direct_string_call_evidence(e, evidence, &body_static_string_values);
+                    self.collect_direct_string_call_evidence(e, evidence, &body_static_string_values, &body_shadowed, mode);
                 }
             }
             ExprKind::LetStar(l) => {
+                // Sequential: each RHS sees every earlier binding.
                 let mut scoped_static_string_values = known_static_string_values.clone();
+                let mut scoped_shadowed = shadowed.clone();
                 for (name, rhs) in l.bindings() {
-                    self.collect_main_direct_string_call_evidence(rhs, evidence, &scoped_static_string_values);
-                    if Self::is_syntax_static_e4_string_expr(rhs, &scoped_static_string_values) {
+                    self.collect_direct_string_call_evidence(rhs, evidence, &scoped_static_string_values, &scoped_shadowed, mode);
+                    if Self::is_syntax_static_e4_string_expr(rhs, &scoped_static_string_values, &scoped_shadowed) {
                         scoped_static_string_values.insert(name.to_string());
                     } else {
                         scoped_static_string_values.remove(name);
                     }
+                    scoped_shadowed.insert(name.to_string());
                 }
                 for e in l.body().iter() {
-                    self.collect_main_direct_string_call_evidence(e, evidence, &scoped_static_string_values);
+                    self.collect_direct_string_call_evidence(e, evidence, &scoped_static_string_values, &scoped_shadowed, mode);
                 }
             }
             ExprKind::Apply(apply) => {
-                if let Some(f) = apply.fn_name() {
+                // Only an UNshadowed head is a direct call to the top-level
+                // function `f`; a shadowed one is a closure call.
+                if let Some(f) = apply.fn_name().filter(|f| !shadowed.contains(*f)) {
                     if let Some(slots) = evidence.get_mut(f) {
                         if apply.args().len() == slots.len() {
                             for (slot, arg) in slots.iter_mut().zip(apply.args().iter()) {
-                                *slot = slot.observe(Self::is_syntax_static_e4_string_expr(
+                                let is_str = Self::is_syntax_static_e4_string_expr(
                                     arg,
                                     known_static_string_values,
-                                ));
+                                    shadowed,
+                                );
+                                *slot = match mode {
+                                    EvidenceMode::Main => slot.observe(is_str),
+                                    EvidenceMode::Elsewhere if is_str => *slot,
+                                    EvidenceMode::Elsewhere => StaticParamEvidence::Conflict,
+                                };
                             }
                         } else {
                             slots.fill(StaticParamEvidence::Conflict);
                         }
                     }
                 }
-                if let Some(f) = apply.fn_expr() {
-                    self.collect_main_direct_string_call_evidence(
-                        f,
-                        evidence,
-                        known_static_string_values,
-                    );
+                // A bare-name head is a call, not an escape — walk the head
+                // only when it is a computed expression like `((g) 1)`.
+                if apply.fn_name().is_none() {
+                    if let Some(f) = apply.fn_expr() {
+                        self.collect_direct_string_call_evidence(f, evidence, known_static_string_values, shadowed, mode);
+                    }
                 }
                 for arg in apply.args().iter() {
-                    self.collect_main_direct_string_call_evidence(arg, evidence, known_static_string_values);
+                    self.collect_direct_string_call_evidence(arg, evidence, known_static_string_values, shadowed, mode);
                 }
             }
-            // Lambdas and match bodies can depend on dynamic closure/match-time
-            // values, so this prepass deliberately does not infer from them.
-            ExprKind::Lambda(_) | ExprKind::Match(_) => {}
+            // `f` used as a value escapes: any closure call may reach it.
+            ExprKind::VarRef(name) => {
+                if !shadowed.contains(name) {
+                    if let Some(slots) = evidence.get_mut(name) {
+                        slots.fill(StaticParamEvidence::Conflict);
+                    }
+                }
+            }
+            // Lambda bodies and match arms run with dynamic closure / match
+            // values, so they may only weaken evidence.
+            ExprKind::Lambda(lam) => {
+                self.collect_lambda_string_call_evidence(lam, evidence, shadowed);
+            }
+            ExprKind::Match(m) => {
+                if let Some(scrutinee) = m.scrutinee() {
+                    self.collect_direct_string_call_evidence(scrutinee, evidence, known_static_string_values, shadowed, mode);
+                }
+                for arm in m.arms() {
+                    let mut arm_shadowed = shadowed.clone();
+                    arm_shadowed.extend(arm.pat().bound_names().map(str::to_string));
+                    for e in arm.body().iter() {
+                        self.collect_direct_string_call_evidence(e, evidence, &HashSet::new(), &arm_shadowed, EvidenceMode::Elsewhere);
+                    }
+                }
+            }
             ExprKind::IntLit(_)
             | ExprKind::BoolLit(_)
             | ExprKind::NilLit
             | ExprKind::SymLit(_)
-            | ExprKind::StrLit(_)
-            | ExprKind::VarRef(_) => {}
+            | ExprKind::StrLit(_) => {}
+        }
+    }
+
+    /// [`Self::collect_direct_string_call_evidence`] over a lambda's body, in
+    /// `Elsewhere` mode with its parameters added to `shadowed`.  Used for
+    /// anonymous lambdas and for top-level function bodies alike.
+    fn collect_lambda_string_call_evidence(
+        &self,
+        lam: LambdaView<'_>,
+        evidence: &mut HashMap<String, Vec<StaticParamEvidence>>,
+        shadowed: &HashSet<String>,
+    ) {
+        let mut body_shadowed = shadowed.clone();
+        body_shadowed.extend(lam.params().map(|p| p.name.to_string()));
+        for e in lam.body().iter() {
+            self.collect_direct_string_call_evidence(
+                e,
+                evidence,
+                &HashSet::new(),
+                &body_shadowed,
+                EvidenceMode::Elsewhere,
+            );
         }
     }
 
@@ -1047,29 +1347,47 @@ impl Compiler {
         }
     }
 
+    /// [`Self::named_apply`], but only when `f` is **not** lexically bound
+    /// — i.e. when `f` really names a builtin or top-level function.
+    ///
+    /// The E4 string fast paths recognise calls by name (`string-append`,
+    /// `substring`, `string-length`, `+`).  If a parameter or `let` binding
+    /// is called `string-append`, `(string-append a b)` calls *that* closure
+    /// (#18435), and treating it as the builtin would compile a
+    /// `str_concat` the program never asked for.  `locals` is whatever set
+    /// holds the names bound at this point: `FnCtx::locals` during
+    /// lowering, the pre-pass's `shadowed` set before it.
+    fn unshadowed_apply<'a>(
+        expr: ExprNode<'a>,
+        locals: &HashSet<String>,
+    ) -> Option<(&'a str, Exprs<'a>)> {
+        Self::named_apply(expr).filter(|(f, _)| !locals.contains(*f))
+    }
+
     fn is_syntax_static_e4_string_expr(
         expr: ExprNode<'_>,
         known_static_string_values: &HashSet<String>,
+        shadowed: &HashSet<String>,
     ) -> bool {
         match expr.kind() {
             ExprKind::StrLit(_) => true,
             ExprKind::VarRef(name) => known_static_string_values.contains(name),
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::named_apply(expr) else {
+                let Some((f, args)) = Self::unshadowed_apply(expr, shadowed) else {
                     return false;
                 };
                 let arg = |i: usize| args.get(i).expect("length checked first");
                 match f {
                     "string-append" => {
                         args.len() == 2
-                            && Self::is_syntax_static_e4_string_expr(arg(0), known_static_string_values)
-                            && Self::is_syntax_static_e4_string_expr(arg(1), known_static_string_values)
+                            && Self::is_syntax_static_e4_string_expr(arg(0), known_static_string_values, shadowed)
+                            && Self::is_syntax_static_e4_string_expr(arg(1), known_static_string_values, shadowed)
                     }
                     "substring" => {
                         args.len() == 3
-                            && Self::is_syntax_static_e4_string_expr(arg(0), known_static_string_values)
-                            && Self::is_syntax_static_e4_index_expr(arg(1), known_static_string_values)
-                            && Self::is_syntax_static_e4_index_expr(arg(2), known_static_string_values)
+                            && Self::is_syntax_static_e4_string_expr(arg(0), known_static_string_values, shadowed)
+                            && Self::is_syntax_static_e4_index_expr(arg(1), known_static_string_values, shadowed)
+                            && Self::is_syntax_static_e4_index_expr(arg(2), known_static_string_values, shadowed)
                     }
                     _ => false,
                 }
@@ -1081,11 +1399,12 @@ impl Compiler {
     fn is_syntax_static_e4_index_expr(
         expr: ExprNode<'_>,
         known_static_string_values: &HashSet<String>,
+        shadowed: &HashSet<String>,
     ) -> bool {
         match expr.kind() {
             ExprKind::IntLit(_) => true,
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::named_apply(expr) else {
+                let Some((f, args)) = Self::unshadowed_apply(expr, shadowed) else {
                     return false;
                 };
                 match f {
@@ -1094,13 +1413,14 @@ impl Compiler {
                             && Self::is_syntax_static_e4_string_expr(
                                 args.get(0).expect("length checked first"),
                                 known_static_string_values,
+                                shadowed,
                             )
                     }
                     "+" | "-" | "*" | "/" => {
                         args.len() >= 2
                             && args
                                 .iter()
-                                .all(|arg| Self::is_syntax_static_e4_index_expr(arg, known_static_string_values))
+                                .all(|arg| Self::is_syntax_static_e4_index_expr(arg, known_static_string_values, shadowed))
                     }
                     _ => false,
                 }
@@ -1214,13 +1534,19 @@ impl Compiler {
     ) -> Result<String, TwigCompileError> {
         let (lam_line, lam_column) = lam.pos();
         let lam_loc = SourceLoc::new(lam_line, lam_column);
-        // 1. Compute free variables using the union of all globals + builtins.
+        // 1. Compute free variables using the union of all globals + builtins
+        //    — minus every name the enclosing scope binds locally (#18435).
+        //    In `(define (mk helper) (lambda (y) (helper y)))` the lambda's
+        //    `helper` is mk's PARAMETER even though a top-level `helper`
+        //    exists; left in `globals` it would be skipped as "not free",
+        //    never captured, and the body would call the global instead.
         let mut globals: HashSet<String> = HashSet::new();
         globals.extend(self.fn_globals.iter().cloned());
         globals.extend(self.value_globals.iter().cloned());
         for b in BUILTINS {
             globals.insert((*b).to_string());
         }
+        globals.retain(|g| !outer.locals.contains(g));
         let captures = free_vars(lam, &globals);
 
         // Every capture must be currently bound in `outer`; otherwise the
@@ -1652,17 +1978,17 @@ impl Compiler {
         // that reference `name` see the concrete type. E4 string RHSs alias
         // their producer register instead, because the current code-gen
         // backends accept string producers but not generic string copies.
-        let mut added: Vec<String> = Vec::new();
-        let mut saved_aliases: Vec<(String, Option<String>)> = Vec::new();
+        //
+        // `shadow` clears any alias / type the name had outside, so the
+        // binding carries only what its own value supports (#18435).
+        let mut outer_bindings: Vec<OuterBinding> = Vec::new();
         for (name, src) in &binding_values {
-            if ctx.locals.insert(name.clone()) {
-                added.push(name.clone());
-            }
+            outer_bindings.push(ctx.shadow(name));
             match src {
+                // The alias register carries the `str` type; register `name`
+                // is not written, so nothing is recorded for it.
                 BindingValue::Reg(src) if ctx.type_of(src) == "str" => {
-                    let previous = ctx.local_aliases.insert(name.clone(), src.clone());
-                    saved_aliases.push((name.clone(), previous));
-                    ctx.record_type(name, "str");
+                    ctx.local_aliases.insert(name.clone(), src.clone());
                 }
                 BindingValue::Reg(src) => ctx.emit_move(name, src, loc),
                 BindingValue::StrLiteral(value, value_loc) => {
@@ -1678,17 +2004,12 @@ impl Compiler {
         }
         let last = last.expect("check_cst rejects empty let body");
 
-        // Pop let names back out so subsequent peers don't see them
-        // bound at this lexical position.
-        for n in added {
-            ctx.locals.remove(&n);
-        }
-        for (name, previous) in saved_aliases.into_iter().rev() {
-            if let Some(alias) = previous {
-                ctx.local_aliases.insert(name, alias);
-            } else {
-                ctx.local_aliases.remove(&name);
-            }
+        // Restore the outer meaning of every name (reverse order, so a name
+        // bound twice in one `let` unwinds correctly).  This pops `locals`,
+        // `local_aliases` AND `var_types` — a type fact belongs to its
+        // binding and must not leak past the scope.
+        for outer in outer_bindings.into_iter().rev() {
+            ctx.unshadow(outer);
         }
         Ok(last)
     }
@@ -1709,16 +2030,13 @@ impl Compiler {
     /// ```
     fn compile_let_star(&mut self, expr: LetView<'_>, ctx: &mut FnCtx) -> Result<String, TwigCompileError> {
         let loc = SourceLoc::new(expr.pos().0, expr.pos().1);
-        let mut added: Vec<String> = Vec::new();
-        let mut saved_aliases: Vec<(String, Option<String>)> = Vec::new();
+        let mut outer_bindings: Vec<OuterBinding> = Vec::new();
 
         for (name, rhs) in expr.bindings() {
             // Compile the RHS in the current scope (which already includes
             // all prior let* bindings).
             if let ExprKind::StrLit(value) = rhs.kind() {
-                if ctx.locals.insert(name.to_string()) {
-                    added.push(name.to_string());
-                }
+                outer_bindings.push(ctx.shadow(name));
                 ctx.emit_str_const_to(name, value, SourceLoc::new(rhs.pos().0, rhs.pos().1));
                 continue;
             }
@@ -1729,13 +2047,14 @@ impl Compiler {
             // Path-A increment 4: typed `mov` propagates scalar RHS types.
             // E4 string RHSs mirror compile_let by aliasing the producer
             // register instead of emitting backend-unsupported `mov [str]`.
-            if ctx.locals.insert(name.to_string()) {
-                added.push(name.to_string());
-            }
-            if ctx.type_of(&v) == "str" {
-                let previous = ctx.local_aliases.insert(name.to_string(), v);
-                saved_aliases.push((name.to_string(), previous));
-                ctx.record_type(name, "str");
+            //
+            // `type_of(&v)` is read BEFORE `shadow`, because `v` may be the
+            // name's own register (`(let* ((x x)) …)`), whose type `shadow`
+            // clears.
+            let rhs_is_str = ctx.type_of(&v) == "str";
+            outer_bindings.push(ctx.shadow(name));
+            if rhs_is_str {
+                ctx.local_aliases.insert(name.to_string(), v);
             } else {
                 ctx.emit_move(name, &v, loc);
             }
@@ -1748,16 +2067,10 @@ impl Compiler {
         }
         let last = last.expect("check_cst rejects empty let* body");
 
-        // Remove bindings so they don't leak into enclosing scope peers.
-        for n in added {
-            ctx.locals.remove(&n);
-        }
-        for (name, previous) in saved_aliases.into_iter().rev() {
-            if let Some(alias) = previous {
-                ctx.local_aliases.insert(name, alias);
-            } else {
-                ctx.local_aliases.remove(&name);
-            }
+        // Restore every name's outer meaning — locals, aliases and types —
+        // in reverse order, so they don't leak into enclosing scope peers.
+        for outer in outer_bindings.into_iter().rev() {
+            ctx.unshadow(outer);
         }
         Ok(last)
     }
@@ -1912,12 +2225,26 @@ impl Compiler {
     }
 
     fn is_known_main_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
-        matches!(self.value_global_locals.get(name), Some(reg) if ctx.type_of(reg) == ty)
+        // A `let` binding of the same name hides the value-global (#18435):
+        // its type is the local's, not the global's register's.
+        !ctx.locals.contains(name)
+            && matches!(self.value_global_locals.get(name), Some(reg) if ctx.type_of(reg) == ty)
     }
 
+    /// Does the lexical name `name` statically hold a `ty` value?
+    ///
+    /// An aliased local is answered by its alias REGISTER's type, which is
+    /// what a read of the name returns.  If that register was overwritten
+    /// since the alias was made — `(let ((y x)) (let ((x 5)) (string-length y)))`
+    /// with `x` a `str` parameter, where `y` aliases register `x` (#18439) —
+    /// the register's type now says `i64`, so `y` is no longer a known
+    /// string and never reaches a typed `str_len`.
     fn is_known_value_type(&self, name: &str, ctx: &FnCtx, ty: &str) -> bool {
         self.is_known_main_value_type(name, ctx, ty)
-            || (ctx.locals.contains(name) && ctx.type_of(name) == ty)
+            || (ctx.locals.contains(name) && {
+                let reg = ctx.local_aliases.get(name).map_or(name, String::as_str);
+                ctx.type_of(reg) == ty
+            })
     }
 
     fn can_compile_e4_string_expr(&self, expr: ExprNode<'_>, ctx: &FnCtx) -> bool {
@@ -1925,7 +2252,7 @@ impl Compiler {
             ExprKind::StrLit(_) => true,
             ExprKind::VarRef(name) => self.is_known_value_type(name, ctx, "str"),
             ExprKind::Apply(_) => {
-                if let Some((f, args)) = Self::named_apply(expr) {
+                if let Some((f, args)) = Self::unshadowed_apply(expr, &ctx.locals) {
                     let arg = |i: usize| args.get(i).expect("length checked first");
                     match f {
                         "string-append" => {
@@ -1957,7 +2284,7 @@ impl Compiler {
                     || self.is_known_value_type(name, ctx, "i32")
             }
             ExprKind::Apply(_) => {
-                let Some((f, args)) = Self::named_apply(expr) else {
+                let Some((f, args)) = Self::unshadowed_apply(expr, &ctx.locals) else {
                     return false;
                 };
                 match f {
@@ -2183,7 +2510,20 @@ impl Compiler {
         // Direct call: fn is a VarRef whose name is a top-level
         // function or a builtin.  We materialise this decision at
         // compile time so the hot path stays a single `call`.
-        if let Some(fn_name) = expr.fn_name() {
+        //
+        // Lexical scope first (#18435): a name bound by a parameter,
+        // `let`/`let*`, lambda or `match` arm is NOT the global or builtin
+        // that happens to share its spelling.  Filtering it out here sends
+        // it down the indirect path below, where `compile_var_ref` resolves
+        // it to the local's register and we emit `call_closure`.  The
+        // global's return / parameter types are skipped with it — they
+        // describe a different function.
+        //
+        //   (define (f helper) (helper 1))
+        //     before: call helper, 1          ; the GLOBAL helper
+        //     after:  call_closure helper, 1  ; f's PARAMETER
+        let direct_fn_name = expr.fn_name().filter(|name| !ctx.locals.contains(*name));
+        if let Some(fn_name) = direct_fn_name {
             if self.fn_globals.contains(fn_name) {
                 let return_type = self
                     .fn_return_types
@@ -2247,7 +2587,9 @@ impl Compiler {
                         ctx.var_types.insert(dest.clone(), "i64".to_string());
                         return Ok(dest);
                     }
-                    if let Some((append_fn, append_args)) = Self::named_apply(arg(0)) {
+                    if let Some((append_fn, append_args)) =
+                        Self::unshadowed_apply(arg(0), &ctx.locals)
+                    {
                         if append_fn == "string-append" && append_args.len() == 2 {
                             let append_arg = |i: usize| {
                                 append_args.get(i).expect("length checked first").kind()
@@ -2684,7 +3026,7 @@ impl Compiler {
                     // Path A increment 6c: typed `field_load[1]` (cdr) and
                     // `field_load[0]` (car) instead of `call_builtin "cdr"`
                     // and `call_builtin "car"`.  Phase 2 convention.
-                    let mut added_names: Vec<String> = Vec::new();
+                    let mut outer_bindings: Vec<OuterBinding> = Vec::new();
                     let mut cur_cdr = matched.clone();
                     for binding in pat.bound_names() {
                         // Advance one cdr step
@@ -2709,9 +3051,7 @@ impl Compiler {
                         ctx.record_type(&field_reg, "ref<any>");
 
                         // Bind field to name in ctx.locals via typed `mov`.
-                        if ctx.locals.insert(binding.to_string()) {
-                            added_names.push(binding.to_string());
-                        }
+                        outer_bindings.push(ctx.shadow(binding));
                         ctx.emit_move(binding, &field_reg, arm_loc);
                     }
 
@@ -2725,9 +3065,9 @@ impl Compiler {
                     // Copy to result register via typed `mov`.
                     ctx.emit_move(&result, &body_v, arm_loc);
 
-                    // Unbind field names
-                    for n in added_names {
-                        ctx.locals.remove(&n);
+                    // Unbind field names, restoring their outer meaning.
+                    for outer in outer_bindings.into_iter().rev() {
+                        ctx.unshadow(outer);
                     }
 
                     // jmp to end
@@ -2800,7 +3140,7 @@ impl Compiler {
         ctx: &mut FnCtx,
         loc: SourceLoc,
     ) -> Result<String, TwigCompileError> {
-        let was_new = ctx.locals.insert(name.to_string());
+        let outer = ctx.shadow(name);
         // Path-A increment 5: typed `mov` for the binding-arm helper.
         ctx.emit_move(name, matched_reg, loc);
         let mut last: Option<String> = None;
@@ -2808,9 +3148,7 @@ impl Compiler {
             last = Some(self.compile_expr(e, ctx)?);
         }
         let last = last.expect("arm body non-empty (check_cst-enforced)");
-        if was_new {
-            ctx.locals.remove(name);
-        }
+        ctx.unshadow(outer);
         Ok(last)
     }
 

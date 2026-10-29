@@ -946,7 +946,10 @@ mod tests {
         let a = compile(&module).expect("compile");
         assert!(a.source.contains("def __lambda_0("));
         assert!(a.source.contains("_sir_make_closure"));
-        assert!(a.source.contains("_globals[\"add5\"]"));
+        assert!(a.source.contains("_sir_global_set(\"add5\", "));
+        // The emitted module never names the runtime's private store (#18461:
+        // it is not imported, so naming it raised `NameError`).
+        assert!(!a.source.contains("_globals"), "got:\n{}", a.source);
     }
 
     #[test]
@@ -1405,10 +1408,11 @@ mod tests {
     }
 
     #[test]
-    fn global_assign_writes_globals_dict() {
+    fn global_assign_writes_the_runtime_global_store() {
         use semantic_ir::{Global, Scope, Stmt};
-        // A `Global`-scoped reassignment writes the module-level
-        // `_globals` dict (the same shape `_init`/`global_set` use).
+        // A `Global`-scoped reassignment writes the runtime's global store
+        // through `_sir_global_set` (the same call `_init` uses, and the store
+        // `_sir_global_get_static` reads).
         // The global must be declared in `module.globals` to satisfy
         // the validator's scope check.
         let m = Module {
@@ -1447,7 +1451,8 @@ mod tests {
             span: s(),
         };
         let a = compile(&m).expect("compile");
-        assert!(a.source.contains("_globals[\"counter\"] = 5"), "got:\n{}", a.source);
+        assert!(a.source.contains("_sir_global_set(\"counter\", 5)"), "got:\n{}", a.source);
+        assert!(!a.source.contains("_globals"), "got:\n{}", a.source);
     }
 
     // ── SIR17 OOP & scopes: Ruby / direct SIR → native Python + oop ──
