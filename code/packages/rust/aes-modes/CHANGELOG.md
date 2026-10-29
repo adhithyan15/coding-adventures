@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- A caller-owned fixed-memory GHASH boundary and GF(2^128) multiplication
+  primitive with fixed loop schedules and masked secret-derived decisions.
+- Wipe-on-drop ownership for GHASH products, multipliers, accumulators, and
+  padded blocks, plus NIST and block-edge regression evidence.
+
+### Security
+- GHASH length validation now occurs before the fixed boundary changes caller
+  output. This primitive is not a combined AES-GCM, TLS, HTTP, or OAuth
+  transport boundary.
+
 ## 0.1.0 — 2026-04-12
 
 ### Added

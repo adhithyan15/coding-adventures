@@ -1923,6 +1923,28 @@ educational surfaces rather than production TLS composition. Fixed-memory
 Poly1305 and combined AEAD review remain prerequisites, and concrete HTTPS
 remains unavailable.
 
+The repository-owned AES modes package now exposes fixed-memory
+`ghash_multiply_fixed` and `ghash_fixed` prerequisites for the
+`TLS_AES_128_GCM_SHA256` and `TLS_AES_256_GCM_SHA384` paths. The multiplication
+boundary always performs 128 rounds, replaces secret-derived choices with
+masks, writes its result into caller-owned fixed storage, and allocates no
+memory. The multiplication product and working multiplier are wipe-on-drop;
+the complete GHASH boundary also reuses and wipes one padded block and its
+accumulator. AAD and ciphertext bit lengths are validated before caller output
+changes. NIST SP 800-38D and block-edge equivalence evidence cover the admitted
+surface.
+
+This is only the universal-hash component of GCM. The repository's legacy AES
+and GCM APIs remain educational compatibility surfaces and are not approved as
+production TLS composition. This slice does not harden AES, derive or own an
+AES key, construct or reserve a nonce, combine counter-mode encryption with
+GHASH into a reviewed fixed-memory AEAD, compare a tag, enforce the selected
+suite's per-key record ceiling, frame or protect records, process a handshake,
+validate certificates, establish trust, enforce revocation, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. A hardened
+repository-owned AES primitive and reviewed combined AES-GCM boundary remain
+prerequisites, and concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

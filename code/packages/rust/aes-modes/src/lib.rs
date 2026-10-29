@@ -32,8 +32,14 @@
 //! - `ctr_decrypt(ciphertext, key, nonce) -> plaintext`
 //! - `gcm_encrypt(plaintext, key, iv, aad) -> (ciphertext, tag)`
 //! - `gcm_decrypt(ciphertext, key, iv, aad, tag) -> plaintext`
+//! - `ghash_multiply_fixed(x, h, output)`
+//! - `ghash_fixed(h, aad, ciphertext, output) -> Result<(), GhashError>`
 
-use coding_adventures_aes::{encrypt_block, decrypt_block};
+#![deny(unsafe_code)]
+
+use coding_adventures_aes::{decrypt_block, encrypt_block};
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
+use core::fmt;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -254,6 +260,23 @@ pub fn ctr_decrypt(ciphertext: &[u8], key: &[u8], nonce: &[u8]) -> Result<Vec<u8
 // GF(2^128) multiplication uses reducing polynomial:
 //   R = x^128 + x^7 + x^2 + x + 1    (high byte = 0xE1)
 
+/// A stable, redacted failure from the fixed-memory GHASH boundary.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum GhashError {
+    /// One input cannot be represented by GCM's 64-bit bit-length field.
+    InputTooLong,
+}
+
+impl fmt::Display for GhashError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::InputTooLong => formatter.write_str("GHASH input exceeds the supported length"),
+        }
+    }
+}
+
+impl std::error::Error for GhashError {}
+
 /// Multiply two 128-bit values in GF(2^128) with the GCM reducing polynomial.
 ///
 /// The reducing polynomial R has high byte 0xE1:
@@ -266,78 +289,103 @@ pub fn ctr_decrypt(ciphertext: &[u8], key: &[u8], nonce: &[u8]) -> Result<Vec<u8
 ///     carry = LSB of V
 ///     V >>= 1
 ///     if carry: V[0] ^= 0xE1
-fn gf128_mul(x: &[u8; 16], y: &[u8; 16]) -> [u8; 16] {
-    let mut z = [0u8; 16];
-    let mut v = *y;
+///
+/// This fixed-memory boundary always performs 128 rounds and uses masks rather
+/// than branches for both secret-derived decisions. Its product and working
+/// multiplier are wiped on return, and the product is written into
+/// caller-owned storage rather than crossing the ABI return slot by value.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_ghash_multiply_fixed_ir_audit")]
+#[inline(never)]
+pub fn ghash_multiply_fixed(x: &[u8; 16], h: &[u8; 16], output: &mut [u8; 16]) {
+    let mut z = Zeroizing::new([0u8; 16]);
+    let mut v = Zeroizing::new(*h);
 
     for i in 0..128 {
-        // Check bit i of X (MSB-first: bit 0 is MSB of byte 0)
         let byte_idx = i / 8;
         let bit_idx = 7 - (i % 8);
-        if (x[byte_idx] >> bit_idx) & 1 == 1 {
-            for j in 0..16 {
-                z[j] ^= v[j];
-            }
+        let bit = (x[byte_idx] >> bit_idx) & 1;
+        let bit_mask = 0u8.wrapping_sub(bit);
+        for j in 0..16 {
+            z[j] ^= v[j] & bit_mask;
         }
 
-        // Check LSB of V (bit 127 = LSB of byte 15)
         let carry = v[15] & 1;
-
-        // Right-shift V by 1 bit
         for j in (1..16).rev() {
             v[j] = (v[j] >> 1) | ((v[j - 1] & 1) << 7);
         }
         v[0] >>= 1;
-
-        // If carry: XOR with R = 0xE100...00
-        if carry == 1 {
-            v[0] ^= 0xe1;
-        }
+        let reduction_mask = 0u8.wrapping_sub(carry);
+        v[0] ^= 0xe1 & reduction_mask;
     }
-    z
+
+    output.copy_from_slice(&z[..]);
 }
 
-/// GHASH: universal hash function for GCM.
+fn ghash_bit_length(byte_length: usize) -> Result<u64, GhashError> {
+    u64::try_from(byte_length)
+        .ok()
+        .and_then(|length| length.checked_mul(8))
+        .ok_or(GhashError::InputTooLong)
+}
+
+fn ghash_absorb(h: &[u8; 16], data: &[u8], accumulator: &mut [u8; 16], block: &mut [u8; 16]) {
+    for chunk in data.chunks(16) {
+        block.zeroize();
+        block[..chunk.len()].copy_from_slice(chunk);
+        for index in 0..16 {
+            block[index] ^= accumulator[index];
+        }
+        ghash_multiply_fixed(block, h, accumulator);
+    }
+}
+
+/// Compute GHASH into caller-owned fixed storage.
 ///
 /// Processes AAD and ciphertext through GF(2^128) polynomial evaluation:
 ///   Y[0] = 0^128
 ///   Y[i] = (Y[i-1] XOR block[i]) * H
 ///
 /// Input sequence: AAD blocks (padded) || CT blocks (padded) || length block
+///
+/// Lengths are validated before `output` is changed. The accumulator and
+/// reusable padded block are wiped on all normal and unwind exits. This
+/// boundary performs no allocation, but it is only GHASH: it does not encrypt,
+/// authenticate a complete GCM invocation, or manage keys and nonces.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_ghash_fixed_ir_audit")]
+#[inline(never)]
+pub fn ghash_fixed(
+    h: &[u8; 16],
+    aad: &[u8],
+    ciphertext: &[u8],
+    output: &mut [u8; 16],
+) -> Result<(), GhashError> {
+    let aad_bits = ghash_bit_length(aad.len())?;
+    let ciphertext_bits = ghash_bit_length(ciphertext.len())?;
+
+    let mut accumulator = Zeroizing::new([0u8; 16]);
+    let mut block = Zeroizing::new([0u8; 16]);
+    ghash_absorb(h, aad, &mut accumulator, &mut block);
+    ghash_absorb(h, ciphertext, &mut accumulator, &mut block);
+
+    block.zeroize();
+    block[..8].copy_from_slice(&aad_bits.to_be_bytes());
+    block[8..].copy_from_slice(&ciphertext_bits.to_be_bytes());
+    for index in 0..16 {
+        block[index] ^= accumulator[index];
+    }
+    ghash_multiply_fixed(&block, h, &mut accumulator);
+    output.copy_from_slice(&accumulator[..]);
+    Ok(())
+}
+
+/// Compatibility wrapper for the allocation-oriented educational GCM API.
 fn ghash(h: &[u8; 16], aad: &[u8], ciphertext: &[u8]) -> [u8; 16] {
-    let mut y = [0u8; 16];
-
-    // Process blocks helper: handles zero-padding of the last block
-    let mut process = |data: &[u8]| {
-        for chunk in data.chunks(16) {
-            let mut block = [0u8; 16];
-            block[..chunk.len()].copy_from_slice(chunk);
-            // Y = (Y XOR block) * H
-            for j in 0..16 {
-                block[j] ^= y[j];
-            }
-            y = gf128_mul(&block, h);
-        }
-    };
-
-    if !aad.is_empty() {
-        process(aad);
-    }
-    if !ciphertext.is_empty() {
-        process(ciphertext);
-    }
-
-    // Length block: [len(AAD)*8 as u64 BE || len(CT)*8 as u64 BE]
-    let mut len_block = [0u8; 16];
-    let aad_bits = (aad.len() as u64) * 8;
-    let ct_bits = (ciphertext.len() as u64) * 8;
-    len_block[..8].copy_from_slice(&aad_bits.to_be_bytes());
-    len_block[8..16].copy_from_slice(&ct_bits.to_be_bytes());
-
-    for j in 0..16 {
-        len_block[j] ^= y[j];
-    }
-    gf128_mul(&len_block, h)
+    let mut output = [0u8; 16];
+    ghash_fixed(h, aad, ciphertext, &mut output)
+        .expect("addressable Rust slices fit the GCM length fields");
+    output
 }
 
 /// Increment the 32-bit counter in the last 4 bytes of a 16-byte block (BE).
@@ -462,6 +510,52 @@ mod tests {
     /// Helper: encode bytes to hex string.
     fn to_hex(bytes: &[u8]) -> String {
         hex::encode(bytes)
+    }
+
+    fn array_16(bytes: Vec<u8>) -> [u8; 16] {
+        bytes.try_into().expect("test vector must be 16 bytes")
+    }
+
+    fn ghash_multiply_reference(x: &[u8; 16], h: &[u8; 16]) -> [u8; 16] {
+        let mut product = [0u8; 16];
+        let mut multiplier = *h;
+        for bit_index in 0..128 {
+            if (x[bit_index / 8] >> (7 - bit_index % 8)) & 1 == 1 {
+                for index in 0..16 {
+                    product[index] ^= multiplier[index];
+                }
+            }
+            let carry = multiplier[15] & 1;
+            for index in (1..16).rev() {
+                multiplier[index] = (multiplier[index] >> 1) | ((multiplier[index - 1] & 1) << 7);
+            }
+            multiplier[0] >>= 1;
+            if carry == 1 {
+                multiplier[0] ^= 0xe1;
+            }
+        }
+        product
+    }
+
+    fn ghash_reference(h: &[u8; 16], aad: &[u8], ciphertext: &[u8]) -> [u8; 16] {
+        let mut accumulator = [0u8; 16];
+        for data in [aad, ciphertext] {
+            for chunk in data.chunks(16) {
+                let mut block = [0u8; 16];
+                block[..chunk.len()].copy_from_slice(chunk);
+                for index in 0..16 {
+                    block[index] ^= accumulator[index];
+                }
+                accumulator = ghash_multiply_reference(&block, h);
+            }
+        }
+        let mut length_block = [0u8; 16];
+        length_block[..8].copy_from_slice(&((aad.len() as u64) * 8).to_be_bytes());
+        length_block[8..].copy_from_slice(&((ciphertext.len() as u64) * 8).to_be_bytes());
+        for index in 0..16 {
+            length_block[index] ^= accumulator[index];
+        }
+        ghash_multiply_reference(&length_block, h)
     }
 
     // NIST SP 800-38A key and plaintext
@@ -630,6 +724,65 @@ mod tests {
     }
 
     // ── GCM ──
+
+    #[test]
+    fn test_ghash_multiply_fixed_nist_intermediate() {
+        let h = array_16(from_hex("66e94bd4ef8a2c3b884cfa59ca342b2e"));
+        let x = array_16(from_hex("0388dace60b6a392f328c2b971b2fe78"));
+        let mut output = [0u8; 16];
+        ghash_multiply_fixed(&x, &h, &mut output);
+        assert_eq!(to_hex(&output), "5e2ec746917062882c85b0685353deb7");
+    }
+
+    #[test]
+    fn test_ghash_fixed_nist_sp_800_38d_case_2() {
+        let h = array_16(from_hex("66e94bd4ef8a2c3b884cfa59ca342b2e"));
+        let ciphertext = from_hex("0388dace60b6a392f328c2b971b2fe78");
+        let mut output = [0u8; 16];
+        ghash_fixed(&h, &[], &ciphertext, &mut output).unwrap();
+        assert_eq!(to_hex(&output), "f38cbb1ad69223dcc3457ae5b6b0f885");
+    }
+
+    #[test]
+    fn test_ghash_fixed_matches_reference_across_block_edges() {
+        let h = array_16(from_hex("b83b533708bf535d0aa6e52980d53b78"));
+        let data: Vec<u8> = (0..=255).map(|value| value as u8).collect();
+        for aad_length in [0, 1, 15, 16, 17, 31, 32, 33, 127] {
+            for ciphertext_length in [0, 1, 15, 16, 17, 31, 32, 33, 255] {
+                let aad = &data[..aad_length];
+                let ciphertext = &data[..ciphertext_length];
+                let mut output = [0xa5; 16];
+                ghash_fixed(&h, aad, ciphertext, &mut output).unwrap();
+                assert_eq!(output, ghash_reference(&h, aad, ciphertext));
+            }
+        }
+    }
+
+    #[test]
+    fn test_ghash_fixed_binds_key_aad_and_ciphertext() {
+        let h = [0x42; 16];
+        let mut baseline = [0u8; 16];
+        let mut changed_h = [0u8; 16];
+        let mut changed_aad = [0u8; 16];
+        let mut changed_ciphertext = [0u8; 16];
+        ghash_fixed(&h, b"header", b"ciphertext", &mut baseline).unwrap();
+
+        let mut other_h = h;
+        other_h[0] ^= 1;
+        ghash_fixed(&other_h, b"header", b"ciphertext", &mut changed_h).unwrap();
+        ghash_fixed(&h, b"Header", b"ciphertext", &mut changed_aad).unwrap();
+        ghash_fixed(&h, b"header", b"Ciphertext", &mut changed_ciphertext).unwrap();
+
+        assert_ne!(baseline, changed_h);
+        assert_ne!(baseline, changed_aad);
+        assert_ne!(baseline, changed_ciphertext);
+    }
+
+    #[cfg(target_pointer_width = "64")]
+    #[test]
+    fn test_ghash_rejects_unrepresentable_bit_length() {
+        assert_eq!(ghash_bit_length(usize::MAX), Err(GhashError::InputTooLong));
+    }
 
     #[test]
     fn test_gcm_nist_test_case() {
