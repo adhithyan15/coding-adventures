@@ -683,6 +683,10 @@ jobs:
           # monotone inventory. New names fail, and removed names must leave the
           # allowlist in the same change so an old crate cannot silently return.
           python3 code/scripts/third_party_dependency_policy.py check --base-ref origin/main
+          # The npm lane applies the same contract to dependencies,
+          # devDependencies, peerDependencies and optionalDependencies. Only
+          # path edges resolving to tracked in-repository manifests are local.
+          python3 code/scripts/third_party_dependency_policy.py check --ecosystem npm --base-ref origin/main
           python3 -m unittest discover -s code/scripts/tests -p 'test_third_party_dependency_policy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_neural_framework_windows_ci.py'
