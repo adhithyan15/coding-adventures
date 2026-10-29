@@ -437,6 +437,64 @@ fn runs_shared_berkeley_v1_syntax_corpus() {
 }
 
 #[test]
+fn tool_compatibility_register_has_an_explicit_cross_tool_backlog() {
+    let register: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../grammars/spice/tool-compatibility-v1.json"
+    ))
+    .expect("tool compatibility register should be valid JSON");
+
+    assert_eq!(register["schemaVersion"], 1);
+    assert_eq!(register["suite"], "spice-tool-compatibility");
+    assert_eq!(register["compatibilityClaim"]["dropInEligible"], false);
+    let profiles = register["profiles"].as_array().unwrap();
+    let profile_ids = profiles
+        .iter()
+        .map(|profile| profile["id"].as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    assert_eq!(
+        profile_ids,
+        std::collections::HashSet::from(["berkeley-spice3f3", "ngspice-47", "ltspice-24"])
+    );
+    let statuses = profiles
+        .iter()
+        .map(|profile| profile["inventoryStatus"].as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    assert!(statuses.is_superset(&std::collections::HashSet::from([
+        "complete-core",
+        "in-progress"
+    ])));
+
+    let features = register["features"].as_array().unwrap();
+    assert!(features.len() >= 45);
+    let families = register["families"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|family| family.as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    let feature_families = features
+        .iter()
+        .map(|feature| feature["family"].as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    assert_eq!(feature_families, families);
+    let feature_ids = features
+        .iter()
+        .map(|feature| feature["id"].as_str().unwrap())
+        .collect::<std::collections::HashSet<_>>();
+    assert_eq!(feature_ids.len(), features.len());
+    for feature in features {
+        let mapped_profiles = feature["profiles"].as_array().unwrap();
+        assert!(!mapped_profiles.is_empty());
+        assert!(mapped_profiles.iter().all(|profile| profile_ids.contains(profile.as_str().unwrap())));
+        assert!(matches!(
+            feature["state"].as_str(),
+            Some("supported" | "partial" | "planned" | "out-of-scope")
+        ));
+        assert!(!feature["evidence"].as_array().unwrap().is_empty());
+    }
+}
+
+#[test]
 fn parses_reactive_elements_vccs_source_waveforms_and_analysis_cards() {
     let parsed = parse_netlist(
         r#"
