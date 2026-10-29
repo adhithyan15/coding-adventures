@@ -220,6 +220,17 @@ Notes:
 
 - Direct calls use plain TS function calls — top-level functions are
   emitted as plain `function` declarations, no name mangling.
+- Names the emitter binds around user code — `__sir…` in any case (the
+  `__Sir*` imports, `__sir_result`, loop temporaries), the wrapper's `_a`,
+  `__l`, `__kw`, `__exc` — and the globals it calls inline (`Map`,
+  `Object`, `Error`) are escaped by `sanitize_ident` like a keyword
+  (issue #18466; SIR10 "Generated names").
+- `await` and `implements` are reserved (every emitted file is an ES
+  module in strict mode), and a non-finite float literal is `1e999`,
+  `(-1e999)` or `(0 / 0)` — never Rust's `inf`, nor a global name.
+- A strict closure's arity check raises SIR's `ArgumentError`: through
+  `__SirExc.raiseError` when the module imports the exception runtime,
+  otherwise as an `Error` named `ArgumentError` (nothing could catch it).
 - `MakeClosure` wraps a JS arrow that prepends the captured values to
   the call's argument list.  This matches the convention that the
   generated `Function` has `captures` first, then `params` (the

@@ -568,6 +568,28 @@ impl<'a> LetView<'a> {
     }
 }
 
+/// Is `name`, written at the head of an application, one of the
+/// short-circuit special forms `and` / `or`?
+///
+/// Every other special form (`if`, `let`, `lambda`, `match`, …) is a
+/// lexer `KEYWORD` with its own grammar rule, so it never parses as an
+/// application.  `and` / `or` are ordinary names to the parser — a program
+/// may bind them as values (#18457) — and only become syntax in call
+/// position:
+///
+/// | Source               | Head `or` is…   | Argument `or` is… |
+/// |----------------------|-----------------|-------------------|
+/// | `(or a b)`           | the special form| —                 |
+/// | `(or #f or)`         | the special form| a name (a value)  |
+/// | `or`                 | —               | a name (a value)  |
+///
+/// The compiler's `compile_apply` and the lambda free-variable walk
+/// (`free_vars`) both ask this one predicate, so they cannot disagree about
+/// which heads are syntax (#18453).
+pub(crate) fn is_short_circuit_form(name: &str) -> bool {
+    matches!(name, "and" | "or")
+}
+
 /// An `apply` node — `(f a…)`.
 #[derive(Clone, Copy)]
 pub(crate) struct ApplyView<'a>(&'a GrammarASTNode);
@@ -581,6 +603,12 @@ impl<'a> ApplyView<'a> {
     /// The function position's name, when it is a bare name.
     pub fn fn_name(self) -> Option<&'a str> {
         self.fn_expr()?.as_var()
+    }
+
+    /// Is this `(and …)` / `(or …)` — a special form, whose head is syntax
+    /// rather than a reference to a name?  See [`is_short_circuit_form`].
+    pub fn is_short_circuit_form(self) -> bool {
+        self.fn_name().is_some_and(is_short_circuit_form)
     }
 
     /// The argument expressions.

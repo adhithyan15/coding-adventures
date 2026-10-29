@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-26
+**Last reprioritized:** 2026-10-28
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -96,7 +96,7 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 4 | Arm Cortex-M33 (merged in PR #18326) | Armv8-M manuals | Bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU with disabled-only ALLNS and most-secure overlap reduction, distinct fetch/data policy, checked transition hooks, all-bank stack-limit closure, and exact inherited-family differential witnesses. Encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
 | 5 | DEC PDP-10 KA10 (merged in PR #18331) | published architecture manuals | Complete bounded checked 36-bit functional oracle. |
 | 6 | Data General Nova (in publication) | published architecture manuals | Checked common Nova/Nova 1200 core, all 32,768 operate words, atomic lifecycle, 17 release tests, and 91.53% line coverage (540/590). |
-| 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336. P0 source-correctness repair complete locally: destructive-overlap `MVCL` suppresses storage movement, preserves both lengths and low 24-bit addresses, and clears the ignored high byte of both address registers for condition-code-3 completion. The gate partner remains blocked until this repair merges. |
+| 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336 and destructive-overlap `MVCL` correction merged in PR #18363. Gate partner complete and independently reviewed: one embedded System/360 stable-Q bank, independent MVCL/CLCL/CLM/STCM/ICM networks, 21 release integration tests, compiler-checked hostile crates, 95.27% line coverage (825/866), and strict package checks; seven affected BUILD recipes pass, while the repository orphan validator remains blocked by stale `BUILD-EXEMPTIONS` entries inherited from `origin/main`. Publication is next. |
 | 8 | Motorola 68020 (in publication) | published programmer reference | Bounded checked full-format `MOVE.L` and problem-state extensions, including reserved IS/IIS rejection, immutable fetched trace bytes, and unaligned data transfers. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Functional merged: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate Spec 07au2 was independently accepted; its complete local implementation is awaiting independent implementation re-review with 525,436 authoritative DFFs, independent strict decode/execution, gate-derived datapath/control, exact functional lifecycle/fault differentials, post-progress allocation rollback, compiler-checked full-crate hostile fixtures, 25 release tests, and 97.65% line coverage (1,040/1,065). No gate publication PR exists yet. |
 | 10 | SuperH-2 (merged in PR #18346) | published programming manuals | Spec 07av's bounded SH-2 integer core has complete 64 KiB state, big-endian transport, delayed control flow, integer/memory and multiply/divide families including `MUL.L`, exact `DIV1` Q/M/T quadrant behavior, MAC alias sequencing, typed atomic lifecycle, and corrected architectural illegal-slot precedence. Remaining interrupt/peripheral/SoC and later-SuperH work stays explicit below. |
@@ -110,7 +110,9 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 18 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is complete locally from its independently reviewed spec-only predecessor: fixed-width big-endian execution, two complete register banks, CC/PC/interrupt/image state, exact transactions, typed atomic lifecycle, 31 completion tests, two corpus consumers over 3,970 checked-in upstream rows, one doctest, and 92.70% release line coverage (1,270/1,370). Exact-clean-head review is next; `RCPU-086` remains blocked until the functional oracle merges. |
 | 19 | PIC16 classic mid-range (PIC16F84A profile) | Microchip DS35007C device data sheet and DS33023A family reference manual | Complete locally: source-pinned 14-bit Harvard CPU with all 35 documented instructions, exact banked file-register/PCL/stack behavior, typed peripheral boundaries, 14 release tests, one doctest, strict checks, and 98.67% package-source line coverage (670/679). |
 | 20 | Microwatt / Power ISA (RCPU-077 / RCPU-078) | Power ISA Version 3.0C plus pinned Microwatt VHDL | Spec 07bd functional implementation is complete locally with checked state, typed rollback, deterministic allocation-failure preflights, exact Microwatt word-result and slash-field rules, 36 release tests, 90.43% line coverage (1,465/1,620), and an executed pinned 173-row full-core GHDL corpus with two independent Rust consumers. The separately scoped source-backed gate cell remains next. |
+| 21 | Zylin ZPU4 Small (`RCPU-087` / `RCPU-088`) | stable Zylin architecture document plus vendor VHDL at `e29aef5f7aa741557d0eb16ecf13e974d55789ff` | `RCPU-087` / Spec 07bf passed pre-implementation review and is complete locally pending exact-head publication review: exact 32-bit/15-bit-address small-core profile, all 256 byte classifications, stack/IDIM/interrupt/break state, big-endian transport, explicit external-word-bus adapter, typed atomic lifecycle, and 260 checksum-pinned GHDL scenarios with independent Rust/Python consumers. `RCPU-088` gate work must wait for the functional merge. Orders 16–17 and `RCPU-083`–`RCPU-086` remain owned by the active LatticeMico32 and ZipCPU cells and are not duplicated here. |
 | 22 | MIPS R4000 / MIPS III (`RCPU-089` / `RCPU-090`) | MIPS Technologies / SGI R4000 User's Manual, second edition, publication 007-2489-001 | Spec 07bg is complete locally and awaits independent preimplementation review. ZPU owns order 21 and `RCPU-087` / `RCPU-088`; this bounded first cell reserves `RCPU-089` for the 64-bit big-endian problem-state integer ISA with exact delayed/likely control flow, 64-bit and unaligned-merge operations, LL/SC, complete checked state/transactions, and typed atomic lifecycle. CP0/TLB/caches/FPU/timing stay separate. `RCPU-090`, the educational gate partner, remains blocked until the functional cell merges. |
+| 23 | Intel 80960KA scalar integer (`RCPU-091` / `RCPU-092`) | Intel order 270567, March 1988, plus Intel's June 1997 KA/KB specification update; MAME 0.289 i80960KA core is secondary differential evidence | Spec 07bh is ready for independent pre-implementation review. `RCPU-091` pins the little-endian scalar application surface, all four instruction formats, 32 split local/global registers, exact AC condition/overflow fields, unaligned scalar memory, four/eight-byte transport, ordered transactions, and typed transactional lifecycle. Calls/register-frame spill, system faults/interrupts, atomics, synchronous/multi-register transfers, floating point, timing, and SoC behavior remain separate cells. No public KA RTL/netlist was found, so `RCPU-092` is reserved only for an explicitly educational repository-synthesized gate model after the functional merge; it may not claim exact Intel topology. Order 22 and `RCPU-089` / `RCPU-090` remain reserved for the parallel MIPS R4000 audit after ZPU's order 21. |
 
 CDP1802 merged in PR #18354 after independent specification and implementation
 review. The functional cell covers the complete register matrix, instruction
@@ -189,6 +191,18 @@ educational gate cell and a source-backed PIC16F84A SoC composition remain
 separate queued follow-up cells after independent implementation review and
 publication of the functional core.
 
+Intel i960 follows the already active ZPU and reserved MIPS R4000 cells. The
+duplicate audit found no package, spec, branch, worktree claim, or open/merged
+PR for i960/80960. Intel's public 270567 programmer reference gives the exact
+KA scalar register, format, addressing, condition-code, and instruction
+contract, while the separately written MAME 0.289 i80960KA device supplies a
+real reproducible common-subset differential target. The first cell stays
+bounded to scalar application execution so register-window spills, system
+tables, architectural fault/interrupt entry, KB floating point, and bus/SoC
+behavior are not approximated. The manuals do not disclose an internal KA
+netlist; any later gate package is educational synthesis, not a source-backed
+exact gate reconstruction.
+
 ## Discovered follow-up work
 
 - Independently re-review the repaired local Spec 07ax2 ARM7TDMI educational
@@ -199,6 +213,13 @@ publication of the functional core.
   follow-ups remain lower priority: little-endian transport, interrupt entry
   and wake from `SLEEP`, SR/VBR system transfers, exception return, `TAS.B`,
   and a source-backed SH-2 microcontroller SoC composition.
+
+### Open-RTL CPU companions
+
+| Priority | Target | Evidence / dependency |
+|---:|---|---|
+| P1 after ZPU functional | ZPU4 Small source-backed educational gate model (`RCPU-088`) | Dependent Spec 07bf2 follows only after the independently reviewed `RCPU-087` functional oracle merges. Pin Zylin commit `e29aef5f7aa741557d0eb16ecf13e974d55789ff`; derive the RTL state inventory; use repository gates/DFFs plus cycle/instruction GHDL differentials; exclude SoC peripherals, FPGA timing, physical-netlist, transistor, and SPICE claims. |
+| P2 discovery | J1 Forth CPU | Distinct 16-bit stack ISA with a public paper and BSD Verilog exists, but its exact immutable profile, programmer-visible lifecycle, and repository priority remain to be audited. Do not conflate it with the 32-bit GCC-backed ZPU cell. |
 
 ### Gate-integrity audit queue
 

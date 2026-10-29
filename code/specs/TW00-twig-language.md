@@ -232,16 +232,8 @@ name is used as a value (`helper`) or called (`(helper 1)`):
 | 3     | Top-level value `define`                                        | `call_closure` on its value   |
 | 4     | Builtin (`+`, `cons`, `string-append`, …)                       | `call_builtin name, args…` (or a typed op) |
 
-`and` and `or` are special forms and are not in this table. A local cannot
-shadow them.
-
-There is one known gap between rows 3 and 4, tracked as issue #18438. A
-top-level *value* `define` that reuses a builtin's name, such as
-`(define car 5)`, wins in value position. In call position the builtin still
-wins. This rule is about the lexical row (row 1), which always wins.
-
-So a local hides a global, an extern or a builtin with the same name for
-the whole of the local's scope:
+Row 1 always wins: a local hides a global, an extern or a builtin with
+the same name for the whole of the local's scope:
 
 ```scheme
 (define (helper x) (* x 100))
@@ -255,6 +247,59 @@ analysis also treats the name as local, so a nested lambda captures the
 local and does not reach the global. (Before issue #18435 was fixed, the
 compiler checked rows 2 and 4 before row 1 in call position, and this
 program returned 100.)
+
+Row 2 also covers the functions a `record` or `union` declaration
+generates: constructors, predicates and accessors.
+
+**A top-level definition shadows a builtin** (issue #18438). Rows 2 and 3
+come before row 4, in value position and in call position alike, as in
+Scheme. Redefining a builtin is not an error. The definition wins
+everywhere the name is used, including where the compiler would otherwise
+assume the builtin ran:
+
+```scheme
+(define car 5)
+car                 ; => 5
+(car (cons 1 2))    ; calls 5: run-time error, not the builtin car
+
+(define (string-append a b) 5)
+(string-length (string-append "a" "b"))   ; string-length of 5: run-time error
+```
+
+- **Typed fast paths.** The compiler recognises `string-append`,
+  `substring`, `string-length` and `+ - * /` by name to emit typed string
+  and index ops (`str_concat`, `str_len`, `str_index`, …). It does that only
+  when the name resolves to the builtin. Otherwise it would type the user's
+  result as the builtin's: `str_len` on the integer 5 above, which a native
+  backend runs unchecked.
+- **Call-site string evidence.** `(f (string-append "a" "b"))` is evidence
+  that `f`'s parameter is a string only while `string-append` is the
+  builtin.
+- **Type checker.** `twig-type-checker` resolves names the same way. An
+  `if` guard such as `(< x 128)` narrows `x` only when `<` (or `not`) is
+  the builtin, not a top-level or imported definition or a local binding.
+- **Compiler-generated code** is not affected. `match`, records and unions
+  lower to the builtin `car` / `cons` / `=` operations directly, so a user
+  `car` does not change how a `match` takes a value apart.
+
+Before this was fixed, rows 2 and 3 lost to row 4 in some places. A value
+`define` lost in call position, so `(car p)` above called the builtin. The
+typed fast paths only checked row 1, so they typed a user function's result
+as the builtin's.
+
+**Special forms are syntax, not bindings**, and are not in this table.
+`if`, `let`, `let*`, `lambda`, `define`, `quote`, `begin` and `match` (and
+the declaration keywords `module`, `record`, `union`, `type`, …) are
+reserved words. `(define (if a) a)` is a parse error that reports its
+source position. `and` and `or` lex as ordinary names, so
+`(define (and a b) …)` is accepted, and `and` in value position is that
+function. But `(and …)` and `(or …)` in call position are always the
+short-circuit special forms, whatever is defined or bound with that name.
+This includes inside a lambda: the head of `(or …)` is not a free variable,
+so `(lambda () (or "a" 1))` captures nothing. In value position, as in
+`(let ((or 7)) (lambda () (or #f or)))`, `or` is still a name, and the
+lambda captures the local. (Before issue #18453 was fixed, a lambda that
+used `and` or `or` failed with `unbound name "or" captured by lambda`.)
 
 ### Type hints
 
@@ -279,9 +324,30 @@ then evaluate `body`.  Bindings are mutually independent (no
 sequential like `let*`).  Scope is lexical: the `body` sees `x`/`y`
 plus the surrounding scope.
 
-Implementation: each binding becomes a fresh assignment; the IIR
-register file handles scoping naturally because `frame.assign(name,
-val)` reuses slots.
+Implementation: each binding gets **a register of its own** (#18439).
+Reusing the source name as the register does *not* handle scoping: two
+bindings of the same name would share one slot, and the inner binding
+would overwrite the outer one, so
+`(define (f x) (begin (let ((x 5)) x) x)) (f 1)` would return 5 instead
+of 1 (and a typed op could be handed a value of the wrong kind).
+
+The compiler keeps, per function, a map from each name to a stack of
+registers — the innermost binding on top. Every binder pushes onto it
+and pops on scope exit: parameters, `let`, `let*`, lambda parameters,
+closure captures and `match` bindings. Every use of the name reads the
+register on top.
+
+| Binding of `x` in a function           | Register            |
+|-----------------------------------------|---------------------|
+| the first one                           | `x`                 |
+| any later one (nested or sibling)       | `__r1_x`, `__r2_x`, … |
+
+The first binding keeps the source name so programs that never reuse a
+name compile exactly as before. The compiler also tracks every register
+name it has used in the function, so a generated name never collides with
+a user local (a user local spelled `__r1_x` just pushes the generated
+name to the next free one), and a compiler temporary never collides with a
+user local spelled like one (`_n1`).
 
 ## The `Heap` class (the GC playground)
 

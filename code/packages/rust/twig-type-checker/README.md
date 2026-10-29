@@ -100,6 +100,25 @@ Combining guards with `and`:
   0)
 ```
 
+A guard narrows only through the **builtin** comparisons and `not`
+(#18438). A user definition shadows a builtin of the same name, as in the
+IR compiler: a top-level `define`, a record or union name, an imported
+definition, or a parameter or `let` binding. After `(define (< a b) #t)`,
+`(< n 128)` calls that function. It may be true for `n = 500`, so it
+narrows nothing and the call is not proven safe:
+
+```scheme
+(define (< a b) #t)
+(define (process (n : int))
+  (if (< n 128) (ascii-info n) 0))   ; strict: refinement error (unproven)
+```
+
+`TypeEnv::resolves_to_builtin(name)` answers "is this still the builtin?".
+`and` and `or` are special forms, not bindings: a user `and` neither stops
+`(and …)` from narrowing nor gets its arity checked against `(and a b c)`.
+`extract_module_exports` leaves out a builtin a module re-exports without
+defining it, so an importer does not take it for a shadowing definition.
+
 ## Notes
 
 - Pure: no I/O, no FFI, no unsafe.

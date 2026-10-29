@@ -5523,6 +5523,23 @@ fn emit_host_drop_target_qml(
     writeln!(out, "{inner}id: {target_id}").unwrap();
     writeln!(out, "{inner}implicitWidth: {content_id}.implicitWidth").unwrap();
     writeln!(out, "{inner}implicitHeight: {content_id}.implicitHeight").unwrap();
+    // Empty content must not erase an authored landing zone. Keep the floor
+    // on the outer Item: DropArea fills that Item, not the inner layout.
+    // A state-dependent minimum is outside this static bridge.
+    if let Some(part) = node.part_name.as_deref().filter(|_| {
+        part_style_props(node, ctx).is_some_and(|props| props.iter().any(|prop| prop.name == "min-height"))
+    }) {
+        let props = part_style_props(node, ctx).unwrap_or(&[]);
+        let layers = collect_state_layers(node, part, ctx.part_styles);
+        if !layers.iter().any(|layer| style_prop(layer.props, "min-height").is_some()) {
+            if let Some(height) = style_prop(props, "min-height")
+                .and_then(qml_px_or_none)
+                .filter(|value| value.parse::<f64>().is_ok_and(|number| number >= 0.0))
+            {
+                writeln!(out, "{inner}Layout.minimumHeight: {height}").unwrap();
+            }
+        }
+    }
     writeln!(
         out,
         "{inner}property string mosaicDropKey: String({target_key})"
@@ -16547,6 +16564,39 @@ mod tests {
             1,
             "onDrop payload must be constructed by exactly one target callback:\n{out}"
         );
+    }
+
+    #[test]
+    fn drop_target_preserves_static_nonnegative_minimum_height() {
+        let (iface, layout) = drag_family_fixture();
+        for (value, expected) in [("60", Some("60")), ("0px", Some("0")),
+            ("-1", None), ("NaN", None), ("inf", None), ("100%", None),
+            ("60; Qt.quit()", None)] {
+            let style = style_with_part("Board", "lane", vec![("min-height", value)]);
+            let out = from_pipeline(&iface, &layout, &style).unwrap().output;
+            let target = out.split("id: mosaicDropTarget1").nth(1).unwrap()
+                .split("ColumnLayout {").next().unwrap();
+            match expected {
+                Some(height) => assert!(target.contains(&format!("Layout.minimumHeight: {height}")), "{value}: {target}"),
+                None => assert!(!target.contains("Layout.minimumHeight:"), "{value}: {target}"),
+            }
+        }
+    }
+
+    #[test]
+    fn drop_target_skips_state_dependent_minimum_height() {
+        let (iface, mut layout) = drag_family_fixture();
+        layout.root.children[1].props.push(drag_prop(
+            "state-when-hover", LayoutPropValue::Expr("true".to_string())));
+        let mut style = style_with_part("Board", "lane", vec![("min-height", "60")]);
+        style.parts[0].states.push(mosstyle_compiler::StateStyle {
+            slot: None, slot_is_bool: false, state: "hover".to_string(),
+            transitions: vec![], props: vec![sp("min-height", "80")],
+        });
+        let out = from_pipeline(&iface, &layout, &style).unwrap().output;
+        let target = out.split("id: mosaicDropTarget1").nth(1).unwrap()
+            .split("ColumnLayout {").next().unwrap();
+        assert!(!target.contains("Layout.minimumHeight:"), "{target}");
     }
 
     #[test]
