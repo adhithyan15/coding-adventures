@@ -175,8 +175,10 @@ arrows through structural layout and backend-neutral PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
 pipeline for C4 elements and boundaries. Core `UpdateRelStyle` text and line
 colors likewise survive semantic IR, layout, and backend-neutral
-PaintInstructions. C4 remains partial while its remaining macro semantics and
-visual corpus are incomplete.
+PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
+semantic IR; shape row limits control structural layout while both values lower
+to backend-neutral PaintScene metadata. C4 remains partial while its remaining
+macro semantics and visual corpus are incomplete.
 
 ## Required New Semantic Families
 
