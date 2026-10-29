@@ -488,7 +488,10 @@ reviewable:
   path edges are treated as local.
 - [x] npm tool installs in workflows, build definitions, shell entrypoints and
   package scripts are checked against an exact current command-name set.
-- [ ] Python project files and tool installs.
+- [x] Python project dependency declarations: build, runtime, optional and
+  dependency-group requirements are checked by normalized distribution name;
+  only explicit tracked `uv` path/workspace sources are local.
+- [ ] Python tool installs in workflows, build definitions and scripts.
 - [ ] Ruby Gemfiles and gemspecs.
 - [ ] Go modules and tool installs.
 - [ ] Elixir Mix manifests and tool installs.
