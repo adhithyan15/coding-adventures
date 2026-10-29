@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-pub const VERSION: &str = "0.89.0";
+pub const VERSION: &str = "0.90.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -2281,6 +2281,8 @@ pub enum StructuralNodeKind {
     Entity,
     Requirement,
     Element,
+    Database,
+    Queue,
     Junction,
 }
 
@@ -3240,7 +3242,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.89.0");
+        assert_eq!(VERSION, "0.90.0");
     }
     #[test]
     fn default_direction_is_tb() {
