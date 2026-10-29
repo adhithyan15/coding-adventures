@@ -16,14 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18566,
+  "active_prs": [
+    18566
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-29T07:36:04Z",
-    "pr_number": 18555,
-    "head_revision": "03fe2f56503918a3ca40256fde7f714dba9b8723",
-    "action": "Observed external squash merge of independently reviewed Ruby dependency-hashing PR #18555 at exact final head 03fe2f56503918a3ca40256fde7f714dba9b8723. All 42 hosted checks are terminal acceptable at observation: 31 successes, 10 expected path-gated skips, and one neutral CodeQL aggregate. Merge 94e8baf5cd164714732535463625e2acee33027b is present on fetched main; the clean completed worktree and local branch were removed.",
-    "manual_merge": true
+    "observed_at": "2026-10-29T07:46:04Z",
+    "pr_number": 18566,
+    "head_revision": "fb29f5e68f9a668a7090e33da0baf11b52a92085",
+    "action": "Published independently reviewed Swift RESP head fb29f5e68f9a668a7090e33da0baf11b52a92085 as draft PR #18566 over exact base 8035689ac23a971a4e77215a3eb651c90f441da0. GitHub reports it mergeable. Keep the PR draft while this durable PR-number receipt is committed, pushed, and independently reviewed; require a fresh exact-head hosted matrix after the final lifecycle head is marked ready.",
+    "manual_merge": false
   },
   "last_inventory": {
     "revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
@@ -312,7 +314,11 @@
         "ocaml-build-tool-current-contract-conformance"
       ],
       "branch": null,
-      "pr_number": null,
+      "pr_number": 18566,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18566",
+      "pr_opened_at": "2026-10-29T07:46:04Z",
+      "publication_head": "fb29f5e68f9a668a7090e33da0baf11b52a92085",
+      "publication_base": "8035689ac23a971a4e77215a3eb651c90f441da0",
       "selection_blocked": true,
       "notes": "Completion umbrella for the eleven independently reviewable existing-engine children. The post-#13388 dependency pass decomposed C#, F#, Elixir, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript before selecting implementation work; F# follows the C# shared engine while every child consumes the same merged inert corpus. Route later Dart, JVM, and promoted OCaml engines through the same contract rather than copying Go-only BUILD parsing."
     },
@@ -17079,6 +17085,7 @@
       "current_main_merge_revision": "5729db118d09cf28e78f2ee700cc23db161d95f1",
       "publication_selection_revision": "8035689ac23a971a4e77215a3eb651c90f441da0",
       "publication_selection_notes": "Selected for the newly free publication slot after verified Ruby PR #18555 merge and durable registration of the cross-runtime diff-selection indexing-ceiling owner. Lua and Rust graph/diff have greater raw leverage at four direct and six total descendants but both still require shared Go routing that overlaps open PR #18495. Swift RESP is dependency-free, reviewed, current-main reconciled, and package-path-disjoint, so it is the highest-leverage publication-safe item.",
+      "publication_notes": "Independently reviewed implementation and lifecycle head fb29f5e68f9a668a7090e33da0baf11b52a92085 opened as draft PR #18566 over exact base 8035689ac23a971a4e77215a3eb651c90f441da0 at 2026-10-29T07:46:04Z. GitHub reported the draft mergeable. The PR stays draft until this durable number receipt is pushed and independently reviewed; guarded squash auto-merge stays disabled until every check on the later exact ready head is terminal acceptable and GitHub still reports it mergeable.",
       "validation_notes": "The dependency-free Swift package implements all seven distinct RESP2 value forms with binary-safe bulk data, distinct null bulk and null array values, strict canonical grammar, iterative bounded encode/decode, failure-atomic incremental decoding, fragmented-work limits, exact UTF-8 identity, stable errors, BUILD fronts, package documentation, and an empty authority profile. Simple and error encoding bounds UTF-8 scans before proportional allocation, while numeric headers enforce their tighter ceiling during terminated or fragmented decoding and before encode-side output allocation. Thirteen package tests, release build, Swift 6.3.1 formatting lint, manifest inspection, JSON validation, lessons validation, diff hygiene, and artifact cleanup pass. Independent LLVM measurement reports 96.84% production line coverage with all 37 functions executed before the final encode-side regression. Merge 5729db118d09cf28e78f2ee700cc23db161d95f1 reconciles exact fetched main 8035689ac23a971a4e77215a3eb651c90f441da0; all thirteen tests and the release build pass again on the current-main branch.",
       "security_review_revision": "d0a724afffae3f0db919505a531e56f5877dc709",
       "security_review_notes": "Independent exact-head review first rejected proportional UTF-8 line allocation before the advertised limit and numeric-header bounds enforced only after generic line scanning. The repaired decoder performs allocation-free bounded UTF-8 preflight, gives numeric headers a dedicated scan ceiling for terminated and fragmented inputs, and preserves header-limit precedence over frame limits. Current-main re-review then found that encode-side integer, bulk-length, null, and array-count headers ignored tightened maximumHeaderBytes. Head d0a724afffae3f0db919505a531e56f5877dc709 preflights every numeric encode header before output allocation and pins both oversize failures and one-byte successes. Re-review issued SHIP with no findings and reconfirmed binary/null semantics, iterative budgets, failure atomicity, stable errors, all thirteen tests, release build, strict formatting, empty authority, exact ancestry, diff hygiene, and artifact cleanup.",

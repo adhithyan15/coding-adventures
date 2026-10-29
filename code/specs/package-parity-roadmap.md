@@ -19790,3 +19790,15 @@ greater raw leverage at four direct and six total unfinished descendants,
 but both still require shared Go routing that overlaps open PR #18495. The
 dependency-free, package-path-disjoint Swift RESP item is therefore the
 highest-leverage publication-safe candidate for the newly free parity slot.
+
+#### Draft PR #18566 publication receipt
+
+Publish independently reviewed exact current-main head
+`fb29f5e68f9a668a7090e33da0baf11b52a92085` as draft PR #18566 over exact
+base `8035689ac23a971a4e77215a3eb651c90f441da0` at
+`2026-10-29T07:46:04Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.
