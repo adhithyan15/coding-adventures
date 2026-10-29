@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import subprocess
 import sys
@@ -195,6 +197,71 @@ class DependencyPolicyTests(unittest.TestCase):
                 policy.load_base_allowlist(root, "HEAD", relative_path),
                 ["serde"],
             )
+
+    def test_command_rejects_inventory_and_allowlist_growth_together(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            manifest = root / "Cargo.toml"
+            allowlist = root / "policy" / "rust-allowlist.json"
+            allowlist.parent.mkdir()
+            manifest.write_text('[dependencies]\nserde = "1"\n', encoding="utf-8")
+            allowlist.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "ecosystem": "cargo",
+                        "allowed_dependency_names": ["serde"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-c",
+                    "user.name=Dependency Policy Test",
+                    "-c",
+                    "user.email=dependency-policy@example.invalid",
+                    "commit",
+                    "-qm",
+                    "baseline",
+                ],
+                cwd=root,
+                check=True,
+            )
+            manifest.write_text(
+                '[dependencies]\nserde = "1"\ntoml = "1"\n', encoding="utf-8"
+            )
+            allowlist.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "ecosystem": "cargo",
+                        "allowed_dependency_names": ["serde", "toml"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            errors = io.StringIO()
+            with contextlib.redirect_stderr(errors):
+                result = policy.main(
+                    [
+                        "check",
+                        "--root",
+                        str(root),
+                        "--allowlist",
+                        str(allowlist),
+                        "--base-ref",
+                        "HEAD",
+                    ]
+                )
+
+            self.assertEqual(result, 1)
+            self.assertIn("approved dependency set may only shrink", errors.getvalue())
+            self.assertIn("toml", errors.getvalue())
 
     def test_allowlist_requires_sorted_unique_names(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

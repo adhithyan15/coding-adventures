@@ -291,11 +291,15 @@ def main(argv: list[str] | None = None) -> int:
     try:
         allowed_names = load_allowlist(allowlist_path)
         unknown, stale = policy_differences(inventory, allowed_names)
-        baseline = (
-            load_base_allowlist(root, args.base_ref, DEFAULT_ALLOWLIST)
-            if args.base_ref
-            else None
-        )
+        baseline = None
+        if args.base_ref:
+            try:
+                baseline_path = allowlist_path.resolve().relative_to(root)
+            except ValueError as error:
+                raise PolicyError(
+                    "the allowlist must be inside the repository when --base-ref is used"
+                ) from error
+            baseline = load_base_allowlist(root, args.base_ref, baseline_path)
     except PolicyError as error:
         print(error, file=sys.stderr)
         return 1
