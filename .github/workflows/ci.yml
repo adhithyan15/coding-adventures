@@ -690,6 +690,10 @@ jobs:
           # Executable npm acquisition in workflows, build scripts, shell
           # entrypoints and package scripts has its own exact monotone set.
           python3 code/scripts/third_party_dependency_policy.py check --ecosystem npm-tools --base-ref origin/main
+          # Python build, runtime, optional and dependency-group declarations
+          # are normalized by distribution name. Only explicit tracked uv
+          # path/workspace sources are local.
+          python3 code/scripts/third_party_dependency_policy.py check --ecosystem python --base-ref origin/main
           python3 -m unittest discover -s code/scripts/tests -p 'test_third_party_dependency_policy.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_bounded_json_windows_ci.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_c_neural_framework_windows_ci.py'
