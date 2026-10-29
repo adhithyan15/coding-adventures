@@ -478,6 +478,21 @@ allowlist may only shrink. This is the single most important step in the
 document, because it is what makes every later phase monotone instead of a
 treadmill.
 
+Phase 0 is delivered in ecosystem-sized slices so each parser and inventory is
+reviewable:
+
+- [x] Cargo manifests: normal, development, build, workspace and target-scoped
+  dependency tables are checked against the exact current name set.
+- [ ] npm manifests and tool installs.
+- [ ] Python project files and tool installs.
+- [ ] Ruby Gemfiles and gemspecs.
+- [ ] Go modules and tool installs.
+- [ ] Elixir Mix manifests and tool installs.
+
+Each slice rejects both additions and stale allowlist entries. The second rule
+turns "may only shrink" into an executable guarantee: when the final use of a
+dependency disappears, its name must leave the allowlist in the same change.
+
 **Phase 1 — Node test tooling.** `vitest` → `node:test` for the ~450 non-DOM
 packages. *Takes the alert count to zero.* Everything after this point is
 purpose, not security.
