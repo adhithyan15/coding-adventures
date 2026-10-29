@@ -45,6 +45,7 @@ members = [
     "array-runtime",
     "arm-simulator",
     "arm7tdmi-simulator",
+    "motorola68020-simulator",
     "arm7tdmi-gatelevel",
     "cortex-m0-gatelevel",
     "cortex-m0-simulator",

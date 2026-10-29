@@ -93,13 +93,13 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 1 | Arm Cortex-M4 (functional merged; gate complete locally, review pending) | Armv7E-M manuals | Cortex-M3 gate base plus gate-derived DSP and optional FPv4-SP boundary; no vendor MCU or timing claims. |
 | 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
 | 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
-| 4 | Arm Cortex-M33 (PR #18326) | Armv8-M manuals | Functional cell complete locally: bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU with disabled-only ALLNS and most-secure overlap reduction, distinct fetch/data policy, checked transition hooks, all-bank stack-limit closure, and exact inherited-family differential witnesses. Publish after independent review; encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
-| 5 | DEC PDP-10 KA10 (PR #18331) | published architecture manuals | Complete bounded checked 36-bit functional oracle; squash auto-merge armed. |
+| 4 | Arm Cortex-M33 (merged in PR #18326) | Armv8-M manuals | Bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU with disabled-only ALLNS and most-secure overlap reduction, distinct fetch/data policy, checked transition hooks, all-bank stack-limit closure, and exact inherited-family differential witnesses. Encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
+| 5 | DEC PDP-10 KA10 (merged in PR #18331) | published architecture manuals | Complete bounded checked 36-bit functional oracle. |
 | 6 | Data General Nova (in publication) | published architecture manuals | Checked common Nova/Nova 1200 core, all 32,768 operate words, atomic lifecycle, 17 release tests, and 91.53% line coverage (540/590). |
 | 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336. P0 source-correctness repair complete locally: destructive-overlap `MVCL` suppresses storage movement, preserves both lengths and low 24-bit addresses, and clears the ignored high byte of both address registers for condition-code-3 completion. The gate partner remains blocked until this repair merges. |
-| 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
+| 8 | Motorola 68020 (in publication) | published programmer reference | Bounded checked full-format `MOVE.L` and problem-state extensions, including reserved IS/IIS rejection, immutable fetched trace bytes, and unaligned data transfers. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Functional merged: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate Spec 07au2 was independently accepted; its complete local implementation is awaiting independent implementation re-review with 525,436 authoritative DFFs, independent strict decode/execution, gate-derived datapath/control, exact functional lifecycle/fault differentials, post-progress allocation rollback, compiler-checked full-crate hostile fixtures, 25 release tests, and 97.65% line coverage (1,040/1,065). No gate publication PR exists yet. |
-| 10 | SuperH-2 (in publication) | published programming manuals | Local implementation repaired and awaiting a different independent exact-head review: Spec 07av's bounded SH-2 integer core has complete 64 KiB state, big-endian transport, delayed control flow, integer/memory and multiply/divide families including `MUL.L`, exact `DIV1` Q/M/T quadrant behavior, MAC alias sequencing, typed atomic lifecycle, and corrected architectural illegal-slot precedence. All 23 tests pass with 94.44% line coverage (1,036/1,097). Remaining interrupt/peripheral/SoC and later-SuperH work stays explicit below. |
+| 10 | SuperH-2 (merged in PR #18346) | published programming manuals | Spec 07av's bounded SH-2 integer core has complete 64 KiB state, big-endian transport, delayed control flow, integer/memory and multiply/divide families including `MUL.L`, exact `DIV1` Q/M/T quadrant behavior, MAC alias sequencing, typed atomic lifecycle, and corrected architectural illegal-slot precedence. Remaining interrupt/peripheral/SoC and later-SuperH work stays explicit below. |
 | 11 | SPARC V9 | published architecture manual | Complete and independently reviewed locally: bounded problem-state integer core implements 72-register complete state, four windows, icc/xcc/Y, the admitted V9 and compatibility integer/memory/control families, exact delay/annul/chaining traces, and typed transactional lifecycle. 48 tests, strict checks/docs, BUILD integration, and 91.22% line coverage (1,216/1,333) are green. Publication is next. |
 | 12 | ARM7TDMI | published ARMv4T manuals | Functional merged. Educational gate partner repaired after independent review: exact 525,522-DFF stable-Q inventory; independent ARM/Thumb engine; gate-derived one-hot selectors through the complete Thumb ALU/high/BX/transfer/stack/conditional/write-enable/mnemonic surface; syntax-normalized whole-file token locks plus named parsed-body source-to-sink locks; compiler-valid hostile full-crate mutations across ARM and Thumb control; two-way candidate divergence; real public differential execution and complete-state rollback for every reachable typed functional fault; and explicit source/public-invariant narrowing for compatibility-only unreachable variants. All 59 release tests, strict checks, and 91.67% line coverage (2,168/2,365) are green; a different independent exact-head review is next, and SoC composition remains queued. |
 | 13 | AVR classic (PR #18344) | published instruction-set manual | Complete: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, terminal-state restore round trips, whole-span two-byte call preflight, all-family terminal skip-target validation, 34 release tests with exhaustive add/subtract flag oracles and bug-sensitive fractional multiply flag regressions, and 97.43% line coverage (949/974). Squash auto-merge is armed; the gate partner remains queued. |
@@ -250,6 +250,26 @@ publication of the functional core.
   optional FPU, exception entry/return and interrupt targeting, MPU/IDAU/NVIC,
   and a source-backed or explicitly educational gate-level topology. The
   bounded functional cell does not imply proprietary Cortex-M33 RTL.
+- Expand the bounded Motorola MC68020 first cell after merge. The follow-up
+  queue is: complete inherited MC68000-family coverage with MC68020 effective
+  addresses, bit fields, `CAS`/`CAS2`, `CHK2`/`CMP2`, long multiply/divide,
+  `PACK`/`UNPK`, `CALLM`/`RTM`, `MOVEC`, and architected exception frames.
+  Cache/MMU/coprocessor, interrupt, and bus behavior belong to later CPU/SoC
+  cells and must not be inferred by the instruction-level model.
+
+The MC68020 bounded first cell is complete locally and awaiting independent
+publication review. It owns full D/A, PC/SR,
+USP/ISP/MSP, 16 MiB memory, halt, and installed-image state; implements
+compatible `MOVE.L`/`MOVEA.L` modes, scaled brief and full extension words,
+both memory-indirect orders, long branches, `RTD`, `LINK.L`, `EXTB.L`, and all
+`TRAPcc` forms; and privately delegates a bounded inherited register subset to
+the checked MC68000 core. Eighteen tests cover the claimed surface, complete
+state/lifecycle, aliases, stack banks, typed rollback, all reserved
+index-suppressed indirect selectors and their legal neighbors, immutable trace
+bytes across self-modifying writes, odd-address data and indirect-pointer
+transfers, boundary rollback, and inherited differentials. Strict checks, the
+package BUILD, lessons validation, and 89.28% line coverage (641/718) are green.
+Publication remains blocked only on independent review and merge.
 - Extend PA-RISC 1.1 problem-state coverage in bounded cells: extract/deposit
   and variable shifts, unit operations, indexed/short/modifying memory forms,
   decimal correction, multiply/divide, MOVB/MOVIB, and remaining arithmetic
