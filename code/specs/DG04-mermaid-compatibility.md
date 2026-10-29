@@ -184,7 +184,9 @@ receive pinned Mermaid sequence numbers during layout, and legacy `RelIndex`
 arguments lower to the same relationship semantics without treating the authored
 index as an endpoint. Database and queue element macros preserve typed node
 kinds through structural layout and lower to backend-neutral cylinder and queue
-paths, with pinned Metal-to-PNG coverage. Core `UpdateRelStyle` text and line
+paths, with pinned Metal-to-PNG coverage. Deployment node technology and
+description survive typed group metadata and structural layout, and deployment
+containers lower with Mermaid's solid border plus portable detail text. Core `UpdateRelStyle` text and line
 colors plus keyed or positional label offsets likewise survive semantic IR,
 layout, and backend-neutral PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
 semantic IR; shape row limits control structural layout while both values lower

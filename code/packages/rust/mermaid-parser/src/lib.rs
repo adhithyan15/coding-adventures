@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.152.0";
+pub const VERSION: &str = "0.153.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14145,8 +14145,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 groups.push(StructuralGroup {
                     id: id.clone(),
                     label,
-                    stereotype: Some(macro_token.value),
-                    metadata: None,
+                    stereotype: Some(macro_token.value.clone()),
+                    metadata: c4_group_metadata(&macro_token.value, &args),
                     style: None,
                     parent_group: group_stack.last().cloned(),
                 });
@@ -14347,6 +14347,21 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
     StructuralNodeMetadata::C4(C4NodeMetadata {
         technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
         description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
+    })
+}
+
+fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGroupMetadata> {
+    if !matches!(macro_name, "Deployment_Node" | "Node" | "Node_L" | "Node_R") {
+        return None;
+    }
+    let argument = |key: &str, position: usize| {
+        args.iter()
+            .find_map(|value| value.split_once('=').filter(|(name, value)| *name == key && !value.is_empty()).map(|(_, value)| value.to_string()))
+            .or_else(|| args.get(position).filter(|value| !value.is_empty() && !value.starts_with('$')).cloned())
+    };
+    Some(StructuralGroupMetadata::C4DeploymentNode {
+        technology: argument("$type", 2),
+        description: argument("$descr", 3),
     })
 }
 
@@ -19928,7 +19943,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.152.0");
+        assert_eq!(crate::VERSION, "0.153.0");
     }
 
     #[test]
