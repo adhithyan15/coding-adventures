@@ -1,5 +1,16 @@
 # TaskApp platform completion v1
 
+## Selected release checkpoint: v0.5.15 (#18581)
+
+The Qt empty Board drop-zone floor merged in #18562 with all checks passing.
+Prepare its compatible patch dated 2026-10-29. Retain the changelog's explicit
+three newly visible style drops and follow-up #18563; do not describe the
+diagnostic total as unchanged. Prioritize publication under #13543, require
+all existing payload validations after preparation merges, dispatch once from
+main, and audit immutable source/tag/manifest identity, inventory, checksums,
+and substantive notes before closing #18581. Preparation is not publication;
+artifact coverage and unsigned-platform limitations stay unchanged.
+
 ## Selected fidelity slice: Qt empty Board drop-target floor (#18559)
 
 Preserve both themes' existing col-drop min-height 60 on Qt's outer
