@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:f6b20ebd16542435",
+  "lessonIds": [
+    "PA-C210-perfective-return",
+    "PA-C210-ne",
+    "PA-C210-ne-review",
+    "PA-C210-aman-did-work",
+    "PA-C210-payoff"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch210.txt",
+  "json": "punjabi/narration/ch210.json",
+  "textHash": "fnv1a64:9a8dbaaba0ca65f1",
+  "jsonHash": "fnv1a64:91342ee332d693e0",
+  "findings": []
+}
