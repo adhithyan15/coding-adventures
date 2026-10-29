@@ -2062,6 +2062,29 @@ revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
 connection. Extension-block and handshake composition remain prerequisites,
 and concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-named-group-policy` prerequisite now binds each
+recognized TLS named-group wire identifier to immutable key-agreement routing
+metadata and exact wire/shared-secret lengths. The initial registry recognizes
+X25519 (`0x001d`), with 32-byte key-exchange and shared-secret values, and
+secp256r1 (`0x0017`), with a 65-byte uncompressed-point key exchange and a
+32-byte shared secret. A caller constructs a non-empty, duplicate-free
+allowlist from typed groups. Selection distinguishes unknown wire identifiers
+from known but disallowed groups, and selected-group length validation fails
+closed without retaining the identifier or observed length in stable errors.
+Additional groups require separately reviewed repository-owned primitives and
+standard parameter descriptors.
+
+The registry is policy metadata only. It does not parse or encode a key-share
+entry or extension, choose which groups a client offers, enforce group-specific
+public-key encoding beyond the exact length, generate ephemeral secrets, invoke
+or approve the existing repository X25519 implementation or a future P-256
+implementation, validate a peer public key, reject an all-zero agreement
+result, derive or retain handshake secrets, advance a handshake, establish
+trust, enforce revocation, perform I/O, authorize HTTP or OAuth transport, or
+open a network connection. Reviewed key-agreement execution, key-share and
+handshake-state composition, TLS transport, and HTTP composition remain
+blockers. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

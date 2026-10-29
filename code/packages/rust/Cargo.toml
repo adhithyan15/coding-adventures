@@ -1381,4 +1381,5 @@ members = [
   "tls13-hkdf-label",
   "tls13-supported-versions",
   "tls13-traffic-key-material",
+  "tls13-named-group-policy",
 ]
