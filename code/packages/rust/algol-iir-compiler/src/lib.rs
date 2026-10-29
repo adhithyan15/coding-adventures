@@ -3696,6 +3696,47 @@ impl Compiler {
         }
 
         let sequence = pieces(node);
+        if node.rule_name == "expr_pow"
+            && sequence
+                .iter()
+                .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+                return None;
+            }
+            let mut operands = Vec::new();
+            for (index, piece) in sequence.iter().enumerate() {
+                if index.is_multiple_of(2) {
+                    let Piece::Node(operand) = piece else {
+                        return None;
+                    };
+                    operands.push(*operand);
+                } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**"))
+                {
+                    return None;
+                }
+            }
+            let (base, exponents) = operands.split_first()?;
+            let (last, prefix) = exponents.split_last()?;
+            let bounded_exponent = |operand: &GrammarASTNode| {
+                let value = self.exact_static_integer_normalizer_operand_value(operand)?;
+                (0..=MAX_POW_UNROLL_EXPONENT as i64)
+                    .contains(&value)
+                    .then_some(value as u32)
+            };
+            let mut exponent = bounded_exponent(last)? as u64;
+            for operand in prefix.iter().rev() {
+                let exponent_base = bounded_exponent(operand)? as u64;
+                exponent = exponent_base.checked_pow(exponent.try_into().ok()?)?;
+                if exponent > MAX_POW_UNROLL_EXPONENT as u64 {
+                    return None;
+                }
+            }
+            return self
+                .exact_static_integer_normalizer_operand_value(base)?
+                .checked_pow(exponent as u32);
+        }
+
         let mut index = 0;
         let mut negate = false;
         if let Some(Piece::Op(operator)) = sequence.first() {
@@ -16957,6 +16998,32 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "unreduced, overflowing, shadowed, and procedure-calling arithmetic normalizers must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_powered_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(2) ^ entier(1)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(2) ^ entier(2) ^ entier(1)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "bounded powers may compose between exact integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(abs(entier(-9007199254740993) - entier(2) ^ entier(1)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(2) ^ entier(63)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(1) ^ entier(4097)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(2) ^ entier(-1)) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure exponent; exponent := 1; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(2) ^ exponent()) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, overflowing, oversized, negative, and procedure-calling normalizer powers must fail closed",
             );
         }
     }
