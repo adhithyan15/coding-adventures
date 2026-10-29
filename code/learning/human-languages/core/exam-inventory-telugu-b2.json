@@ -30,7 +30,7 @@
       "id": "LDCIL-TELUGU-TEXT",
       "kind": "official-text-corpus",
       "title": "LDC-IL, A Gold Standard Telugu Raw Text Corpus",
-      "url": "https://datat.ldcil.org/a-gold-standard-telugu-raw-text-corpus",
+      "url": "https://data.ldcil.org/a-gold-standard-telugu-raw-text-corpus",
       "note": "Documents contemporary Telugu corpus material across aesthetics, commerce, mass media, official documents, science and technology, and social sciences. Those are domain boundaries, not a B2 word list or frequency threshold."
     },
     {
