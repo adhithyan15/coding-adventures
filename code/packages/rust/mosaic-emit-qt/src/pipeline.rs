@@ -5526,7 +5526,9 @@ fn emit_host_drop_target_qml(
     // Empty content must not erase an authored landing zone. Keep the floor
     // on the outer Item: DropArea fills that Item, not the inner layout.
     // A state-dependent minimum is outside this static bridge.
-    if let Some(part) = node.part_name.as_deref() {
+    if let Some(part) = node.part_name.as_deref().filter(|_| {
+        part_style_props(node, ctx).is_some_and(|props| props.iter().any(|prop| prop.name == "min-height"))
+    }) {
         let props = part_style_props(node, ctx).unwrap_or(&[]);
         let layers = collect_state_layers(node, part, ctx.part_styles);
         if !layers.iter().any(|layer| style_prop(layer.props, "min-height").is_some()) {

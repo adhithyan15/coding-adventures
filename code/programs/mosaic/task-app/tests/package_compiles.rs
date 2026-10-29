@@ -186,6 +186,26 @@ fn board_floor_does_not_add_swiftui_min_width_drops() {
     }
 }
 
+/// Reading the Board minimum exposes its existing unsupported layout styles.
+/// Do not silently activate calendar targets that do not author that minimum.
+#[test]
+fn qt_board_drop_floor_reports_only_its_newly_reached_style_debt() {
+    use mosaic_package_artifact_builder::{analyze_package_degradations, Backend, BuildOptions, BuildProfile};
+    for theme in ["light", "dark"] {
+        let out = tempfile::TempDir::new().unwrap();
+        let report = analyze_package_degradations(&BuildOptions {
+            package_root: PathBuf::from(env!("CARGO_MANIFEST_DIR")),
+            output_root: out.path().to_path_buf(), backend: Backend::Qt,
+            emit_project: false, theme: Some(theme.to_string()),
+        }, BuildProfile::NativeComplete).unwrap();
+        assert_eq!(report.style_degradations.len(), 79, "{theme}: measured Qt drop total");
+        for (property, expected) in [("display", 1), ("flex-direction", 1), ("gap", 1), ("flex-grow", 6), ("width", 0)] {
+            let count = report.style_degradations.iter().filter(|d| d.primitive.as_deref() == Some(property)).count();
+            assert_eq!(count, expected, "{theme}: {property}");
+        }
+    }
+}
+
 /// #16151: the package-expanded TaskApp has a reviewed, deterministic Paint
 /// image for both product themes. This is an explicit CPU Skia CI fixture; it
 /// does not claim that TaskApp ships a native Paint host or Paint artifacts.

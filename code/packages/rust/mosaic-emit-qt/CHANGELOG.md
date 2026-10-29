@@ -5,6 +5,8 @@
 - Preserve finite nonnegative static `min-height` on the outer HostDropTarget
   Item so empty landing zones retain their layout floor (#18559). Skip state
   overrides; drag acceptance and callback routing are unchanged.
+  The first style read also exposes existing unsupported declarations on that
+  part; targets without authored min-height remain untouched (#18563).
 
 - `Text ( content: row )` inside `For ( each: slot: rows, as: row )` is
   `text: row`, the delegate's `property var row: modelData` (backlog 6f1f).

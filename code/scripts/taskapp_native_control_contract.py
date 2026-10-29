@@ -119,6 +119,12 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "box-shadow": 1,
         "box-sizing": 1,
         "color": 2,
+        # #18559 reaches col-drop for its minimum height. These existing
+        # declarations were previously invisible, not newly broken. #18563
+        # owns their lowering; keep each count bounded to that one part.
+        "display": 1,
+        "flex-direction": 1,
+        "gap": 1,
         # The compact task identity uses flexible name sizing in Flutter. Qt
         # keeps the portable row structure and records that task-name flex
         # occurrence until the emitter grows an equivalent lowering (#16949).

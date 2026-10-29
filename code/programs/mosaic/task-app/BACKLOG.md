@@ -75,6 +75,10 @@ Require numeric safety, state-override exclusions, and package-expanded checks.
 Keep root-scroll/flex work owned by #18481 separate; feature composition and
 signing remain outside scope.
 
+Release validation discovered three previously invisible Qt col-drop styles:
+display, flex-direction, and gap. Each is pinned to one occurrence (total
+76 to 79) and tracked for lowering in #18563; further increases fail.
+
 **Published and audited: #18550 — v0.5.14.**
 Run 40824813766 passed all six payloads and publication from
 `760775910601fc8523d9a4b5b3cbfbf9acae9e05`. The immutable tag, source,
