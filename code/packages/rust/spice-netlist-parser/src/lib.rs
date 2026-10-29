@@ -526,6 +526,8 @@ struct TableParameter {
     entries: Vec<(f64, f64)>,
 }
 
+type ParameterControls = (BTreeMap<String, f64>, Vec<StepCard>, Vec<TableParameter>);
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct ParsedNetlist {
     pub circuit: Circuit,
@@ -1066,9 +1068,7 @@ fn parse_netlist_with_parameters(
     })
 }
 
-fn parameter_controls(
-    text: &str,
-) -> Result<(BTreeMap<String, f64>, Vec<StepCard>, Vec<TableParameter>), NetlistParseError> {
+fn parameter_controls(text: &str) -> Result<ParameterControls, NetlistParseError> {
     let syntax = syntax::parse_berkeley_syntax(&without_control_blocks(text));
     if let Some(diagnostic) = syntax
         .diagnostics
@@ -1180,9 +1180,11 @@ fn parse_table_parameter_card(
         )));
     }
     let selector = parameter_name(values[0])?;
-    let entries = values[1..]
-        .chunks_exact(2)
-        .map(|pair| Ok((parse_value(pair[0])?, parse_value(pair[1])?)))
+    let (pairs, remainder) = values[1..].as_chunks::<2>();
+    debug_assert!(remainder.is_empty());
+    let entries = pairs
+        .iter()
+        .map(|[key, value]| Ok((parse_value(key)?, parse_value(value)?)))
         .collect::<Result<Vec<_>, NetlistParseError>>()?;
     table_parameters.push(TableParameter {
         parameter,
