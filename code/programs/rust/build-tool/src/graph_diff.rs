@@ -5,7 +5,7 @@
 //! clock, use randomness, or access a network. Every public evaluation returns
 //! either one complete deterministic result or one stable error code.
 
-use crate::glob_match::{compile_patterns, match_compiled_path, CompiledPattern};
+use crate::glob_match::{compile_pattern, match_compiled_path, validate_pattern};
 use oxixml_unicode::{case, norm};
 use serde::Deserialize;
 use serde_json::Value;
@@ -131,7 +131,17 @@ struct ValidatedGraph {
 #[derive(Debug)]
 struct ValidatedPackage<'a> {
     spec: &'a PackageSpec,
-    compiled_globs: Vec<CompiledPattern>,
+    pattern_factor: u64,
+}
+
+struct IndexedChangedPaths<'a> {
+    packages: Vec<Option<usize>>,
+    relatives: Vec<Option<&'a str>>,
+}
+
+struct BoundarySelection {
+    changed_packages: BTreeSet<String>,
+    known_paths: Vec<bool>,
 }
 
 /// Validate and evaluate canonical graph edges and prerequisite-first levels.
@@ -163,6 +173,7 @@ fn try_evaluate_diff_selection(
     if input.packages.len() > MAX_GRAPH_PACKAGES {
         return Err("DIFF_PACKAGE_INVALID");
     }
+    validate_diff_package_names(&input.packages)?;
     let names = input
         .packages
         .iter()
@@ -173,41 +184,56 @@ fn try_evaluate_diff_selection(
         return Err("DIFF_EDGE_CYCLE");
     }
     let packages = validate_diff_input(input, &graph)?;
-    let boundary_consumers = boundary_reverse_index(input, &packages)?;
-    preflight_match_work(&packages, &input.changed_paths)?;
+    let indexed_paths = index_changed_paths(&packages, &input.changed_paths);
+    let boundary = select_boundary_changes(input, &packages)?;
+    preflight_match_work(&packages, &indexed_paths)?;
 
     let mut changed = input
         .forced_packages
         .iter()
         .cloned()
         .collect::<BTreeSet<_>>();
-    let mut unknown = false;
-    for path in &input.changed_paths {
-        let consumers = boundary_consumers.get(path);
-        if let Some(consumers) = consumers {
-            changed.extend(consumers.iter().cloned());
+    changed.extend(boundary.changed_packages);
+    let mut known_paths = boundary.known_paths;
+    let mut candidates = vec![Vec::<&str>::new(); packages.len()];
+    for (path_index, package_index) in indexed_paths.packages.iter().enumerate() {
+        let Some(package_index) = package_index else {
+            continue;
+        };
+        known_paths[path_index] = true;
+        candidates[*package_index].push(
+            indexed_paths.relatives[path_index].expect("indexed package path has a relative path"),
+        );
+    }
+
+    for (package_index, package) in packages.iter().enumerate() {
+        let package_candidates = &candidates[package_index];
+        if package_candidates.is_empty() {
+            continue;
         }
-        let mut known = consumers.is_some_and(|values| !values.is_empty());
-        for package in &packages {
-            if !inside(path, &package.spec.rel_path) {
-                continue;
-            }
-            known = true;
-            let relative = relative_path(path, &package.spec.rel_path);
-            let selected = package.spec.source_mode == "package_prefix"
-                || is_build_front(relative)
-                || package
-                    .compiled_globs
+        let mut selected = package.spec.source_mode == "package_prefix"
+            || package_candidates
+                .iter()
+                .any(|relative| is_build_front(relative));
+        if !selected {
+            for source_glob in &package.spec.source_globs {
+                let compiled = compile_pattern(source_glob)
+                    .expect("all source globs were validated before match-work preflight");
+                if package_candidates
                     .iter()
-                    .any(|pattern| match_compiled_path(pattern, relative));
-            if selected {
-                changed.insert(package.spec.name.clone());
+                    .any(|relative| match_compiled_path(&compiled, relative))
+                {
+                    selected = true;
+                    break;
+                }
             }
         }
-        if !known {
-            unknown = true;
+        if selected {
+            changed.insert(package.spec.name.clone());
         }
     }
+
+    let unknown = known_paths.iter().any(|known| !known);
 
     if unknown {
         if input.unknown_path_policy == "error" {
@@ -226,6 +252,19 @@ fn try_evaluate_diff_selection(
         affected_packages: affected.into_iter().collect(),
         prerequisite_packages: prerequisites.into_iter().collect(),
     })
+}
+
+fn validate_diff_package_names(packages: &[PackageSpec]) -> Result<(), &'static str> {
+    let mut names = BTreeSet::new();
+    for package in packages {
+        if !valid_package_name(&package.name) {
+            return Err("DIFF_PACKAGE_INVALID");
+        }
+        if !names.insert(&package.name) {
+            return Err("DIFF_PACKAGE_DUPLICATE");
+        }
+    }
+    Ok(())
 }
 
 fn validate_graph(packages: &[String], edges: &[Edge]) -> Result<ValidatedGraph, &'static str> {
@@ -331,23 +370,12 @@ fn validate_diff_input<'a>(
 ) -> Result<Vec<ValidatedPackage<'a>>, &'static str> {
     let mut packages = Vec::with_capacity(input.packages.len());
     let mut names = BTreeSet::new();
-    let mut root_identities = Vec::new();
+    let mut root_identities = Vec::with_capacity(input.packages.len());
     for package in &input.packages {
-        if !valid_package_name(&package.name) {
-            return Err("DIFF_PACKAGE_INVALID");
-        }
         if !valid_portable_path(&package.rel_path) {
             return Err("DIFF_PATH_INVALID");
         }
-        let identity = case::fold_str(&norm::nfc(&package.rel_path));
-        if root_identities.iter().any(|prior: &String| {
-            identity == *prior
-                || identity.starts_with(&format!("{prior}/"))
-                || prior.starts_with(&format!("{identity}/"))
-        }) {
-            return Err("DIFF_PATH_INVALID");
-        }
-        root_identities.push(identity);
+        root_identities.push(case::fold_str(&norm::nfc(&package.rel_path)));
 
         if package.source_mode != "package_prefix" && package.source_mode != "strict_globs" {
             return Err("DIFF_SOURCE_MODE_INVALID");
@@ -357,20 +385,30 @@ fn validate_diff_input<'a>(
             || package
                 .source_globs
                 .iter()
-                .any(|pattern| !valid_portable_glob(pattern))
+                .any(|pattern| !valid_portable_glob(pattern) || validate_pattern(pattern).is_err())
             || (package.source_mode != "strict_globs" && !package.source_globs.is_empty())
         {
             return Err("DIFF_GLOB_INVALID");
         }
-        let compiled_globs =
-            compile_patterns(&package.source_globs).map_err(|_| "DIFF_GLOB_INVALID")?;
         if !names.insert(package.name.clone()) {
             return Err("DIFF_PACKAGE_DUPLICATE");
         }
         packages.push(ValidatedPackage {
             spec: package,
-            compiled_globs,
+            pattern_factor: package
+                .source_globs
+                .iter()
+                .map(|pattern| pattern.chars().count() as u64 + 1)
+                .sum(),
         });
+    }
+    root_identities.sort_unstable_by(|left, right| left.split('/').cmp(right.split('/')));
+    if root_identities.windows(2).any(|pair| {
+        pair[0] == pair[1]
+            || (pair[1].starts_with(&pair[0])
+                && pair[1].as_bytes().get(pair[0].len()) == Some(&b'/'))
+    }) {
+        return Err("DIFF_PATH_INVALID");
     }
     if names != graph.names {
         return Err("DIFF_PACKAGE_INVALID");
@@ -406,48 +444,87 @@ fn validate_diff_input<'a>(
     Ok(packages)
 }
 
+fn index_changed_paths<'a>(
+    packages: &[ValidatedPackage<'_>],
+    paths: &'a [String],
+) -> IndexedChangedPaths<'a> {
+    let roots = packages
+        .iter()
+        .enumerate()
+        .map(|(index, package)| (package.spec.rel_path.as_str(), index))
+        .collect::<BTreeMap<_, _>>();
+    let mut package_indexes = Vec::with_capacity(paths.len());
+    let mut relatives = Vec::with_capacity(paths.len());
+    for path in paths {
+        if let Some(package_index) = roots.get(path.as_str()) {
+            package_indexes.push(Some(*package_index));
+            relatives.push(Some(""));
+            continue;
+        }
+
+        let mut found = None;
+        for (slash, _) in path.rmatch_indices('/') {
+            if let Some(package_index) = roots.get(&path[..slash]) {
+                found = Some((*package_index, &path[slash + 1..]));
+                break;
+            }
+        }
+        match found {
+            Some((package_index, relative)) => {
+                package_indexes.push(Some(package_index));
+                relatives.push(Some(relative));
+            }
+            None => {
+                package_indexes.push(None);
+                relatives.push(None);
+            }
+        }
+    }
+    IndexedChangedPaths {
+        packages: package_indexes,
+        relatives,
+    }
+}
+
 fn preflight_match_work(
     packages: &[ValidatedPackage<'_>],
-    paths: &[String],
+    paths: &IndexedChangedPaths<'_>,
 ) -> Result<(), &'static str> {
     let mut remaining = MAX_DIFF_SELECTION_MATCH_WORK;
-    for package in packages {
+    for (path_index, package_index) in paths.packages.iter().enumerate() {
+        let Some(package_index) = package_index else {
+            continue;
+        };
+        let package = &packages[*package_index];
         if package.spec.source_mode != "strict_globs" {
             continue;
         }
-        let pattern_factor = package
-            .spec
-            .source_globs
-            .iter()
-            .map(|pattern| pattern.chars().count() as u64 + 1)
-            .sum::<u64>();
-        for path in paths {
-            if !inside(path, &package.spec.rel_path) {
-                continue;
-            }
-            let relative = relative_path(path, &package.spec.rel_path);
-            if is_build_front(relative) {
-                continue;
-            }
-            let path_factor = relative.chars().count() as u64 + 1;
-            if pattern_factor != 0 && pattern_factor > remaining / path_factor {
-                return Err("DIFF_MATCH_LIMIT_EXCEEDED");
-            }
-            remaining -= pattern_factor * path_factor;
+        let relative =
+            paths.relatives[path_index].expect("indexed package path has a relative path");
+        if is_build_front(relative) {
+            continue;
         }
+        let path_factor = relative.chars().count() as u64 + 1;
+        if package.pattern_factor != 0 && package.pattern_factor > remaining / path_factor {
+            return Err("DIFF_MATCH_LIMIT_EXCEEDED");
+        }
+        remaining -= package.pattern_factor * path_factor;
     }
     Ok(())
 }
 
-fn boundary_reverse_index(
+fn select_boundary_changes(
     input: &DiffSelectionInput,
     packages: &[ValidatedPackage<'_>],
-) -> Result<BTreeMap<String, BTreeSet<String>>, &'static str> {
+) -> Result<BoundarySelection, &'static str> {
     if input.boundary_sha256.is_empty() {
         if input.boundary.is_some() {
             return Err("DIFF_BOUNDARY_DIGEST_MISMATCH");
         }
-        return Ok(BTreeMap::new());
+        return Ok(BoundarySelection {
+            changed_packages: BTreeSet::new(),
+            known_paths: vec![false; input.changed_paths.len()],
+        });
     }
     if !valid_digest(&input.boundary_sha256) {
         return Err("DIFF_BOUNDARY_DIGEST_MISMATCH");
@@ -457,34 +534,64 @@ fn boundary_reverse_index(
         .as_ref()
         .ok_or("DIFF_BOUNDARY_DIGEST_MISMATCH")?;
     validate_boundary_value_bounds(boundary_value)?;
-    let encoded = canonical_json(boundary_value)?;
-    let mut hasher = Sha256::new();
-    hasher.update(BOUNDARY_DOMAIN);
-    hasher.update((encoded.len() as u64).to_be_bytes());
-    hasher.update(encoded.as_bytes());
-    let actual = format!("{:x}", hasher.finalize());
-    if actual != input.boundary_sha256 {
+    if boundary_digest(boundary_value)? != input.boundary_sha256 {
         return Err("DIFF_BOUNDARY_DIGEST_MISMATCH");
     }
     let boundary = serde_json::from_value::<RepositoryBoundary>(boundary_value.clone())
         .map_err(|_| "DIFF_BOUNDARY_INVALID")?;
     validate_boundary(&boundary)?;
 
-    let mut result = BTreeMap::<String, BTreeSet<String>>::new();
+    let mut selection = BoundarySelection {
+        changed_packages: BTreeSet::new(),
+        known_paths: vec![false; input.changed_paths.len()],
+    };
+    if input.changed_paths.is_empty() {
+        return Ok(selection);
+    }
+
+    let changed_path_indexes = input
+        .changed_paths
+        .iter()
+        .enumerate()
+        .map(|(index, path)| (path.as_str(), index))
+        .collect::<BTreeMap<_, _>>();
+    let matching_rules = boundary
+        .boundaries
+        .iter()
+        .filter_map(|rule| {
+            let path_indexes = rule
+                .inputs
+                .iter()
+                .filter_map(|boundary_input| {
+                    changed_path_indexes
+                        .get(boundary_input.path.as_str())
+                        .copied()
+                })
+                .collect::<Vec<_>>();
+            (!path_indexes.is_empty()).then_some((rule, path_indexes))
+        })
+        .collect::<Vec<_>>();
+
     for package in packages {
-        for rule in &boundary.boundaries {
-            if !boundary_applies(&rule.applies_to, &package.spec.rel_path) {
-                continue;
-            }
-            for boundary_input in &rule.inputs {
-                result
-                    .entry(boundary_input.path.clone())
-                    .or_default()
-                    .insert(package.spec.name.clone());
+        for (rule, path_indexes) in &matching_rules {
+            if boundary_applies(&rule.applies_to, &package.spec.rel_path) {
+                selection.changed_packages.insert(package.spec.name.clone());
+                for path_index in path_indexes {
+                    selection.known_paths[*path_index] = true;
+                }
             }
         }
     }
-    Ok(result)
+    Ok(selection)
+}
+
+fn boundary_digest(value: &Value) -> Result<String, &'static str> {
+    let encoded = canonical_json(value)?;
+    let mut hasher = Sha256::new();
+    hasher.update(BOUNDARY_DOMAIN);
+    hasher.update((encoded.len() as u64).to_be_bytes());
+    hasher.update(encoded.as_bytes());
+    Ok(format!("{:x}", hasher.finalize()))
 }
 
 #[derive(Debug, Deserialize)]
@@ -520,7 +627,23 @@ struct BoundaryInput {
     path: String,
     role: String,
     #[serde(default)]
-    generated_component: Option<String>,
+    generated_component: GeneratedComponentField,
+}
+
+#[derive(Debug, Default)]
+enum GeneratedComponentField {
+    #[default]
+    Missing,
+    Present(String),
+}
+
+impl<'de> Deserialize<'de> for GeneratedComponentField {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        String::deserialize(deserializer).map(Self::Present)
+    }
 }
 
 fn validate_boundary(boundary: &RepositoryBoundary) -> Result<(), &'static str> {
@@ -568,14 +691,13 @@ fn validate_boundary(boundary: &RepositoryBoundary) -> Result<(), &'static str> 
                 return Err("DIFF_BOUNDARY_INVALID");
             }
             if input.role == "generated_pruning_exception" {
-                if !input
-                    .generated_component
-                    .as_deref()
-                    .is_some_and(valid_generated_component)
-                {
+                let GeneratedComponentField::Present(component) = &input.generated_component else {
+                    return Err("DIFF_BOUNDARY_INVALID");
+                };
+                if !valid_generated_component(component) {
                     return Err("DIFF_BOUNDARY_INVALID");
                 }
-            } else if input.generated_component.is_some() {
+            } else if !matches!(input.generated_component, GeneratedComponentField::Missing) {
                 return Err("DIFF_BOUNDARY_INVALID");
             }
         }
@@ -700,7 +822,7 @@ fn valid_portable_path(value: &str) -> bool {
 }
 
 fn valid_portable_glob(value: &str) -> bool {
-    valid_portable_prefix(value, "<>:\"|?")
+    valid_portable_prefix(value, "<>:\"|")
         && value.split('/').all(|segment| {
             !invalid_segment(segment)
                 && (segment.chars().any(|character| "*[]{}".contains(character))
@@ -790,22 +912,10 @@ fn boundary_applies(value: &BoundaryApplicability, root: &str) -> bool {
             .excluded_roots
             .iter()
             .any(|candidate| candidate == root)
-            && value
-                .descendant_roots
-                .iter()
-                .any(|parent| root.starts_with(&format!("{parent}/"))))
-}
-
-fn inside(path: &str, root: &str) -> bool {
-    path == root || path.starts_with(&format!("{root}/"))
-}
-
-fn relative_path<'a>(path: &'a str, root: &str) -> &'a str {
-    if path == root {
-        ""
-    } else {
-        &path[root.len() + 1..]
-    }
+            && value.descendant_roots.iter().any(|parent| {
+                root.strip_prefix(parent)
+                    .is_some_and(|suffix| suffix.starts_with('/'))
+            }))
 }
 
 fn is_build_front(path: &str) -> bool {
@@ -831,6 +941,7 @@ fn closure(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
 
     fn package(name: &str, path: &str, mode: &str, globs: &[&str]) -> PackageSpec {
         PackageSpec {
@@ -909,19 +1020,224 @@ mod tests {
     }
 
     #[test]
+    fn root_identity_prefix_detection_is_segment_ordered() {
+        let input = base_diff_input(vec![
+            package("fixture/root", "code/a", "package_prefix", &[]),
+            package("fixture/interloper", "code/a-b", "package_prefix", &[]),
+            package("fixture/child", "code/a/child", "package_prefix", &[]),
+        ]);
+        assert_eq!(
+            evaluate_diff_selection(&input),
+            Evaluation::Failure("DIFF_PATH_INVALID")
+        );
+    }
+
+    #[test]
     fn exact_match_work_ceiling_uses_unicode_scalars() {
+        let spec = PackageSpec {
+            name: "fixture/a".to_owned(),
+            rel_path: "p".to_owned(),
+            source_mode: "strict_globs".to_owned(),
+            source_globs: vec![format!("😀{}", "a".repeat(98))],
+        };
         let package = ValidatedPackage {
-            spec: &PackageSpec {
-                name: "fixture/a".to_owned(),
-                rel_path: "p".to_owned(),
-                source_mode: "strict_globs".to_owned(),
-                source_globs: vec![format!("😀{}", "a".repeat(98))],
-            },
-            compiled_globs: Vec::new(),
+            spec: &spec,
+            pattern_factor: 100,
         };
         let paths = (0..1_000)
             .map(|index| format!("p/{index:0499}"))
             .collect::<Vec<_>>();
-        assert_eq!(preflight_match_work(&[package], &paths), Ok(()));
+        let packages = [package];
+        let indexed = index_changed_paths(&packages, &paths);
+        assert_eq!(preflight_match_work(&packages, &indexed), Ok(()));
+    }
+
+    #[test]
+    fn strict_question_mark_matches_one_unicode_scalar() {
+        let mut input = base_diff_input(vec![package(
+            "typescript/question",
+            "p",
+            "strict_globs",
+            &["src/?.ts"],
+        )]);
+        input.changed_paths = vec!["p/src/😀.ts".to_owned()];
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("portable question-mark glob must be accepted");
+        };
+        assert_eq!(result.changed_packages, ["typescript/question"]);
+    }
+
+    #[test]
+    fn root_identity_validation_handles_full_scale_many_segment_roots() {
+        let suffix = format!("{}leaf", "segment/".repeat(60));
+        let packages = (0..MAX_GRAPH_PACKAGES)
+            .map(|index| {
+                package(
+                    &format!("fixture/p-{index}"),
+                    &format!("roots/p-{index}/{suffix}"),
+                    "package_prefix",
+                    &[],
+                )
+            })
+            .collect();
+        let input = base_diff_input(packages);
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("full-scale disjoint roots must validate");
+        };
+        assert!(result.changed_packages.is_empty());
+    }
+
+    #[test]
+    fn zero_path_validation_does_not_retain_all_compiled_glob_trees() {
+        let globs = (0..MAX_SOURCE_GLOBS)
+            .map(|index| format!("src/file-{index:03}.rs"))
+            .collect::<Vec<_>>();
+        let packages = (0..1_024)
+            .map(|index| PackageSpec {
+                name: format!("fixture/p-{index}"),
+                rel_path: format!("roots/p-{index}"),
+                source_mode: "strict_globs".to_owned(),
+                source_globs: globs.clone(),
+            })
+            .collect();
+        let input = base_diff_input(packages);
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("zero-path max-glob snapshot must remain compact");
+        };
+        assert!(result.changed_packages.is_empty());
+    }
+
+    #[test]
+    fn diff_package_diagnostics_do_not_leak_graph_codes() {
+        let invalid = base_diff_input(vec![package("INVALID", "p", "package_prefix", &[])]);
+        assert_eq!(
+            evaluate_diff_selection(&invalid),
+            Evaluation::Failure("DIFF_PACKAGE_INVALID")
+        );
+
+        let duplicate = base_diff_input(vec![
+            package("fixture/a", "p-a", "package_prefix", &[]),
+            package("fixture/a", "p-b", "package_prefix", &[]),
+        ]);
+        assert_eq!(
+            evaluate_diff_selection(&duplicate),
+            Evaluation::Failure("DIFF_PACKAGE_DUPLICATE")
+        );
+    }
+
+    fn digest_for_test(value: &Value) -> String {
+        boundary_digest(value).unwrap()
+    }
+
+    fn minimal_boundary(input: Value) -> Value {
+        json!({
+            "schema_version": 1,
+            "language_source_input_registry_sha256": "0".repeat(64),
+            "boundaries": [{
+                "id": "test-boundary",
+                "input_origin": "repository",
+                "applies_to": {
+                    "exact_roots": ["p"],
+                    "descendant_roots": [],
+                    "excluded_roots": []
+                },
+                "inputs": [input],
+                "reason": "test",
+                "owner": "test-owner"
+            }]
+        })
+    }
+
+    #[test]
+    fn explicit_null_generated_component_is_not_treated_as_absent() {
+        let boundary = minimal_boundary(json!({
+            "path": "shared/input.rs",
+            "role": "cross_package_exact",
+            "generated_component": null
+        }));
+        let mut input = base_diff_input(vec![package("fixture/a", "p", "package_prefix", &[])]);
+        input.boundary_sha256 = digest_for_test(&boundary);
+        input.boundary = Some(boundary);
+        assert_eq!(
+            evaluate_diff_selection(&input),
+            Evaluation::Failure("DIFF_BOUNDARY_INVALID")
+        );
+    }
+
+    #[test]
+    fn max_shape_boundary_with_zero_changed_paths_does_not_expand_consumers() {
+        // 58 × 64 input objects plus each rule's six containers is the
+        // largest complete-rule shape below the 4,096-container ceiling.
+        // Eager expansion would still create 15,204,352 consumer entries.
+        let boundaries = (0..58)
+            .map(|rule| {
+                let inputs = (0..64)
+                    .map(|input| {
+                        json!({
+                            "path": format!("shared/rule-{rule}/input-{input}"),
+                            "role": "cross_package_exact"
+                        })
+                    })
+                    .collect::<Vec<_>>();
+                json!({
+                    "id": format!("rule-{rule}"),
+                    "input_origin": "repository",
+                    "applies_to": {
+                        "exact_roots": [],
+                        "descendant_roots": ["roots"],
+                        "excluded_roots": []
+                    },
+                    "inputs": inputs,
+                    "reason": "max-shape zero-path regression",
+                    "owner": "test-owner"
+                })
+            })
+            .collect::<Vec<_>>();
+        let boundary = json!({
+            "schema_version": 1,
+            "language_source_input_registry_sha256": "0".repeat(64),
+            "boundaries": boundaries
+        });
+        let packages = (0..MAX_GRAPH_PACKAGES)
+            .map(|index| {
+                package(
+                    &format!("fixture/p-{index}"),
+                    &format!("roots/p-{index}"),
+                    "package_prefix",
+                    &[],
+                )
+            })
+            .collect();
+        let mut input = base_diff_input(packages);
+        input.boundary_sha256 = digest_for_test(&boundary);
+        input.boundary = Some(boundary);
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("zero-path boundary must not expand input-consumer pairs");
+        };
+        assert!(result.changed_packages.is_empty());
+    }
+
+    #[test]
+    fn max_shape_package_path_index_avoids_cross_product_scans() {
+        let suffix = format!("{}leaf", "segment/".repeat(60));
+        let packages = (0..MAX_GRAPH_PACKAGES)
+            .map(|index| {
+                package(
+                    &format!("fixture/p-{index}"),
+                    &format!("roots/p-{index}/{suffix}"),
+                    "strict_globs",
+                    &[],
+                )
+            })
+            .collect();
+        let mut input = base_diff_input(packages);
+        input.unknown_path_policy = "all".to_owned();
+        input.changed_paths = (0..MAX_GRAPH_PACKAGES)
+            .map(|index| format!("unknown/p-{index}/{suffix}"))
+            .collect();
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("max-shape disjoint paths must remain bounded");
+        };
+        assert_eq!(result.changed_packages.len(), MAX_GRAPH_PACKAGES);
     }
 }

@@ -21,6 +21,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   registry, pruning exact lowercase `blib` while retaining `Blib` and
   `blib-example` in both extension and declared-source modes.
 
+### Fixed
+
+- Accept portable strict-glob `?` as exactly one Unicode scalar and preserve
+  DIFF-specific invalid and duplicate package diagnostics.
+- Replace quadratic package-root collision and package-by-path scans with
+  segment-ordered validation and an allocation-free bounded changed-path
+  index.
+- Validate glob declarations one at a time, cache only scalar work factors,
+  and lazily compile one pattern across its candidate paths after exact
+  50,000,000-unit preflight instead of retaining every compiled token tree.
+- Validate `generated_component` presence and string type exactly, and expand
+  repository-boundary consumers only for changed shared inputs rather than
+  eagerly materializing the full input-by-package reverse product.
+
 ## [0.2.11] - 2026-09-27
 
 ### Fixed
