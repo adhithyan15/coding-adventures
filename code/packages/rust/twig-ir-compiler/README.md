@@ -84,6 +84,22 @@ synthesizing refinement annotations. Reassignable strings, captured strings,
 unobserved/conflicting or closure-derived string parameters, and broader dynamic
 string values remain follow-up work.
 
+Typing a parameter `str` promises that every value that reaches it is a
+string, so the evidence pass walks the whole program. Only a direct call in
+`main` can establish `str`. The parameter falls back to `any` if any of these
+is true:
+
+- A direct call anywhere else (another function body, a lambda, a `match`
+  arm) passes a non-string.
+- A call has the wrong number of arguments.
+- The function is used as a value, as in `(define h strlen)`,
+  `(let ((g strlen)) …)` or `(map strlen xs)`, so its callers cannot be known.
+- The program is module code: it has a `(module …)` declaration, or it was
+  compiled with externs by `twig-module-driver`. The driver makes every
+  module's functions, private ones included, visible to every other module,
+  so no single module sees all the call sites. Module code gets no
+  call-site inference. Explicit `(x : str)` annotations still apply.
+
 Twig remains dynamically typed, so functions keep `type_status = Untyped` and
 dynamic paths still carry `type_hint = "any"`. The LANG-FULL fast paths above
 stamp concrete hints only where source-local evidence makes the type
@@ -92,17 +108,64 @@ later.
 
 ## Apply-site dispatch
 
-The compiler decides at compile time:
+The compiler decides at compile time. The rows are tried top to bottom, so
+the first one that matches wins:
 
 | Function position           | Emitted IIR                                 |
 |-----------------------------|---------------------------------------------|
-| Top-level user fn           | `call <name>, ...args`, using the known return type when the function was already lowered in source order |
+| A name bound in the current lexical scope (parameter, `let`/`let*` binding, lambda parameter, `match` binding) | `call_closure <local>, ...args`, even if a top-level function, extern or builtin has the same name |
+| Top-level user fn or extern | `call <name>, ...args`, using the known return type when the function was already lowered in source order |
 | Typed arithmetic (`+`,`-`,`*`,`/`) on `i64` args | a chain of typed `add`/`sub`/`mul`/`div` |
 | Direct literal, immutable top-level, lexical-local, annotated top-level-parameter, or direct-call-inferred top-level-parameter string metadata (`string-length`, `string-ref`, `substring`, `string=?`, `string<?`, `string>?`, `string-append`) | `str_const` + `str_len`/`str_index`/`str_slice`/`str_eq`/`str_cmp`/`str_concat`, with typed index arithmetic for `string-ref` and `substring` bounds |
 | Builtin (`cons`, `<`, …)    | `call_builtin <name>, ...args`              |
-| Anything else (locals etc.) | `call_builtin "apply_closure", h, ...args`  |
+| Anything else (e.g. `((f 1) 2)`) | `call_closure h, ...args`              |
 
 Top-level recursion stays on the fast `call` path; only locals holding closures pay the indirect cost.
+
+### Lexical scope wins
+
+Twig is lexically scoped, like Scheme: a use of a name refers to the
+innermost binding of that name. This holds in call position as well as in
+value position:
+
+```scheme
+(define (helper x) (* x 100))
+(define (f helper) (helper 1))   ; this `helper` is f's parameter
+(f (lambda (x) (+ x 1)))         ; => 2
+```
+
+Before issue #18435 was fixed, the compiler checked "is this a top-level
+function?" before "is this a local?" in call position. The body of `f`
+compiled to `call helper`, a direct call to the global function, and the
+program returned 100. Every lookup now checks the lexical scope first:
+
+- **Calls.** A shadowing local is called with `call_closure`. The global's
+  direct `call`, its known return type and its known parameter types are not
+  used, because the callee is a different function.
+- **Lambda captures.** If a lambda uses a local that shares a global's name,
+  the lambda captures the local. Free-variable analysis does not skip the
+  name as a global.
+- **E4 string fast paths.** If a local is named `string-append`, `substring`
+  or `string-length`, calls to it are not lowered to `str_concat`, `str_slice`
+  or `str_len`.
+- **Call-site string inference in `main`.** A call to a shadowing `let`
+  binding tells the compiler nothing about the parameters of the top-level
+  function with the same name.
+- **Type facts belong to their binding.** `let`, `let*` and `match` bindings
+  start with no type and no E4 alias. When the scope ends, they restore what
+  the name meant outside it (`FnCtx::shadow` / `FnCtx::unshadow`). So an inner
+  string `x` does not make a later `(string-length x)` on an integer
+  parameter lower to `str_len`. An inner `s` bound to 5 also no longer reads
+  the outer string's alias register.
+- **`var_types` describes registers.** Same-name locals still share one
+  register (#18439). `FnCtx::emit` therefore counts the writes to every
+  register. If a nested binding rewrote register `x` while an outer `x` was
+  in scope, the outer type is not restored; `x` becomes `any`. An aliased
+  name takes its type from its alias register. So an alias whose target
+  register was overwritten is no longer treated as a `str`.
+
+`and` and `or` are special forms, not bindings, so a local cannot shadow
+them.
 
 ### Typed arithmetic fold
 

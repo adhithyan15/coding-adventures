@@ -1096,6 +1096,71 @@ mod tests {
         );
     }
 
+    #[test]
+    fn call_site_refinement_skips_parameter_shadowing_the_refined_fn() {
+        // #18435: `ascii-info` inside `g` is g's PARAMETER, not the global
+        // with the `(Int 0 128)` contract, so `(ascii-info 200)` is not a
+        // proven-unsafe call to the refined function.
+        let src = format!(
+            "{} (define (g ascii-info) (ascii-info 200))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            !r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "shadowed callee must not be refinement-checked; errors: {:?}",
+            r.errors
+        );
+
+        // The same goes for a `let` binding…
+        let src = format!(
+            "{} (let ((ascii-info (lambda (x) x))) (ascii-info 200))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            !r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "let-shadowed callee must not be refinement-checked; errors: {:?}",
+            r.errors
+        );
+    }
+
+    #[test]
+    fn call_site_refinement_still_checks_a_global_narrowed_by_an_if_guard() {
+        // `infer_if` narrows guard variables found in locals OR globals and
+        // binds them in a scope frame.  That frame is not a lexical binding:
+        // in the else-branch `ascii-info` is still the GLOBAL refined
+        // function, so `(ascii-info 200)` must still be a refinement error.
+        let src = format!(
+            "{} (define (g) (if (and #f (< ascii-info 1)) 0 (ascii-info 200)))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(!r.ok, "narrowed global must still be refinement-checked");
+        assert!(
+            r.errors.iter().any(|e| e.message.contains("refinement error")),
+            "expected refinement error; got: {:?}",
+            r.errors
+        );
+    }
+
+    #[test]
+    fn arity_check_uses_the_shadowing_local() {
+        // The global `ascii-info` takes 1 argument; g's parameter of the same
+        // name is unconstrained (`Any`), so a 2-argument call is no arity
+        // error.
+        let src = format!(
+            "{} (define (g ascii-info) (ascii-info 1 2))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(
+            !r.errors.iter().any(|e| e.message.contains("arity")),
+            "arity must come from the shadowing param; errors: {:?}",
+            r.errors
+        );
+    }
+
     // ── TW05-C: flow-sensitive narrowing ────────────────────────────────────
 
     #[test]

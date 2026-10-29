@@ -1,5 +1,170 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18435: lexical scope wins in call position
+
+### Fixed
+
+- **A local now shadows a global, extern or builtin of the same name in
+  call position.** `compile_apply` used to check `fn_globals` (top-level
+  functions and externs) and then `BUILTINS` *before* looking at the lexical
+  scope. So in
+
+  ```scheme
+  (define (helper x) (* x 100))
+  (define (f helper) (helper 1))
+  (f (lambda (x) (+ x 1)))
+  ```
+
+  `f`'s body compiled to `call helper`, the global function, and the program
+  returned 100 instead of 2. Value position (`compile_var_ref`) was already
+  correct. Call position now checks `FnCtx::locals` first. A parameter,
+  `let`/`let*` binding, lambda parameter or `match` binding is called with
+  `call_closure`. The shadowed global's return type and parameter types are
+  no longer stamped on the call.
+- **Lambda captures.** `compile_anonymous_lambda` passed `free_vars` every
+  global and builtin name as "never free". A lambda that used an enclosing
+  local named like a global, as in
+  `(define (mk helper) (lambda (y) (helper y)))`, therefore did not capture
+  the local and called the global. Names bound in the enclosing scope are
+  now removed from that set, so they are captured.
+- **E4 string fast paths.** `can_compile_e4_string_expr`,
+  `can_compile_e4_index_expr` and the `(string-length (string-append …))`
+  fold recognised builtins by name only. A local named `string-append`
+  (or `substring`, `string-length`, `+`) could be lowered to `str_concat` and
+  the other typed string ops. They now use a new `unshadowed_apply` helper,
+  which ignores a call whose head is lexically bound.
+- **`main` direct-call string evidence.** The pre-pass that seeds
+  unannotated parameters as `str` (`collect_main_direct_string_call_evidence`
+  and `is_syntax_static_e4_{string,index}_expr`) now tracks the names bound by
+  enclosing `let`/`let*` forms. A call to a shadowing `let` binding is no
+  longer counted as evidence about the global function of the same name.
+- **Value-global type facts.** `is_known_main_value_type` ignored a `let`
+  binding that shadowed a typed value-global. So
+  `(define s "HELLO") (let ((s 5)) (string-length s))` lowered to `str_len`
+  on the integer. It now defers to the local.
+
+### Fixed (security review follow-up)
+
+- **Call-site string inference is now sound.** It used to look only at
+  direct calls in `main`. Lambda and `match` bodies, other function bodies,
+  and value-position uses were not seen. So each of these programs typed
+  `x : str`, lowered `strlen`'s body to `str_len`, and then passed it an
+  integer:
+  - `(strlen "abc") (let ((strlen strlen)) (strlen 5))`
+  - `(define (g) (strlen 5)) (strlen "abc") (g)`
+  - `(define h strlen) (h 5)`
+
+  Each one is type confusion on the AOT backends.
+  `collect_direct_string_call_evidence` (renamed from
+  `collect_main_direct_string_call_evidence`) now walks every function body,
+  lambda and `match` arm in a new `EvidenceMode::Elsewhere`, which can only
+  weaken evidence. It also marks a function `Conflict` when the function is
+  used as a value (an escape). Only direct
+  calls in `main` can establish `str`.
+- **Scoped type facts no longer leak.** `compile_let`, `compile_let_star` and
+  the two `match` binding paths restored `locals` and (for `let`) the E4
+  aliases, but never `var_types`. So in
+  `(define (f x) (begin (let ((x (string-append "a" "b"))) x) (string-length x)))`
+  the outer `(string-length x)` lowered to `str_len` on the integer
+  parameter. In the other direction, an inner binding inherited the outer
+  binding's type and alias. An inner `(car l)` kept an outer `i64`, so
+  `(+ x 1)` became a typed `add`. An inner `s` bound to 5 still read the outer
+  string's alias.
+
+  New `FnCtx::shadow` / `FnCtx::unshadow` helpers fix this. A binding now
+  starts with no type or alias. When the scope ends, the outer meaning comes
+  back. Same-name locals still share one register, which is tracked
+  separately, so `unshadow` keeps a type only when the register still holds
+  a value of that type. Otherwise it drops to `any`.
+- IIR is byte-identical to `origin/main` for all 49 Twig programs in
+  `lang-aot`'s `lang_matrix` and for about 430 other Twig programs taken from
+  the test sources of the twig and lang-aot crates. Only the new shadowing
+  test programs change.
+
+### Fixed (second security re-review)
+
+- **`unshadow` could restore a type the register no longer held.** This was
+  a regression from the first follow-up. The first version treated an outer
+  alias as proof that register `name` was never written. But a nested
+  same-name binding (a `mov`, a `str_const` or a `match` arm) writes that
+  register. So in
+  `(define (g x) (let ((x (string-append x "b"))) (let ((x 5)) x)) (string-length x))`
+  the `str` type came back on a register holding 5, and the call lowered to
+  `str_len`. The same happened through a `match` arm, through `let*`
+  rebinding a `str` parameter, and in
+  `(let ((y (let ((x 5)) x))) (string-length y))` under an outer string `x`.
+
+  `FnCtx::emit` now keeps a per-register write counter, and `shadow` records
+  it. If the counter has moved when the scope closes and the name has an
+  outer binding, the type becomes `any`. If the counter has not moved, the
+  outer type is restored. If the counter moved but the name has no outer
+  binding, the register's current type is kept, so `(let ((x 1)) x)` still
+  returns a typed `i64`.
+
+  `var_types` now describes registers only: alias bindings no longer record
+  `str` under the alias name, and `is_known_value_type` resolves an alias to
+  its target register. So `(let ((y x)) (let ((x 5)) (string-length y)))`,
+  where `y` aliases the `str` parameter register `x`, no longer reaches
+  `str_len`. That register's type is updated when it is overwritten.
+- **Module code gets no call-site string inference.** The export-only
+  conflict rule missed the module driver, which registers every module's
+  function names, private ones included, as externs of every other module.
+  So a private `strlen` in `lib.tw`, called only with `"abc"` there, got
+  `x : str`, and `main.tw`'s `(strlen 5)` reached `str_len`.
+  `infer_main_direct_string_param_types` now returns early for any program
+  with a `(module …)` declaration or with externs registered by
+  `with_extern_fns` (tracked by a new `has_externs` flag). The export rule
+  is subsumed by this and removed. This does not rely on #18437: the repro
+  also works through an exported function.
+- The IIR diff was re-run over 505 harvested programs, including all 49
+  `lang_matrix` Twig programs. Only the 22 shadowing test programs differ
+  from `origin/main`.
+- **Third review: keep a register's type only after its first-ever write.**
+  "Rewritten, no outer binding ⇒ keep the current type" was unsafe. A scope
+  can return its named register (`(let ((x "s")) x)`) for use after the name
+  is out of scope. A later sibling binding of the same name, possibly in an
+  `if` branch that never runs, then stamped its own type onto that register.
+  For example, `(+ (let ((x "s")) x) (if c (let ((x 1)) x) 3))` became a
+  typed `add` on `"s"`. `unshadow` now keeps the type only when the count
+  recorded at `shadow` time is 0; otherwise the type is `any`.
+  `(let ((x 1)) x)` still returns an `i64` register. Three new tests cover
+  the review's programs and all failed before the fix; a fourth guards the
+  `i64` return. The re-run IIR diff over 508 programs changes only the 25
+  shadowing test programs.
+
+### Docs
+
+- The README's apply-site table now lists the lexical row first. Its stale
+  last row, `call_builtin "apply_closure"`, now reads `call_closure`, which
+  the compiler has emitted since LANG34. TW00 gains a
+  "Name resolution: lexical scope wins" section.
+
+### Tests
+
+- 15 new IIR-shape tests in `src/lib.rs`. They cover a parameter, a `let`,
+  a `let*`, a lambda parameter and a `match` binding shadowing a global. They
+  also cover a captured shadowing parameter in call and value position, the
+  global call coming back after the `let` ends, the return type not being
+  inherited, an extern, a builtin, the E4 string builtins, both evidence
+  pre-pass cases and a shadowed typed value-global. All except the
+  scope-exit control failed before the fix.
+- 12 more tests for the follow-up fixes (11 failed before them; the
+  `str` control passes either way). Six cover string-parameter
+  inference: a `let`/`let*` alias, a call in another function body, a
+  `define` alias, calls in a lambda and a `match` arm, a function passed as
+  an argument, and an exported function. Five cover scope type leaks: after a
+  `let`/`let*` and after a `match` arm, a literal `let`, an inherited outer
+  `i64`, and an inner binding hiding an outer alias.
+- 7 more tests for the second re-review, all failing before it:
+  - review programs A and B
+  - a `match` arm over an aliased outer binding
+  - `let*` rebinding a `str` parameter
+  - an alias whose target register is overwritten (two shapes)
+  - module code with a `(module …)` declaration
+  - code compiled with externs
+- End-to-end runs of the same programs are in `twig-vm`'s dispatch tests
+  (the example from the issue now returns 2). The imported-function case is
+  in `twig-module-driver`.
 ## Unreleased — security review: the whole `__` namespace, and unspellable temporaries
 
 - **Every name beginning with `__` is now reserved** (new `RESERVED_NAMESPACE = "__"`), not only the listed prefixes. A parameter or `let` name is an IIR register, and the compiler and the passes after it invent registers in the same function: twig-aot's `__aot_str{n}_len` (the byte count it hands the runtime's print), closure_heap's `__clo_*`, dyn_repr's `__truthy_*` / `__unbox_*`, iir-to-llvm's `__<hint><n>` SSA names. Listing each prefix is whack-a-mole, so the namespace is reserved, as C reserves `__` identifiers. `RESERVED_PREFIXES` also names `__gc_`, `__aot_` and `__clo_` (seven entries) so errors name the owner; `reserved_prefix` returns the most specific listed prefix, else `"__"`. Behaviour change: a program that used a `__` name of its own (none in this repo) is now refused.
