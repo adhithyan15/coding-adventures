@@ -45214,9 +45214,9 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         base_entry(
             "axis_vapix",
             "Axis VAPIX",
-            "Challenge-authenticated local Axis camera and NVR discovery, inspection, and bounded PTZ control.",
+            "Challenge-authenticated local Axis camera and NVR discovery, inspection, supervised readiness events, and bounded PTZ control.",
             IntegrationCategory::CameraMedia,
-            ConnectivityClass::LocalPolling,
+            ConnectivityClass::LocalPush,
             ImplementationStatus::FirstPartyRuntime,
             3,
             "axis_vapix",
@@ -45231,6 +45231,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::DiscoveryIndex,
             PrimitiveFamily::Mdns,
             PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::WebSocket,
             PrimitiveFamily::CapabilityPolicy,
             PrimitiveFamily::VaultLease,
             PrimitiveFamily::Supervision,
@@ -45238,7 +45239,8 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "Production inspection requires certificate-verifying HTTPS and selects advertised Basic or Digest authentication; plain HTTP is accepted only for loopback transport tests.",
             "Camera 1 PTZ is capability-probed, human-approved, queue-aware, and bounded with an explicit native stop.",
-            "Event streaming, snapshots, media transfer, multi-channel PTZ, and advanced PTZ functions remain separate capability-specific work.",
+            "The fixed SystemReady event is supervised over certificate-verifying WSS with a short-lived authenticated session token; broader event topics remain separate schema- and privacy-specific work.",
+            "Snapshots, media transfer, multi-channel PTZ, and advanced PTZ functions remain separate capability-specific work.",
         ]),
         base_entry(
             "blue_iris",
@@ -81852,7 +81854,7 @@ mod tests {
             axis.implementation_status,
             ImplementationStatus::FirstPartyRuntime
         );
-        assert_eq!(axis.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(axis.connectivity, ConnectivityClass::LocalPush);
         assert_eq!(
             axis.supported_protocols,
             vec![ProtocolFamily::Vendor("axis_vapix".to_string())]
@@ -81868,6 +81870,9 @@ mod tests {
         assert!(axis
             .required_primitives
             .contains(&PrimitiveFamily::LocalHttp));
+        assert!(axis
+            .required_primitives
+            .contains(&PrimitiveFamily::WebSocket));
         assert!(axis
             .required_primitives
             .contains(&PrimitiveFamily::VaultLease));
