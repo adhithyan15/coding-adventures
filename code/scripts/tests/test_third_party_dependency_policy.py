@@ -341,6 +341,99 @@ cmd = "npx vitest run"
                 policy.build_npm_tool_inventory(root, [], [manifest])
 
 
+class PythonToolTests(unittest.TestCase):
+    def test_collects_pip_pipx_and_uv_tool_packages(self) -> None:
+        commands = """
+python3 -m pip install --quiet jsonschema==4.26.0 fonttools
+pip install --no-deps -e ../matrix -e . build
+pip install -e ".[dev]" > /dev/null 2>&1
+uv pip install --system pytest pytest-cov
+uv tool install --with ruff mypy
+uv tool run --from black black --check .
+uvx --with typing-extensions pyright .
+pipx run --spec hatch hatch build
+echo "pip install imaginary-package"
+# pip install imaginary-package
+cmd = "python -m pip install requests"
+"""
+
+        self.assertEqual(
+            policy.python_tool_names(commands),
+            {
+                "black",
+                "build",
+                "fonttools",
+                "hatch",
+                "jsonschema",
+                "mypy",
+                "pyright",
+                "pytest",
+                "pytest-cov",
+                "requests",
+                "ruff",
+                "typing-extensions",
+            },
+        )
+
+    def test_named_direct_urls_are_counted_and_unnamed_urls_are_rejected(
+        self,
+    ) -> None:
+        self.assertEqual(
+            policy.python_tool_names(
+                "pip install 'named-tool @ https://example.invalid/tool.whl'"
+            ),
+            {"named-tool"},
+        )
+        with self.assertRaisesRegex(policy.PolicyError, "must use a package name"):
+            policy.python_tool_names(
+                "python -m pip install https://example.invalid/tool.whl"
+            )
+
+    def test_rejects_requirements_file_indirection_and_missing_values(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "declare packages inline"):
+            policy.python_tool_names("pip install -r requirements.txt")
+        with self.assertRaisesRegex(policy.PolicyError, "requires a value"):
+            policy.python_tool_names("uv pip install --index-url")
+        with self.assertRaisesRegex(policy.PolicyError, "requires a Python package"):
+            policy.python_tool_names("uvx --from")
+
+    def test_sparse_inventory_reads_sources_and_package_scripts_from_index(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            workflow = root / ".github" / "workflows" / "ci.yml"
+            manifest = root / "app" / "package.json"
+            workflow.parent.mkdir(parents=True)
+            manifest.parent.mkdir()
+            workflow.write_text(
+                "steps:\n  - run: python -m pip install pytest\n",
+                encoding="utf-8",
+            )
+            manifest.write_text(
+                json.dumps({"scripts": {"lint": "uvx ruff check ."}}),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            workflow.unlink()
+            manifest.unlink()
+
+            sources = policy.git_python_tool_sources(root)
+            manifests = policy.git_npm_manifests(root)
+            inventory = policy.build_python_tool_inventory(root, sources, manifests)
+
+            self.assertEqual(sources, [workflow])
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(
+                inventory,
+                {
+                    "pytest": [".github/workflows/ci.yml"],
+                    "ruff": ["app/package.json"],
+                },
+            )
+
+
 class PythonManifestTests(unittest.TestCase):
     def test_collects_standard_groups_and_normalizes_distribution_names(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
