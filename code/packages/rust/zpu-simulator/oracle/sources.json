@@ -1,0 +1,30 @@
+{
+  "commit": "e29aef5f7aa741557d0eb16ecf13e974d55789ff",
+  "files": [
+    {
+      "path": "zpu/docs/zpu_arch.html",
+      "sha256": "44661240d60ffdbcb6c7a88113a866de17ffa7875c5b2147a60814e4f57c752f"
+    },
+    {
+      "path": "zpu/hdl/zpu4/core/zpu_config.vhd",
+      "sha256": "e6b65d0d7cf41748c41444fbc2dd42980a48ee49ee264c79cab4c4240193ed7b"
+    },
+    {
+      "path": "zpu/hdl/zpu4/core/zpupkg.vhd",
+      "sha256": "f7b36298967779778a4eb95ab4efb84035b46fa9d77c24181fbdf660298a94be"
+    },
+    {
+      "path": "zpu/hdl/zpu4/core/zpu_core_small.vhd",
+      "sha256": "2b9cca96b3e59204796a57866ff74a166db343846ae449ff91d193033d88fb70"
+    },
+    {
+      "path": "zpu/sw/simulator/com/zylin/zpu/simulator/Simulator.java",
+      "sha256": "7cefccdc3e7567acdb062054ae01a54f690cd392c51c8527c4eb489f54d1fa71"
+    },
+    {
+      "path": "zpu/COPYING",
+      "sha256": "8bc96909cb1b0dea55f1c1f98d3935085f2f1d9471e5b539782ef1de5a7f4eae"
+    }
+  ],
+  "derived_config_sha256": "166a3f446015b0efe4aad59728be76a297e6a70686ef1510fd33920147f1cdef"
+}

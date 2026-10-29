@@ -1,0 +1,22 @@
+{
+  "chapter": 228,
+  "title": "A Headache",
+  "label": "ch:zh-a-headache",
+  "canDo": "I can say my head aches, take medicine, have an injection, say whether it is serious, and nod.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "ZH-C228-diantou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say my head aches, take medicine, have an injection, say whether it is serious, and nod.",
+    "assesses": [
+      "ZH-LEX-C228-ACHE228-01",
+      "ZH-LEX-C228-ACHE228-03",
+      "ZH-LEX-C228-ACHE228-04",
+      "ZH-LEX-C228-ACHE228-05",
+      "ZH-SCRIPT-TOU-HEAD-01",
+      "ZH-SCRIPT-TENG-ACHE-01"
+    ]
+  }
+}

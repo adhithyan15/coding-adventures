@@ -511,10 +511,25 @@ How it behaves:
   quotes at most 200 characters of an expression. One missing slot is
   reported bare. A package that fails to load is compiled once, and is
   reported once however many call sites name it.
-- **Known follow-up.** A callee's `For` binding can still capture names
-  that come from outside the callee, both consumer values bound into the
-  callee and caller-authored children spliced under the loop. This is not
-  yet addressed.
+- **Hygiene: a callee's `For` binding never captures a consumer name**
+  (UI29 §3.4, backlog 6f1m). Two kinds of name come from outside the
+  callee and can land inside one of its loops: a consumer value bound
+  into the callee (`title: row`, read by `Text ( content: title )` in
+  the callee's `For ( each: slot: rows , as: row )`), and the children
+  a caller splices into a child mount that sits inside a callee loop.
+  Both are the consumer's names. Before substitution, the inliner looks
+  at each callee `For`: if its `as:` or `index:` binding (compared in
+  camelCase, the spelling every emitter gives an identifier) is a name
+  that a substituted value or a spliced child would bring into its
+  body, the binding is renamed to a fresh name, `<name>-in<n>` with the
+  smallest `n` that no name in the callee, the bound values or the
+  children already uses. Every use of the binding in the body is
+  renamed with it: bare prop values in name positions, `each:` of a
+  nested `For`, and bare names in expressions; a nested `For` that
+  binds the same name again ends the rename for its own body. Literal
+  positions (see "Callee scope") are not uses. A binding that captures
+  nothing keeps its authored name, so the output of every layout that
+  was not miscompiled is unchanged.
 - **The message.** It names the package and component, and gives the fix.
   The "give it a default" half is offered only for `text`, `number` and
   `bool`, the types that can have one today.

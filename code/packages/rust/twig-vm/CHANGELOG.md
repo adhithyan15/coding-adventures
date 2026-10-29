@@ -1,5 +1,114 @@
 # Changelog — twig-vm
 
+## Unreleased — #18453: `str_cmp`, `str_slice`; `and` / `or` inside a lambda
+
+### Fixed
+
+- **twig-vm runs `str_slice`.** The compiler lowers a `(substring s a b)`
+  over a static string and integer bounds to `str_slice`. twig-vm had no
+  arm for it, so `(substring "abcde" 1 3)` stopped with
+  `UnsupportedOpcode("str_slice")`. So did
+  `(define (f s) (substring s 0 1)) (f "abc")`. The new `exec_str_slice`
+  mirrors `vm-core`'s `handle_str_slice`: it counts bytes, like the other E4
+  ops. It requires `0 <= start <= end <= len`, and for UTF-8 input both
+  ends must fall on character boundaries. Anything else is a `TypeError`.
+
+- **twig-vm runs `str_cmp`.** The Twig compiler lowers a `string<?` /
+  `string>?` whose operands are statically strings to `str_cmp` followed by
+  `cmp_lt` / `cmp_gt` against 0. `vm-core` and the native backends run
+  that shape, but twig-vm's dispatcher had no `str_cmp` arm. So even
+  `(string<? "a" "b")` stopped with `UnsupportedOpcode("str_cmp")`. The
+  new `exec_str_cmp` compares the bytes and writes -1, 0 or 1, as
+  `vm-core`'s `handle_str_cmp` does.
+
+### Tests
+
+- `and_or_inside_a_lambda_run` checks the values of 12 programs with
+  `and` / `or` inside anonymous lambdas. They include nested joins, a
+  lambda inside a lambda, a lambda returned from a function, and a local
+  or global named `or` / `and` used in value position next to the special
+  form. Before the `twig-ir-compiler` fix, they failed to compile with
+  `unbound name "or" captured by lambda`.
+- `literal_substring_runs_as_str_slice` runs the four programs from the
+  review, which compile to `str_slice`, plus an empty slice.
+  `str_slice_rejects_a_bad_range` checks five out-of-range bounds and a
+  UTF-8 split. Both failed with `UnsupportedOpcode("str_slice")` before
+  this change.
+- `string_order_results_are_right_in_joins` runs `string<?` / `string>?`
+  in `if`, `and`, `or` and `let` joins, including equal strings. Before
+  this change, it stopped with `UnsupportedOpcode("str_cmp")`.
+
+## Unreleased — #18438: end-to-end tests for builtin shadowing
+
+### Tests
+
+- `user_definition_named_like_a_builtin_is_what_runs` checks the values of
+  23 programs. A top-level function or value named like a builtin is what
+  runs, in both positions. A user `=` or `car` does not change how a
+  `match` takes a value apart. `and` stays the special form in call
+  position. Five failed before the `twig-ir-compiler` fix. In four of
+  them a value define named like a builtin is called, and the builtin ran
+  instead: `(+ 1 2)` gave 3, not the user's 100. The fifth nests a user
+  `string-length` inside a `substring` bound. Before the fix, the
+  string-parameter evidence treated that inner call as the builtin and
+  typed the user function's parameter `str`.
+- `shadowing_definition_result_reaches_the_dynamic_builtin` runs 8
+  programs where a user definition returns the wrong kind for the builtin
+  that consumes its result. Each must fail in the dynamic builtin
+  (`string-length`, `string-ref`, `substring`), not in the typed op
+  (`str_len`, `str_index`, `str_slice`) that a native backend would run
+  unchecked. It also checks that `(define car 5) (car p)` is an error.
+
+## Unreleased — #18448: end-to-end tests for join result types
+
+### Tests
+
+- `string_op_on_a_disagreeing_join_is_the_dynamic_builtin` runs 8 programs
+  in which `or` or `match` (and `and` nested in `or`) joins a string with
+  another kind, and `string-length` reads the result while it holds the
+  other kind. Before the `twig-ir-compiler` fix the join was typed `str`,
+  so the typed `str_len` ran and raised
+  `str_len: expected str at srcs[0], got 5`. On the native backends,
+  which trust the hint, that was type confusion. Now the dynamic
+  `string-length` builtin runs and reports the real kind error. All 8
+  failed before the fix.
+- `join_results_are_right_on_every_path` checks the values of 17 `and` /
+  `or` / `match` programs. Each path of each join is covered, including
+  short-circuit `#f` paths, a `match` falling through to `nil`, and joins
+  whose paths agree and so keep the typed fast path. It is a regression
+  guard and passed before the fix too: the VM's typed arithmetic dispatches
+  to the dynamic builtins, so it gives the right value either way.
+
+## Unreleased — #18439: end-to-end tests for per-binding registers
+
+### Tests
+
+- 9 new dispatch tests run programs in which a nested binding reuses an
+  outer binding's name. Before the `twig-ir-compiler` fix, both bindings
+  shared one register, so the inner one overwrote the outer:
+  `(define (f x) (begin (let ((x 5)) x) x)) (f 1)` returned 5, not 1. The
+  tests cover value and call position, an E4 string alias to a rebound name
+  (which raised a `TypeError` on the VM and was type confusion on native
+  backends), a closure capturing an aliased string, a sibling scope's live
+  result, nested lambdas, `match` binding arms and variant fields shadowing
+  a parameter, recursion through shadowed names, and user locals spelled
+  like compiler registers (`__r1_x`, `_n1`). Eight failed before the fix;
+  the recursion test is a regression guard and passed either way.
+
+## Unreleased — #18435: end-to-end tests for lexical shadowing
+
+### Tests
+
+- 8 new dispatch tests run programs in which a parameter, a `let`/`let*`
+  binding, a lambda parameter, a captured parameter or a `match` binding
+  shadows a global function. Others shadow a builtin or the E4 string
+  builtins. The tests check the values. The example from the issue,
+  `(define (f helper) (helper 1))`, returns 2, not 100. The fix itself is in
+  `twig-ir-compiler`.
+- `inner_let_hides_outer_string_alias_binding`:
+  `(let ((s (string-append "a" "b"))) (let ((s 5)) s))` returns 5. It used to
+  read the outer string's alias register.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - A test that built nil with `call_builtin "make_nil"` uses `dyn_nil`, the name `dynval-runtime`'s binding now resolves (LANG83 PR7f). Doc comments describe the typed `const 0 : ref<LispyPair>` that twig-ir-compiler emits for `nil`.

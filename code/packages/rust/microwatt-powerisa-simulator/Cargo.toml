@@ -1,0 +1,11 @@
+[package]
+name = "microwatt-powerisa-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked 64-bit little-endian Microwatt/Power ISA fixed-point simulator"
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }

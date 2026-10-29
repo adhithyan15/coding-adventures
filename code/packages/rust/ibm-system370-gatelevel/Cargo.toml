@@ -1,0 +1,16 @@
+[package]
+name = "ibm-system370-gatelevel"
+version = "0.1.0"
+edition = "2021"
+description = "DFF-backed educational IBM System/370 gate-level simulator"
+license = "MIT"
+
+[dependencies]
+arithmetic = { path = "../arithmetic" }
+logic-gates = { path = "../logic-gates" }
+ibm-system360-gatelevel = { path = "../ibm-system360-gatelevel" }
+ibm-system370-simulator = { path = "../ibm-system370-simulator" }
+
+[dev-dependencies]
+quote = "1"
+syn = { version = "2", features = ["full"] }

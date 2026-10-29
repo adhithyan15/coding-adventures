@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:e218f05db0588114",
+  "lessonIds": [
+    "ZH-C160-saodi",
+    "ZH-C160-xiwan",
+    "ZH-C160-puchuang",
+    "ZH-C160-ganhuo",
+    "ZH-C160-zhaogu"
+  ],
+  "tex": "chinese/book/chapters/ch160-doing-the-chores.tex"
+}

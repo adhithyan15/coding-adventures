@@ -1,5 +1,46 @@
 # TaskApp platform completion v1
 
+## Selected fidelity slice: Qt empty Board drop-target floor (#18559)
+
+Preserve both themes' existing col-drop min-height 60 on Qt's outer
+HostDropTarget Item so an empty Board column retains a drop zone. Accept
+only finite nonnegative static numeric lengths; skip min-height state
+overrides. Keep drag callbacks, acceptance, shared styles,
+and release coverage unchanged. Require emitter positive/negative regressions
+and package-expanded assertions in both themes. General flex and root-scroll
+work remains in #18481. Record the audited v0.5.14 receipt in product docs.
+
+Release validation exposed a reporting blind spot: the first read of col-drop
+also reveals its existing display, flex-direction, and gap drops. Preserve that
+evidence and pin each to one occurrence (Qt total 76 to 79), with further
+increases rejected. #18563 owns lowering that debt. Do not reach calendar drop
+targets without a minimum height. This measured diagnostic change supersedes
+the initial unchanged-budget assumption; it does not claim a visual regression.
+
+## Selected release checkpoint: v0.5.14 (#18550)
+
+The due-date editor width floor merged in #18396. Prepare a compatible patch
+dated 2026-10-28, preserving every authoritative Unreleased Notes change and
+its substantive Markdown. Reprioritize the completion queue under #13543.
+Require release-helper tests, changelog validation, and independent security
+review before pushing. After preparation merges, dispatch publication once
+from main, require every existing payload check, and audit immutable source,
+tag, manifest, assets, checksums, and notes before closing #18550. Preparation
+is not publication; artifact coverage and unsigned limitations are unchanged.
+
+## Selected fidelity slice: Qt input width floor (#18394)
+
+Preserve the due-date HostInput's existing scalar width 150 plus exact
+flex-shrink: 0 intent on the Qt control itself, not only its surrounding box.
+Reuse the conservative static width bridge; fill widths, conflicting constraints,
+and geometry/shrink state overrides remain excluded. Keep shared styles and
+unsupported-flex diagnostics unchanged. Require emitted-control regressions
+and package-expanded checks for both themes before publication.
+
+The v0.5.13 checkpoint (#18334) is published and audited via run 40340262448:
+immutable source d1730421d34c9fe6ebe9cc68473f505017659a5a, 13 assets,
+12 checksum entries, and 11 manifest payloads. Coverage is unchanged.
+
 ## Selected release checkpoint: v0.5.13 (#18334)
 
 Prepare the compatible patch for the timeline-label floor merged in #18306,

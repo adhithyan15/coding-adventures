@@ -79,7 +79,8 @@
 //! defence-in-depth that fire only on a backend bug (the accept-set
 //! drifting out of sync with what `emit` handles), never on user input.
 
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
+use std::collections::HashMap;
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -95,6 +96,12 @@ thread_local! {
     /// Reset at the start of every `emit_module` so output stays
     /// deterministic regardless of how many modules a process compiles.
     static LOOP_COUNTER: Cell<usize> = const { Cell::new(0) };
+
+    /// Function name → [`Function::exact_arity`] for every function a
+    /// strict closure can check (see [`emit_strict_closure`]).  Filled at
+    /// the start of every `emit_module`, because `emit_expr` sees one
+    /// expression at a time and has no handle on the module.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
 }
 
 fn fresh_loop_id() -> usize {
@@ -110,6 +117,11 @@ fn fresh_loop_id() -> usize {
 /// the module is valid and uses only accepted features.
 pub fn emit_module(m: &Module) -> String {
     LOOP_COUNTER.with(|c| c.set(0));
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     let mut out = String::new();
     emit_banner(&mut out, m);
     // Strict mode goes first (after the banner comment) so the whole
@@ -1613,7 +1625,59 @@ fn emit_oop_name_arg(out: &mut String, e: &Expr) {
     }
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* — as a closure that refuses a call with the
+/// wrong number of arguments:
+///
+/// ```text
+/// (lambda (x y) (+ x y))   →   new __Sir.Closure((..._a) => {
+///                                if (_a.length !== 2) { __Sir.raiseError("ArgumentError",
+///                                  "arity mismatch: closure expects 2 argument(s), got " + _a.length); }
+///                                return __lambda_0(..._a); })
+/// ```
+///
+/// A plain JS function would quietly bind a missing argument to
+/// `undefined` (Twig's `(g 4)` on a two-parameter lambda printed `NaN`) and
+/// drop an extra one; the check makes this backend agree with every other
+/// one (issue #18461).  The check sits *inside* the closure's own function,
+/// so it holds however the closure is reached — `applyClosure`, or a
+/// runtime helper that unwraps `.fn`.
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`Function::exact_arity`] is `None`: defaults, `*rest`, …), the
+/// inner expression is emitted unchanged and keeps its lenient behaviour.
+fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
+    let Expr::MakeClosure { fn_name, captures, .. } = inner else {
+        emit_expr(out, inner, indent);
+        return;
+    };
+    let Some(n) = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied()) else {
+        emit_expr(out, inner, indent);
+        return;
+    };
+    // The error is SIR's `ArgumentError` (SIR10, "Strict closures"), raised
+    // through the runtime so a `rescue ArgumentError` catches it — a native
+    // `TypeError` is classed as a plain `StandardError` by `rescueMatches`,
+    // so it escaped that rescue on this backend alone (issue #18466).
+    let _ = write!(
+        out,
+        "new __Sir.Closure((..._a) => {{ if (_a.length !== {n}) {{ __Sir.raiseError(\"ArgumentError\", \
+         \"arity mismatch: closure expects {n} argument(s), got \" + _a.length); }} return {}(",
+        sanitize_ident(fn_name)
+    );
+    for c in captures {
+        emit_expr(out, &c.value, indent);
+        out.push_str(", ");
+    }
+    out.push_str("..._a); })");
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // The strict-closure marker (SIR10 "Strict closures").
+    if name == "lambda" && args.len() == 1 {
+        emit_strict_closure(out, &args[0], indent);
+        return;
+    }
     // Method dispatch (`recv.meth(args…)` → `BuiltinCall("__method__",
     // [recv, StrLit("meth"), args…])`, produced by the Ruby/JS frontends)
     // routes to the runtime's `callMethod(recv, name, args…)`, which applies
@@ -2075,11 +2139,27 @@ const TAG_ESCAPED: &str = "e";
 /// python::escape_body`'s own doc comment for the full argument. `$`
 /// needed no such change: it plays no role in the escape token's own
 /// shape, so it stays a safe, ordinary pass-through character.
+///
+/// # Generated names are reserved too (#18466)
+///
+/// The emitter binds a few names of its own around the user's code — see
+/// [`is_generated_name`].  A user name spelled the same way used to pass
+/// straight through and be *shadowed* by the generated one.  The closure
+/// wrapper `(..._a) => __lambda_0(<captures>, ..._a)` evaluates its
+/// captured values inside the arrow, so `(define (f _a) (lambda (x) (* x
+/// _a)))` read the wrapper's argument array instead of the user's `_a`.
+/// A reserved name now takes the marker branch:
+///
+/// ```text
+/// _a       ->  _$sir_esc_v_a
+/// __Sir    ->  _$sir_esc_v__Sir
+/// Map      ->  _$sir_esc_vMap
+/// ```
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
-    if is_valid_js_ident(s) && !s.starts_with(ESCAPE_MARKER) {
+    if is_valid_js_ident(s) && !s.starts_with(ESCAPE_MARKER) && !is_generated_name(s) {
         return s.to_string();
     }
     if is_valid_js_ident(s) {
@@ -2111,6 +2191,63 @@ fn sanitize_comment(s: &str) -> String {
     }
     out
 }
+
+/// Names the emitted JavaScript binds or reads around the user's code that a
+/// user name must never spell (#18466).  [`sanitize_ident`] escapes every one
+/// of them.
+///
+/// | reserved               | where the emitter writes it                                  |
+/// |------------------------|--------------------------------------------------------------|
+/// | `__sir…` (any case)    | the runtime object `__Sir`, loop temporaries `__sir_stop_N`/`__sir_step_N`, the display placeholders `__SIR_DISPLAY_*__` |
+/// | `_a`                   | a closure wrapper's argument array, `(..._a) => …`; the captured values are evaluated inside it |
+/// | `__l`                  | the arrow that evaluates a short-circuit `and`/`or` operand once, `((__l) => …)(lhs)`; the right operand is evaluated inside it |
+/// | `__kw`                 | a function's keyword-argument options object                 |
+/// | `__exc`                | the caught value in a `try`/`catch` lowering                 |
+/// | the globals in [`JS_GLOBALS`] | the inlined runtime and the emitted code reach JavaScript's and Node's globals by name (`new Map(…)`, `Math.floor`, `console.log`, `process.stdout`) |
+///
+/// The globals need reserving because the user's functions are emitted as
+/// top-level function *declarations*, which are hoisted over the whole
+/// file: `(define (Map x) x)` replaced `Map` for the runtime too, before a
+/// line of it ran.  (Wrapping the program in a block would scope the
+/// declarations instead, but callers append code that calls the emitted
+/// functions by name — e.g. `java-to-semantic-ir`'s `console.log(probe())`
+/// epilogue — so the declarations stay at top level.)
+///
+/// `__sir_block__` is the one exception to the `__sir` family: it is not
+/// generated here but is the SIR-level name the Ruby frontend gives a
+/// method's block parameter, shared by every frontend and backend, so it
+/// keeps its spelling.
+fn is_generated_name(s: &str) -> bool {
+    (s.get(..5).is_some_and(|p| p.eq_ignore_ascii_case("__sir")) && s != "__sir_block__")
+        || matches!(s, "_a" | "__l" | "__kw" | "__exc")
+        || JS_GLOBALS.contains(&s)
+}
+
+/// The global bindings of ECMAScript (ES2024's global object) and of Node,
+/// which the inlined runtime and the emitted code may name.  A user function
+/// or global of one of these names would shadow it for the whole file, so
+/// [`sanitize_ident`] escapes them all.  The unit test
+/// `every_global_the_runtime_names_is_reserved` asks `node` for its real
+/// global object and fails if the runtime names one missing from this list.
+const JS_GLOBALS: &[&str] = &[
+    // ECMAScript value, function and constructor properties.
+    "globalThis", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN",
+    "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI",
+    "encodeURIComponent", "escape", "unescape", "AggregateError", "Array",
+    "ArrayBuffer", "Atomics", "BigInt", "BigInt64Array", "BigUint64Array", "Boolean",
+    "DataView", "Date", "Error", "EvalError", "FinalizationRegistry", "Float32Array",
+    "Float64Array", "Function", "Int8Array", "Int16Array", "Int32Array", "Intl", "Iterator",
+    "JSON", "Map", "Math", "Number", "Object", "Promise", "Proxy", "RangeError",
+    "ReferenceError", "Reflect", "RegExp", "Set", "SharedArrayBuffer", "String", "Symbol",
+    "SyntaxError", "TypeError", "Uint8Array", "Uint8ClampedArray", "Uint16Array",
+    "Uint32Array", "URIError", "WeakMap", "WeakRef", "WeakSet",
+    // Node's globals and CommonJS module bindings.
+    "console", "process", "Buffer", "require", "module", "exports", "__dirname",
+    "__filename", "global", "setTimeout", "setInterval", "setImmediate", "clearTimeout",
+    "clearInterval", "clearImmediate", "queueMicrotask", "structuredClone",
+    "TextEncoder", "TextDecoder", "URL", "URLSearchParams", "performance", "crypto",
+    "fetch", "AbortController", "AbortSignal", "Event", "EventTarget", "atob", "btoa",
+];
 
 fn is_valid_js_ident(s: &str) -> bool {
     let mut chars = s.chars();
@@ -2309,6 +2446,57 @@ mod tests {
             sanitize_ident(verbatim_side),
             "_$sir_esc_v_$sir_esc_null_u003f_"
         );
+    }
+
+    /// The names the emitter binds around user code, and the JS/Node
+    /// globals, are escaped; ordinary names are not (#18466).
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in ["_a", "__l", "__kw", "__exc", "__Sir", "__sir_stop_0", "Map", "console"] {
+            assert_eq!(sanitize_ident(name), format!("_$sir_esc_v{name}"), "{name}");
+        }
+        for name in ["a", "_b", "__lambda_0", "__sir_block__", "map", "consoles"] {
+            assert_eq!(sanitize_ident(name), name, "{name}");
+        }
+    }
+
+    /// Every JavaScript/Node global the inlined runtime names is reserved, so
+    /// a hoisted user `function` can never replace it (#18466).  Asks `node`
+    /// for its real global object; skipped without Node.
+    #[test]
+    fn every_global_the_runtime_names_is_reserved() {
+        // A script file, not `node -e`: `-e` also exposes the core modules
+        // (`path`, `vm`, …) as globals, which an emitted program never sees.
+        let script = std::env::temp_dir().join(format!(
+            "sir_js_globals_{}.js",
+            std::process::id()
+        ));
+        std::fs::write(
+            &script,
+            "console.log(Object.getOwnPropertyNames(globalThis).join('\\n'));\n",
+        )
+        .expect("write probe script");
+        let out = std::process::Command::new("node").arg(&script).output();
+        let _ = std::fs::remove_file(&script);
+        let Ok(out) = out else {
+            eprintln!("note: `node` unavailable — skipping");
+            return;
+        };
+        if !out.status.success() {
+            eprintln!("note: `node` failed — skipping");
+            return;
+        }
+        let globals: std::collections::HashSet<String> =
+            String::from_utf8_lossy(&out.stdout).lines().map(str::to_string).collect();
+        assert!(globals.contains("Map"), "unexpected `node` output: {globals:?}");
+        let mut spellable: Vec<String> = crate::runtime::RUNTIME
+            .split(|c: char| !(c.is_ascii_alphanumeric() || c == '_' || c == '$'))
+            .filter(|w| globals.contains(*w) && sanitize_ident(w) == *w)
+            .map(str::to_string)
+            .collect();
+        spellable.sort();
+        spellable.dedup();
+        assert!(spellable.is_empty(), "globals a user function could replace: {spellable:?}");
     }
 
     #[test]

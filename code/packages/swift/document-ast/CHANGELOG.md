@@ -2,6 +2,11 @@
 
 All notable changes to this package are documented here.
 
+## 0.2.0 — 2026-10-25
+
+- Added source-preserving `FencedBlockNode` and `.fencedBlock` while retaining
+  the ordinary `.codeBlock` API for indented code and existing callers.
+
 ## 0.1.0 — Initial release
 
 - All Document AST block node types: `DocumentNode`, `HeadingNode`, `ParagraphNode`, `CodeBlockNode`, `BlockquoteNode`, `ListNode`, `ListItemNode`, `TaskItemNode`, `ThematicBreakNode`, `RawBlockNode`, `TableNode`, `TableRowNode`, `TableCellNode`

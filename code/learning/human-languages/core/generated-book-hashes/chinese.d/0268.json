@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:7bd196e4ddc6d042",
+  "lessonIds": [
+    "ZH-C268-baoming",
+    "ZH-C268-koushi",
+    "ZH-C268-jige",
+    "ZH-C268-daan",
+    "ZH-C268-jieshi"
+  ],
+  "tex": "chinese/book/chapters/ch268-exams.tex"
+}

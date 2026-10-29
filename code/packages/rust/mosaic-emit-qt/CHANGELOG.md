@@ -43,7 +43,7 @@
   Calendar (`calendar-cell-drop`), in Engram and DeckStats
   (`deck-option-button`), and in Venture (seven parts, including
   `content-surface`, so Venture's root now fills the window).
-- Drop reports: TaskApp 78 → 79 (`flex-grow` −1, `gap` +1, `width` +1,
+- Drop reports: TaskApp 79 → 80 (`flex-grow` −1, `gap` +1, `width` +1,
   because `calendar-cell-drop` is now reached), Calendar 2 → 4, Engram
   40 → 38, DeckStats 2 → 1, Venture 15 → 8.
 - New `fixtures/host-scroll-column-shell` and
@@ -51,6 +51,11 @@
   fixture and measures it with `qml`. The check passes on this emitter
   (519 px viewport over 1646 px of content) and fails 4 of its 5
   assertions on the previous one.
+- Preserve finite nonnegative static `min-height` on the outer HostDropTarget
+  Item so empty landing zones retain their layout floor (#18559). Skip state
+  overrides; drag acceptance and callback routing are unchanged.
+  The first style read also exposes existing unsupported declarations on that
+  part; targets without authored min-height remain untouched (#18563).
 
 - `Text ( content: row )` inside `For ( each: slot: rows, as: row )` is
   `text: row`, the delegate's `property var row: modelData` (backlog 6f1f).
@@ -64,6 +69,12 @@
   slot arm beside it does.
 - Visible change: CollectionActions' missing-media and unused-media lists (and
   EngramApp, which inlines them) now show each filename and asset id.
+
+## 2026-10-26 (Fixed control width floors)
+
+- Preserve static scalar host-control widths paired with exact flex-shrink: 0
+  (#18394). Fill widths, conflicting constraints, and state geometry remain
+  excluded; unsupported-flex diagnostics remain unchanged.
 
 ## 2026-10-25 (Fixed text width floors)
 

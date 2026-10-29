@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:8efebe56ed4cbc2d",
+  "lessonIds": [
+    "ZH-C225-nongcun",
+    "ZH-C225-nongmin",
+    "ZH-C225-zhongdi",
+    "ZH-C225-zhai",
+    "ZH-C225-luying"
+  ],
+  "tex": "chinese/book/chapters/ch225-in-the-country.tex"
+}

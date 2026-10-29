@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C271-chijing",
+  "pathSegment": "ZH-PATH-271-MOOD271",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-271-MOOD271",
+      "order": 2
+    }
+  ]
+}

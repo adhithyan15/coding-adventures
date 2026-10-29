@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W190-dian-shop",
+  "pathSegment": "ZH-PATH-190-TOWN190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-190-TOWN190",
+      "order": 1
+    }
+  ]
+}

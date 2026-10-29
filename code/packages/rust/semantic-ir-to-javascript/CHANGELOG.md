@@ -1,5 +1,57 @@
 # Changelog
 
+## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds around user code**:
+  `__sir…` in any case (`__Sir`, loop temporaries), `_a` (a closure
+  wrapper's argument array), `__l`, `__kw`, `__exc`, and the JavaScript and
+  Node globals (`Map`, `Object`, `Math`, `console`, `process`, …;
+  `JS_GLOBALS`).  The closure wrapper evaluates its captured values inside
+  `(..._a) => …`, so `(define (f _a) (lambda (x) (* x _a)))` read the
+  argument array; and a user `function Map` is hoisted over the whole file,
+  replacing `Map` for the inlined runtime before it ran.  The unit test
+  `every_global_the_runtime_names_is_reserved` asks `node` for its real
+  global object and fails if the runtime names a global the list misses.
+  (`__sir_block__`, the frontends' shared block-parameter name, keeps its
+  spelling.)
+- **A strict closure's arity error is `ArgumentError`**, raised through
+  `__Sir.raiseError`, where it was a native `TypeError` that
+  `rescueMatches` classes as a plain `StandardError` — so a Ruby-frontend
+  `rescue ArgumentError` missed it on this backend.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) used to
+fall through to `__Sir.callBuiltin("lambda", …)`.  It now emits the closure
+with its arity check inline:
+
+```js
+new __Sir.Closure((..._a) => { if (_a.length !== 2) { throw new TypeError(
+  "arity mismatch: closure expects 2 argument(s), got " + _a.length); } return __lambda_0(..._a); })
+```
+
+JavaScript binds a missing argument to `undefined`, so Twig's
+`((lambda (x y) (+ x y)) 4)` printed `NaN`.  `tests/twig_pairs_and_closures.rs`
+runs the #18460/#18461 Twig programs under `node`, and
+`tests/twig_name_resolution.rs` no longer adds `Feature::Pairs` to the
+module by hand (#18460 fixed the frontend).
+
+## Unreleased — tests: Twig name resolution runs end to end (#18456)
+
+Test-only; the emitted JavaScript is unchanged.
+
+`tests/twig_name_resolution.rs` drives 19 Twig programs through
+`twig-to-semantic-ir` and this backend under `node`.  In each, a
+builtin's name is shadowed by a top-level function, a top-level value,
+a parameter, a `let` / `let*` binding, a lambda parameter or a capture.
+The test checks the program prints the shadowing definition's answer.
+For example, `(define (car p) 42) (print (car (cons 1 2)))` prints `42`;
+before the frontend fix it printed the builtin's `1`.  The test declares
+`Feature::Pairs` on each module before compiling, because the Twig
+frontend does not yet declare it (a separate, pre-existing gap).
+Without `node` the test still lowers and compiles every program.
+
 ## 0.54.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

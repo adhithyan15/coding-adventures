@@ -5959,6 +5959,23 @@ fn emit_host_drop_target_qml(
     writeln!(out, "{inner}id: {target_id}").unwrap();
     writeln!(out, "{inner}implicitWidth: {content_id}.implicitWidth").unwrap();
     writeln!(out, "{inner}implicitHeight: {content_id}.implicitHeight").unwrap();
+    // Empty content must not erase an authored landing zone. Keep the floor
+    // on the outer Item: DropArea fills that Item, not the inner layout.
+    // A state-dependent minimum is outside this static bridge.
+    if let Some(part) = node.part_name.as_deref().filter(|_| {
+        part_style_props(node, ctx).is_some_and(|props| props.iter().any(|prop| prop.name == "min-height"))
+    }) {
+        let props = part_style_props(node, ctx).unwrap_or(&[]);
+        let layers = collect_state_layers(node, part, ctx.part_styles);
+        if !layers.iter().any(|layer| style_prop(layer.props, "min-height").is_some()) {
+            if let Some(height) = style_prop(props, "min-height")
+                .and_then(qml_px_or_none)
+                .filter(|value| value.parse::<f64>().is_ok_and(|number| number >= 0.0))
+            {
+                writeln!(out, "{inner}Layout.minimumHeight: {height}").unwrap();
+            }
+        }
+    }
     writeln!(
         out,
         "{inner}property string mosaicDropKey: String({target_key})"
@@ -6985,6 +7002,12 @@ fn host_control_style_qml_lines(
         if let Some(width) = width {
             lines.push(format!("implicitWidth: {width}"));
             lines.push(format!("Layout.preferredWidth: {width}"));
+        }
+        // Preferred sizing alone permits the layout to shrink an editor.
+        // Keep the same narrow, validated bridge used by containers and text;
+        // fill geometry and general flex semantics remain outside its scope.
+        if let Some(minimum) = static_delegate_min_width(base, &state_layers) {
+            lines.push(format!("Layout.minimumWidth: {minimum}"));
         }
     }
     let height = conditional_lowered_px_expr(base, &state_layers, "height", "0");
@@ -16995,6 +17018,39 @@ mod tests {
     }
 
     #[test]
+    fn drop_target_preserves_static_nonnegative_minimum_height() {
+        let (iface, layout) = drag_family_fixture();
+        for (value, expected) in [("60", Some("60")), ("0px", Some("0")),
+            ("-1", None), ("NaN", None), ("inf", None), ("100%", None),
+            ("60; Qt.quit()", None)] {
+            let style = style_with_part("Board", "lane", vec![("min-height", value)]);
+            let out = from_pipeline(&iface, &layout, &style).unwrap().output;
+            let target = out.split("id: mosaicDropTarget1").nth(1).unwrap()
+                .split("ColumnLayout {").next().unwrap();
+            match expected {
+                Some(height) => assert!(target.contains(&format!("Layout.minimumHeight: {height}")), "{value}: {target}"),
+                None => assert!(!target.contains("Layout.minimumHeight:"), "{value}: {target}"),
+            }
+        }
+    }
+
+    #[test]
+    fn drop_target_skips_state_dependent_minimum_height() {
+        let (iface, mut layout) = drag_family_fixture();
+        layout.root.children[1].props.push(drag_prop(
+            "state-when-hover", LayoutPropValue::Expr("true".to_string())));
+        let mut style = style_with_part("Board", "lane", vec![("min-height", "60")]);
+        style.parts[0].states.push(mosstyle_compiler::StateStyle {
+            slot: None, slot_is_bool: false, state: "hover".to_string(),
+            transitions: vec![], props: vec![sp("min-height", "80")],
+        });
+        let out = from_pipeline(&iface, &layout, &style).unwrap().output;
+        let target = out.split("id: mosaicDropTarget1").nth(1).unwrap()
+            .split("ColumnLayout {").next().unwrap();
+        assert!(!target.contains("Layout.minimumHeight:"), "{target}");
+    }
+
+    #[test]
     fn non_drag_component_omits_drag_controller() {
         let out = from_pipeline(
             &component("Plain", vec![], vec![]),
@@ -18648,6 +18704,30 @@ mod tests {
             "font.pixelSize: ( (size === \"sm\") ) ? 12 : 14",
         ] {
             assert!(out.contains(expected), "missing {expected:?}:\n{out}");
+        }
+    }
+
+    #[test]
+    fn host_input_static_non_shrinking_width_has_a_floor() {
+        let model = component("FixedInput", vec![], vec![]);
+        let layout = LayoutDef {
+            component_name: "FixedInput".into(),
+            root: LayoutNode {
+                tag: "HostInput".into(), part_name: Some("input".into()),
+                props: vec![lp("placeholder", LayoutPropValue::String("Due date".into()))],
+                children: vec![],
+            },
+        };
+        for (width, shrink, expected) in [("150", "0", true), ("150", "1", false), ("100%", "0", false)] {
+            let style = StyleDef {
+                component_name: "FixedInput".into(),
+                parts: vec![PartStyle {
+                    name: "input".into(), base: vec![sp("width", width), sp("flex-shrink", shrink)],
+                    states: vec![], transitions: vec![],
+                }],
+            };
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert_eq!(out.contains("Layout.minimumWidth: 150"), expected, "{out}");
         }
     }
 

@@ -12,28 +12,35 @@ use serde_json::{json, Map as JsonMap, Value as JsonValue};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CapabilityMode,
     CommandResult, CommandType, Device, DeviceControlCommandType, DeviceId, Entity, EntityId,
-    EntityKind, Health, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, SmartHomeTool,
-    StateConfidence, StateSnapshot, StateSource, Value, ValueKind, VaultRef,
+    EntityKind, EventId, Health, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier,
+    SmartHomeTool, StateConfidence, StateSnapshot, StateSource, Value, ValueKind, VaultRef,
 };
 use smart_home_discovery::{
     run_mdns_ipv4_scan, DiscoveryConfidence, DiscoveryRecord, DiscoverySource, MdnsAdvertisement,
     MdnsScanOptions, MdnsScanResult, PairingRequirement,
+};
+use smart_home_event_streams::{
+    EventStreamCheckpoint, EventStreamSpec, EventStreamState, EventStreamTransport,
 };
 use smart_home_local_http::{
     LocalHttpAuth, LocalHttpEndpoint, LocalHttpError, LocalHttpMethod, LocalHttpRequestPlan,
     LocalHttpRequestTemplate, LocalHttpScheme,
 };
 use smart_home_runtime::{RuntimeCommandToolRequest, RuntimeError, SmartHomeRuntime};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::fmt;
 use std::io::{self, Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 use std::thread;
 use std::time::Duration;
-use tls_platform::{default_connector, TlsConfig, TlsConnector};
+use tls_platform::{default_connector, TlsConfig, TlsConnector, TlsStream};
 use url_parser::{Url, UrlError};
+use websocket_core::{
+    build_client_request, control_reply, encode_frame, validate_client_response, EndpointRole,
+    Frame, FrameDecoder, MessageAssembler, MessageEvent,
+};
 
-pub const VERSION: &str = "0.4.1";
+pub const VERSION: &str = "0.5.0";
 pub const INTEGRATION_ID: &str = "axis_vapix";
 pub const PROTOCOL_ID: &str = "axis_vapix";
 pub const VIDEO_MDNS_SERVICE_TYPE: &str = "_axis-video._tcp.local";
@@ -45,8 +52,13 @@ pub const PTZ_QUEUE_PATH: &str = "/axis-cgi/com/ptzqueue.cgi";
 pub const PARAM_PATH: &str = "/axis-cgi/param.cgi";
 pub const JPEG_SNAPSHOT_PATH: &str = "/axis-cgi/jpg/image.cgi?camera=1";
 pub const VIDEO_CAPABILITY_PATH: &str = "/axis-cgi/param.cgi?action=list&responseformat=rfc&group=Properties.API.HTTP.Version,Properties.Image.Format,Image.NbrOfConfigs,Image.I0.Enabled";
+pub const WEBSOCKET_SESSION_PATH: &str = "/axis-cgi/wssession.cgi";
+pub const EVENT_STREAM_PATH: &str = "/vapix/ws-data-stream";
+pub const SYSTEM_READY_TOPIC: &str = "tns1:Device/tnsaxis:Status/tnsaxis:SystemReady";
 pub const DEFAULT_MAX_DISCOVERY_RESPONSES: usize = 128;
 pub const DEFAULT_MAX_RESPONSE_BYTES: usize = 2 * 1024 * 1024;
+pub const DEFAULT_MAX_EVENT_MESSAGE_BYTES: usize = 64 * 1024;
+pub const DEFAULT_EVENT_STALE_AFTER_MS: u64 = 120_000;
 pub const MAX_CREDENTIAL_FIELD_BYTES: usize = 1_024;
 pub const MIN_PTZ_SPEED: u32 = 1;
 pub const MAX_PTZ_SPEED: u32 = 100;
@@ -61,6 +73,7 @@ pub enum AxisError {
     Url(UrlError),
     Io(String),
     Tls(String),
+    WebSocket(String),
     Http(String),
     HttpStatus(u16),
     Authentication(String),
@@ -96,6 +109,7 @@ impl fmt::Display for AxisError {
             Self::Url(error) => write!(formatter, "invalid Axis VAPIX URL: {error}"),
             Self::Io(message) => write!(formatter, "Axis LAN I/O failed: {message}"),
             Self::Tls(message) => write!(formatter, "Axis TLS failed: {message}"),
+            Self::WebSocket(message) => write!(formatter, "Axis WebSocket failed: {message}"),
             Self::Http(message) => write!(formatter, "invalid Axis HTTP response: {message}"),
             Self::HttpStatus(status) => write!(formatter, "Axis endpoint returned HTTP {status}"),
             Self::Authentication(message) => {
@@ -202,6 +216,39 @@ impl fmt::Debug for AxisCredentials {
     }
 }
 
+pub struct AxisWebSocketSessionToken(Zeroizing<String>);
+
+impl AxisWebSocketSessionToken {
+    fn parse(body: &[u8]) -> Result<Self, AxisError> {
+        let token = std::str::from_utf8(body)
+            .map_err(|_| {
+                AxisError::Authentication("WebSocket session token is not UTF-8".to_string())
+            })?
+            .trim();
+        if token.is_empty()
+            || token.len() > 256
+            || !token.bytes().all(|byte| {
+                byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~')
+            })
+        {
+            return Err(AxisError::Authentication(
+                "WebSocket session token is empty, oversized, or URL-unsafe".to_string(),
+            ));
+        }
+        Ok(Self(Zeroizing::new(token.to_string())))
+    }
+
+    fn expose(&self) -> &str {
+        self.0.as_str()
+    }
+}
+
+impl fmt::Debug for AxisWebSocketSessionToken {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("AxisWebSocketSessionToken([REDACTED])")
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AxisConfig {
     pub bridge_id: BridgeId,
@@ -297,6 +344,16 @@ pub struct AxisSnapshot {
     pub apis: Vec<AxisApi>,
     pub video: Option<AxisVideoSnapshot>,
     pub ptz: Option<AxisPtzSnapshot>,
+}
+
+impl AxisSnapshot {
+    pub fn supports_event_streaming(&self) -> bool {
+        self.apis.iter().any(|api| {
+            api.id == "event-streaming-over-websocket"
+                && api.version == "1.0"
+                && api.status.eq_ignore_ascii_case("released")
+        })
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -704,6 +761,13 @@ impl<T: AxisTransport> AxisClient<T> {
         Ok(snapshot)
     }
 
+    pub fn issue_websocket_session_token(
+        &mut self,
+    ) -> Result<AxisWebSocketSessionToken, AxisError> {
+        let response = self.get_text(WEBSOCKET_SESSION_PATH, None)?;
+        AxisWebSocketSessionToken::parse(&response.body)
+    }
+
     fn inspect_video(&mut self) -> Result<Option<AxisVideoSnapshot>, AxisError> {
         let response = self.get_text(VIDEO_CAPABILITY_PATH, None)?;
         parse_video_snapshot(response_text(&response.body)?)
@@ -889,6 +953,7 @@ pub struct InstalledAxisDevice {
     pub bridge_id: BridgeId,
     pub device_id: DeviceId,
     pub camera_entity_id: EntityId,
+    pub supports_event_streaming: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -937,6 +1002,381 @@ struct AxisPtzSupport {
     supports_continuous_pan_tilt: bool,
     supports_server_presets: bool,
     queue_mode: AxisPtzQueueMode,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AxisSystemReadyEvent {
+    pub timestamp_ms: Option<u64>,
+    pub ready: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstalledAxisEvent {
+    pub camera_entity_id: EntityId,
+    pub event: AxisSystemReadyEvent,
+    pub checkpoint: EventStreamCheckpoint,
+}
+
+pub trait AxisEventSession {
+    fn configure_system_ready(&mut self) -> Result<(), AxisError>;
+    fn read_system_ready(&mut self) -> Result<AxisSystemReadyEvent, AxisError>;
+    fn close(&mut self) -> Result<(), AxisError>;
+}
+
+pub trait AxisEventConnector {
+    type Session: AxisEventSession;
+
+    fn connect(
+        &mut self,
+        config: &AxisConfig,
+        token: &AxisWebSocketSessionToken,
+    ) -> Result<Self::Session, AxisError>;
+}
+
+enum AxisWebSocketSocket {
+    Tcp(TcpStream),
+    Tls(Box<dyn TlsStream>),
+}
+
+impl Read for AxisWebSocketSocket {
+    fn read(&mut self, buffer: &mut [u8]) -> io::Result<usize> {
+        match self {
+            Self::Tcp(stream) => stream.read(buffer),
+            Self::Tls(stream) => stream.read(buffer),
+        }
+    }
+}
+
+impl Write for AxisWebSocketSocket {
+    fn write(&mut self, buffer: &[u8]) -> io::Result<usize> {
+        match self {
+            Self::Tcp(stream) => stream.write(buffer),
+            Self::Tls(stream) => stream.write(buffer),
+        }
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        match self {
+            Self::Tcp(stream) => stream.flush(),
+            Self::Tls(stream) => stream.flush(),
+        }
+    }
+}
+
+impl AxisWebSocketSocket {
+    fn close_transport(&mut self) -> Result<(), AxisError> {
+        match self {
+            Self::Tcp(stream) => stream
+                .shutdown(std::net::Shutdown::Both)
+                .map_err(|error| AxisError::Io(error.to_string())),
+            Self::Tls(stream) => stream
+                .close_notify()
+                .map_err(|error| AxisError::Tls(error.to_string())),
+        }
+    }
+}
+
+pub struct AxisWebSocketConnector {
+    connector: Box<dyn TlsConnector>,
+    tls_config: TlsConfig,
+    maximum_message_bytes: usize,
+}
+
+impl Default for AxisWebSocketConnector {
+    fn default() -> Self {
+        Self::new(default_connector(), TlsConfig::https_default())
+    }
+}
+
+impl AxisWebSocketConnector {
+    pub fn new(connector: Box<dyn TlsConnector>, tls_config: TlsConfig) -> Self {
+        Self {
+            connector,
+            tls_config,
+            maximum_message_bytes: DEFAULT_MAX_EVENT_MESSAGE_BYTES,
+        }
+    }
+
+    pub fn with_maximum_message_bytes(mut self, maximum: usize) -> Self {
+        self.maximum_message_bytes = maximum.max(1);
+        self
+    }
+}
+
+impl AxisEventConnector for AxisWebSocketConnector {
+    type Session = AxisWebSocketSession;
+
+    fn connect(
+        &mut self,
+        config: &AxisConfig,
+        token: &AxisWebSocketSessionToken,
+    ) -> Result<Self::Session, AxisError> {
+        let url = Url::parse(&config.base_url)?;
+        let host = url
+            .host
+            .as_deref()
+            .ok_or(AxisError::MissingField("base URL host"))?;
+        let port = url
+            .effective_port()
+            .ok_or(AxisError::MissingField("base URL port"))?;
+        let timeout = config.timeout.max(Duration::from_millis(1));
+        let mut socket = match url.scheme.as_str() {
+            "http" if is_loopback_host(host) => {
+                AxisWebSocketSocket::Tcp(connect_tcp(host, port, timeout)?)
+            }
+            "https" => {
+                let mut tls_config = self.tls_config.clone();
+                tls_config.connect_timeout = timeout;
+                tls_config.read_timeout = Some(timeout);
+                tls_config.write_timeout = Some(timeout);
+                AxisWebSocketSocket::Tls(
+                    self.connector
+                        .connect(host, port, &tls_config)
+                        .map_err(|error| AxisError::Tls(error.to_string()))?,
+                )
+            }
+            _ => {
+                return Err(AxisError::Validation(
+                    "Axis event streaming requires WSS or loopback WS".to_string(),
+                ))
+            }
+        };
+        let target = format!(
+            "{EVENT_STREAM_PATH}?wssession={}&sources=events",
+            token.expose()
+        );
+        let host_header = websocket_host_header(host, port, &url.scheme);
+        let nonce =
+            random_array::<16>().map_err(|error| AxisError::WebSocket(error.to_string()))?;
+        let handshake = build_client_request(&host_header, &target, nonce)
+            .map_err(|error| AxisError::WebSocket(error.to_string()))?;
+        socket
+            .write_all(handshake.bytes())
+            .map_err(|error| AxisError::Io(error.to_string()))?;
+        socket
+            .flush()
+            .map_err(|error| AxisError::Io(error.to_string()))?;
+        let response = read_websocket_handshake(&mut socket)?;
+        let consumed = validate_client_response(&response, handshake.expected_accept())
+            .map_err(|error| AxisError::WebSocket(error.to_string()))?;
+        let mut session = AxisWebSocketSession::new(socket, self.maximum_message_bytes);
+        session.push_inbound(&response[consumed..])?;
+        Ok(session)
+    }
+}
+
+pub struct AxisWebSocketSession {
+    socket: AxisWebSocketSocket,
+    decoder: FrameDecoder,
+    assembler: MessageAssembler,
+    pending: VecDeque<MessageEvent>,
+    configured: bool,
+    closed: bool,
+}
+
+impl AxisWebSocketSession {
+    fn new(socket: AxisWebSocketSocket, maximum_message_bytes: usize) -> Self {
+        Self {
+            socket,
+            decoder: FrameDecoder::new(EndpointRole::Client, maximum_message_bytes),
+            assembler: MessageAssembler::new(maximum_message_bytes),
+            pending: VecDeque::new(),
+            configured: false,
+            closed: false,
+        }
+    }
+
+    fn push_inbound(&mut self, bytes: &[u8]) -> Result<(), AxisError> {
+        for frame in self
+            .decoder
+            .push(bytes)
+            .map_err(|error| AxisError::WebSocket(error.to_string()))?
+        {
+            if let Some(event) = self
+                .assembler
+                .push(frame)
+                .map_err(|error| AxisError::WebSocket(error.to_string()))?
+            {
+                self.pending.push_back(event);
+            }
+        }
+        Ok(())
+    }
+
+    fn send_frame(&mut self, frame: &Frame) -> Result<(), AxisError> {
+        let mask = random_array::<4>().map_err(|error| AxisError::WebSocket(error.to_string()))?;
+        let bytes = encode_frame(EndpointRole::Client, frame, Some(mask))
+            .map_err(|error| AxisError::WebSocket(error.to_string()))?;
+        self.socket
+            .write_all(&bytes)
+            .map_err(|error| AxisError::Io(error.to_string()))?;
+        self.socket
+            .flush()
+            .map_err(|error| AxisError::Io(error.to_string()))
+    }
+
+    fn next_message(&mut self) -> Result<MessageEvent, AxisError> {
+        loop {
+            if let Some(event) = self.pending.pop_front() {
+                if let Some(reply) = control_reply(&event) {
+                    self.send_frame(&reply)?;
+                }
+                match event {
+                    MessageEvent::Ping(_) | MessageEvent::Pong(_) => continue,
+                    MessageEvent::Close(_) => {
+                        self.closed = true;
+                        return Err(AxisError::WebSocket(
+                            "device closed the event stream".to_string(),
+                        ));
+                    }
+                    event => return Ok(event),
+                }
+            }
+            let mut buffer = [0_u8; 4096];
+            let read = self
+                .socket
+                .read(&mut buffer)
+                .map_err(|error| AxisError::Io(error.to_string()))?;
+            if read == 0 {
+                return Err(AxisError::WebSocket(
+                    "event stream ended before a complete message".to_string(),
+                ));
+            }
+            self.push_inbound(&buffer[..read])?;
+        }
+    }
+}
+
+impl AxisEventSession for AxisWebSocketSession {
+    fn configure_system_ready(&mut self) -> Result<(), AxisError> {
+        if self.configured {
+            return Err(AxisError::WebSocket(
+                "event stream was configured more than once".to_string(),
+            ));
+        }
+        let request = json!({
+            "apiVersion": "1.0",
+            "context": "smart-home-system-ready",
+            "method": "events:configure",
+            "params": {"eventFilterList": [{"topicFilter": SYSTEM_READY_TOPIC}]}
+        });
+        self.send_frame(&Frame::text(serde_json::to_string(&request)?))?;
+        let message = expect_text(self.next_message()?)?;
+        parse_configure_response(&message)?;
+        self.configured = true;
+        Ok(())
+    }
+
+    fn read_system_ready(&mut self) -> Result<AxisSystemReadyEvent, AxisError> {
+        if !self.configured {
+            return Err(AxisError::WebSocket(
+                "event stream must be configured before reading".to_string(),
+            ));
+        }
+        let message = expect_text(self.next_message()?)?;
+        parse_system_ready_event(&message)
+    }
+
+    fn close(&mut self) -> Result<(), AxisError> {
+        if self.closed {
+            return Ok(());
+        }
+        self.send_frame(
+            &Frame::close(Some(1000), "sample complete")
+                .map_err(|error| AxisError::WebSocket(error.to_string()))?,
+        )?;
+        self.closed = true;
+        self.socket.close_transport()
+    }
+}
+
+pub struct AxisEventStreamSupervisor<T, C> {
+    client: AxisClient<T>,
+    connector: C,
+    stream_state: EventStreamState,
+}
+
+impl<T: AxisTransport, C: AxisEventConnector> AxisEventStreamSupervisor<T, C> {
+    pub fn new(client: AxisClient<T>, connector: C, now_ms: u64) -> Self {
+        let config = client.config();
+        let endpoint = format!("{}{EVENT_STREAM_PATH}?sources=events", config.base_url);
+        let spec = EventStreamSpec::new(
+            IntegrationId::trusted(INTEGRATION_ID),
+            config.bridge_id.clone(),
+            EventStreamTransport::WebSocket,
+        )
+        .with_endpoint(endpoint)
+        .with_heartbeat_timeout(DEFAULT_EVENT_STALE_AFTER_MS)
+        .with_stale_after(DEFAULT_EVENT_STALE_AFTER_MS)
+        .with_metadata(Metadata::new("axis.event_topic", SYSTEM_READY_TOPIC));
+        Self {
+            client,
+            connector,
+            stream_state: EventStreamState::new(spec, now_ms),
+        }
+    }
+
+    pub fn stream_state(&self) -> &EventStreamState {
+        &self.stream_state
+    }
+
+    pub fn sample_one_authorized(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+        principal_id: AgentId,
+        installed: &InstalledAxisDevice,
+        observed_at_ms: u64,
+    ) -> Result<InstalledAxisEvent, AxisError> {
+        authorize_read(runtime, principal_id, observed_at_ms)?;
+        if !installed.supports_event_streaming {
+            return Err(AxisError::Validation(
+                "device did not advertise released event-streaming-over-websocket 1.0 support"
+                    .to_string(),
+            ));
+        }
+        self.stream_state.mark_connecting();
+        let result = self.sample_one(installed, runtime, observed_at_ms);
+        if result.is_err() {
+            self.stream_state.mark_disconnected(observed_at_ms);
+        }
+        result
+    }
+
+    fn sample_one(
+        &mut self,
+        installed: &InstalledAxisDevice,
+        runtime: &mut SmartHomeRuntime,
+        observed_at_ms: u64,
+    ) -> Result<InstalledAxisEvent, AxisError> {
+        let token = self.client.issue_websocket_session_token()?;
+        let mut session = self.connector.connect(self.client.config(), &token)?;
+        self.stream_state.mark_connected(observed_at_ms);
+        let event = session
+            .configure_system_ready()
+            .and_then(|()| session.read_system_ready());
+        let close = session.close();
+        let event = match (event, close) {
+            (Err(error), _) => return Err(error),
+            (Ok(_), Err(error)) => return Err(error),
+            (Ok(event), Ok(())) => event,
+        };
+        let native_cursor = event.timestamp_ms.map(|timestamp| timestamp.to_string());
+        let checkpoint = self.stream_state.record_event(
+            EventId::trusted(format!(
+                "axis:system-ready:{}:{}",
+                event.timestamp_ms.unwrap_or(observed_at_ms),
+                u8::from(event.ready)
+            )),
+            native_cursor,
+            observed_at_ms,
+        );
+        install_system_ready_event(runtime, installed, &event, observed_at_ms)?;
+        Ok(InstalledAxisEvent {
+            camera_entity_id: installed.camera_entity_id.clone(),
+            event,
+            checkpoint,
+        })
+    }
 }
 
 pub struct AxisRuntimeIntegration<T> {
@@ -1139,6 +1579,13 @@ pub fn install_snapshot(
     {
         capabilities.push(Capability::camera_ptz());
     }
+    if snapshot.supports_event_streaming() {
+        capabilities.push(Capability::new(
+            CapabilityId::trusted("camera.system_ready"),
+            CapabilityMode::Observe,
+            ValueKind::Boolean,
+        ));
+    }
     runtime.upsert_entity(Entity {
         entity_id: camera_entity_id.clone(),
         device_id: device_id.clone(),
@@ -1164,6 +1611,7 @@ pub fn install_snapshot(
         bridge_id: config.bridge_id.clone(),
         device_id,
         camera_entity_id,
+        supports_event_streaming: snapshot.supports_event_streaming(),
     })
 }
 
@@ -1183,6 +1631,247 @@ fn authorize_read(
             missing_capabilities: decision.missing_capabilities,
         }))
     }
+}
+
+fn websocket_host_header(host: &str, port: u16, scheme: &str) -> String {
+    let host = if host.contains(':') && !host.starts_with('[') {
+        format!("[{host}]")
+    } else {
+        host.to_string()
+    };
+    let default_port = matches!((scheme, port), ("http", 80) | ("https", 443));
+    if default_port {
+        host
+    } else {
+        format!("{host}:{port}")
+    }
+}
+
+fn read_websocket_handshake(reader: &mut dyn Read) -> Result<Vec<u8>, AxisError> {
+    const MAX_HANDSHAKE_BYTES: usize = 16 * 1024;
+    let mut bytes = Vec::new();
+    let mut buffer = [0_u8; 2048];
+    while !bytes.windows(4).any(|window| window == b"\r\n\r\n") {
+        let read = reader
+            .read(&mut buffer)
+            .map_err(|error| AxisError::Io(error.to_string()))?;
+        if read == 0 {
+            return Err(AxisError::WebSocket(
+                "truncated WebSocket upgrade response".to_string(),
+            ));
+        }
+        if read > MAX_HANDSHAKE_BYTES.saturating_sub(bytes.len()) {
+            return Err(AxisError::WebSocket(
+                "WebSocket upgrade response exceeded 16384 bytes".to_string(),
+            ));
+        }
+        bytes.extend_from_slice(&buffer[..read]);
+    }
+    Ok(bytes)
+}
+
+fn expect_text(event: MessageEvent) -> Result<String, AxisError> {
+    match event {
+        MessageEvent::Text(text) => Ok(text),
+        MessageEvent::Binary(_) => Err(AxisError::WebSocket(
+            "Axis event stream returned binary application data".to_string(),
+        )),
+        MessageEvent::Ping(_) | MessageEvent::Pong(_) | MessageEvent::Close(_) => {
+            Err(AxisError::WebSocket(
+                "Axis event stream returned an unexpected control message".to_string(),
+            ))
+        }
+    }
+}
+
+fn parse_configure_response(text: &str) -> Result<(), AxisError> {
+    let value: JsonValue = serde_json::from_str(text)?;
+    let object = exact_object(
+        &value,
+        &["apiVersion", "context", "method", "data"],
+        "configuration response",
+    )?;
+    exact_string(object, "apiVersion", "1.0", "configuration response")?;
+    exact_string(
+        object,
+        "context",
+        "smart-home-system-ready",
+        "configuration response",
+    )?;
+    exact_string(
+        object,
+        "method",
+        "events:configure",
+        "configuration response",
+    )?;
+    if object
+        .get("data")
+        .and_then(JsonValue::as_object)
+        .is_none_or(|data| !data.is_empty())
+    {
+        return Err(AxisError::WebSocket(
+            "Axis event configuration response data must be an empty object".to_string(),
+        ));
+    }
+    Ok(())
+}
+
+fn parse_system_ready_event(text: &str) -> Result<AxisSystemReadyEvent, AxisError> {
+    let value: JsonValue = serde_json::from_str(text)?;
+    let object = exact_object(
+        &value,
+        &["apiVersion", "method", "params"],
+        "event notification",
+    )?;
+    exact_string(object, "apiVersion", "1.0", "event notification")?;
+    exact_string(object, "method", "events:notify", "event notification")?;
+    let params = exact_object(
+        object
+            .get("params")
+            .ok_or(AxisError::MissingField("params"))?,
+        &["notification"],
+        "event params",
+    )?;
+    let notification = params
+        .get("notification")
+        .and_then(JsonValue::as_object)
+        .ok_or(AxisError::MissingField("params.notification"))?;
+    if notification
+        .keys()
+        .any(|key| !matches!(key.as_str(), "timestamp" | "topic" | "message"))
+        || !notification.contains_key("topic")
+        || !notification.contains_key("message")
+    {
+        return Err(AxisError::WebSocket(
+            "Axis event notification has an unexpected shape".to_string(),
+        ));
+    }
+    exact_string(
+        notification,
+        "topic",
+        SYSTEM_READY_TOPIC,
+        "event notification",
+    )?;
+    let timestamp_ms = notification
+        .get("timestamp")
+        .map_or(Ok(None), |timestamp| {
+            timestamp.as_u64().map(Some).ok_or_else(|| {
+                AxisError::WebSocket("event timestamp must be an unsigned integer".to_string())
+            })
+        })?;
+    let message = exact_object(
+        notification
+            .get("message")
+            .ok_or(AxisError::MissingField("notification.message"))?,
+        &["source", "key", "data"],
+        "event message",
+    )?;
+    validate_event_pairs(message.get("source"), "source")?;
+    validate_event_pairs(message.get("key"), "key")?;
+    let data = message
+        .get("data")
+        .and_then(JsonValue::as_object)
+        .ok_or(AxisError::MissingField("notification.message.data"))?;
+    if data.len() != 1 || !data.contains_key("ready") {
+        return Err(AxisError::WebSocket(
+            "SystemReady event data must contain only ready".to_string(),
+        ));
+    }
+    let ready = match data.get("ready").and_then(JsonValue::as_str) {
+        Some("1" | "true") => true,
+        Some("0" | "false") => false,
+        _ => {
+            return Err(AxisError::WebSocket(
+                "SystemReady ready value must be 0, 1, false, or true".to_string(),
+            ))
+        }
+    };
+    Ok(AxisSystemReadyEvent {
+        timestamp_ms,
+        ready,
+    })
+}
+
+fn exact_object<'a>(
+    value: &'a JsonValue,
+    keys: &[&str],
+    label: &str,
+) -> Result<&'a JsonMap<String, JsonValue>, AxisError> {
+    let object = value
+        .as_object()
+        .ok_or_else(|| AxisError::WebSocket(format!("Axis {label} must be an object")))?;
+    if object.len() != keys.len() || keys.iter().any(|key| !object.contains_key(*key)) {
+        return Err(AxisError::WebSocket(format!(
+            "Axis {label} has an unexpected shape"
+        )));
+    }
+    Ok(object)
+}
+
+fn exact_string(
+    object: &JsonMap<String, JsonValue>,
+    key: &str,
+    expected: &str,
+    label: &str,
+) -> Result<(), AxisError> {
+    if object.get(key).and_then(JsonValue::as_str) != Some(expected) {
+        return Err(AxisError::WebSocket(format!(
+            "Axis {label} has an unexpected {key}"
+        )));
+    }
+    Ok(())
+}
+
+fn validate_event_pairs(value: Option<&JsonValue>, label: &str) -> Result<(), AxisError> {
+    let pairs = value
+        .and_then(JsonValue::as_object)
+        .ok_or_else(|| AxisError::WebSocket(format!("event {label} must be an object")))?;
+    if pairs.len() > 32
+        || pairs.iter().any(|(key, value)| {
+            key.is_empty()
+                || key.len() > 128
+                || value.as_str().is_none_or(|value| value.len() > 1024)
+        })
+    {
+        return Err(AxisError::WebSocket(format!(
+            "event {label} pairs exceed their fixed bounds"
+        )));
+    }
+    Ok(())
+}
+
+fn install_system_ready_event(
+    runtime: &mut SmartHomeRuntime,
+    installed: &InstalledAxisDevice,
+    event: &AxisSystemReadyEvent,
+    observed_at_ms: u64,
+) -> Result<(), AxisError> {
+    let mut entity = runtime
+        .registry()
+        .entity(&installed.camera_entity_id)
+        .cloned()
+        .ok_or_else(|| AxisError::UnknownEntity(installed.camera_entity_id.clone()))?;
+    entity.state = Some(StateSnapshot {
+        entity_id: installed.camera_entity_id.clone(),
+        value: Value::Object(vec![
+            ("system_ready".to_string(), Value::Bool(event.ready)),
+            (
+                "event_timestamp_ms".to_string(),
+                event
+                    .timestamp_ms
+                    .and_then(|value| i64::try_from(value).ok())
+                    .map(Value::Integer)
+                    .unwrap_or(Value::Null),
+            ),
+        ]),
+        source: StateSource::EventStream,
+        observed_at_ms,
+        received_at_ms: observed_at_ms,
+        expires_at_ms: Some(observed_at_ms.saturating_add(DEFAULT_EVENT_STALE_AFTER_MS)),
+        confidence: StateConfidence::Confirmed,
+    });
+    runtime.upsert_entity(entity)?;
+    Ok(())
 }
 
 fn parse_snapshot(properties: &JsonValue, apis: &JsonValue) -> Result<AxisSnapshot, AxisError> {
@@ -1909,6 +2598,7 @@ mod tests {
 
     const DEVICE_INFO: &str = r#"{"apiVersion":"1.0","context":"smart-home","data":{"propertyList":{"Brand":"AXIS","ProdFullName":"AXIS Q1785-LE Network Camera","ProdNbr":"Q1785-LE","ProdType":"Network Camera","SerialNumber":"ACCC8EAF8C30","Version":"12.1.0"}}}"#;
     const API_LIST: &str = r#"{"apiVersion":"1.0","context":"smart-home","data":{"apiList":[{"id":"systemready","version":"1.0","status":"released"},{"id":"basic-device-info","version":"1.2","status":"released"}]}}"#;
+    const EVENT_API_LIST: &str = r#"{"apiVersion":"1.0","context":"smart-home","data":{"apiList":[{"id":"event-streaming-over-websocket","version":"1.0","status":"released"},{"id":"basic-device-info","version":"1.2","status":"released"}]}}"#;
     const PTZ_API_LIST: &str = r#"{"apiVersion":"1.0","context":"smart-home","data":{"apiList":[{"id":"ptz-control","version":"1.0","status":"released"},{"id":"basic-device-info","version":"1.2","status":"released"}]}}"#;
     const VIDEO_CAPABILITY: &str = "root.Properties.API.HTTP.Version=3\nroot.Properties.Image.Format=jpeg,mjpeg,h264\nroot.Image.NbrOfConfigs=1\nroot.Image.I0.Enabled=yes\n";
 
@@ -2463,5 +3153,270 @@ mod tests {
             decode_http_response(&response("{}"), 1),
             Err(AxisError::ResponseTooLarge { limit: 1 })
         ));
+    }
+
+    #[test]
+    fn event_parser_accepts_only_the_fixed_system_ready_shape() {
+        let event = parse_system_ready_event(
+            r#"{"apiVersion":"1.0","method":"events:notify","params":{"notification":{"timestamp":1639385866198,"topic":"tns1:Device/tnsaxis:Status/tnsaxis:SystemReady","message":{"source":{},"key":{},"data":{"ready":"1"}}}}}"#,
+        )
+        .unwrap();
+        assert_eq!(event.timestamp_ms, Some(1_639_385_866_198));
+        assert!(event.ready);
+
+        for invalid in [
+            r#"{"apiVersion":"1.0","method":"events:notify","params":{"notification":{"topic":"tns1:Device/tnsaxis:IO/VirtualPort","message":{"source":{},"key":{},"data":{"ready":"1"}}}}}"#,
+            r#"{"apiVersion":"1.0","method":"events:notify","params":{"notification":{"topic":"tns1:Device/tnsaxis:Status/tnsaxis:SystemReady","message":{"source":{},"key":{},"data":{"ready":"maybe"}}}}}"#,
+            r#"{"apiVersion":"1.0","method":"events:notify","params":{"notification":{"topic":"tns1:Device/tnsaxis:Status/tnsaxis:SystemReady","message":{"source":{},"key":{},"data":{"ready":"1","extra":"secret"}}}}}"#,
+        ] {
+            assert!(matches!(
+                parse_system_ready_event(invalid),
+                Err(AxisError::WebSocket(_))
+            ));
+        }
+    }
+
+    #[derive(Debug)]
+    struct TokenTransport(Arc<AtomicUsize>);
+
+    impl AxisTransport for TokenTransport {
+        fn execute(
+            &mut self,
+            plan: &LocalHttpRequestPlan,
+            _credentials: &AxisCredentials,
+            _session_cookie: Option<&str>,
+        ) -> Result<AxisHttpResponse, AxisError> {
+            assert!(plan.url.ends_with(WEBSOCKET_SESSION_PATH));
+            self.0.fetch_add(1, Ordering::SeqCst);
+            Ok(AxisHttpResponse::new(b"short-lived-token\n".to_vec()))
+        }
+    }
+
+    struct FakeEventConnector {
+        calls: Arc<AtomicUsize>,
+        lifecycle: Arc<Mutex<Vec<&'static str>>>,
+    }
+
+    struct FakeEventSession {
+        lifecycle: Arc<Mutex<Vec<&'static str>>>,
+    }
+
+    impl AxisEventConnector for FakeEventConnector {
+        type Session = FakeEventSession;
+
+        fn connect(
+            &mut self,
+            config: &AxisConfig,
+            token: &AxisWebSocketSessionToken,
+        ) -> Result<Self::Session, AxisError> {
+            assert_eq!(config.bridge_id, BridgeId::trusted("axis.event-test"));
+            assert_eq!(token.expose(), "short-lived-token");
+            self.calls.fetch_add(1, Ordering::SeqCst);
+            self.lifecycle.lock().unwrap().push("connect");
+            Ok(FakeEventSession {
+                lifecycle: Arc::clone(&self.lifecycle),
+            })
+        }
+    }
+
+    impl AxisEventSession for FakeEventSession {
+        fn configure_system_ready(&mut self) -> Result<(), AxisError> {
+            self.lifecycle.lock().unwrap().push("configure");
+            Ok(())
+        }
+
+        fn read_system_ready(&mut self) -> Result<AxisSystemReadyEvent, AxisError> {
+            self.lifecycle.lock().unwrap().push("read");
+            Ok(AxisSystemReadyEvent {
+                timestamp_ms: Some(7_500),
+                ready: true,
+            })
+        }
+
+        fn close(&mut self) -> Result<(), AxisError> {
+            self.lifecycle.lock().unwrap().push("close");
+            Ok(())
+        }
+    }
+
+    fn event_client(calls: Arc<AtomicUsize>) -> AxisClient<TokenTransport> {
+        AxisClient::new(
+            AxisConfig::new(
+                BridgeId::trusted("axis.event-test"),
+                "http://127.0.0.1",
+                VaultRef::trusted("vault://axis/event-test"),
+            )
+            .unwrap(),
+            credentials(),
+            TokenTransport(calls),
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn supervised_event_sample_authorizes_before_io_and_normalizes_state() {
+        let transport_calls = Arc::new(AtomicUsize::new(0));
+        let connector_calls = Arc::new(AtomicUsize::new(0));
+        let lifecycle = Arc::new(Mutex::new(Vec::new()));
+        let connector = FakeEventConnector {
+            calls: Arc::clone(&connector_calls),
+            lifecycle: Arc::clone(&lifecycle),
+        };
+        let mut supervisor = AxisEventStreamSupervisor::new(
+            event_client(Arc::clone(&transport_calls)),
+            connector,
+            1_000,
+        );
+        let mut runtime = SmartHomeRuntime::new();
+        let snapshot = parse_snapshot(
+            &serde_json::from_str(DEVICE_INFO).unwrap(),
+            &serde_json::from_str(EVENT_API_LIST).unwrap(),
+        )
+        .unwrap();
+        let installed =
+            install_snapshot(&mut runtime, supervisor.client.config(), &snapshot, 2_000).unwrap();
+
+        assert!(matches!(
+            supervisor.sample_one_authorized(
+                &mut runtime,
+                AgentId::trusted("agent:axis-event-denied"),
+                &installed,
+                7_000,
+            ),
+            Err(AxisError::Runtime(_))
+        ));
+        assert_eq!(transport_calls.load(Ordering::SeqCst), 0);
+        assert_eq!(connector_calls.load(Ordering::SeqCst), 0);
+
+        let principal = AgentId::trusted("agent:axis-event");
+        grant(&mut runtime, &principal);
+        let sampled = supervisor
+            .sample_one_authorized(&mut runtime, principal, &installed, 8_000)
+            .unwrap();
+        assert!(sampled.event.ready);
+        assert_eq!(transport_calls.load(Ordering::SeqCst), 1);
+        assert_eq!(connector_calls.load(Ordering::SeqCst), 1);
+        assert_eq!(
+            *lifecycle.lock().unwrap(),
+            vec!["connect", "configure", "read", "close"]
+        );
+        assert_eq!(supervisor.stream_state().checkpoint(), sampled.checkpoint);
+        let state = runtime
+            .registry()
+            .entity(&installed.camera_entity_id)
+            .unwrap()
+            .state
+            .as_ref()
+            .unwrap();
+        assert_eq!(state.source, StateSource::EventStream);
+        assert_eq!(state.expires_at_ms, Some(128_000));
+        assert_eq!(
+            object_field(&state.value, "system_ready"),
+            Some(&Value::Bool(true))
+        );
+    }
+
+    #[test]
+    fn websocket_session_tokens_are_redacted_and_url_safe() {
+        let token = AxisWebSocketSessionToken::parse(b"token-123\n").unwrap();
+        assert_eq!(
+            format!("{token:?}"),
+            "AxisWebSocketSessionToken([REDACTED])"
+        );
+        assert!(matches!(
+            AxisWebSocketSessionToken::parse(b"token&sources=other"),
+            Err(AxisError::Authentication(_))
+        ));
+    }
+
+    #[test]
+    fn loopback_websocket_connector_uses_exact_target_configures_reads_and_closes() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let handle = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            stream
+                .set_read_timeout(Some(Duration::from_secs(2)))
+                .unwrap();
+            let mut request = Vec::new();
+            let mut buffer = [0_u8; 4096];
+            while !request.windows(4).any(|window| window == b"\r\n\r\n") {
+                let read = stream.read(&mut buffer).unwrap();
+                request.extend_from_slice(&buffer[..read]);
+            }
+            let request = String::from_utf8(request).unwrap();
+            assert!(request.starts_with(
+                "GET /vapix/ws-data-stream?wssession=wire-token&sources=events HTTP/1.1\r\n"
+            ));
+            assert!(!request.contains("Sec-WebSocket-Extensions"));
+            let key = request_header(&request, "Sec-WebSocket-Key").unwrap();
+            let accept = websocket_core::derive_accept(key);
+            stream
+                .write_all(
+                    format!(
+                        "HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: {accept}\r\n\r\n"
+                    )
+                    .as_bytes(),
+                )
+                .unwrap();
+
+            let mut decoder = FrameDecoder::new(EndpointRole::Server, 64 * 1024);
+            let mut assembler = MessageAssembler::new(64 * 1024);
+            let configure = loop {
+                let read = stream.read(&mut buffer).unwrap();
+                let mut found = None;
+                for frame in decoder.push(&buffer[..read]).unwrap() {
+                    if let Some(MessageEvent::Text(text)) = assembler.push(frame).unwrap() {
+                        found = Some(text);
+                    }
+                }
+                if let Some(text) = found {
+                    break text;
+                }
+            };
+            let configure: JsonValue = serde_json::from_str(&configure).unwrap();
+            assert_eq!(
+                configure.pointer("/method").and_then(JsonValue::as_str),
+                Some("events:configure")
+            );
+            assert_eq!(
+                configure
+                    .pointer("/params/eventFilterList/0/topicFilter")
+                    .and_then(JsonValue::as_str),
+                Some(SYSTEM_READY_TOPIC)
+            );
+            let ack = Frame::text(
+                r#"{"apiVersion":"1.0","context":"smart-home-system-ready","method":"events:configure","data":{}}"#,
+            );
+            let event = Frame::text(
+                r#"{"apiVersion":"1.0","method":"events:notify","params":{"notification":{"timestamp":9000,"topic":"tns1:Device/tnsaxis:Status/tnsaxis:SystemReady","message":{"source":{},"key":{},"data":{"ready":"1"}}}}}"#,
+            );
+            let mut outbound = encode_frame(EndpointRole::Server, &ack, None).unwrap();
+            outbound.extend_from_slice(&encode_frame(EndpointRole::Server, &event, None).unwrap());
+            stream.write_all(&outbound).unwrap();
+
+            let mut close_decoder = FrameDecoder::new(EndpointRole::Server, 256);
+            loop {
+                let read = stream.read(&mut buffer).unwrap();
+                let frames = close_decoder.push(&buffer[..read]).unwrap();
+                if frames
+                    .iter()
+                    .any(|frame| frame.opcode() == websocket_core::Opcode::Close)
+                {
+                    break;
+                }
+            }
+        });
+
+        let config = config(port);
+        let token = AxisWebSocketSessionToken::parse(b"wire-token").unwrap();
+        let mut connector = AxisWebSocketConnector::default();
+        let mut session = connector.connect(&config, &token).unwrap();
+        session.configure_system_ready().unwrap();
+        let event = session.read_system_ready().unwrap();
+        assert_eq!(event.timestamp_ms, Some(9_000));
+        assert!(event.ready);
+        session.close().unwrap();
+        handle.join().unwrap();
     }
 }

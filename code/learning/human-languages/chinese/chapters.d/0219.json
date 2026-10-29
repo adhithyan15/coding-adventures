@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Cloudy Tomorrow",
+  "label": "ch:zh-cloudy-tomorrow",
+  "canDo": "I can say there will be cloud, a cloudy day, a cold snap, what the temperature is and when it will clear.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C219-fangqing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say there will be cloud, a cloudy day, a cold snap, what the temperature is and when it will clear.",
+    "assesses": [
+      "ZH-LEX-C219-CLOUD219-03",
+      "ZH-LEX-C219-CLOUD219-04",
+      "ZH-LEX-C219-CLOUD219-05"
+    ]
+  }
+}

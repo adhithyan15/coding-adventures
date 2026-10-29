@@ -23,7 +23,7 @@
 //!     │    2. TW05-B gate    — only for (typed lenient|strict) modules
 //!     │    3. lower          — walk the CST through borrowed views,
 //!     │                        after refusing reserved names
-//!     │                        (`__lisp_*`, `__dyn_*`; see RESERVED_PREFIXES)
+//!     │                        (every `__` name; see RESERVED_PREFIXES)
 //! IIRModule  (functions: top-level fns + anonymous lambdas + main)
 //!     │
 //!     ▼  vm-core / jit-core
@@ -135,7 +135,7 @@ mod free_vars;
 mod reserved_names;
 
 pub use check_cst::check_cst;
-pub use reserved_names::{reserved_prefix, RESERVED_PREFIXES};
+pub use reserved_names::{reserved_prefix, RESERVED_NAMESPACE, RESERVED_PREFIXES};
 pub use compiler::Compiler;
 pub use errors::TwigCompileError;
 
@@ -512,7 +512,7 @@ fn set_function_type_status(func: &mut interpreter_ir::function::IIRFunction) {
 mod tests {
     use super::*;
     use interpreter_ir::{
-        function::FunctionTypeStatus,
+        function::{FunctionTypeStatus, IIRFunction},
         instr::{IIRInstr, Operand},
     };
 
@@ -1089,6 +1089,1306 @@ mod tests {
         let i = fn_instrs("(define (f x) x)", "f");
         let ret = i.iter().find(|x| x.op == "ret").unwrap();
         assert_eq!(ret.srcs[0], Operand::Var("x".into()));
+    }
+
+    // ---- Lexical shadowing in call position (#18435) ------------------
+    //
+    // The innermost binding of a name wins, in call position exactly as
+    // in value position.  A parameter, `let`/`let*` binding, lambda
+    // parameter or `match` binding named like a top-level function, an
+    // extern, or a builtin must be called through `call_closure` on the
+    // local's value — never compiled to a direct `call <global>` (or a
+    // `call_builtin`, or a typed E4 string op) behind the local's back.
+    //
+    //   (define (helper x) (* x 100))
+    //   (define (f helper) (helper 1))     ; `helper` here is the PARAMETER
+    //   (f (lambda (x) (+ x 1)))           ; ⇒ 2, not 100
+    //
+    // These tests pin the IIR shape; `twig-vm`'s dispatch tests run the
+    // same programs end to end and check the values.
+
+    /// True when `instrs` holds a direct `call <name>`.
+    fn has_direct_call(instrs: &[IIRInstr], name: &str) -> bool {
+        instrs.iter().any(|i| {
+            i.op == "call" && matches!(&i.srcs[0], Operand::Var(s) if s == name)
+        })
+    }
+
+    /// True when `instrs` holds a `call_closure` whose handle is the
+    /// register (or local) `name`.
+    fn has_closure_call_on(instrs: &[IIRInstr], name: &str) -> bool {
+        instrs.iter().any(|i| {
+            i.op == "call_closure" && matches!(&i.srcs[0], Operand::Var(s) if s == name)
+        })
+    }
+
+    /// The instructions of the first anonymous lambda in `src`.
+    fn first_lambda(src: &str) -> IIRFunction {
+        module(src)
+            .functions
+            .into_iter()
+            .find(|f| f.name.starts_with("__lambda"))
+            .expect("module must contain a lambda")
+    }
+
+    const HELPER: &str = "(define (helper x) (* x 100))";
+
+    #[test]
+    fn parameter_shadows_global_function_in_call_position() {
+        let src = format!("{HELPER} (define (f helper) (helper 1)) (f (lambda (x) (+ x 1)))");
+        let f = fn_instrs(&src, "f");
+        assert!(!has_direct_call(&f, "helper"), "param must not compile to `call helper`: {f:?}");
+        assert!(has_closure_call_on(&f, "helper"), "param must be called via call_closure: {f:?}");
+    }
+
+    #[test]
+    fn let_binding_shadows_global_function_in_call_position() {
+        let src = format!("{HELPER} (let ((helper (lambda (x) (+ x 1)))) (helper 1))");
+        let main = main_instrs(&src);
+        assert!(!has_direct_call(&main, "helper"), "{main:?}");
+        assert!(has_closure_call_on(&main, "helper"), "{main:?}");
+    }
+
+    #[test]
+    fn let_star_binding_shadows_global_function_in_call_position() {
+        let src = format!("{HELPER} (let* ((helper (lambda (x) (+ x 1)))) (helper 1))");
+        let main = main_instrs(&src);
+        assert!(!has_direct_call(&main, "helper"), "{main:?}");
+        assert!(has_closure_call_on(&main, "helper"), "{main:?}");
+    }
+
+    #[test]
+    fn lambda_parameter_shadows_global_function_in_call_position() {
+        let src = format!("{HELPER} ((lambda (helper) (helper 1)) (lambda (x) (+ x 1)))");
+        let lam = first_lambda(&src);
+        assert!(!has_direct_call(&lam.instructions, "helper"), "{:?}", lam.instructions);
+        assert!(has_closure_call_on(&lam.instructions, "helper"), "{:?}", lam.instructions);
+    }
+
+    #[test]
+    fn match_binding_shadows_global_function_in_call_position() {
+        let src = format!("{HELPER} (match (lambda (x) (+ x 1)) (helper (helper 1)))");
+        let main = main_instrs(&src);
+        assert!(!has_direct_call(&main, "helper"), "{main:?}");
+        assert!(has_closure_call_on(&main, "helper"), "{main:?}");
+    }
+
+    #[test]
+    fn shadowing_local_is_captured_by_an_inner_lambda() {
+        // The inner lambda's `helper` is the enclosing PARAMETER, so the
+        // free-variable pass must capture it (not skip it as a global) and
+        // the lambda body must call the captured closure.
+        let src = format!("{HELPER} (define (mk helper) (lambda (y) (helper y)))");
+        let lam = first_lambda(&src);
+        assert!(
+            lam.params.iter().any(|(p, _)| p == "helper"),
+            "inner lambda must capture the shadowing param: {:?}",
+            lam.params
+        );
+        assert!(!has_direct_call(&lam.instructions, "helper"), "{:?}", lam.instructions);
+        assert!(has_closure_call_on(&lam.instructions, "helper"), "{:?}", lam.instructions);
+    }
+
+    #[test]
+    fn shadowing_local_referenced_as_a_value_in_inner_lambda_is_captured() {
+        // Value position inside a nested lambda: `helper` must be the
+        // captured parameter, not a fresh `alloc_closure("helper")`.
+        let src = format!("{HELPER} (define (mk helper) (lambda () helper))");
+        let lam = first_lambda(&src);
+        assert!(lam.params.iter().any(|(p, _)| p == "helper"), "{:?}", lam.params);
+        assert!(
+            !lam.instructions.iter().any(|i| i.op == "alloc_closure"),
+            "must not wrap the global: {:?}",
+            lam.instructions
+        );
+    }
+
+    #[test]
+    fn global_call_resumes_once_the_shadowing_let_ends() {
+        // Scope ends with the `let` body: the later `(helper 1)` is the
+        // global function again and stays on the fast direct-call path.
+        let src = format!("{HELPER} (begin (let ((helper 5)) helper) (helper 1))");
+        let main = main_instrs(&src);
+        assert!(has_direct_call(&main, "helper"), "{main:?}");
+        assert!(!main.iter().any(|i| i.op == "call_closure"), "{main:?}");
+    }
+
+    #[test]
+    fn shadowed_global_return_type_is_not_stamped_on_closure_call() {
+        // `helper` returns a statically-known i64.  A shadowing local's call
+        // result is unknown, so it must stay `any` — not inherit the
+        // global's `fn_return_types` entry.
+        let src = "(define (helper x) 7) (define (f helper) (helper 1))";
+        let f = fn_instrs(src, "f");
+        let cc = f.iter().find(|i| i.op == "call_closure").expect("call_closure");
+        assert_eq!(cc.type_hint, "any");
+    }
+
+    #[test]
+    fn parameter_shadows_extern_function_in_call_position() {
+        let cst = parse_to_ast("(define (f double) (double 1))").unwrap();
+        let m = compile_ast_with_externs(&cst, "test", &["double"]).unwrap();
+        let f = &m.functions.iter().find(|f| f.name == "f").unwrap().instructions;
+        assert!(!has_direct_call(f, "double"), "{f:?}");
+        assert!(has_closure_call_on(f, "double"), "{f:?}");
+    }
+
+    #[test]
+    fn parameter_shadows_builtin_in_call_position() {
+        let f = fn_instrs("(define (f car) (car 1))", "f");
+        assert!(
+            !f.iter().any(|i| i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s) if s == "car")),
+            "{f:?}"
+        );
+        assert!(has_closure_call_on(&f, "car"), "{f:?}");
+    }
+
+    #[test]
+    fn local_shadowing_string_builtin_skips_typed_e4_lowering() {
+        // `string-length` is a local closure here, so no `str_len` may be
+        // emitted for it.
+        let main =
+            main_instrs("(let ((string-length (lambda (s) 99))) (string-length \"abc\"))");
+        assert!(!main.iter().any(|i| i.op == "str_len"), "{main:?}");
+        assert!(has_closure_call_on(&main, "string-length"), "{main:?}");
+
+        // …and a shadowed `string-append` nested under the real
+        // `string-length` must not be folded into `str_concat`.
+        let main = main_instrs(
+            "(let ((string-append (lambda (a b) \"zzz\"))) \
+             (string-length (string-append \"a\" \"b\")))",
+        );
+        assert!(!main.iter().any(|i| i.op == "str_concat"), "{main:?}");
+        assert!(has_closure_call_on(&main, "string-append"), "{main:?}");
+    }
+
+    #[test]
+    fn shadowed_call_in_main_is_not_direct_call_string_evidence() {
+        // The only `(strlen "lit")` in `main` calls the LOCAL closure, so it
+        // says nothing about the global `strlen`'s parameter: the param must
+        // stay dynamic (`any`), not be seeded as `str`.
+        let src = "(define (strlen s) (string-length s)) \
+                   (let ((strlen (lambda (x) 0))) (strlen \"HELLO\"))";
+        let m = module(src);
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(strlen.params, vec![("s".to_string(), "any".to_string())]);
+
+        // Control: the same call without the shadow does seed `str`.
+        let m = module("(define (strlen s) (string-length s)) (strlen \"HELLO\")");
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(strlen.params, vec![("s".to_string(), "str".to_string())]);
+    }
+
+    #[test]
+    fn shadowed_string_append_is_not_static_string_evidence() {
+        // `(string-append "A" "B")` is a call to a LOCAL closure returning an
+        // integer, so it is not static string evidence for `strlen`'s param.
+        let src = "(define (strlen s) (string-length s)) \
+                   (let ((string-append (lambda (a b) 5))) (strlen (string-append \"A\" \"B\")))";
+        let m = module(src);
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(strlen.params, vec![("s".to_string(), "any".to_string())]);
+    }
+
+    #[test]
+    fn let_shadowing_typed_string_value_global_is_not_a_known_string() {
+        // `s` is a typed `str` value-global living in a `main` register, but
+        // inside the `let` the name means the local integer 5.  The E4 path
+        // must not lower `(string-length s)` to `str_len` on it.
+        let main = main_instrs("(define s \"HELLO\") (let ((s 5)) (string-length s))");
+        assert!(!main.iter().any(|i| i.op == "str_len"), "{main:?}");
+    }
+
+    // ---- Call-site string-parameter inference must be sound -----------
+    //
+    // `(define (strlen x) (string-length x)) (strlen "abc")` seeds `x : str`
+    // so `strlen`'s body lowers to the typed `str_len`.  That is only sound
+    // if EVERY value that can reach `x` is a string.  Each program below
+    // also passes an integer to `strlen` by a route the old `main`-only
+    // pre-pass could not see.  `x` must then stay dynamic (`any`) and the
+    // body must keep the dynamic `string-length` builtin.
+
+    /// Assert `strlen`'s parameter stayed dynamic and its body has no `str_len`.
+    fn assert_strlen_param_dynamic(src: &str) {
+        let m = module(src);
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(
+            strlen.params,
+            vec![("x".to_string(), "any".to_string())],
+            "x must not be inferred `str` for: {src}"
+        );
+        assert!(
+            !strlen.instructions.iter().any(|i| i.op == "str_len"),
+            "strlen must not lower to str_len for: {src}\n{:?}",
+            strlen.instructions
+        );
+    }
+
+    const STRLEN: &str = "(define (strlen x) (string-length x)) (strlen \"abc\")";
+
+    #[test]
+    fn string_param_inference_control_still_infers_str() {
+        // Control: with only string actuals the fast path still fires.
+        let m = module(STRLEN);
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(strlen.params, vec![("x".to_string(), "str".to_string())]);
+    }
+
+    #[test]
+    fn string_param_inference_sees_let_alias_of_the_function() {
+        // `strlen` escapes into a `let` binding that is then called with 5.
+        assert_strlen_param_dynamic(&format!("{STRLEN} (let ((strlen strlen)) (strlen 5))"));
+        assert_strlen_param_dynamic(&format!("{STRLEN} (let* ((f strlen)) (f 5))"));
+    }
+
+    #[test]
+    fn string_param_inference_sees_calls_in_other_function_bodies() {
+        assert_strlen_param_dynamic(
+            "(define (strlen x) (string-length x)) (define (g) (strlen 5)) (strlen \"abc\") (g)",
+        );
+    }
+
+    #[test]
+    fn string_param_inference_sees_value_define_alias() {
+        assert_strlen_param_dynamic(&format!("{STRLEN} (define h strlen) (h 5)"));
+    }
+
+    #[test]
+    fn string_param_inference_sees_calls_inside_lambdas_and_match_arms() {
+        assert_strlen_param_dynamic(&format!("{STRLEN} ((lambda () (strlen 5)))"));
+        assert_strlen_param_dynamic(&format!("{STRLEN} (match 1 (n (strlen n)))"));
+    }
+
+    #[test]
+    fn string_param_inference_sees_function_passed_as_an_argument() {
+        assert_strlen_param_dynamic(&format!("{STRLEN} (map strlen (list 1 2))"));
+    }
+
+    #[test]
+    fn string_param_inference_sees_exported_functions() {
+        // Another module may import `strlen` and call it with anything.
+        assert_strlen_param_dynamic(&format!("(module m (export strlen)) {STRLEN}"));
+    }
+
+    // ---- Scoped locals must not leak type facts -------------------------
+    //
+    // A `let` / `let*` / `match` binding records what it knows about its
+    // value's type in `FnCtx::var_types`, keyed by the binding's register.
+    // Those facts belong to the binding: once the scope closes the name must
+    // read the outer binding's register again (with its own type), and an
+    // inner binding never inherits an outer one's type.
+
+    #[test]
+    fn let_bound_string_type_does_not_leak_after_the_let() {
+        // The inner `x` is a string; after the `let` the name means the
+        // integer parameter again, so `(string-length x)` must stay dynamic.
+        let src = "(define (f x) (begin (let ((x (string-append \"a\" \"b\"))) x) \
+                   (string-length x))) (f 5)";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
+
+        let src = "(define (f x) (begin (let* ((x (string-append \"a\" \"b\"))) x) \
+                   (string-length x))) (f 5)";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
+    }
+
+    #[test]
+    fn literal_string_let_type_does_not_leak_after_the_let() {
+        let src = "(define (f x) (begin (let ((x \"ab\")) x) (string-length x))) (f 5)";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
+    }
+
+    #[test]
+    fn inner_binding_does_not_inherit_outer_type() {
+        // Outer `x` is a known `i64`; the inner `x` is whatever `(car l)`
+        // returns, so `(+ x 1)` must not be the typed `add`.
+        let src = "(define (f l) (let ((x 1)) (let ((x (car l))) (+ x 1)))) (f (list 2))";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "add"), "{f:?}");
+    }
+
+    #[test]
+    fn inner_non_string_binding_hides_outer_string_alias() {
+        // The outer `s` is an E4 string held in an alias register; the
+        // inner `s` is 5.  A read of `s` inside the inner `let` must be the
+        // inner integer, not the outer alias (which `main` would then
+        // return as a `str`).
+        let main = main_instrs("(let ((s (string-append \"a\" \"b\"))) (let ((s 5)) s))");
+        let ret = main.iter().rfind(|i| i.op == "ret").unwrap();
+        assert_eq!(ret.srcs[0], Operand::Var("s".into()), "{main:?}");
+        assert_ne!(ret.type_hint, "str", "{main:?}");
+    }
+
+    #[test]
+    fn match_binding_type_does_not_leak_after_the_arm() {
+        // The arm binds `x` to a string; after the `match` the name is the
+        // integer parameter again, so `(string-length x)` must stay dynamic.
+        let src = "(define (f x) (begin (match \"ab\" (x x)) (string-length x))) (f 5)";
+        let f = fn_instrs(src, "f");
+        assert!(!f.iter().any(|i| i.op == "str_len"), "{f:?}");
+    }
+
+    // ---- A nested same-name binding never touches the outer register ---
+    //
+    // These programs come from the #18435 security reviews.  While
+    // same-name locals shared one register, a nested binding overwrote the
+    // outer binding's register, and the only safe answer was to forget the
+    // outer `str` type (no `str_len`).  Now every binding has its own
+    // register (#18439): the outer string is still in its register after the
+    // inner scope, so the typed `str_len` is both emitted and sound.  Each
+    // test checks both halves — the fast path fires, and every typed op
+    // reads a register written only with its kind.
+
+    /// `func` in `src` lowers `string-length` to a typed `str_len`, and every
+    /// typed op in the program is sound.
+    fn assert_sound_str_len_in(src: &str, func: &str) {
+        let instrs = fn_instrs(src, func);
+        assert!(
+            instrs.iter().any(|i| i.op == "str_len"),
+            "{func} should keep the typed str_len for: {src}\n{instrs:?}"
+        );
+        assert_registers_sound(src);
+    }
+
+    /// Assert function `func` in `src` has no typed `str_len`.
+    fn assert_no_str_len_in(src: &str, func: &str) {
+        let instrs = fn_instrs(src, func);
+        assert!(
+            !instrs.iter().any(|i| i.op == "str_len"),
+            "{func} must not lower to str_len for: {src}\n{instrs:?}"
+        );
+    }
+
+    #[test]
+    fn nested_mov_over_aliased_outer_binding_keeps_param_string() {
+        // Program A from the review: the final `x` is the `str` parameter.
+        assert_sound_str_len_in(
+            "(define (g x) (let ((x (string-append x \"b\"))) (let ((x 5)) x)) \
+             (string-length x)) (g \"a\")",
+            "g",
+        );
+    }
+
+    #[test]
+    fn let_result_register_overwritten_by_nested_binding_is_not_str() {
+        // Program B: `y` is the innermost `x`, 5 — never a string.
+        let src = "(let ((x (string-append \"a\" \"b\"))) \
+                   (let ((y (let ((x 5)) x))) (string-length y)))";
+        assert_no_str_len_in(src, "main");
+        assert_registers_sound(src);
+    }
+
+    #[test]
+    fn match_arm_over_aliased_outer_binding_keeps_param_string() {
+        assert_sound_str_len_in(
+            "(define (g x) (let ((x (string-append x \"b\"))) (match 5 (x x))) \
+             (string-length x)) (g \"a\")",
+            "g",
+        );
+    }
+
+    #[test]
+    fn let_star_rebinding_over_str_param_keeps_param_string() {
+        assert_sound_str_len_in(
+            "(define (g x) (let* ((x x) (x 5)) x) (string-length x)) (g \"a\")",
+            "g",
+        );
+    }
+
+    #[test]
+    fn alias_of_a_param_survives_a_nested_rebinding_of_the_param() {
+        // `y` reads the `str` parameter register `x`; the inner `x` lives in
+        // a register of its own, so `y` is still a string.
+        assert_sound_str_len_in(
+            "(define (g x) (let ((y x)) (begin (let ((x 5)) x) (string-length y)))) (g \"a\")",
+            "g",
+        );
+        assert_sound_str_len_in(
+            "(define (g x) (let ((y x)) (let ((x 5)) (string-length y)))) (g \"a\")",
+            "g",
+        );
+    }
+
+    // ---- A scope's result register outlives the scope ----------------
+    //
+    // `(let ((x "s")) x)` evaluates to register `x` itself, and that value
+    // can be consumed AFTER the name is out of scope.  A later sibling
+    // binding of the same name — here inside an `if` branch that may not
+    // run — must not write register `x` or change its type.  Sibling
+    // bindings therefore get distinct registers too (#18439), and the
+    // register keeps the type its single write recorded.
+
+    #[test]
+    fn sibling_let_in_branch_does_not_type_earlier_let_result() {
+        // 1: the first `+` operand is register `x` holding "s"; the branch's
+        //    `x = 1` must not make it look `i64` to the typed `add`.
+        let main = main_instrs("(define c #f) (+ (let ((x \"s\")) x) (if c (let ((x 1)) x) 3))");
+        assert!(!main.iter().any(|i| i.op == "add"), "{main:?}");
+        assert!(
+            main.iter().any(|i| i.op == "call_builtin"
+                && matches!(&i.srcs[0], Operand::Var(s) if s == "+")),
+            "{main:?}"
+        );
+    }
+
+    #[test]
+    fn sibling_let_in_branch_does_not_type_earlier_let_result_as_str() {
+        // 2: `y` is register `x` holding 1; the branch's `x = "s"` must not
+        //    make `(string-length y)` a typed `str_len`.
+        let main = main_instrs(
+            "(define c #f) (let ((y (let ((x 1)) x)) (z (if c (let ((x \"s\")) 0) 0))) \
+             (string-length y))",
+        );
+        assert!(!main.iter().any(|i| i.op == "str_len"), "{main:?}");
+    }
+
+    #[test]
+    fn later_let_in_branch_does_not_retype_value_global_register() {
+        // 3: `g` lives in register `x` (holding "abc"); the branch's `x = 5`
+        //    must not make `(+ g 1)` a typed `add`.
+        let main = main_instrs(
+            "(define g (let ((x \"abc\")) x)) (define c #f) (if c (let ((x 5)) x) 0) (+ g 1)",
+        );
+        assert!(!main.iter().any(|i| i.op == "add"), "{main:?}");
+    }
+
+    #[test]
+    fn let_returning_its_own_binding_keeps_its_type() {
+        // The first write to a register still keeps its type after the
+        // scope, so this stays a typed `i64` return.
+        let main = main_instrs("(let ((x 1)) x)");
+        let ret = main.iter().rfind(|i| i.op == "ret").unwrap();
+        assert_eq!(ret.srcs[0], Operand::Var("x".into()), "{main:?}");
+        assert_eq!(ret.type_hint, "i64", "{main:?}");
+    }
+
+    // ---- Every binding owns its register (#18439) -----------------------
+    //
+    // A local's IIR register used to be its source name, so a nested
+    // binding of the same name wrote over the outer binding's register:
+    //
+    // ```text
+    // (define (f x) (begin (let ((x 5)) x) x))
+    //   before:  mov x ← 5      ; the PARAMETER x is gone
+    //            ret x          ; → 5
+    //   after:   mov __r1_x ← 5 ; the inner x has its own register
+    //            ret x          ; → the parameter, 1
+    // ```
+    //
+    // Two checks below look at the IR as a whole rather than at one
+    // program's shape:
+    //
+    // * `assert_typed_ops_sound` — every typed op (`str_len`, `add`, …)
+    //   reads only registers whose every writer produced that kind.  This
+    //   is the property the native backends rely on: they trust the hint.
+    // * `assert_binding_registers_written_once` — only the compiler's join
+    //   temporaries (`if` / `and` / `or` / `match` results) may be written by
+    //   more than one instruction, and no instruction writes a parameter.
+
+    /// The operand kinds a typed op trusts, or `None` for dynamic ops.
+    fn typed_operand_kinds(op: &str) -> Option<&'static [&'static str]> {
+        Some(match op {
+            "str_len" => &["str"],
+            "str_concat" | "str_eq" | "str_cmp" => &["str", "str"],
+            "str_index" => &["str", "i64"],
+            "str_slice" => &["str", "i64", "i64"],
+            "add" | "sub" | "mul" | "div" | "cmp_eq" | "cmp_lt" | "cmp_gt" | "cmp_le"
+            | "cmp_ge" => &["i64", "i64"],
+            _ => return None,
+        })
+    }
+
+    /// The kinds `i` trusts its operands to be, if any.
+    ///
+    /// Besides the typed ops above, a `mov` or `ret` with a concrete hint is
+    /// a claim about the register it reads: `mov y ← _or [str]` tells a
+    /// native backend that `_or` holds a string, and `ret _or [i64]` makes
+    /// the function's callers believe it returns one.  Checking those too
+    /// is what catches a wrong join type that flows through a `let` or a
+    /// function return before it reaches a typed op (#18448).
+    fn trusted_operand_kinds(i: &IIRInstr) -> Option<Vec<&str>> {
+        if let Some(kinds) = typed_operand_kinds(&i.op) {
+            return Some(kinds.to_vec());
+        }
+        match i.op.as_str() {
+            "mov" | "ret" if i.type_hint != "any" => Some(vec![i.type_hint.as_str()]),
+            _ => None,
+        }
+    }
+
+    /// Every register a typed op (or typed `mov` / `ret`) reads was only
+    /// ever written with that kind.
+    fn assert_typed_ops_sound(src: &str) {
+        for f in module(src).functions {
+            let mut writers: HashMap<&str, Vec<&str>> = HashMap::new();
+            for (p, ty) in &f.params {
+                writers.entry(p.as_str()).or_default().push(ty.as_str());
+            }
+            for i in &f.instructions {
+                if let Some(d) = &i.dest {
+                    writers.entry(d.as_str()).or_default().push(i.type_hint.as_str());
+                }
+            }
+            for i in &f.instructions {
+                let Some(kinds) = trusted_operand_kinds(i) else { continue };
+                for (src, kind) in i.srcs.iter().zip(kinds.iter()) {
+                    let Operand::Var(r) = src else { continue };
+                    let w = writers.get(r.as_str()).cloned().unwrap_or_default();
+                    assert!(
+                        !w.is_empty() && w.iter().all(|t| t == kind),
+                        "{}: `{}` reads {r} as {kind}, but {r} is written as {w:?}\n\
+                         program: {src:?}\n{:#?}",
+                        f.name,
+                        i.op,
+                        f.instructions
+                    );
+                }
+            }
+        }
+    }
+
+    /// Binding registers have one static writer; parameters have none.
+    fn assert_binding_registers_written_once(src: &str) {
+        const JOIN_TEMP_SUFFIXES: [&str; 4] = ["_ifv", "_and", "_or", "_match_result"];
+        for f in module(src).functions {
+            let mut count: HashMap<&str, usize> = HashMap::new();
+            for (p, _) in &f.params {
+                *count.entry(p.as_str()).or_default() += 1;
+            }
+            for i in &f.instructions {
+                if let Some(d) = &i.dest {
+                    *count.entry(d.as_str()).or_default() += 1;
+                }
+            }
+            for (reg, n) in count {
+                let is_join_temp = reg.starts_with("__t")
+                    && JOIN_TEMP_SUFFIXES.iter().any(|suffix| reg.ends_with(suffix));
+                assert!(
+                    n == 1 || is_join_temp,
+                    "{}: register {reg} has {n} writers\nprogram: {src:?}\n{:#?}",
+                    f.name,
+                    f.instructions
+                );
+            }
+        }
+    }
+
+    /// Both whole-IR checks.
+    fn assert_registers_sound(src: &str) {
+        assert_typed_ops_sound(src);
+        assert_binding_registers_written_once(src);
+    }
+
+    /// Every program from #18439 and its comment, plus nested lambdas, a
+    /// `match` shadowing a parameter, and recursion through a shadow.  The
+    /// twig-vm tests (`dispatch.rs`) run the same programs end to end.
+    const SHADOWING_PROGRAMS: &[&str] = &[
+        // The issue body: value and call position.
+        "(define (f x) (begin (let ((x 5)) x) x)) (f 1)",
+        "(define (f helper) (begin (let ((helper (lambda (x) 0))) (helper 1)) (helper 2))) \
+         (f (lambda (x) (+ x 40)))",
+        // The comment: an alias to a register that a later binding rewrote…
+        "(let* ((x \"abc\") (y x) (x 5)) (string-length y))",
+        "(define (g x) (let ((y x)) (let ((x 5)) (string-length y)))) (g \"abc\")",
+        // …and a capture that ignored the alias.
+        "(let ((s (string-append \"a\" \"b\"))) (string-length ((lambda () s))))",
+        // A sibling scope's result is still live when the next one binds.
+        "(+ (let ((x 1)) x) (begin (let ((x \"s\")) x) 2))",
+        // Nested lambdas capturing a shadowed name.
+        "(define (f x) (let ((x (+ x 10))) ((lambda () ((lambda () x)))))) (f 1)",
+        "(define (f x) (begin (let ((x 5)) x) ((lambda () x)))) (f 1)",
+        "(define (f x) (let ((g (lambda () x))) (let ((x 99)) (+ (g) x)))) (f 1)",
+        "((lambda (x) (+ ((lambda (x) x) 7) x)) 3)",
+        // `match` bindings shadowing a parameter.
+        "(define (f x) (+ (match 5 (x x)) x)) (f 1)",
+        "(union T (A (v : int)) (B)) \
+         (define (f v) (+ (match (A 41) ((A v) v) (_ 0)) v)) (f 1)",
+        // Recursion through shadowed names.
+        "(define (sum n acc) (if (= n 0) acc \
+           (let ((acc (+ acc n))) (let ((n (- n 1))) (sum n acc))))) (sum 4 0)",
+        // Programs from the #18435 / #18449 reviews.
+        "(define (g x) (let ((x (string-append x \"b\"))) (let ((x 5)) x)) \
+         (string-length x)) (g \"a\")",
+        "(let ((x (string-append \"a\" \"b\"))) (let ((y (let ((x 5)) x))) (string-length y)))",
+        "(define (g x) (let ((x (string-append x \"b\"))) (match 5 (x x))) \
+         (string-length x)) (g \"a\")",
+        "(define (g x) (let* ((x x) (x 5)) x) (string-length x)) (g \"a\")",
+        "(define c #f) (+ (let ((x \"s\")) x) (if c (let ((x 1)) x) 3))",
+        "(define g (let ((x \"abc\")) x)) (define c #f) (if c (let ((x 5)) x) 0) (+ g 1)",
+    ];
+
+    #[test]
+    fn shadowing_programs_never_feed_a_typed_op_the_wrong_kind() {
+        for src in SHADOWING_PROGRAMS {
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn inner_let_gets_its_own_register_and_outer_param_survives() {
+        let f = fn_instrs("(define (f x) (begin (let ((x 5)) x) x)) (f 1)", "f");
+        let ret = f.iter().rfind(|i| i.op == "ret").unwrap();
+        assert_eq!(ret.srcs[0], Operand::Var("x".into()), "{f:?}");
+        assert!(
+            !f.iter().any(|i| i.dest.as_deref() == Some("x")),
+            "nothing may write the parameter register: {f:?}"
+        );
+    }
+
+    #[test]
+    fn shadowed_call_resumes_calling_the_parameter() {
+        let f = fn_instrs(
+            "(define (f helper) (begin (let ((helper (lambda (x) 0))) (helper 1)) (helper 2)))",
+            "f",
+        );
+        let calls: Vec<&IIRInstr> = f.iter().filter(|i| i.op == "call_closure").collect();
+        assert_eq!(calls.len(), 2, "{f:?}");
+        assert_ne!(calls[0].srcs[0], Operand::Var("helper".into()), "{f:?}");
+        assert_eq!(calls[1].srcs[0], Operand::Var("helper".into()), "{f:?}");
+    }
+
+    #[test]
+    fn alias_to_rebound_name_keeps_the_typed_string_op_sound() {
+        // The E4 fast path still fires — `y` really is a string — but now on
+        // a register nothing else writes.
+        for src in [
+            "(let* ((x \"abc\") (y x) (x 5)) (string-length y))",
+            "(define (g x) (let ((y x)) (let ((x 5)) (string-length y)))) (g \"abc\")",
+        ] {
+            let m = module(src);
+            assert!(
+                m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == "str_len")),
+                "{src}: {m:#?}"
+            );
+            assert_typed_ops_sound(src);
+        }
+    }
+
+    #[test]
+    fn closure_capture_reads_the_alias_register() {
+        // `s` is an E4 alias of the `str_concat` result; the capture must
+        // pass that register, not the never-written register `s`.
+        let main = main_instrs("(let ((s (string-append \"a\" \"b\"))) ((lambda () s)))");
+        let concat = main.iter().find(|i| i.op == "str_concat").unwrap();
+        let clos = main.iter().find(|i| i.op == "alloc_closure").unwrap();
+        assert_eq!(
+            clos.srcs[1],
+            Operand::Var(concat.dest.clone().unwrap()),
+            "{main:?}"
+        );
+    }
+
+    #[test]
+    fn sibling_scopes_get_distinct_registers() {
+        // The first `let` keeps the source name; the second is renamed so the
+        // first one's result register is not overwritten before the `+`.
+        let main = main_instrs("(+ (let ((x 1)) x) (begin (let ((x \"s\")) x) 2))");
+        let writes = |r: &str| main.iter().filter(|i| i.dest.as_deref() == Some(r)).count();
+        assert_eq!(writes("x"), 1, "{main:?}");
+        assert!(main.iter().any(|i| i.dest.as_deref() == Some("__r1_x")), "{main:?}");
+        assert!(main.iter().any(|i| i.op == "add"), "{main:?}");
+    }
+
+    #[test]
+    fn generated_register_names_cannot_collide_with_user_names() {
+        // Binding registers use the reserved `__r` namespace and temporaries
+        // use reserved `__t` names. Similar single-underscore user names
+        // therefore remain distinct from both.
+        for src in [
+            "(let ((_r1_x 7)) (let ((x 1)) (let ((x 2)) (+ x _r1_x))))",
+            "(let ((x 1)) (let ((x 2)) (let ((_r1_x 7)) (+ x _r1_x))))",
+            "(let ((_n1 \"s\")) (+ 1 (string-length _n1)))",
+            "(define (f _r1) (+ (g) (string-length _r1))) (define (g) 1) (f \"ab\")",
+        ] {
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn duplicate_parameter_names_get_distinct_registers() {
+        let m = module("(define (f x x) x) (f 1 2)");
+        let f = m.functions.iter().find(|f| f.name == "f").unwrap();
+        assert_eq!(f.params[0].0, "x");
+        assert_ne!(f.params[1].0, "x", "{f:?}");
+        let ret = f.instructions.iter().rfind(|i| i.op == "ret").unwrap();
+        assert_eq!(ret.srcs[0], Operand::Var(f.params[1].0.clone()), "{f:?}");
+    }
+
+    // ---- A join temporary keeps only a type every writer agrees on (#18448) --
+    //
+    // `if`, `and`, `or` and `match` each funnel several paths into one
+    // register — a *join temporary* — with one `mov` per path:
+    //
+    // ```text
+    // (or (< 1 2) 5)     mov _or ← cond   [bool]   ; truthy path
+    //                    mov _or ← 5      [i64]    ; falsy path
+    // ```
+    //
+    // The register's type has to be true on *every* path, so it is the
+    // writers' consensus: the common type if they all agree, else none at
+    // all.  `and`, `or` and `match` used to keep whichever type the last
+    // `mov` recorded (`i64` above), so `(+ (or (< 1 2) 5) 1)` became a
+    // typed `add [i64]` on `#t`.  Every writer counts — the `#f` of a
+    // short-circuiting `and`, the truthy test value of an `or`, and the
+    // `nil` a `match` starts from in case no arm matches.
+
+    /// Programs whose join writers DISAGREE.  Each one used to hand a typed
+    /// op, a typed `mov` or a typed `ret` a register holding another kind.
+    /// The twig-vm tests (`dispatch.rs`) run the same shapes end to end.
+    const JOIN_PROGRAMS: &[&str] = &[
+        // The issue body.
+        "(let ((y (or 5 \"s\"))) (string-length y))",
+        "(define c 3) (let ((y (match c (x 5) (_ \"s\")))) (string-length y))",
+        "(+ (or \"s\" 5) 1)",
+        // The issue comment.
+        "(+ (or (< 1 2) 5) 1)",
+        "(let ((s (or (< 1 2) \"abc\"))) (string-length s))",
+        "(union T (A (v : int)) (B)) \
+         (let ((s (match (A 1) ((A v) 7) (_ \"abc\")))) (string-length s))",
+        "(define c #t) (and c 5)",
+        "(define c #t) (let ((y (and c 5))) y)",
+        // A wrong join type escaping through a function's return type.
+        "(define (f) (or (< 1 2) 5)) (+ (f) 1)",
+        "(define (f c) (and c \"abc\")) (string-length (f #t))",
+        "(define (f) (or 7 \"abc\")) (let ((s (f))) (string-length s))",
+        // `or` nested inside `and`, and `and` nested inside `or`.
+        "(let ((y (and (< 1 2) (or (< 1 2) 5)))) y)",
+        "(+ (and (< 1 2) (or (< 2 1) 5) 7) 1)",
+        "(+ (or (and (< 1 2) 5) 6) 1)",
+        "(let ((s (or (and (< 1 2) \"a\") \"b\"))) (string-length s))",
+        // `match`: every arm agrees, but the `nil` initialiser (the value
+        // when no arm matches) does not.
+        "(+ (match 5 (x 1)) 1)",
+        "(union T (A (v : int)) (B)) (+ (match (B) ((A v) 7)) 1)",
+        "(union T (A (v : int)) (B)) \
+         (let ((s (match (B) ((A v) \"abc\")))) (string-length s))",
+        // `#f` short-circuit paths.
+        "(+ (or #f 5) 1)",
+        "(let ((s (or #f 5 \"abc\"))) (string-length s))",
+        "(let ((y (and #f 5))) y)",
+        "(let ((s (and (< 1 2) \"abc\"))) (string-length s))",
+        "(define (f) (and #f 5)) (f)",
+        // Joins inside anonymous lambdas (#18453), which did not compile
+        // before: `free_vars` took the `and` / `or` heads for names.
+        "(let ((f (lambda () (or \"a\" 1)))) (f))",
+        "(let ((f (lambda () (or \"a\" 1)))) (string-length (f)))",
+        "((lambda (c) (+ (and c 5) 1)) #t)",
+        "((lambda (c) (let ((s (or (and c \"a\") 7))) (string-length s))) #t)",
+        "(let ((y 5)) ((lambda () (+ (or #f y) 1))))",
+        "((lambda () ((lambda (x) (+ (or (< x 2) 5) 1)) 1)))",
+        "(define (mk) (lambda (c) (or (and c (< 1 2)) \"s\"))) ((mk) #t)",
+        // `string<?` / `string>?` results in joins: a `bool` like `(< a b)`.
+        "(if (and (string<? \"ALPHA\" \"BETA\") (string>? \"BETA\" \"ALPHA\")) 42 0)",
+        "(+ (or (string<? \"b\" \"a\") 5) 1)",
+        "(let ((y (or (string>? \"a\" \"b\") (< 1 2)))) y)",
+        "(let ((y (if (string<? \"a\" \"b\") (string>? \"a\" \"b\") 7))) y)",
+        "(define (f s) (string<? s \"m\")) (f \"a\")",
+    ];
+
+    #[test]
+    fn join_programs_never_feed_a_typed_op_the_wrong_kind() {
+        for src in JOIN_PROGRAMS {
+            assert_registers_sound(src);
+        }
+    }
+
+    /// The type hint on `main`'s final `ret`.
+    fn main_ret_type(src: &str) -> String {
+        main_instrs(src).iter().rfind(|i| i.op == "ret").unwrap().type_hint.clone()
+    }
+
+    #[test]
+    fn disagreeing_join_falls_back_to_the_dynamic_op() {
+        // `+` and `string-length` on an untyped join become the dynamic
+        // builtins, which check the value's kind at run time.
+        for (src, typed_op) in [
+            ("(+ (or (< 1 2) 5) 1)", "add"),
+            ("(+ (or #f 5) 1)", "add"),
+            ("(+ (match 5 (x 1)) 1)", "add"),
+            ("(let ((s (or (< 1 2) \"abc\"))) (string-length s))", "str_len"),
+            (
+                "(union T (A (v : int)) (B)) \
+                 (let ((s (match (A 1) ((A v) 7) (_ \"abc\")))) (string-length s))",
+                "str_len",
+            ),
+        ] {
+            let m = module(src);
+            assert!(
+                !m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == typed_op)),
+                "{src}: {m:#?}"
+            );
+        }
+        // `(and c 5)` can be 5: it is not a `bool`.
+        assert_eq!(main_ret_type("(define c #t) (and c 5)"), "any");
+        assert_eq!(main_ret_type("(and (< 1 2) 5)"), "any");
+        assert_eq!(main_ret_type("(or (< 1 2) 5)"), "any");
+        assert_eq!(main_ret_type("(match 5 (x 1))"), "any");
+    }
+
+    #[test]
+    fn agreeing_join_keeps_its_type() {
+        // When every writer agrees the type is kept, so the typed fast
+        // paths are not lost.
+        for src in [
+            "(and (< 1 2) (< 2 3))",
+            "(and (< 1 2) #f)",
+            "(and #f #t)",
+            "(or (< 1 2) #f)",
+            "(or #f (< 2 1))",
+            "(or (and (< 1 2) (< 2 3)) (< 3 4))",
+            "(and (or (< 1 2) #f) (< 2 3))",
+        ] {
+            assert_eq!(main_ret_type(src), "bool", "{src}");
+            assert_registers_sound(src);
+        }
+        for src in [
+            "(match 5 (_ nil))",
+            "(union T (A (v : int)) (B)) (match (B) ((A v) nil) (_ nil))",
+        ] {
+            assert_eq!(main_ret_type(src), "ref<LispyPair>", "{src}");
+            assert_registers_sound(src);
+        }
+        for (src, typed_op) in [
+            ("(+ (or 1 2) 3)", "add"),
+            ("(+ (or 1 (or 2 3)) 4)", "add"),
+            ("(let ((s (or \"a\" \"b\"))) (string-length s))", "str_len"),
+            ("(+ (if (< 1 2) (or 1 2) 3) 4)", "add"),
+        ] {
+            assert!(
+                main_instrs(src).iter().any(|i| i.op == typed_op),
+                "{src}: {:#?}",
+                main_instrs(src)
+            );
+            assert_registers_sound(src);
+        }
+    }
+
+    // ---- `and` / `or` inside a lambda (#18453) ---------------------------
+    //
+    // `and` / `or` are special forms written in call position, so the
+    // parser hands them over as an ordinary application whose head is the
+    // name `and`.  The lambda free-variable walk used to visit that head
+    // like any other name, decide `or` was free, and fail the compile:
+    //
+    // ```text
+    // (let ((f (lambda () (or "a" 1)))) (f))
+    //   before: unbound name "or" captured by lambda
+    //   after:  __lambda_0 captures nothing; its body is the usual `or` join
+    // ```
+
+    /// The anonymous lambda `src` compiles to.
+    fn lambda_fn(src: &str) -> IIRFunction {
+        module(src)
+            .functions
+            .into_iter()
+            .find(|f| f.name.starts_with("__lambda_"))
+            .unwrap_or_else(|| panic!("{src}: no lambda"))
+    }
+
+    #[test]
+    fn and_or_inside_a_lambda_compile_and_capture_nothing() {
+        for src in [
+            "(let ((f (lambda () (or \"a\" 1)))) (f))",
+            "(let ((f (lambda () (and #t 5)))) (f))",
+            // Nested joins, and a lambda inside a lambda.
+            "((lambda (c) (let ((s (or (and c \"a\") 7))) (string-length s))) #t)",
+            "((lambda () ((lambda (x) (and (< x 2) (or #f x))) 1)))",
+        ] {
+            let f = lambda_fn(src);
+            assert!(
+                f.params.iter().all(|(p, _)| p != "and" && p != "or"),
+                "{src}: {f:#?}"
+            );
+            assert!(f.instructions.iter().any(|i| i.op == "jmp_if_false"), "{src}: {f:#?}");
+            assert_registers_sound(src);
+        }
+        // The empty forms are constants, and capture nothing either.
+        for src in ["((lambda () (or)))", "((lambda () (and)))"] {
+            assert!(lambda_fn(src).params.is_empty(), "{src}");
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn and_or_arguments_inside_a_lambda_are_still_captured() {
+        // The head is syntax, but the arguments are ordinary expressions.
+        let f = lambda_fn("(let ((y 5)) ((lambda () (or #f y))))");
+        assert_eq!(f.params[0].0, "y", "{f:#?}");
+        let f = lambda_fn("(let ((a 1) (b 2)) ((lambda () (and a (or b #f)))))");
+        let names: Vec<&str> = f.params.iter().map(|(p, _)| p.as_str()).collect();
+        assert_eq!(names, ["a", "b"], "{f:#?}");
+    }
+
+    #[test]
+    fn a_local_named_and_or_is_captured_in_value_position() {
+        // A local may be named `and` / `or` (#18457): in value position it
+        // is that local, and a lambda captures it — even when the same
+        // lambda also uses the special form of that name.
+        for src in [
+            "(let ((or 7)) ((lambda () (+ or 1))))",
+            "(let ((or 7)) ((lambda () (or #f or))))",
+            "(let ((and 3)) ((lambda () (and 1 and))))",
+            "(define (f and) (lambda () and)) ((f 4))",
+        ] {
+            let f = lambda_fn(src);
+            assert!(
+                f.params.iter().any(|(p, _)| p == "and" || p == "or"),
+                "{src}: {f:#?}"
+            );
+            assert_registers_sound(src);
+        }
+        // A top-level value define is a global, not a capture; the lambda
+        // reads it from the global table.
+        let src = "(define or 7) ((lambda () (or #f or)))";
+        assert!(lambda_fn(src).params.is_empty(), "{src}");
+        assert_registers_sound(src);
+    }
+
+    #[test]
+    fn an_unbound_and_or_value_inside_a_lambda_is_still_an_error() {
+        // In value position `or` is a name like any other; with nothing
+        // bound to it, the lambda's capture of it is unbound.
+        let e = compile_source("((lambda () or))", "test").unwrap_err();
+        assert!(e.message.contains("\"or\""), "{e:?}");
+    }
+
+    // ---- `string<?` / `string>?` produce a `bool` (#18453) ---------------
+    //
+    // `(string<? a b)` lowers to a three-way `str_cmp` and a `cmp_lt` of
+    // that against 0.  The `cmp_lt` was emitted `[i64]` while its register
+    // was recorded as `bool`, so a typed `mov` / `ret [bool]` read a
+    // register whose only writer said `i64`.  It is now `[bool]`, as
+    // `(< a b)` is; `str_cmp` itself stays a three-way `i64`.
+
+    #[test]
+    fn string_order_result_is_written_as_a_bool() {
+        for (src, op) in [
+            ("(string<? \"a\" \"b\")", "cmp_lt"),
+            ("(string>? \"a\" \"b\")", "cmp_gt"),
+        ] {
+            let main = main_instrs(src);
+            let cmp = main.iter().find(|i| i.op == op).unwrap();
+            assert_eq!(cmp.type_hint, "bool", "{src}: {main:#?}");
+            let three_way = main.iter().find(|i| i.op == "str_cmp").unwrap();
+            assert_eq!(three_way.type_hint, "i64", "{src}: {main:#?}");
+            assert_eq!(main_ret_type(src), "bool", "{src}");
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn string_order_in_a_join_agrees_with_other_bools_only() {
+        // With `(< a b)`: both `bool`, so the join stays `bool`.
+        for src in [
+            "(or (string<? \"b\" \"a\") (< 1 2))",
+            "(and (string>? \"b\" \"a\") (string<? \"a\" \"b\"))",
+            "(if (< 1 2) (string<? \"a\" \"b\") #f)",
+        ] {
+            assert_eq!(main_ret_type(src), "bool", "{src}");
+            assert_registers_sound(src);
+        }
+        // With an integer: no consensus, so `+` is the dynamic builtin.
+        let src = "(+ (or (string<? \"b\" \"a\") 5) 1)";
+        assert!(!main_instrs(src).iter().any(|i| i.op == "add"), "{src}");
+        assert_eq!(main_ret_type("(if (string<? \"a\" \"b\") (string>? \"a\" \"b\") 7)"), "any");
+        assert_registers_sound(src);
+    }
+
+    // ---- A top-level definition shadows a builtin (#18438) -------------
+    //
+    // A user's top-level `define` beats a builtin of the same name, in
+    // call position exactly as in value position — as in Scheme, and as a
+    // lexical binding already did (#18435).  The typed fast paths used to
+    // recognise `string-append`, `substring`, `string-length` and `+ - * /`
+    // by name alone, so a user function with one of those names was
+    // *called*, but the code around the call was typed as if the builtin
+    // had run:
+    //
+    // ```text
+    // (define (string-append a b) 5)
+    // (string-length (string-append "a" "b"))
+    //   before:  r = call string-append "a", "b"   ; returns 5
+    //            str_len r                          ; a native backend reads 5 as a string
+    //   after:   call_builtin string-length, r     ; checks the kind at run time
+    // ```
+    //
+    // A *value* define named like a builtin was worse: `(define car 5)`
+    // made `car` read as 5, but `(car p)` still called the builtin.
+
+    /// Every program from #18438 and its comment, a user function named
+    /// like each builtin the typed fast paths recognise, user *values*
+    /// named like builtins, and string-parameter evidence through a
+    /// shadowing definition.  The twig-vm tests (`dispatch.rs`) run the
+    /// same shapes end to end.
+    const BUILTIN_SHADOWING_PROGRAMS: &[&str] = &[
+        // The issue body: a value define and a function define named `car`.
+        "(define car 5) car",
+        "(define car 5) (car (cons 1 2))",
+        "(define (car p) 42) (car (cons 1 2))",
+        "(define car (let ((k 7)) (lambda (p) k))) (car (cons 1 2))",
+        // The comment: code around the call was typed as the builtin.
+        "(define (string-append a b) 5) (string-length (string-append \"a\" \"b\"))",
+        "(define (+ a b) \"zz\") (string-ref \"abc\" (+ 0 1))",
+        "(define (f x) (string-length x)) (define (string-append a b) 5) \
+         (f (string-append \"a\" \"b\"))",
+        // A user function named like each name-recognised builtin.
+        "(define (string-length s) \"x\") (substring \"abc\" 0 (string-length \"abc\"))",
+        "(define (string-length s) \"x\") (string-ref \"abc\" (string-length \"a\"))",
+        "(define (substring s a b) 5) (string-length (substring \"abc\" 0 1))",
+        "(define (substring s a b) 5) (string-append (substring \"abc\" 0 1) \"d\")",
+        "(define (string-append a b) 5) (string=? (string-append \"a\" \"b\") \"ab\")",
+        "(define (string-append a b) 5) (string<? (string-append \"a\" \"b\") \"b\")",
+        "(define (string-append a b) 5) (substring (string-append \"ab\" \"c\") 0 1)",
+        "(define (string-ref s i) \"q\") (string-length (string-ref \"abc\" 0))",
+        "(define (- a b) \"zz\") (substring \"abc\" 0 (- 3 1))",
+        "(define (* a b) \"zz\") (string-ref \"abc\" (* 1 1))",
+        "(define (/ a b) \"zz\") (string-ref \"abc\" (/ 2 2))",
+        "(define (< a b) \"lt\") (string-length (< 1 2))",
+        "(define (= a b) 7) (+ (= 1 1) 1)",
+        "(define (car p) \"s\") (string-length (car (cons 1 2)))",
+        "(define (cons a b) 9) (+ (cons 1 2) 1)",
+        // A user VALUE named like a builtin, called.
+        "(define string-append (let ((k \"xyz\")) (lambda (a b) k))) \
+         (string-length (string-append \"a\" \"b\"))",
+        "(define + (let ((k 100)) (lambda (a b) k))) (+ 1 2)",
+        "(define string-length (let ((k \"x\")) (lambda (s) k))) \
+         (substring \"abc\" 0 (string-length \"abc\"))",
+        // String-parameter evidence through a shadowing definition.
+        "(define (f x) (string-length x)) (define (substring s a b) 5) \
+         (f (substring \"abc\" 0 1))",
+        "(define (f x) (string-length x)) (define (string-append a b) 5) \
+         (define s (string-append \"a\" \"b\")) (f s)",
+        "(define (f x) (string-length x)) \
+         (define string-append (let ((k 5)) (lambda (a b) k))) \
+         (f (string-append \"a\" \"b\"))",
+        // The use comes before the definition, and inside a function body
+        // and a lambda.
+        "(define (g) (string-length (string-append \"a\" \"b\"))) \
+         (define (string-append a b) 5) (g)",
+        "(define (string-append a b) 5) (define (g) (string-length (string-append \"a\" \"b\"))) (g)",
+        "(define (string-append a b) 5) ((lambda () (string-length (string-append \"a\" \"b\"))))",
+    ];
+
+    #[test]
+    fn builtin_shadowing_programs_never_feed_a_typed_op_the_wrong_kind() {
+        for src in BUILTIN_SHADOWING_PROGRAMS {
+            assert_registers_sound(src);
+        }
+    }
+
+    /// True when some function in `m` emits `call_builtin <name>`.
+    fn module_calls_builtin(m: &IIRModule, name: &str) -> bool {
+        m.functions.iter().any(|f| {
+            f.instructions.iter().any(|i| {
+                i.op == "call_builtin" && matches!(&i.srcs[0], Operand::Var(s) if s == name)
+            })
+        })
+    }
+
+    /// The typed string ops — the ones a native backend runs unchecked.
+    const TYPED_STRING_OPS: [&str; 5] = ["str_len", "str_concat", "str_slice", "str_index", "str_eq"];
+
+    #[test]
+    fn user_function_named_like_a_builtin_wins_in_both_positions() {
+        // Call position: a direct `call car`, never the builtin.
+        let m = module("(define (car p) 42) (car (cons 1 2))");
+        let main = &m.functions.iter().find(|f| f.name == "main").unwrap().instructions;
+        assert!(has_direct_call(main, "car"), "{main:?}");
+        assert!(!module_calls_builtin(&m, "car"), "{m:#?}");
+        // Value position: a closure over the user's function.
+        let main = main_instrs("(define (car p) 42) car");
+        assert!(
+            main.iter().any(|i| i.op == "alloc_closure" && i.srcs[0] == Operand::Str("car".into())),
+            "{main:?}"
+        );
+        assert!(!main.iter().any(|i| i.op == "call_builtin"), "{main:?}");
+    }
+
+    #[test]
+    fn user_value_named_like_a_builtin_wins_in_both_positions() {
+        // `(define car 5)`: `car` reads 5, and `(car p)` calls that 5 — a
+        // run-time "not a closure" error, as in Scheme — instead of
+        // quietly calling the builtin `car`.
+        for src in [
+            "(define car 5) (car (cons 1 2))",
+            "(define car (let ((k 7)) (lambda (p) k))) (car (cons 1 2))",
+            "(define + (let ((k 100)) (lambda (a b) k))) (+ 1 2)",
+            "(define (g p) (car p)) (define car (let ((k 7)) (lambda (p) k))) (g (cons 1 2))",
+        ] {
+            let m = module(src);
+            for name in ["car", "+"] {
+                assert!(!module_calls_builtin(&m, name), "{src}: {m:#?}");
+            }
+            assert!(!m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == "add")), "{src}: {m:#?}");
+            assert!(
+                m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == "call_closure")),
+                "{src}: {m:#?}"
+            );
+        }
+    }
+
+    #[test]
+    fn typed_fast_paths_do_not_trust_a_shadowing_definition() {
+        // Each user definition below is called, and no typed string op
+        // reads its result: the consumer is the dynamic builtin.
+        for src in [
+            "(define (string-append a b) 5) (string-length (string-append \"a\" \"b\"))",
+            "(define (+ a b) \"zz\") (string-ref \"abc\" (+ 0 1))",
+            "(define (string-length s) \"x\") (substring \"abc\" 0 (string-length \"abc\"))",
+            "(define (substring s a b) 5) (string-length (substring \"abc\" 0 1))",
+            "(define (- a b) \"zz\") (substring \"abc\" 0 (- 3 1))",
+            "(define (* a b) \"zz\") (string-ref \"abc\" (* 1 1))",
+            "(define (/ a b) \"zz\") (string-ref \"abc\" (/ 2 2))",
+            "(define (string-append a b) 5) (string=? (string-append \"a\" \"b\") \"ab\")",
+            "(define string-append (let ((k \"xyz\")) (lambda (a b) k))) \
+             (string-length (string-append \"a\" \"b\"))",
+            "(define string-length (let ((k \"x\")) (lambda (s) k))) \
+             (substring \"abc\" 0 (string-length \"abc\"))",
+        ] {
+            let main = main_instrs(src);
+            assert!(
+                !main.iter().any(|i| TYPED_STRING_OPS.contains(&i.op.as_str())),
+                "{src}: {main:#?}"
+            );
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn unshadowed_builtins_keep_their_fast_paths() {
+        // Control: only the shadowed NAME loses its fast path.  Defining
+        // `car` leaves `string-append` and `string-length` typed.
+        let main = main_instrs("(define (car p) 1) (string-length (string-append \"a\" \"b\"))");
+        assert!(main.iter().any(|i| i.op == "str_len"), "{main:?}");
+        let main = main_instrs("(define (car p) 1) (string-length (string-append (substring \"abc\" 0 1) \"d\"))");
+        assert!(main.iter().any(|i| i.op == "str_concat"), "{main:?}");
+        assert!(main.iter().any(|i| i.op == "str_slice"), "{main:?}");
+    }
+
+    #[test]
+    fn string_param_evidence_ignores_a_shadowing_definition() {
+        // `(string-append "a" "b")` is not a string when `string-append`
+        // is the user's: it is no evidence that `f`'s `x` is a `str`.
+        for src in [
+            "(define (f x) (string-length x)) (define (string-append a b) 5) \
+             (f (string-append \"a\" \"b\"))",
+            "(define (f x) (string-length x)) (define (substring s a b) 5) \
+             (f (substring \"abc\" 0 1))",
+            "(define (f x) (string-length x)) (define (string-append a b) 5) \
+             (define s (string-append \"a\" \"b\")) (f s)",
+            "(define (f x) (string-length x)) \
+             (define string-append (let ((k 5)) (lambda (a b) k))) \
+             (f (string-append \"a\" \"b\"))",
+        ] {
+            let m = module(src);
+            let f = m.functions.iter().find(|f| f.name == "f").unwrap();
+            assert_eq!(f.params, vec![("x".to_string(), "any".to_string())], "{src}");
+            assert!(!f.instructions.iter().any(|i| i.op == "str_len"), "{src}: {f:#?}");
+        }
+    }
+
+    #[test]
+    fn extern_named_like_a_builtin_is_not_typed_as_the_builtin() {
+        // Another module's `string-append` is an extern here: `call`ed, so
+        // its result is not a known string.
+        let cst = parse_to_ast("(string-length (string-append \"a\" \"b\"))").unwrap();
+        let m = compile_ast_with_externs(&cst, "test", &["string-append"]).unwrap();
+        let main = &m.functions.iter().find(|f| f.name == "main").unwrap().instructions;
+        assert!(has_direct_call(main, "string-append"), "{main:?}");
+        assert!(
+            !main.iter().any(|i| TYPED_STRING_OPS.contains(&i.op.as_str())),
+            "{main:#?}"
+        );
+    }
+
+    #[test]
+    fn and_or_stay_special_forms_when_defined() {
+        // `and` / `or` are syntax, not bindings.  A top-level define of one
+        // is accepted and is what the name means as a VALUE, but a call
+        // `(and …)` is still the short-circuit form (see TW00 "Name
+        // resolution").
+        for (src, name) in [
+            ("(define (and a b) 99) (and #f 5)", "and"),
+            ("(define (or a b) 99) (or 5 #f)", "or"),
+            ("(define and 99) (and #f 5)", "and"),
+        ] {
+            let main = main_instrs(src);
+            assert!(!has_direct_call(&main, name), "{src}: {main:?}");
+            assert!(!main.iter().any(|i| i.op == "call_closure"), "{src}: {main:?}");
+            assert!(main.iter().any(|i| i.op == "jmp_if_false"), "{src}: {main:?}");
+        }
+        let main = main_instrs("(define (and a b) 99) and");
+        assert!(
+            main.iter().any(|i| i.op == "alloc_closure" && i.srcs[0] == Operand::Str("and".into())),
+            "{main:?}"
+        );
+    }
+
+    #[test]
+    fn and_or_calls_are_no_string_evidence_for_a_user_and_or() {
+        // `(and "x" "y")` is the special form, not a call to the user's
+        // `and`, so it says nothing about that function's parameters.
+        for (src, name) in [
+            ("(define (and a b) (string-length a)) (and \"x\" \"y\")", "and"),
+            ("(define (or a b) (string-length a)) (or \"x\" \"y\")", "or"),
+        ] {
+            let m = module(src);
+            let f = m.functions.iter().find(|f| f.name == name).unwrap();
+            assert_eq!(
+                f.params,
+                vec![("a".to_string(), "any".to_string()), ("b".to_string(), "any".to_string())],
+                "{src}"
+            );
+            assert!(!f.instructions.iter().any(|i| i.op == "str_len"), "{src}: {f:#?}");
+        }
+    }
+
+    #[test]
+    fn keyword_special_forms_cannot_be_defined() {
+        // The other special forms are keywords: defining one is a parse
+        // error that carries a source position.
+        for src in [
+            "(define (if a) a)",
+            "(define (let a) a)",
+            "(define (let* a) a)",
+            "(define (lambda a) a)",
+            "(define (define a) a)",
+            "(define (quote a) a)",
+            "(define (begin a) a)",
+            "(define (match a) a)",
+            "(define if 5)",
+            "\n  (define (begin a) a)",
+        ] {
+            let e = compile_source(src, "test").expect_err(src);
+            assert!(e.line >= 1 && e.column >= 1, "{src}: {e:?}");
+        }
+        let e = compile_source("\n  (define (begin a) a)", "test").unwrap_err();
+        assert_eq!(e.line, 2, "{e:?}");
+    }
+
+    // ---- Module code gets no call-site string inference ---------------
+    //
+    // Under `twig-module-driver` every module's functions are visible to
+    // every other module as externs — private ones included — so no
+    // single module sees all of a function's call sites.
+
+    #[test]
+    fn module_code_gets_no_string_param_inference() {
+        assert_strlen_param_dynamic(
+            "(module lib (export run)) (define (strlen x) (string-length x)) \
+             (define (run) 0) (define n (strlen \"abc\"))",
+        );
+    }
+
+    #[test]
+    fn extern_compiled_code_gets_no_string_param_inference() {
+        let cst = parse_to_ast(STRLEN).unwrap();
+        let m = compile_ast_with_externs(&cst, "test", &["other"]).unwrap();
+        let strlen = m.functions.iter().find(|f| f.name == "strlen").unwrap();
+        assert_eq!(strlen.params, vec![("x".to_string(), "any".to_string())]);
     }
 
     // ---- Realistic shapes --------------------------------------------

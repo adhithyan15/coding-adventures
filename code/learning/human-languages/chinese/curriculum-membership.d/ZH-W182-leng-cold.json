@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W182-leng-cold",
+  "pathSegment": "ZH-PATH-182-EATOUT182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-182-EATOUT182",
+      "order": 2
+    }
+  ]
+}

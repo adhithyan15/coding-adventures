@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Getting Things Fixed",
+  "label": "ch:zh-getting-things-fixed",
+  "canDo": "I can call a repairer, have something checked or put in, and talk about tools and batteries.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C208-dianchi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can call a repairer, have something checked or put in, and talk about tools and batteries.",
+    "assesses": [
+      "ZH-LEX-C208-FIX208-03",
+      "ZH-LEX-C208-FIX208-04",
+      "ZH-LEX-C208-FIX208-05"
+    ]
+  }
+}

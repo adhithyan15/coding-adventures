@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C200-tuifang",
+  "pathSegment": "ZH-PATH-200-HOTEL200",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-200-HOTEL200",
+      "order": 4
+    }
+  ]
+}

@@ -6,8 +6,17 @@ The v0.5.12 release is published and audited (#18264), from
 and unsigned limitations are unchanged. The next Qt fidelity fix (#18305)
 preserves timeline labels' existing 150-pixel non-shrinking floor. It merged
 in #18306 with all payload validations passing in run 40280477318.
-The compatible v0.5.13 checkpoint (#18334) is prepared, not yet published;
-it also includes the authoritative toolkit dependency-pin change.
+The compatible v0.5.13 checkpoint (#18334) is published and audited via
+run 40340262448 from `d1730421d34c9fe6ebe9cc68473f505017659a5a`:
+13 assets, 12 checksum entries, and 11 manifest payloads, with unchanged
+coverage and unsigned limits. It also includes the toolkit dependency-pin change.
+The Qt due-date editor width floor (#18394) merged in #18396 with all payload
+validations passing. The v0.5.14 checkpoint (#18550) is prepared, including
+the authoritative Notes changes. It is published and audited via run 40824813766
+from `760775910601fc8523d9a4b5b3cbfbf9acae9e05`: 13 assets, 12 checksum
+entries, and 11 manifest payloads. The next bounded Qt fix (#18559) preserves
+the empty Board drop zone's existing 60-pixel minimum height.
+Artifact coverage and unsigned-platform limitations are unchanged.
 
 A to-do app with **automatic scheduling**, built entirely on the shared `task-core`
 engine. Add tasks (with optional due dates), complete or delete them — and the engine

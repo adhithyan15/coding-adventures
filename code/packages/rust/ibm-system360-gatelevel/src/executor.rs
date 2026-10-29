@@ -458,6 +458,7 @@ fn gate_cardinality(selects: &[u8]) -> (u8, u8) {
 
 pub(crate) fn execute(
     before: &System360State,
+    mut next: System360State,
     trace: &StepTrace,
     authority: &DecodeAuthority,
 ) -> Result<System360State, System360Error> {
@@ -468,7 +469,6 @@ pub(crate) fn execute(
     {
         return gate_error("gate format selection disagrees with the instruction transport");
     }
-    let mut next = before.clone();
     next.pc = gates::add_24(before.pc, u32::from(trace.width));
     match operation {
         Operation::Balr
@@ -1194,7 +1194,7 @@ mod tests {
                         description: String::new(),
                     };
                     assert!(matches!(
-                        execute(&state, &trace, &authority),
+                        execute(&state, state.clone(), &trace, &authority),
                         Err(System360Error::Specification { .. })
                     ));
                 }

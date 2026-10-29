@@ -1,4 +1,78 @@
 # Changelog — `twig-aot`
+
+## Unreleased — `propagate_aot_types` doc follows the signed-`bool` fix (#18453)
+
+- The doc comment on `propagate_aot_types` no longer says `cmp_lt_bool` is an
+  unsigned comparison. Since #18453, the x86-64 and AArch64 backends compare
+  a `bool`-suffixed op as signed. No code change.
+
+## Unreleased — untyped Twig integers compare signed (#18483)
+
+- **Bug.** On the native x86-64 column `(if (< -8 100) 1 2)` exited 2; the
+  VM says 1. The frontend writes `(< a b)` as `cmp_lt a, b` with the hint
+  `"bool"` (the result type). `propagate_aot_types` only fills hints that are
+  still `"any"`, so `aot_specialise` named the op `cmp_lt_bool`, and the
+  x86-64 and AArch64 backends compared that suffix unsigned (-8 became
+  `0xFFFF_FFFF_FFFF_FFF8`). The issue's "`cmp_*_u64`" was the documented
+  intent of the untyped path; the op actually emitted was `cmp_*_bool`,
+  with the same unsigned effect.
+- **Fix.** New `sign_word_comparisons` (preparation step 5, after
+  `default_any_to_i64`) retypes a `cmp_*` whose hint is `"bool"` and whose
+  operands are all 64-bit integer words (`i64`, `bool`, `any`,
+  `polymorphic`, `ref<any>`, or an `Int` / `Bool` literal) to `"i64"`, the
+  operand type. The specialiser then emits `cmp_lt_i64` and every native
+  backend picks a signed condition code. It runs on both the untyped path
+  (`prepare_module_for_aot`, used by every native entry point and by
+  `lang-aot`) and `compile_typed_module_to_arm64_bytes`. A compare over a
+  float, narrow or unsigned operand, or one whose hint already names an
+  operand type (Nib and ALGOL hint `i64`, BASIC `f64`), is left alone.
+- Tagged words stay correct: a boxed integer is `n << 3`, which keeps the
+  sign and order of every 61-bit `n`, and equality compares whole words
+  either way. Non-integer tagged words (nil, `#f`, `#t`, pair pointers) are
+  small or below 2⁴⁷, so their (already undefined) ordering is unchanged.
+- Division, remainder and `modulo` were already `div_i64` / `mod_i64`
+  (signed); Twig has no shift or min/max builtins.
+- Doc comments no longer describe the untyped path as "u64": the crate
+  header, `compile_typed_module_to_arm64_bytes`, the preparation-pipeline
+  overview, `propagate_aot_types`, `infer_aot_type`, `prepare_module_for_aot`
+  and `compile_module_to_text`.
+- Tests: `untyped_twig_integer_comparisons_specialise_to_signed_i64` (every
+  comparison in eight negative-operand programs specialises to `_i64`),
+  `untyped_negative_comparisons_run_signed_on_linux_x86_64` (the same
+  programs run natively and exit with the VM's answer), and
+  `sign_word_comparisons_leaves_float_narrow_and_typed_compares_alone`.
+- Follow-up: `sign_word_comparisons_leaves_a_u64_operand_alone` and
+  `..._u32_operand_alone` pin that an unsigned operand blocks the rewrite.
+- `infer_aot_type` now consults every comparison operand, and a typed
+  register's type wins over a literal's. Before, only the first operand was
+  read, so an `"any"`-hinted `cmp_lt 5, x` with `x: u64` became a signed
+  `cmp_lt_i64`; it is now `cmp_lt_u64`
+  (`untyped_compare_takes_the_registers_type_over_a_literals`).
+
+## Unreleased — security review: fail-closed `__dyn_` check, shared with LLVM; the `__aot_` register namespace
+
+- `check_program_function_names` fails closed. A module function named `__dyn_*` is a runtime symbol unless it is one of `iir_builtin_lowering::PASS_GENERATED_DYN_HELPERS`. The old check listed the runtime's functions, parsed from `dynval_runtime.c` (`DYNVAL_RUNTIME_SYMBOLS`, now removed), which fails open for a function added to the runtime later. It is now `pub`, so `lang-aot`'s LLVM path runs the same check.
+- New `check_no_aot_registers`, first thing in `prepare_module_for_aot`: a module that already uses a register, parameter or operand beginning `__aot_` is refused (`AotError::Compile`). The string lowering names its registers `__aot_str{n}_len` / `_buf` / … and `__aot_ps{n}_*`, strips dead blocks by that prefix, and hands `__aot_str{n}_len` to the runtime's print as the byte count. A program register of that name would be the same register. Twig cannot spell it any more (`__` is reserved), but Python and JavaScript locals can.
+- Tests: `every_dyn_name_but_the_pass_helpers_is_a_runtime_symbol` replaces `dynval_runtime_symbols_match_the_c_source`. It requires every `__dyn_` function in the C file, every registry `dyn_*` builtin and names the runtime does not define (`__dyn_pair_firsts`, `__dyn_not_yet_in_the_runtime`) to be refused, and no pass helper to be a runtime function. Also new: `a_module_using_an_aot_register_is_refused` (Linux, Windows, macOS objects).
+
+## Unreleased — a program function cannot stand in for a runtime symbol
+
+- The link step patches a call in place whenever its symbol names a function of the module, and the backends name a runtime call by its runtime symbol. So a program function called `__twig_print_i64` received `print`'s call: `(define (__twig_print_i64 n) 0) (begin (print 5) 0)` printed nothing on native x86-64. New `check_program_function_names`, run first by both link steps (`compile_module_x86_64_to_text`, `compile_module_to_text_raw`, so every native target), refuses two kinds of module with `AotError::Linker`:
+  - one that defines a function named like a runtime symbol: the `__twig_*` and `__gc_*` namespaces, or one of the `__dyn_*` functions `dynval_runtime.c` defines (`DYNVAL_RUNTIME_SYMBOLS`; the pass-generated `__dyn_list_*` / `__dyn_call_closure` stay allowed);
+  - one that defines two functions with one name (the offset table kept only one).
+- `prepare_module_for_aot` propagates `lower_closures_to_heap` / `lower_heap_builtins_runtime`'s new `HelperNameError` as `AotError::Compile`.
+- Tests: `a_program_function_named_like_a_runtime_symbol_is_refused` (five names × Linux, Windows and macOS objects), `a_module_with_two_functions_of_one_name_is_refused`, `module_helpers_and_lookalikes_are_not_runtime_symbols`, and `dynval_runtime_symbols_match_the_c_source`, which pins the list to the C file and to every registry `dyn_*` builtin.
+
+## Unreleased — LANG83 PR7f follow-up — pair reads check the tag
+
+- `runtime/dynval_runtime.c`: `__dyn_pair_first` / `__dyn_pair_rest` check that the word carries the pair tag (`0b111`) before reading the cell. A non-pair used to be read through: Twig's `(car 1000000)` lowers to `__dyn_pair_first(8000000)` and read the 8 bytes at address 8000000. Now, matching the VM (`TypeError`) and the Rust `extern "C" dyn_pair_first` (panic), the program stops: stdout is flushed, `dyn_pair_first: argument 0x… is not a pair` goes to stderr, then `abort()`. The helper is local to the file (not `__twig_trap`): a type error is not a LANG83 trap kind, and `dynval_runtime.c` is linked without `twig_runtime.c` by some harnesses. A heap-tagged non-pair object is still read as a pair (a type confusion inside a live GC block, not a wild read).
+- `dynval_runtime_golden`: new `c_pair_reads_of_a_non_pair_fail_closed` re-runs the test binary as a child for each of an integer, nil, `#f`, `#t` and a symbol, through both functions, and asserts the child died with the refusal on stderr; it also asserts the Rust reference (`heap::car` / `heap::cdr`) refuses each word, and that a real pair still reads.
+
+- Security-review fixes to the refusal (`lispy_not_a_pair`):
+  - It prints the word's tag and kind (`dyn_pair_first: argument with tag 0 (int) is not a pair`), never the word, so no heap address can reach stderr. `dynval-runtime`'s Rust panic now uses the same words.
+  - `abort()` is no longer the last line of defence. It is called through a `volatile` function pointer and followed by `__builtin_trap()` (MSVC: `__fastfail(FAST_FAIL_FATAL_APP_EXIT)`). A program-defined `abort` that returns (possible on LLVM, #18416) now ends in SIGILL instead of running on. The pointer matters: libc declares `abort` `noreturn`, so a plain `abort(); __builtin_trap();` let clang and GCC delete the trap. Checked by hand with a returning `abort` linked in: the plain form fell through into the next function and looped printing refusals (with a heap address), the new form exits with SIGILL at -O0 and -O2 under both compilers.
+- `dynval_runtime_golden`: `c_pair_reads_of_a_non_pair_fail_closed` expects the tag-and-kind message and no `0x` on stderr; the child sets `RLIMIT_CORE` to 0 before the deliberate abort so no core file is written per case; the test is `#[cfg(unix)]` (no Windows Error Reporting dialog or minidump per child). New Unix-only dev-dependency `libc` for `setrlimit`.
+
 ## Unreleased — LANG83 PR7f-2 — Lisp's value rules are compiler-emitted IIR
 
 - `runtime/dynval_runtime.c` drops `__dyn_not`, `__dyn_truthy`, `__dyn_equal` and `__dyn_to_exit_code`. They were Lisp's value rules, not the representation; the Lisp-family lowering writes them as IIR in each module. The golden tests for them are removed (the rules are checked in `iir-builtin-lowering` and end to end in `lang-aot`'s `op_conformance`).

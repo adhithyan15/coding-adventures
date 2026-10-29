@@ -87,6 +87,13 @@ across backends, a separate formatting concern). Current programs:
 | `js_counter_state` | JavaScript-sourced instance state — same case as `counter_state`, sourced from **JavaScript** | `2` |
 | `js_inheritance` | JavaScript-sourced single inheritance, ancestry-walk dispatch with no explicit `super()` | `...-woof` |
 
+`tests/python_nested_closures.rs` runs a separate Python corpus of closures
+that name themselves or each other (#18468): self-reference, recursion, sibling
+mutual recursion, an uncle call, and a top-level `def` reading a `main` local.
+Before running each program on every backend, it checks the lowered SIR: every
+`MakeClosure` must thread exactly its target's capture count, and no
+`DirectCall` may target a capturing function.
+
 Adding a program is one `Program { name, frontend, source, expected }` entry
 in `tests/conformance.rs`. `frontend` defaults nothing — pick the `Frontend`
 variant matching `source`'s language (`Frontend::Ruby` for every pre-existing

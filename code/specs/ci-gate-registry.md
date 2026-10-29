@@ -207,15 +207,17 @@ The exact flat `code/specs/fixtures/build-tool-v1/cases/graph-*.json` and
 `code/specs/fixtures/build-tool-v1/cases/diff-selection-*.json` families have
 eight and twelve checked cases respectively. Any added, modified, deleted,
 or renamed path in either family, including the deleted source of a rename,
-MUST seed their eleven direct native readers before affected/prerequisite
+MUST seed their twelve direct native readers before affected/prerequisite
 closure: `dotnet/programs/build-tool-csharp`,
 `dotnet/programs/build-tool-fsharp`, and `<language>/programs/build-tool` for
-Java, Kotlin, Dart, OCaml, Go, Haskell, Perl, Python, and Swift. Java, Kotlin,
-Dart, and OCaml tests discover `cases/*.json` by decoded `graph` and
+Java, Kotlin, Dart, OCaml, Go, Haskell, Perl, Python, Swift, and TypeScript.
+Java, Kotlin, Dart, and OCaml tests discover `cases/*.json` by decoded `graph` and
 `diff_selection` domains and pin all twenty IDs; they are real native readers
 even without literal fixture filenames. OCaml is still an emerging lane, and
-these fixtures exercise process-free cores only in Java/Kotlin/Dart/OCaml, not
-complete build-tool front doors or neutral adapters.
+these fixtures exercise process-free cores only in
+Java/Kotlin/Dart/OCaml/TypeScript, not complete build-tool front doors or
+neutral adapters. TypeScript adopts both closed fixture families through its
+pure graph/diff-selection seam and the same bounded match-work contract.
 
 Classify raw Git paths without OS cleanup. Only the exact prefix, a nonempty
 flat stem, and a final lower-case `.json` extension belong to either family;
@@ -272,13 +274,16 @@ Swift, and TypeScript `<language>/programs/build-tool` fronts.
 | `corrupt` | C, F, L, Y, T |
 | `hit` | C, F, L, Y |
 | `missing` | C, F, L, G, P, Y, B, S |
-| `dependency-change-after`, `dependency-order-before`, `failed-prior-record`, `local-boundary-union` | C, F, L |
+| `dependency-change-after`, `dependency-order-before`, `failed-prior-record` | C, F, L, B |
+| `local-boundary-union` | C, F, L |
 | `shared-input-conduit-after`, `shared-input-conduit-before`, `shared-input-sha256-native-after`, `shared-input-sha256-native-before` | C, F, L |
 
 C#/F# enumerate the entire checked glob; Lua lists all eleven; Python
-constructs its three state names dynamically. The relation MUST track those
-test-source references, including dynamic readers, and the checked corpus
-roster. New valid flat cases MUST fail closed until classified, not silently
+constructs its three state names dynamically; Ruby filters the checked glob by
+the exact three dependency-adversarial case IDs in addition to its existing
+missing-record case. The relation MUST track those test-source references,
+including dynamic readers, and the checked corpus roster. New valid flat cases
+MUST fail closed until classified, not silently
 fall back to the neutral gate alone. Added, modified, deleted, and renamed
 paths (including the deleted source) participate, but nested, backslash,
 case-varied, and backup lookalikes do not. The selector MUST keep ordinary

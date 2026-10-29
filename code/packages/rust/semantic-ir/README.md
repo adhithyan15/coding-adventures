@@ -83,8 +83,9 @@ What's covered:
 - Atomic literals (int, bool, nil, symbol, string)
 - VarRef with explicit scope tags
 - If, Block, LetBinding, LetStarBinding, ExprStmt
-- DirectCall, IndirectCall, BuiltinCall
-- MakeClosure
+- DirectCall (never to a closure body — a function with captures), IndirectCall, BuiltinCall
+- MakeClosure — lenient (block-like); wrapped in `BuiltinCall("lambda", […])` it is a
+  *strict* closure whose calls must match `Function::exact_arity()` (SIR10 "Strict closures")
 - Intrinsic with escape-hatch discipline
 - SirType (Dynamic, Int(IntSpec), Bool, Nil, Symbol, Str, Pair, Closure, Fn, Float, Seq, Map, Ptr, Struct, Optional,
   NDArray, Rational, Complex, SymExpr)

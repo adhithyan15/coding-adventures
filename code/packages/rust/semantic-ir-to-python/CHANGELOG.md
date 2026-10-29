@@ -1,5 +1,56 @@
 # Changelog
 
+## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitted module binds or reads**:
+  `_sir…` in any case (every runtime alias, `_SIR_MISSING`,
+  `_sir_user_main`), the escape marker, `__l`, `__exc`, and the builtins the
+  emitted code names bare — `Exception`, `len`, `list`, `range`.  Python
+  resolves names at call time, so `(define (_sir_global_set k v) 0)`
+  replaced the imported global store, and `(define (_sir_user_main) 42)` was
+  overwritten by the renamed SIR `main`, which then called itself until
+  `RecursionError`.
+- **Expression-position loop blocks are lifted to `_sir_block_N`**, not
+  `__block_N` — the name the Ruby frontend gives its hoisted block
+  *functions*, so a Ruby method with both could define `__block_0` twice.
+- **A strict closure's arity error is `ArgumentError`**: the runtime's
+  `apply` (in `sir-runtime-core`) now checks the count and raises
+  `ArityError`, tagged `"ArgumentError"`, instead of letting Python raise
+  its own `TypeError`; `tests/twig_pairs_and_closures.rs` now expects the
+  shared "arity mismatch" text.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
+Security-review follow-up:
+
+- **A strict closure is count-checked only when its function has one exact
+  arity.**  The emitter now writes `_sir_as_lambda(c, n)` with
+  `n = Function::exact_arity()`, and plain `_sir_as_lambda(c)` otherwise.
+  The first version had the runtime count every positional parameter,
+  defaults included, so Ruby `->(a, b = 10) { a + b }.call(1)` raised
+  `ArityError` instead of returning 11 — a regression on this backend
+  alone (every other backend already keyed its check on `exact_arity`).
+- **Non-finite float literals** are `1e999`, `(-1e999)` and
+  `(1e999 - 1e999)`.  They were Rust's `{:?}` spelling (`inf`, `-inf`,
+  `NaN`), which Python reads as undefined names — or as a user's `inf`.
+- `sanitize_ident` also reserves `__debug__`, which Python refuses to bind.
+
+## Unreleased — Value defines no longer raise `NameError` (issue #18461)
+
+**Bug fix.**  `_init` wrote each value define with `_globals["x"] = …`, but
+the store lives in the imported runtime package, and `from
+coding_adventures_sir_runtime_core import (…)` binds only the names it
+lists.  So every module with a value define — even `(define x 5) (print
+x)` — died with `NameError: name '_globals' is not defined` as soon as
+`_init` ran; it was not test-harness setup.  Global writes (`_init`,
+`Stmt::Assign` with `Scope::Global`, and its expression-position form)
+now go through the runtime's own `_sir_global_set`, the store
+`_sir_global_get_static` reads.
+
+`tests/twig_pairs_and_closures.rs` runs the #18460/#18461 Twig programs
+with `python3`.  This backend already honoured the `lambda` marker
+(`_sir_as_lambda`), so a strict closure called with the wrong count raises
+Python's own `TypeError`.
+
 ## 0.18.0 — Accept `Feature::LoopControl` (task #63)
 
 Fourth backend (after `semantic-ir-to-javascript` task #62,
