@@ -45,10 +45,32 @@ class TestHasher < Minitest::Test
       true
     end
 
-    def predecessors(name)
+    def each_predecessor(name)
       @calls += 1
       index = (name == "ruby/app") ? 0 : Integer(name.delete_prefix("ruby/Node"), 10) + 1
-      (index < @length) ? ["ruby/Node#{index}"] : []
+      yield "ruby/Node#{index}" if index < @length
+    end
+  end
+
+  class CountingPredecessorStar
+    attr_reader :yields
+
+    def initialize(width)
+      @width = width
+      @yields = 0
+    end
+
+    def has_node?(_name)
+      true
+    end
+
+    def each_predecessor(name)
+      return unless name == "ruby/app"
+
+      @width.times do |index|
+        @yields += 1
+        yield "ruby/Node#{index}"
+      end
     end
   end
 
@@ -702,6 +724,16 @@ class TestHasher < Minitest::Test
     end
     assert_equal "dependency identity limit exceeded", error.message
     assert_operator graph.calls, :<=, BuildTool::Hasher::MAX_HASHING_IDENTITIES + 1
+  end
+
+  def test_dependency_hash_stops_wide_predecessor_enumeration_at_first_excess_identity
+    graph = CountingPredecessorStar.new(1_000_000)
+
+    error = assert_raises(ArgumentError) do
+      BuildTool::Hasher.hash_deps("ruby/app", graph, {})
+    end
+    assert_equal "dependency identity limit exceeded", error.message
+    assert_equal BuildTool::Hasher::MAX_HASHING_IDENTITIES + 1, graph.yields
   end
 
   def test_combined_hash_uses_decoded_digests_and_rejects_invalid_inputs

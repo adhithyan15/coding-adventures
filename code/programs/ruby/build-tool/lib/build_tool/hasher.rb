@@ -502,10 +502,10 @@ module BuildTool
         stack << dependency
       end
 
-      graph.predecessors(package_name).each { |dependency| enqueue.call(dependency) }
+      graph.each_predecessor(package_name) { |dependency| enqueue.call(dependency) }
       until stack.empty?
         dependency = stack.pop
-        graph.predecessors(dependency).each { |parent| enqueue.call(parent) }
+        graph.each_predecessor(dependency) { |parent| enqueue.call(parent) }
       end
       visited.keys
     end
