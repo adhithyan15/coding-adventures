@@ -2,6 +2,23 @@
 
 All notable changes to the `semantic-ir` crate are documented here.
 
+## Unreleased — a `DirectCall` to a closure body is refused (issue #18466)
+
+**Validator: a `DirectCall` may not target a function with captures**
+("direct call to `f`, a closure body with N capture(s); call it through
+`MakeClosure` and `IndirectCall`").  The call-arity rule counted `params`
+only, so a hand-written `DirectCall` passing `params.len()` arguments to a
+closure body validated; C, Go and Rust then failed to compile it (their
+function takes `captures…, params…`) and JavaScript shifted every argument
+into a capture slot.  No in-tree frontend emits one (Twig's own path was
+closed in #18461; the Ruby, Python, JavaScript and Java frontend suites
+pass unchanged), so the call is refused outright rather than given a
+captures-inclusive arity that no frontend could use.
+
+SIR10 now also states that the strict-closure error is `ArgumentError` on
+every backend, and that each backend reserves the names it generates
+("Generated names").
+
 ## Unreleased — `Function::exact_arity` for strict closures; capture-count check (issue #18461)
 
 **Validator: a `MakeClosure` must supply exactly as many capture values as

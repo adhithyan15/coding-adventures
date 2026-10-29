@@ -1,5 +1,11 @@
 # Changelog — `twig-aot`
 
+## Unreleased — `propagate_aot_types` doc follows the signed-`bool` fix (#18453)
+
+- The doc comment on `propagate_aot_types` no longer says `cmp_lt_bool` is an
+  unsigned comparison. Since #18453, the x86-64 and AArch64 backends compare
+  a `bool`-suffixed op as signed. No code change.
+
 ## Unreleased — untyped Twig integers compare signed (#18483)
 
 - **Bug.** On the native x86-64 column `(if (< -8 100) 1 2)` exited 2; the

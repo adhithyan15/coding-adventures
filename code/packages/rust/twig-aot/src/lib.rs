@@ -2311,8 +2311,11 @@ fn normalize_params_to_i64(func: &mut IIRFunction) {
 ///
 /// The ARM64 backend's `emit_cmp` uses the CIR mnemonic suffix to choose
 /// between signed (`i64`, `i32`, …) and unsigned (`u64`, `u32`, …) condition
-/// codes.  `cmp_lt_bool` produces an unsigned comparison — correct when all
-/// values are non-negative, but wrong for negative numbers.
+/// codes.  `cmp_lt_bool` used to produce an unsigned comparison — correct when
+/// all values are non-negative, but wrong for negative numbers.  Since #18453
+/// both native backends compare a `bool`-suffixed op as signed (a Twig
+/// `(< a b)` / `string<?` keeps its explicit `bool` hint, which this pass does
+/// not touch), but an inferred hint still names the operand type.
 ///
 /// Returning the operand type lets the specialiser emit `cmp_lt_i64` for
 /// Twig's `i64` integers (both the untyped and the typed path seed params

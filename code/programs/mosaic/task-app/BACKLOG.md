@@ -69,10 +69,27 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18394 — Qt due-date editor width floor.**
-Preserve the existing 150-pixel non-shrink intent on the control itself, using
-the conservative static-width bridge and both-theme emitted-control tests.
-Feature composition and signing remain outside scope; flex diagnostics stay intact.
+**Next: #18559 — Qt empty Board drop-target height floor.**
+Preserve both themes' existing 60-pixel minimum on the outer drop target.
+Require numeric safety, state-override exclusions, and package-expanded checks.
+Keep root-scroll/flex work owned by #18481 separate; feature composition and
+signing remain outside scope.
+
+Release validation discovered three previously invisible Qt col-drop styles:
+display, flex-direction, and gap. Each is pinned to one occurrence (total
+76 to 79) and tracked for lowering in #18563; further increases fail.
+
+**Published and audited: #18550 — v0.5.14.**
+Run 40824813766 passed all six payloads and publication from
+`760775910601fc8523d9a4b5b3cbfbf9acae9e05`. The immutable tag, source,
+13 assets, 12 checksum entries, 11 manifest payloads, and substantive notes were
+audited. Coverage is unchanged; signing remains blocked in #13977.
+
+**Completed fidelity slice: #18394 — Qt due-date editor width floor.**
+Merged in #18396 with all required checks successful on
+`84f9e0f4f69b7ce46d05855b9797fd7d92ab55d8`; TaskApp payload run 40645495547
+passed. Both themes retain the 150-pixel control floor through conservative
+static-width validation. Shared styles and flex diagnostics are unchanged.
 
 **Published and audited: #18334 — v0.5.13.**
 Run 40340262448 passed all six payloads and publication from

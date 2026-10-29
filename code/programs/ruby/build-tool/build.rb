@@ -410,6 +410,8 @@ module BuildTool
 
       packages.each do |pkg|
         package_hashes[pkg.name] = Hasher.hash_package(pkg)
+      end
+      packages.each do |pkg|
         deps_hashes[pkg.name] = Hasher.hash_deps(pkg.name, graph, package_hashes)
       end
 
@@ -627,6 +629,8 @@ module BuildTool
       deps_hashes = {}
       packages.each do |pkg|
         package_hashes[pkg.name] = Hasher.hash_package(pkg)
+      end
+      packages.each do |pkg|
         deps_hashes[pkg.name] = Hasher.hash_deps(pkg.name, graph, package_hashes)
       end
 

@@ -1,7 +1,7 @@
 # smart-home-axis-vapix-integration
 
-Production-facing Axis VAPIX discovery, inspection, and bounded PTZ control for
-D23.
+Production-facing Axis VAPIX discovery, inspection, bounded PTZ control, and
+supervised system-readiness events for D23.
 
 The package:
 
@@ -32,12 +32,22 @@ The package:
 - authorizes D23 reads and human-approved PTZ commands before credentials or
   transport are touched;
 - preserves confirmed position from inspection instead of inventing optimistic
-  orientation after movement.
+  orientation after movement;
+- mints the documented 15-second `wssession` token through the same bounded
+  authenticated transport, then opens the exact certificate-verifying WSS
+  event endpoint without exposing the token in debug or runtime state;
+- configures only the documented stateful SystemReady topic, verifies the
+  configuration acknowledgement and strict notification shape, normalizes one
+  expiring event-sourced readiness state, and closes the WebSocket explicitly;
+- uses the shared WebSocket codec for strict handshakes, masking, control-frame
+  replies, message bounds, and extension rejection, and the shared event-stream
+  state for lifecycle and checkpoints.
 
-The production path intentionally targets VAPIX camera 1. Snapshot execution
-is composed by `smart-home-axis-snapshot-host`; event streaming, broader media
-transfer, multi-channel enumeration, and advanced zoom/guard-tour control
-remain separate slices with additional host or capability prerequisites.
+The production path intentionally targets VAPIX camera 1 and the SystemReady
+event only. Snapshot execution is composed by `smart-home-axis-snapshot-host`;
+broader event topics, media transfer, multi-channel enumeration, and advanced
+zoom/guard-tour control remain separate slices with additional schema, privacy,
+host, or capability prerequisites.
 
 Protocol references:
 
@@ -48,3 +58,5 @@ Protocol references:
 - [Axis PTZ API](https://developer.axis.com/vapix/network-video/pantiltzoom-api/)
 - [Axis video streaming API](https://developer.axis.com/vapix/network-video/video-streaming/)
 - [Axis image parameters](https://developer.axis.com/vapix/network-video/parameter-management/image-api/)
+- [Axis event streaming over WebSocket](https://developer.axis.com/vapix/network-video/event-streaming-over-websocket/)
+- [Axis event and action services](https://developer.axis.com/vapix/network-video/event-and-action-services/)

@@ -6,11 +6,16 @@ All notable changes to the `task-app` web program are documented here.
 
 ### Fixed
 
-- Preserve the Qt due-date editor's authored 150-pixel non-shrinking width on
-  the control itself (#18394), without changing shared styles or flex diagnostics.
+- Preserve the Board empty-column drop zone's authored 60-pixel minimum height
+  on Qt's outer drop target (#18559), without changing shared styles, drag
+  routing or artifact coverage. Reading its styles exposes three existing Qt
+  drops (display, flex-direction, gap), each pinned to one occurrence: total
+  76 to 79. Their lowering is tracked in #18563; further increases still fail.
 
-Entries added after `task-app-v0.5.13` accumulate here until the next version is
+Entries added after `task-app-v0.5.14` accumulate here until the next version is
 cut.
+
+## [0.5.14] - 2026-10-28
 
 ### Changed
 
@@ -28,6 +33,8 @@ cut.
 
 ### Fixed
 
+- Preserve the Qt due-date editor's authored 150-pixel non-shrinking width on
+  the control itself (#18394), without changing shared styles or flex diagnostics.
 - **A refused note Save says why (E5).** Saving a note whose *Attach to task*
   field names no task in the project did nothing visible: the web host logged
   to the console and the native hosts did nothing at all. TaskApp gains a
