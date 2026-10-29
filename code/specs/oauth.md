@@ -1610,6 +1610,26 @@ policy and decoding, handshake state, repository-owned record protection,
 certificate-path validation, revocation, TLS transport, and HTTP composition
 remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-signature-scheme-list` prerequisite now decodes the
+exact RFC 8446 section 4.2.3 `SignatureSchemeList` carried as extension data by
+`signature_algorithms` and `signature_algorithms_cert`. The decoder requires a
+non-empty, even-length, two-byte-length-prefixed vector, requires the declared
+length to consume the complete input, applies a caller-selected scheme-count
+ceiling before exposing entries, retains the exact borrowed extension data,
+and yields every two-byte scheme identifier in preference order. Unknown and
+private-use identifiers remain data for a later allowlist instead of becoming
+implicitly supported, and diagnostics omit all identifiers and input bytes.
+
+This framing layer does not locate either extension in a handshake message,
+decide where an extension is legal or required, reject duplicate preferences,
+select or authorize a scheme, bind a selection to an offer, parse a public
+key, invoke hashing, MGF1, RSA, ECDSA, or EdDSA, verify a signature, process a
+certificate or transcript, establish trust, enforce revocation, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. Separate
+context policy, data-driven signature-scheme policy, repository-owned
+verification, handshake state, certificate validation, TLS transport, and
+HTTP composition remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-inner-plaintext` prerequisite now specifies the
 authenticated cleartext syntax inside a protected TLS 1.3 record. Its decoder
 first bounds the complete caller-supplied cleartext, scans backward only within
