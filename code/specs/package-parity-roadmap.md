@@ -19578,3 +19578,37 @@ publication head/base, mergeability, state graph, diff, and artifact hygiene
 all match live evidence. Mark the PR ready and require every fresh hosted check
 on the final exact head to finish acceptably before enabling guarded
 auto-merge.
+
+### Parallel Swift RESP selection and local implementation
+
+While TypeScript graph/diff PR #18548 runs hosted qualification, a fresh
+bounded-owner pass ranks Ruby dependency hashing first at three direct and five
+total unfinished descendants, tied with Lua graph/diff. Both higher-ranked
+owners overlap shared routing or registry paths changed by the active PR.
+Dependency-free `swift-resp-protocol-lane-parity` ranks next at two direct and
+four total descendants and is package-path-disjoint, so branch
+`codex/swift-resp-protocol-lane-parity` advances locally from exact main
+`92cf52368f835648df9d54be2cc41be47c82417f` without publication or shared
+CI-routing edits.
+
+Implementation head `523c36c9c0a4f6803092a29c0e886fb862ef640c`
+adds all seven distinct RESP2 values, binary-safe bulk strings, distinct null
+bulk and null array values, strict canonical grammar, iterative bounded
+encoding and decoding, failure-atomic fragmented input, stable errors, BUILD
+fronts, package documentation, and an empty authority profile. UTF-8 line
+preflight and numeric-header scanning enforce their limits before proportional
+allocation, including fragmented unterminated headers. Twelve tests,
+release build, strict Swift formatting, manifest and JSON checks, lessons,
+diff, and artifact hygiene pass. Independent LLVM measurement reports 96.84%
+production lines with all 37 functions executed. Exact-head review first
+rejected proportional UTF-8 line allocation and late numeric-header limits;
+the repaired bounded scans close both defects, and re-review issued SHIP with
+no findings. Current-main reconciliation and publication remain deferred.
+
+The implementation audit enriches the existing
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` backlog owner:
+DT23 lacks a shared language-neutral fixture corpus, and its worked array
+example reports 14 consumed bytes for a 12-byte frame. The neutral owner must
+correct that receipt and freeze valid, malformed, incomplete, fragmentation,
+and error-precedence fixtures across established lanes without widening the
+bounded Swift package.

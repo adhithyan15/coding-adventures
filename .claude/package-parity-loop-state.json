@@ -16992,11 +16992,18 @@
     {
       "id": "swift-resp-protocol-lane-parity",
       "title": "Implement DT23 RESP protocol in Swift",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/swift-resp-protocol-lane-parity",
       "pr_number": null,
       "selection_blocked": false,
+      "selected_at": "2026-10-29T02:05:56Z",
+      "selection_revision": "92cf52368f835648df9d54be2cc41be47c82417f",
+      "selection_notes": "Selected for local-only parallel implementation while TypeScript graph/diff PR #18548 runs hosted CI. Fresh bounded-owner ranking places Ruby dependency hashing first at three direct and five total unfinished descendants, tied with Lua graph/diff, but both overlap shared routing or registry paths changed by the active PR. Dependency-free Swift RESP ranks next at two direct and four total unfinished descendants and is path-disjoint from #18548, so it can advance safely without exceeding the publication ceiling. Defer shared lifecycle, root changelog, and CI routing reconciliation until #18548 merges.",
+      "implementation_revision": "523c36c9c0a4f6803092a29c0e886fb862ef640c",
+      "validation_notes": "The dependency-free Swift package implements all seven distinct RESP2 value forms with binary-safe bulk data, distinct null bulk and null array values, strict canonical grammar, iterative bounded encode/decode, failure-atomic incremental decoding, fragmented-work limits, exact UTF-8 identity, stable errors, BUILD fronts, package documentation, and an empty authority profile. Simple and error encoding bounds UTF-8 scans before proportional allocation, while numeric headers enforce their tighter ceiling during terminated or fragmented scanning. Twelve package tests, release build, Swift 6.3.1 formatting lint, manifest inspection, JSON validation, lessons validation, diff hygiene, and artifact cleanup pass. Independent LLVM measurement reports 96.84% production line coverage with all 37 functions executed. Shared lifecycle, root changelog, and CI routing remain intentionally deferred until the active TypeScript PR merges.",
+      "security_review_revision": "523c36c9c0a4f6803092a29c0e886fb862ef640c",
+      "security_review_notes": "Independent exact-head review first rejected proportional UTF-8 line allocation before the advertised limit and numeric-header bounds enforced only after generic line scanning. The repaired head performs allocation-free bounded UTF-8 preflight, gives numeric headers a dedicated scan ceiling for terminated and fragmented inputs, and preserves header-limit precedence over frame limits. Re-review issued SHIP with no findings and reconfirmed binary/null semantics, iterative budgets, failure atomicity, stable errors, fixtures, tests, release build, coverage, empty authority, exact ancestry, package-only scope, diff hygiene, and artifact cleanup.",
       "notes": "Implement the pure typed RESP2 codec with binary-safe bulk strings, distinct null bulk and null array values, incremental decoding across arbitrary fragmentation, stable failures, explicit resource ceilings, package-native tests, and empty capabilities.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-resp-protocol-lane-parity"
@@ -17064,7 +17071,9 @@
       "pr_number": null,
       "discovered_at": "2026-10-28T20:53:48Z",
       "discovered_revision": "729e0b761e339bcc8d5863550da644e5b3ccec24",
-      "notes": "Close DT23 line, buffer, bulk, array, nesting-depth, aggregate-element, and aggregate-byte ceilings for incremental decoders; specify checked arithmetic, failure atomicity, and stable hostile-input errors. Existing decoders diverge and Python explicitly permits an unbounded buffer. Require this neutral reconciliation before selecting another RESP lane, without changing the selected Swift protocol IR."
+      "latest_discovery_at": "2026-10-29T02:18:15Z",
+      "latest_discovery_revision": "523c36c9c0a4f6803092a29c0e886fb862ef640c",
+      "notes": "Close DT23 line, buffer, bulk, array, nesting-depth, aggregate-element, aggregate-byte, and fragmented-work ceilings for incremental decoders; specify checked arithmetic, failure atomicity, and stable hostile-input errors. Existing decoders diverge and Python explicitly permits an unbounded buffer. The Swift implementation audit also found that DT23 has no shared language-neutral RESP fixture corpus and that its worked array example reports 14 consumed bytes for a 12-byte frame. Correct that receipt and freeze cross-language valid, malformed, incomplete, fragmentation, and error-precedence cases. Require this neutral reconciliation before publishing another RESP lane beyond the locally implemented Swift package; do not widen the Swift package into existing-lane remediation."
     },
     {
       "id": "swift-in-memory-data-store-engine-lane-parity",
