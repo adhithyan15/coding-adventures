@@ -19622,3 +19622,14 @@ still reach property and regular-expression operations. The final primitive-
 string guard and zero-trap Proxy regression close that issue; exact-head
 re-review issued SHIP with no findings and reconfirmed every prior repair,
 current-main ancestry, routing, validation, diff, and artifact hygiene.
+
+#### Draft PR #18548 publication receipt
+
+Publish independently reviewed exact current-main head
+`1f0af52e94868f70300e2690b5510485c08934e0` as draft PR #18548 over exact
+base `92cf52368f835648df9d54be2cc41be47c82417f`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.

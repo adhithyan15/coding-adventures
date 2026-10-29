@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18548,
+  "active_prs": [
+    18548
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-29T01:51:52Z",
-    "pr_number": 18544,
-    "head_revision": "58f1c24dba4c12c08985710b5cefea028fbf118a",
-    "action": "All 38 exact-head checks completed acceptably (14 successes and 24 expected path-gated skips), including the aggregate CI gate. GitHub reported the reviewed head clean and mergeable; guarded squash auto-merge landed PR #18544 as 92cf52368f835648df9d54be2cc41be47c82417f. The merge was verified on origin/main, then the clean completed worktree and local branch were removed.",
+    "observed_at": "2026-10-29T02:00:59Z",
+    "pr_number": 18548,
+    "head_revision": "1f0af52e94868f70300e2690b5510485c08934e0",
+    "action": "Published independently reviewed TypeScript graph/diff implementation as draft PR #18548 over exact base 92cf52368f835648df9d54be2cc41be47c82417f. GitHub reports the publication head mergeable. Keep it draft while the PR-number lifecycle receipt is committed, pushed, and independently reviewed; then mark ready and require fresh hosted qualification at the resulting exact head.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2834,7 +2836,7 @@
     {
       "id": "build-tool-typescript-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the TypeScript build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",
@@ -2845,7 +2847,12 @@
         "build-tool-shared-input-multiconsumer-diff-selection-fixture"
       ],
       "branch": "codex/build-tool-typescript-diff-selection-parity",
-      "pr_number": null,
+      "pr_number": 18548,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18548",
+      "opened_at": "2026-10-29T02:00:59Z",
+      "publication_head": "1f0af52e94868f70300e2690b5510485c08934e0",
+      "publication_base": "92cf52368f835648df9d54be2cc41be47c82417f",
+      "publication_notes": "Draft PR #18548 records the independently reviewed exact current-main head. GitHub reports the publication head mergeable over exact base 92cf52368f835648df9d54be2cc41be47c82417f. Keep it draft only while this PR-number lifecycle receipt is committed, pushed, and independently reviewed; then mark ready and require fresh hosted qualification at the resulting exact head.",
       "selected_at": "2026-10-29T01:54:38Z",
       "selection_revision": "92cf52368f835648df9d54be2cc41be47c82417f",
       "selection_notes": "Selected after PR #18544 completed all 38 exact-head checks acceptably, merged through guarded squash auto-merge, and its clean worktree and local branch were removed. A fresh dependency/leverage pass places this ready process-free TypeScript build-tool leaf at three direct and five total unfinished descendants, tied with the pending Lua graph/diff leaf. TypeScript wins the tie-break because all seven prerequisites are merged and its mature directed-graph, Git-diff, and hardened matcher modules provide the narrower implementation surface; its paths are disjoint from the completed Elixir tranche. From-scratch canonical-CBOR work has lower near-term leverage.",
