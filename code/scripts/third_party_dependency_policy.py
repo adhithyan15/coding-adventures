@@ -34,6 +34,8 @@ DEFAULT_ALLOWLISTS = {
         "code/specs/data/third-party-dependencies/python-tool-allowlist.json"
     ),
     "ruby": Path("code/specs/data/third-party-dependencies/ruby-allowlist.json"),
+    "go": Path("code/specs/data/third-party-dependencies/go-allowlist.json"),
+    "go-tools": Path("code/specs/data/third-party-dependencies/go-tool-allowlist.json"),
 }
 PYTHON_NAME = re.compile(
     r"([A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
@@ -53,6 +55,12 @@ RUBY_GEMSPEC_NAME = re.compile(
 )
 RUBY_PATH_OPTION = re.compile(
     r"\bpath\s*:\s*(?P<quote>['\"])(?P<path>[^'\"]+)(?P=quote)"
+)
+GO_TOOL_COMMAND_START = re.compile(
+    r"(?:^|[;&|()]|[ \t-]run:[ \t]|=[ \t]*[\"'])[ \t]*(?:-[ \t]+)?"
+    r"(?:(?:if|then|do|sudo|command|exec|time|env)[ \t]+|![ \t]*)*"
+    r"(?:[A-Za-z_][A-Za-z0-9_]*=[^ \t]+[ \t]+)*"
+    r"(?:[A-Za-z0-9_.\\/-]+[\\/])?go[ \t]+(?P<action>install|get|run)\b"
 )
 AUTOMATION_TOOL_SOURCE_PATHS = (
     ":(glob).github/**/*.yml",
@@ -142,6 +150,18 @@ PYTHON_RUNNER_OPTIONS_WITH_VALUES = {
     "--python-version",
 }
 PYTHON_RUNNER_PACKAGE_OPTIONS = {"--from", "--spec", "--with"}
+GO_OPTIONS_WITH_VALUES = {
+    "-C",
+    "-coverpkg",
+    "-exec",
+    "-mod",
+    "-modfile",
+    "-overlay",
+    "-p",
+    "-pkgdir",
+    "-tags",
+    "-toolexec",
+}
 
 
 class PolicyError(ValueError):
@@ -231,6 +251,22 @@ def git_ruby_manifests(root: Path) -> list[Path]:
     )
 
 
+def git_go_manifests(root: Path) -> list[Path]:
+    """Return every tracked Go module manifest."""
+
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--", ":(glob)**/go.mod"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return sorted(
+        root / raw_path.decode("utf-8", errors="surrogateescape")
+        for raw_path in result.stdout.split(b"\0")
+        if raw_path
+    )
+
+
 def git_npm_tool_sources(root: Path) -> list[Path]:
     """Return tracked automation files that can acquire npm tools."""
 
@@ -251,6 +287,29 @@ def git_python_tool_sources(root: Path) -> list[Path]:
     """Return tracked automation files that can acquire Python tools."""
 
     return git_npm_tool_sources(root)
+
+
+def git_go_tool_sources(root: Path) -> list[Path]:
+    """Return tracked automation and go:generate sources."""
+
+    result = subprocess.run(
+        [
+            "git",
+            "ls-files",
+            "-z",
+            "--",
+            *AUTOMATION_TOOL_SOURCE_PATHS,
+            ":(glob)**/*.go",
+        ],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    return sorted(
+        root / raw_path.decode("utf-8", errors="surrogateescape")
+        for raw_path in result.stdout.split(b"\0")
+        if raw_path
+    )
 
 
 def tracked_text_document(path: Path, repository_root: Path) -> str:
@@ -1214,6 +1273,231 @@ def build_ruby_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, lis
     return {name: sorted(set(paths)) for name, paths in sorted(inventory.items())}
 
 
+def go_mod_tokens(text: str, manifest: Path) -> list[list[str]]:
+    """Tokenize the dependency-bearing subset of go.mod syntax."""
+
+    statements: list[list[str]] = []
+    block: str | None = None
+    for line_number, line in enumerate(text.splitlines(), 1):
+        source = line.split("//", 1)[0].strip()
+        if not source:
+            continue
+        if source == ")":
+            if block is None:
+                raise PolicyError(f"{manifest}:{line_number} closes no block")
+            block = None
+            continue
+        try:
+            tokens = shlex.split(source, comments=False, posix=True)
+        except ValueError as error:
+            raise PolicyError(
+                f"cannot parse {manifest}:{line_number}: {error}"
+            ) from error
+        if tokens in (["require", "("], ["replace", "("]):
+            if block is not None:
+                raise PolicyError(f"{manifest}:{line_number} nests a block")
+            block = tokens[0]
+            continue
+        if block is not None:
+            tokens.insert(0, block)
+        statements.append(tokens)
+    if block is not None:
+        raise PolicyError(f"{manifest} has an unterminated {block} block")
+    return statements
+
+
+def parse_go_mod(
+    text: str, manifest: Path
+) -> tuple[str, list[tuple[str, str]], dict[tuple[str, str | None], list[str]]]:
+    """Return a module name, requirements, and replacements from go.mod text."""
+
+    module_names: list[str] = []
+    requirements: list[tuple[str, str]] = []
+    replacements: dict[tuple[str, str | None], list[str]] = {}
+    for tokens in go_mod_tokens(text, manifest):
+        if not tokens:
+            continue
+        directive = tokens[0]
+        if directive == "module":
+            if len(tokens) != 2:
+                raise PolicyError(f"{manifest} has an invalid module directive")
+            module_names.append(tokens[1])
+        elif directive == "require":
+            if len(tokens) != 3:
+                raise PolicyError(f"{manifest} has an invalid require directive")
+            requirements.append((tokens[1], tokens[2]))
+        elif directive == "replace":
+            try:
+                arrow = tokens.index("=>")
+            except ValueError as error:
+                raise PolicyError(
+                    f"{manifest} has a replace directive without =>"
+                ) from error
+            left = tokens[1:arrow]
+            right = tokens[arrow + 1 :]
+            if len(left) not in {1, 2} or len(right) not in {1, 2}:
+                raise PolicyError(f"{manifest} has an invalid replace directive")
+            key = (left[0], left[1] if len(left) == 2 else None)
+            if key in replacements:
+                raise PolicyError(f"{manifest} replaces {left!r} more than once")
+            replacements[key] = right
+    if len(module_names) != 1:
+        raise PolicyError(f"{manifest} must contain exactly one module directive")
+    return module_names[0], requirements, replacements
+
+
+def build_go_inventory(root: Path, manifests: Iterable[Path]) -> dict[str, list[str]]:
+    """Map third-party Go module names to the manifests declaring them."""
+
+    manifest_list = list(manifests)
+    documents = tracked_text_documents(manifest_list, root)
+    parsed = {
+        manifest.resolve(): parse_go_mod(documents[manifest], manifest)
+        for manifest in manifest_list
+    }
+    tracked_modules: dict[Path, str] = {
+        manifest: document[0] for manifest, document in parsed.items()
+    }
+    inventory: dict[str, list[str]] = {}
+    for manifest in manifest_list:
+        _, requirements, replacements = parsed[manifest.resolve()]
+        display_path = manifest.relative_to(root).as_posix()
+        for name, version in requirements:
+            replacement = replacements.get((name, version)) or replacements.get(
+                (name, None)
+            )
+            dependency_name = name
+            if replacement is not None and len(replacement) == 1:
+                replacement_path = replacement[0]
+                if replacement_path in {".", ".."} or replacement_path.startswith(
+                    ("./", "../")
+                ):
+                    candidate = (
+                        manifest.parent / replacement_path / "go.mod"
+                    ).resolve()
+                    try:
+                        candidate.relative_to(root.resolve())
+                    except ValueError:
+                        pass
+                    else:
+                        if tracked_modules.get(candidate) == name:
+                            continue
+                elif not replacement_path.startswith(("/", "\\")):
+                    dependency_name = replacement_path
+            elif replacement is not None and len(replacement) == 2:
+                dependency_name = replacement[0]
+            inventory.setdefault(dependency_name, []).append(display_path)
+    return {name: sorted(set(paths)) for name, paths in sorted(inventory.items())}
+
+
+def go_tool_target_name(target: str) -> str | None:
+    """Return the import path acquired by one Go tool target."""
+
+    if (
+        not target
+        or target in {".", ".."}
+        or target.startswith(("./", "../", "/", "\\"))
+        or target.endswith(".go")
+        or re.match(r"^[A-Za-z]:[\\/]", target)
+    ):
+        return None
+    if any(marker in target for marker in ("$", "`", "{", "}")):
+        raise PolicyError(f"dynamic Go tool target {target!r} is not allowed")
+    if target.startswith(("http:", "https:", "git:")):
+        raise PolicyError(f"remote Go tool target {target!r} must use an import path")
+    name = target.rsplit("@", 1)[0]
+    if not name or "/" not in name:
+        raise PolicyError(f"invalid Go tool import path {target!r}")
+    return name
+
+
+def go_tool_names(command: str) -> set[str]:
+    """Return package names acquired by executable Go command positions."""
+
+    names: set[str] = set()
+    normalized = command.replace("\\\n", " ")
+    for line in normalized.splitlines():
+        if line.lstrip().startswith("#"):
+            continue
+        for match in GO_TOOL_COMMAND_START.finditer(line):
+            arguments = command_arguments(line, match.end())
+            targets: list[str] = []
+            index = 0
+            while index < len(arguments):
+                argument = arguments[index]
+                if SHELL_REDIRECTION.match(argument):
+                    break
+                if argument in GO_OPTIONS_WITH_VALUES:
+                    index += 1
+                    if index >= len(arguments):
+                        raise PolicyError(f"{argument} requires a value")
+                elif any(
+                    argument.startswith(f"{option}=")
+                    for option in GO_OPTIONS_WITH_VALUES
+                ):
+                    pass
+                elif argument.startswith("-"):
+                    pass
+                else:
+                    targets.append(argument)
+                    if match.group("action") == "run":
+                        break
+                index += 1
+            for target in targets:
+                name = go_tool_target_name(target)
+                if name is not None:
+                    names.add(name)
+    return names
+
+
+def build_go_tool_inventory(
+    root: Path,
+    sources: Iterable[Path],
+    manifests: Iterable[Path],
+) -> dict[str, list[str]]:
+    """Map Go tools acquired by tracked automation to their source files."""
+
+    source_list = list(sources)
+    manifest_list = list(manifests)
+    documents = tracked_text_documents([*source_list, *manifest_list], root)
+    inventory: dict[str, set[str]] = {}
+    for source in source_list:
+        display_path = source.relative_to(root).as_posix()
+        text = documents[source]
+        if source.suffix == ".go":
+            text = "\n".join(
+                line.removeprefix("//go:generate").lstrip()
+                for line in text.splitlines()
+                if line.startswith("//go:generate")
+            )
+        try:
+            names = go_tool_names(text)
+        except PolicyError as error:
+            raise PolicyError(f"cannot parse {display_path}: {error}") from error
+        for name in names:
+            inventory.setdefault(name, set()).add(display_path)
+    for manifest in manifest_list:
+        document = parse_json_manifest_text(documents[manifest], manifest)
+        scripts = document.get("scripts")
+        if scripts is None:
+            continue
+        if not isinstance(scripts, Mapping):
+            raise PolicyError(f"{manifest} scripts must be a JSON object")
+        display_path = manifest.relative_to(root).as_posix()
+        for script_name, command in scripts.items():
+            if not isinstance(script_name, str) or not isinstance(command, str):
+                raise PolicyError(f"{manifest} scripts must map strings to strings")
+            try:
+                names = go_tool_names(command)
+            except PolicyError as error:
+                raise PolicyError(
+                    f"cannot parse {display_path} script {script_name!r}: {error}"
+                ) from error
+            for name in names:
+                inventory.setdefault(name, set()).add(display_path)
+    return {name: sorted(paths) for name, paths in sorted(inventory.items())}
+
+
 def validate_allowlist(
     document: Any, label: str, ecosystem: str = "cargo"
 ) -> list[str]:
@@ -1322,7 +1606,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("command", choices=("check", "inventory"))
     parser.add_argument(
         "--ecosystem",
-        choices=("cargo", "npm", "npm-tools", "python", "python-tools", "ruby"),
+        choices=(
+            "cargo",
+            "npm",
+            "npm-tools",
+            "python",
+            "python-tools",
+            "ruby",
+            "go",
+            "go-tools",
+        ),
         default="cargo",
     )
     parser.add_argument(
@@ -1368,11 +1661,22 @@ def main(argv: list[str] | None = None) -> int:
             inventory = build_python_tool_inventory(root, sources, manifests)
             input_count = len(sources) + len(manifests)
             input_label = "automation inputs"
-        else:
+        elif args.ecosystem == "ruby":
             manifests = git_ruby_manifests(root)
             inventory = build_ruby_inventory(root, manifests)
             input_count = len(manifests)
             input_label = "manifests"
+        elif args.ecosystem == "go":
+            manifests = git_go_manifests(root)
+            inventory = build_go_inventory(root, manifests)
+            input_count = len(manifests)
+            input_label = "manifests"
+        else:
+            sources = git_go_tool_sources(root)
+            manifests = git_npm_manifests(root)
+            inventory = build_go_tool_inventory(root, sources, manifests)
+            input_count = len(sources) + len(manifests)
+            input_label = "automation inputs"
     except (PolicyError, subprocess.CalledProcessError) as error:
         print(error, file=sys.stderr)
         return 1
