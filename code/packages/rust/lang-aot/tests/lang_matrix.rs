@@ -296,6 +296,62 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // Twig — untyped integer comparisons are SIGNED (#18483). twig-aot's
+    // untyped native path kept the frontend's `bool` result hint on
+    // `(< a b)`, so the op was `cmp_lt_bool`, and x86-64 / AArch64 compared
+    // that suffix unsigned: -8 became 0xFFFF_FFFF_FFFF_FFF8, and
+    // `(< -8 100)` was false. twig-aot now retypes an integer-word compare
+    // `i64`. Each row below takes the other branch under an unsigned compare.
+    // `(<= -5 -5)` alone is true either way (equal words), so its row also
+    // asks `(<= -5 0)`, which only a signed compare answers true. Not
+    // declared on Clr / Beam: not run where these rows were added (no
+    // `dotnet` / `erl`).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (< -8 100) 1 2)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (> -1 0) 1 2)",
+        expect: Expect::Exit(2),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (<= -5 -5) (if (<= -5 0) 1 3) 2)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(if (< (- 0 8) 0) 1 2)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // A function's negative result, compared in the caller.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (neg7) (- 0 7)) (if (< (neg7) 0) 1 2)",
+        expect: Expect::Exit(1),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // Twig — **E6d-1: TW3-core dynamic `cons`/`car`/`cdr` on the code-gen backends.**
     // `(car (cons 42 0))` allocates a heap cons pair `(42 . 0)` and reads its head.
     // The Twig frontend emits `call_builtin "cons"/"car" [any]`; the shared
@@ -6811,6 +6867,28 @@ fn main() { out(1, VALUE); }\n",
         lang: Language::Algol60,
         ext: "alg",
         src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-9007199254740993) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Pure chains of integer-valued normalizers retain the same exact i64
+    // root until an enclosing integer reduction makes widening exact.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Checked unary signs may appear between exact integer normalizers without
+    // forcing their wide static root through binary64 before the reduction.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
         expect: Expect::Stdout("3"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
         release: None,
@@ -15235,7 +15313,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        (Language::Twig, 49, 392),
+        // Twig: 49 rows on all eight columns, then #18483's five
+        // negative-operand comparison rows on six (all but Clr / Beam).
+        (Language::Twig, 54, 422),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),
@@ -17562,6 +17642,56 @@ fn algol_exact_wide_static_integer_normalizers_run_on_every_available_standard_b
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but exact wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("abs(entier(-9007199254740993)) * sign(pick())) mod 5")
+        })
+        .expect("the nested wide-static-normalizer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_signed_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("abs(-entier(-9007199254740993)) * sign(pick())) mod 5")
+        })
+        .expect("the signed nested wide-static-normalizer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but signed nested wide static integer normalizers did not complete"
             );
             continue;
         };

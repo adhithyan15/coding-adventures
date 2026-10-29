@@ -1306,6 +1306,59 @@ mod tests {
             "linked module should have entry_point = main");
     }
 
+    #[test]
+    fn local_shadowing_imported_function_is_called() {
+        // #18435: `double` is an imported (extern) function, but inside
+        // `apply-to-five` — and inside the `let` — it names a LOCAL
+        // closure, which must be the one called.  The bug compiled both
+        // calls to a direct `call double` and answered 10 instead of 6.
+        let dir = make_tempdir("shadow_imported_fn");
+        write_temp(&dir, "lib.tw", "
+            (module lib (export double))
+            (define (double x) (* x 2))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib))
+            (define (apply-to-five double) (double 5))
+            (+ (apply-to-five (lambda (x) (+ x 1)))
+               (let ((double (lambda (x) (+ x 100)))) (double 5))
+               (double 5))
+        ");
+        let v = twig_vm::run_module_tree(&root, &[dir.as_path()])
+            .unwrap_or_else(|e| panic!("run failed: {e}"));
+        // 6 (param) + 105 (let) + 10 (the real imported `double`).
+        assert_eq!(v.as_int(), Some(121));
+    }
+
+    #[test]
+    fn private_library_function_gets_no_string_param_inference() {
+        // `strlen` is private to lib, and lib only ever calls it with a
+        // string.  But the driver makes every module's functions visible to
+        // every other module, and main calls it with 5.  Inferring
+        // `x : str` from lib's own call would lower its body to the typed
+        // `str_len` and then hand it an integer.
+        let dir = make_tempdir("private_strlen_inference");
+        write_temp(&dir, "lib.tw", "
+            (module lib (export run))
+            (define (strlen x) (string-length x))
+            (define (run) 0)
+            (define n (strlen \"abc\"))
+        ");
+        let root = write_temp(&dir, "main.tw", "
+            (module main (import lib))
+            (strlen 5)
+        ");
+        let m = compile_module_tree(&root, &[dir.as_path()]).unwrap();
+        let strlen = m.get_function("strlen").expect("strlen linked");
+        assert_eq!(strlen.params, vec![("x".to_string(), "any".to_string())]);
+        assert!(
+            !strlen.instructions.iter().any(|i| i.op == "str_len"),
+            "{:?}",
+            strlen.instructions
+        );
+    }
+
+
     // ── Issue #18421: per-module lambda names must survive linking ───────────
     //
     // Every module is compiled by a fresh `twig-ir-compiler::Compiler`, so

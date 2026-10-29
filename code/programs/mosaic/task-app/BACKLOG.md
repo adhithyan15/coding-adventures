@@ -69,12 +69,15 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18334 — publish and audit v0.5.13.**
-The timeline-label floor #18305 merged in #18306 with all payload validation
-passing in run 40280477318. Prepare its compatible patch together with the
-authoritative toolkit-pin change, publish only after preparation merges, then
-audit immutable provenance, inventory, and checksums. Preparation is not publication.
-Feature composition and signing remain outside scope; artifact coverage is unchanged.
+**Next: #18394 — Qt due-date editor width floor.**
+Preserve the existing 150-pixel non-shrink intent on the control itself, using
+the conservative static-width bridge and both-theme emitted-control tests.
+Feature composition and signing remain outside scope; flex diagnostics stay intact.
+
+**Published and audited: #18334 — v0.5.13.**
+Run 40340262448 passed all six payloads and publication from
+`d1730421d34c9fe6ebe9cc68473f505017659a5a`. The immutable release's 13 assets,
+12 checksum entries, and 11 manifest payloads were audited. Coverage is unchanged.
 
 **Published and audited: #18264 — v0.5.12 Qt rail checkpoint.**
 Run 40269564825 passed all payloads and publication. The immutable source is
