@@ -70,8 +70,17 @@ end
 
 local function diff_input(fixture, boundary)
     local options = fixture.input.options
+    local packages = {}
+    for index, value in ipairs(options.packages) do
+        packages[index] = {
+            name = value.name,
+            rel_path = value.rel_path,
+            source_mode = value.source_mode,
+            source_globs = value.source_globs or {},
+        }
+    end
     return {
-        packages = options.packages,
+        packages = packages,
         edges = options.edges,
         forced_packages = options.forced_packages,
         unknown_path_policy = options.unknown_path_policy,
@@ -215,6 +224,88 @@ describe("process-free Lua graph and diff selection", function()
             edges = {}, forced_packages = {}, unknown_path_policy = "error",
             changed_paths = {"code/question/src/😀.ts"}, boundary_sha256 = "",
         }))
+    end)
+
+    it("treats a package root as zero path components", function()
+        local function evaluate(glob)
+            return GraphDiff.evaluate_diff_selection({
+                packages = {{name = "fixture/root", rel_path = "code/root",
+                    source_mode = "strict_globs", source_globs = {glob}}},
+                edges = {}, forced_packages = {}, unknown_path_policy = "error",
+                changed_paths = {"code/root"}, boundary_sha256 = "",
+            })
+        end
+
+        for _, glob in ipairs({"*", "?"}) do
+            assert.same({ok = true, value = {changed_packages = {},
+                affected_packages = {}, prerequisite_packages = {}}}, evaluate(glob))
+        end
+        assert.same({ok = true, value = {changed_packages = {"fixture/root"},
+            affected_packages = {"fixture/root"}, prerequisite_packages = {}}},
+            evaluate("**"))
+    end)
+
+    it("compiles a maximum-length unmatched bracket run without suffix rescans", function()
+        local maximum = string.rep("[", 512)
+        assert.same({ok = true, value = {changed_packages = {}, affected_packages = {},
+            prerequisite_packages = {}}}, GraphDiff.evaluate_diff_selection({
+                packages = {{name = "fixture/maximum", rel_path = "maximum",
+                    source_mode = "strict_globs", source_globs = {maximum}}},
+                edges = {}, forced_packages = {}, unknown_path_policy = "error",
+                changed_paths = {"maximum"}, boundary_sha256 = "",
+            }))
+
+        local literal = string.rep("[", 500)
+        assert.same({ok = true, value = {changed_packages = {"fixture/brackets"},
+            affected_packages = {"fixture/brackets"}, prerequisite_packages = {}}},
+            GraphDiff.evaluate_diff_selection({
+                packages = {{name = "fixture/brackets", rel_path = "p",
+                    source_mode = "strict_globs", source_globs = {literal}}},
+                edges = {}, forced_packages = {}, unknown_path_policy = "error",
+                changed_paths = {"p/" .. literal}, boundary_sha256 = "",
+            }))
+    end)
+
+    it("validates maximum-scale roots with a segment trie and catches a late prefix", function()
+        local packages = {}
+        for index = 1, 4096 do
+            packages[index] = package_prefix(
+                string.format("fixture/p%04d", index),
+                string.format("code/p%04d", index))
+        end
+        assert.same({ok = true, value = {changed_packages = {}, affected_packages = {},
+            prerequisite_packages = {}}}, GraphDiff.evaluate_diff_selection(simple_diff(packages)))
+
+        packages[1].rel_path = "code/shared/child"
+        packages[4096].rel_path = "code/shared"
+        assert.same({ok = false, code = "DIFF_PATH_INVALID"},
+            GraphDiff.evaluate_diff_selection(simple_diff(packages)))
+    end)
+
+    it("preserves domain errors after inert array snapshotting", function()
+        local oversized = {}
+        for index = 1, 4098 do oversized[index] = string.format("fixture/p%04d", index) end
+        assert.same({ok = false, code = "GRAPH_PACKAGE_LIMIT_EXCEEDED"},
+            GraphDiff.evaluate_graph({packages = oversized, edges = {}}))
+        assert.same({ok = false, code = "GRAPH_EDGE_UNKNOWN"},
+            GraphDiff.evaluate_graph({packages = {"fixture/a", "fixture/b"},
+                edges = {{"fixture/a", "fixture/b", "fixture/a", "fixture/b"}}}))
+
+        local oversized_diff = {}
+        for index = 1, 4098 do
+            oversized_diff[index] = package_prefix(
+                string.format("fixture/p%04d", index), string.format("code/p%04d", index))
+        end
+        assert.same({ok = false, code = "DIFF_PACKAGE_INVALID"},
+            GraphDiff.evaluate_diff_selection(simple_diff(oversized_diff)))
+
+        local missing = {name = "fixture/a", rel_path = "code/a",
+            source_mode = "package_prefix"}
+        assert.same({ok = false, code = "DIFF_INPUT_INVALID"},
+            GraphDiff.evaluate_diff_selection(simple_diff({missing})))
+        missing.source_globs = false
+        assert.same({ok = false, code = "DIFF_INPUT_INVALID"},
+            GraphDiff.evaluate_diff_selection(simple_diff({missing})))
     end)
 
     it("rejects hostile table shapes and complete invalid glob lists", function()

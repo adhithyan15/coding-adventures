@@ -96,16 +96,22 @@ end
 -- Lua has one table type for arrays and objects.  This helper accepts plain
 -- dense arrays as well as dkjson's inert array marker, but rejects holes,
 -- metamethod-bearing values, and non-integer keys before indexing members.
-local function dense_count(value, maximum, code)
-    require_contract(type(value) == "table" and accepted_metatable(value, "array"), code)
-    local count = 0
+local function dense_count(value, maximum, shape_code, overflow_code)
+    require_contract(type(value) == "table" and accepted_metatable(value, "array"),
+        shape_code)
+    local count, keys = 0, {}
     for key in next, value do
-        require_contract(type(key) == "number" and key % 1 == 0 and key >= 1, code)
         count = count + 1
-        require_contract(count <= maximum and key <= maximum, code)
+        require_contract(count <= maximum, overflow_code)
+        keys[count] = key
     end
     for index = 1, count do
-        require_contract(rawget(value, index) ~= nil, code)
+        local key = keys[index]
+        require_contract(type(key) == "number" and key % 1 == 0 and key >= 1,
+            shape_code)
+    end
+    for index = 1, count do
+        require_contract(rawget(value, index) ~= nil, shape_code)
     end
     return count
 end
@@ -116,8 +122,8 @@ local function inert_record(value, code)
     return value
 end
 
-local function snapshot_array(value, maximum, code, snapshot_member)
-    local count = dense_count(value, maximum, code)
+local function snapshot_array(value, maximum, shape_code, overflow_code, snapshot_member)
+    local count = dense_count(value, maximum, shape_code, overflow_code)
     local result = {}
     for index = 1, count do
         result[index] = snapshot_member(rawget(value, index))
@@ -128,11 +134,13 @@ end
 local function snapshot_graph_input(input)
     input = inert_record(input, "GRAPH_INPUT_INVALID")
     return {
-        packages = snapshot_array(rawget(input, "packages"), MAX_PACKAGES + 1,
-            "GRAPH_INPUT_INVALID", function(value) return value end),
-        edges = snapshot_array(rawget(input, "edges"), MAX_EDGES + 1,
-            "GRAPH_INPUT_INVALID", function(value)
-                return snapshot_array(value, 3, "GRAPH_INPUT_INVALID",
+        packages = snapshot_array(rawget(input, "packages"), MAX_PACKAGES,
+            "GRAPH_INPUT_INVALID", "GRAPH_PACKAGE_LIMIT_EXCEEDED",
+            function(value) return value end),
+        edges = snapshot_array(rawget(input, "edges"), MAX_EDGES,
+            "GRAPH_INPUT_INVALID", "GRAPH_EDGE_LIMIT_EXCEEDED",
+            function(value)
+                return snapshot_array(value, 2, "GRAPH_INPUT_INVALID", "GRAPH_EDGE_UNKNOWN",
                     function(member) return member end)
             end),
     }
@@ -141,27 +149,32 @@ end
 local function snapshot_diff_input(input)
     input = inert_record(input, "DIFF_INPUT_INVALID")
     local result = {}
-    result.packages = snapshot_array(rawget(input, "packages"), MAX_PACKAGES + 1,
-        "DIFF_INPUT_INVALID", function(value)
+    result.packages = snapshot_array(rawget(input, "packages"), MAX_PACKAGES,
+        "DIFF_INPUT_INVALID", "DIFF_PACKAGE_INVALID",
+        function(value)
             value = inert_record(value, "DIFF_INPUT_INVALID")
-            local globs = rawget(value, "source_globs") or {}
+            local globs = rawget(value, "source_globs")
             return {
                 name = rawget(value, "name"),
                 rel_path = rawget(value, "rel_path"),
                 source_mode = rawget(value, "source_mode"),
-                source_globs = snapshot_array(globs, MAX_SOURCE_GLOBS + 1,
-                    "DIFF_INPUT_INVALID", function(glob) return glob end),
+                source_globs = snapshot_array(globs, MAX_SOURCE_GLOBS,
+                    "DIFF_INPUT_INVALID", "DIFF_GLOB_INVALID",
+                    function(glob) return glob end),
             }
         end)
-    result.edges = snapshot_array(rawget(input, "edges"), MAX_EDGES + 1,
-        "DIFF_INPUT_INVALID", function(value)
-            return snapshot_array(value, 3, "DIFF_INPUT_INVALID",
+    result.edges = snapshot_array(rawget(input, "edges"), MAX_EDGES,
+        "DIFF_INPUT_INVALID", "GRAPH_EDGE_LIMIT_EXCEEDED",
+        function(value)
+            return snapshot_array(value, 2, "DIFF_INPUT_INVALID", "GRAPH_EDGE_UNKNOWN",
                 function(member) return member end)
         end)
     result.forced_packages = snapshot_array(rawget(input, "forced_packages"),
-        MAX_PACKAGES + 1, "DIFF_INPUT_INVALID", function(value) return value end)
+        MAX_PACKAGES, "DIFF_INPUT_INVALID", "DIFF_FORCED_PACKAGE_INVALID",
+        function(value) return value end)
     result.changed_paths = snapshot_array(rawget(input, "changed_paths"),
-        MAX_PACKAGES + 1, "DIFF_INPUT_INVALID", function(value) return value end)
+        MAX_PACKAGES, "DIFF_INPUT_INVALID", "DIFF_PATH_INVALID",
+        function(value) return value end)
     result.unknown_path_policy = rawget(input, "unknown_path_policy")
     local digest = rawget(input, "boundary_sha256")
     require_contract(digest == nil or type(digest) == "string", "DIFF_INPUT_INVALID")
@@ -239,6 +252,7 @@ end
 
 local function split_path(value)
     local result = {}
+    if value == "" then return result end
     for segment in (value .. "/"):gmatch("(.-)/") do result[#result + 1] = segment end
     return result
 end
@@ -250,6 +264,15 @@ end
 local function compile_segment(value)
     local characters = scalars(value)
     local tokens = {}
+    -- close_at_or_after makes every '[' lookup constant-time.  Without this
+    -- reverse index, a run of unmatched opening brackets rescans the remaining
+    -- suffix once per scalar and turns compilation quadratic.
+    local close_at_or_after = {}
+    local next_close
+    for position = #characters, 1, -1 do
+        if characters[position] == 93 then next_close = position end
+        close_at_or_after[position] = next_close
+    end
     local index = 1
     while index <= #characters do
         local scalar = characters[index]
@@ -261,10 +284,10 @@ local function compile_segment(value)
             local first = index + 1
             local negated = characters[first] == 33
             if negated then first = first + 1 end
-            local close = first
-            if characters[close] == 93 then close = close + 1 end
-            while close <= #characters and characters[close] ~= 93 do close = close + 1 end
-            if close > #characters then
+            local search_from = first
+            if characters[search_from] == 93 then search_from = search_from + 1 end
+            local close = close_at_or_after[search_from]
+            if close == nil then
                 tokens[#tokens + 1] = {kind = "literal", scalar = 91}
             else
                 local content = {}
@@ -364,11 +387,10 @@ local function canonical_edge_less(left, right)
 end
 
 local function validate_graph(packages, edges)
-    local package_count = dense_count(packages, MAX_PACKAGES + 1,
-        "GRAPH_PACKAGE_LIMIT_EXCEEDED")
-    require_contract(package_count <= MAX_PACKAGES, "GRAPH_PACKAGE_LIMIT_EXCEEDED")
-    local edge_count = dense_count(edges, MAX_EDGES + 1, "GRAPH_EDGE_LIMIT_EXCEEDED")
-    require_contract(edge_count <= MAX_EDGES, "GRAPH_EDGE_LIMIT_EXCEEDED")
+    local package_count = dense_count(packages, MAX_PACKAGES,
+        "GRAPH_PACKAGE_LIMIT_EXCEEDED", "GRAPH_PACKAGE_LIMIT_EXCEEDED")
+    local edge_count = dense_count(edges, MAX_EDGES,
+        "GRAPH_EDGE_LIMIT_EXCEEDED", "GRAPH_EDGE_LIMIT_EXCEEDED")
 
     local names, ordered_names = {}, {}
     for index = 1, package_count do
@@ -387,7 +409,7 @@ local function validate_graph(packages, edges)
     local seen = {}
     for index = 1, edge_count do
         local edge = rawget(edges, index)
-        require_contract(dense_count(edge, 3, "GRAPH_EDGE_UNKNOWN") == 2,
+        require_contract(dense_count(edge, 2, "GRAPH_EDGE_UNKNOWN", "GRAPH_EDGE_UNKNOWN") == 2,
             "GRAPH_EDGE_UNKNOWN")
         local prerequisite, dependent = rawget(edge, 1), rawget(edge, 2)
         require_contract(type(prerequisite) == "string" and type(dependent) == "string"
@@ -444,22 +466,28 @@ local function same_set(left, right)
 end
 
 local function validate_root_identities(packages)
-    local identities = {}
+    local root = {children = {}}
     for _, package in ipairs(packages) do
         local identity = Unicode.casefold(Unicode.nfc(package.rel_path))
-        for _, prior in ipairs(identities) do
-            require_contract(identity ~= prior
-                and identity:sub(1, #prior + 1) ~= prior .. "/"
-                and prior:sub(1, #identity + 1) ~= identity .. "/", "DIFF_PATH_INVALID")
+        local node = root
+        for _, segment in ipairs(split_path(identity)) do
+            require_contract(node.terminal ~= true, "DIFF_PATH_INVALID")
+            local child = node.children[segment]
+            if child == nil then
+                child = {children = {}}
+                node.children[segment] = child
+            end
+            node = child
         end
-        identities[#identities + 1] = identity
+        require_contract(node.terminal ~= true and next(node.children) == nil,
+            "DIFF_PATH_INVALID")
+        node.terminal = true
     end
 end
 
 local function validate_diff_input(input, graph)
-    local package_count = dense_count(rawget(input, "packages"), MAX_PACKAGES + 1,
-        "DIFF_PACKAGE_INVALID")
-    require_contract(package_count <= MAX_PACKAGES, "DIFF_PACKAGE_INVALID")
+    local package_count = dense_count(rawget(input, "packages"), MAX_PACKAGES,
+        "DIFF_PACKAGE_INVALID", "DIFF_PACKAGE_INVALID")
     local packages, names = {}, {}
     for index = 1, package_count do
         local raw_package = inert_record(rawget(rawget(input, "packages"), index),
@@ -467,14 +495,13 @@ local function validate_diff_input(input, graph)
         local name = rawget(raw_package, "name")
         local rel_path = rawget(raw_package, "rel_path")
         local source_mode = rawget(raw_package, "source_mode")
-        local source_globs = rawget(raw_package, "source_globs") or {}
+        local source_globs = rawget(raw_package, "source_globs")
         require_contract(valid_package_name(name), "DIFF_PACKAGE_INVALID")
         require_contract(valid_portable_path(rel_path), "DIFF_PATH_INVALID")
         require_contract(source_mode == "package_prefix" or source_mode == "strict_globs",
             "DIFF_SOURCE_MODE_INVALID")
-        local glob_count = dense_count(source_globs, MAX_SOURCE_GLOBS + 1,
-            "DIFF_GLOB_INVALID")
-        require_contract(glob_count <= MAX_SOURCE_GLOBS, "DIFF_GLOB_INVALID")
+        local glob_count = dense_count(source_globs, MAX_SOURCE_GLOBS,
+            "DIFF_GLOB_INVALID", "DIFF_GLOB_INVALID")
         local globs, compiled, seen_globs = {}, {}, {}
         for glob_index = 1, glob_count do
             local glob = rawget(source_globs, glob_index)
@@ -497,8 +524,8 @@ local function validate_diff_input(input, graph)
     local policy = rawget(input, "unknown_path_policy")
     require_contract(policy == "all" or policy == "error", "DIFF_POLICY_INVALID")
     local forced = rawget(input, "forced_packages")
-    local forced_count = dense_count(forced, MAX_PACKAGES + 1, "DIFF_FORCED_PACKAGE_INVALID")
-    require_contract(forced_count <= MAX_PACKAGES, "DIFF_FORCED_PACKAGE_INVALID")
+    local forced_count = dense_count(forced, MAX_PACKAGES,
+        "DIFF_FORCED_PACKAGE_INVALID", "DIFF_FORCED_PACKAGE_INVALID")
     local seen_forced = {}
     for index = 1, forced_count do
         local name = rawget(forced, index)
@@ -508,8 +535,8 @@ local function validate_diff_input(input, graph)
         require_contract(names[name], "DIFF_FORCED_PACKAGE_UNKNOWN")
     end
     local changed_paths = rawget(input, "changed_paths")
-    local changed_count = dense_count(changed_paths, MAX_PACKAGES + 1, "DIFF_PATH_INVALID")
-    require_contract(changed_count <= MAX_PACKAGES, "DIFF_PATH_INVALID")
+    local changed_count = dense_count(changed_paths, MAX_PACKAGES,
+        "DIFF_PATH_INVALID", "DIFF_PATH_INVALID")
     local seen_paths = {}
     for index = 1, changed_count do
         local path = rawget(changed_paths, index)
@@ -579,7 +606,8 @@ local function snapshot_boundary(root)
             and rawget(mt, "__jsontype") == "object")
         if marked_array then
             require_contract(accepted_metatable(value, "array"), "DIFF_BOUNDARY_INVALID")
-            local count = dense_count(value, MAX_BOUNDARY_NODES, "DIFF_BOUNDARY_INVALID")
+            local count = dense_count(value, MAX_BOUNDARY_NODES - nodes,
+                "DIFF_BOUNDARY_INVALID", "DIFF_BOUNDARY_INVALID")
             require_contract(count <= MAX_BOUNDARY_NODES - nodes, "DIFF_BOUNDARY_INVALID")
             if count > 0 then require_contract(depth < MAX_BOUNDARY_DEPTH,
                 "DIFF_BOUNDARY_INVALID") end
@@ -642,8 +670,8 @@ local function canonical_json(value)
 end
 
 local function validate_path_array(value, maximum)
-    local count = dense_count(value, maximum + 1, "DIFF_BOUNDARY_INVALID")
-    require_contract(count <= maximum, "DIFF_BOUNDARY_INVALID")
+    local count = dense_count(value, maximum, "DIFF_BOUNDARY_INVALID",
+        "DIFF_BOUNDARY_INVALID")
     local result, seen = {}, {}
     for index = 1, count do
         local path = rawget(value, index)
@@ -694,7 +722,8 @@ local function validate_boundary(value)
         and #rawget(value, "language_source_input_registry_sha256") == 64,
         "DIFF_BOUNDARY_INVALID")
     local raw_boundaries = rawget(value, "boundaries")
-    local count = dense_count(raw_boundaries, 257, "DIFF_BOUNDARY_INVALID")
+    local count = dense_count(raw_boundaries, 256, "DIFF_BOUNDARY_INVALID",
+        "DIFF_BOUNDARY_INVALID")
     require_contract(count >= 1 and count <= 256, "DIFF_BOUNDARY_INVALID")
     local result, ids = {}, {}
     local scopes, authorizations = 0, 0
@@ -710,7 +739,8 @@ local function validate_boundary(value)
         ids[rawget(rule, "id")] = true
         local applies_to = validate_applicability(rawget(rule, "applies_to"))
         local raw_inputs = rawget(rule, "inputs")
-        local input_count = dense_count(raw_inputs, 65, "DIFF_BOUNDARY_INVALID")
+        local input_count = dense_count(raw_inputs, 64, "DIFF_BOUNDARY_INVALID",
+            "DIFF_BOUNDARY_INVALID")
         require_contract(input_count >= 1 and input_count <= 64, "DIFF_BOUNDARY_INVALID")
         local inputs = {}
         for input_index = 1, input_count do
@@ -881,9 +911,8 @@ function GraphDiff.evaluate_diff_selection(input)
     return protect("DIFF_INPUT_INVALID", function()
         input = snapshot_diff_input(input)
         local packages_value = input.packages
-        local package_count = dense_count(packages_value, MAX_PACKAGES + 1,
-            "DIFF_PACKAGE_INVALID")
-        require_contract(package_count <= MAX_PACKAGES, "DIFF_PACKAGE_INVALID")
+        local package_count = dense_count(packages_value, MAX_PACKAGES,
+            "DIFF_PACKAGE_INVALID", "DIFF_PACKAGE_INVALID")
         local names = {}
         for index = 1, package_count do
             local package = inert_record(rawget(packages_value, index), "DIFF_PACKAGE_INVALID")

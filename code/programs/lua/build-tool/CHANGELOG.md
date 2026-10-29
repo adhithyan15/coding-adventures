@@ -42,6 +42,12 @@
 
 ### Fixed
 
+- Strict diff globs now treat the package root as a zero-component relative
+  path, so `*` and `?` cannot select it while a whole `**` segment can.
+- Glob character-class compilation and folded package-root validation are
+  linear in their bounded inputs, and inert snapshots no longer turn package
+  limits or malformed edges into generic input errors or default a missing
+  `source_globs` field.
 - Package discovery now classifies the emerging `ocaml` bucket while continuing
   to prune only exact case-sensitive `_build` output; `_Build` and
   `_build-example` remain discoverable source paths.

@@ -79,8 +79,12 @@ The build tool follows a pipeline:
    package-prefix and strict portable-glob source modes.
 
    Strict globs compile to Unicode-scalar tokens and run through bounded
-   dynamic programs. Before the first match, the evaluator charges the full
-   pattern/path cross product against one 50,000,000-unit operation ceiling.
+   dynamic programs; empty package-relative paths contain zero components, so
+   only a whole `**` segment can match a package root. A reverse bracket index
+   keeps pattern parsing linear even for unmatched opening-bracket runs, and a
+   segment trie validates folded package roots without pairwise comparisons.
+   Before the first match, the evaluator charges the full pattern/path cross
+   product against one 50,000,000-unit operation ceiling.
    Optional repository source-boundary data is bounded as an inert decoded
    object graph, verified with its domain-separated SHA-256 digest, and
    reversed so one shared input can select every registered consumer. The
