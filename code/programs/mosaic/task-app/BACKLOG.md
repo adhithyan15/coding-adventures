@@ -69,11 +69,18 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18559 — Qt empty Board drop-target height floor.**
-Preserve both themes' existing 60-pixel minimum on the outer drop target.
-Require numeric safety, state-override exclusions, and package-expanded checks.
-Keep root-scroll/flex work owned by #18481 separate; feature composition and
-signing remain outside scope.
+**Next: #18581 — prepare, publish, and audit v0.5.15.**
+The P0 lifecycle gates are complete. Prioritize this compatible release under
+#13543 after #18559 merged in #18562. Preserve substantive changelog details,
+including the reporting change below. Require all existing payload validations;
+dispatch only after preparation merges and audit immutable provenance, assets,
+checksums, and notes before closing #18581. Preparation is not publication.
+Artifact coverage is unchanged; signing remains blocked in #13977.
+
+**Completed fidelity slice: #18559 — Qt empty Board drop-target floor.**
+Merged in #18562, with TaskApp payload run 40836764807 and all required checks
+passing on `95a6a47aacd0fc5d3a033d218d525d49e4dd364b`. Both themes preserve
+the 60-pixel minimum with numeric safety and state-override exclusions.
 
 Release validation discovered three previously invisible Qt col-drop styles:
 display, flex-direction, and gap. Each is pinned to one occurrence (total
