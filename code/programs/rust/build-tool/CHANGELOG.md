@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Add a process-free graph and diff-selection core that dynamically consumes
+  all eight graph and twelve diff-selection neutral fixtures. It provides
+  canonical all-or-error graph results, deterministic dependent and
+  prerequisite closures, exact repository-boundary digest and reverse-index
+  selection (including shared multi-consumers), Unicode-scalar strict-glob
+  matching, and the operation-wide 50,000,000 work ceiling.
+
 ### Changed
 
 - Source hashing now follows the 27-component neutral generated-directory

@@ -36,6 +36,16 @@ The compatibility `match_path` helper converts invalid syntax to a non-match
 without panicking; BUILD-file hosts use the typed API and complete-list
 preflight above so invalid input remains distinguishable from a non-match.
 
+The reusable `graph_diff` core accepts only caller-supplied values. It
+canonicalizes graph edges and prerequisite-first levels, performs exact
+package and shared-repository-input selection, and returns either one complete
+result or one stable error code. Strict-glob work is preflighted across the
+whole operation with the neutral 50,000,000 Unicode-scalar ceiling before the
+first match. Repository-boundary inputs are depth, node, container, and string
+bounded; their versioned canonical SHA-256 is verified before an exact reverse
+consumer index is used. The core never reads a checkout or acquires process,
+environment, clock, randomness, or network authority.
+
 ## Building
 
 ```bash
@@ -99,6 +109,7 @@ The tool is organized into focused modules, each responsible for one aspect of t
 8. **reporter** — Terminal-friendly build report formatting
 9. **validator** — Pure build-contract, orphan-crate, and tracked-artifact validation
 10. **toolchain_detection** — Pure bounded snapshot evaluation for extra CI toolchain declarations
+11. **graph_diff** — Pure bounded graph and diff-selection evaluation for inert snapshots
 
 Tracked-artifact snapshots explicitly require Unicode 17.0.0. The validator's
 exactly pinned `oxixml-unicode` tables cover NFC, NFKC, full default folding,
@@ -147,6 +158,12 @@ per-front and aggregate resource ceilings, empty platform-front precedence,
 exact CRLF parsing, null-versus-empty schedules, aliases, forced toolchains,
 error precedence, and fresh deterministic result maps without reading the
 filesystem or invoking Git, processes, environment variables, or the network.
+
+Graph/diff conformance tests dynamically enumerate and pin the exact eight
+`graph-*.json` and twelve `diff-selection-*.json` neutral cases, including the
+shared-input multi-consumer reverse index, deterministic transitive closures,
+strict character classes, unknown-path policies, repository-boundary digest,
+and the exact-at/over 50,000,000 match-work boundary.
 
 ## Discovery and metadata diagnostics
 
