@@ -118,7 +118,6 @@ end
 
 local function inert_record(value, code)
     require_contract(type(value) == "table" and accepted_metatable(value, "object"), code)
-    for key in next, value do require_contract(type(key) == "string", code) end
     return value
 end
 
@@ -325,6 +324,67 @@ local function compile_segment(value)
     return tokens
 end
 
+-- Validation walks UTF-8 byte offsets without materializing tokens or scalar
+-- arrays.  Each closing-bracket search consumes a disjoint suffix; after one
+-- misses, every later opening bracket is known to be literal.  Thus even a
+-- maximum-length run of unmatched '[' scalars is scanned once.
+local function validate_segment_syntax(value)
+    local index = 1
+    local no_more_close = false
+    while index <= #value do
+        local scalar = utf8.codepoint(value, index)
+        local following = utf8.offset(value, 2, index) or (#value + 1)
+        if scalar == 91 and not no_more_close then
+            local first = following
+            if value:byte(first) == 33 then
+                first = utf8.offset(value, 2, first) or (#value + 1)
+            end
+            local search_from = first
+            if value:byte(search_from) == 93 then search_from = search_from + 1 end
+            local close = value:find("]", search_from, true)
+            if close == nil then
+                no_more_close = true
+            else
+                require_contract(first < close, "DIFF_GLOB_INVALID")
+                local position = first
+                while position < close do
+                    local next_position = utf8.offset(value, 2, position) or (#value + 1)
+                    local byte = value:byte(position)
+                    if next_position < close and (byte == 45 or byte == 38
+                            or byte == 126 or byte == 124) then
+                        require_contract(value:byte(next_position) ~= byte,
+                            "DIFF_GLOB_INVALID")
+                    end
+                    position = next_position
+                end
+                position = first
+                while position < close do
+                    local next_position = utf8.offset(value, 2, position) or (#value + 1)
+                    local after_next = next_position < close
+                        and (utf8.offset(value, 2, next_position) or (#value + 1))
+                        or (#value + 1)
+                    if next_position < close and value:byte(next_position) == 45
+                            and after_next < close then
+                        require_contract(utf8.codepoint(value, position)
+                            <= utf8.codepoint(value, after_next), "DIFF_GLOB_INVALID")
+                        position = utf8.offset(value, 2, after_next) or (#value + 1)
+                    else
+                        position = next_position
+                    end
+                end
+                following = close + 1
+            end
+        end
+        index = following
+    end
+end
+
+local function validate_glob_syntax(value)
+    for segment in (value .. "/"):gmatch("(.-)/") do
+        if segment ~= "**" then validate_segment_syntax(segment) end
+    end
+end
+
 local function compile_glob(value)
     local result = {}
     for _, segment in ipairs(split_path(value)) do
@@ -465,23 +525,41 @@ local function same_set(left, right)
     return left_count == right_count
 end
 
-local function validate_root_identities(packages)
-    local root = {children = {}}
-    for _, package in ipairs(packages) do
-        local identity = Unicode.casefold(Unicode.nfc(package.rel_path))
-        local node = root
-        for _, segment in ipairs(split_path(identity)) do
-            require_contract(node.terminal ~= true, "DIFF_PATH_INVALID")
-            local child = node.children[segment]
-            if child == nil then
-                child = {children = {}}
-                node.children[segment] = child
-            end
-            node = child
+local function root_prefix(left, right)
+    if #left >= #right or right:byte(#left + 1) ~= 47 then return false end
+    for index = 1, #left do
+        if left:byte(index) ~= right:byte(index) then return false end
+    end
+    return true
+end
+
+local function root_less(left, right)
+    local shared = math.min(#left, #right)
+    for index = 1, shared do
+        local left_byte, right_byte = left:byte(index), right:byte(index)
+        if left_byte ~= right_byte then
+            -- Order the path separator before every segment byte.  Then an
+            -- ancestor and its descendants remain adjacent even when a valid
+            -- sibling such as "a!" would sort between "a" and "a/x" under
+            -- ordinary byte ordering.
+            if left_byte == 47 then return true end
+            if right_byte == 47 then return false end
+            return left_byte < right_byte
         end
-        require_contract(node.terminal ~= true and next(node.children) == nil,
+    end
+    return #left < #right
+end
+
+local function validate_root_identities(packages)
+    local identities = {}
+    for _, package in ipairs(packages) do
+        identities[#identities + 1] = Unicode.casefold(Unicode.nfc(package.rel_path))
+    end
+    table.sort(identities, root_less)
+    for index = 2, #identities do
+        local prior, identity = identities[index - 1], identities[index]
+        require_contract(identity ~= prior and not root_prefix(prior, identity),
             "DIFF_PATH_INVALID")
-        node.terminal = true
     end
 end
 
@@ -502,21 +580,21 @@ local function validate_diff_input(input, graph)
             "DIFF_SOURCE_MODE_INVALID")
         local glob_count = dense_count(source_globs, MAX_SOURCE_GLOBS,
             "DIFF_GLOB_INVALID", "DIFF_GLOB_INVALID")
-        local globs, compiled, seen_globs = {}, {}, {}
+        local globs, seen_globs = {}, {}
         for glob_index = 1, glob_count do
             local glob = rawget(source_globs, glob_index)
             require_contract(valid_portable_glob(glob) and not seen_globs[glob],
                 "DIFF_GLOB_INVALID")
+            validate_glob_syntax(glob)
             seen_globs[glob] = true
             globs[#globs + 1] = glob
-            compiled[#compiled + 1] = compile_glob(glob)
         end
         require_contract(source_mode == "strict_globs" or #globs == 0,
             "DIFF_GLOB_INVALID")
         require_contract(not names[name], "DIFF_PACKAGE_DUPLICATE")
         names[name] = true
         packages[#packages + 1] = {name = name, rel_path = rel_path,
-            source_mode = source_mode, source_globs = globs, compiled_globs = compiled}
+            source_mode = source_mode, source_globs = globs}
     end
     require_contract(same_set(names, graph.names), "DIFF_PACKAGE_INVALID")
     validate_root_identities(packages)
@@ -858,7 +936,7 @@ end
 
 local function select_diff(packages, graph, forced, forced_count, changed_paths,
         changed_count, policy, boundary_consumers)
-    local changed = {}
+    local changed, strict_candidates = {}, {}
     for index = 1, forced_count do changed[rawget(forced, index)] = true end
     local unknown = false
     for index = 1, changed_count do
@@ -872,12 +950,16 @@ local function select_diff(packages, graph, forced, forced_count, changed_paths,
                 local relative = relative_path(path, package.rel_path)
                 local selected = package.source_mode == "package_prefix"
                     or BUILD_FRONTS[basename(relative)] == true
-                if not selected then
-                    for _, pattern in ipairs(package.compiled_globs) do
-                        if glob_matches(pattern, relative) then selected = true; break end
+                if selected then
+                    changed[package.name] = true
+                else
+                    local candidates = strict_candidates[package.name]
+                    if candidates == nil then
+                        candidates = {}
+                        strict_candidates[package.name] = candidates
                     end
+                    candidates[#candidates + 1] = relative
                 end
-                if selected then changed[package.name] = true end
             end
         end
         if not known then unknown = true end
@@ -886,6 +968,28 @@ local function select_diff(packages, graph, forced, forced_count, changed_paths,
     if unknown then
         changed = {}
         for name in pairs(graph.names) do changed[name] = true end
+    else
+        -- Compile at most one pattern at a time and reuse it across every
+        -- candidate path for its package.  The preflight ceiling bounds all
+        -- such pattern/path work, while this local lifetime bounds retained
+        -- token storage independently of the number of declared globs.
+        for _, package in ipairs(packages) do
+            local candidates = strict_candidates[package.name]
+            if candidates and not changed[package.name] then
+                local selected = false
+                for _, glob in ipairs(package.source_globs) do
+                    local pattern = compile_glob(glob)
+                    for _, relative in ipairs(candidates) do
+                        if glob_matches(pattern, relative) then
+                            selected = true
+                            break
+                        end
+                    end
+                    if selected then break end
+                end
+                if selected then changed[package.name] = true end
+            end
+        end
     end
     local affected = closure(changed, graph.dependents)
     local prerequisites = closure(affected, graph.prerequisites)

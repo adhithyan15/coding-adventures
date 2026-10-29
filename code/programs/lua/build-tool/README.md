@@ -78,13 +78,15 @@ The build tool follows a pipeline:
    prerequisite closures, recognizes only exact BUILD fronts, and supports
    package-prefix and strict portable-glob source modes.
 
-   Strict globs compile to Unicode-scalar tokens and run through bounded
-   dynamic programs; empty package-relative paths contain zero components, so
-   only a whole `**` segment can match a package root. A reverse bracket index
-   keeps pattern parsing linear even for unmatched opening-bracket runs, and a
-   segment trie validates folded package roots without pairwise comparisons.
-   Before the first match, the evaluator charges the full pattern/path cross
-   product against one 50,000,000-unit operation ceiling.
+   Strict glob syntax is validated with a linear, allocation-light scalar scan.
+   Matching then compiles one pattern at a time, reuses it across the candidate
+   paths for that package, and releases it before compiling the next pattern.
+   Empty package-relative paths contain zero components, so only a whole `**`
+   segment can match a package root. Folded package roots are sorted with
+   separator-aware ordering and checked adjacently, avoiding both pairwise
+   comparisons and per-segment trie nodes. Before the first match, the
+   evaluator charges the full pattern/path cross product against one
+   50,000,000-unit operation ceiling.
    Optional repository source-boundary data is bounded as an inert decoded
    object graph, verified with its domain-separated SHA-256 digest, and
    reversed so one shared input can select every registered consumer. The

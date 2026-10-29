@@ -112,6 +112,15 @@ local function simple_diff(packages)
         unknown_path_policy = "error", changed_paths = {}, boundary_sha256 = ""}
 end
 
+local function retained_kibibytes(operation)
+    collectgarbage("collect")
+    local before = collectgarbage("count")
+    local result = operation()
+    local retained = collectgarbage("count") - before
+    collectgarbage("collect")
+    return result, retained
+end
+
 describe("process-free Lua graph and diff selection", function()
     it("dynamically consumes the exact eight graph fixtures", function()
         local documents = fixtures("graph")
@@ -266,15 +275,26 @@ describe("process-free Lua graph and diff selection", function()
             }))
     end)
 
-    it("validates maximum-scale roots with a segment trie and catches a late prefix", function()
+    it("validates maximum-scale many-segment roots without per-segment nodes", function()
         local packages = {}
         for index = 1, 4096 do
+            local segments = {}
+            for bit = 11, 0, -1 do
+                segments[#segments + 1] = ((index - 1) // (1 << bit)) % 2 == 0
+                    and "a" or "b"
+            end
+            for _ = 13, 256 do segments[#segments + 1] = "a" end
             packages[index] = package_prefix(
                 string.format("fixture/p%04d", index),
-                string.format("code/p%04d", index))
+                table.concat(segments, "/"))
         end
+        local actual, retained = retained_kibibytes(function()
+            return GraphDiff.evaluate_diff_selection(simple_diff(packages))
+        end)
         assert.same({ok = true, value = {changed_packages = {}, affected_packages = {},
-            prerequisite_packages = {}}}, GraphDiff.evaluate_diff_selection(simple_diff(packages)))
+            prerequisite_packages = {}}}, actual)
+        assert.is_true(retained < 32768,
+            string.format("root validation retained %.1f MiB", retained / 1024))
 
         packages[1].rel_path = "code/shared/child"
         packages[4096].rel_path = "code/shared"
@@ -306,6 +326,41 @@ describe("process-free Lua graph and diff selection", function()
         missing.source_globs = false
         assert.same({ok = false, code = "DIFF_INPUT_INVALID"},
             GraphDiff.evaluate_diff_selection(simple_diff({missing})))
+    end)
+
+    it("validates many maximum glob lists without retaining compiled tokens", function()
+        local globs = {}
+        for index = 1, 256 do
+            globs[index] = string.format("%03d", index) .. string.rep("a", 509)
+        end
+        local packages = {}
+        for index = 1, 4 do
+            packages[index] = {name = string.format("fixture/p%d", index),
+                rel_path = string.format("code/p%d", index), source_mode = "strict_globs",
+                source_globs = globs}
+        end
+        local actual, retained = retained_kibibytes(function()
+            return GraphDiff.evaluate_diff_selection(simple_diff(packages))
+        end)
+        assert.same({ok = true, value = {changed_packages = {}, affected_packages = {},
+            prerequisite_packages = {}}}, actual)
+        assert.is_true(retained < 24576,
+            string.format("glob validation retained %.1f MiB", retained / 1024))
+    end)
+
+    it("ignores hostile extra fields without weakening metatable rejection", function()
+        local package = package_prefix("fixture/a", "code/a")
+        local input = simple_diff({package})
+        for index = 1, 32768 do
+            input["ignored_" .. index] = true
+            package[index] = true
+        end
+        assert.same({ok = true, value = {changed_packages = {}, affected_packages = {},
+            prerequisite_packages = {}}}, GraphDiff.evaluate_diff_selection(input))
+
+        setmetatable(input, {__index = {changed_paths = {"code/a/injected.lua"}}})
+        assert.same({ok = false, code = "DIFF_INPUT_INVALID"},
+            GraphDiff.evaluate_diff_selection(input))
     end)
 
     it("rejects hostile table shapes and complete invalid glob lists", function()

@@ -48,6 +48,11 @@
   linear in their bounded inputs, and inert snapshots no longer turn package
   limits or malformed edges into generic input errors or default a missing
   `source_globs` field.
+- Glob validation no longer retains compiled token graphs for declarations
+  that never reach matching; compilation is lazy, one-pattern-at-a-time, and
+  reused across a package's candidate paths. Folded-root validation now uses a
+  compact separator-aware sorted list instead of per-segment trie tables, and
+  ignored record fields no longer trigger unbounded pre-snapshot enumeration.
 - Package discovery now classifies the emerging `ocaml` bucket while continuing
   to prune only exact case-sensitive `_build` output; `_Build` and
   `_build-example` remain discoverable source paths.
