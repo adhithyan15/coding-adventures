@@ -180,6 +180,34 @@ R2 out 0 1k
     }
   });
 
+  it("runs the shared ngspice control parameter corpus", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/ngspice-control-parameter-v1-corpus.json", import.meta.url),
+      "utf8",
+    )) as { suite: string; cases: readonly { deck: string; expected: {
+      stepCards: readonly { parameter: string; values: readonly number[] }[];
+      stepValues: readonly Record<string, number>[];
+      out: readonly number[];
+    } }[] };
+    expect(corpus.suite).toBe("ngspice-control-parameter-v1");
+    for (const testCase of corpus.cases) {
+      const parsed = parseNetlist(testCase.deck);
+      expect(parsed.stepCards).toEqual(testCase.expected.stepCards);
+      const results = parsed.runAnalysisPlan();
+      expect(results.map((result) => Object.fromEntries(result.stepValues ?? []))).toEqual(
+        testCase.expected.stepValues,
+      );
+      for (const [index, result] of results.entries()) {
+        expect((result.result as { voltage(node: string): number | undefined }).voltage("out"))
+          .toBeCloseTo(testCase.expected.out[index]!, 12);
+      }
+      const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+        analyses: readonly { stepValues: Record<string, number> }[];
+      };
+      expect(payload.analyses.map((analysis) => analysis.stepValues)).toEqual(testCase.expected.stepValues);
+    }
+  });
+
   it("runs the shared Berkeley v1 core corpus", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-op-corpus.json", import.meta.url),

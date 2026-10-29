@@ -1097,7 +1097,85 @@ fn parameter_controls(text: &str) -> Result<ParameterControls, NetlistParseError
             _ => {}
         }
     }
+    step_cards.extend(control_parameter_step_cards(text, &parameters)?);
     Ok((parameters, step_cards, table_parameters))
+}
+
+fn control_parameter_step_cards(
+    text: &str,
+    parameters: &BTreeMap<String, f64>,
+) -> Result<Vec<StepCard>, NetlistParseError> {
+    let mut cards = Vec::new();
+    let mut block = Vec::new();
+    let mut in_control = false;
+    for line in text.lines() {
+        let line = line.trim();
+        if !in_control {
+            if line.eq_ignore_ascii_case(".control") {
+                in_control = true;
+                block.clear();
+            }
+            continue;
+        }
+        if line.eq_ignore_ascii_case(".endc") {
+            cards.extend(control_parameter_step_cards_in_block(&block, parameters)?);
+            in_control = false;
+        } else {
+            block.push(line);
+        }
+    }
+    Ok(cards)
+}
+
+fn control_parameter_step_cards_in_block(
+    block: &[&str],
+    parameters: &BTreeMap<String, f64>,
+) -> Result<Vec<StepCard>, NetlistParseError> {
+    let mut cards = Vec::new();
+    for (index, line) in block.iter().enumerate() {
+        let fields = split_fields(line)?;
+        if fields.len() < 3 || !fields[0].trim_start_matches('.').eq_ignore_ascii_case("foreach") {
+            continue;
+        }
+        let values = fields[2..]
+            .iter()
+            .map(|value| parse_value(value))
+            .collect::<Result<Vec<_>, _>>()?;
+        let tail = &block[index + 1..];
+        let assignment = tail.iter().find(|line| {
+            line.to_ascii_lowercase().starts_with("alterparam ")
+                || line.to_ascii_lowercase().starts_with(".alterparam ")
+        });
+        let Some(assignment) = assignment else {
+            return Err(NetlistParseError::new(
+                ".control foreach parameter runs require alterparam followed by reset",
+            ));
+        };
+        if !tail.iter().any(|line| line.trim_start_matches('.').eq_ignore_ascii_case("reset")) {
+            return Err(NetlistParseError::new(
+                ".control foreach parameter runs require alterparam followed by reset",
+            ));
+        }
+        let expression = assignment.split_once(char::is_whitespace).map(|(_, rest)| rest.trim()).unwrap_or("");
+        let Some((parameter, value)) = expression.split_once('=') else {
+            return Err(NetlistParseError::new(
+                ".control alterparam requires NAME=$foreach_variable",
+            ));
+        };
+        if value.trim().trim_start_matches('$') != fields[1] {
+            return Err(NetlistParseError::new(
+                ".control alterparam must use its enclosing foreach variable",
+            ));
+        }
+        let parameter = parameter_name(parameter.trim())?;
+        if !parameters.contains_key(&parameter) {
+            return Err(NetlistParseError::new(format!(
+                ".control alterparam target {parameter:?} is not a top-level .param"
+            )));
+        }
+        cards.push(StepCard { parameter, values });
+    }
+    Ok(cards)
 }
 
 fn parse_parameter_card(
