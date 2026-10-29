@@ -1873,6 +1873,33 @@ traffic keys or IVs, process handshake or records, validate certificates,
 select trust, enforce revocation, authorize HTTP or OAuth transport, or open a
 network connection. Concrete HTTPS remains unavailable.
 
+A bounded `tls13-traffic-key-material` composition now derives one selected
+TLS 1.3 cipher suite's record-protection key and static IV from an
+already-derived traffic secret. It consumes the existing caller-policy-selected
+suite value together with the fixed wipe-on-drop `HkdfPrk` owner, rejects a
+SHA-256/SHA-384 mismatch before derivation, and takes the exact key and IV
+lengths only from the suite's immutable descriptor. The fixed labels `"key"`
+and `"iv"` and empty context are internal rather than caller-controlled. Both
+outputs occupy non-cloneable caller-owned fixed wipe-on-drop storage, retain
+the selected AEAD and caller-authorized per-key record ceiling, and become
+accessible only through a success-only borrowed view. Secret bytes never cross
+the ABI return slot by value and diagnostics remain redacted. If IV derivation
+fails after the key succeeds, the key's staging owner is wiped while unwinding
+the error path. On success, both staging owners remain alive after their
+deliberate copies into caller-owned storage and scrub their original stack
+slots before return; a release-codegen gate verifies those source scrubs and
+allocator absence.
+
+This composition does not establish the traffic secret's entropy, provenance,
+or key-schedule position; derive or retain early, handshake, master, exporter,
+resumption, or traffic secrets; select or negotiate a suite; invoke an AEAD;
+construct per-record nonces; protect records; process a handshake; validate
+certificates; establish trust; enforce revocation; perform I/O; authorize HTTP
+or OAuth transport; or open a network connection. Repository-owned AEAD
+review and composition, complete key-schedule and transcript state, handshake
+processing, certificate-path validation, revocation policy, TLS transport, and
+HTTP composition remain blockers. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
