@@ -7235,6 +7235,17 @@ where
             diagram.render_config.html_labels.to_string(),
         );
     }
+    if diagram.kind == diagram_ir::StructuralKind::C4 {
+        if let Some(value) = diagram.render_config.c4_diagram_type {
+            scene_metadata.insert("c4.diagramType".into(), value.as_str().into());
+        }
+        if let Some(value) = diagram.render_config.c4_shape_in_row {
+            scene_metadata.insert("c4.shapeInRow".into(), value.to_string());
+        }
+        if let Some(value) = diagram.render_config.c4_boundary_in_row {
+            scene_metadata.insert("c4.boundaryInRow".into(), value.to_string());
+        }
+    }
     let lf = options.label_font.clone();
     let ls = lf.size;
 
@@ -7267,11 +7278,11 @@ where
             y: group.y,
             width: group.width,
             height: group.height,
-            fill: Some("#f8fafc".into()),
-            stroke: Some("#94a3b8".into()),
-            stroke_width: Some(1.5),
-            corner_radius: Some(8.0),
-            stroke_dash: Some(vec![6.0, 4.0]),
+            fill: Some(group.style.fill.clone()),
+            stroke: Some(group.style.stroke.clone()),
+            stroke_width: Some(group.style.stroke_width),
+            corner_radius: Some(group.style.corner_radius),
+            stroke_dash: group.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }));
         let label = match &group.stereotype {
@@ -7303,20 +7314,28 @@ where
             group.y + 6.0,
             label_width,
             ls * 1.3,
-            lf.clone(),
-            Color {
-                r: 71,
-                g: 85,
-                b: 105,
-                a: 255,
+            {
+                let mut font = lf.clone();
+                font.size = group.style.font_size;
+                font.weight = group.style.font_weight;
+                font.italic = group.style.font_italic;
+                font.family.clone_from(&group.style.font_family);
+                font
             },
+            css_to_color(&group.style.text_color),
         ));
     }
 
     // ── Relationships (drawn behind nodes) ───────────────────────────────────
     for rel in &diagram.relationships {
-        let mut relationship_path = line_path(&rel.points, "#6b7280", 1.5);
-        if rel.kind == RelKind::Dependency {
+        let mut relationship_path = line_path(
+            &rel.points,
+            &rel.style.stroke,
+            rel.style.stroke_width,
+        );
+        if let Some(stroke_dash) = &rel.style.stroke_dash {
+            relationship_path.stroke_dash = Some(stroke_dash.clone());
+        } else if rel.kind == RelKind::Dependency {
             relationship_path.stroke_dash = Some(vec![6.0, 4.0]);
         }
         instructions.push(PaintInstruction::Path(relationship_path));
@@ -7324,7 +7343,12 @@ where
             let tip = &rel.points[rel.points.len() - 1];
             let prev = &rel.points[rel.points.len() - 2];
             instructions.push(PaintInstruction::Path(structural_arrowhead(
-                prev, tip, &rel.kind,
+                prev,
+                tip,
+                &rel.kind,
+                &rel.style.fill,
+                &rel.style.stroke,
+                rel.style.stroke_width,
             )));
         }
         if rel.start_arrow && rel.points.len() >= 2 {
@@ -7332,6 +7356,9 @@ where
                 &rel.points[1],
                 &rel.points[0],
                 &rel.kind,
+                &rel.style.fill,
+                &rel.style.stroke,
+                rel.style.stroke_width,
             )));
         }
         if let Some((pos, lbl)) = rel.label.as_ref().filter(|(_, label)| !label.is_empty()) {
@@ -7355,12 +7382,7 @@ where
                 80.0,
                 ls * 1.2,
                 lf.clone(),
-                Color {
-                    r: 55,
-                    g: 65,
-                    b: 81,
-                    a: 255,
-                },
+                css_to_color(&rel.style.text_color),
             ));
         }
         if rel.points.len() >= 2 {
@@ -7593,7 +7615,14 @@ where
     }
 }
 
-fn structural_arrowhead(prev: &Point, tip: &Point, kind: &RelKind) -> PaintPath {
+fn structural_arrowhead(
+    prev: &Point,
+    tip: &Point,
+    kind: &RelKind,
+    fill: &str,
+    stroke: &str,
+    stroke_width: f64,
+) -> PaintPath {
     let dx = tip.x - prev.x;
     let dy = tip.y - prev.y;
     let len = (dx * dx + dy * dy).sqrt().max(1e-9);
@@ -7605,11 +7634,7 @@ fn structural_arrowhead(prev: &Point, tip: &Point, kind: &RelKind) -> PaintPath 
     let by = tip.y - uy * size;
     let px = -uy;
     let py = ux;
-    let (fill, open) = match kind {
-        RelKind::Inheritance | RelKind::Realization => ("#ffffff", true),
-        RelKind::Composition => ("#374151", false),
-        _ => ("#6b7280", false),
-    };
+    let open = matches!(kind, RelKind::Inheritance | RelKind::Realization);
     let commands = if open {
         vec![
             PathCommand::MoveTo { x: tip.x, y: tip.y },
@@ -7646,8 +7671,8 @@ fn structural_arrowhead(prev: &Point, tip: &Point, kind: &RelKind) -> PaintPath 
             Some(fill.into())
         },
         fill_rule: None,
-        stroke: Some("#374151".into()),
-        stroke_width: Some(1.5),
+        stroke: Some(stroke.into()),
+        stroke_width: Some(stroke_width),
         stroke_cap: None,
         stroke_join: None,
         stroke_dash: None,
@@ -10256,6 +10281,11 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: None,
+                style: ResolvedDiagramStyle {
+                    fill: "#6b7280".into(),
+                    stroke: "#6b7280".into(),
+                    ..edge_style()
+                },
             }],
         };
 
@@ -10309,6 +10339,11 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: Some((Point { x: 100.0, y: 40.0 }, String::new())),
+                style: ResolvedDiagramStyle {
+                    fill: "#6b7280".into(),
+                    stroke: "#6b7280".into(),
+                    ..edge_style()
+                },
             }],
         };
 
@@ -10334,6 +10369,9 @@ mod tests {
             render_config: diagram_ir::StructuralRenderConfig {
                 use_max_width: false,
                 html_labels: false,
+                c4_diagram_type: None,
+                c4_shape_in_row: None,
+                c4_boundary_in_row: None,
             },
             groups: vec![],
             nodes: vec![],

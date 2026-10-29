@@ -1,0 +1,6 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "c4-dynamic-relationships-11.16.1-corpus.json",
+  "fixtures": ["dynamic-relationship-order", "dynamic-rel-index-compatibility"]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-203-RENT203",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-203-RENT203"
+  ],
+  "after": []
+}

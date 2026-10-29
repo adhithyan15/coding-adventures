@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:f9aa50b1496bb45c",
+  "lessonIds": [
+    "ZH-C239-jiankang",
+    "ZH-C239-jieyan",
+    "ZH-C239-hejiu",
+    "ZH-C239-huxi",
+    "ZH-C239-tijian"
+  ],
+  "tex": "chinese/book/chapters/ch239-healthy-habits.tex"
+}

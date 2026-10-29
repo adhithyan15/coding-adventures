@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:ed101a2cce2afaa2",
+  "lessonIds": [
+    "ZH-C181-beizi",
+    "ZH-C181-zhentou",
+    "ZH-C181-jian",
+    "ZH-W181-jian-room",
+    "ZH-C181-yushi",
+    "ZH-C181-chuanglian",
+    "ZH-R181-review-176-181"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch181.txt",
+  "json": "chinese/narration/ch181.json",
+  "textHash": "fnv1a64:b57efd02b8807e72",
+  "jsonHash": "fnv1a64:3678da8b1751a8c7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Rain or Shine",
+  "label": "ch:zh-rain-or-shine",
+  "canDo": "I can put plans off, call them off, move them to another day, take a raincoat and shelter from the rain.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C234-duoyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can put plans off, call them off, move them to another day, take a raincoat and shelter from the rain.",
+    "assesses": [
+      "ZH-LEX-C234-RAIN234-03",
+      "ZH-LEX-C234-RAIN234-04",
+      "ZH-LEX-C234-RAIN234-05"
+    ]
+  }
+}

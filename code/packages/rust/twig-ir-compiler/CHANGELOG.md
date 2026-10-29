@@ -1,5 +1,507 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18453: `and` / `or` inside a lambda; `string<?` is a `bool`
+
+### Fixed
+
+- **`and` / `or` inside an anonymous lambda compile.** `free_vars` walked
+  the head of every application as a name reference. `(and …)` / `(or …)`
+  parse as applications, so their head looked like a free variable called
+  `and` / `or`, and
+
+  ```scheme
+  (let ((f (lambda () (or "a" 1)))) (f))
+  ; unbound name "or" captured by lambda
+  ```
+
+  failed to compile. The walk now skips the head of an `(and …)` /
+  `(or …)` and still walks the arguments. An `and` / `or` in value
+  position is still a name: `(let ((or 7)) ((lambda () (or #f or))))`
+  captures the local `or`, and `((lambda () or))` with nothing bound is
+  still an "unbound name" error. A new predicate,
+  `cst::is_short_circuit_form` (and `ApplyView::is_short_circuit_form`),
+  names the two heads. `compile_apply`, `free_vars` and the call-site
+  string-evidence walk all ask it, so they cannot disagree. Every other special form is a lexer keyword with
+  its own grammar rule, so it never parses as an application, and
+  `free_vars` already handled it as syntax. As a side effect,
+  `lambda_captured_globals` no longer counts a `(or …)` inside a lambda as
+  a capture of a top-level value named `or`. Such a value now stays in a
+  register when nothing captures it in value position.
+- **`string<?` / `string>?` write their result as a `bool`.** The E4 fast
+  path lowers them to a three-way `str_cmp [i64]` and then a `cmp_lt` /
+  `cmp_gt` against 0. That comparison was emitted `[i64]` but recorded as
+  `bool`, so a typed `mov` / `ret [bool]` read a register whose only
+  writer claimed `i64`. It is now emitted `[bool]`, the same hint that
+  `(< a b)` gets. `str_cmp` is a real three-way integer and stays `i64`.
+  On x86-64 and AArch64 this hint selects the comparison's signedness
+  (`cmp_lt_bool`). Those backends used to treat `bool` as unsigned, so they
+  needed the matching fix in this change: there, `-1 < 0` would otherwise
+  have been false (see their changelogs). The IR of the 826-program corpus
+  changes in only the two programs that use `string<?` / `string>?`, by that
+  hint. One of them is a
+  `lang_matrix` program. The strengthened soundness check now finds 0
+  problems across the corpus (it found 1 before).
+
+### Not changed
+
+- `str_eq` (`string=?`) is still typed `i64`. Its writer hint and its
+  recorded type agree, so the soundness check has nothing to report. The
+  wasm, JVM, CLR and BEAM validators all require an `i32` / `i64` result
+  hint on `str_eq`, so a `bool` hint would be rejected by every backend.
+
+### Tests
+
+- `and_or_inside_a_lambda_compile_and_capture_nothing`,
+  `and_or_arguments_inside_a_lambda_are_still_captured`,
+  `a_local_named_and_or_is_captured_in_value_position`,
+  `an_unbound_and_or_value_inside_a_lambda_is_still_an_error`,
+  `string_order_result_is_written_as_a_bool` and
+  `string_order_in_a_join_agrees_with_other_bools_only`. `free_vars` has
+  three new unit tests for `and` / `or` heads, `and` / `or` in value
+  position, and `lambda_captured_globals`.
+- `JOIN_PROGRAMS` gains 7 programs with joins inside lambdas (nested joins,
+  a lambda inside a lambda, and a lambda returned from a function) and 5
+  `string<?` / `string>?` joins. `assert_registers_sound` now covers them.
+  Before the fix, the lambda programs failed to compile and the `string<?`
+  programs failed the typed `mov` / `ret` check.
+
+## Unreleased — #18438: a top-level definition shadows a builtin
+
+### Fixed
+
+- **A user's top-level definition now beats a builtin of the same name
+  everywhere.** Before, the call and value positions disagreed, and the
+  typed fast paths trusted the builtin's name:
+
+  ```scheme
+  (define car 5) car (car p)              ; 5, but (car p) ran the builtin car
+  (define (string-append a b) 5)
+  (string-length (string-append "a" "b")) ; call string-append; str_len on 5
+  (define (+ a b) "zz")
+  (string-ref "abc" (+ 0 1))              ; str_index with a str index
+  (define (f x) (string-length x)) (define (string-append a b) 5)
+  (f (string-append "a" "b"))             ; evidence typed x : str
+  ```
+
+  `compile_apply` already called a user *function* before a builtin, but
+  `unshadowed_apply`, the `can_compile_e4_*` and `is_syntax_static_e4_*`
+  checks, and string-parameter evidence only excluded *locals*. So the
+  user's function was called, while the code around it was typed as if the
+  builtin had run. The VM's typed string ops check their operands and
+  raised a `TypeError`. The native backends trust the hint, so there this
+  was type confusion. A user *value* define named like a builtin lost in
+  call position altogether.
+
+  A new predicate, `Compiler::resolves_to_builtin(name, is_bound)`, is true
+  only for a builtin that is neither a local nor a top-level definition
+  (function or value define, record or union function, or extern). The
+  `call_builtin` arm of `compile_apply` and every name-recognising fast path
+  ask it. `unshadowed_apply` became the method `builtin_apply`, and
+  `is_syntax_static_e4_string_expr` / `_index_expr` became methods so they
+  can see the globals. A call to a value define named like a builtin now
+  takes the indirect path (`call_closure` on its value), like any other
+  value define. Redefining a builtin is not an error, as in Scheme.
+- **`(and …)` / `(or …)` are no evidence about a user `and` / `or`.**
+  Found in the security review. `collect_direct_string_call_evidence` counted
+  `(and "x" "y")` as a direct call to a user `(define (and a b) …)` and
+  typed its parameters `str`, although the special form never calls that
+  function. The evidence walk now skips `and` / `or` heads, as
+  `compile_apply` does. Test:
+  `and_or_calls_are_no_string_evidence_for_a_user_and_or`. It failed
+  before the fix.
+- **Special forms are unchanged and now documented.** Keywords (`if`,
+  `let`, `let*`, `lambda`, `define`, `quote`, `begin`, `match`, …) cannot
+  be defined: that is a positioned parse error. `and` / `or` can be: the
+  definition is what the name means as a value, but `(and …)` / `(or …)`
+  stay the short-circuit forms.
+
+### Changed
+
+- **IR changes only for programs that define a builtin-named global.** Over
+  an 826-program corpus (the 780 Twig program literals from the twig, twigc
+  and lang-aot test sources, plus this change's 46 new programs), 28
+  programs' IR changed relative to the base branch. Every one of them
+  defines a global named like a builtin. The other 798 are byte-identical,
+  including all 49 Twig programs in `lang-aot`'s `lang_matrix`. Of the 49
+  corpus programs that define such a global, the 21 unchanged ones only
+  call a user function by its name, which was already a `call`.
+
+### Tests
+
+- `BUILTIN_SHADOWING_PROGRAMS`: 31 programs, all run through
+  `assert_registers_sound`. They are the issue's and comment's programs, a
+  user function named like each name-recognised builtin (`string-append`,
+  `string-length`, `substring`, `string-ref`, `+`, `-`, `*`, `/`, `<`, `=`,
+  `car`, `cons`), user values named like builtins, string-parameter
+  evidence through a shadowing definition, and uses before the definition,
+  in a function body and in a lambda.
+- `user_function_named_like_a_builtin_wins_in_both_positions`,
+  `user_value_named_like_a_builtin_wins_in_both_positions`,
+  `typed_fast_paths_do_not_trust_a_shadowing_definition`,
+  `string_param_evidence_ignores_a_shadowing_definition` and
+  `extern_named_like_a_builtin_is_not_typed_as_the_builtin` pin the IR
+  shape. `unshadowed_builtins_keep_their_fast_paths` is the control: only
+  the shadowed name loses its fast path.
+- `and_or_stay_special_forms_when_defined` and
+  `keyword_special_forms_cannot_be_defined` pin the special-form behaviour.
+- Five of these tests failed before the fix. The other four (both-positions
+  for functions, the control and the two special-form tests) pin behaviour
+  that was already right.
+
+## Unreleased — #18448: join temporaries take the consensus of every writer
+
+### Fixed
+
+- **`and`, `or` and `match` no longer type their result with the last
+  path's type.** Each of them is a *join*: several paths `mov` a value into
+  one temporary register, and the rest of the program reads that register
+  without knowing which path ran. `emit_move` recorded the source's type on
+  the destination at every `mov`, so the temporary ended up typed with
+  whichever path was compiled **last**. A typed op then read a value of
+  another kind:
+
+  ```scheme
+  (+ (or (< 1 2) 5) 1)                                  ; add [i64] on #t
+  (let ((s (or (< 1 2) "abc"))) (string-length s))      ; str_len on #t
+  (union T (A (v : int)) (B))
+  (let ((s (match (A 1) ((A v) 7) (_ "abc")))) (string-length s))   ; str_len on 7
+  (define c #t) (and c 5)                               ; typed bool, holds 5
+  ```
+
+  The VM's typed string ops check their operand and raised a `TypeError`;
+  the native and LLVM backends trust the hint, so there it was type
+  confusion — memory-unsafe for `str_len` / `str_index`.
+
+  A join temporary's type is now the **consensus** of all its writers: the
+  common type if every writer agrees on a concrete one, otherwise none. Every
+  writer counts, including the ones with no source expression of their own:
+  the `#f` of `and`'s short-circuit path, the test value `or` returns when it
+  is truthy, and the `nil` a `match` starts from in case no arm matches.
+
+  | join                       | writers                    | type before | type now |
+  |----------------------------|----------------------------|-------------|----------|
+  | `(or (< 1 2) 5)`           | `bool`, `i64`              | `i64`       | none     |
+  | `(and c 5)`                | `i64`, `bool` (`#f`)       | `bool`      | none     |
+  | `(match 5 (x 1))`          | `ref<LispyPair>`, `i64`    | `i64`       | none     |
+  | `(and (< 1 2) (< 2 3))`    | `bool`, `bool`             | `bool`      | `bool`   |
+  | `(or 1 2)`                 | `i64`, `i64`               | `i64`       | `i64`    |
+  | `(match 5 (_ nil))`        | `ref<LispyPair>` ×2        | `ref<LispyPair>` | `ref<LispyPair>` |
+
+  When the paths agree, nothing changes, so `(+ (or 1 2) 3)` keeps its
+  typed `add` and `(if (and (< a b) (< b c)) …)` its `bool` test.
+
+### Changed
+
+- **One consensus helper for all four joins.** `compile_if` already
+  computed a consensus for its two arms by hand. That logic is now a small
+  `JoinType` fold plus two `FnCtx` methods, used by `if`, `and`, `or` and
+  `match` alike: `emit_join_move` emits a path's `mov` (still carrying the
+  source's type, which is true for that path) and counts its type, and
+  `settle_join` records the consensus — or clears the type — once the last
+  writer is in. `if`'s IR is byte-identical.
+- **IR changes only where the paths disagree.** Over a 780-program corpus
+  (every Twig program literal in the twig, twigc and lang-aot test sources),
+  47 programs' IR changed relative to the base branch, and every one of
+  them has a join whose writers disagree; the other 733 are
+  byte-identical. In the changed programs, a typed op on the join result
+  becomes the dynamic builtin (`add` → `call_builtin "+"`, `str_len` →
+  `call_builtin "string-length"`), a typed `mov` / `ret` / call / return
+  type becomes `any`, and a `let` that used to alias a `str`-typed join as
+  an E4 string binding now copies it into its own register with
+  `mov [any]`. Of the 49 Twig programs in `lang-aot`'s `lang_matrix`, 47
+  are byte-identical. The two union `match` rows,
+  `(match (Some 42) ((Some v) v) ((None) 0))` and
+  `(match (None) ((Some v) v) ((None) 42))`, now return `any` instead of
+  `i64`. Their writers are `nil` (`ref<LispyPair>`), the boxed field `v`
+  (`ref<any>`) and an `i64` literal, so `i64` was wrong whenever the `Some`
+  arm ran. Only the final `ret`'s hint and `main`'s return type change; the
+  backends' boxing passes (`dyn_repr`, `dyn_repr_structural`) already pick
+  the exit coercion from the returned register's representation, not from
+  that hint.
+
+### Tests
+
+- `JOIN_PROGRAMS`: 23 programs whose join writers disagree. They are the
+  issue's programs plus variants: `or` nested in `and` and `and` in `or`,
+  a wrong type escaping through a function's return type, a `match` whose
+  arms agree but whose `nil` initialiser does not, and `#f` short-circuit
+  paths. Each one goes through `assert_registers_sound`, and every one
+  failed before the fix.
+- `assert_typed_ops_sound` now also checks a typed `mov` or `ret`: its hint
+  is a claim about the register it reads. Without this, a wrong join type
+  that flowed through a `let` (`mov s ← _or [str]`) or a function return
+  went unnoticed, because the typed op only saw the binding register's
+  single, consistent writer.
+- `disagreeing_join_falls_back_to_the_dynamic_op` checks that the typed op is
+  gone and that `main` returns `any`. `agreeing_join_keeps_its_type` checks
+  that `and` / `or` / `match` whose paths agree keep `bool`, `i64`, `str` or
+  `ref<LispyPair>` and their typed ops. That second test is a guard against
+  over-pessimising the IR, so it passed before the fix too.
+- `twig_typed_match_wildcard_accepted_by_every_backend` now asserts that
+  `(match 1 (_ 42))` returns `any`, and its comment says why.
+
+## Unreleased — #18439: every binding owns its register
+
+### Fixed
+
+- **A nested binding with the same name no longer overwrites the outer
+  one.** A local's IIR register was its source name, so every binding of a
+  name shared one register. An inner `let` / `let*` / lambda / `match`
+  binding wrote over the outer binding, and the outer value was gone when
+  the inner scope ended:
+
+  ```scheme
+  (define (f x) (begin (let ((x 5)) x) x)) (f 1)                ; 5, now 1
+  (define (f helper) (begin (let ((helper (lambda (x) 0))) (helper 1))
+                            (helper 2)))                         ; called the inner lambda
+  ```
+
+  Through E4 aliases this was type confusion, not just a wrong value: in
+  `(let* ((x "abc") (y x) (x 5)) (string-length y))` and
+  `(define (g x) (let ((y x)) (let ((x 5)) (string-length y)))) (g "abc")`,
+  `y` read register `x`, which held 5, and the native backends trusted the
+  `str_len`'s `[str]` hint. The VM raised a `TypeError`.
+
+  `FnCtx` now keeps a **name → stack of registers** map (`scope`) instead of
+  the `locals` set and the `local_aliases` map. Every binder pushes onto it
+  and pops on scope exit: top-level and lambda parameters, closure captures,
+  `let`, `let*`, `match` variant fields and `match` binding arms. Every
+  reader resolves through `FnCtx::lookup`: `compile_var_ref`, the
+  call-position check in `compile_apply`, the E4 checks
+  (`is_known_value_type`, `is_known_main_value_type`, `unshadowed_apply`)
+  and lambda captures. An E4 string binding pushes its producer's register,
+  so an alias is just a stack entry.
+- **Closure captures read the alias register.** `alloc_closure` passed the
+  raw register named after each captured variable and ignored aliases, so
+  `(let ((s (string-append "a" "b"))) ((lambda () s)))` captured register
+  `s`, which nothing had written. Captures now pass `lookup(name)`.
+- **Register names are collision-free.** The first binding of a name in a
+  function keeps the name as its register; any later binding, nested or
+  sibling, gets `__r{n}_{name}`. A new per-function `claimed` set holds
+  every register handed out (parameters, bindings, temporaries). A binding
+  takes its own name only if it is free, a rebinding skips any taken
+  `__r{n}_{name}`, and `fresh_var` skips a temporary name that a user
+  binding already holds. So `(define (f _r1) (+ (g) (string-length _r1)))`
+  no longer overwrites the parameter `_r1` with `(g)`'s result. This does
+  not rely on #18444 reserving the `__` prefix.
+- **Duplicate parameter names** (`(define (f x x) x)`) get distinct
+  registers, and the body reads the last one, as before.
+
+### Changed
+
+- **The `shadow` / `unshadow` write-counter machinery from #18435 is
+  removed.** It existed because bindings shared registers: at scope exit it
+  had to decide whether a nested binding had overwritten the register an
+  outer type fact described. Now every binding register has exactly one
+  writer, so the type recorded at that write is true for the register's
+  whole life, and a scope exit is a plain `pop_binding`. `OuterBinding`,
+  `FnCtx::writes`, `write_count`, `shadow` and `unshadow` are gone.
+- **Sound typed ops come back.** Four #18435 follow-up tests asserted *no*
+  `str_len`, because the old fix could only forget the outer `str` type.
+  Each program's `(string-length x)` reads the `str` parameter, whose
+  register is now never overwritten, so the typed `str_len` is emitted and
+  sound. The tests now assert both: the fast path fires and every typed op
+  is sound.
+
+### Tests
+
+- 8 new IR-shape tests, including `SHADOWING_PROGRAMS`: every program from
+  #18439, nested lambdas capturing a shadowed name, `match` shadowing a
+  parameter (binding arm and variant field), recursion through shadowed
+  names, and the #18435 review programs. Two whole-IR checks run on them:
+  `assert_typed_ops_sound` (every register a typed op reads is only ever
+  written with that kind) and `assert_binding_registers_written_once`
+  (only `if` / `and` / `or` / `match` join temporaries have several
+  writers). All 8 failed before the fix. twig-vm runs the same programs
+  end to end.
+- **IIR diff.** Over 728 Twig programs harvested from the twig, twigc and
+  lang-aot test sources (including all `lang_matrix` Twig programs), 679
+  compile to byte-identical IIR to `origin/main`. Of the 49 that differ, 14
+  differ only because of #18435 and are identical to this branch's base, 29
+  bind a name more than once, and 6 are the alias-capture and
+  user-names-like-temporaries test programs. All 49 are shadowing test
+  programs. Run over the same corpus, the (flow-insensitive)
+  `assert_typed_ops_sound` check flags 18 programs on `origin/main`, 3 on
+  the #18435 branch (one a real temporary-name collision) and none now; 31
+  programs had a binding register with several writers before, none now.
+
+## Unreleased — #18435: lexical scope wins in call position
+
+### Fixed
+
+- **A local now shadows a global, extern or builtin of the same name in
+  call position.** `compile_apply` used to check `fn_globals` (top-level
+  functions and externs) and then `BUILTINS` *before* looking at the lexical
+  scope. So in
+
+  ```scheme
+  (define (helper x) (* x 100))
+  (define (f helper) (helper 1))
+  (f (lambda (x) (+ x 1)))
+  ```
+
+  `f`'s body compiled to `call helper`, the global function, and the program
+  returned 100 instead of 2. Value position (`compile_var_ref`) was already
+  correct. Call position now checks `FnCtx::locals` first. A parameter,
+  `let`/`let*` binding, lambda parameter or `match` binding is called with
+  `call_closure`. The shadowed global's return type and parameter types are
+  no longer stamped on the call.
+- **Lambda captures.** `compile_anonymous_lambda` passed `free_vars` every
+  global and builtin name as "never free". A lambda that used an enclosing
+  local named like a global, as in
+  `(define (mk helper) (lambda (y) (helper y)))`, therefore did not capture
+  the local and called the global. Names bound in the enclosing scope are
+  now removed from that set, so they are captured.
+- **E4 string fast paths.** `can_compile_e4_string_expr`,
+  `can_compile_e4_index_expr` and the `(string-length (string-append …))`
+  fold recognised builtins by name only. A local named `string-append`
+  (or `substring`, `string-length`, `+`) could be lowered to `str_concat` and
+  the other typed string ops. They now use a new `unshadowed_apply` helper,
+  which ignores a call whose head is lexically bound.
+- **`main` direct-call string evidence.** The pre-pass that seeds
+  unannotated parameters as `str` (`collect_main_direct_string_call_evidence`
+  and `is_syntax_static_e4_{string,index}_expr`) now tracks the names bound by
+  enclosing `let`/`let*` forms. A call to a shadowing `let` binding is no
+  longer counted as evidence about the global function of the same name.
+- **Value-global type facts.** `is_known_main_value_type` ignored a `let`
+  binding that shadowed a typed value-global. So
+  `(define s "HELLO") (let ((s 5)) (string-length s))` lowered to `str_len`
+  on the integer. It now defers to the local.
+
+### Fixed (security review follow-up)
+
+- **Call-site string inference is now sound.** It used to look only at
+  direct calls in `main`. Lambda and `match` bodies, other function bodies,
+  and value-position uses were not seen. So each of these programs typed
+  `x : str`, lowered `strlen`'s body to `str_len`, and then passed it an
+  integer:
+  - `(strlen "abc") (let ((strlen strlen)) (strlen 5))`
+  - `(define (g) (strlen 5)) (strlen "abc") (g)`
+  - `(define h strlen) (h 5)`
+
+  Each one is type confusion on the AOT backends.
+  `collect_direct_string_call_evidence` (renamed from
+  `collect_main_direct_string_call_evidence`) now walks every function body,
+  lambda and `match` arm in a new `EvidenceMode::Elsewhere`, which can only
+  weaken evidence. It also marks a function `Conflict` when the function is
+  used as a value (an escape). Only direct
+  calls in `main` can establish `str`.
+- **Scoped type facts no longer leak.** `compile_let`, `compile_let_star` and
+  the two `match` binding paths restored `locals` and (for `let`) the E4
+  aliases, but never `var_types`. So in
+  `(define (f x) (begin (let ((x (string-append "a" "b"))) x) (string-length x)))`
+  the outer `(string-length x)` lowered to `str_len` on the integer
+  parameter. In the other direction, an inner binding inherited the outer
+  binding's type and alias. An inner `(car l)` kept an outer `i64`, so
+  `(+ x 1)` became a typed `add`. An inner `s` bound to 5 still read the outer
+  string's alias.
+
+  New `FnCtx::shadow` / `FnCtx::unshadow` helpers fix this. A binding now
+  starts with no type or alias. When the scope ends, the outer meaning comes
+  back. Same-name locals still share one register, which is tracked
+  separately, so `unshadow` keeps a type only when the register still holds
+  a value of that type. Otherwise it drops to `any`.
+- IIR is byte-identical to `origin/main` for all 49 Twig programs in
+  `lang-aot`'s `lang_matrix` and for about 430 other Twig programs taken from
+  the test sources of the twig and lang-aot crates. Only the new shadowing
+  test programs change.
+
+### Fixed (second security re-review)
+
+- **`unshadow` could restore a type the register no longer held.** This was
+  a regression from the first follow-up. The first version treated an outer
+  alias as proof that register `name` was never written. But a nested
+  same-name binding (a `mov`, a `str_const` or a `match` arm) writes that
+  register. So in
+  `(define (g x) (let ((x (string-append x "b"))) (let ((x 5)) x)) (string-length x))`
+  the `str` type came back on a register holding 5, and the call lowered to
+  `str_len`. The same happened through a `match` arm, through `let*`
+  rebinding a `str` parameter, and in
+  `(let ((y (let ((x 5)) x))) (string-length y))` under an outer string `x`.
+
+  `FnCtx::emit` now keeps a per-register write counter, and `shadow` records
+  it. If the counter has moved when the scope closes and the name has an
+  outer binding, the type becomes `any`. If the counter has not moved, the
+  outer type is restored. If the counter moved but the name has no outer
+  binding, the register's current type is kept, so `(let ((x 1)) x)` still
+  returns a typed `i64`.
+
+  `var_types` now describes registers only: alias bindings no longer record
+  `str` under the alias name, and `is_known_value_type` resolves an alias to
+  its target register. So `(let ((y x)) (let ((x 5)) (string-length y)))`,
+  where `y` aliases the `str` parameter register `x`, no longer reaches
+  `str_len`. That register's type is updated when it is overwritten.
+- **Module code gets no call-site string inference.** The export-only
+  conflict rule missed the module driver, which registers every module's
+  function names, private ones included, as externs of every other module.
+  So a private `strlen` in `lib.tw`, called only with `"abc"` there, got
+  `x : str`, and `main.tw`'s `(strlen 5)` reached `str_len`.
+  `infer_main_direct_string_param_types` now returns early for any program
+  with a `(module …)` declaration or with externs registered by
+  `with_extern_fns` (tracked by a new `has_externs` flag). The export rule
+  is subsumed by this and removed. This does not rely on #18437: the repro
+  also works through an exported function.
+- The IIR diff was re-run over 505 harvested programs, including all 49
+  `lang_matrix` Twig programs. Only the 22 shadowing test programs differ
+  from `origin/main`.
+- **Third review: keep a register's type only after its first-ever write.**
+  "Rewritten, no outer binding ⇒ keep the current type" was unsafe. A scope
+  can return its named register (`(let ((x "s")) x)`) for use after the name
+  is out of scope. A later sibling binding of the same name, possibly in an
+  `if` branch that never runs, then stamped its own type onto that register.
+  For example, `(+ (let ((x "s")) x) (if c (let ((x 1)) x) 3))` became a
+  typed `add` on `"s"`. `unshadow` now keeps the type only when the count
+  recorded at `shadow` time is 0; otherwise the type is `any`.
+  `(let ((x 1)) x)` still returns an `i64` register. Three new tests cover
+  the review's programs and all failed before the fix; a fourth guards the
+  `i64` return. The re-run IIR diff over 508 programs changes only the 25
+  shadowing test programs.
+
+### Docs
+
+- The README's apply-site table now lists the lexical row first. Its stale
+  last row, `call_builtin "apply_closure"`, now reads `call_closure`, which
+  the compiler has emitted since LANG34. TW00 gains a
+  "Name resolution: lexical scope wins" section.
+
+### Tests
+
+- 15 new IIR-shape tests in `src/lib.rs`. They cover a parameter, a `let`,
+  a `let*`, a lambda parameter and a `match` binding shadowing a global. They
+  also cover a captured shadowing parameter in call and value position, the
+  global call coming back after the `let` ends, the return type not being
+  inherited, an extern, a builtin, the E4 string builtins, both evidence
+  pre-pass cases and a shadowed typed value-global. All except the
+  scope-exit control failed before the fix.
+- 12 more tests for the follow-up fixes (11 failed before them; the
+  `str` control passes either way). Six cover string-parameter
+  inference: a `let`/`let*` alias, a call in another function body, a
+  `define` alias, calls in a lambda and a `match` arm, a function passed as
+  an argument, and an exported function. Five cover scope type leaks: after a
+  `let`/`let*` and after a `match` arm, a literal `let`, an inherited outer
+  `i64`, and an inner binding hiding an outer alias.
+- 7 more tests for the second re-review, all failing before it:
+  - review programs A and B
+  - a `match` arm over an aliased outer binding
+  - `let*` rebinding a `str` parameter
+  - an alias whose target register is overwritten (two shapes)
+  - module code with a `(module …)` declaration
+  - code compiled with externs
+- End-to-end runs of the same programs are in `twig-vm`'s dispatch tests
+  (the example from the issue now returns 2). The imported-function case is
+  in `twig-module-driver`.
+## Unreleased — security review: the whole `__` namespace, and unspellable temporaries
+
+- **Every name beginning with `__` is now reserved** (new `RESERVED_NAMESPACE = "__"`), not only the listed prefixes. A parameter or `let` name is an IIR register, and the compiler and the passes after it invent registers in the same function: twig-aot's `__aot_str{n}_len` (the byte count it hands the runtime's print), closure_heap's `__clo_*`, dyn_repr's `__truthy_*` / `__unbox_*`, iir-to-llvm's `__<hint><n>` SSA names. Listing each prefix is whack-a-mole, so the namespace is reserved, as C reserves `__` identifiers. `RESERVED_PREFIXES` also names `__gc_`, `__aot_` and `__clo_` (seven entries) so errors name the owner; `reserved_prefix` returns the most specific listed prefix, else `"__"`. Behaviour change: a program that used a `__` name of its own (none in this repo) is now refused.
+- **The compiler's temporaries and labels are unspellable.** `fresh_var` names a temporary `__t{n}_{what}` (was `_{what}{n}`) and `fresh_label` a label `__l{n}_{what}` (was `_{what}{n}`). The old names could be spelled by a program, and collided: `(let ((_n2 40)) (+ _n2 2))` wrote the literal `2` into the program's `_n2` and computed 4 on every column; `(define (f _n1) (+ _n1 2)) (f 40)` likewise; and a parameter `_else1` met the label `_else1` in LLVM's single `%` namespace (clang: "'%_else1' is not a basic block"). The `__t<digit>` / `__l<digit>` shape ending in a letter also cannot meet a later pass's generated name (iir-to-llvm's end in a digit). An unspellable *character* was ruled out because LLVM already uses `.` for its own derived names (`%x.slot`) and quotes `%`, `#`, `@`.
+- Tests: `tests/reserved_names.rs` `generated_register_names_cannot_be_spelled` and `a_let_named_like_an_old_temporary_keeps_its_value`; the prefix-table test covers the namespace.
+
+## Unreleased — reserved `__lambda_` and `__twig_` prefixes
+
+- `RESERVED_PREFIXES` adds `__lambda_` and `__twig_` (now `["__lisp_", "__dyn_", "__lambda_", "__twig_"]`). Two programs found by security review compiled and then misbehaved on native x86-64. In `(define (__twig_print_i64 n) 0) (begin (print 5) 0)`, `print`'s runtime call was linked to the program's function, so nothing was printed. In `(define (__lambda_0 y) (+ y 50)) … (g (lambda (y) (+ y 1)))`, the lifted lambda became a second `__lambda_0` and the closure called the program's function: exit 120 instead of 57. Both are now a `TwigCompileError` at the name.
+- Lifted lambdas keep the `__lambda_N` names. Reserving the prefix was chosen over a generated name with a character `NAME` cannot contain, because no such character is legal unquoted in every backend's symbols (JVM method names, LLVM identifiers, ilasm). The reasoning is in `reserved_names.rs`.
+- `tests/reserved_names.rs`: `runtime_and_lambda_names_are_reserved` (both repros, plus a bare reference to `__lambda_0`) and `a_lifted_lambda_is_the_only_function_with_its_name`; the prefix-table test is updated.
+
 ## Unreleased — LANG83 PR7f-2 security review — reserved name prefixes
 
 - A program may no longer define, bind or reference a name beginning with `__lisp_` or `__dyn_` (ASCII case ignored, each `/`-separated segment checked): `Compiler::compile` refuses it with a `TwigCompileError` at the name's position, right after `check_cst`. Those prefixes name the functions the lowering passes add to the module (`__lisp_equal`, `__lisp_exit_code`, the inline-rule markers `__lisp_truthy` / `__lisp_not`, `__dyn_list_*`, `__dyn_call_closure`) and the C runtime's `__dyn_*` symbols, which the passes recognise by name: `(define (__lisp_equal a b) 42)` used to stand in for `equal?`, and `(define (__lisp_not x) 0) (__lisp_not 5)` was silently compiled as Lisp's `not`. Quoted symbols (`'__lisp_x`) are data and stay allowed.

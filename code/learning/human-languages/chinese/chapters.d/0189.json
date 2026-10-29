@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Forms and Dates",
+  "label": "ch:zh-forms-and-dates",
+  "canDo": "I can say the date, ask for a form, fill it in, sign it and show my identity card.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C189-shenfenzheng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say the date, ask for a form, fill it in, sign it and show my identity card.",
+    "assesses": [
+      "ZH-LEX-C189-FORM189-03",
+      "ZH-LEX-C189-FORM189-04",
+      "ZH-LEX-C189-FORM189-05"
+    ]
+  }
+}

@@ -67,11 +67,12 @@ The frontend covers everything in
 | `'foo`, `(quote foo)`             | `SymLit`                              |
 | `"hello"`                         | `StrLit`                              |
 | name reference                    | `VarRef { scope }`                    |
+| name of a top-level function      | `lambda`-marked `MakeClosure`, no captures |
 | `(if c t e)`                      | `If`                                  |
 | `(let ((x e)...) body...)`        | `Block` with `LetBinding`s            |
 | `(let* ((x e)...) body...)`       | `Block` with `LetStarBinding`s        |
 | `(begin e1 e2 ...)`               | `Block` with `ExprStmt`s              |
-| `(lambda (a b) body...)`          | `MakeClosure` + synthesised `Function`|
+| `(lambda (a b) body...)`          | `BuiltinCall("lambda", [MakeClosure])` + synthesised `Function`|
 | `(f a b)` — `f` local             | `IndirectCall`                        |
 | `(f a b)` — `f` top-level fn      | `DirectCall`                          |
 | `(f a b)` — `f` top-level value   | `IndirectCall` on the `Global`        |
@@ -133,14 +134,58 @@ Each `(lambda (a b) body...)` becomes:
 1. A fresh top-level `Function` named `__lambda_<gensym>`, with the
    captured free variables prepended to its `captures` list and the
    user-visible parameters as `params`.
-2. A `MakeClosure` node at the lambda's source location, with the
-   captures filled in from the surrounding scope.
+2. At the lambda's source location, a **strict** closure:
+   `BuiltinCall("lambda", [MakeClosure { fn_name, captures }])`, with
+   the captures filled in from the surrounding scope.
 
 The synthesised function's body resolves capture references as
 `VarRef { scope: Capture }`.  Top-level `(define (f ...) body)` does
 **not** allocate captures — it is a plain `Function` with empty
 `captures` and the `IndirectCall`/`DirectCall` dispatch table treats
 its name as known.
+
+### Every Twig closure is strict
+
+SIR10 ("Strict closures") gives a bare `MakeClosure` Ruby-block
+semantics — a call may pass too many arguments (the extras are dropped)
+or too few (the missing ones are `nil`) — and the `lambda` marker
+around it lambda semantics: the call's argument count must equal the
+function's (`Function::exact_arity()`), or the call raises an arity
+error at run time.  Twig has no blocks, so this frontend never emits a
+bare `MakeClosure`:
+
+```scheme
+(define g (begin (lambda (x y) (+ x y))))
+(print (g 4))   ; ArgumentError on every backend
+```
+
+The error is the same `ArgumentError` everywhere (SIR10 "Strict
+closures"; JavaScript, TypeScript and Python raised a native `TypeError`
+until issue #18466).
+
+> **Revision (issue #18461).** This frontend used to emit the bare
+> `MakeClosure`, and each backend then did its own thing with the
+> program above: C printed `4` (the missing `y` read as `nil`, which `+`
+> counts as 0), JavaScript printed `NaN`, Go panicked with an index
+> error, Rust failed later with "expected int, got nil".
+
+### A top-level function used as a value
+
+A name that resolves to a top-level function *outside* call position
+(`h` in `(define g h)` or `(app h 5)`) lowers to a strict closure over
+that function with no captures — a top-level function sees only
+globals, functions and builtins, so there is nothing to capture:
+
+```text
+(define (h x) (* x 3))
+(define g h)      ;  _init: global_set 'g (BuiltinCall lambda [MakeClosure h []])
+(g 4)             ;  IndirectCall (VarRef g Global) [4]  →  12
+```
+
+> **Revision (issue #18461).** It used to lower to `VarRef { scope:
+> Global }`, but functions are code, not entries in the globals store,
+> so the read found an empty slot ("non-closure" on C and JavaScript,
+> "undefined global" on TypeScript and Python).
 
 ## Free-variable analysis
 
@@ -176,6 +221,50 @@ If the program has no top-level value defines, `_init` is omitted.
 If the program has no bare top-level expressions, `main`'s body is
 just `(nil)`.
 
+### Names the compiler owns
+
+`main`, `_init` and the closure-body gensyms `__lambda_<digits>` share
+the function namespace with the user's definitions, so they are
+reserved:
+
+- *Binding* one is a `TwigLowerError` — by a top-level `define`, as a
+  function or lambda parameter, or with `let` / `let*` — at the
+  binding form's position: "`` `main` is reserved: the compiler
+  generates a function with that name … ``".
+- None of them is in the table user names resolve against, so every
+  reference — `(main)`, `(print _init)`, `(define g __lambda_0)`,
+  `(__lambda_0 5)` — is an "unresolved name" error, not a reach into
+  generated code.
+- Only the exact names are reserved: `main2`, `_init_count`,
+  `__lambda_x` and `my-main` are ordinary.
+
+> **Revision (security review of the #18461 fix, F1).** The first fix
+> still added each generated `__lambda_<n>` to the resolution table, so
+> `(define (adder n) (lambda (x) (+ x n))) (define g __lambda_0)` made a
+> closure with no capture values over a body that expects one; the C
+> backend read `caps[0]` through a NULL pointer.  Binding a reserved
+> name as a parameter or `let` variable was also allowed, and collided
+> with the function of that name in the emitted JS, Python and Go.  The
+> validator now also refuses any `MakeClosure` whose capture count
+> differs from its function's (SIR10 "Closure construction").
+
+> **Revision (issue #18461).** The function table used to contain
+> `main` and `_init`, so `(define main 5) (main)` lowered the bare
+> `(main)` to a `DirectCall` to the *generated* `main` — which then
+> called itself until the stack ran out.  Mangling the generated names
+> instead was rejected: `main` / `_init` are the SIR-wide entry-point
+> convention every backend looks up by name.
+
+Names a *backend* generates are not this frontend's concern: Twig accepts
+`_sir_user_main`, `__cap_A`, `_a`, `free` or `Map` as ordinary names, and
+every backend escapes the names it reserves for itself (SIR10, "Generated
+names").  Before issue #18466 those spellings reached the emitted code
+unchanged and collided there — `(define (_sir_user_main) 42)` recursed
+forever on Python, and `(define (f A __cap_A) (lambda () (+ A __cap_A)))`
+returned 2 instead of 11 on Rust.  Reserving them here instead would have
+covered Twig only, leaving every other frontend's programs exposed, and
+would have had to track seven backends' private naming schemes.
+
 ### Global initialization model
 
 Top-level value defines could be represented in two equivalent ways:
@@ -203,7 +292,9 @@ a `Scopes` stack:
   `LetFrame`s (the local scope), then the function's `params`, then
   the function's `captures`, then the module's `globals` table (value
   and function defines), then the builtin table.  The first hit wins
-  and supplies the scope tag.  Call position uses the same order; see
+  and supplies the scope tag — except that a top-level *function*
+  becomes a closure over it rather than a `VarRef` (see "A top-level
+  function used as a value").  Call position uses the same order; see
   "Apply-site dispatch".
 
 A name with no hit anywhere is a `TwigLowerError`.
@@ -242,7 +333,10 @@ Effects are pre-tabulated:
 The lowerer accumulates the feature manifest as it walks:
 
 - Any `MakeClosure` or `IndirectCall` → `Closures`
-- Any `BuiltinCall("cons" | "car" | "cdr" | "pair?", ...)` → `Pairs`
+- Any `BuiltinCall("cons" | "car" | "cdr" | "pair?", ...)`, or one of
+  those builtins used as a value → `Pairs`.  (Issue #18460: this rule
+  was documented but not implemented, so the validator refused every
+  Twig program that used a pair, and so did every validating backend.)
 - Any `SymLit` → `Symbols`
 - Any `StrLit` → `Strings`
 - Any `Param` or `Global` with `sir_type = None` → `DynamicTyping`
@@ -267,7 +361,10 @@ pub struct TwigLowerError {
 
 Error sites:
 
-- Unresolved name reference
+- Unresolved name reference (including every reference to `main`,
+  `_init` or `__lambda_<digits>`)
+- A binding of a reserved name (`main`, `_init`, `__lambda_<digits>`)
+  by `define`, a parameter, or `let` / `let*`
 - Empty lambda body
 - Empty let / let* / begin body
 - Apply on a non-callable atom (e.g. `(42 1 2)`)
@@ -296,6 +393,12 @@ All errors carry the source position from the offending AST node.
   definition, with the expected call node pinned.  The same programs run
   end to end under `node` in `semantic-ir-to-javascript`'s
   `tests/twig_name_resolution.rs`.
+- **Pairs, function values, strict closures and reserved names**
+  (`tests/pairs_closures_and_entry_names.rs`), with every
+  `semantic-ir-to-*` backend running the same programs on its real
+  toolchain in `tests/twig_pairs_and_closures.rs` (`node`, `cc`,
+  `go run`, `rustc`, `ruby`, `python3`): each must print the same
+  answer, and each must stop a mis-called closure with an arity error.
 
 Coverage target: **≥ 95%**.
 

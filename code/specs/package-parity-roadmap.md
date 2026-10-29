@@ -18028,6 +18028,97 @@ fleet are out of scope. The active parity PRs touch none of these package or
 build-front files; shared bookkeeping will be reconciled only when a
 publication slot opens.
 
+## October 25, 2026: Swift fenced-block prerequisite selection
+
+The current dependency review selected
+`gfm-fenced-block-swift-contract-adoption` as the smallest unblocked Swift GFM
+prerequisite. The neutral TE04 fixture is merged, while the 652-example Swift
+CommonMark reconciliation, missing GFM parser, aggregate Swift GFM owner, and
+facade all remain downstream.
+
+An older local Swift GFM preparation predates that decomposition and combines
+the fenced-block contract with the missing parser and facade work. It is useful
+as implementation evidence but is not publishable as one bounded owner. The
+new branch therefore carries only the Document AST variant, existing
+CommonMark-parser projection, inert HTML fallback, focused native tests, and
+package documentation. It does not claim all sixteen GFM cases or any of the
+downstream owners.
+
+The focused RED phase failed on the missing AST type and enum case. The GREEN
+phase passes 96 document-AST, 62 parser, and 63 renderer tests. The complete
+manifest-confirmed dependent closure also passes 30 CommonMark facade, 45
+AsciiDoc parser, and 28 AsciiDoc facade tests, and all six packages build in
+release mode. Production line coverage is 100% for the AST, 92.38% for the
+renderer plus AST, and 81.91% for the parser plus AST; the parser total includes
+the pre-existing 77.66% `InlineParser` baseline, while the changed block and
+projection files measure 86.99% and 97.78%. Current-source diff discovery finds
+three direct packages and the same six-package closure. Its repository-wide
+orphan census is intentionally not credited from the sparse worktree because
+hidden package roots appear absent; hosted complete-checkout CI remains the
+publication gate.
+## October 25, 2026: Go and Rust Bezier flattening selection
+
+The last bounded existing-lane G2D02 implementation child is
+`geometry-bezier2d-flattening-go-rust`. The termination contract is merged,
+the four other implementation tranches are active or locally prepared, and
+these two package trees do not overlap any current PR. Work can proceed on a
+sparse branch while the three publication slots remain occupied; no fourth PR
+opens before a slot is available.
+
+Both lanes still expose midpoint-only recursive flattening with no invalid
+input or work-budget result. This owner changes those public APIs to explicit
+error returns, measures every control point against the finite endpoint
+segment, walks a left-first bounded stack, and consumes all nine neutral rows
+dynamically. Native regressions must cover invalid tolerance, non-finite
+controls and derived geometry, deterministic depth/split exhaustion, and the
+subnormal-distance underflow boundary. Go and Rust Bezier2D plus their
+same-language Arc2D suites must remain green. Shared selector integration stays
+sequenced behind PR #18293, and the twelve-lane aggregate remains a later
+owner rather than a claim of this branch.
+
+The local implementation now returns explicit Go and Rust errors, uses the
+finite-segment convex-hull bound and a left-first iterative stack, and consumes
+all nine neutral rows. Go passes 22 top-level Bezier2D tests plus their dynamic
+subtests under race detection at 95.1% statement coverage; formatting, vet,
+and build pass. Its downstream Arc2D suite remains green at 96.8%. Rust passes
+23 Bezier2D tests at 96.02% source-line, 96.06% region, and 98.08% function
+coverage; formatting, strict all-target clippy, and release
+build pass. Its downstream Arc2D suite retains 20 tests and doc tests. A full
+tracked-tree search finds no external Go or Rust flattening callers requiring
+migration.
+
+Independent review found that globally scaling both the chord and point
+vectors erased a `1e-16` perpendicular offset beside a `1e308` chord. The
+corrected distance calculation scales only the chord, uses compensated finite
+products, widens for floating error, rounds nonzero magnitudes outward, and
+carries direct mixed-scale public-API regressions in both lanes. The root
+changelog shard now uses its
+heading-derived `HARDEN-GO-AND-RUST-BEZIER-FLATTENING` slug and `08c0edc5`
+digest. The exact neutral oracle validates all nine cases and its seven tests
+pass. The sparse focused planner selects the two changed Bezier2D packages and
+their six same-language prerequisites/dependents; its strict repository-wide
+orphan check is not meaningful in the sparse checkout, so publication still
+requires the normal full-tree CI gate.
+
+The branch is reconciled with `396c0320b98e515279f3ba348392099fa769952d`
+and remains local because PR #18293 owns the shared selector change. After that
+dependency lands, rebase current main, run the native and selector gates again,
+and require independent exact-head correctness/security review before
+publication. The refreshed 1,548-owner graph is unique, dependency-complete,
+acyclic, and has no merged-to-unfinished edge; all 1,587 lesson shards validate.
+
+A separate pending owner,
+`geometry-bezier2d-go-rust-trig-dependency-contract`, records a pre-existing
+contract mismatch deliberately excluded from this tranche: G2D02 and the
+package documentation say Bezier2D depends only on `point2d`, while both Go and
+Rust manifests and bounding-box implementations use their same-lane `trig`
+package solely for square root. That owner follows the flattening repair because
+it overlaps the same package roots. It must choose either standard-library
+square root with the dependency removed or an explicit documented `trig` edge,
+then reconcile the spec, manifests, source, build metadata, READMEs, native
+tests, downstream Arc2D suites, and focused planner closure without changing
+flattening behavior or widening authority.
+
 ## October 25, 2026: C# document-AST Windows-front preparation
 
 After locally completing the independent .NET WasmOpcodes coverage repair,
@@ -18049,6 +18140,137 @@ enforce the 95% library line target on Unix and Windows. Package APIs, AST
 nodes, parser behavior, renderer behavior, and the wider .NET fleet remain out
 of scope.
 
+## October 25, 2026: Haskell and Swift Bezier flattening selection
+
+All three publication slots remain occupied, and the prepared C#/F# Bezier
+tranche remains first in the publication queue. Independent review rejected
+the unpublished TypeScript Arc2D build-front candidate: the production runner
+already starts every BUILD line in the package directory, while the proposed
+POSIX identity guard would fail when the shared front falls back to `cmd /C` on
+Windows. That non-defect branch is retired instead of published.
+
+Reprioritization therefore selects
+`geometry-bezier2d-flattening-haskell-swift`: it advances two non-Rust lanes,
+depends only on the merged neutral contract, and does not overlap any active or
+prepared implementation branch.
+
+Both selected lanes still use midpoint-only flatness and unbounded recursion.
+This owner will define deterministic Haskell `Either` and Swift throwing APIs,
+enforce finite positive tolerance plus the pinned depth/subdivision budgets,
+measure every control point against the finite endpoint segment, and consume
+all nine neutral cases dynamically. Native Bezier2D tests and downstream Arc2D
+tests must pass; Haskell Arc2D has no BUILD front, so its Cabal suite must be run
+explicitly. Go/Rust adoption, aggregate completion, and shared build-selector
+integration remain separate owners.
+
+## October 25, 2026: Haskell and Swift Bezier flattening local receipt
+
+The bounded implementation is complete on a branch reconciled with
+`54f5726481be0ae0d43b08623b14d95efe285f12`, but it remains unpublished while
+all three parity PR slots are occupied and PR #18293 still owns the shared
+fixture-selector integration. Publication requires rebasing that dependency,
+re-running the affected selector and native suites, and an independent review
+of the resulting exact head.
+
+Haskell consumes all nine neutral rows dynamically and passes 29 Bezier2D
+examples. Coverage-enabled execution records 778/781 expressions (99%) and
+31/32 alternatives (96%). The explicit downstream Cabal run also passes 25
+Arc2D, 27 Point2D, and 19 Trig examples. Swift passes 27 Bezier2D tests at
+98.21% source-line, 94.68% region, and 96% function coverage; its downstream
+Arc2D BUILD passes 13 tests. Both lanes reject invalid tolerance, non-finite
+controls and derived geometry, and subnormal curves that would otherwise
+underflow into a false chord. Failure remains atomic under depth 32 and the
+65,535-subdivision ceiling.
+
+## October 28, 2026: Haskell and Swift Bezier current-main reconciliation
+
+Swift PaintVmAscii PR #18367 merged through guarded squash auto-merge as
+`98eac40cc0ebba14b6c4a22eebfd60419ea28777`, opening one publication slot.
+The prepared Haskell/Swift Bezier branch normally merged that exact current
+main without rewriting its implementation history. Its production delta is
+unchanged from exact prepared head
+`b48a6da1880522ff003959ab31bf8ca473d06b22`; all 29 Haskell Bezier examples,
+the complete downstream Haskell Arc2D closure, all 27 Swift Bezier tests, and
+all 13 downstream Swift Arc2D tests pass after reconciliation. The live set is
+{#18506, #18508}; exact merge-head review remains before the two-lane tranche
+can occupy the third slot.
+
+## October 25, 2026: scripting Bezier flattening selection
+
+The occupied three-PR publication ceiling does not block independent local
+preparation. The next dependency-ready tranche is
+`geometry-bezier2d-flattening-python-ruby-perl`: its sole prerequisite is the
+merged G2D02 termination contract, and its native package sources do not
+overlap the active Haskell, C# document-AST, or .NET Wasm PRs or the prepared
+C#/F# Bezier tranche.
+
+All three scripting implementations still use midpoint-only flatness and
+unbounded recursion. Adopt the nine-case neutral fixture through each public
+polyline API, reject nonpositive or nonfinite tolerance and nonfinite control
+points, use the finite-segment control-point bound, and fail atomically when
+the shared depth or split budget is exhausted. Preserve public return shapes
+and endpoint ordering, and run each same-language Arc2D regression suite.
+Shared Go build-tool selector changes remain with the earlier C#/F# tranche;
+this branch consumes the fixture natively and avoids conflicting selector
+edits until that dependency-independent publication lands.
+
+The prepared implementation now replaces recursion in all three lanes with a
+left-first explicit stack, a depth limit of 32, and a shared 65,535-split
+budget. Scaled finite-segment distance arithmetic also carries the independent
+.NET review's subnormal-underflow lesson into these lanes before publication.
+The branch is now reconciled normally with exact current main
+`5daf063f8aeaf4f2c40936ab579a00113706074b`, preserving every intervening
+parity merge receipt without rewriting its prepared implementation history.
+The Python, Ruby, and Perl production delta is unchanged from exact reviewed
+head `6138482108a9535aed890eb76424c2bfe442275b`; the live publication set is
+{#18367, #18506}, leaving one slot for this independent three-lane tranche.
+All native fixtures and same-language Arc2D suites pass. Python's 35-test
+Bezier2D build measures 95.73% production coverage and its one-test negative
+selection fails the raised 95% floor; Ruby passes 19 tests with 138 assertions,
+and Perl passes 86 assertions. Independent review also pinned the fixture
+version, depth, and split-budget metadata in every reader and corrected Ruby's
+retired midpoint-flatness comment. Hosted platforms and independent final-head
+review remain required before this tranche can be published.
+## October 25, 2026: dynamic-runtime Bezier flattening selection
+
+With the three publication slots still occupied and the C#/F# plus
+Python/Ruby/Perl tranches prepared locally, the next independent owner is
+`geometry-bezier2d-flattening-typescript-elixir-lua`. Its sole dependency is
+the merged G2D02 termination contract, and its three native package trees do
+not overlap active or prepared work. Three non-Rust lanes provide more parity
+leverage than either remaining two-lane successor.
+
+Consume all nine neutral cases dynamically through the public polyline APIs,
+replace midpoint recursion with the finite-segment control bound and bounded
+left-first traversal, and reject nonpositive/nonfinite tolerance, nonfinite
+controls, nonfinite derived arithmetic, and exhausted work without returning
+partial output. Carry the independent subnormal-distance regression into all
+three runtimes and run each same-language Arc2D suite. Shared Go selector
+changes remain owned by the prepared C#/F# tranche to avoid branch conflicts.
+
+The prepared implementation now replaces recursion in all three lanes with
+bounded left-first traversal, a depth limit of 32, and a shared 65,535-split
+budget. Scaled finite-segment distance arithmetic carries the independent
+.NET review's subnormal-underflow lesson into these lanes before publication.
+All nine corpus cases and native invalid-input, overflow, budget, and
+subnormal regressions pass. TypeScript passes 36 Bezier2D tests at 100% line
+coverage, with a focused selection proving the 95% floor fails closed; Elixir
+passes 16 tests and Lua passes 24. Their real dependent Arc2D suites pass 32,
+9, and 9 tests respectively.
+
+Independent review rejected the initially suspected TypeScript Arc2D
+working-directory gap. The repository runner starts every BUILD line from the
+package directory, so dependency-install directory changes do not persist into
+the Arc2D install, compile, test, or coverage commands. Runner-equivalent
+execution passes the actual 32-test Arc2D suite at 100% line and 95.23% branch
+coverage. The invalid repair candidate and its provisional backlog item are
+retired rather than published. Reconciliation over the unrelated Mermaid
+receipt at `20ba82cbe644174616d85b05a314c8395772ad8f` preserves that result: all
+three Bezier2D suites plus Elixir and Lua Arc2D pass again. The TypeScript
+Arc2D rerun reached its unchanged npm install front but hit the known shared
+npm Arborist `edgesOut` transient, not a package or working-directory failure.
+A clean rerun, shared-fixture selector integration, hosted platforms, and
+independent final-head review remain required before publication.
 ## October 25: serial Haskell opcode-provider recovery
 
 PR #18174 actually merged as `bd533925647b7fbac74eba35e611a8ba3930757f`; PR #18147 previously merged its frozen16 adoption. The unpublished67 draft remains separate. Earlier three-slot and draft-publication statements above are historical. Existing PR #18183 is now the sole active implementation. Its original `231de32b` head is preserved locally while its net change is carefully rebased onto `9000beddee61a136cf5c0c6c5787f81d3d717834`. Actual CI fails before compilation in Cabal3.10.3.0 coverage planning for vector0.13.2; preserve coverage and inert metadata APIs while validating a package-local repair. Local native13tests/all359records, productionHPC100percent expressions/alternatives, Go15packages/84.6percentcoverage, vet/build, realplanner14-packageclosure and metadata/parity checks pass. Runtime source80a01 passed independent review; final documentation delta and fresh hosted CI remain required. See [the exact recovery evidence](../packages/haskell/starlark-compiler/VALIDATION.md).
@@ -18248,6 +18470,189 @@ current main into the Python branch without rewriting its published history,
 then rerun exact-head independent review and hosted checks before re-enabling
 guarded auto-merge.
 
+## October 26, 2026: Swift PaintVmAscii capability preparation
+
+PR #18312 completed its final-head checks and merged from exact head
+`b804a122612f4ae64d967efbff454af771bf6130` as
+`0be03745d775ffa9ee8c66ffda1700baa76ba58f` at
+`2026-10-26T11:52:29Z`. That verified receipt is present on exact reconciled
+origin/main `d1730421d34c9fe6ebe9cc68473f505017659a5a`. The three
+authorized publication slots are now occupied by live PRs #18293, #18324, and
+#18355, so the PaintVmAscii owner remains pending and this work stays local.
+
+The existing branch
+`codex/parity-swift-paint-vm-ascii-capabilities-20261026` was rebased
+conflict-free onto that main revision while preserving the intervening
+append-only lifecycle and roadmap history. Its bounded change adds only an
+explicit schema-v1 empty capability profile plus documentation for the already
+merged Swift renderer. Production source, public API, dependencies, BUILD
+fronts, scene semantics, and terminal behavior do not change: the library
+still consumes an in-memory scene and returns a string, and only its caller may
+choose to print it.
+
+The three live PRs overlap this preparation only in shared lifecycle documents,
+not in the PaintVmAscii package or its changelog shard. Local validation passes
+all 34 PaintVmAscii tests and all 43 downstream cowsay tests. The production Go
+planner selects and executes only the six-package Swift closure containing
+PaintInstructions, PaintVmAscii, cli-builder, directed-graph, cowsay, and
+state-machine; no special CI suite is widened. Capability-schema, strict JSON,
+state-graph, lessons, changelog-shard, diff-hygiene, and artifact-cleanup gates
+remain required before recording the local preparation head. Publication and
+selection require a later slot-opening reprioritization and independent review.
+
+## October 26, 2026: Swift PaintVmAscii selection after Python merge
+
+Python gradient-descent PR #18324 completed every required check and merged
+from exact reviewed head `d34af356d621175dd8cc307d953ecb7a99d1b79a` as
+`1bb58a0d7ed8d818d622e69890234d96b6e26b3a` at
+`2026-10-26T15:37:25Z`. The receipt was exact current origin/main at selection
+time, and its clean
+completed worktree and local branch were removed. The only live parity PRs are
+now #18293 and #18355.
+
+The ready backlog was reprioritized before using the opened slot. Every
+prepared Bezier successor remains blocked on selector dependency PR #18293, so
+the independently reviewed, dependency-free Swift PaintVmAscii capability
+repair is the next eligible candidate. Its exact owner advances from pending
+to in-progress locally; this does not publish a branch or create a PR.
+
+The three preparation commits were rebased onto exact main while preserving
+the complete Swift-hash, Python-gradient, and other intervening append-only
+history. Shared state and roadmap conflicts retained both sides. The resulting
+product scope remains one empty capability manifest plus documentation and the
+canonical changelog filename correction; production code, public API, BUILD
+fronts, dependencies, and caller-owned terminal authority remain unchanged.
+Fresh focused validation and independent review of the final local head are
+required before publication.
+
+Before publication, unrelated PA-RISC PR #18342 advanced origin/main to
+`de088e2ddfacd2372fab3677d38b969eea602c00` without touching the parity state,
+roadmap, or PaintVmAscii scope. The still-unpublished four-commit series was
+rebased onto that exact tip. Range comparison confirms all four commits are
+patch-identical to the previously validated series; the lifecycle receipt now
+records `de088e2ddfacd2372fab3677d38b969eea602c00` as the exact reconciled base.
+
+## October 26, 2026: Swift PaintVmAscii draft publication
+
+Independent exact-head review passed at
+`0ecc1c018da921308dac726c91dab152d93bf753`. The reviewed branch was pushed
+normally without rewriting that head and opened as draft PR #18367 at
+`2026-10-26T15:52:35Z`. GitHub reports the exact draft head open and mergeable.
+The draft records the durable PR identity only; it must remain draft until this
+lifecycle-only receipt receives separate exact-head review, and no readiness,
+auto-merge, or merge action is authorized here.
+
+After the independent review, unrelated Japanese-book PR #18338 advanced
+origin/main to `eb841de8f43fd001bde8bdc7ece462a008779da0`. It has no path
+overlap with the PaintVmAscii tranche, and a three-way merge-tree check is
+conflict-free, so publication preserves the exact reviewed implementation head
+rather than rewriting it for unrelated content. The other live parity owners
+are #18293 at exact head `c7b1e98687d3c762a98a9beed61ad71f586ca484`
+and #18355 at exact head `f27058ffa18abe1fb7a7167237eb0b761414162f`;
+GitHub reports both open, non-draft, and mergeable. The live parity set is now
+exactly {18293, 18355, 18367}.
+## October 26, 2026: local Swift fenced-block rebase and reconciliation
+
+The `gfm-fenced-block-swift-contract-adoption` lifecycle mismatch is expected:
+origin/main still records the owner pending because neither its selection nor
+its implementation has ever been published, while this local-only preparation
+records it in progress. Its exact prerequisite,
+`gfm-language-neutral-conformance-fixture`, merged in PR #18118 as
+`83f1871e3d61e8151b0e9313337f5dc2c842a3e6`.
+
+All prepared Bezier successors remain blocked on PR #18293 and the three hosted
+slots are occupied by #18293 at
+`c7b1e98687d3c762a98a9beed61ad71f586ca484`, #18355 at
+`f27058ffa18abe1fb7a7167237eb0b761414162f`, and #18367 at
+`365f455bbaa57c41b1ff825f85fbca883d0cfb92`. The unpublished Swift branch was
+therefore rebased locally onto exact origin/main
+`79322a77c561c1c0cbe21a397a6cd7c41021c3a0` without opening a fourth PR. The
+rebase preserved current main, the verified Python #18324 merge receipt, and
+the complete append-only PaintVmAscii lifecycle history. The old C# receipt
+replay became empty because current main already carries its verified receipt.
+GitHub reports all three exact heads open, non-draft, and mergeable; their
+queued checks and merge responsibility remain outside this local preparation.
+
+Fresh native validation passes 96 document-AST, 62 CommonMark-parser, 63 HTML
+renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
+tests, plus release builds for all six packages. The production planner finds
+exactly three direct packages and their six-package Swift closure, selects only
+the Swift toolchain, and executes all six packages from its emitted plan. Its
+full repository orphan census still fails only because this intentionally
+sparse worktree omits unrelated roots listed by the shared exemption file; the
+bounded planner result remains exact when that global census is disabled.
+
+All three empty capability manifests validate against the current schema. The
+strict state graph has 1,547 unique owners and 2,616 complete acyclic edges,
+zero merged-to-unfinished edges, exactly one local in-progress owner, and the
+three exact live PR owners. All 1,595 lesson shards validate. Fresh root
+changelog validation also caught the preparation's old noncanonical shard
+name; the file now uses the uppercase heading slug and the exact SHA-256
+heading digest `7d765417`. This is preparation evidence only: independent
+exact-head review and a future hosted slot remain publication gates.
+## October 26, 2026: Kotlin micro-qr build-front selection
+
+PR #18312 completed every reported final-head check acceptably and merged from
+exact head `b804a122612f4ae64d967efbff454af771bf6130` as
+`0be03745d775ffa9ee8c66ffda1700baa76ba58f` at
+`2026-10-26T11:52:29Z`. That receipt is an ancestor of the reconciled selection
+base, exact origin/main `9dce8120cfc6ed37c205d7a03f35de40b509260a`, so the live
+parity PR set is now #18293 and #18324.
+
+The refreshed ready-owner prioritization selects
+`kotlin-micro-qr-build-front-and-gradle-metadata-coverage` next. This bounded
+repair restores an existing 123-test Kotlin package to repository discovery
+and scheduling, and its external Gradle consumer verifies that the public
+`ModuleGrid` return type is transitively available through the package API.
+That build-front and public-metadata work ranks ahead of the capability-only
+Swift PaintVmAscii repair. The prepared Bezier successors remain blocked on
+selector dependency PR #18293.
+
+The two local implementation commits were rebased conflict-free onto the exact
+selection base on branch
+`codex/parity-kotlin-micro-qr-build-front-20261026`. The tranche adds the
+Gradle package definition, fail-closed Unix and Windows BUILD fronts, empty
+capability declaration, and documentation; it does not change encoder source
+or behavior. The intervening mainline advances are unrelated System/360,
+TaskApp, and LANG84 changes with no path overlap. Neither live PR touches this
+Kotlin package. PR #18324 removes a different `code/BUILD-EXEMPTIONS` record,
+so later reconciliation must preserve both removals and both append-only
+lifecycle receipts.
+
+Reconciliation also removes one inherited duplicate `merged_at` key from the
+already-merged CommonMark fixture owner while retaining its canonical identical
+value. Publication remains prohibited until the final local head has passed
+the native Kotlin build, external-consumer compile, focused planner, capability
+schema, lesson, state-graph, diff-hygiene, and independent exact-head review
+gates.
+
+## October 26, 2026: Kotlin micro-qr publication
+
+The reconciled Kotlin front passed exact-head independent review at
+`34c40e1eee79ccf526d6217e63d166b19f13e1e1` and opened as draft PR #18355.
+GitHub reported the reviewed implementation head mergeable. The draft exists
+only to record the durable PR identity while this lifecycle receipt receives
+independent delta review; it must not be marked ready until that review passes,
+and guarded auto-merge remains disabled until every exact-head hosted check is
+terminal acceptable. The hosted parity queue is now at its three-PR ceiling.
+
+## October 26, 2026: Python merge and Kotlin conflict reconciliation
+
+Python gradient-descent PR #18324 completed every final-head check acceptably
+at exact independently reviewed head
+`d34af356d621175dd8cc307d953ecb7a99d1b79a` and merged through guarded squash
+as `1bb58a0d7ed8d818d622e69890234d96b6e26b3a` at
+`2026-10-26T15:37:25Z`. The receipt is exact current origin/main, leaving only
+#18293 and #18355 in the live parity set.
+
+That base advance conflicts only with the Kotlin branch's append-only state and
+roadmap records. Merge exact current main normally into the published Kotlin
+branch without rewriting history, preserving both distinct BUILD-exemption
+removals, the complete Python merge receipt, and the Kotlin selection and
+publication records. The Kotlin owner remains pr-open. The resulting local
+merge head must pass focused validation and independent exact-head review before
+a normal push; fresh hosted checks must then finish acceptably before guarded
+auto-merge can be considered.
 ## October 26, 2026: Python merge and .NET Bezier conflict reconciliation
 
 Python gradient-descent PR #18324 completed its guarded lifecycle and merged as
@@ -18264,3 +18669,1136 @@ Re-run the native Bezier2D and dependent Arc2D suites, exact G2D02 selector and
 atomic-plan checks, state/lesson/JSON/diff hygiene, and independent exact-head
 review. Existing guarded auto-merge may remain enabled, but only replacement
 checks on the final exact head may permit the merge.
+
+## October 26, 2026: .NET Bezier merge and Swift conflict reconciliation
+
+.NET Bezier PR #18293 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact independently reviewed head
+`c7b1e98687d3c762a98a9beed61ad71f586ca484` as
+`960397b253474e002be8805103f1f0bca6d82e6c` at
+`2026-10-26T23:13:55Z`. The merge receipt is an ancestor of exact current
+origin/main `cee485ce0a48464b35619f156ff7674b7c72ad58`.
+
+That base advance conflicts only with the Swift branch's append-only state and
+roadmap records. Preserve the published Swift history by merging exact current
+main normally, retaining the complete Python and .NET merge receipts and the
+PaintVmAscii preparation, selection, publication, and exact-review records.
+Kotlin micro-qr PR #18355 has independently reconciled the same base and was
+pushed normally at exact replacement head
+`dac7bcee4255e286754d39a1e5bc33cb51430b19`. The live publication set is now
+{#18355, #18367}. The resulting Swift merge head must pass focused package and
+downstream validation plus independent exact-head review before a normal push;
+all replacement hosted checks must then finish acceptably before guarded
+auto-merge can be enabled.
+
+## October 26, 2026: .NET Bezier merge and Kotlin conflict reconciliation
+
+The .NET merge receipt is an ancestor of exact reconciliation base
+`cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed
+
+## October 28, 2026: .NET Bezier merge and Go/Rust reprioritization
+
+`2026-10-26T23:13:55Z`. The exact receipt is an ancestor of current origin/main
+`cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed .NET worktree
+and local branch were removed safely.
+
+The merge unblocks all four prepared Bezier successors. A fresh prioritization
+selects the Go/Rust tranche first because it closes two established native lanes
+with explicit bounded-error APIs and completes the final reviewed implementation
+child needed before evaluating the aggregate owner. The branch normally merged
+exact current main as `327ea0a6100` without a textual conflict, preserving the
+dependency receipt and all intervening repository history. Kotlin micro-qr and
+Swift PaintVmAscii remain the two live published parity owners; this local
+tranche may use the open third slot only after fresh native, selector, planner,
+state, lesson, and exact-head independent review gates pass.
+
+Fresh validation at exact receipt head
+`17f4ee3b2202ae97f7c7669050791706a158cc66` passes Go Bezier2D at 95.1%
+statement coverage and downstream Go Arc2D at 96.8%. Exact tracked-tree exports
+avoid the sparse Rust workspace's intentionally omitted unrelated sources:
+Rust Bezier2D passes all 23 tests, and downstream Rust Arc2D passes all 20 tests
+plus doc tests. The focused G2D02 exact-selection and atomic-plan tests pass
+against the same tracked tree. Both temporary exports were moved to Trash after
+validation. The production delta is unchanged from the previously independently
+reviewed correction series; only the current-main and validation receipts need
+final exact-head review before publication.
+
+## October 28, 2026: Go/Rust Bezier draft publication
+
+The reconciled and revalidated tranche passed exact-head receipt review at
+`3d4de4a17994bf509021c29250580b9427a3ebf0`. The branch was pushed normally
+without rewriting history and opened as draft PR #18503 at
+`2026-10-28T07:20:44Z`. GitHub reports the exact draft head mergeable. This
+draft records the durable PR identity only; the lifecycle-only receipt requires
+exact delta review before readiness. Guarded auto-merge remains disabled until
+the final exact head is conflict-free and every hosted check reaches a terminal
+acceptable conclusion. The live parity set is now exactly {#18355, #18367,
+#18503}, filling the three-PR publication ceiling.
+
+## October 26, 2026: .NET Bezier merge and Kotlin conflict reconciliation
+
+The .NET merge receipt is an ancestor of exact current
+origin/main `cee485ce0a48464b35619f156ff7674b7c72ad58`, and the completed
+.NET worktree and local branch were removed safely.
+
+That base advance conflicts only with the Kotlin branch's append-only state and
+roadmap records. Preserve the published Kotlin history by merging exact current
+main normally, retaining the complete Python and .NET merge receipts, the
+Kotlin selection and publication records, and both distinct BUILD-exemption
+removals. The other live parity owner is Swift PaintVmAscii PR #18367 at exact
+published head `365f455bbaa57c41b1ff825f85fbca883d0cfb92`; it requires its own
+normal conflict reconciliation. The live publication set is now {#18355,
+#18367}. The resulting Kotlin merge head must pass focused validation and
+independent exact-head review before a normal push, and all replacement hosted
+checks must finish acceptably before guarded auto-merge can be enabled.
+
+## October 28, 2026: dynamic Bezier reprioritization after Kotlin merge
+
+Kotlin micro-qr PR #18355 merged through guarded squash auto-merge from exact
+reviewed head `dac7bcee4255e286754d39a1e5bc33cb51430b19` as
+`36178b3a0d81054cbaf4424b81aec7792f0bcfb0` at
+`2026-10-28T07:21:45Z`. The receipt is exact current origin/main, and the clean
+completed Kotlin worktree and local branch were removed safely.
+
+The refreshed ready-owner prioritization selects the prepared
+TypeScript/Elixir/Lua Bezier tranche for the open publication slot. It advances
+three non-Rust lanes, is dependency-ready after #18293, and does not overlap
+the live Swift PaintVmAscii or Go/Rust Bezier package roots. Exact current main
+was merged into the still-unpublished local branch while preserving its reviewed
+implementation history. Publication remains gated on refreshed native and
+downstream validation, exact-head review, and confirmation that the live parity
+set remains below the three-PR ceiling.
+
+Fresh post-reconciliation validation passes TypeScript Bezier2D's 36 tests at
+100% production line and function coverage, Elixir Bezier2D's 16 tests, and Lua
+Bezier2D's 24 tests. The downstream TypeScript Arc2D front completes cleanly,
+and the Elixir and Lua Arc2D suites each pass all nine tests. The production
+package delta is unchanged from the previously reviewed prepared head; only the
+current-main and validation receipts require final exact-head review before
+publication.
+
+## October 28, 2026: dynamic Bezier draft publication
+
+The reconciled and revalidated tranche passed exact-head receipt review at
+`4708c642472672b7c47e5421fb2930ea476641cc`. The branch was pushed normally
+without rewriting history and opened as draft PR #18506 at
+`2026-10-28T08:01:01Z`. GitHub reports the exact draft head mergeable. This
+draft records the durable PR identity only; the lifecycle-only receipt requires
+exact delta review before readiness. Guarded auto-merge remains disabled until
+the final exact head is conflict-free and every hosted check reaches a terminal
+acceptable conclusion. The live parity set is now exactly {#18367, #18503,
+#18506}, filling the three-PR publication ceiling.
+## October 28, 2026: Kotlin merge and Swift conflict reconciliation
+
+Kotlin micro-qr PR #18355 completed every replacement check acceptably and
+merged through guarded squash auto-merge from exact independently reviewed head
+`dac7bcee4255e286754d39a1e5bc33cb51430b19` as
+`36178b3a0d81054cbaf4424b81aec7792f0bcfb0` at
+`2026-10-28T07:21:45Z`. The exact receipt is current origin/main, and the clean
+completed Kotlin worktree and local branch were removed safely.
+
+That base advance conflicts only with the Swift branch's append-only lifecycle
+records. Preserve the published Swift history by merging exact current main
+normally, retaining the complete Python, .NET, and Kotlin merge receipts plus
+the PaintVmAscii preparation, selection, publication, and exact-review history.
+Go/Rust Bezier PR #18503 is the other live parity owner. The live publication
+set is now {#18367, #18503}. The resulting Swift merge head must pass the 34
+PaintVmAscii tests, all 43 downstream cowsay tests, exact-head review, and fresh
+hosted checks before guarded auto-merge can be enabled.
+
+## October 28, 2026: Kotlin merge and Go/Rust conflict reconciliation
+
+That base advance conflicts only with the published Go/Rust branch's append-only
+lifecycle records. Preserve its published history by merging exact current main
+normally, retaining the complete Python, .NET, and Kotlin merge receipts plus
+the implementation, validation, publication, and review history. Swift
+PaintVmAscii PR #18367 is the other live parity owner. The live publication set
+is now {#18367, #18503}. The resulting Go/Rust merge head requires confirmation
+that the production delta is unchanged, exact-head review, and fresh hosted
+checks before guarded auto-merge can be enabled.
+
+## October 28, 2026: Go/Rust merge and published-branch conflict reconciliation
+
+Go/Rust Bezier PR #18503 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact independently reviewed head
+`ad3ba31a0d1ee7f8865fcdd0bdf31727afcd86a5` as
+`5daf063f8aeaf4f2c40936ab579a00113706074b` at
+`2026-10-28T08:32:42Z`. The exact receipt is current origin/main, and the clean
+completed Go/Rust worktree and local branch were removed safely.
+
+That base advance conflicts only with the dynamic branch's append-only lifecycle
+records. Preserve published history by merging exact current main normally,
+retaining all prior merge receipts and the TypeScript/Elixir/Lua implementation,
+validation, publication, and review history. Swift PaintVmAscii PR #18367 is the
+other live parity owner. The live publication set is now {#18367, #18506}.
+
+That base advance conflicts only with the Swift branch's append-only lifecycle
+records. Preserve published history by merging exact current main normally,
+retaining the full Python, .NET, Kotlin, and Go/Rust merge receipts plus the
+PaintVmAscii preparation, publication, and review history. Dynamic Bezier PR
+#18506 is the other live parity owner. The live publication set is now
+{#18367, #18506}. The resulting Swift merge head must pass focused validation,
+exact-head review, and fresh hosted checks before guarded auto-merge.
+
+## October 28, 2026: Swift merge and published Bezier conflict reconciliation
+
+Swift PaintVmAscii PR #18367 completed all 40 exact-head checks acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`6251a402fc319a9c7dcb19e06d908dadc5d7a5e6` as
+`98eac40cc0ebba14b6c4a22eebfd60419ea28777` at
+`2026-10-28T09:14:13Z`. The exact receipt is current origin/main, and its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with the published dynamic and scripting Bezier
+branches only on append-only lifecycle records. Both branches preserve their
+published histories through normal merges of exact current main: the scripting
+branch retains the Python/Ruby/Perl implementation and review receipts, while
+the dynamic branch retains the TypeScript/Elixir/Lua implementation and review
+receipts. The live publication set is now {#18506, #18508}; each reconciled
+exact head requires fresh hosted checks before guarded auto-merge can be enabled.
+
+## October 28, 2026: dynamic Bezier merge and scripting reconciliation
+
+Dynamic Bezier PR #18506 completed all 39 exact-head checks acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`133ed55bc690321aef534d18902b875353bedff9` as
+`e08ed142125a4441e2ca53470e6b584573b7e6ac` at
+`2026-10-28T09:52:15Z`. The exact receipt is current origin/main, and its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with the published scripting and Haskell/Swift
+Bezier branches only on append-only lifecycle records. Preserve the
+Haskell/Swift branch's published history through a normal merge of exact
+current main while retaining every prior merge receipt and its complete
+implementation, validation, publication, and review history. The live
+publication set is now {#18508, #18511}; replacement exact-head hosted checks
+remain required before guarded auto-merge.
+
+## October 28, 2026: Haskell/Swift hosted macOS linker blocker reprioritization
+
+Exact Haskell/Swift Bezier head `cd46abd9c493004912415a69ae6df75e5ee67c9d`
+failed its hosted macOS build before package tests. GHC 9.4.8 is linked to the
+CommandLineTools SDK, but Cabal inherited the Xcode linker; that linker rejects
+the SDK's `arm64e.x1-macos` TAPI stubs while linking the first dependency in the
+Haskell closure, `haskell/trig`. This is the same runner/toolchain mismatch
+already repaired for the Haskell Starlark package and documented in the
+repository's macOS GHC linker lesson, not a Bezier implementation failure.
+
+Log `haskell-trig-macos-clt-linker-selection` as a distinct bounded backlog
+owner, then prioritize it immediately because it directly blocks an existing
+two-language PR and has no open-PR path overlap. Scope the repair to selecting
+`/Library/Developer/CommandLineTools` for Cabal and its children on Darwin in
+the trig BUILD front. Linux, Windows, package source, and unrelated owners stay
+unchanged. Native trig and Haskell Bezier closure validation plus a completely
+fresh hosted matrix on the repaired exact head remain mandatory before guarded
+auto-merge.
+
+The bounded repair is implemented at
+`77107207763aec5fc8302eb8b55c9abb13dd2deb`. On local macOS the native trig
+BUILD follows the CLT route and passes all 19 examples. The dependent Haskell
+Bezier2D BUILD passes all 19 Trig, 27 Point2D, and 29 Bezier2D examples. Keep
+PR #18511 blocked until the normal follow-up commit is published and every
+replacement exact-head hosted check reaches a terminal acceptable result.
+
+## October 28, 2026: scripting Bezier merge and Haskell/Swift reconciliation
+
+Scripting Bezier PR #18508 completed every exact-head check acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`c780f49320552adab7eea83c283a6c7afbce17eb` as
+`fe057f18c6e8b62cae9921fee2538c091fae1bbb` at
+`2026-10-28T11:08:57Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+Reprioritization keeps Haskell/Swift PR #18511's macOS linker repair first: the
+published failure blocks an existing two-language tranche and the repair is
+already locally green. Preserve that published history by normally merging
+exact current main. The Haskell/Swift production delta remains unchanged from
+its reviewed head apart from the bounded trig BUILD fix. PR #18516 is the
+other live parity owner, leaving one publication slot open for the next
+dependency-ready, non-overlapping backlog item. Both reconciled published
+heads require fresh hosted checks before guarded auto-merge.
+
+Post-reconciliation local validation passes the complete Haskell Bezier2D and
+Arc2D closures (29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples), all
+27 Swift Bezier2D tests, and all 13 downstream Swift Arc2D tests. The normal
+merge may now be published; its new exact head still needs a full replacement
+hosted matrix.
+
+## October 28, 2026: Haskell reverse-closure linker repair
+
+Replacement head `d7277e638d7aea6a9a729708f6e9c43ef810385f` passed
+Ubuntu and Windows but failed hosted macOS in build run 40678136914. The direct
+trig BUILD now selects the correct CommandLineTools linker, but the build plan
+also launches independent point2d, wave, and Bezier2D BUILD processes for the
+reverse dependency closure. Point2D and wave failed with the same
+`arm64e.x1-macos` TAPI error; Bezier2D was dependency-skipped and would inherit
+the same mismatched linker next.
+
+Log `haskell-bezier-reverse-closure-macos-clt-linker-selection` and prioritize
+it immediately as the exact blocker on the already-published two-language PR.
+Apply the reviewed Darwin-only Cabal wrapper to the three independent BUILD
+fronts. Keep package sources, Linux, Windows, unrelated Haskell packages, and
+the separate fleet-wide cleanup out of scope. Validate all three fronts plus
+the downstream Arc2D closure locally, then require a completely fresh hosted
+matrix before guarded auto-merge.
+
+The closure repair is implemented at
+`b6248dcddd0f45a199a6d086950c71cc17eb53bc`. On local macOS, point2d passes
+19 Trig and 27 Point2D examples, wave passes 19 Trig and 21 Wave examples,
+Bezier2D passes 19 Trig, 27 Point2D, and 29 Bezier2D examples, and the explicit
+downstream Arc2D closure passes all 25 Arc2D examples as well. Publish the
+normal follow-up history and require a completely fresh exact-head hosted
+matrix before guarded auto-merge.
+
+## October 28, 2026: Swift fenced-block current-main reconciliation
+
+The bounded Swift fenced-block prerequisite first normally merged exact main
+`c32d5acc15c3563487cce56a7976c754f62e4bd2` without rewriting its prepared
+history. Scripting Bezier PR #18508 has now advanced current main to
+`fe057f18c6e8b62cae9921fee2538c091fae1bbb`; preserve the same published
+history through another normal merge. The six-package production delta remains
+unchanged from exact prepared head
+`47bcc00857695c53f9caeb9a0568b2d4cfb8356b`. Re-run the six native package
+suites and require a fresh exact-head hosted matrix before guarded auto-merge.
+The live parity set is {#18511, #18516}, leaving one publication slot for the
+next dependency-ready, non-overlapping backlog item.
+
+Post-reconciliation validation passes 96 document-AST, 62 CommonMark-parser,
+63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
+tests. The normal merge can now be published; the resulting exact head still
+needs its full replacement hosted matrix.
+
+## October 28, 2026: Swift hash-map selection after scripting Bezier merge
+
+Scripting Bezier PR #18508 merged from exact reviewed head
+`c780f49320552adab7eea83c283a6c7afbce17eb` as
+`fe057f18c6e8b62cae9921fee2538c091fae1bbb`, opening the third publication
+slot. Reprioritization selects `swift-hash-map-lane-parity`: its hash-functions
+prerequisite is merged, the complete preparation has no open-PR path overlap,
+and landing one missing non-Rust package immediately unlocks the recorded
+Swift hash-set and HyperLogLog descendants. It ranks ahead of new documentary
+contracts and the lower-leverage Go/Rust Bezier dependency cleanup.
+
+The preparation normally merged exact current main without rewriting its four
+commits; merge head `e8d5e1897756bb0e012a3f01769ba5df03cf85dc`
+preserves the corrected implementation at
+`a04423e471cbcbd6e59f8e22738e98eefa658739`. The native BUILD passes all 17
+focused tests, including both collision strategies and exact UTF-8 identity,
+then completes a production release build. Keep scope to the prepared DT18
+package, exact DT17 hashing, persistent semantics, native build fronts, docs,
+capability declaration, and lifecycle receipts. Exact merge-head review and
+hosted Windows qualification remain before publication.
+
+## October 28, 2026: Swift hash-map draft publication
+
+Open PR #18517 from exact current-main reconciliation and lifecycle head
+`e8fed125d8e611f657bd358b2dc69bf5dffc4808`. The live publication set is now
+{#18511, #18516, #18517}; do not open a fourth parity PR. Guarded auto-merge
+remains disabled until every hosted check for this exact head is terminal and
+acceptable, including the Windows BUILD front.
+
+## October 28, 2026: Swift hash-map merge and published-PR reconciliation
+
+Swift hash-map PR #18517 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact lifecycle head
+`6a3703a288ff8a9af8e4cf25cd15cf8a8c934dcc` as
+`031553c39dda7b68b9aa43d4abb4ab688ceff3a0` at
+`2026-10-28T12:21:19Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with Haskell/Swift PR #18511 only in shared
+lifecycle records. Preserve its published Bezier implementation and both
+macOS linker repairs through a normal merge of exact current main. Re-run the
+Haskell Bezier closure and Swift Bezier/Arc suites, then require a completely
+fresh exact-head hosted matrix before guarded auto-merge. The live publication
+set is {#18511, #18516}; one slot is open after fresh backlog prioritization.
+
+Post-reconciliation validation passes the complete Haskell Bezier2D and Arc2D
+closures (29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples), all 27
+Swift Bezier2D tests, and all 13 downstream Swift Arc2D tests. The normal merge
+can now be published; the resulting exact head still needs a full replacement
+hosted matrix.
+
+That base advance conflicts with Swift fenced-block PR #18516 only in shared
+lifecycle records. Preserve its published implementation and review history
+through a normal merge of exact current main. Re-run the six affected native
+Swift suites and require a completely fresh exact-head hosted matrix before
+guarded auto-merge. The live publication set is {#18511, #18516}; one slot is
+open, but the next publication must wait for a fresh backlog prioritization.
+
+Post-reconciliation validation passes 96 document-AST, 62 CommonMark-parser,
+63 renderer, 30 CommonMark facade, 45 AsciiDoc parser, and 28 AsciiDoc facade
+tests. The production delta remains unchanged from exact prepared head
+`47bcc00857695c53f9caeb9a0568b2d4cfb8356b`; publish the normal merge and
+require a full replacement hosted matrix.
+
+## October 28, 2026: Swift fenced-block merge and parallel continuation
+
+Swift fenced-block PR #18516 completed every exact-head check acceptably and
+merged through guarded squash auto-merge from exact reconciliation head
+`8a9ac79a9308df20e88c1def222967a51f3a1abb` as
+`7bb2f044fed05e25d8c1cfb330ccfd3c286e1550` at
+`2026-10-28T13:29:40Z`. The exact receipt is current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+That base advance conflicts with Haskell/Swift PR #18511 only in shared
+lifecycle records. Preserve its published Bezier implementation and both
+macOS linker repairs through a normal merge of exact current main. Re-run the
+Haskell Bezier closure and Swift Bezier/Arc suites, then require a completely
+fresh exact-head hosted matrix before guarded auto-merge. PR #18511 is the
+only live parity owner while the independent Swift hash-set tranche advances
+locally.
+
+Post-reconciliation validation passes the complete Haskell Bezier2D and Arc2D
+closures (29 Bezier2D, 25 Arc2D, 27 Point2D, and 19 Trig examples), all 27
+Swift Bezier2D tests, and all 13 downstream Swift Arc2D tests. The production
+delta remains unchanged from the reviewed implementation apart from the
+bounded BUILD-front fixes. Publish the normal merge and require a full
+replacement exact-head hosted matrix.
+
+The dedicated `swift-hash-set-lane-parity` branch preserved its selection
+commit through a normal merge of that exact main. Its DT17 hash-functions and
+DT18 persistent-map prerequisites are both merged, it advances another
+non-Rust lane, and its new package root does not overlap active Haskell/Swift
+Bezier PR #18511. Keep scope to DT19 membership, deterministic set algebra,
+persistent value semantics, native build fronts, docs, empty capabilities,
+and lifecycle receipts. Do not publish hash-set until implementation,
+validation, and exact-head review are complete.
+
+The package implementation now passes 10 native tests and a production release
+build with 100% production-source region, function, and line coverage. The real
+build tool discovers and successfully builds the exact three-package Swift
+closure: hash-functions, hash-map, and hash-set. Independent security review
+found no implementation or authority defect and confirmed an external
+HashSet-only consumer compiles. Its hygiene findings are resolved before
+publication: imports are strictly ordered, a root changelog shard and lifecycle
+receipt are present, and generated artifacts are cleaned.
+
+The older Haskell ITF Windows-front branch is truthfully reclassified as a
+pending local preparation at `fa152d9eb70c3e95ad2b3529da63607a84f4305b`,
+not a second selected owner. It remains 112 main revisions behind and must wait
+for a future prioritization, current-main reconciliation, validation, and
+review. Swift hash-set is the sole selected local owner; PR #18511 remains the
+sole live parity publication.
+
+## October 28, 2026: Swift hash-set publication
+
+Open non-draft PR #18525 from clean, independently reviewed publication head
+`16a89f287a210f4262dc8af2dddbf16b3db60d8c`. Its implementation is based on
+exact current main `7bb2f044fed05e25d8c1cfb330ccfd3c286e1550`; the new package
+root has no overlap with any other open PR. The live parity set is now
+{#18511, #18525}, leaving one publication slot open. Guarded auto-merge remains
+disabled until every hosted check for the final exact head is terminal and
+acceptable and GitHub reports a clean merge state.
+
+## October 28, 2026: Swift hash-set merge and affine2d macOS repair
+
+Swift hash-set PR #18525 completed every exact-head check acceptably and merged
+through guarded squash auto-merge from exact lifecycle head
+`d3884fb31e50c2dc17c9b4ccc51820d227d96dc8` as
+`f888b7b1c77f01a2a3059cf44ce98bfbde91cfdc` at
+`2026-10-28T14:18:43Z`. The receipt is exact current origin/main; its clean
+completed worktree and local branch were removed safely.
+
+Haskell/Swift Bezier PR #18511 passed Linux, Windows, metadata, CodeQL, and all
+other exact-head checks, but its macOS build exposed one additional root in the
+same bounded linker family. The build tool selected `haskell/affine2d` directly,
+so Cabal built trig and point2d under affine2d's process; fixes in those leaf
+BUILD fronts could not affect it. The unchanged affine2d front therefore let
+GHC 9.4.8 invoke a linker that could not parse the CLT SDK's newer
+`arm64e.x1` stubs. Scope the established Command Line Tools `DEVELOPER_DIR` to
+affine2d's Cabal process, record the root-selection lesson, validate the full
+22 affine2d, 27 point2d, and 19 trig examples, and normally merge current main.
+A completely fresh exact-head hosted matrix remains mandatory.
+
+## October 28, 2026: Bezier merge and Haskell ITF Windows-front continuation
+
+Haskell/Swift Bezier PR #18511 completed every exact-head check acceptably and
+merged through guarded squash auto-merge from independently reviewed head
+`20545a2563a2d921e61f4af51af28d3db059ef0a` as
+`71ac0f0ab54aada8ed9a6da34b1140b546afbbc8` at `2026-10-28T15:06:15Z`.
+The receipt is exact current origin/main; its clean worktree and local branch
+were removed safely.
+
+Fresh prioritization keeps the already-complete
+`haskell-itf-stack-windows-build-front-coverage` preparation selected. It
+advances a separate Haskell build front, all prior live parity PRs are merged,
+and its bounded implementation remains isolated to the barcode-layout-1d and
+ITF Windows fronts plus their regression and lifecycle receipts.
+
+Preserve its preparation through a normal merge of exact current main
+`71ac0f0ab54aada8ed9a6da34b1140b546afbbc8`. Independent review found that the
+two-line cmd.exe recipe could not implement a successful Cabal-absent skip
+because the build tool executes each line in a fresh process and stops at the
+first failure. Replace it with one PowerShell invocation that exits zero only
+for confirmed absence and propagates the real Cabal exit status. Cover absent,
+successful, and failing Cabal paths before exact-head re-review and publication.
+
+## October 28, 2026: Haskell ITF Windows-front draft publication
+
+Open draft PR #18527 from exact-current-main independently reviewed candidate
+`053cb27651a47c061bd2c4739b4657d5e9ac85d9`. The corrected fronts use one
+PowerShell process, and the focused build-tool regression pins both literal
+fronts while exercising absent, successful, and failing fake Cabal paths on
+Windows. The native GHC 9.6.7 closures pass 29 paint-instructions, 27
+barcode-layout-1d, 25 SHA-256 plus allocation budget, and 19 ITF examples.
+
+Keep the PR draft only while this durable lifecycle receipt is committed and
+independently reviewed. After the reviewed receipt is published, mark it ready
+and require a completely fresh exact-head hosted matrix; guarded auto-merge
+remains disabled until every final-head check is terminal acceptable and the
+merge state is clean.
+
+The first hosted matrix failed only the repository metadata gate: the Haskell
+barcode-layout-1d target registry still pinned the package tree from original
+adoption PR #16343, so the new `BUILD_windows` correctly appeared as unverified
+non-lockfile drift. Re-verify the unchanged Haskell lane at durable
+implementation `053cb27651a47c061bd2c4739b4657d5e9ac85d9`, repoint the exact package
+tree, and require another complete exact-head matrix.
+
+Before publishing that repair, current main advanced to
+`d70b1afc3de8ae83b641d8ca8fe9565d901798f6` with unrelated human-language
+level-progress owner sharding. Preserve both histories through a normal merge;
+the Haskell package trees and metadata repair are unchanged. Re-run the focused
+registry and Windows-front checks, then independently review the exact merge
+head before push.
+
+## October 28, 2026: Swift Bloom filter parallel selection
+
+After Haskell ITF Windows-front PR #18527 merged and while the isolated Swift
+HyperLogLog PR #18531 runs fresh CI, fresh prioritization selects
+`swift-bloom-filter-lane-parity` for local-only parallel implementation. Its
+sole DT17 hash-functions prerequisite is merged, it adds one bounded missing
+non-Rust package, and its package root does not overlap HyperLogLog. It ranks
+ahead of the Swift store-engine chain because that chain still depends on the
+active HyperLogLog publication.
+
+Keep scope to DT22 size and hash-count calculation, deterministic double
+hashing, bounded bit addressing and allocation, membership and false-positive
+fixtures, stable validation errors, persistent value semantics, native build
+fronts, documentation, and empty capabilities. Keep this branch local until
+the active lifecycle state is reconciled from main and exact-head review
+passes.
+
+The bounded implementation is now committed at
+`dc7ac4b6db0b3eea11de45b34d7c26ab549b5e93`. Five native tests and the release
+build pass; strict Swift Format lint passes; production coverage is 95.22% of
+lines, 96.55% of functions, and 92.11% of regions. The real Go build tool's
+bounded sparse inventory selects the new package together with its DT17
+hash-functions prerequisite and records the intended dependency edge. Keep the
+branch local while exact-head review and active-main reconciliation complete.
+
+Independent review of exact head
+`233185c373fda90720db60c17c5ba188ec3edf6c` passes with no remaining code,
+security, test, authority, or local publication finding. Review required the
+closed capability schema and a stable capacity-overflow boundary; both fixes
+and their regressions pass. Keep the approved branch local pending PR #18531
+and current-main lifecycle reconciliation.
+
+## October 28, 2026: Swift HyperLogLog local selection
+
+While Haskell ITF Windows-front PR #18527 runs replacement CI, fresh backlog
+prioritization selects `swift-hyperloglog-lane-parity` for independent local
+work. Its sole DT17 hash-functions prerequisite is merged, it adds one missing
+non-Rust package, and its new package root does not overlap the active Haskell
+or Go build-tool surfaces. It ranks ahead of the two-lane binary-tree owner
+because it is a bounded single package and directly advances the recorded
+Swift store-engine dependency chain.
+
+Keep scope to DT21 precision bounds, deterministic FNV-1a plus fixed avalanche
+mixing, persistent register values, small- and large-range correction, merge
+compatibility, stable errors, native build fronts, documentation, and empty
+capabilities. Keep the branch local until current-main lifecycle receipts are
+reconciled, complete native validation passes, and the exact head receives
+independent review.
+
+The bounded implementation is now committed at
+`d9eff3c2776c4093894bc3544b996cb048019212`. Six native tests and the release
+build pass; strict Swift Format lint passes; production coverage is 98.68% of
+lines, 96.00% of functions, and 92.75% of regions. The real Go build tool's
+bounded sparse inventory selects the new package together with its DT17
+hash-functions prerequisite and records the intended dependency edge. Keep the
+branch local while exact-head review and current-main reconciliation complete.
+
+Independent review of exact head
+`d9eff3c2776c4093894bc3544b996cb048019212` now passes with no remaining code,
+security, or test finding. Review drove the 64-bit correction/saturation
+regressions and reflexive NaN error equality. Current-main lifecycle
+reconciliation and generated-artifact cleanup still precede publication.
+
+Haskell ITF Windows-front PR #18527 then completed every exact-head check
+acceptably and merged through guarded squash auto-merge from reviewed head
+`70f21eaf0b154c39490b19dd47ec5ae0cc1cf2de` as
+`3fd9485da978aa6276aba825336f0962897fd456` at `2026-10-28T16:37:37Z`.
+The clean completed worktree and local branch were removed safely. Preserve the
+reviewed Swift preparation through a normal merge of that exact current main,
+then re-run its bounded validation before publication.
+
+Exact merge head `03ca6ba7cd1fc2e11635457ffb0c628bf2b9b475`
+preserves both histories and leaves the reviewed package and root changelog
+byte-identical to implementation `d9eff3c2776c4093894bc3544b996cb048019212`.
+All six tests, the release build, strict formatting, JSON and diff checks, and
+the bounded build-tool dependency plan pass again. Final review found no code,
+security, test, or merge-resolution defect; clear the now-merged Haskell PR
+from the active set and remove the ignored SwiftPM build tree before push.
+
+Publish the independently reviewed exact current-main candidate
+`60198587d0363966d3ed0ab16d278efa5a3beffc` as draft PR #18531. Keep it draft
+only while the durable PR lifecycle receipt is committed and reviewed. Once
+that exact receipt is pushed, mark the PR ready and require a completely fresh
+hosted matrix before guarded auto-merge.
+
+The first exact-head matrix passes Linux and macOS package builds but fails the
+repository metadata gate: Haskell barcode-layout-1d still records reviewed
+pre-squash implementation `053cb27651a47c061bd2c4739b4657d5e9ac85d9`, which
+is intentionally absent from fresh-clone ancestry after PR #18527's squash
+merge. Repoint the unchanged package tree and its lifecycle implementation
+receipt to reachable exact merge revision
+`3fd9485da978aa6276aba825336f0962897fd456`; require a fresh exact-head matrix.
+
+The repaired exact head `1246545183a7d34bc6c1e3b43f83cb49df058890`
+completed every hosted check acceptably after one no-step infrastructure
+cancellation of Swift CodeQL reran successfully. Guarded squash auto-merge
+landed it as `ae197369af5c6bfe8ab2768465f67e0119baac97` at
+`2026-10-28T18:58:48Z`; verify that receipt and remove the clean completed
+worktree and local branch. Preserve the independently reviewed Bloom filter
+preparation through a normal merge of that exact current main, then re-run its
+bounded validation before publication.
+
+Exact merge head `3ba0e748758cccf1e9a53ccf503f2fdc967e430e`
+preserves both histories. All five Bloom filter tests, the release build,
+strict formatting, closed capability schema, JSON and diff checks, and the
+bounded build-tool dependency plan pass again; generated SwiftPM artifacts are
+removed and no open PR overlaps the package root. Require final exact-head
+review before publication.
+
+Independent exact-head review approved merge head
+`3ba0e748758cccf1e9a53ccf503f2fdc967e430e` with no findings. The Bloom
+implementation and root changelog remain byte-identical to the approved
+implementation receipt, both histories and the merged HyperLogLog receipt are
+intact, lifecycle and graph invariants pass, and the validated worktree is
+artifact-free. Seal this review receipt before publishing the draft PR.
+
+Publish independently reviewed receipt
+`f8b5143724247eea549e60d27446f96f7887bf6d` as draft PR #18533 over exact
+main `ae197369af5c6bfe8ab2768465f67e0119baac97`. Keep it draft only while
+this durable PR-number lifecycle receipt is committed and independently
+reviewed. Then push the receipt, mark the PR ready, and require a completely
+fresh exact-head hosted matrix before guarded auto-merge.
+
+Every exact-head check for PR #18533 completed acceptably: ten succeeded,
+twenty-nine were expected skips, and the CodeQL aggregate was neutral with no
+failure. GitHub reported independently reviewed head
+`541a9294cbad4b3dd3d0019dc048df151c212451` cleanly mergeable; guarded squash
+auto-merge landed `c85baee9a4b57105b7d1c57f71f8536b5379b164` at
+`2026-10-28T19:51:50Z`. Verify the exact receipt, remove the clean completed
+worktree and local branch, and reconcile the reviewed skip-list preparation
+through a normal merge of that current main.
+
+## October 28, 2026: Swift skip-list parallel selection
+
+After Swift HyperLogLog merged and while isolated Swift Bloom filter PR #18533
+runs exact-head CI, fresh prioritization selects
+`swift-skip-list-lane-parity` for local-only parallel implementation. It is
+dependency-free, adds one bounded missing non-Rust package, does not overlap
+Bloom filter paths, and removes one of the remaining package prerequisites
+from the Swift in-memory data-store engine.
+
+It ranks ahead of RESP and the protocol IR because its span-augmented
+rank/select invariants and caller-controlled level source are the highest-risk
+remaining pure data-structure prerequisite. Keep scope to DT20 ordered-map
+insert/update/delete, comparator semantics, rank, selection, range behavior,
+bounded caller-controlled level generation, package-native tests, native build
+fronts, documentation, and empty capabilities. Keep the branch local until
+Bloom's terminal lifecycle is reconciled from main and exact-head review
+passes.
+
+The implementation audit discovers a separate existing-lane gap:
+`skip-list-existing-lanes-dt20-contract-reconciliation`. DT20's one-based and
+`-1` prose conflicts with the zero-based optional behavior used by Python,
+Rust, and TypeScript; Rust and TypeScript are façades rather than skip-list
+towers, Go scans rank/select/range without spans, and Python consumes ambient
+randomness. Keep that neutral reconciliation pending and require it before any
+whole-family DT20 conformance claim. It does not block the selected Swift lane,
+which explicitly pins zero-based optional rank/select, a real span-augmented
+tower, injected level generation, and finite resource ceilings.
+
+The bounded Swift implementation is committed at
+`e2cfdff742b28bde6dcce0b73b2e7130fcf42eb9`. Seven native tests pass exact
+scripted spans, update and source-call semantics, invalid-level atomicity,
+capacity, deletion and top-level collapse, nullable presence, comparator
+profiles, bounded ranges, and a 200-key rank/select reference trace. The
+release build and strict formatting pass; production coverage is 98.38% of
+lines, 95.45% of functions, and 93.75% of regions. The closed empty capability
+profile and authority scan pass. A bounded real build-tool plan detects one
+changed and affected package and selects exactly `swift/skip-list`. Keep the
+branch local pending exact-head review and Bloom/current-main reconciliation.
+
+Independent review approves exact repaired head
+`f9d10c622dd36af0fe873afd4540a54d42be26e1` with no remaining code, security,
+test, authority, or publication finding. Review required a reachable discovery
+receipt, canonical H3/slug/digest changelog shard, and span-based wording that
+does not overclaim complexity under adversarial caller levels; all are fixed
+without changing the approved implementation. Preserve this reviewed delta
+through the normal current-main merge, re-run bounded validation, and require
+fresh exact merge-head review before publication.
+
+Normal merge head `3489fb88bf12f870c16fa2228a1860fde6230354`
+preserves reviewed skip-list parent
+`7a54e9c4c285f87ec0ae82f76f82985ee4c0ea9f` and exact current-main parent
+`c85baee9a4b57105b7d1c57f71f8536b5379b164`. All seven tests, the release
+build, strict formatting, JSON and diff checks pass with unchanged coverage.
+The bounded real build-tool plan now discovers 171 Swift packages, detects one
+changed and affected package, and selects exactly `swift/skip-list` while the
+newly merged Bloom filter remains skipped. Remove generated artifacts and
+require independent exact merge-head review before publication.
+
+Independent exact current-main review approves
+`c42ee26066b79dbdac5fd1d19fd32b8175fd06da` with no findings. Both merge
+parents and the approved package/changelog identity are exact; native
+validation, coverage, the one-package build plan, capability and authority
+boundaries, Bloom's terminal receipt and cleanup, the 1,554-owner graph, open
+PR overlap, merge-tree hygiene, and artifact-free status all pass. Seal this
+review receipt before publishing the draft PR.
+
+Publish independently reviewed receipt
+`a8d4e0355b85c19cf58f99fdc4343c5f92de8c0d` as draft PR #18535 over exact
+main `c85baee9a4b57105b7d1c57f71f8536b5379b164`. Keep it draft only while
+this durable PR-number lifecycle receipt is committed and independently
+reviewed. Then push the receipt, mark the PR ready, and require a completely
+fresh exact-head hosted matrix before guarded auto-merge.
+
+Every exact-head check for PR #18535 completed acceptably and guarded squash
+auto-merge landed `729e0b761e339bcc8d5863550da644e5b3ccec24` at
+`2026-10-28T20:46:16Z`. The clean Swift skip-list worktree and local branch
+were removed. Dart and Swift binary-tree PR #18537 is now the sole active
+parity PR at independently reviewed head
+`3d147429f868c416b2f0f18e70d4ec2c4ffe39f6`; fresh hosted CI remains its
+merge gate.
+
+## October 28, 2026: Swift data-store protocol IR selection
+
+Without waiting on #18537, reprioritization selects the independent
+`swift-in-memory-data-store-protocol-lane-parity` owner locally. It has three
+direct and five total unfinished descendants versus two/four for RESP and
+radix tree, while remaining a bounded dependency-free value-model package.
+Keep it RESP-independent: normalize only ASCII command letters, preserve owned
+binary arguments, model the complete nullable ordered response algebra, and
+validate nested responses iteratively under checked depth/element/byte budgets.
+
+Register `in-memory-data-store-protocol-existing-lanes-contract-reconciliation`
+for established binary/text, normalization, RESP-coupling, ownership, nullable
+response, integer-width, error, and budget drift. Also register
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` before selecting
+another RESP codec lane. Correct `swift-radix-tree-lane-parity` to depend on
+`radix-tree-dt14-neutral-conformance`; its Unicode and structural contract is
+not ready. Keep the selected Swift IR branch local until #18537's terminal
+lifecycle is reconciled from main.
+
+### Swift protocol IR local implementation
+
+Implementation revision `988ac240fc06960a7b0fc21455bfaa275fca1d8e`
+adds the dependency-free Swift package and an additive DT25 boundary. Commands
+use visible ASCII identity with bytewise lowercase folding and preserve ordered
+binary arguments. Responses retain exact UTF-8 identity, the complete nullable
+algebra, and deterministic order. Tighten-only command, argument, frame, depth,
+element, and payload budgets remain below fixed package ceilings; command text
+scanning stops one byte beyond its ceiling, and both response validation and
+equality use cursor stacks bounded by nesting depth.
+
+All ten native tests, the release build, strict Swift Format, the Unix BUILD,
+JSON/diff hygiene, and the empty capability profile pass; the reviewed Windows
+front awaits hosted execution. LLVM reports
+100% production line, function, and region coverage across 249 lines. A real
+bounded Go build-tool dry plan discovers 172 Swift packages, marks exactly the
+new protocol package changed and affected, and selects only
+`swift/in-memory-data-store-protocol`. Independent exact-head review approved
+the bounded command scan, iterative response operations, exact identities,
+authority boundary, tests, coverage, and artifact cleanup. Keep this validated
+work local until #18537's terminal lifecycle reconciliation; then merge current
+main, rerun the gates, and require fresh hosted qualification before guarded
+auto-merge.
+
+Every exact-head check for PR #18535 completed acceptably, including Ubuntu,
+macOS, Windows, Swift CodeQL, metadata, and the aggregate CI gate. GitHub
+reported reviewed head `9a02ab99d53e474410e3da7e3795a4739efab532`
+cleanly mergeable; guarded squash auto-merge landed
+`729e0b761e339bcc8d5863550da644e5b3ccec24` at
+`2026-10-28T20:46:16Z`. The clean completed worktree and local branch were
+removed.
+
+## October 28, 2026: Dart and Swift binary-tree selection
+
+Post-merge reprioritization selects `binary-tree-dart-swift-lane-parity`. Its
+three direct and seven total unfinished descendants exceed Swift data-store IR
+(3/5), Swift RESP (2/4), and Swift radix tree (2/4). The two package paths do
+not overlap the merged skip-list implementation. Register the distinct pending
+`binary-tree-existing-lanes-dt03-contract-reconciliation` owner for established
+identity/equality, nullable/missing, orphan, shared/cycle, recursion, resource,
+and empty-height drift without blocking the two real canonical gaps.
+
+Exact current-main merge head
+`126e961f11466780ada6d6a39e39b6f12bdfc998` contains the bounded Dart and Swift
+packages. Eleven Dart tests pass format and fatal-info analysis with 100%
+production-line coverage. Nine Swift tests pass debug coverage, release build,
+and strict formatting with 98.13% production lines, 96.26% regions, and 100%
+functions covered. Both lanes use immutable identity nodes, tagged nullable-safe
+slots, iterative algorithms, canonical sparse projections, stable errors,
+checked 1,048,575-slot limits, failure-atomic admission, shallow ownership,
+cross-platform build fronts, and empty capability profiles. A bounded real
+build-tool plan selects exactly `dart/binary-tree` and `swift/binary-tree`.
+Require exact-head security review and fresh hosted qualification before merge.
+
+Independent exact current-main review approves publication head
+`375212df3a2b40234660f6c8892fcd2f8981fade` with no findings. The Dart, Swift,
+and DT03 trees are byte-identical to the approved implementation; Bloom and
+skip-list lifecycle receipts match GitHub; the 1,555-owner graph is valid; the
+canonical root changelog shard, lessons, JSON, ancestry, merge-tree, diff, and
+artifact hygiene all pass. Publish that receipt as draft PR #18537 over exact
+main `729e0b761e339bcc8d5863550da644e5b3ccec24`. Keep it draft only while this
+durable PR-number receipt receives independent delta review, then mark it ready
+and require a completely fresh exact-head hosted matrix before guarded
+auto-merge.
+
+### PR #18537 merge and Swift protocol reconciliation
+
+Every exact-head check for Dart and Swift binary-tree PR #18537 completed
+terminal acceptable, including Ubuntu, macOS, Windows, Swift CodeQL, metadata,
+human-language books, and both aggregate gates. GitHub reported reviewed head
+`3d147429f868c416b2f0f18e70d4ec2c4ffe39f6` clean and mergeable; guarded
+squash auto-merge landed `4a32928e2f0e6ef12b9665def9602039d32364af`
+at `2026-10-28T22:09:42Z`. The completed worktree, its ignored Dart/Swift build
+artifacts, and local branch were removed.
+
+Normal merge head `8f7c055b98c7e95e4ca312e6b12f43970d91d76d`
+preserves the reviewed protocol receipt and exact new main as its two parents.
+All ten protocol tests, release build, strict formatting, Unix BUILD, JSON/diff
+checks, and empty capabilities pass with unchanged 100% production coverage
+across 249 lines. The fresh bounded build-tool plan discovers 173 Swift
+packages and selects only `swift/in-memory-data-store-protocol`. Post-merge
+prioritization keeps this three-direct/five-total-descendant item ahead of RESP
+and radix tree at two/four each. Require independent exact merge-head review
+before publication, then fresh hosted Windows and repository-wide qualification
+before guarded auto-merge.
+
+### Draft PR #18540 and live-main refresh
+
+Publish independently reviewed head
+`b9cb795db6b14b85fbe52292b3a6a68e67e74cc9` as draft PR #18540 to record its
+durable identity. At creation, GitHub records live base
+`e2119773be5b8881191bcb5b8657946d2b51ed5f`, which had advanced moments
+earlier through one path-disjoint Rust HKDF change while the draft head still
+contained prior main. Normal merge head
+`1d23920b2584877943a283eaf03770611c3fe680` preserves both reviewed
+publication history and exact live main.
+
+The protocol implementation, DT25 amendment, and changelog remain unchanged.
+All ten tests, release build, strict formatting, JSON/diff checks, and empty
+capabilities pass with 100% coverage across 249 production lines. The bounded
+build-tool plan still discovers 173 Swift packages and selects exactly
+`swift/in-memory-data-store-protocol`. Keep the PR draft until this lifecycle
+and current-main delta is independently reviewed; then push the receipt, mark
+ready, and require a completely fresh exact-head hosted matrix before guarded
+auto-merge.
+
+### PR #18540 merge and Elixir graph/diff selection
+
+All 40 final-head checks for Swift protocol IR PR #18540 completed acceptably
+at `9997c16d1f5c63994e981ef8a227e35833c6cf8d`: 10 successes, 29 expected
+path-gated skips, and one neutral CodeQL result. GitHub reported the reviewed
+head clean and mergeable. Guarded squash auto-merge was enabled only after the
+aggregate CI gate passed, and GitHub merged the PR at
+`2026-10-28T22:52:43Z` as
+`93ce1b4493a1ea5d781a047e86c658fc78483f59`. The clean completed worktree
+and local branch were removed.
+
+The fresh dependency/leverage pass selects
+`build-tool-elixir-diff-selection-match-work-ceiling-adoption` on branch
+`codex/build-tool-elixir-diff-selection-parity` from that exact merged main.
+Its seven prerequisites are merged, and its three direct and five total
+unfinished descendants rank ahead of the other bounded ready leaves. The
+existing Elixir directed graph, Git-diff mapping, and hardened memoized
+Unicode-scalar matcher keep the implementation surface narrower than the
+from-scratch canonical-CBOR and Lua alternatives. Dynamically consume exactly
+the eight graph and twelve diff-selection neutral cases, including the shared
+input multi-consumer case and the 50,000,000-unit match-work ceiling; preserve
+stable all-or-error output and process-free authority. Keep lifecycle edits
+and the program implementation on the dedicated current-main worktree, require
+native validation plus independent exact-head security review before
+publication, and do not claim execution-adapter or host authority readiness.
+
+#### Elixir graph/diff local implementation and review
+
+Reviewed implementation head `cd136e09fd595c9bdf0705252ae13ed5102a0a4b`
+adds the typed, process-free `BuildTool.GraphDiff` core and dynamically consumes
+the exact eight graph and twelve diff-selection fixtures. Normal merge head
+`121885ac4b8431a94e6c9afbba7c1e7832b8e711` preserves that reviewed lineage
+and exact current main `5ca8d638258ff7100f0c077c587846dccbd85d03`;
+the intervening Microwatt Rust package is path-disjoint. The core returns
+canonical levels and sorted closures, verifies the domain-separated repository
+boundary digest, recognizes only exact BUILD fronts, and completes the
+50,000,000-unit Unicode-scalar match-work preflight before matching or
+unknown-path policy. It accepts only caller-materialized values and gains no
+checkout, Git, filesystem, process, environment, network, clock, randomness,
+credential, or execution authority.
+
+Independent security review first rejected an unbounded decoded boundary DAG
+canonicalization path and a lexical-adjacency package-root overlap check. The
+repaired exact head validates object graphs before canonicalization under
+depth, queued-value, nonempty-container, and aggregate UTF-8 ceilings; rejects
+shared containers and non-JSON terms; preserves malformed-digest precedence;
+and uses a folded segment trie to reject ancestor and Unicode-fold collisions.
+Hostile alias, depth, non-JSON, string-byte, node, container, punctuation, and
+case-fold probes pass, and exact-head re-review issued SHIP with no findings.
+
+The final BUILD runs 282 tests with two established skips. Warnings-as-errors
+compilation, focused formatting, changelog validation, diff hygiene, current-
+main ancestry, state-graph validation, and artifact cleanup pass. The new
+module measures 90.15% coverage. Package aggregate coverage is 70.02% because
+unrelated legacy Resolver and CLI modules retain pre-existing gaps; do not
+widen this bounded contract tranche into that separate debt. Publish only
+after one final exact-head lifecycle review, then require fresh hosted
+qualification before guarded auto-merge.
+
+#### Draft PR #18544 publication receipt
+
+Publish independently reviewed exact current-main head
+`8256abf1447673df603e4c014d6fdb94300c5ddc` as draft PR #18544 over exact
+base `5ca8d638258ff7100f0c077c587846dccbd85d03`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
+
+Independent focused review approves the durable PR-number receipt at
+`852ded240b140abe1c639933f63bc66872644317` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18544's identity, creation time,
+publication head/base, mergeability, state graph, diff, and artifact hygiene
+all match live evidence. Mark the PR ready and require every fresh hosted check
+on the final exact head to finish acceptably before enabling guarded
+auto-merge.
+
+### Parallel Swift RESP selection and local implementation
+
+While TypeScript graph/diff PR #18548 runs hosted qualification, a fresh
+bounded-owner pass ranks Ruby dependency hashing first at three direct and five
+total unfinished descendants, tied with Lua graph/diff. Both higher-ranked
+owners overlap shared routing or registry paths changed by the active PR.
+Dependency-free `swift-resp-protocol-lane-parity` ranks next at two direct and
+four total descendants and is package-path-disjoint, so branch
+`codex/swift-resp-protocol-lane-parity` advances locally from exact main
+`92cf52368f835648df9d54be2cc41be47c82417f` without publication or shared
+CI-routing edits.
+
+Implementation head `523c36c9c0a4f6803092a29c0e886fb862ef640c`
+adds all seven distinct RESP2 values, binary-safe bulk strings, distinct null
+bulk and null array values, strict canonical grammar, iterative bounded
+encoding and decoding, failure-atomic fragmented input, stable errors, BUILD
+fronts, package documentation, and an empty authority profile. UTF-8 line
+preflight and numeric-header scanning enforce their limits before proportional
+allocation, including fragmented unterminated headers. Twelve tests,
+release build, strict Swift formatting, manifest and JSON checks, lessons,
+diff, and artifact hygiene pass. Independent LLVM measurement reports 96.84%
+production lines with all 37 functions executed. Exact-head review first
+rejected proportional UTF-8 line allocation and late numeric-header limits;
+the repaired bounded scans close both defects, and re-review issued SHIP with
+no findings. Merge `aec006f2c4a3f43e876a16f842709d00a6bd37f2`
+reconciles exact fetched main `6fe513ee903ff2ef56279783ccbd59a0b8100788`;
+current-main review then found that encode-side integer, bulk-length, null, and
+array-count headers ignored tightened `maximumHeaderBytes`. Repaired head
+`d0a724afffae3f0db919505a531e56f5877dc709` preflights every numeric header
+before output allocation and pins oversize failures plus one-byte successes.
+Re-review issued SHIP; all thirteen tests, release build, and strict formatting
+pass. Publication remains deferred while Ruby dependency hashing PR #18555
+occupies the active-PR slot.
+
+The implementation audit enriches the existing
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` backlog owner:
+DT23 lacks a shared language-neutral fixture corpus, and its worked array
+example reports 14 consumed bytes for a 12-byte frame. The neutral owner must
+correct that receipt and freeze valid, malformed, incomplete, fragmentation,
+and error-precedence fixtures across established lanes without widening the
+bounded Swift package.
+### PR #18544 merge and TypeScript graph/diff selection
+
+All 38 final-head checks for Elixir graph/diff PR #18544 completed acceptably
+at `58f1c24dba4c12c08985710b5cefea028fbf118a`: 14 successes and 24 expected
+path-gated skips, including a successful aggregate CI gate. GitHub reported
+the reviewed head clean and mergeable. Guarded squash auto-merge landed
+`92cf52368f835648df9d54be2cc41be47c82417f` at
+`2026-10-29T01:51:52Z`. The merge is present on fetched main, and the clean
+completed worktree and local branch were removed.
+
+A fresh dependency/leverage pass selects
+`build-tool-typescript-diff-selection-match-work-ceiling-adoption` on branch
+`codex/build-tool-typescript-diff-selection-parity` from that exact merged main.
+Its seven prerequisites are merged. Its three direct and five total unfinished
+descendants tie the pending Lua graph/diff leaf; TypeScript wins the tie-break
+because its existing graph, Git-diff, and hardened matcher modules make the
+implementation surface narrower. From-scratch canonical-CBOR work has lower
+near-term leverage. The tranche must dynamically consume all eight graph and
+twelve diff-selection cases, preserve deterministic all-or-error output, and
+add no Node host authority.
+
+#### TypeScript graph/diff local implementation
+
+Implementation head `775da92315c4e954cb4af3118fb176d5b40ab0bb` adds the
+bounded pure graph/diff core, exact neutral fixture consumption, Go routing,
+and the final primitive-digest guard. Its parent merge
+`8b6da2ceab9f2b3f9baba3dfb17281b24c234e55` preserves the reviewed repair
+lineage and exact selected main as its two parents. Public arrays and records
+are snapshotted from data descriptors without invoking accessors; repository-
+boundary data is cloned into a bounded descriptor-value graph before
+canonicalization, so validation never rereads live caller containers.
+
+BUILD runs 375 tests, TypeScript typechecking passes, focused Go fixture routing
+and `go vet` pass, changelog and lesson validation pass, and graph/diff line
+coverage is 98.93% with 92.86% package-wide coverage. A full Go sweep has one
+unrelated local environment failure because PowerShell is unavailable; all
+other packages pass. Independent exact-head correctness review first rejected
+live caller rereads, post-check object canonicalization, and an outdated reader
+registry. After those repairs it found that a non-string boundary digest could
+still reach property and regular-expression operations. The final primitive-
+string guard and zero-trap Proxy regression close that issue; exact-head
+re-review issued SHIP with no findings and reconfirmed every prior repair,
+current-main ancestry, routing, validation, diff, and artifact hygiene.
+
+#### Draft PR #18548 publication receipt
+
+Publish independently reviewed exact current-main head
+`1f0af52e94868f70300e2690b5510485c08934e0` as draft PR #18548 over exact
+base `92cf52368f835648df9d54be2cc41be47c82417f`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
+
+Independent focused review approves the durable PR-number receipt at
+`eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18548's identity, creation time,
+publication head/base, current remote head, mergeability, state graph, diff,
+and artifact hygiene all match live evidence. Mark the PR ready and require
+every fresh hosted check on the final exact head to finish acceptably before
+enabling guarded auto-merge.
+
+### PR #18548 merge and parallel Swift/Ruby progress
+
+All 42 final-head checks for TypeScript graph/diff PR #18548 completed
+terminal acceptable at `dd18418d69cbb88fbc1ad1149e4b1fc593bf9a81`:
+31 successes, 10 expected path-gated skips, and one neutral CodeQL aggregate.
+GitHub reported the reviewed head clean and mergeable. Guarded squash
+auto-merge landed `6fe513ee903ff2ef56279783ccbd59a0b8100788` at
+`2026-10-29T04:03:30Z`. The merge is present on fetched main, and the clean
+completed worktree and local branch were removed.
+
+While #18548 ran hosted qualification, dependency-free Swift RESP advanced
+locally on branch `codex/swift-resp-protocol-lane-parity`. Reviewed exact head
+`523c36c9c0a4f6803092a29c0e886fb862ef640c` implements all seven RESP2 value
+forms, binary-safe bulk data, distinct null bulk and null array values,
+allocation-free bounded line preflight, bounded numeric-header scanning,
+iterative failure-atomic fragmented decode, stable errors, and an empty
+authority profile. Twelve tests and release build pass; independent LLVM
+measurement reports 96.84% production lines with all 37 functions executed.
+Exact-head re-review issued SHIP with no findings.
+
+That audit enriches the existing
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` owner: DT23 has
+no shared language-neutral fixture corpus, and its worked array example claims
+14 consumed bytes for a 12-byte frame. The neutral owner now records the
+receipt correction plus valid, malformed, incomplete, fragmentation, and
+error-precedence fixture work rather than widening the bounded Swift package.
+
+The post-merge bounded-owner pass selects
+`build-tool-ruby-portable-dependency-hashing-conformance` on branch
+`codex/build-tool-ruby-dependency-hashing-parity`. Ruby and Lua each have three
+direct and five total unfinished descendants, but Ruby wins the tie-break: its
+existing hasher needs a smaller framing correction, and completion immediately
+makes the Ruby reverse-digest owner dependency-ready. Both Ruby prerequisites
+are merged. Reviewed candidate `3c66c9ec17f53ac74d1f78d06a078dce82e8e051`
+frames sorted canonical identities with decoded raw SHA-256 dependency digests,
+computes complete digest maps before dependency hashing, applies explicit
+identity and dependency-count bounds, fails closed on malformed digests, and
+dynamically consumes all three adversarial neutral cases. The exact BUILD runs
+395 tests and 1,091 assertions with zero failures at 92.89% line and 79.03%
+branch coverage. Repair preserves case after the lowercase language segment,
+uses lazy predecessor enumeration to abort at the first excess identity even
+for million-wide fan-in, and proves the neutral prior-cache status,
+invalidation, and diagnostic expectations. The real
+178-package Swift dry plan, shared Go routing, registry, changelog, fail-fast
+BUILD front, StandardRB, and artifact hygiene pass. Independent review first
+rejected case-erasing identity validation, post-traversal bounds, and partial
+fixture semantics, then found eager wide fan-in after the first repair. Final
+head `3c66c9ec17f53ac74d1f78d06a078dce82e8e051` closes every issue with lazy
+predecessor iteration and a million-wide regression that stops exactly at the
+4,097th identity; exact-head re-review issued SHIP with no findings. The
+lifecycle commit remains the publication gate.
+
+#### Draft PR #18555 publication receipt
+
+Publish independently reviewed exact current-main head
+`541089eefe9e22c9a0691f31749b55e81cfe2fe4` as draft PR #18555 over exact
+base `6fe513ee903ff2ef56279783ccbd59a0b8100788`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
+
+Independent focused review approves the durable PR-number receipt at
+`741ab911cb01813b3eec2ca5dee37c2cbcb12a7a` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18555's identity, creation time,
+publication head/base, current remote head, mergeability, state graph,
+changelog rank and digest, diff, and artifact hygiene all match live evidence.
+Mark the PR ready and require every fresh hosted check on the final exact head
+to finish acceptably before enabling guarded auto-merge.
+
+### PR #18555 merge, indexing-ceiling discovery, and Swift publication selection
+
+Ruby dependency-hashing PR #18555 reached 42 terminal acceptable checks at
+final reviewed head `03fe2f56503918a3ca40256fde7f714dba9b8723`: 31
+successes, 10 expected path-gated skips, and one neutral CodeQL aggregate. An
+external squash merge landed `94e8baf5cd164714732535463625e2acee33027b` at
+`2026-10-29T07:25:20Z`. The merge is present on fetched main. GitHub removed
+the remote branch, and the clean completed worktree and local branch were
+removed safely.
+
+Parallel Lua and Rust graph/diff implementations completed independent local
+review. Lua exact head `7d6faa409b5b7a6295765b025da7f7b6f3f5c382`
+passes 144 tests with 99.29% focused line coverage. Rust exact head
+`dfacf49115d56c73cfb69d29ddb0c26be274af17` passes 245 tests and
+doc tests with graph/diff at 95.29% line, 95.17% region, and 100% function
+coverage. Split reviews forced bounded snapshots, content-memoized glob
+validation, lazy one-pattern compilation, allocation-free path indexes,
+changed-only boundary expansion, indexed exclusions, stable diagnostics, and
+maximum-shape CPU and memory regressions before issuing SHIP.
+
+Those reviews register
+`build-tool-cross-runtime-diff-selection-indexing-ceiling-hardening` before the
+next prioritization. The owner must freeze neutral adversarial cases for
+zero-path repeated-glob validation, package-by-path discovery,
+boundary-input-by-consumer expansion, and exclusion applicability; repair Go,
+Lua, and TypeScript; audit the remaining readers; and place explicit CPU and
+retained-memory ceilings ahead of aggregate graph/diff closure.
+
+After merging exact fetched main
+`8035689ac23a971a4e77215a3eb651c90f441da0` as
+`5729db118d09cf28e78f2ee700cc23db161d95f1`, the Swift RESP branch
+passes all 13 tests and release build again. Lua and Rust graph/diff retain
+greater raw leverage at four direct and six total unfinished descendants,
+but both still require shared Go routing that overlaps open PR #18495. The
+dependency-free, package-path-disjoint Swift RESP item is therefore the
+highest-leverage publication-safe candidate for the newly free parity slot.
+
+#### Draft PR #18566 publication receipt
+
+Publish independently reviewed exact current-main head
+`fb29f5e68f9a668a7090e33da0baf11b52a92085` as draft PR #18566 over exact
+base `8035689ac23a971a4e77215a3eb651c90f441da0` at
+`2026-10-29T07:46:04Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.

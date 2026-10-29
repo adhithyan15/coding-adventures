@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C225-nongmin",
+    "language": "chinese",
+    "chapter": 225,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6068e92d255651fa"
+  },
+  "findings": []
+}

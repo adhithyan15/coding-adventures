@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Back Next Month",
+  "label": "ch:zh-back-next-month",
+  "canDo": "I can say when I will come back or go back, go home from abroad, go abroad or go away for work.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C191-chuchai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can say when I will come back or go back, go home from abroad, go abroad or go away for work.",
+    "assesses": [
+      "ZH-LEX-C191-BACK191-03",
+      "ZH-LEX-C191-BACK191-04",
+      "ZH-LEX-C191-BACK191-05"
+    ]
+  }
+}

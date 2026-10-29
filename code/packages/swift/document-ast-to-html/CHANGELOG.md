@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented here.
 
+## 0.2.0 — 2026-10-25
+
+- Added the inert escaped fallback for source-preserving fenced blocks.
+- Limited the optional language class to the escaped first info token without
+  rendering or interpreting the complete metadata.
+
 ## 0.1.0 — Initial release
 
 - `render(_ node: BlockNode) -> String` — renders any Document AST block node to HTML

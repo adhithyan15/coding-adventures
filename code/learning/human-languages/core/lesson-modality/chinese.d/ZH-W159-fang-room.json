@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W159-fang-room",
+    "language": "chinese",
+    "chapter": 159,
+    "sequence": 13075,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5596a92698342f4d",
+    "detachableSegments": [
+      "Script — a door over fāng"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

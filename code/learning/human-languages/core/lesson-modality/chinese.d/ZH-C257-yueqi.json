@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C257-yueqi",
+    "language": "chinese",
+    "chapter": 257,
+    "sequence": 19460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94738dd2d6e31878"
+  },
+  "findings": []
+}

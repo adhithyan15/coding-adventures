@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C240-tu",
+    "language": "chinese",
+    "chapter": 240,
+    "sequence": 18160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e27a160b8b4d41d9"
+  },
+  "findings": []
+}

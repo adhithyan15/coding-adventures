@@ -436,6 +436,7 @@ pub struct AnalysisExecutionResult {
     pub analysis: RunnableAnalysis,
     pub result: AnalysisResult,
     pub temperature_kelvin: Option<f64>,
+    pub step_values: BTreeMap<String, f64>,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -461,6 +462,7 @@ pub struct SelectedAnalysisOutput {
     pub probes: Vec<OutputProbe>,
     pub rows: Vec<SelectedOutputRow>,
     pub temperature_kelvin: Option<f64>,
+    pub step_values: BTreeMap<String, f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -472,6 +474,7 @@ pub struct MeasureResult {
     pub probe: OutputProbe,
     pub value: f64,
     pub temperature_kelvin: Option<f64>,
+    pub step_values: BTreeMap<String, f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -511,11 +514,29 @@ pub struct ModelCard {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct StepCard {
+    pub parameter: String,
+    pub values: Vec<f64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct TableParameter {
+    parameter: String,
+    selector: String,
+    entries: Vec<(f64, f64)>,
+}
+
+type ParameterControls = (BTreeMap<String, f64>, Vec<StepCard>, Vec<TableParameter>);
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct ParsedNetlist {
     pub circuit: Circuit,
     pub analyses: Vec<Analysis>,
     pub models: HashMap<String, ModelCard>,
     pub title: Option<String>,
+    pub source_text: String,
+    pub parameters: BTreeMap<String, f64>,
+    pub step_cards: Vec<StepCard>,
 }
 
 impl ParsedNetlist {
@@ -898,7 +919,24 @@ struct SubcktDefinition {
 }
 
 pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
-    let syntax = syntax::parse_berkeley_syntax(&without_control_blocks(text));
+    parse_netlist_with_parameters(text, &BTreeMap::new(), true)
+}
+
+fn parse_netlist_with_parameters(
+    text: &str,
+    parameter_overrides: &BTreeMap<String, f64>,
+    capture_steps: bool,
+) -> Result<ParsedNetlist, NetlistParseError> {
+    let (mut parameters, step_cards, table_parameters) = parameter_controls(text)?;
+    for card in &step_cards {
+        parameters
+            .entry(card.parameter.clone())
+            .or_insert(card.values[0]);
+    }
+    parameters.extend(parameter_overrides.clone());
+    resolve_table_parameters(&table_parameters, &mut parameters)?;
+    let materialized_text = materialize_parameter_text(text, &parameters)?;
+    let syntax = syntax::parse_berkeley_syntax(&without_control_blocks(&materialized_text));
     if let Some(diagnostic) = syntax
         .diagnostics
         .iter()
@@ -1020,7 +1058,284 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
         analyses,
         models,
         title,
+        source_text: text.to_string(),
+        parameters,
+        step_cards: if capture_steps {
+            step_cards
+        } else {
+            Vec::new()
+        },
     })
+}
+
+fn parameter_controls(text: &str) -> Result<ParameterControls, NetlistParseError> {
+    let syntax = syntax::parse_berkeley_syntax(&without_control_blocks(text));
+    if let Some(diagnostic) = syntax
+        .diagnostics
+        .iter()
+        .find(|diagnostic| diagnostic.is_error())
+    {
+        return Err(syntax_diagnostic_error(diagnostic));
+    }
+    let mut parameters = BTreeMap::new();
+    let mut step_cards = Vec::new();
+    let mut table_parameters = Vec::new();
+    for card in syntax.cards {
+        let fields =
+            split_fields(&card.text).map_err(|err| line_error(card.span.start_line, err))?;
+        if fields.is_empty() {
+            continue;
+        }
+        match fields[0].to_ascii_lowercase().as_str() {
+            ".param" => {
+                parse_parameter_card(&card.text, &fields, &mut parameters, &mut table_parameters)
+                    .map_err(|err| line_error(card.span.start_line, err))?
+            }
+            ".step" => step_cards.push(
+                parse_step_card(&fields).map_err(|err| line_error(card.span.start_line, err))?,
+            ),
+            _ => {}
+        }
+    }
+    Ok((parameters, step_cards, table_parameters))
+}
+
+fn parse_parameter_card(
+    card: &str,
+    fields: &[String],
+    parameters: &mut BTreeMap<String, f64>,
+    table_parameters: &mut Vec<TableParameter>,
+) -> Result<(), NetlistParseError> {
+    if parse_table_parameter_card(card, parameters, table_parameters)? {
+        return Ok(());
+    }
+    require_min_fields(fields, 2, ".param")?;
+    let mut index = 1;
+    while index < fields.len() {
+        let (name, value) = if let Some((name, value)) = fields[index].split_once('=') {
+            index += 1;
+            (name, value)
+        } else {
+            if index + 1 >= fields.len() {
+                return Err(NetlistParseError::new(
+                    ".param expects NAME VALUE or NAME=VALUE",
+                ));
+            }
+            let name = fields[index].as_str();
+            let value = fields[index + 1].as_str();
+            index += 2;
+            (name, value)
+        };
+        let name = parameter_name(name)?;
+        if parameters.contains_key(&name) {
+            return Err(NetlistParseError::new(format!(
+                "duplicate .param definition {name:?}"
+            )));
+        }
+        parameters.insert(name, parse_value(value)?);
+    }
+    Ok(())
+}
+
+fn parse_table_parameter_card(
+    card: &str,
+    parameters: &BTreeMap<String, f64>,
+    table_parameters: &mut Vec<TableParameter>,
+) -> Result<bool, NetlistParseError> {
+    let trimmed = card.trim();
+    let Some((directive, assignment)) = trimmed.split_once(char::is_whitespace) else {
+        return Ok(false);
+    };
+    if !directive.eq_ignore_ascii_case(".param") {
+        return Ok(false);
+    }
+    let Some((name, expression)) = assignment.trim().split_once('=') else {
+        return Ok(false);
+    };
+    let expression = expression.trim();
+    if expression.len() < 7 || !expression[..5].eq_ignore_ascii_case("table") {
+        return Ok(false);
+    }
+    let arguments = expression[5..].trim();
+    if !arguments.starts_with('(') || !arguments.ends_with(')') {
+        return Ok(false);
+    }
+    let values = arguments[1..arguments.len() - 1]
+        .split(',')
+        .map(str::trim)
+        .collect::<Vec<_>>();
+    if values.len() < 3 || values.len() % 2 == 0 {
+        return Err(NetlistParseError::new(
+            ".param table requires a selector and key/value pairs",
+        ));
+    }
+    let parameter = parameter_name(name.trim())?;
+    if parameters.contains_key(&parameter)
+        || table_parameters
+            .iter()
+            .any(|table| table.parameter == parameter)
+    {
+        return Err(NetlistParseError::new(format!(
+            "duplicate .param definition {name:?}"
+        )));
+    }
+    let selector = parameter_name(values[0])?;
+    let (pairs, remainder) = values[1..].as_chunks::<2>();
+    debug_assert!(remainder.is_empty());
+    let entries = pairs
+        .iter()
+        .map(|[key, value]| Ok((parse_value(key)?, parse_value(value)?)))
+        .collect::<Result<Vec<_>, NetlistParseError>>()?;
+    table_parameters.push(TableParameter {
+        parameter,
+        selector,
+        entries,
+    });
+    Ok(true)
+}
+
+fn resolve_table_parameters(
+    table_parameters: &[TableParameter],
+    parameters: &mut BTreeMap<String, f64>,
+) -> Result<(), NetlistParseError> {
+    for table in table_parameters {
+        let Some(selector) = parameters.get(&table.selector).copied() else {
+            return Err(NetlistParseError::new(format!(
+                ".param table selector {:?} is not a numeric parameter",
+                table.selector
+            )));
+        };
+        let tolerance = selector.abs().max(1.0) * 1e-12;
+        let Some((_, value)) = table
+            .entries
+            .iter()
+            .find(|(key, _)| (selector - *key).abs() <= tolerance)
+        else {
+            return Err(NetlistParseError::new(format!(
+                ".param table has no value for selector {:?}={selector}",
+                table.selector
+            )));
+        };
+        parameters.insert(table.parameter.clone(), *value);
+    }
+    Ok(())
+}
+
+fn parse_step_card(fields: &[String]) -> Result<StepCard, NetlistParseError> {
+    require_min_fields(fields, 4, ".step")?;
+    if !fields[1].eq_ignore_ascii_case("param") {
+        return Err(NetlistParseError::new(
+            "LTspice v1 supports only .step param NAME ...",
+        ));
+    }
+    let parameter = parameter_name(&fields[2])?;
+    let values = if fields[3].eq_ignore_ascii_case("list") {
+        if fields.len() < 5 {
+            return Err(NetlistParseError::new(
+                ".step param NAME list requires at least one value",
+            ));
+        }
+        fields[4..]
+            .iter()
+            .map(|value| parse_value(value))
+            .collect::<Result<Vec<_>, _>>()?
+    } else {
+        require_fields(fields, 6, ".step param NAME START STOP INCREMENT")?;
+        let start = parse_value(&fields[3])?;
+        let stop = parse_value(&fields[4])?;
+        let increment = parse_value(&fields[5])?;
+        if increment == 0.0 {
+            return Err(NetlistParseError::new(
+                ".step param increment must be non-zero",
+            ));
+        }
+        if (stop - start) * increment < 0.0 {
+            return Err(NetlistParseError::new(
+                ".step param increment does not reach the stop value",
+            ));
+        }
+        inclusive_range(start, stop, increment)
+    };
+    Ok(StepCard { parameter, values })
+}
+
+fn inclusive_range(start: f64, stop: f64, increment: f64) -> Vec<f64> {
+    let mut values = Vec::new();
+    let mut value = start;
+    let epsilon = increment.abs() * 1e-12;
+    while if increment > 0.0 {
+        value <= stop + epsilon
+    } else {
+        value >= stop - epsilon
+    } {
+        values.push(value);
+        value += increment;
+    }
+    values
+}
+
+fn parameter_name(name: &str) -> Result<String, NetlistParseError> {
+    let mut chars = name.chars();
+    let Some(first) = chars.next() else {
+        return Err(NetlistParseError::new("parameter name may not be empty"));
+    };
+    if !(first.is_ascii_alphabetic() || first == '_')
+        || !chars.all(|character| character.is_ascii_alphanumeric() || character == '_')
+    {
+        return Err(NetlistParseError::new(format!(
+            "invalid parameter name {name:?}"
+        )));
+    }
+    Ok(name.to_ascii_lowercase())
+}
+
+fn materialize_parameter_text(
+    text: &str,
+    parameters: &BTreeMap<String, f64>,
+) -> Result<String, NetlistParseError> {
+    let mut materialized = String::new();
+    for line in text.split_inclusive('\n') {
+        let source = line.split(';').next().unwrap_or("").trim();
+        let head = source
+            .split_whitespace()
+            .next()
+            .unwrap_or("")
+            .to_ascii_lowercase();
+        if matches!(head.as_str(), ".param" | ".step") {
+            if line.ends_with('\n') {
+                materialized.push('\n');
+            }
+            continue;
+        }
+        materialized.push_str(&replace_parameter_references(line, parameters)?);
+    }
+    Ok(materialized)
+}
+
+fn replace_parameter_references(
+    card: &str,
+    parameters: &BTreeMap<String, f64>,
+) -> Result<String, NetlistParseError> {
+    let mut materialized = String::new();
+    let mut rest = card;
+    while let Some(start) = rest.find('{') {
+        materialized.push_str(&rest[..start]);
+        let tail = &rest[start + 1..];
+        let Some(end) = tail.find('}') else {
+            return Err(NetlistParseError::new("unclosed parameter reference"));
+        };
+        let name = parameter_name(&tail[..end])?;
+        let Some(value) = parameters.get(&name) else {
+            return Err(NetlistParseError::new(format!(
+                "unknown parameter {:?}",
+                &tail[..end]
+            )));
+        };
+        materialized.push_str(&format!("{value:.15}"));
+        rest = &tail[end + 1..];
+    }
+    materialized.push_str(rest);
+    Ok(materialized)
 }
 
 fn without_control_blocks(text: &str) -> String {
@@ -1065,6 +1380,18 @@ pub fn build_analysis_plan(parsed: &ParsedNetlist) -> Vec<AnalysisPlanStep> {
 pub fn run_analysis_plan(
     parsed: &ParsedNetlist,
 ) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
+    if !parsed.step_cards.is_empty() {
+        let mut results = Vec::new();
+        for overrides in step_value_combinations(&parsed.step_cards) {
+            let materialized =
+                parse_netlist_with_parameters(&parsed.source_text, &overrides, false)?;
+            for mut result in run_analysis_plan(&materialized)? {
+                result.step_values = overrides.clone();
+                results.push(result);
+            }
+        }
+        return Ok(results);
+    }
     let plan = build_analysis_plan(parsed);
     let mut results = Vec::new();
     for temperature_kelvin in parsed.analysis_temperatures_kelvin()? {
@@ -1081,10 +1408,28 @@ pub fn run_analysis_plan(
                 analysis: step.analysis.clone(),
                 result: execute_analysis_step(parsed, step, &circuit, temperature_kelvin)?,
                 temperature_kelvin,
+                step_values: BTreeMap::new(),
             });
         }
     }
     Ok(results)
+}
+
+fn step_value_combinations(step_cards: &[StepCard]) -> Vec<BTreeMap<String, f64>> {
+    step_cards
+        .iter()
+        .fold(vec![BTreeMap::new()], |combinations, card| {
+            combinations
+                .into_iter()
+                .flat_map(|combination| {
+                    card.values.iter().map(move |value| {
+                        let mut next = combination.clone();
+                        next.insert(card.parameter.clone(), *value);
+                        next
+                    })
+                })
+                .collect()
+        })
 }
 
 pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
@@ -1105,28 +1450,58 @@ pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
     let mut analyses = Vec::new();
     let mut rawfiles = Vec::new();
     let mut wrdata = Vec::new();
-    for temperature_kelvin in parsed.analysis_temperatures_kelvin()? {
-        let circuit = match temperature_kelvin {
-            Some(temperature) => {
-                circuit_at_temperature(&parsed.circuit, temperature, 300.15, 1.11)?
+    let step_runs = if !parsed.step_cards.is_empty() {
+        step_value_combinations(&parsed.step_cards)
+            .into_iter()
+            .map(|step_values| {
+                let materialized =
+                    parse_netlist_with_parameters(&parsed.source_text, &step_values, false)?;
+                Ok((Some(step_values), materialized))
+            })
+            .collect::<Result<Vec<_>, NetlistParseError>>()?
+    } else {
+        vec![(None, parsed.clone())]
+    };
+    for (step_values, materialized) in step_runs {
+        for temperature_kelvin in materialized.analysis_temperatures_kelvin()? {
+            let circuit = match temperature_kelvin {
+                Some(temperature) => {
+                    circuit_at_temperature(&materialized.circuit, temperature, 300.15, 1.11)?
+                }
+                None => materialized.circuit.clone(),
+            };
+            let deck =
+                materialize_parameter_text(&materialized.source_text, &materialized.parameters)?;
+            let execution = run_deck(&circuit, &deck)?;
+            if execution.executions.len() != plan.len() {
+                return Err(AnalysisExecutionError::Netlist(NetlistParseError::new(
+                    "deck execution plan did not match the parser analysis plan",
+                )));
             }
-            None => parsed.circuit.clone(),
-        };
-        let execution = run_deck(&circuit, text)?;
-        if execution.executions.len() != plan.len() {
-            return Err(AnalysisExecutionError::Netlist(NetlistParseError::new(
-                "deck execution plan did not match the parser analysis plan",
-            )));
-        }
-        for (step, item) in plan.iter().zip(&execution.executions) {
-            analyses.push(serde_json::json!({
-                "index": step.index,
-                "kind": format!("{:?}", step.kind).to_ascii_lowercase(),
-                "temperatureKelvin": temperature_kelvin,
-                "records": cli_table_records(&item.plan.analysis, &item.table),
-            }));
-            rawfiles.extend(cli_rawfile_artifacts(step, item, temperature_kelvin));
-            wrdata.extend(cli_wrdata_artifacts(step, item, temperature_kelvin));
+            for (step, item) in plan.iter().zip(&execution.executions) {
+                let mut analysis = serde_json::json!({
+                    "index": step.index,
+                    "kind": format!("{:?}", step.kind).to_ascii_lowercase(),
+                    "temperatureKelvin": temperature_kelvin,
+                    "records": cli_table_records(&item.plan.analysis, &item.table),
+                });
+                if let Some(values) = &step_values {
+                    analysis["stepValues"] = serde_json::json!(values);
+                }
+                analyses.push(analysis);
+                rawfiles.extend(cli_rawfile_artifacts(
+                    step,
+                    item,
+                    temperature_kelvin,
+                    step_values.as_ref(),
+                ));
+                wrdata.extend(cli_wrdata_artifacts(
+                    step,
+                    item,
+                    temperature_kelvin,
+                    step_values.as_ref(),
+                ));
+            }
         }
     }
     Ok(format!(
@@ -1209,13 +1584,17 @@ fn cli_output_artifacts(outputs: &[SelectedAnalysisOutput]) -> Vec<serde_json::V
                     })
                 })
                 .collect::<Vec<_>>();
-            serde_json::json!({
+            let mut artifact = serde_json::json!({
                 "analysisIndex": output.index,
                 "analysis": format!("{:?}", output.kind).to_ascii_lowercase(),
                 "temperatureKelvin": output.temperature_kelvin,
                 "probes": output.probes.iter().map(cli_probe_text).collect::<Vec<_>>(),
                 "records": records,
-            })
+            });
+            if !output.step_values.is_empty() {
+                artifact["stepValues"] = serde_json::json!(output.step_values);
+            }
+            artifact
         })
         .collect()
 }
@@ -1224,7 +1603,7 @@ fn cli_measure_artifacts(measures: &[MeasureResult]) -> Vec<serde_json::Value> {
     measures
         .iter()
         .map(|measure| {
-            serde_json::json!({
+            let mut artifact = serde_json::json!({
                 "analysisIndex": measure.analysis_index,
                 "analysis": measure.analysis,
                 "name": measure.name,
@@ -1232,7 +1611,11 @@ fn cli_measure_artifacts(measures: &[MeasureResult]) -> Vec<serde_json::Value> {
                 "probe": cli_probe_text(&measure.probe),
                 "value": measure.value,
                 "temperatureKelvin": measure.temperature_kelvin,
-            })
+            });
+            if !measure.step_values.is_empty() {
+                artifact["stepValues"] = serde_json::json!(measure.step_values);
+            }
+            artifact
         })
         .collect()
 }
@@ -1241,12 +1624,13 @@ fn cli_rawfile_artifacts(
     step: &AnalysisPlanStep,
     execution: &DeckAnalysisExecution,
     temperature_kelvin: Option<f64>,
+    step_values: Option<&BTreeMap<String, f64>>,
 ) -> Vec<serde_json::Value> {
     execution
         .rawfile_artifacts
         .iter()
         .map(|artifact| {
-            serde_json::json!({
+            let mut value = serde_json::json!({
                 "analysisIndex": step.index,
                 "analysis": format!("{:?}", step.kind).to_ascii_lowercase(),
                 "temperatureKelvin": temperature_kelvin,
@@ -1257,7 +1641,11 @@ fn cli_rawfile_artifacts(
                 "unmatchedProbes": artifact.unmatched_probes,
                 "options": artifact.options,
                 "content": artifact.rawfile,
-            })
+            });
+            if let Some(values) = step_values {
+                value["stepValues"] = serde_json::json!(values);
+            }
+            value
         })
         .collect()
 }
@@ -1266,12 +1654,13 @@ fn cli_wrdata_artifacts(
     step: &AnalysisPlanStep,
     execution: &DeckAnalysisExecution,
     temperature_kelvin: Option<f64>,
+    step_values: Option<&BTreeMap<String, f64>>,
 ) -> Vec<serde_json::Value> {
     execution
         .wrdata_artifacts
         .iter()
         .map(|artifact| {
-            serde_json::json!({
+            let mut value = serde_json::json!({
                 "analysisIndex": step.index,
                 "analysis": format!("{:?}", step.kind).to_ascii_lowercase(),
                 "temperatureKelvin": temperature_kelvin,
@@ -1282,7 +1671,11 @@ fn cli_wrdata_artifacts(
                 "unmatchedProbes": artifact.unmatched_probes,
                 "options": artifact.options,
                 "content": artifact.datafile,
-            })
+            });
+            if let Some(values) = step_values {
+                value["stepValues"] = serde_json::json!(values);
+            }
+            value
         })
         .collect()
 }
@@ -1330,6 +1723,7 @@ pub fn select_outputs(
             rows: selected_output_rows(result, &probes)?,
             probes,
             temperature_kelvin: result.temperature_kelvin,
+            step_values: result.step_values.clone(),
         });
     }
     Ok(selected)
@@ -1341,15 +1735,16 @@ pub fn measure_results(
 ) -> Result<Vec<MeasureResult>, NetlistParseError> {
     let mut measured = Vec::new();
     for card in parsed.measure_cards() {
-        let mut temperatures = Vec::new();
+        let mut executions_seen = Vec::new();
         let matching = results
             .iter()
             .filter(|result| analysis_name_matches(&card.analysis, result.kind))
             .filter(|result| {
-                if temperatures.contains(&result.temperature_kelvin) {
+                let key = (result.temperature_kelvin, &result.step_values);
+                if executions_seen.contains(&key) {
                     false
                 } else {
-                    temperatures.push(result.temperature_kelvin);
+                    executions_seen.push(key);
                     true
                 }
             })
@@ -1366,6 +1761,7 @@ pub fn measure_results(
                 probe: card.probe.clone(),
                 value: evaluate_measure(card, execution)?,
                 temperature_kelvin: execution.temperature_kelvin,
+                step_values: execution.step_values.clone(),
             });
         }
     }

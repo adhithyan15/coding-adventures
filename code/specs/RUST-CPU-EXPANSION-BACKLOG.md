@@ -1,7 +1,7 @@
 # Rust CPU Expansion Backlog
 
 **Status:** active
-**Last reprioritized:** 2026-10-26
+**Last reprioritized:** 2026-10-28
 
 This is the live expansion queue after the original 07-series architecture
 matrix. The older `RUST-CPU-SIMULATOR-BACKLOG.md` remains the audit record for
@@ -46,8 +46,11 @@ the functional/gate cells needed before SoC, interconnect, and SPICE descent.
 | P0 | OpenSPARC T1 | merged | merged | Complete; gate PR #18295 landed. |
 | P0 | Arm Cortex-M0 | merged | merged | Complete; gate PR #18296 landed. |
 | P0 | Arm Cortex-M3 | merged | merged | Complete; gate PR #18297 landed. |
-| P0 | Arm Cortex-M7 | merged | local repair complete | Gate cell implements Spec 07an2 with 524,956 authoritative DFFs, exhaustive DSP truth tables, hostile compiled-backend proofs, and typed allocation rollback. The shared M3 integration commit is now fallible and revalidates its publicly mutable candidate before any DFF clock; the external-consumer regression proves a hostile post-settle mutation preserves the complete authoritative Q snapshot. |
+| P0 | Arm Cortex-M4 | merged | merged | Complete; functional PR #18313 and gate PR #18387 landed. |
+| P0 | Arm Cortex-M7 | merged | merged | Complete; functional PR #18307 and gate PR #18351 landed. |
 | P0 | Arm Cortex-M23, Security Extension disabled | merged | local complete | Spec 07ao2 is implemented with exactly 524,898 authoritative stable-Q DFFs and independent gate-derived decode/data/flags/control. All 35 release tests pass, including exhaustive decode, every condition and shift-boundary outcome, arithmetic/multiply edges, memory-addressing overlaps, full-state differential, typed allocation/lifecycle rollback, exact locks over every stable-Q mutation route, compile-valid direct-Q hostile fixtures, and out-of-range decoder boundaries; measured line coverage is 93.64% (1,827/1,951). TrustZone/SAU, NVIC, MPU/IDAU, buses, timing, and proprietary silicon topology remain separate cells. |
+| P0 | Arm Cortex-M33 | PR #18326 | blocked on functional | Functional cell is published with squash auto-merge armed. |
+| P0 | DEC PDP-10 KA10 | in progress | blocked on functional | Spec 07aq and the checked bounded functional cell are under local completion review. |
 
 ## P0 gate-integrity repair queue
 
@@ -90,22 +93,25 @@ Cortex-M7 and Cortex-M23 are merged, and Cortex-M33 merged in PR #18326.
 | 1 | Arm Cortex-M4 (functional merged; gate complete locally, review pending) | Armv7E-M manuals | Cortex-M3 gate base plus gate-derived DSP and optional FPv4-SP boundary; no vendor MCU or timing claims. |
 | 2 | Arm Cortex-M7 (merged) | Armv7E-M manuals | M7 programmer-visible core; cache/bus timing stays in SoC cells. |
 | 3 | Arm Cortex-M23 (merged) | Armv8-M manuals | Bounded baseline/security-state cell complete; exclusive encodings and exceptions remain follow-up work. |
-| 4 | Arm Cortex-M33 (PR #18326) | Armv8-M manuals | Functional cell complete locally: bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU with disabled-only ALLNS and most-secure overlap reduction, distinct fetch/data policy, checked transition hooks, all-bank stack-limit closure, and exact inherited-family differential witnesses. Publish after independent review; encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
-| 5 | DEC PDP-10 family | published architecture manuals | One model-selected checked 36-bit functional oracle. |
+| 4 | Arm Cortex-M33 (merged in PR #18326) | Armv8-M manuals | Bounded Mainline integer core, optional Security Extension, banked control/stack-limit state, eight-region SAU with disabled-only ALLNS and most-secure overlap reduction, distinct fetch/data policy, checked transition hooks, all-bank stack-limit closure, and exact inherited-family differential witnesses. Encoded security instructions, DSP/FPU, exceptions, MPU/NVIC/SoC, and evidence-backed gate topology remain separate cells. |
+| 5 | DEC PDP-10 KA10 (merged in PR #18331) | published architecture manuals | Complete bounded checked 36-bit functional oracle. |
 | 6 | Data General Nova (in publication) | published architecture manuals | Checked common Nova/Nova 1200 core, all 32,768 operate words, atomic lifecycle, 17 release tests, and 91.53% line coverage (540/590). |
-| 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336. P0 source-correctness repair complete locally: destructive-overlap `MVCL` suppresses storage movement, preserves both lengths and low 24-bit addresses, and clears the ignored high byte of both address registers for condition-code-3 completion. The gate partner remains blocked until this repair merges. |
-| 8 | Motorola 68020 | published programmer reference | 32-bit 68k extension boundary. |
+| 7 | IBM System/370 | published Principles of Operation | Functional merged in PR #18336 and destructive-overlap `MVCL` correction merged in PR #18363. Gate partner complete and independently reviewed: one embedded System/360 stable-Q bank, independent MVCL/CLCL/CLM/STCM/ICM networks, 21 release integration tests, compiler-checked hostile crates, 95.27% line coverage (825/866), and strict package checks; seven affected BUILD recipes pass, while the repository orphan validator remains blocked by stale `BUILD-EXEMPTIONS` entries inherited from `origin/main`. Publication is next. |
+| 8 | Motorola 68020 (in publication) | published programmer reference | Bounded checked full-format `MOVE.L` and problem-state extensions, including reserved IS/IIS rejection, immutable fetched trace bytes, and unaligned data transfers. |
 | 9 | PA-RISC 1.1 | published architecture manuals | Functional merged: checked bounded integer core, big-endian transport, both IA queues, PSW nibble carry/borrow state, delayed control, nullification, calls/returns, complete traces, typed atomic lifecycle, three allocation-seam unit tests, 19 integration tests, one doctest, and 92.80% line coverage (580/625). Gate Spec 07au2 was independently accepted; its complete local implementation is awaiting independent implementation re-review with 525,436 authoritative DFFs, independent strict decode/execution, gate-derived datapath/control, exact functional lifecycle/fault differentials, post-progress allocation rollback, compiler-checked full-crate hostile fixtures, 25 release tests, and 97.65% line coverage (1,040/1,065). No gate publication PR exists yet. |
-| 10 | SuperH-2 (in publication) | published programming manuals | Checked compact RISC core boundary. |
+| 10 | SuperH-2 (merged in PR #18346) | published programming manuals | Spec 07av's bounded SH-2 integer core has complete 64 KiB state, big-endian transport, delayed control flow, integer/memory and multiply/divide families including `MUL.L`, exact `DIV1` Q/M/T quadrant behavior, MAC alias sequencing, typed atomic lifecycle, and corrected architectural illegal-slot precedence. Remaining interrupt/peripheral/SoC and later-SuperH work stays explicit below. |
 | 11 | SPARC V9 | published architecture manual | Complete and independently reviewed locally: bounded problem-state integer core implements 72-register complete state, four windows, icc/xcc/Y, the admitted V9 and compatibility integer/memory/control families, exact delay/annul/chaining traces, and typed transactional lifecycle. 48 tests, strict checks/docs, BUILD integration, and 91.22% line coverage (1,216/1,333) are green. Publication is next. |
 | 12 | ARM7TDMI | published ARMv4T manuals | Functional merged. Educational gate partner repaired after independent review: exact 525,522-DFF stable-Q inventory; independent ARM/Thumb engine; gate-derived one-hot selectors through the complete Thumb ALU/high/BX/transfer/stack/conditional/write-enable/mnemonic surface; syntax-normalized whole-file token locks plus named parsed-body source-to-sink locks; compiler-valid hostile full-crate mutations across ARM and Thumb control; two-way candidate divergence; real public differential execution and complete-state rollback for every reachable typed functional fault; and explicit source/public-invariant narrowing for compatibility-only unreachable variants. All 59 release tests, strict checks, and 91.67% line coverage (2,168/2,365) are green; a different independent exact-head review is next, and SoC composition remains queued. |
 | 13 | AVR classic (PR #18344) | published instruction-set manual | Complete: ATmega328P/`avr5` Harvard core, mapped register/I/O/data state, checked stack/control flow, all 26 typed undefined-overlap refusals, transactional traces/lifecycle, terminal-state restore round trips, whole-span two-byte call preflight, all-family terminal skip-target validation, 34 release tests with exhaustive add/subtract flag oracles and bug-sensitive fractional multiply flag regressions, and 97.43% line coverage (949/974). Squash auto-merge is armed; the gate partner remains queued. |
 | 14 | Xtensa LX6 | public Tensilica ISA manual plus ESP32 manuals | Functional cell complete locally as `Esp32Lx6IntegerV1`, pending independent implementation review: little-endian, 64 physical windowed ARs, mixed 16/24-bit core+density, lazy window checks, loops, complete traces/lifecycle, 29 release tests, and 90.09% line coverage (1,382/1,534). Proprietary/configuration-unknown extensions remain excluded. |
 | 15 | RCA CDP1802 (`RCPU-081` / `RCPU-082`; functional merged in PR #18354) | Renesas/Intersil FN1441 and archived RCA/Intersil data sheet | Complete locally: functional merged; gate Spec 07bc2 independently reviewed; independent gate decoder/executor with gate-authoritative legality/family/control predicates, repository-gate ALU/control, exact 524,667-DFF state, exact full-trace/full-state 255-transition and focused lifecycle/bus differentials, explicit I/O/DMA/interrupt seams, eleven compiler-valid hostile structural fixtures, typed atomic lifecycle including post-first-step allocation rollback, 40 release tests plus one doctest, and 95.62% line coverage (1,442/1,508). Exact-head review remains before publication. |
 | 16 | MSP430 classic (MSP430F2274 profile) | TI SLAU144K family guide and SLAS504G device data sheet | Functional cell repaired locally: source-pinned classic 16-bit von-Neumann CPU with the full documented 27-instruction core, source-only constant-generator enforcement, exact Format II trace roles, and injected allocation rollback; independent re-review/publication is next. MSP430X, peripherals, clocks, power, and timing stay outside this cell. |
-| 17 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | Functional implementation is in progress from an independently reviewed configuration-pinned spec; the dependent gate cell remains blocked on functional merge. |
+| 17 | LatticeMico32 (`RCPU-083` / `RCPU-084`) | official LatticeMico32 Processor Reference Manual 3.8 plus vendor-origin open RTL at `84b3e3ca0ad9535acaef201c1482342871358b08` | `RCPU-083` is complete locally: full pinned base configuration, 34 release tests, 712 checked-in evidence rows including 308 independent manual transitions, 183 distinct source-topology transitions, and 56 lifecycle/fault rows, strict checks, and 94.33% line coverage (882/935). Independent exact-head review is next. `RCPU-084` remains merge-dependent and must review the manual/RTL EBA bit-8 discrepancy before claiming state equality. |
 | 18 | ZipCPU (`RCPU-085` / `RCPU-086`) | official ZipCPU Specification revision 3.0 plus open RTL at `42606d2d6ef55df313772232977621b2d72f0159` | `RCPU-085` is complete locally from its independently reviewed spec-only predecessor: fixed-width big-endian execution, two complete register banks, CC/PC/interrupt/image state, exact transactions, typed atomic lifecycle, 31 completion tests, two corpus consumers over 3,970 checked-in upstream rows, one doctest, and 92.70% release line coverage (1,270/1,370). Exact-clean-head review is next; `RCPU-086` remains blocked until the functional oracle merges. |
 | 19 | PIC16 classic mid-range (PIC16F84A profile) | Microchip DS35007C device data sheet and DS33023A family reference manual | Complete locally: source-pinned 14-bit Harvard CPU with all 35 documented instructions, exact banked file-register/PCL/stack behavior, typed peripheral boundaries, 14 release tests, one doctest, strict checks, and 98.67% package-source line coverage (670/679). |
+| 20 | Microwatt / Power ISA (RCPU-077 / RCPU-078) | Power ISA Version 3.0C plus pinned Microwatt VHDL | Spec 07bd functional implementation is complete locally with checked state, typed rollback, deterministic allocation-failure preflights, exact Microwatt word-result and slash-field rules, 36 release tests, 90.43% line coverage (1,465/1,620), and an executed pinned 173-row full-core GHDL corpus with two independent Rust consumers. The separately scoped source-backed gate cell remains next. |
+| 21 | Zylin ZPU4 Small (`RCPU-087` / `RCPU-088`) | stable Zylin architecture document plus vendor VHDL at `e29aef5f7aa741557d0eb16ecf13e974d55789ff` | `RCPU-087` / Spec 07bf passed pre-implementation review and is complete locally pending exact-head publication review: exact 32-bit/15-bit-address small-core profile, all 256 byte classifications, stack/IDIM/interrupt/break state, big-endian transport, explicit external-word-bus adapter, typed atomic lifecycle, and 260 checksum-pinned GHDL scenarios with independent Rust/Python consumers. `RCPU-088` gate work must wait for the functional merge. Orders 16–17 and `RCPU-083`–`RCPU-086` remain owned by the active LatticeMico32 and ZipCPU cells and are not duplicated here. |
+| 23 | Intel 80960KA scalar integer (`RCPU-091` / `RCPU-092`) | Intel order 270567, March 1988, plus Intel's June 1997 KA/KB specification update; MAME 0.289 i80960KA core is secondary differential evidence | Spec 07bh is ready for independent pre-implementation review. `RCPU-091` pins the little-endian scalar application surface, all four instruction formats, 32 split local/global registers, exact AC condition/overflow fields, unaligned scalar memory, four/eight-byte transport, ordered transactions, and typed transactional lifecycle. Calls/register-frame spill, system faults/interrupts, atomics, synchronous/multi-register transfers, floating point, timing, and SoC behavior remain separate cells. No public KA RTL/netlist was found, so `RCPU-092` is reserved only for an explicitly educational repository-synthesized gate model after the functional merge; it may not claim exact Intel topology. Order 22 and `RCPU-089` / `RCPU-090` remain reserved for the parallel MIPS R4000 audit after ZPU's order 21. |
 
 CDP1802 merged in PR #18354 after independent specification and implementation
 review. The functional cell covers the complete register matrix, instruction
@@ -124,6 +130,28 @@ decode sweep, exact full traces/states for all 255 accepted transitions and
 focused alias/control/bus/lifecycle/fault/allocation matrices, exhaustive
 256x256x2 ALU relations, eleven compiler-valid hostile fixtures, strict
 Clippy/rustdoc, affected BUILD, and 95.62% line coverage (1,442/1,508).
+
+LatticeMico32 was selected after a duplicate and evidence audit found no
+pre-existing package, branch, worktree, open pull request, or merged pull
+request for LM32.
+It ranks ahead of evidence-blocked Itanium and LoongArch because Lattice
+publishes a complete programmer reference while the pinned vendor-origin fork
+retains the original decoder, register file, ALU, shifter, multiplier,
+multi-cycle divider, interrupt logic, top-level CPU, and instruction tests.
+The functional boundary is deliberately configuration-pinned; the dependent
+gate cell is not authorized to claim transistor accuracy or a complete SoC.
+The completed local functional cell owns all 32 mutable GPRs, complete 64 KiB
+memory/image state, every pinned instruction family, exact CFG/CSR behavior,
+DC.RE exception remapping, all 32 latched-pending interrupt inputs, complete
+post-state and bus-transaction traces, and atomic lifecycle/allocation seams.
+Its 32 release integration tests consume 747 checked-in evidence rows,
+including 530 independently generated exact full-state/full-transaction
+transitions, 52 lifecycle/fault rollback rows, five immutable RTL source
+hashes represented by eight source facts, and 32 operand seeds that drive 672
+additional complete-state ALU transitions; strict Clippy/rustdoc and 94.18%
+measured release line coverage (874/928) are green. A different
+reviewer's exact-clean-head implementation PASS is the remaining publication
+gate.
 
 MSP430 follows Xtensa and CDP1802 rather than displacing an active item. TI's public
 SLAU144K chapter 3 gives a complete classic encoding, addressing, flag, and
@@ -162,16 +190,42 @@ educational gate cell and a source-backed PIC16F84A SoC composition remain
 separate queued follow-up cells after independent implementation review and
 publication of the functional core.
 
+Intel i960 follows the already active ZPU and reserved MIPS R4000 cells. The
+duplicate audit found no package, spec, branch, worktree claim, or open/merged
+PR for i960/80960. Intel's public 270567 programmer reference gives the exact
+KA scalar register, format, addressing, condition-code, and instruction
+contract, while the separately written MAME 0.289 i80960KA device supplies a
+real reproducible common-subset differential target. The first cell stays
+bounded to scalar application execution so register-window spills, system
+tables, architectural fault/interrupt entry, KB floating point, and bus/SoC
+behavior are not approximated. The manuals do not disclose an internal KA
+netlist; any later gate package is educational synthesis, not a source-backed
+exact gate reconstruction.
+
 ## Discovered follow-up work
 
 - Independently re-review the repaired local Spec 07ax2 ARM7TDMI educational
   gate partner at its final exact head. Real exception delivery and SoC buses
   remain separate bounded follow-ups.
+- After independent review and publication of the completed local SuperH-2
+  cell, resume the chronological independent queue with SPARC V9. SuperH
+  follow-ups remain lower priority: little-endian transport, interrupt entry
+  and wake from `SLEEP`, SR/VBR system transfers, exception return, `TAS.B`,
+  and a source-backed SH-2 microcontroller SoC composition.
+
+### Open-RTL CPU companions
+
+| Priority | Target | Evidence / dependency |
+|---:|---|---|
+| P1 after ZPU functional | ZPU4 Small source-backed educational gate model (`RCPU-088`) | Dependent Spec 07bf2 follows only after the independently reviewed `RCPU-087` functional oracle merges. Pin Zylin commit `e29aef5f7aa741557d0eb16ecf13e974d55789ff`; derive the RTL state inventory; use repository gates/DFFs plus cycle/instruction GHDL differentials; exclude SoC peripherals, FPGA timing, physical-netlist, transistor, and SPICE claims. |
+| P2 discovery | J1 Forth CPU | Distinct 16-bit stack ISA with a public paper and BSD Verilog exists, but its exact immutable profile, programmer-visible lifecycle, and repository priority remain to be audited. Do not conflate it with the 32-bit GCC-backed ZPU cell. |
 
 ### Gate-integrity audit queue
 
 | Priority | Target | Finding / next action |
 |---:|---|---|
+| P0 merged | SPARC V8 gate HALT storage | Repair PR #18309 landed. HALT DFF Q is now the sole architectural authority; the public boolean is only a synchronized compatibility observer. The published storage inventory derives 524,288 memory bits, 1,896 register/control bits, and one HALT bit from owned containers. Deliberate mirror-divergence, restore, run/result, and typed-fault atomicity tests pass alongside 42 unit tests, the 248-vector differential, and eight lifecycle/integrity tests. Strict Clippy/rustdoc/fmt, lessons validation, the six-package affected build, and clean all-target 94.68% line coverage (1,691/1,786) are green. |
+| P0 merged | Motorola 68000 gate storage | Repair PR #18316 landed. |
 | P0 complete locally; review fix | Intel 8051 gate HALT and PC storage | HALT DFF Q and all 16 PC DFF Q outputs are now the sole architectural authorities; the public boolean and PC integer are synchronized compatibility observers. The storage inventory derives 524,288 code bits, 524,288 XDATA bits, 2,048 IRAM/SFR bits, 16 PC bits, and one HALT bit from owned containers. Deliberate HALT/PC mirror-divergence, snapshot, step, restore, run/result, and typed-fault rollback tests pass alongside 71 unit tests, the all-256-opcode differential, nine lifecycle/integrity tests, and 23 doctests. Strict Clippy/rustdoc/fmt, lessons validation, the five-package affected build, and 97.34% line coverage (1,937/1,990) are green. |
 | P0 complete locally | Intel 8086 counted DFF authority | Every counted bank is now Q-authoritative across execution, snapshot, restore, rollback, and port I/O; public fields and arrays are synchronized compatibility observers only. Register/FLAGS public read APIs sample Q, explicit setters clock Q, instruction evaluation starts Q-to-wire and commits result wires, and IN/OUT use port Q directly. Adversarial divergence tests cover ADC, snapshot, restore, rollback, IN, and OUT. Release tests cover 62 unit cases, all 461 differential vectors, 10 lifecycle cases, and 14 doctests; line coverage is 95.34% (2,906/3,048). |
 | P0 complete locally | SPARC V8 gate HALT storage | HALT DFF Q is now the sole architectural authority; the public boolean is only a synchronized compatibility observer. The published storage inventory derives 524,288 memory bits, 1,896 register/control bits, and one HALT bit from owned containers. Deliberate mirror-divergence, restore, run/result, and typed-fault atomicity tests pass alongside 42 unit tests, the 248-vector differential, and eight lifecycle/integrity tests. Strict Clippy/rustdoc/fmt, lessons validation, the six-package affected build, and clean all-target 94.68% line coverage (1,691/1,786) are green. |
@@ -182,7 +236,7 @@ publication of the functional core.
 | P0 merged | MIPS R2000 gate HALT storage | PR #18304 landed. HALT DFF Q is now the sole architectural halt authority; the public boolean remains only as a source-compatible observation mirror and is repaired by simulator mutations. The published storage inventory derives 524,288 memory bits, 1,120 register bits, and one HALT bit from the owned physical containers. Deliberate mirror-divergence, restore, and typed-fault atomicity tests pass alongside 33 unit tests, the 218-vector differential suite, nine lifecycle/integrity tests, and 20 doctests. Strict Clippy/rustdoc, the six-package affected build, and 94.50% line coverage (1,581/1,673) are green. |
 | P0 complete locally | MOS 6502 gate HALT storage | The one-bit `StateRegister` Q output is the sole HALT authority across observation, reset/load/restore, step/run, BRK, IRQ/NMI, and rollback; the private host Boolean is observer-only. The exact 528,184-bit inventory is derived from owned containers. Two-way divergence and five compiler-checked hostile full-crate variants pass alongside 83 unit tests, the complete 256-opcode differential, seven lifecycle/integrity tests, seven doctests, strict checks, and 98.75% package-source line coverage (1,834/1,857). |
 | P0 complete locally | Intel 4004 gate HALT storage | HALT Q is now the sole authority across observation, snapshot, reset/load/restore, step/run, `HLT`, and rollback; the Boolean observer is non-decisive under two-way divergence and repaired from Q. The container-derived inventory totals exactly 1,428 DFFs. Five compiler-valid hostile full-crate variants are rejected after type-checking. All 256 first-byte classifications, 90 unit tests, seven integration tests, four doctests, strict checks, the affected build, and 96.69% line coverage (1,607/1,662) pass. |
-| P1 complete locally | IBM System/360 branch predicates | `BCR`/`BC`, `BALR`, `BCTR`/`BCT`, and `BXH`/`BXLE` now derive their select wires from gate mask muxes, target/count OR reductions, signed comparator condition-code wires, and one-hot opcode lines in both the executor and independent validator. Exhaustive mask/CC/register/count/index truth tables and token-normalized exact-body structural checks cover the complete branch-select, fixed-width-adder, signed-comparator, and top-level dispatch chain, including the exact four-byte router, RR/RX/RS dispatcher shells, complete validation router, branch-validator shell, public `step`/`run`/`execute` bridge, and AST-verified top-level file-backed executor/gates module identity, and reject hostile helper rewrites, dead anchors/dispatch, attributed/aliased/inline or macro-generated routing modules, macro-discarded declaration decoys, delimiter-shaped character-literal confusers, binding shadows, oracle substitution, expectation shadowing, and post-dispatch overwrites. All eleven existing differential/lifecycle suites, strict checks, and 93.01% package-source line coverage (1,662/1,787) pass. |
+| P1 merged | IBM System/360 branch predicates | Repair PR #18330 landed. `BCR`/`BC`, `BALR`, `BCTR`/`BCT`, and `BXH`/`BXLE` now derive their select wires from gate mask muxes, target/count OR reductions, signed comparator condition-code wires, and one-hot opcode lines in both the executor and independent validator. Exhaustive mask/CC/register/count/index truth tables and token-normalized exact-body structural checks cover the complete branch-select, fixed-width-adder, signed-comparator, and top-level dispatch chain, including the exact four-byte router, RR/RX/RS dispatcher shells, complete validation router, branch-validator shell, public `step`/`run`/`execute` bridge, and AST-verified top-level file-backed executor/gates module identity, and reject hostile helper rewrites, dead anchors/dispatch, attributed/aliased/inline or macro-generated routing modules, macro-discarded declaration decoys, delimiter-shaped character-literal confusers, binding shadows, oracle substitution, expectation shadowing, and post-dispatch overwrites. All eleven existing differential/lifecycle suites, strict checks, and 93.01% package-source line coverage (1,662/1,787) pass. |
 | P1 complete locally | IBM System/360 decode authority | One transition-boundary 256-line gate decode is now the sole RR/RX/RS/SI/SS/floating transport, legality, family, typed-operation, validator, and commit authority. Reserved holes retain their transport width and prior truncation precedence; inactive candidates cannot read storage, fault, or mutate. An independent literal 256-entry family/legality/width table is exercised at every 2/4/6-byte loaded length, with explicit short reserved-hole truncation witnesses. Parsed-token locks cover `DecodeAuthority::new`, width, the complete candidate map, every execution/validation router, gate branch/add/compare primitives, and the public commit chain. Anchored raw-match/range/equality/`trace.raw.first()` helper, dead/duplicate/secondary-decode, oracle-dispatch, shadow, inactive-access, and post-authorization/commit source mutations compile as disposable complete crates before rejection. |
 | P1 queued | IBM System/360 divide qualification | The restoring divider uses gate subtraction per round but host equality detects zero and host `quotient > limit` decides the architectural divide fault. Replace both with exact-width gate reductions/comparison and pin signed fit boundaries. |
 | P1 queued | IBM System/360 DFF transition discipline | Register banks are private stable-Q authority, but main-storage reset and snapshot restore write the packed Q bytes directly despite Spec 07ad2 promising sequential primitives. Decide and enforce a scalable clocked-restore boundary without weakening the topology claim. |
@@ -217,6 +271,26 @@ publication of the functional core.
   optional FPU, exception entry/return and interrupt targeting, MPU/IDAU/NVIC,
   and a source-backed or explicitly educational gate-level topology. The
   bounded functional cell does not imply proprietary Cortex-M33 RTL.
+- Expand the bounded Motorola MC68020 first cell after merge. The follow-up
+  queue is: complete inherited MC68000-family coverage with MC68020 effective
+  addresses, bit fields, `CAS`/`CAS2`, `CHK2`/`CMP2`, long multiply/divide,
+  `PACK`/`UNPK`, `CALLM`/`RTM`, `MOVEC`, and architected exception frames.
+  Cache/MMU/coprocessor, interrupt, and bus behavior belong to later CPU/SoC
+  cells and must not be inferred by the instruction-level model.
+
+The MC68020 bounded first cell is complete locally and awaiting independent
+publication review. It owns full D/A, PC/SR,
+USP/ISP/MSP, 16 MiB memory, halt, and installed-image state; implements
+compatible `MOVE.L`/`MOVEA.L` modes, scaled brief and full extension words,
+both memory-indirect orders, long branches, `RTD`, `LINK.L`, `EXTB.L`, and all
+`TRAPcc` forms; and privately delegates a bounded inherited register subset to
+the checked MC68000 core. Eighteen tests cover the claimed surface, complete
+state/lifecycle, aliases, stack banks, typed rollback, all reserved
+index-suppressed indirect selectors and their legal neighbors, immutable trace
+bytes across self-modifying writes, odd-address data and indirect-pointer
+transfers, boundary rollback, and inherited differentials. Strict checks, the
+package BUILD, lessons validation, and 89.28% line coverage (641/718) are green.
+Publication remains blocked only on independent review and merge.
 - Extend PA-RISC 1.1 problem-state coverage in bounded cells: extract/deposit
   and variable shifts, unit operations, indexed/short/modifying memory forms,
   decimal correction, multiply/divide, MOVB/MOVIB, and remaining arithmetic

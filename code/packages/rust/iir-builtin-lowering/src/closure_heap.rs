@@ -65,8 +65,10 @@ use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::IIRModule;
 use std::collections::BTreeMap;
 
+use crate::helper_names::{claim_helper_name, HelperNameError};
+
 /// The synthesized dispatcher's function name.
-const DISPATCHER: &str = "__dyn_call_closure";
+pub(crate) const DISPATCHER: &str = "__dyn_call_closure";
 /// The nil-sentinel `const` type hint — the empty-list terminator, exactly the
 /// form `make_nil` / `desugar_list` emit.
 const REF_PAIR: &str = "ref<LispyPair>";
@@ -122,10 +124,18 @@ fn collect_dispatch(module: &IIRModule) -> Vec<Dispatch> {
 /// Module-level entry: lower `alloc_closure`/`call_closure` to the cons-heap
 /// form plus a synthesized dispatcher (native + WASM). A no-op if the module has
 /// no closures.
-pub fn lower_closures_to_heap(module: &mut IIRModule) {
+///
+/// # Errors
+///
+/// [`HelperNameError`], before anything is rewritten, when the module already
+/// holds a function named [`DISPATCHER`] that is not the dispatcher this pass
+/// would build for it. Every closure call is rewritten to call the dispatcher
+/// by that name, so keeping the module's function would route every closure
+/// call through it (see [`crate::helper_names`]).
+pub fn lower_closures_to_heap(module: &mut IIRModule) -> Result<(), HelperNameError> {
     let dispatch = collect_dispatch(module);
     if dispatch.is_empty() {
-        return; // no closures — nothing to do (every closure-free program).
+        return Ok(()); // no closures — nothing to do (every closure-free program).
     }
     let index_of: BTreeMap<String, i64> =
         dispatch.iter().map(|d| (d.fn_name.clone(), d.idx)).collect();
@@ -168,12 +178,18 @@ pub fn lower_closures_to_heap(module: &mut IIRModule) {
             .is_some_and(|f| f.params.iter().any(|(_, t)| t == REF_ANY))
     });
 
+    // Claim the dispatcher's name before rewriting a single call, so a refused
+    // module is refused unchanged.
+    let dispatcher = build_dispatcher(&dispatch, params_are_boxed);
+    let already_ours = claim_helper_name(module, &dispatcher, "lower_closures_to_heap")?;
+
     for f in &mut module.functions {
         rewrite_closure_ops(f, &index_of, params_are_boxed);
     }
-    if !module.functions.iter().any(|f| f.name == DISPATCHER) {
-        module.functions.push(build_dispatcher(&dispatch, params_are_boxed));
+    if !already_ours {
+        module.functions.push(dispatcher);
     }
+    Ok(())
 }
 
 /// Rewrite `alloc_closure`/`call_closure` in one function to cons-chain builds +
@@ -186,8 +202,8 @@ fn rewrite_closure_ops(
     let types = producer_types(f);
     let old = std::mem::take(&mut f.instructions);
     let mut out: Vec<IIRInstr> = Vec::with_capacity(old.len() * 2);
-    // Monotonic suffix so the temporaries this pass introduces never collide.
-    let mut counter = 0usize;
+    // The temporaries this pass introduces: never a name `f` already uses.
+    let mut counter = FreshNames::avoiding(f_names(&old, f));
 
     for instr in old {
         if is_alloc_closure(&instr) {
@@ -266,7 +282,7 @@ fn rewrite_closure_ops(
 fn store(
     out: &mut Vec<IIRInstr>,
     v: Operand,
-    counter: &mut usize,
+    counter: &mut FreshNames,
     box_it: bool,
     types: &BTreeMap<String, String>,
 ) -> Operand {
@@ -333,7 +349,7 @@ fn emit_closure_alloc(
     dest: &str,
     idx: i64,
     captures: &[Operand],
-    counter: &mut usize,
+    counter: &mut FreshNames,
     params_are_boxed: bool,
     types: &BTreeMap<String, String>,
 ) {
@@ -360,7 +376,7 @@ fn emit_closure_call(
     dest: &str,
     handle: Operand,
     args: &[Operand],
-    counter: &mut usize,
+    counter: &mut FreshNames,
     params_are_boxed: bool,
     types: &BTreeMap<String, String>,
 ) {
@@ -488,9 +504,54 @@ fn build_dispatcher(dispatch: &[Dispatch], params_are_boxed: bool) -> IIRFunctio
 
 // --- small IIR builders -----------------------------------------------------
 
-fn fresh(counter: &mut usize, tag: &str) -> String {
-    *counter += 1;
-    format!("__clo_{tag}{counter}")
+/// The register names this pass invents in one function, `__clo_{tag}{n}`,
+/// skipping every name the function already uses.
+///
+/// A plain counter is not enough: the pass runs on IIR from every frontend,
+/// and a program register can be spelled `__clo_argnil1` (Python and
+/// JavaScript identifiers can; Twig refuses every `__` name). With a counter
+/// alone that register and the chain temporary would be one register, and
+/// the closure call would read the program's value as its argument chain —
+/// a cons-cell read through a program-chosen word. So the candidates the
+/// function already uses (parameters, destinations and operands) are taken:
+///
+/// ```text
+/// function already uses:  __clo_argnil1
+/// fresh("argnil")         → __clo_argnil2   (1 is taken, the counter moves on)
+/// ```
+struct FreshNames {
+    counter: usize,
+    taken: std::collections::HashSet<String>,
+}
+
+impl FreshNames {
+    fn avoiding(taken: std::collections::HashSet<String>) -> Self {
+        FreshNames { counter: 0, taken }
+    }
+}
+
+/// Every name `f` mentions: its parameters, each instruction's destination
+/// and each `Var` operand (`old` is `f`'s body, already taken out of it).
+fn f_names(old: &[IIRInstr], f: &IIRFunction) -> std::collections::HashSet<String> {
+    let mut names: std::collections::HashSet<String> = f.params.iter().map(|(p, _)| p.clone()).collect();
+    for i in old {
+        names.extend(i.dest.iter().cloned());
+        names.extend(i.srcs.iter().filter_map(|o| match o {
+            Operand::Var(v) => Some(v.clone()),
+            _ => None,
+        }));
+    }
+    names
+}
+
+fn fresh(counter: &mut FreshNames, tag: &str) -> String {
+    loop {
+        counter.counter += 1;
+        let name = format!("__clo_{tag}{}", counter.counter);
+        if counter.taken.insert(name.clone()) {
+            return name;
+        }
+    }
 }
 /// `dest = cons(a, b)` via the shared heap `cons` builtin.
 fn cons(dest: &str, a: Operand, b: Operand) -> IIRInstr {
@@ -519,6 +580,69 @@ mod tests {
         m
     }
 
+    /// Security review: a module that already defines `__dyn_call_closure`
+    /// used to keep it, and every closure call was rewritten to call it. The
+    /// module is refused, before any closure op is rewritten.
+    #[test]
+    fn an_impostor_dispatcher_is_refused() {
+        let body = IIRFunction::new("__lambda_0", vec![("x".into(), "any".into())], "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")]);
+        let impostor = IIRFunction::new(DISPATCHER, vec![("c".into(), "any".into()), ("a".into(), "any".into())], "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "any")]);
+        let main = IIRFunction::new("main", vec![], "any", vec![
+            IIRInstr::new("alloc_closure", Some("clo".into()), vec![Operand::Str("__lambda_0".into())], "closure"),
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(41)], "i64"),
+            IIRInstr::new("call_closure", Some("r".into()), vec![Operand::Var("clo".into()), Operand::Var("a".into())], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ]);
+        let mut m = module_with(vec![body, impostor, main]);
+        let err = lower_closures_to_heap(&mut m).unwrap_err();
+        assert_eq!(err, HelperNameError { name: DISPATCHER.into(), pass: "lower_closures_to_heap" });
+        assert!(m.functions[2].instructions.iter().any(|i| i.op == "call_closure"), "main is untouched");
+        assert_eq!(m.functions.len(), 3, "no dispatcher added");
+    }
+
+    /// Security review: the chain temporaries are `__clo_{tag}{n}`, which a
+    /// non-Twig frontend can spell. A function that already uses the very
+    /// names a plain counter would produce keeps its own registers: every
+    /// temporary the pass adds is a name the function did not use.
+    #[test]
+    fn temporaries_never_reuse_a_name_the_function_already_has() {
+        let body = || IIRFunction::new("__lambda_0", vec![("x".into(), "any".into())], "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "any")]);
+        // `p` is the program's parameter, `k` a program register it writes.
+        let main = |p: &str, k: &str| IIRFunction::new("main", vec![(p.into(), "any".into())], "any", vec![
+            IIRInstr::new("const", Some(k.into()), vec![Operand::Int(7)], "i64"),
+            IIRInstr::new("alloc_closure", Some("clo".into()), vec![Operand::Str("__lambda_0".into())], "closure"),
+            IIRInstr::new("call_closure", Some("r".into()),
+                vec![Operand::Var("clo".into()), Operand::Var(k.into())], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ]);
+        let temporaries = |m: &IIRModule| -> Vec<String> {
+            let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+            main.instructions.iter().filter_map(|i| i.dest.clone()).filter(|d| d.starts_with("__clo_")).collect()
+        };
+
+        // What a plain counter names the temporaries of this function.
+        let mut plain = module_with(vec![body(), main("p", "k")]);
+        lower_closures_to_heap(&mut plain).unwrap();
+        let plain_names = temporaries(&plain);
+        assert!(plain_names.len() >= 2, "{plain_names:?}");
+        let (taken_param, taken_reg) = (plain_names[0].clone(), plain_names[plain_names.len() - 1].clone());
+
+        // A program that already uses two of exactly those names.
+        let mut m = module_with(vec![body(), main(&taken_param, &taken_reg)]);
+        lower_closures_to_heap(&mut m).unwrap();
+        let lowered = m.functions.iter().find(|f| f.name == "main").unwrap();
+        let writes = |name: &str| lowered.instructions.iter().filter(|i| i.dest.as_deref() == Some(name)).count();
+        assert_eq!(writes(&taken_param), 0, "the pass wrote the program's parameter {taken_param}");
+        assert_eq!(writes(&taken_reg), 1, "only the program's own const writes {taken_reg}");
+        // The call still reads the program's value as its argument (boxed into
+        // the chain, since this body takes raw words).
+        assert!(lowered.instructions.iter().any(|i| i.op != "const"
+            && i.srcs.iter().any(|o| matches!(o, Operand::Var(v) if *v == taken_reg))));
+    }
+
     /// A capture-free `((lambda (x) x) …)`: one body `__lambda_0(x)`.
     #[test]
     fn alloc_and_call_lower_to_cons_and_dispatch() {
@@ -531,7 +655,7 @@ mod tests {
             IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
         ]);
         let mut m = module_with(vec![body, main]);
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
 
         // No closure opcodes remain.
         assert!(!m.functions.iter().any(|f| f.instructions.iter().any(|i| i.op == "alloc_closure" || i.op == "call_closure")));
@@ -581,7 +705,7 @@ mod tests {
             vec![IIRInstr::new("ret", None, vec![Operand::Var("y".into())], "any")],
         );
         let mut m = module_with(vec![l0, l1]);
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
 
         // Producer side: the captured parameter is boxed before it is consed.
         let l0 = m.functions.iter().find(|f| f.name == "__lambda_0").unwrap();
@@ -651,7 +775,7 @@ mod tests {
             ],
         );
         let mut m = module_with(vec![inner, outer, main]);
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
     }
 
     /// The mirror image: a genuinely tagged (lisp) module passes values through
@@ -689,7 +813,7 @@ mod tests {
         );
         let mut m = IIRModule::new("m", "mccarthy-lisp");
         m.functions = vec![l0, main];
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
 
         let disp = m.functions.iter().find(|f| f.name == DISPATCHER).unwrap();
         assert_eq!(
@@ -720,7 +844,7 @@ mod tests {
             IIRInstr::new("ret", None, vec![Operand::Var("clo".into())], "any"),
         ]);
         let mut m = module_with(vec![l1, l0, main]); // deliberately out of order
-        lower_closures_to_heap(&mut m);
+        lower_closures_to_heap(&mut m).unwrap();
         let disp = m.functions.iter().find(|f| f.name == DISPATCHER).unwrap();
         // Two cmp_eq cases, calling __lambda_0 (idx 0, 0 caps + 1 arg) and
         // __lambda_1 (idx 1, 1 cap + 1 arg).

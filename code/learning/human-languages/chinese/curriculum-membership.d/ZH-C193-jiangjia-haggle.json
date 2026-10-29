@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C193-jiangjia-haggle",
+  "pathSegment": "ZH-PATH-193-PRICE193",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-193-PRICE193",
+      "order": 3
+    }
+  ]
+}

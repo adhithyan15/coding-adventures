@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:ecbfa2bc84e8bdf8",
+  "lessonIds": [
+    "ZH-C239-jiankang",
+    "ZH-C239-jieyan",
+    "ZH-C239-hejiu",
+    "ZH-C239-huxi",
+    "ZH-C239-tijian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch239.txt",
+  "json": "chinese/narration/ch239.json",
+  "textHash": "fnv1a64:d18ef1ac4de62cd1",
+  "jsonHash": "fnv1a64:03f990a00461b5b2",
+  "findings": []
+}

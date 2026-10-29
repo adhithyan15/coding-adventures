@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+- Preserve finite nonnegative static `min-height` on the outer HostDropTarget
+  Item so empty landing zones retain their layout floor (#18559). Skip state
+  overrides; drag acceptance and callback routing are unchanged.
+  The first style read also exposes existing unsupported declarations on that
+  part; targets without authored min-height remain untouched (#18563).
+
 - `Text ( content: row )` inside `For ( each: slot: rows, as: row )` is
   `text: row`, the delegate's `property var row: modelData` (backlog 6f1f).
   `build_text_attribute` quoted a bare NAME as `text: "row"`, so every row
@@ -14,6 +20,12 @@
   slot arm beside it does.
 - Visible change: CollectionActions' missing-media and unused-media lists (and
   EngramApp, which inlines them) now show each filename and asset id.
+
+## 2026-10-26 (Fixed control width floors)
+
+- Preserve static scalar host-control widths paired with exact flex-shrink: 0
+  (#18394). Fill widths, conflicting constraints, and state geometry remain
+  excluded; unsupported-flex diagnostics remain unchanged.
 
 ## 2026-10-25 (Fixed text width floors)
 

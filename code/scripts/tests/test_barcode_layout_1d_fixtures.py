@@ -443,6 +443,7 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             "dart": "barcode-layout-1d-java-kotlin-dart-lane-parity",
             "java": "barcode-layout-1d-java-kotlin-dart-lane-parity",
             "kotlin": "barcode-layout-1d-java-kotlin-dart-lane-parity",
+            "haskell": "haskell-itf-stack-windows-build-front-coverage",
             "lua": "barcode-layout-1d-elixir-lua-v1-conformance",
             "ruby": "barcode-layout-1d-ruby-swift-v1-conformance",
             "swift": "barcode-layout-1d-ruby-swift-v1-conformance",

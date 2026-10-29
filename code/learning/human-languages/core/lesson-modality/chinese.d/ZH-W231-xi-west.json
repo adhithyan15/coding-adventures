@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W231-xi-west",
+    "language": "chinese",
+    "chapter": 231,
+    "sequence": 17685,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:48a96fe61a6f9f1d",
+    "detachableSegments": [
+      "Script — a bar, a box and two strokes inside"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

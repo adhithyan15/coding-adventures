@@ -1,5 +1,38 @@
 # Changelog
 
+## Unreleased — Generated names reserved (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds**: `__sir…` (the
+  runtime module, `__sir_user_main`, loop temporaries), the capture
+  temporaries `__cap_…`, the closure adapter's `__args`/`__it`, `__l`,
+  `__r`, `__payload`, `__exc`, and the prelude variants `Some`, `None`,
+  `Ok`, `Err` that the emitted `match` arms name.  `(define
+  (__sir_user_main) 42)` was a duplicate definition, and `(define (f A
+  __cap_A) (lambda () (+ A __cap_A)))` printed 2 instead of 11: the second
+  capture read the temporary bound for the first.  (`__sir_block__`, the
+  frontends' shared block-parameter name, keeps its spelling.)
+- **A keyword capture's temporary is one identifier**: `__cap_fn`, not the
+  invalid `__cap_r#fn`.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
+Security-review follow-up: `sanitize_ident` also reserves `_`, Rust's
+wildcard, which binds nothing — `(define (f _) _)` did not compile.
+
+## Unreleased — Strict closures; readable uncaught raises (issue #18461)
+
+- The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`)
+  lowers to `__sir::strict_arity(<closure>, N)`, which raises a catchable
+  `ArgumentError` ("arity mismatch: closure expects N argument(s), got M")
+  on any other count.  A plain closure drains its arguments with
+  `unwrap_or(Nil)`, so a missing one became `nil` and an extra one was
+  dropped.
+- `__sir::raise` in a module with no exception handling (no
+  `install_panic_hook`, so nothing can catch it) now reports
+  `Class: message` and exits 1, as `report_uncaught` does, instead of
+  unwinding to Rust's opaque `panicked at …: Box<dyn Any>`.
+- `tests/twig_pairs_and_closures.rs` builds and runs the #18460/#18461
+  Twig programs with `rustc`.
+
 ## 0.44.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

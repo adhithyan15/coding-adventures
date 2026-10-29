@@ -288,6 +288,7 @@ var graphDiffNativeFixtureConsumers = []struct{ name, language string }{
 	{"perl/programs/build-tool", "perl"},
 	{"python/programs/build-tool", "python"},
 	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
 }
 
 // Resolution readers are case-specific: most native fronts intentionally run
@@ -339,9 +340,9 @@ var hashingCacheNativeFixtureReaders = map[rune]struct{ name, language string }{
 
 var hashingCacheNativeFixtureCases = map[string]string{
 	"corrupt":                           "CFLYT",
-	"dependency-change-after":           "CFL",
-	"dependency-order-before":           "CFL",
-	"failed-prior-record":               "CFL",
+	"dependency-change-after":           "CFLB",
+	"dependency-order-before":           "CFLB",
+	"failed-prior-record":               "CFLB",
 	"hit":                               "CFLY",
 	"local-boundary-union":              "CFL",
 	"missing":                           "CFLGPYBS",

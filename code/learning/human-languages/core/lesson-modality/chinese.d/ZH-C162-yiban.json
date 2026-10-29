@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C162-yiban",
+    "language": "chinese",
+    "chapter": 162,
+    "sequence": 13200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2316d61cd67d70ef"
+  },
+  "findings": []
+}

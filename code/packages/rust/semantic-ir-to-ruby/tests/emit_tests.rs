@@ -1188,7 +1188,7 @@ fn default_param_emits_native_ruby_syntax() {
         vec![],
     );
     let rb = compile(&m).expect("compile").source;
-    assert!(rb.contains("def f(a, b = 5)"), "native default syntax:\n{rb}");
+    assert!(rb.contains("def sir_fn_f(a, b = 5)"), "native default syntax:\n{rb}");
 }
 
 #[test]
@@ -1333,7 +1333,7 @@ fn keyword_param_and_arg_emit_native_ruby_syntax() {
     ))
     .expect("compile")
     .source;
-    assert!(rb.contains("def f(x:)"), "keyword parameter syntax:\n{rb}");
+    assert!(rb.contains("def sir_fn_f(x:)"), "keyword parameter syntax:\n{rb}");
     assert!(rb.contains("x: 5"), "keyword argument syntax:\n{rb}");
 }
 
@@ -1365,7 +1365,7 @@ fn rest_and_keyword_rest_params_emit_splat_syntax() {
     ))
     .expect("compile")
     .source;
-    assert!(rb.contains("def f(a, *rest, x:, **opts)"), "splat syntax:\n{rb}");
+    assert!(rb.contains("def sir_fn_f(a, *rest, x:, **opts)"), "splat syntax:\n{rb}");
 }
 
 // ── SIR17 exceptions ────────────────────────────────────────────────────────
@@ -2611,4 +2611,31 @@ fn a_malformed_include_missing_the_module_is_rejected() {
 fn a_non_empty_module_body_is_rejected() {
     let m = method_module(vec![moduledef("Mod", vec![puts(strlit("side effect"))])]);
     assert!(compile(&m).is_err(), "a non-empty module body must be rejected");
+}
+
+/// Every user function lives in the `sir_fn_` namespace (#18466), so a user
+/// `def raise` can no longer replace `Kernel#raise` for the runtime, and the
+/// closure wrapper's argument list is `sir_args`, which no user name can
+/// spell (a user `__sir_args` is an ordinary local now).
+#[test]
+fn user_functions_and_the_closure_wrapper_live_in_the_reserved_namespace() {
+    let rb = twig_to_ruby("(define (raise a b) 0) (define (f k) (lambda (x) (* x k))) (print ((f 2) 3))");
+    assert!(rb.contains("def sir_fn_raise(a, b)"), "got:\n{rb}");
+    assert!(rb.contains("def sir_fn_f(k)"), "got:\n{rb}");
+    assert!(rb.contains("->(*sir_args) {"), "got:\n{rb}");
+    assert!(!rb.contains("__sir_args"), "got:\n{rb}");
+    assert_eq!(sanitize_ident("sir_args"), "sir_esc_vsir_args");
+    assert_eq!(sanitize_ident("sir_fn_f"), "sir_esc_vsir_fn_f");
+    assert_eq!(sanitize_ident("__sir_args"), "__sir_args");
+}
+
+/// `raise` is always a parenthesised call — a method call Ruby cannot read
+/// as a local named `raise`, and one no user `Kernel` constant can redirect
+/// (security review of #18466).
+#[test]
+fn raise_is_always_a_parenthesised_call() {
+    let rb = ruby_to_ruby("begin\n  raise ArgumentError\nrescue ArgumentError => e\n  raise\nend\n");
+    assert!(rb.contains("raise(ArgumentError)"), "got:\n{rb}");
+    assert!(rb.contains("raise()"), "bare re-raise:\n{rb}");
+    assert!(!rb.contains("Kernel.raise"), "got:\n{rb}");
 }

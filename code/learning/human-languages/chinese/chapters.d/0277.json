@@ -1,0 +1,21 @@
+{
+  "chapter": 277,
+  "title": "Likes and Dislikes",
+  "label": "ch:zh-likes-and-dislikes",
+  "canDo": "I can say what is amusing, what I dislike, whom I admire, what I enjoy and what I love.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R277-review-final-277",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can say what is amusing, what I dislike, whom I admire, what I enjoy and what I love.",
+    "assesses": [
+      "ZH-LEX-C277-LIKES277-01",
+      "ZH-LEX-C277-LIKES277-02",
+      "ZH-LEX-C277-LIKES277-03",
+      "ZH-LEX-C277-LIKES277-04",
+      "ZH-LEX-C277-LIKES277-05"
+    ]
+  }
+}

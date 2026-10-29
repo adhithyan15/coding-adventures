@@ -1713,6 +1713,216 @@ trust, revocation, I/O, HTTP, OAuth transport, or any network effect. Reviewed
 fixed-output HMAC-SHA-256 and HMAC-SHA-384 remain prerequisites, and concrete
 HTTPS remains unavailable.
 
+The existing Rust `hmac_sha256` entry point now supplies the bounded
+fixed-output HMAC-SHA-256 prerequisite without routing secret-derived state
+through the generic heap-allocating HMAC path. It uses the repository-owned
+fixed-memory SHA-256 stream twice, holds one 64-byte normalized key block on
+the stack, transforms that block from the inner pad to the outer pad in place,
+and wipes normalized key bytes, keyed pads, the inner digest, and both retained
+hash states at their ownership boundaries. Checked SHA-256 length failures are
+stable categories containing no caller bytes or lengths; the returned 32-byte
+tag remains caller-owned. RFC 4231 vectors and key/message boundary cases lock
+the output to the generic compatibility implementation.
+
+This primitive performs no credential access, edit, signing operation, audit,
+provider action, I/O, or external effect. It does not make generic HMAC
+fixed-memory, add HMAC-SHA-384, select a TLS cipher suite, implement HKDF or a
+TLS key schedule, process handshake records or certificates, establish trust,
+check revocation, authorize HTTP or OAuth transport, or open a network
+connection. Fixed-output HMAC-SHA-384 and reviewed HKDF execution remain
+prerequisites, and concrete HTTPS remains unavailable.
+
+The Rust `hmac_sha384` entry point now supplies the corresponding bounded
+fixed-output HMAC-SHA-384 prerequisite. It uses the repository-owned
+fixed-memory SHA-384 stream twice, retains one 128-byte normalized key block on
+the stack, transforms that block from the inner pad to the outer pad in place,
+and wipes normalized key bytes, keyed pads, the inner digest, and both retained
+hash states at their ownership boundaries. Checked SHA-384 length failures are
+stable categories containing no caller bytes or lengths; the returned 48-byte
+tag remains caller-owned. RFC 4231 vectors and key/message boundary cases lock
+the result to the generic compatibility implementation.
+
+This primitive performs no credential access, edit, signing operation, audit,
+provider action, I/O, or external effect. It does not make generic HMAC
+fixed-memory, select a TLS cipher suite, implement or review HKDF execution,
+build a TLS key schedule, process handshake records or certificates, establish
+trust, check revocation, authorize HTTP or OAuth transport, or open a network
+connection. Reviewed HKDF execution remains a prerequisite, and concrete HTTPS
+remains unavailable.
+
+The Rust `hkdf_extract_fixed` entry point now supplies the bounded Extract half
+of reviewed HKDF execution for SHA-256 and SHA-384. A data-driven
+`FixedHkdfHash` policy admits only the repository-owned fixed-output HMAC paths.
+The RFC 5869 default salt occupies a fixed stack buffer, temporary HMAC results
+are wiped on drop, and the returned `HkdfPrk` owns one fixed backing array that
+exposes only the selected 32-byte or 48-byte prefix and wipes the full array on
+drop. Its Debug representation contains algorithm and public length metadata,
+never PRK bytes. Checked hash-length failures remain payload-free.
+
+This primitive performs no credential access, edit, signing operation, audit,
+provider action, I/O, or external effect. It does not change the legacy
+allocation-backed HKDF compatibility APIs, implement fixed-memory HKDF-Expand
+or `HKDF-Expand-Label`, compose a TLS key schedule, process handshake records
+or certificates, establish trust, check revocation, authorize HTTP or OAuth
+transport, or open a network connection. Reviewed fixed-memory Expand remains
+a prerequisite, and concrete HTTPS remains unavailable.
+
+The fixed-output HMAC-SHA-256 and HMAC-SHA-384 primitives now also accept
+borrowed message segments. They stream each segment into the repository hash
+state in order without allocating or assembling a concatenated whole-message
+buffer. A bounded partial block may be retained inside the wiped hash state.
+The APIs preserve the existing fixed-memory key normalization, wipe-on-drop
+key-derived state, caller-owned fixed tag, and payload-free length failure.
+Segment boundaries do not change the tag, and an empty segment list is the
+empty message. This is the bounded input primitive needed to represent
+`T(i-1) || info || counter` without constructing an allocation-backed aggregate
+buffer.
+
+This HMAC slice performs no HKDF expansion, secret derivation, credential
+access, credential edit, signing operation, provider action, trace emission,
+I/O, or external effect. It does not implement `HKDF-Expand`,
+`HKDF-Expand-Label`, a TLS key schedule, handshake or record protection,
+certificate processing, trust or revocation policy, HTTP, an OAuth transport,
+or a network connection. Reviewed fixed-memory Expand remains a prerequisite,
+and concrete HTTPS remains unavailable.
+
+The Rust `hkdf_expand_fixed` entry point now completes the bounded RFC 5869
+Expand half for the repository-owned SHA-256 and SHA-384 paths. It accepts an
+`HkdfPrk` directly, so the data-driven algorithm selected during Extract cannot
+disagree with Expand, and it derives into caller-provided output storage. Each
+HMAC receives borrowed `T(i-1)`, `info`, and counter segments without an
+aggregate message allocation. One fixed 48-byte previous-block owner and every
+temporary HMAC tag in its original result slot are wiped; an optimized-IR gate
+checks those scrubs and rejects allocator calls in the Expand boundary. Public
+output and encoded-message length checks occur before caller output changes,
+and an unexpected PRF failure wipes the destination before returning.
+Successful output remains caller-owned.
+
+This fixed-memory Expand slice performs secret derivation only inside the
+caller's process. It performs no credential access, credential edit, signing
+operation, provider action, audit or trace emission, I/O, or external effect.
+It does not implement `HKDF-Expand-Label`, select or compose a TLS cipher suite
+or key schedule, process handshake or record protection, parse or validate
+certificates, select trust roots, enforce revocation, authorize HTTP or OAuth
+transport, or open a network connection. Reviewed `HKDF-Expand-Label` and TLS
+key-schedule composition remain prerequisites, and concrete HTTPS remains
+unavailable.
+
+The Rust `tls13-hkdf-label` layer now composes that fixed-memory Expand boundary
+with its existing bounded RFC 8446 section 7.1 framing. The public output
+length, exact `"tls13 "` namespace, caller label, and context occupy one fixed
+514-byte stack buffer before the PRK-bound SHA-256 or SHA-384 expansion derives
+into caller-owned output. Algorithm selection remains data-driven through
+`HkdfPrk`; framing cannot disagree with Extract. Public framing and HKDF length
+failures occur before caller output changes, while the underlying unexpected
+PRF failure path wipes the destination. RFC 8448 SHA-256 evidence and a
+three-block independent SHA-384 vector cover the composition.
+
+This `HKDF-Expand-Label` slice performs only in-process secret derivation. It
+performs no credential access, edit, signing operation, provider action, audit
+or trace emission, I/O, or external effect. It does not select or compose a TLS
+cipher suite or key schedule, manage transcript sequencing, process handshake
+or record protection, parse or validate certificates, select trust roots,
+enforce revocation, authorize HTTP or OAuth transport, or open a network
+connection. Reviewed TLS key-schedule composition remains a prerequisite, and
+concrete HTTPS remains unavailable.
+
+The same repository-owned boundary now exposes the RFC 8446 section 7.1
+`Derive-Secret` operation over an already-computed transcript hash. The
+wipe-on-drop `HkdfPrk` remains the single source of SHA-256 or SHA-384 policy:
+both the transcript-hash input and caller-owned secret output must equal that
+selected hash's exact 32-byte or 48-byte length before expansion begins. The
+operation then delegates to the fixed-memory `HKDF-Expand-Label` path, so its
+stack-only framing, public-failure atomicity, and unexpected-PRF output wipe are
+preserved. RFC 8448 SHA-256 evidence and an independently generated SHA-384
+vector cover both admitted algorithms.
+
+This is one key-schedule primitive, not a TLS key schedule. It accepts a
+transcript hash rather than owning transcript sequencing or hashing, and it
+does not label or retain early, handshake, master, traffic, exporter, or
+resumption secret state. It performs no credential access, edit, signing,
+provider action, audit or trace emission, I/O, or external effect. Cipher-suite
+selection and complete key-schedule state composition remain prerequisites,
+along with handshake and record processing, certificate validation, trust-root
+selection, revocation, HTTP authorization, OAuth transport, and networking.
+Concrete HTTPS remains unavailable.
+
+The fixed-memory HKDF boundary now also accepts an already-derived
+pseudorandom key through one exact-length import operation. The caller selects
+SHA-256 or SHA-384 through `FixedHkdfHash`; the borrowed input must be exactly
+that hash's 32-byte or 48-byte output length before any secret copy occurs.
+Success copies only that exact prefix into the existing fixed 48-byte
+wipe-on-drop `HkdfPrk` owner, leaving the unused SHA-256 tail zeroed. The input
+remains caller-owned and the caller retains responsibility for wiping it. A
+stable payload-free error exposes no secret bytes or caller length.
+
+Both fixed Extract and exact import retain their original PRK staging owner
+after copying into the caller-owned result, then wipe that original 48-byte
+storage before return. The release-codegen regression gate verifies those
+staging scrubs, the existing HMAC-tag and previous-block scrubs, and the absence
+of allocator calls across the fixed Extract, import, and Expand boundaries.
+
+Import is not HKDF-Extract and does not establish entropy, provenance, or
+protocol meaning. In particular, accepting arbitrary input keying material at
+this boundary would be caller misuse. This slice exists so an already-derived
+TLS secret can later re-enter the repository-owned Expand boundary without an
+allocation-backed compatibility API or an unowned long-lived copy. It performs
+no credential access, edit, signing, provider action, audit or trace emission,
+I/O, or external effect, and it does not compose the TLS key schedule, derive
+traffic keys or IVs, process handshake or records, validate certificates,
+select trust, enforce revocation, authorize HTTP or OAuth transport, or open a
+network connection. Concrete HTTPS remains unavailable.
+
+A bounded `tls13-traffic-key-material` composition now derives one selected
+TLS 1.3 cipher suite's record-protection key and static IV from an
+already-derived traffic secret. It consumes the existing caller-policy-selected
+suite value together with the fixed wipe-on-drop `HkdfPrk` owner, rejects a
+SHA-256/SHA-384 mismatch before derivation, and takes the exact key and IV
+lengths only from the suite's immutable descriptor. The fixed labels `"key"`
+and `"iv"` and empty context are internal rather than caller-controlled. Both
+outputs occupy non-cloneable caller-owned fixed wipe-on-drop storage, retain
+the selected AEAD and caller-authorized per-key record ceiling, and become
+accessible only through a success-only borrowed view. Secret bytes never cross
+the ABI return slot by value and diagnostics remain redacted. If IV derivation
+fails after the key succeeds, the key's staging owner is wiped while unwinding
+the error path. On success, both staging owners remain alive after their
+deliberate copies into caller-owned storage and scrub their original stack
+slots before return; a release-codegen gate verifies those source scrubs and
+allocator absence.
+
+This composition does not establish the traffic secret's entropy, provenance,
+or key-schedule position; derive or retain early, handshake, master, exporter,
+resumption, or traffic secrets; select or negotiate a suite; invoke an AEAD;
+construct per-record nonces; protect records; process a handshake; validate
+certificates; establish trust; enforce revocation; perform I/O; authorize HTTP
+or OAuth transport; or open a network connection. Repository-owned AEAD
+review and composition, complete key-schedule and transcript state, handshake
+processing, certificate-path validation, revocation policy, TLS transport, and
+HTTP composition remain blockers. Concrete HTTPS remains unavailable.
+
+The repository-owned ChaCha20 implementation now exposes a bounded
+`chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
+It accepts exact caller-owned input and output buffers, validates the entire
+RFC 8439 32-bit block-counter range before changing output, and derives through
+one reusable fixed wipe-on-drop keystream owner. Each block's original and
+working 16-word key-derived states are wiped on return. Its 20 rounds and ARX
+operations do not branch on secret values, output does not cross the ABI return
+slot, and the boundary performs no allocation. RFC 8439 evidence, block-edge
+equivalence, failure atomicity, and final-counter tests cover the admitted
+surface. The caller remains responsible for preventing key, nonce, and counter
+position reuse; this primitive neither reserves nor persists nonce state.
+
+This is only an unauthenticated stream-cipher primitive. It does not provide a
+reviewed fixed-memory Poly1305 implementation or combined AEAD boundary, own
+traffic keys, construct or reserve record nonces, enforce the selected suite's
+per-key record ceiling, frame or protect records, process a handshake, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. The allocation-returning
+legacy ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain compatibility and
+educational surfaces rather than production TLS composition. Fixed-memory
+Poly1305 and combined AEAD review remain prerequisites, and concrete HTTPS
+remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,

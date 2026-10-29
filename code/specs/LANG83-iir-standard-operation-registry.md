@@ -1403,7 +1403,9 @@ PR6a `python_repr` and with host `python3` byte for byte.
   in a release build. Now it stops after 3 steps. A test measures the
   dearest print over the sweep and pins it between half the bound and
   the bound; another runs the largest program the default budgets accept,
-  and a trusted-budget one at vm-core's register limit; a third hands
+  and a trusted-budget one at vm-core's register limit (one float line
+  more is refused by the compiler since #18419, which sizes the trusted
+  budgets to vm-core's frame: see LANG84 C5); a third hands
   `run_module` looping modules and requires the step-limit error from a
   budget of their own size.
 - *Which rows BEAM runs did not change.* The five literal-only float rows
@@ -1794,8 +1796,32 @@ the frontends.
   spell either. `__dyn_` has the same exposure — `length` binds to an
   existing `__dyn_list_length`, closures to an existing
   `__dyn_call_closure`, and `__dyn_pair_new` … are runtime symbols — and is
-  closed at the Twig frontend; a pass-level refusal for the list and
-  closure helpers is left for a follow-up.
+  closed at the Twig frontend. *Follow-up (landed):* the list and closure
+  passes now refuse a module that holds a different function under one of
+  their helpers' names (`helper_names::HelperNameError`, plumbed like
+  `ReservedNameError`). A second review found two more shadowing routes, also
+  closed. First, `twig-aot`'s link step patched a runtime call to a program
+  function of the same name: `(define (__twig_print_i64 n) 0)` swallowed
+  `print`. It now refuses a function named like a runtime symbol, or two
+  functions of one name. Second, a program could define `__lambda_0`, the
+  name of a lifted lambda. Twig now also reserves `__lambda_` and `__twig_`.
+  A third review extended this to *registers*. A Twig parameter or `let` name
+  is an IIR register, and the compiler's temporaries (`_n1`, `_else1`, …)
+  and the passes' (`__aot_str{n}_len`, `__clo_*`, …) live in the same
+  function: `(let ((_n2 40)) (+ _n2 2))` computed 4. Fixes:
+  - Twig reserves the whole `__` namespace.
+  - Its temporaries and labels are `__t{n}_{what}` / `__l{n}_{what}`. An
+    unspellable character was ruled out because LLVM already uses `.` in its
+    derived names (`%x.slot`).
+  - `closure_heap` picks temporaries the function does not already use.
+  - `twig-aot` refuses a module that already uses a register beginning
+    `__aot_`.
+  - `twig-aot`'s `__dyn_*` check fails closed, through an allowlist of the
+    pass helpers (`PASS_GENERATED_DYN_HELPERS`), and `lang-aot`'s LLVM path
+    runs the same check, so `__gc_alloc_kind` and friends are refused there
+    too.
+  - `claim_helper_name` refuses if *any* function under the helper's name
+    differs from the helper.
 - *Not moved yet.* The managed backends (WASM, JVM, CLR, BEAM) still lower
   the source-level `pair?`, `not` and `equal?` builtins in their own code
   (their value model is structural, and `lower_dyn_repr_structural` leaves

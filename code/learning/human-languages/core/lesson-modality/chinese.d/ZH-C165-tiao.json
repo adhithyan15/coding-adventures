@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C165-tiao",
+    "language": "chinese",
+    "chapter": 165,
+    "sequence": 13380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:790a2d4d507ba61a"
+  },
+  "findings": []
+}

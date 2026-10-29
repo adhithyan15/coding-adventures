@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C174-tai",
+  "pathSegment": "ZH-PATH-174-JOBS174",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-174-JOBS174",
+      "order": 2
+    }
+  ]
+}
