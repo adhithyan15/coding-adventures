@@ -248,7 +248,7 @@ This repaired specification received independent review before implementation.
 The completed package has 21 release integration tests, including the literal
 1,536-case transport matrix, functional differentials, allocation rollback,
 gate truth tables, and compiler-checked complete hostile crates. Strict checks
-and 94.75% package-source line coverage (812/857) pass. The current-source
+and 95.27% package-source line coverage (825/866) pass. The current-source
 affected closure is seven packages and all seven BUILD recipes pass, but the
 strict repository planner currently stops first on stale `BUILD-EXEMPTIONS`
 entries inherited unchanged from `origin/main`; this branch does not claim
