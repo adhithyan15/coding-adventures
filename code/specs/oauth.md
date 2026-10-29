@@ -1912,15 +1912,27 @@ equivalence, failure atomicity, and final-counter tests cover the admitted
 surface. The caller remains responsible for preventing key, nonce, and counter
 position reuse; this primitive neither reserves nor persists nonce state.
 
-This is only an unauthenticated stream-cipher primitive. It does not provide a
-reviewed fixed-memory Poly1305 implementation or combined AEAD boundary, own
-traffic keys, construct or reserve record nonces, enforce the selected suite's
-per-key record ceiling, frame or protect records, process a handshake, validate
-certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
-or OAuth transport, or open a network connection. The allocation-returning
-legacy ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain compatibility and
-educational surfaces rather than production TLS composition. Fixed-memory
-Poly1305 and combined AEAD review remain prerequisites, and concrete HTTPS
+The repository-owned Poly1305 implementation now also exposes a bounded
+`poly1305_mac_fixed` prerequisite. It writes the 16-byte tag into exact
+caller-owned output, uses one reusable wipe-on-drop 16-byte block, and performs
+no allocation. The standard five 26-bit-limb core has one fixed multiplication
+and reduction schedule per admitted block; final conditional reduction uses
+mask selection rather than secret-dependent control flow. Clamped key limbs,
+accumulator limbs, the addition pad, multiplication products, and carry
+workspace share one wipe-on-drop owner. RFC 8439 evidence and block-edge
+equivalence plus an independently cross-checked multi-block vector cover the
+admitted surface. The caller remains responsible for never reusing a one-time
+Poly1305 key; this primitive neither derives nor reserves that key.
+
+These are still only separate stream-cipher and authenticator primitives. They
+do not provide a combined AEAD boundary, constant-time tag-verification API,
+own traffic keys, construct or reserve record nonces, enforce the selected
+suite's per-key record ceiling, frame or protect records, process a handshake,
+validate certificates, establish trust, enforce revocation, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. The
+allocation-returning legacy ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain
+compatibility and educational surfaces rather than production TLS composition.
+Combined fixed-memory AEAD review remains a prerequisite, and concrete HTTPS
 remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
