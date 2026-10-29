@@ -21,7 +21,6 @@ from coding_adventures_sha512 import (
     sha512_hex,
 )
 
-
 _FIXTURE = Path(__file__).resolve().parents[4] / "specs/fixtures/sha512-v1/cases.txt"
 
 

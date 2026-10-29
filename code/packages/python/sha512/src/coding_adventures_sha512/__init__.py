@@ -343,7 +343,8 @@ def _owned_bytes(data: object, operation: str) -> bytes:
     try:
         return view.cast("B").tobytes()
     except (TypeError, ValueError) as error:
-        raise TypeError(f"{operation}: expected a contiguous bytes-like object") from error
+        message = f"{operation}: expected a contiguous bytes-like object"
+        raise TypeError(message) from error
 
 
 def sha512(data: bytes) -> bytes:
