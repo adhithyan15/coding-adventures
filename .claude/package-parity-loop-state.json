@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18555,
+  "active_prs": [
+    18555
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-29T04:03:30Z",
-    "pr_number": 18548,
-    "head_revision": "dd18418d69cbb88fbc1ad1149e4b1fc593bf9a81",
-    "action": "All 42 exact-head checks completed acceptably: 31 successes, 10 expected path-gated skips, and one neutral CodeQL aggregate. GitHub reported the reviewed head clean and mergeable; guarded squash auto-merge landed PR #18548 as 6fe513ee903ff2ef56279783ccbd59a0b8100788. The merge was verified on origin/main, then the clean completed worktree and local branch were removed.",
+    "observed_at": "2026-10-29T04:50:00Z",
+    "pr_number": 18555,
+    "head_revision": "541089eefe9e22c9a0691f31749b55e81cfe2fe4",
+    "action": "Published independently reviewed Ruby dependency-hashing implementation as draft PR #18555 over exact base 6fe513ee903ff2ef56279783ccbd59a0b8100788. GitHub reports the publication head mergeable. Keep it draft while the PR-number lifecycle receipt is committed, pushed, and independently reviewed; then mark ready and require fresh hosted qualification at the resulting exact head.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -3764,13 +3766,18 @@
     {
       "id": "build-tool-ruby-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Ruby build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-ruby-portable-source-hashing-conformance",
         "build-tool-neutral-dependency-hashing-adversarial-corpus"
       ],
       "branch": "codex/build-tool-ruby-dependency-hashing-parity",
-      "pr_number": null,
+      "pr_number": 18555,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18555",
+      "opened_at": "2026-10-29T04:50:00Z",
+      "publication_head": "541089eefe9e22c9a0691f31749b55e81cfe2fe4",
+      "publication_base": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
+      "publication_notes": "Draft PR #18555 records the independently reviewed exact current-main head. GitHub reports the publication head mergeable over exact base 6fe513ee903ff2ef56279783ccbd59a0b8100788. Keep it draft only while this PR-number lifecycle receipt is committed, pushed, and independently reviewed; then mark ready and require fresh hosted qualification at the resulting exact head.",
       "selected_at": "2026-10-29T04:03:30Z",
       "selection_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
       "selection_notes": "Selected after TypeScript graph/diff PR #18548 completed all 42 exact-head checks acceptably, merged through guarded squash auto-merge, and its clean worktree and local branch were removed. Fresh bounded-owner ranking places Ruby dependency hashing at three direct and five total unfinished descendants, tied with Lua graph/diff. Ruby wins the tie-break because its existing hasher needs a smaller framing correction and completion immediately makes the Ruby reverse-digest owner dependency-ready; both explicit prerequisites are merged. The already selected path-disjoint Swift RESP package remains local and independently reviewed.",

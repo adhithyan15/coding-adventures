@@ -19693,3 +19693,14 @@ head `3c66c9ec17f53ac74d1f78d06a078dce82e8e051` closes every issue with lazy
 predecessor iteration and a million-wide regression that stops exactly at the
 4,097th identity; exact-head re-review issued SHIP with no findings. The
 lifecycle commit remains the publication gate.
+
+#### Draft PR #18555 publication receipt
+
+Publish independently reviewed exact current-main head
+`541089eefe9e22c9a0691f31749b55e81cfe2fe4` as draft PR #18555 over exact
+base `6fe513ee903ff2ef56279783ccbd59a0b8100788`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
