@@ -160,6 +160,13 @@ sentinel the imported package's `replace_all`/`replace_repeated` can return
 into a raised `ValueError` at the point a `SymReplaceAll` expression must
 evaluate to a real term or fail loudly.
 
+Global writes (`_init`'s value defines, `Scope::Global` assignments) go
+through the runtime's `_sir_global_set` — the same store
+`_sir_global_get_static` reads.  (Before issue #18461 they wrote a
+`_globals` dict the emitted module never imported, so any value define
+raised `NameError`.)  A strict closure (SIR10's `lambda` marker) is wrapped
+in `_sir_as_lambda`, so a wrong argument count raises Python's `TypeError`.
+
 ## Capability declaration
 
 Accepts: `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,

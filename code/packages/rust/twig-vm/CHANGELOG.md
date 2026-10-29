@@ -1,5 +1,19 @@
 # Changelog — twig-vm
 
+## Unreleased — #18435: end-to-end tests for lexical shadowing
+
+### Tests
+
+- 8 new dispatch tests run programs in which a parameter, a `let`/`let*`
+  binding, a lambda parameter, a captured parameter or a `match` binding
+  shadows a global function. Others shadow a builtin or the E4 string
+  builtins. The tests check the values. The example from the issue,
+  `(define (f helper) (helper 1))`, returns 2, not 100. The fix itself is in
+  `twig-ir-compiler`.
+- `inner_let_hides_outer_string_alias_binding`:
+  `(let ((s (string-append "a" "b"))) (let ((s 5)) s))` returns 5. It used to
+  read the outer string's alias register.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - A test that built nil with `call_builtin "make_nil"` uses `dyn_nil`, the name `dynval-runtime`'s binding now resolves (LANG83 PR7f). Doc comments describe the typed `const 0 : ref<LispyPair>` that twig-ir-compiler emits for `nil`.

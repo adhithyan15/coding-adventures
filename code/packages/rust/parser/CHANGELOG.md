@@ -4,6 +4,40 @@ All notable changes to the `parser` crate will be documented in this file.
 
 ## Unreleased
 
+### Added — `@asi(T, C…)` automatic insertion (F11, LANG84 E6)
+
+`GrammarElement::AutoInsert` is evaluated at the cursor without moving it. It
+finds the next token exactly as the adjacency predicates do. It succeeds when
+any of these holds:
+- a line break precedes that token: a newline flag, a stepped-over
+  `NEWLINE`, or a significant `NEWLINE` as the next token;
+- the token is one of the closers, matched as a token reference matches;
+- the input has ended.
+
+On success it adds a synthetic token:
+- `type_`/`type_name` as `GrammarLexer` would give `T`;
+- an empty `value`;
+- the next token's line and column;
+- `flags: Some(TOKEN_SYNTHETIC)` and `cv: None`.
+
+On failure it records no expectation. ECMAScript's "offending token"
+condition comes from PEG ordering, so `a ⏎ (b)` stays a call.
+
+- **Spans skip synthetic tokens.** A statement ends at its last written
+  token, and a node holding only synthetic tokens has no span.
+- **Budget.** A finished tree may hold at most one synthetic token per input
+  token, EOF included. More fails with "automatic insertion budget
+  exceeded". The count walks each distinct shared node once. It runs only
+  for grammars that contain `@asi`, so every other grammar pays nothing.
+  The budget error does not read `current()`, so a stream with no tokens
+  at all (one that a hook supplies) reports the error instead of
+  panicking. Both points came from the security review.
+- **Tests.** `tests/auto_insert.rs` has 17 tests: the truth table, a written
+  `;` winning, the error left unchanged, the token's fields, a custom `T`,
+  spans, `a ⏎ (b)`, restricted `return` and postfix `++`, a
+  newline-significant grammar, lookahead, repetition, the budget,
+  hand-built streams, an empty stream, and a compiled-grammar fixture round trip.
+
 ### Fixed — a parse tree whose owned copy would explode is refused
 
 The packrat memo shares nodes, so a grammar of stacked zero-width rules

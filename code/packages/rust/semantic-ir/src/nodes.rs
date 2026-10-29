@@ -204,6 +204,37 @@ impl Function {
             .collect()
     }
 
+    /// The one argument count a **strict** closure over this function
+    /// accepts, or `None` when no single count describes it.
+    ///
+    /// A closure reaches its function through `IndirectCall`, which the
+    /// validator cannot arity-check: the target is a run-time value.  A
+    /// frontend that wants the call checked anyway wraps the closure in the
+    /// `lambda` marker (`BuiltinCall("lambda", [MakeClosure …])`, SIR10
+    /// "Strict closures"), and each backend then compares the call's
+    /// argument count with this number when the call runs.
+    ///
+    /// ```text
+    ///   (lambda (x y) …)          → Some(2)   every param plain, no default
+    ///   (lambda () …)             → Some(0)
+    ///   def f(a, b = 1)           → None      1 or 2 arguments are both fine
+    ///   def f(*rest)              → None      any count is fine
+    ///   def f(a, x:)              → None      keywords are not positions
+    ///   def f(a, __sir_block__)   → None      the block slot is filled by
+    ///                                         the lowerer, not by position
+    /// ```
+    ///
+    /// `None` is not an error: a backend leaves such a closure with its
+    /// lenient behaviour, the same as an unmarked `MakeClosure`.
+    pub fn exact_arity(&self) -> Option<usize> {
+        self.params
+            .iter()
+            .all(|p| {
+                p.kind == ParamKind::Required && p.default.is_none() && p.name != "__sir_block__"
+            })
+            .then_some(self.params.len())
+    }
+
     /// The `Keyword` params whose name is **not** in `supplied` — i.e. the
     /// keyword parameters a caller left out (KW1).
     ///
@@ -1624,6 +1655,54 @@ mod tests {
         };
         assert_eq!(e.span(), &s());
         assert_eq!(e.kind_name(), "int");
+    }
+
+    #[test]
+    fn exact_arity_is_the_param_count_only_for_plain_params() {
+        let param = |name: &str, kind: ParamKind, default: Option<Expr>| Param {
+            name: name.into(),
+            sir_type: None,
+            kind,
+            default: default.map(Box::new),
+            span: s(),
+        };
+        let func = |params: Vec<Param>| Function {
+            name: "f".into(),
+            params,
+            return_type: None,
+            captures: vec![],
+            body: Block {
+                stmts: vec![],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            effects: crate::effects::EffectSet::PURE,
+            metadata: crate::metadata::Metadata::new(),
+            span: s(),
+        };
+        let plain = |n: &str| param(n, ParamKind::Required, None);
+        assert_eq!(func(vec![]).exact_arity(), Some(0));
+        assert_eq!(func(vec![plain("x"), plain("y")]).exact_arity(), Some(2));
+        let one = Some(Expr::IntLit {
+            value: 1,
+            span: s(),
+        });
+        assert_eq!(
+            func(vec![plain("a"), param("b", ParamKind::Required, one)]).exact_arity(),
+            None
+        );
+        assert_eq!(
+            func(vec![param("r", ParamKind::Rest, None)]).exact_arity(),
+            None
+        );
+        assert_eq!(
+            func(vec![plain("a"), param("x", ParamKind::Keyword, None)]).exact_arity(),
+            None
+        );
+        assert_eq!(
+            func(vec![plain("a"), plain("__sir_block__")]).exact_arity(),
+            None
+        );
     }
 
     #[test]

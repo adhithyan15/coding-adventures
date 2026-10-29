@@ -34,6 +34,11 @@ pub fn emit_module(m: &Module) -> String {
             t.insert(f.name.clone(), f.params.len());
         }
     });
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     // KW6: snapshot each function's *parameter shape* (name, is-keyword,
     // has-default) in declared order.  The `DirectCall` arm needs this to
     // resolve a `KeywordArg` (matched by NAME) back to the callee's declared
@@ -95,6 +100,7 @@ pub fn emit_module(m: &Module) -> String {
 
     FN_ARITY.with(|t| t.borrow_mut().clear());
     FN_PARAMS.with(|t| t.borrow_mut().clear());
+    STRICT_ARITY.with(|t| t.borrow_mut().clear());
 
     out
 }
@@ -1495,7 +1501,45 @@ fn try_emit_block_pass(out: &mut String, a: &Expr, indent: usize) -> bool {
     false
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* (a Ruby lambda, every Twig closure):
+///
+/// ```text
+/// (lambda (x y) (+ x y))  →  _sir_strict_arity(_sir_make_closure(…), 2)
+/// ```
+///
+/// `_sir_strict_arity` wraps the closure so a call with any other argument
+/// count panics with a catchable `ArgumentError` ("arity mismatch: …").  A
+/// plain closure's adapter indexes `__args[i]` directly, so a missing
+/// argument died with Go's own "index out of range" and an extra one was
+/// silently dropped (issue #18461).
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`semantic_ir::Function::exact_arity`] is `None`: defaults,
+/// `*rest`, …), the inner expression is emitted unchanged.
+fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
+    let arity = match inner {
+        Expr::MakeClosure { fn_name, .. } => {
+            STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+        }
+        _ => None,
+    };
+    match arity {
+        Some(n) => {
+            out.push_str("_sir_strict_arity(");
+            emit_expr(out, inner, indent);
+            let _ = write!(out, ", {n})");
+        }
+        None => emit_expr(out, inner, indent),
+    }
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // SIR10 strict closure — see `emit_strict_closure`.
+    if name == "lambda" && args.len() == 1 {
+        emit_strict_closure(out, &args[0], indent);
+        return;
+    }
     // ── Collection-method dispatch (C5) ────────────────────────────
     //
     // The Ruby→SIR frontend lowers every `recv.meth(args…)` /
@@ -2012,6 +2056,10 @@ struct ParamShape {
 
 thread_local! {
     static FN_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+    /// Function name → [`semantic_ir::Function::exact_arity`], for the
+    /// strict-closure marker (see `emit_strict_closure`).  Populated and
+    /// cleared by `emit_module` alongside `FN_ARITY`.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
     /// Per-module map from function name to its declared parameter shapes,
     /// in order.  Populated by `emit_module` before any body is walked, and
     /// consulted by the `DirectCall` arm to resolve keyword arguments to

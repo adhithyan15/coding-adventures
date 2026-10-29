@@ -3595,6 +3595,9 @@ impl Compiler {
         if node.rule_name != "proc_call" {
             return None;
         }
+        if let Some(value) = self.exact_static_integer_normalizer_value(node) {
+            return Some(value);
+        }
         let name = direct_tokens(node)
             .into_iter()
             .find(|token| token.effective_type_name() == "NAME")?
@@ -3628,20 +3631,28 @@ impl Compiler {
         }
     }
 
-    /// Evaluate the integer-preserving standard normalizers without routing a
-    /// wide static integer through binary64. The argument must itself be
-    /// call-free, and user declarations continue to shadow the built-ins.
-    fn exact_call_free_static_integer_normalizer_value(
+    /// Evaluate a chain of integer-preserving standard normalizers without
+    /// routing its wide call-free static integer root through binary64. User
+    /// declarations continue to shadow the built-ins at every level.
+    fn exact_static_integer_normalizer_value(
         &self,
         node: &GrammarASTNode,
     ) -> Option<i64> {
         if node.rule_name != "proc_call" {
             if let Some(child) = single_parenthesized_child(node) {
-                return self.exact_call_free_static_integer_normalizer_value(child);
+                return self.exact_static_integer_normalizer_value(child);
+            }
+            if let Some((sign, child)) = single_signed_child(node) {
+                let value = self.exact_static_integer_normalizer_value(child)?;
+                return match sign {
+                    "+" => Some(value),
+                    "-" => value.checked_neg(),
+                    _ => None,
+                };
             }
             let children = direct_nodes(node);
             return (direct_tokens(node).is_empty() && children.len() == 1)
-                .then(|| self.exact_call_free_static_integer_normalizer_value(children[0]))?;
+                .then(|| self.exact_static_integer_normalizer_value(children[0]))?;
         }
         let name = direct_tokens(node)
             .into_iter()
@@ -3649,14 +3660,20 @@ impl Compiler {
             .value
             .clone();
         let target_name = self.resolve_procedure_identity(&name);
-        if self.proc_sigs.contains_key(&target_name) {
+        if self.proc_sigs.contains_key(&target_name)
+            || !matches!(target_name.as_str(), "abs" | "sign" | "entier")
+        {
             return None;
         }
         let actuals = self.standard_fn_actuals(node);
-        if actuals.len() != 1 || self.contains_procedure_call(actuals[0]) {
+        if actuals.len() != 1 {
             return None;
         }
-        let value = self.static_integer_scalar_value(actuals[0])?;
+        let value = if self.contains_procedure_call(actuals[0]) {
+            self.exact_static_integer_normalizer_value(actuals[0])?
+        } else {
+            self.static_integer_scalar_value(actuals[0])?
+        };
         match target_name.as_str() {
             "abs" => value.checked_abs(),
             "sign" => Some(value.signum()),
@@ -4897,7 +4914,7 @@ impl Compiler {
         node: &GrammarASTNode,
         magnitude_limit: u64,
     ) -> Option<(u64, i64)> {
-        if let Some(value) = self.exact_call_free_static_integer_normalizer_value(node) {
+        if let Some(value) = self.exact_static_integer_normalizer_value(node) {
             return (value.unsigned_abs() <= magnitude_limit)
                 .then_some((value.unsigned_abs(), value));
         }
@@ -6940,6 +6957,16 @@ impl Compiler {
         name: &str,
         node: &GrammarASTNode,
     ) -> Result<Option<ExprValue>, CompileError> {
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() == 1 && self.contains_procedure_call(actuals[0]) {
+            if let Some(value) = self.exact_static_integer_normalizer_value(node) {
+                let slot = self.emit_const(ScalarType::Integer, Operand::Int(value));
+                return Ok(Some(ExprValue {
+                    slot,
+                    ty: ScalarType::Integer,
+                }));
+            }
+        }
         match name {
             "abs"    => Ok(Some(self.emit_abs(node)?)),
             "sign"   => Ok(Some(self.emit_sign(node)?)),
@@ -16807,6 +16834,55 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "unreduced, early-divided, shadowed, and effectful normalizers must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((entier(abs(entier(9007199254740993))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a pure exact integer-normalizer chain may reduce before widening for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(abs(entier(-9007199254740993)) * sign(pick())); output(result) end",
+            "begin real procedure entier(x); value x; real x; entier := x; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(if choose() then -9007199254740993 else -9007199254740993)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, shadowed, and effectful normalizer chains must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_signed_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((entier(abs(+entier(-9007199254740993))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "checked unary signs may compose through an exact integer-normalizer chain for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(abs(-entier(-9007199254740993)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(-9223372036854775807 - 1)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure entier(x); value x; real x; entier := x; real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(if choose() then -9007199254740993 else -9007199254740993)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, overflowing, shadowed, and effectful signed normalizer chains must fail closed",
             );
         }
     }

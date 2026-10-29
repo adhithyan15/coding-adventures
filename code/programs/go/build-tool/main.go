@@ -288,6 +288,7 @@ var graphDiffNativeFixtureConsumers = []struct{ name, language string }{
 	{"perl/programs/build-tool", "perl"},
 	{"python/programs/build-tool", "python"},
 	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
 }
 
 // Resolution readers are case-specific: most native fronts intentionally run

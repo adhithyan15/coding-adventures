@@ -1,0 +1,8 @@
+[package]
+name = "motorola68020-simulator"
+version = "0.1.0"
+edition = "2021"
+description = "Checked bounded Motorola MC68020 functional simulator with full extension-word addressing"
+
+[dependencies]
+m68k-simulator = { path = "../m68k-simulator" }

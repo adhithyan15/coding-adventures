@@ -935,9 +935,9 @@ command_arg      = @space_before !@space_after_next MINUS primary ;
 completes it so that every fact has both polarities: `@space_before`,
 `@no_space_before`, `@newline_before`, `@no_newline_before`,
 `@space_after_next` and `@no_space_after_next` (`!@p` is equivalent to the
-`no_` form). `@asi(...)` is still to come; until it lands it is rejected with
-a "not implemented yet" error. No shipped `.grammar` uses the predicates yet:
-JavaScript (phase 6b) and Ruby (R6) adopt them in their own PRs. The non-Rust
+`no_` form). `@asi(T, C…)` followed on 2026-10-25, specified in F11
+"Automatic insertion". The details are below. No shipped `.grammar` uses
+either yet: JavaScript (phase 6b) and Ruby (R6) adopt them in their own PRs. The non-Rust
 ports already reject `@` with an "unexpected character" error; F11 lists the
 parity follow-ups.
 
@@ -955,8 +955,12 @@ inside a multi-line comment, as ECMAScript requires.
   - the parser is at end of input
 
   On success it adds a **synthetic leaf token** of type `T` with a new
-  `TOKEN_SYNTHETIC` flag, zero width, positioned at the next token. The CST
-  shape is then the same whether or not the semicolon was written.
+  `TOKEN_SYNTHETIC` flag (`8`). The token has zero width (`value` is `""`)
+  and takes the position of the next token. The CST shape is then the same
+  whether or not the semicolon was written. CST spans skip synthetic tokens,
+  so a statement ends at its last written token. F11 gives the exact rules:
+  `T` and `C` are token names, `T` is not `NEWLINE`/`EOF`, closers do not
+  repeat, and a failure records no expectation.
 
 PEG greediness supplies ECMAScript's "offending token" condition: `@asi` is
 tried only after the statement's expression has stopped consuming, so
@@ -978,7 +982,9 @@ packrat-memo-safe.
 grammar construct.
 
 **Security and budget.** Constant-time predicates. Synthetic tokens are capped
-at one per real token.
+at one per input token, `EOF` included. The cap is checked on the finished
+tree, and a parse that exceeds it fails with an "automatic insertion budget
+exceeded" error.
 
 ### E7. Goal-directed lexing (parser→lexer feedback) and binding predicates
 
