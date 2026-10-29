@@ -1808,6 +1808,25 @@ transport, or open a network connection. Reviewed `HKDF-Expand-Label` and TLS
 key-schedule composition remain prerequisites, and concrete HTTPS remains
 unavailable.
 
+The Rust `tls13-hkdf-label` layer now composes that fixed-memory Expand boundary
+with its existing bounded RFC 8446 section 7.1 framing. The public output
+length, exact `"tls13 "` namespace, caller label, and context occupy one fixed
+514-byte stack buffer before the PRK-bound SHA-256 or SHA-384 expansion derives
+into caller-owned output. Algorithm selection remains data-driven through
+`HkdfPrk`; framing cannot disagree with Extract. Public framing and HKDF length
+failures occur before caller output changes, while the underlying unexpected
+PRF failure path wipes the destination. RFC 8448 SHA-256 evidence and a
+three-block independent SHA-384 vector cover the composition.
+
+This `HKDF-Expand-Label` slice performs only in-process secret derivation. It
+performs no credential access, edit, signing operation, provider action, audit
+or trace emission, I/O, or external effect. It does not select or compose a TLS
+cipher suite or key schedule, manage transcript sequencing, process handshake
+or record protection, parse or validate certificates, select trust roots,
+enforce revocation, authorize HTTP or OAuth transport, or open a network
+connection. Reviewed TLS key-schedule composition remains a prerequisite, and
+concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
