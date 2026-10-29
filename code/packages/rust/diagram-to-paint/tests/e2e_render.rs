@@ -121,6 +121,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-boundary-colors-11.16.1-visual-corpus.json"
     ));
+    const C4_LAYOUT_CONFIG_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-layout-config-11.16.1-corpus.json"
+    ));
+    const C4_LAYOUT_CONFIG_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-layout-config-11.16.1-visual-corpus.json"
+    ));
     const C4_RELATIONSHIP_COLORS_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-corpus.json"
@@ -4967,6 +4975,44 @@ line "Target" [35, 50, 68, 82]"##,
             let path = format!("/tmp/mermaid_c4_boundary_colors_{index}_e2e.png");
             write_png(&pixels, &path).expect("C4 boundary color PNG write failed");
             assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_layout_config_to_png() {
+        let syntax: Value = serde_json::from_str(C4_LAYOUT_CONFIG_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_LAYOUT_CONFIG_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().unwrap();
+        for (index, fixture) in fixtures.iter().enumerate() {
+            let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+            let columns = diagram.render_config.c4_shape_in_row.unwrap();
+            let layout = layout_structural_diagram(&diagram);
+            if columns == 1 {
+                assert!(layout.nodes[1].y > layout.nodes[0].y);
+            } else {
+                assert_eq!(layout.nodes[0].y, layout.nodes[1].y);
+                assert!(layout.nodes[2].y > layout.nodes[0].y);
+            }
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("c4.shapeInRow")), Some(&columns.to_string()));
+            assert_eq!(
+                scene.metadata.as_ref().and_then(|metadata| metadata.get("c4.boundaryInRow")),
+                Some(&diagram.render_config.c4_boundary_in_row.unwrap().to_string())
+            );
+            let pixels = render(&scene);
+            write_png(&pixels, &format!("/tmp/mermaid_c4_layout_config_{index}_e2e.png")).unwrap();
         }
     }
 

@@ -19,6 +19,7 @@ use diagram_ir::{
     PacketTheme, RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneIconForm,
     SwimlaneIconNode, SwimlaneImageNode, SwimlaneLabelPosition, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
+    StructuralRenderConfig,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -13786,6 +13787,8 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 fn parse_er_render_config(source: &str) -> diagram_ir::StructuralRenderConfig {
     let defaults = diagram_ir::StructuralRenderConfig::default();
     diagram_ir::StructuralRenderConfig {
+        c4_shape_in_row: None,
+        c4_boundary_in_row: None,
         use_max_width: parse_mermaid_boolean_config(
             source,
             "er",
@@ -14040,6 +14043,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
+    let mut render_config = StructuralRenderConfig::default();
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
     let mut groups = Vec::new();
@@ -14093,6 +14097,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                         apply_c4_element_style(&args, &mut nodes, &node_indices, &mut groups);
                     }
                     "UpdateRelStyle" => apply_c4_relationship_style(&args, &mut relationships),
+                    "UpdateLayoutConfig" => apply_c4_layout_config(&args, &mut render_config),
                     _ => {}
                 }
             }
@@ -14198,7 +14203,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     Ok(StructuralDiagram {
         kind: StructuralKind::C4,
         architecture_config: None,
-        render_config: Default::default(),
+        render_config,
         title,
         accessibility_title,
         accessibility_description,
@@ -14278,6 +14283,23 @@ fn apply_c4_element_style(
     let mut style = group.style.clone().unwrap_or_default();
     apply_c4_element_color_arguments(args, &mut style);
     group.style = Some(style);
+}
+
+fn apply_c4_layout_config(args: &[String], config: &mut StructuralRenderConfig) {
+    for (position, argument) in args.iter().enumerate() {
+        let (key, value) = argument
+            .split_once('=')
+            .map_or((None, argument.as_str()), |(key, value)| (Some(key), value));
+        let Ok(value) = value.parse::<usize>() else { continue };
+        if value == 0 { continue; }
+        match key {
+            Some("$c4ShapeInRow") => config.c4_shape_in_row = Some(value),
+            Some("$c4BoundaryInRow") => config.c4_boundary_in_row = Some(value),
+            None if position == 0 => config.c4_shape_in_row = Some(value),
+            None if position == 1 => config.c4_boundary_in_row = Some(value),
+            _ => {}
+        }
+    }
 }
 
 fn apply_c4_element_color_arguments(args: &[String], style: &mut DiagramStyle) {
