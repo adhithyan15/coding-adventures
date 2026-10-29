@@ -4,8 +4,9 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; the pre-A1 task inventory is checked in, while
-A1-C2 inventories, mocks, calibration, and human validation remain backlog
+**Status:** target specified; the pre-A1, A1, and B2 task inventories are
+checked in, while A2, B1, C1, and C2 inventories, mocks, calibration, and human
+validation remain backlog
 
 This specification names the assessment that the complete Tamil book must
 eventually prepare a book-only learner to pass. It is not an external
@@ -83,6 +84,27 @@ Sources checked 2026-09-13:
 - [Council of Europe introduction and certification caveat](https://www.coe.int/en/web/common-european-framework-reference-languages/introduction-and-context)
 - [Tamil Virtual Academy certificate rules and regulations](https://www.tamilvu.org/en/coresite-html-cwsylcrl-342515)
 - [Tamil Virtual Academy higher certificate course](https://www.tamilvu.org/en/highercertificate)
+
+### B2 task-shape source boundary
+
+The B2 task shape is an executable form of this project's own envelope, not a
+transcription of a published Tamil B2 examination. The Council of Europe CEFR
+Companion Volume supplies the generic B2 proficiency backbone and
+examination-design context. Tamil Virtual Academy documents a real Government
+of Tamil Nadu school-class ladder with oral, online, and written assessment.
+Neither checked source publishes a CEFR-mapped Tamil B2 paper with part counts,
+timings, input speed, text or response lengths, replay rules, regional-voice
+requirements, aid rules, independent-skill thresholds, or validation evidence.
+
+HL16, HL18, and this specification therefore own the numeric B2 envelope as a
+transparent project choice. The machine-readable inventory must repeat that
+source boundary wherever a precise project value could otherwise look
+externally measured. It must also preserve this specification's Tamil variety
+boundary: contemporary standard written Tamil for reading and writing, standard
+spoken Tamil accepted for listening and speaking, consistent documented
+regional forms credited, and the expected register stated by the task.
+Publishing the shape does not establish an external qualification, complete
+mocks, calibration, human validation, learner readiness, or learner attainment.
 
 ## Pass rule
 
