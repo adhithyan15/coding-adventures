@@ -83,7 +83,15 @@ The emitter is **thin**; the semantics live in an inlined C runtime
 - **Strict closures** — SIR10's `lambda` marker becomes
   `_sir_strict_arity(<closure>, N)`; `_sir_apply` then raises
   `ArgumentError: arity mismatch: …` for any other argument count, where a
-  plain (block-like) closure pads with `nil`.
+  plain (block-like) closure pads with `nil`.  A marker that does not wrap
+  exactly one closure is refused at compile time.
+- **Names kept apart** (SIR10 "Generated names", issue #18466) — every user
+  function is `sir_fn_<name>` (SIR's `main`/`_init` are `sir_user_main`/
+  `sir_user_init`), so `(define (free x) x)` cannot clash with libc;
+  `sanitize_ident` escapes the runtime's `sir…`/`_sir…` names, upper-case
+  names (the headers' macros: `EOF`, `NAN`, …), implementation-reserved
+  `__x`/`_X` names, header typedefs (`…_t`), `setjmp`/`jmp_buf`/`va_*`, and
+  `errno`/`stdin`/`stdout`/`stderr`.
 - **Display convention** — a single `__SIR_DISPLAY_RUBY__` placeholder is
   substituted with a boolean-selected literal (`1` = Ruby `true`/`false`,
   `0` = Lisp `#t`/`#f`) — never source-derived text.

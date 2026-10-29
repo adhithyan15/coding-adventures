@@ -56,6 +56,7 @@ from spice_netlist_parser import (
     build_analysis_plan,
     parse_netlist,
     run_netlist,
+    run_netlist_json,
 )
 from spice_netlist_parser.parser import parse_value
 
@@ -180,6 +181,27 @@ def test_runs_two_axis_dc_sweep_with_second_source_as_outer_axis() -> None:
     ]
 
 
+def test_runs_shared_ltspice_step_v1_corpus() -> None:
+    corpus_path = Path(__file__).resolve().parents[4] / "grammars/spice/ltspice-step-v1-corpus.json"
+    corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+
+    assert corpus["suite"] == "ltspice-step-v1"
+    for case in corpus["cases"]:
+        expected = case["expected"]
+        parsed = parse_netlist(case["deck"])
+        assert parsed.step_cards[0].parameter == expected["parameter"]
+        assert parsed.step_cards[0].values == tuple(expected["values"])
+        results = parsed.run_analysis_plan()
+        assert [result.step_values for result in results] == [
+            {expected["parameter"]: value} for value in expected["values"]
+        ]
+        assert [result.result.node_voltages["out"] for result in results] == pytest.approx(expected["out"])
+        cli_payload = json.loads(run_netlist_json(case["deck"]))
+        assert [analysis["stepValues"] for analysis in cli_payload["analyses"]] == [
+            {expected["parameter"]: value} for value in expected["values"]
+        ]
+
+
 def test_runs_shared_berkeley_v1_core_corpus() -> None:
     corpus_path = (
         Path(__file__).resolve().parents[4]
@@ -289,6 +311,34 @@ def test_runs_shared_berkeley_v1_syntax_corpus() -> None:
             assert parsed.title == expected["title"], case["id"]
         assert len(parsed.circuit.elements) == expected["elementCount"], case["id"]
         assert [step.kind for step in parsed.analysis_plan()] == expected["analysisKinds"], case["id"]
+
+
+def test_tool_compatibility_register_has_an_explicit_cross_tool_backlog() -> None:
+    register_path = (
+        Path(__file__).resolve().parents[4]
+        / "grammars/spice/tool-compatibility-v1.json"
+    )
+    register = json.loads(register_path.read_text(encoding="utf-8"))
+
+    assert register["schemaVersion"] == 1
+    assert register["suite"] == "spice-tool-compatibility"
+    assert register["compatibilityClaim"]["dropInEligible"] is False
+    profiles = {profile["id"] for profile in register["profiles"]}
+    assert profiles == {"berkeley-spice3f3", "ngspice-47", "ltspice-24"}
+    assert {profile["inventoryStatus"] for profile in register["profiles"]} >= {
+        "complete-core",
+        "in-progress",
+    }
+
+    features = register["features"]
+    assert len(features) >= 45
+    assert {feature["family"] for feature in features} == set(register["families"])
+    assert len({feature["id"] for feature in features}) == len(features)
+    for feature in features:
+        assert feature["profiles"]
+        assert set(feature["profiles"]) <= profiles
+        assert feature["state"] in {"supported", "partial", "planned", "out-of-scope"}
+        assert feature["evidence"]
 
 
 def test_parse_reactive_elements_and_analysis_cards() -> None:

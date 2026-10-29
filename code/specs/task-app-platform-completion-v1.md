@@ -1,5 +1,16 @@
 # TaskApp platform completion v1
 
+## Selected release checkpoint: v0.5.14 (#18550)
+
+The due-date editor width floor merged in #18396. Prepare a compatible patch
+dated 2026-10-28, preserving every authoritative Unreleased Notes change and
+its substantive Markdown. Reprioritize the completion queue under #13543.
+Require release-helper tests, changelog validation, and independent security
+review before pushing. After preparation merges, dispatch publication once
+from main, require every existing payload check, and audit immutable source,
+tag, manifest, assets, checksums, and notes before closing #18550. Preparation
+is not publication; artifact coverage and unsigned limitations are unchanged.
+
 ## Selected fidelity slice: Qt input width floor (#18394)
 
 Preserve the due-date HostInput's existing scalar width 150 plus exact

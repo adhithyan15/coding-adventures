@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
+
+- **`sanitize_ident` escapes the names the emitter binds around user code**:
+  `__sir…` in any case (`__Sir`, loop temporaries), `_a` (a closure
+  wrapper's argument array), `__l`, `__kw`, `__exc`, and the JavaScript and
+  Node globals (`Map`, `Object`, `Math`, `console`, `process`, …;
+  `JS_GLOBALS`).  The closure wrapper evaluates its captured values inside
+  `(..._a) => …`, so `(define (f _a) (lambda (x) (* x _a)))` read the
+  argument array; and a user `function Map` is hoisted over the whole file,
+  replacing `Map` for the inlined runtime before it ran.  The unit test
+  `every_global_the_runtime_names_is_reserved` asks `node` for its real
+  global object and fails if the runtime names a global the list misses.
+  (`__sir_block__`, the frontends' shared block-parameter name, keeps its
+  spelling.)
+- **A strict closure's arity error is `ArgumentError`**, raised through
+  `__Sir.raiseError`, where it was a native `TypeError` that
+  `rescueMatches` classes as a plain `StandardError` — so a Ruby-frontend
+  `rescue ArgumentError` missed it on this backend.
+- `tests/twig_generated_names.rs` runs the cross-backend table.
+
 ## Unreleased — Strict closures (issue #18461)
 
 The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) used to

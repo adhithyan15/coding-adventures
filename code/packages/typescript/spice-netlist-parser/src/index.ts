@@ -241,6 +241,7 @@ export interface AnalysisExecutionResult {
   readonly analysis: RunnableAnalysis;
   readonly result: AnalysisResult;
   readonly temperatureKelvin?: number;
+  readonly stepValues?: ReadonlyMap<string, number>;
 }
 
 export interface SelectedOutputRow {
@@ -258,6 +259,7 @@ export interface SelectedAnalysisOutput {
   readonly probes: readonly OutputProbe[];
   readonly rows: readonly SelectedOutputRow[];
   readonly temperatureKelvin?: number;
+  readonly stepValues?: ReadonlyMap<string, number>;
 }
 
 export interface MeasureResult {
@@ -268,6 +270,7 @@ export interface MeasureResult {
   readonly probe: OutputProbe;
   readonly value: number;
   readonly temperatureKelvin?: number;
+  readonly stepValues?: ReadonlyMap<string, number>;
 }
 
 export interface ModelCard {
@@ -276,12 +279,20 @@ export interface ModelCard {
   readonly params: ReadonlyMap<string, number>;
 }
 
+export interface StepCard {
+  readonly parameter: string;
+  readonly values: readonly number[];
+}
+
 export class ParsedNetlist {
   constructor(
     readonly circuit = new Circuit(),
     readonly analyses: Analysis[] = [],
     readonly models: ReadonlyMap<string, ModelCard> = new Map(),
     readonly title?: string,
+    readonly sourceText = "",
+    readonly parameters: ReadonlyMap<string, number> = new Map(),
+    readonly stepCards: readonly StepCard[] = [],
   ) {}
 
   opCards(): OpAnalysis[] {
@@ -565,13 +576,32 @@ const SUFFIXES = new Map<string, number>([
 ]);
 
 export function parseNetlist(text: string): ParsedNetlist {
+  return parseNetlistWithParameters(text, new Map(), true);
+}
+
+function parseNetlistWithParameters(
+  text: string,
+  parameterOverrides: ReadonlyMap<string, number>,
+  captureSteps: boolean,
+): ParsedNetlist {
+  const { parameters, stepCards } = parameterControls(text);
+  if (stepCards.length > 1) {
+    throw new NetlistParseError("LTspice v1 supports one .step param card per deck");
+  }
+  if (stepCards[0] !== undefined && !parameters.has(stepCards[0].parameter)) {
+    parameters.set(stepCards[0].parameter, stepCards[0].values[0]!);
+  }
+  for (const [name, value] of parameterOverrides) {
+    parameters.set(name.toLowerCase(), value);
+  }
+  const materializedText = materializeParameterText(text, parameters);
   const circuit = new Circuit();
   const analyses: Analysis[] = [];
   const models = new Map<string, ModelCard>();
   const statements: Statement[] = [];
   const subckts = new Map<string, SubcktDefinition>();
   let currentSubckt: SubcktDefinition | undefined;
-  const { title, cards } = berkeleyLogicalCards(withoutControlBlocks(text));
+  const { title, cards } = berkeleyLogicalCards(withoutControlBlocks(materializedText));
 
   let fields: string[];
   for (const card of cards) {
@@ -659,7 +689,111 @@ export function parseNetlist(text: string): ParsedNetlist {
   validateMutualInductors(circuit);
   validateTransmissionLines(circuit);
 
-  return new ParsedNetlist(circuit, analyses, models, title);
+  return new ParsedNetlist(circuit, analyses, models, title, text, parameters, captureSteps ? stepCards : []);
+}
+
+function parameterControls(text: string): { parameters: Map<string, number>; stepCards: StepCard[] } {
+  const parameters = new Map<string, number>();
+  const stepCards: StepCard[] = [];
+  const { cards } = berkeleyLogicalCards(withoutControlBlocks(text));
+  for (const card of cards) {
+    const fields = splitFields(card.text);
+    if (fields.length === 0) {
+      continue;
+    }
+    try {
+      if (fields[0]!.toLowerCase() === ".param") {
+        parseParameterCard(fields, parameters);
+      } else if (fields[0]!.toLowerCase() === ".step") {
+        stepCards.push(parseStepCard(fields));
+      }
+    } catch (error) {
+      throw lineError(card.lineNumber, error);
+    }
+  }
+  return { parameters, stepCards };
+}
+
+function parseParameterCard(fields: readonly string[], parameters: Map<string, number>): void {
+  requireMinFields(fields, 2, ".param");
+  for (let index = 1; index < fields.length;) {
+    let name: string;
+    let value: string;
+    const assignment = fields[index]!.split("=", 2);
+    if (assignment.length === 2) {
+      [name, value] = assignment as [string, string];
+      index += 1;
+    } else {
+      if (index + 1 >= fields.length) {
+        throw new NetlistParseError(".param expects NAME VALUE or NAME=VALUE");
+      }
+      name = fields[index]!;
+      value = fields[index + 1]!;
+      index += 2;
+    }
+    const normalized = parameterName(name);
+    if (parameters.has(normalized)) {
+      throw new NetlistParseError(`duplicate .param definition ${JSON.stringify(name)}`);
+    }
+    parameters.set(normalized, parseValue(value));
+  }
+}
+
+function parseStepCard(fields: readonly string[]): StepCard {
+  requireMinFields(fields, 4, ".step");
+  if (fields[1]!.toLowerCase() !== "param") {
+    throw new NetlistParseError("LTspice v1 supports only .step param NAME ...");
+  }
+  const parameter = parameterName(fields[2]!);
+  if (fields[3]!.toLowerCase() === "list") {
+    if (fields.length < 5) {
+      throw new NetlistParseError(".step param NAME list requires at least one value");
+    }
+    return { parameter, values: fields.slice(4).map(parseValue) };
+  }
+  requireFields(fields, 6, ".step param NAME START STOP INCREMENT");
+  const start = parseValue(fields[3]!);
+  const stop = parseValue(fields[4]!);
+  const increment = parseValue(fields[5]!);
+  if (increment === 0) {
+    throw new NetlistParseError(".step param increment must be non-zero");
+  }
+  if ((stop - start) * increment < 0) {
+    throw new NetlistParseError(".step param increment does not reach the stop value");
+  }
+  const values: number[] = [];
+  const epsilon = Math.abs(increment) * 1e-12;
+  for (let value = start; increment > 0 ? value <= stop + epsilon : value >= stop - epsilon; value += increment) {
+    values.push(value);
+  }
+  return { parameter, values };
+}
+
+function parameterName(name: string): string {
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+    throw new NetlistParseError(`invalid parameter name ${JSON.stringify(name)}`);
+  }
+  return name.toLowerCase();
+}
+
+function materializeParameterText(text: string, parameters: ReadonlyMap<string, number>): string {
+  const lines = text.match(/[^\n]*\n|[^\n]+$/g) ?? [];
+  return lines
+    .map((line) => {
+      const source = line.split(";", 1)[0]!.trim();
+      const head = source.split(/\s+/, 1)[0]?.toLowerCase();
+      if (head === ".param" || head === ".step") {
+        return line.endsWith("\n") ? "\n" : "";
+      }
+      return line.replace(/\{([A-Za-z_][A-Za-z0-9_]*)\}/g, (_match, name: string) => {
+      const value = parameters.get(name.toLowerCase());
+      if (value === undefined) {
+        throw new NetlistParseError(`unknown parameter ${JSON.stringify(name)}`);
+      }
+      return value.toPrecision(15);
+      });
+    })
+    .join("");
 }
 
 function withoutControlBlocks(text: string): string {
@@ -693,6 +827,14 @@ export function runAnalysisPlan(
   parsed: ParsedNetlist,
   plan: readonly AnalysisPlanStep[] = buildAnalysisPlan(parsed),
 ): AnalysisExecutionResult[] {
+  if (parsed.stepCards[0] !== undefined) {
+    const stepCard = parsed.stepCards[0];
+    return stepCard.values.flatMap((value) => {
+      const stepValues = new Map([[stepCard.parameter, value]]);
+      const materialized = parseNetlistWithParameters(parsed.sourceText, stepValues, false);
+      return runAnalysisPlan(materialized).map((result) => ({ ...result, stepValues }));
+    });
+  }
   return parsed.analysisTemperaturesKelvin().flatMap((temperatureKelvin) => {
     const circuit = temperatureKelvin === undefined
       ? parsed.circuit
@@ -721,26 +863,33 @@ export function runNetlistJson(text: string): string {
   const plan = buildAnalysisPlan(parsed);
   const rawfiles: Record<string, unknown>[] = [];
   const wrdata: Record<string, unknown>[] = [];
-  const analyses = parsed.analysisTemperaturesKelvin().flatMap((temperatureKelvin) => {
+  const stepRuns = parsed.stepCards[0] === undefined
+    ? [{ stepValues: undefined, materialized: parsed }]
+    : parsed.stepCards[0].values.map((value) => {
+      const stepValues = new Map([[parsed.stepCards[0]!.parameter, value]]);
+      return { stepValues, materialized: parseNetlistWithParameters(parsed.sourceText, stepValues, false) };
+    });
+  const analyses = stepRuns.flatMap(({ stepValues, materialized }) => materialized.analysisTemperaturesKelvin().flatMap((temperatureKelvin) => {
     const circuit = temperatureKelvin === undefined
-      ? parsed.circuit
-      : circuitAtTemperature(parsed.circuit, temperatureKelvin);
-    const execution = runDeck(circuit, text);
+      ? materialized.circuit
+      : circuitAtTemperature(materialized.circuit, temperatureKelvin);
+    const execution = runDeck(circuit, materializeParameterText(materialized.sourceText, materialized.parameters));
     if (execution.executions.length !== plan.length) {
       throw new NetlistParseError("deck execution plan did not match the parser analysis plan");
     }
     return execution.executions.map((item, index) => {
       const step = plan[index]!;
-      rawfiles.push(...cliRawfileArtifacts(step, item, temperatureKelvin));
-      wrdata.push(...cliWrdataArtifacts(step, item, temperatureKelvin));
+      rawfiles.push(...cliRawfileArtifacts(step, item, temperatureKelvin, stepValues));
+      wrdata.push(...cliWrdataArtifacts(step, item, temperatureKelvin, stepValues));
       return {
-      index: step.index,
-      kind: step.kind,
-      temperatureKelvin: temperatureKelvin ?? null,
-      records: cliTableRecords(item.plan.analysis, item.table),
+        index: step.index,
+        kind: step.kind,
+        temperatureKelvin: temperatureKelvin ?? null,
+        ...(stepValues === undefined ? {} : { stepValues: Object.fromEntries(stepValues) }),
+        records: cliTableRecords(item.plan.analysis, item.table),
       };
     });
-  });
+  }));
   return `${JSON.stringify(canonicalJson({
     schemaVersion: CLI_RESULT_SCHEMA_VERSION,
     title: parsed.title ?? null,
@@ -775,6 +924,7 @@ function cliOutputArtifacts(outputs: readonly SelectedAnalysisOutput[]): readonl
     analysisIndex: output.index,
     analysis: output.kind,
     temperatureKelvin: output.temperatureKelvin ?? null,
+    ...(output.stepValues === undefined ? {} : { stepValues: Object.fromEntries(output.stepValues) }),
     probes: output.probes.map(cliProbeText),
     records: output.rows.map((row) => ({
       index: row.index,
@@ -798,6 +948,7 @@ function cliMeasureArtifacts(measures: readonly MeasureResult[]): readonly Recor
     probe: cliProbeText(measure.probe),
     value: measure.value,
     temperatureKelvin: measure.temperatureKelvin ?? null,
+    ...(measure.stepValues === undefined ? {} : { stepValues: Object.fromEntries(measure.stepValues) }),
   }));
 }
 
@@ -805,11 +956,13 @@ function cliRawfileArtifacts(
   step: AnalysisPlanStep,
   execution: ReturnType<typeof runDeck>["executions"][number],
   temperatureKelvin: number | undefined,
+  stepValues: ReadonlyMap<string, number> | undefined,
 ): Record<string, unknown>[] {
   return execution.rawfileArtifacts.map((artifact) => ({
     analysisIndex: step.index,
     analysis: step.kind,
     temperatureKelvin: temperatureKelvin ?? null,
+    ...(stepValues === undefined ? {} : { stepValues: Object.fromEntries(stepValues) }),
     target: artifact.target,
     marker: artifact.marker,
     probes: artifact.probes,
@@ -824,11 +977,13 @@ function cliWrdataArtifacts(
   step: AnalysisPlanStep,
   execution: ReturnType<typeof runDeck>["executions"][number],
   temperatureKelvin: number | undefined,
+  stepValues: ReadonlyMap<string, number> | undefined,
 ): Record<string, unknown>[] {
   return execution.wrdataArtifacts.map((artifact) => ({
     analysisIndex: step.index,
     analysis: step.kind,
     temperatureKelvin: temperatureKelvin ?? null,
+    ...(stepValues === undefined ? {} : { stepValues: Object.fromEntries(stepValues) }),
     target: artifact.target,
     marker: artifact.marker,
     probes: artifact.probes,
@@ -884,6 +1039,7 @@ export function selectOutputs(
       probes,
       rows: selectedOutputRows(result, probes),
       ...(result.temperatureKelvin === undefined ? {} : { temperatureKelvin: result.temperatureKelvin }),
+      ...(result.stepValues === undefined ? {} : { stepValues: result.stepValues }),
     });
   }
   return selected;
@@ -894,12 +1050,16 @@ export function measureResults(
   results: readonly AnalysisExecutionResult[] = runAnalysisPlan(parsed),
 ): MeasureResult[] {
   return parsed.measureCards().flatMap((card) => {
-    const temperatures = new Set<number | undefined>();
+    const executionsSeen = new Set<string>();
     const matching = results.filter((result) => {
-      if (!analysisNameMatches(card.analysis, result.kind) || temperatures.has(result.temperatureKelvin)) {
+      const executionKey = JSON.stringify([
+        result.temperatureKelvin,
+        [...(result.stepValues ?? new Map()).entries()].sort(([left], [right]) => left.localeCompare(right)),
+      ]);
+      if (!analysisNameMatches(card.analysis, result.kind) || executionsSeen.has(executionKey)) {
         return false;
       }
-      temperatures.add(result.temperatureKelvin);
+      executionsSeen.add(executionKey);
       return true;
     });
     if (matching.length === 0) {
@@ -913,6 +1073,7 @@ export function measureResults(
       probe: card.probe,
       value: evaluateMeasure(card, execution),
       ...(execution.temperatureKelvin === undefined ? {} : { temperatureKelvin: execution.temperatureKelvin }),
+      ...(execution.stepValues === undefined ? {} : { stepValues: execution.stepValues }),
     }));
   });
 }

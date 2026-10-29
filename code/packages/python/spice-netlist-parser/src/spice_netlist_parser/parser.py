@@ -286,6 +286,7 @@ class AnalysisExecutionResult:
     analysis: RunnableAnalysis
     result: AnalysisResult
     temperature_kelvin: float | None = None
+    step_values: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)
@@ -309,6 +310,7 @@ class SelectedAnalysisOutput:
     probes: tuple[OutputProbe, ...]
     rows: tuple[SelectedOutputRow, ...]
     temperature_kelvin: float | None = None
+    step_values: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)
@@ -322,6 +324,7 @@ class MeasureResult:
     probe: OutputProbe
     value: float
     temperature_kelvin: float | None = None
+    step_values: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)
@@ -331,6 +334,14 @@ class ModelCard:
     name: str
     kind: str
     params: dict[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
+class StepCard:
+    """A supported LTspice ``.step param`` execution card."""
+
+    parameter: str
+    values: tuple[float, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -362,6 +373,9 @@ class ParsedNetlist:
     analyses: list[Analysis] = field(default_factory=list)
     models: dict[str, ModelCard] = field(default_factory=dict)
     title: str | None = None
+    source_text: str = ""
+    parameters: dict[str, float] = field(default_factory=dict)
+    step_cards: list[StepCard] = field(default_factory=list)
 
     def op_cards(self) -> list[OpAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, OpAnalysis)]
@@ -625,11 +639,32 @@ def _option_int(
 def parse_netlist(text: str) -> ParsedNetlist:
     """Parse SPICE3 netlist text into a :class:`ParsedNetlist`."""
 
-    parsed = ParsedNetlist()
+    return _parse_netlist(text)
+
+
+def _parse_netlist(
+    text: str,
+    *,
+    parameter_overrides: dict[str, float] | None = None,
+    capture_steps: bool = True,
+) -> ParsedNetlist:
+    parameters, step_cards = _parameter_controls(text)
+    if step_cards and len(step_cards) > 1:
+        raise NetlistParseError("LTspice v1 supports one .step param card per deck")
+    if step_cards:
+        parameters.setdefault(step_cards[0].parameter.lower(), step_cards[0].values[0])
+    if parameter_overrides:
+        parameters.update({name.lower(): value for name, value in parameter_overrides.items()})
+    materialized_text = _materialize_parameter_text(text, parameters)
+    parsed = ParsedNetlist(
+        source_text=text,
+        parameters=dict(parameters),
+        step_cards=step_cards if capture_steps else [],
+    )
     statements: list[_Statement] = []
     subckts: dict[str, _SubcktDefinition] = {}
     current_subckt: _SubcktDefinition | None = None
-    parsed.title, logical_cards = _berkeley_logical_cards(_without_control_blocks(text))
+    parsed.title, logical_cards = _berkeley_logical_cards(_without_control_blocks(materialized_text))
     for line_number, logical_card in logical_cards:
         fields = _split_fields(logical_card)
         if not fields:
@@ -697,6 +732,106 @@ def parse_netlist(text: str) -> ParsedNetlist:
     return parsed
 
 
+def _parameter_controls(text: str) -> tuple[dict[str, float], list[StepCard]]:
+    """Collect the narrow LTspice parameter controls before card lowering."""
+
+    parameters: dict[str, float] = {}
+    step_cards: list[StepCard] = []
+    _, cards = _berkeley_logical_cards(_without_control_blocks(text))
+    for line_number, card in cards:
+        fields = _split_fields(card)
+        if not fields:
+            continue
+        directive = fields[0].lower()
+        try:
+            if directive == ".param":
+                _parse_parameter_card(fields, parameters)
+            elif directive == ".step":
+                step_cards.append(_parse_step_card(fields))
+        except NetlistParseError as exc:
+            raise NetlistParseError(f"line {line_number}: {exc}") from exc
+    return parameters, step_cards
+
+
+def _parse_parameter_card(fields: list[str], parameters: dict[str, float]) -> None:
+    _require_min_fields(fields, 2, ".param")
+    index = 1
+    while index < len(fields):
+        token = fields[index]
+        if "=" in token:
+            name, value = token.split("=", 1)
+            index += 1
+        else:
+            if index + 1 >= len(fields):
+                raise NetlistParseError(".param expects NAME VALUE or NAME=VALUE")
+            name, value = token, fields[index + 1]
+            index += 2
+        normalized = _parameter_name(name)
+        if normalized in parameters:
+            raise NetlistParseError(f"duplicate .param definition {name!r}")
+        parameters[normalized] = parse_value(value)
+
+
+def _parse_step_card(fields: list[str]) -> StepCard:
+    _require_min_fields(fields, 4, ".step")
+    if fields[1].lower() != "param":
+        raise NetlistParseError("LTspice v1 supports only .step param NAME ...")
+    parameter = _parameter_name(fields[2])
+    if fields[3].lower() == "list":
+        if len(fields) < 5:
+            raise NetlistParseError(".step param NAME list requires at least one value")
+        values = tuple(parse_value(value) for value in fields[4:])
+    else:
+        _require_fields(fields, 6, ".step param NAME START STOP INCREMENT")
+        start, stop, increment = (parse_value(value) for value in fields[3:])
+        if increment == 0.0:
+            raise NetlistParseError(".step param increment must be non-zero")
+        if (stop - start) * increment < 0.0:
+            raise NetlistParseError(".step param increment does not reach the stop value")
+        values = tuple(_inclusive_range(start, stop, increment))
+    return StepCard(parameter=parameter, values=values)
+
+
+def _inclusive_range(start: float, stop: float, increment: float) -> list[float]:
+    values: list[float] = []
+    value = start
+    epsilon = abs(increment) * 1e-12
+    while value <= stop + epsilon if increment > 0 else value >= stop - epsilon:
+        values.append(value)
+        value += increment
+    return values
+
+
+def _parameter_name(name: str) -> str:
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+        raise NetlistParseError(f"invalid parameter name {name!r}")
+    return name.lower()
+
+
+def _materialize_parameter_text(text: str, parameters: dict[str, float]) -> str:
+    """Remove control cards and replace supported ``{NAME}`` parameter references."""
+
+    materialized: list[str] = []
+    for line in text.splitlines(keepends=True):
+        stripped = _strip_inline_comment(line).strip()
+        head = stripped.split(maxsplit=1)[0].lower() if stripped else ""
+        if head in {".param", ".step"}:
+            materialized.append("\r\n" if line.endswith("\r\n") else "\n" if line.endswith("\n") else "")
+            continue
+        materialized.append(_replace_parameter_references(line, parameters))
+    return "".join(materialized)
+
+
+def _replace_parameter_references(card: str, parameters: dict[str, float]) -> str:
+    def replacement(match: re.Match[str]) -> str:
+        name = match.group(1).lower()
+        if name not in parameters:
+            raise NetlistParseError(f"unknown parameter {match.group(1)!r}")
+        return format(parameters[name], ".15g")
+
+    return re.sub(r"\{([A-Za-z_][A-Za-z0-9_]*)\}", replacement, card)
+
+
 def _without_control_blocks(text: str) -> str:
     """Leave selected engine-owned control blocks out of parser card lowering."""
 
@@ -733,6 +868,28 @@ def run_analysis_plan(
     plan: list[AnalysisPlanStep] | None = None,
 ) -> list[AnalysisExecutionResult]:
     """Execute the runnable plan for a parsed netlist."""
+
+    if parsed.step_cards:
+        step_card = parsed.step_cards[0]
+        results: list[AnalysisExecutionResult] = []
+        for value in step_card.values:
+            materialized = _parse_netlist(
+                parsed.source_text,
+                parameter_overrides={step_card.parameter: value},
+                capture_steps=False,
+            )
+            for result in run_analysis_plan(materialized, plan):
+                results.append(
+                    AnalysisExecutionResult(
+                        index=result.index,
+                        kind=result.kind,
+                        analysis=result.analysis,
+                        result=result.result,
+                        temperature_kelvin=result.temperature_kelvin,
+                        step_values={step_card.parameter: value},
+                    )
+                )
+        return results
 
     executable_plan = build_analysis_plan(parsed) if plan is None else plan
     results: list[AnalysisExecutionResult] = []
@@ -775,24 +932,37 @@ def run_netlist_json(text: str) -> str:
     analyses: list[dict[str, object]] = []
     rawfiles: list[dict[str, object]] = []
     wrdata: list[dict[str, object]] = []
-    for temperature_kelvin in parsed.analysis_temperatures_kelvin():
-        circuit = (
-            parsed.circuit
-            if temperature_kelvin is None
-            else circuit_at_temperature(parsed.circuit, temperature_kelvin)
+    step_runs = [(None, parsed)] if not parsed.step_cards else [
+        (
+            {parsed.step_cards[0].parameter: value},
+            _parse_netlist(
+                parsed.source_text,
+                parameter_overrides={parsed.step_cards[0].parameter: value},
+                capture_steps=False,
+            ),
         )
-        execution = run_deck(circuit, text)
-        for step, item in zip(plan, execution.executions, strict=True):
-            analyses.append(
-                {
+        for value in parsed.step_cards[0].values
+    ]
+    for step_values, materialized in step_runs:
+        for temperature_kelvin in materialized.analysis_temperatures_kelvin():
+            circuit = (
+                materialized.circuit
+                if temperature_kelvin is None
+                else circuit_at_temperature(materialized.circuit, temperature_kelvin)
+            )
+            execution = run_deck(circuit, _materialize_parameter_text(materialized.source_text, materialized.parameters))
+            for step, item in zip(plan, execution.executions, strict=True):
+                analysis = {
                     "index": step.index,
                     "kind": step.kind,
                     "temperatureKelvin": temperature_kelvin,
                     "records": _cli_table_records(item.plan.analysis, item.table),
                 }
-            )
-            rawfiles.extend(_cli_rawfile_artifacts(step, item, temperature_kelvin))
-            wrdata.extend(_cli_wrdata_artifacts(step, item, temperature_kelvin))
+                if step_values is not None:
+                    analysis["stepValues"] = step_values
+                analyses.append(analysis)
+                rawfiles.extend(_cli_rawfile_artifacts(step, item, temperature_kelvin, step_values))
+                wrdata.extend(_cli_wrdata_artifacts(step, item, temperature_kelvin, step_values))
     payload = {
         "schemaVersion": CLI_RESULT_SCHEMA_VERSION,
         "title": parsed.title,
@@ -855,7 +1025,7 @@ def _cli_output_artifacts(
                 }
                 for row in output.rows
             ],
-        }
+        } | ({"stepValues": output.step_values} if output.step_values else {})
         for output in select_outputs(parsed, results)
     ]
 
@@ -864,6 +1034,7 @@ def _cli_rawfile_artifacts(
     step: AnalysisPlanStep,
     execution: DeckAnalysisExecution,
     temperature_kelvin: float | None,
+    step_values: dict[str, float] | None = None,
 ) -> list[dict[str, object]]:
     return [
         {
@@ -877,7 +1048,7 @@ def _cli_rawfile_artifacts(
             "unmatchedProbes": artifact.unmatched_probes,
             "options": artifact.options,
             "content": artifact.rawfile,
-        }
+        } | ({"stepValues": step_values} if step_values is not None else {})
         for artifact in execution.rawfile_artifacts
     ]
 
@@ -886,6 +1057,7 @@ def _cli_wrdata_artifacts(
     step: AnalysisPlanStep,
     execution: DeckAnalysisExecution,
     temperature_kelvin: float | None,
+    step_values: dict[str, float] | None = None,
 ) -> list[dict[str, object]]:
     return [
         {
@@ -899,7 +1071,7 @@ def _cli_wrdata_artifacts(
             "unmatchedProbes": artifact.unmatched_probes,
             "options": artifact.options,
             "content": artifact.datafile,
-        }
+        } | ({"stepValues": step_values} if step_values is not None else {})
         for artifact in execution.wrdata_artifacts
     ]
 
@@ -917,7 +1089,7 @@ def _cli_measure_artifacts(
             "probe": _cli_probe_text(measure.probe),
             "value": measure.value,
             "temperatureKelvin": measure.temperature_kelvin,
-        }
+        } | ({"stepValues": measure.step_values} if measure.step_values else {})
         for measure in measure_results(parsed, results)
     ]
 
@@ -957,6 +1129,7 @@ def select_outputs(
                 probes=tuple(probes),
                 rows=tuple(_selected_output_rows(result, probes)),
                 temperature_kelvin=result.temperature_kelvin,
+                step_values=result.step_values,
             )
         )
     return selected
@@ -971,14 +1144,15 @@ def measure_results(
     execution_results = run_analysis_plan(parsed) if results is None else results
     measured: list[MeasureResult] = []
     for card in parsed.measure_cards():
-        temperatures: set[float | None] = set()
+        executions_seen: set[tuple[float | None, tuple[tuple[str, float], ...]]] = set()
         matching_results = []
         for result in execution_results:
             if not _analysis_name_matches(card.analysis, result.kind):
                 continue
-            if result.temperature_kelvin in temperatures:
+            execution_key = (result.temperature_kelvin, tuple(sorted(result.step_values.items())))
+            if execution_key in executions_seen:
                 continue
-            temperatures.add(result.temperature_kelvin)
+            executions_seen.add(execution_key)
             matching_results.append(result)
         if not matching_results:
             _find_measure_execution_result(card, execution_results)
@@ -992,6 +1166,7 @@ def measure_results(
                     probe=card.probe,
                     value=_evaluate_measure(card, execution_result),
                     temperature_kelvin=execution_result.temperature_kelvin,
+                    step_values=execution_result.step_values,
                 )
             )
     return measured

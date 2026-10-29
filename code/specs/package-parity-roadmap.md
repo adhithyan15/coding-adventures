@@ -19572,14 +19572,6 @@ auto-merge remains disabled until every check is terminal and acceptable and
 GitHub still reports the reviewed head mergeable.
 
 Independent focused review approves the durable PR-number receipt at
-`eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0` with no finding. The delta changes
-only lifecycle state and roadmap text; PR #18548's identity, creation time,
-publication head/base, current remote head, mergeability, state graph, diff,
-and artifact hygiene all match live evidence. Mark the PR ready and require
-every fresh hosted check on the final exact head to finish acceptably before
-enabling guarded auto-merge.
-
-Independent focused review approves the durable PR-number receipt at
 `852ded240b140abe1c639933f63bc66872644317` with no finding. The delta changes
 only lifecycle state and roadmap text; PR #18544's identity, creation time,
 publication head/base, mergeability, state graph, diff, and artifact hygiene
@@ -19587,6 +19579,47 @@ all match live evidence. Mark the PR ready and require every fresh hosted check
 on the final exact head to finish acceptably before enabling guarded
 auto-merge.
 
+### Parallel Swift RESP selection and local implementation
+
+While TypeScript graph/diff PR #18548 runs hosted qualification, a fresh
+bounded-owner pass ranks Ruby dependency hashing first at three direct and five
+total unfinished descendants, tied with Lua graph/diff. Both higher-ranked
+owners overlap shared routing or registry paths changed by the active PR.
+Dependency-free `swift-resp-protocol-lane-parity` ranks next at two direct and
+four total descendants and is package-path-disjoint, so branch
+`codex/swift-resp-protocol-lane-parity` advances locally from exact main
+`92cf52368f835648df9d54be2cc41be47c82417f` without publication or shared
+CI-routing edits.
+
+Implementation head `523c36c9c0a4f6803092a29c0e886fb862ef640c`
+adds all seven distinct RESP2 values, binary-safe bulk strings, distinct null
+bulk and null array values, strict canonical grammar, iterative bounded
+encoding and decoding, failure-atomic fragmented input, stable errors, BUILD
+fronts, package documentation, and an empty authority profile. UTF-8 line
+preflight and numeric-header scanning enforce their limits before proportional
+allocation, including fragmented unterminated headers. Twelve tests,
+release build, strict Swift formatting, manifest and JSON checks, lessons,
+diff, and artifact hygiene pass. Independent LLVM measurement reports 96.84%
+production lines with all 37 functions executed. Exact-head review first
+rejected proportional UTF-8 line allocation and late numeric-header limits;
+the repaired bounded scans close both defects, and re-review issued SHIP with
+no findings. Merge `aec006f2c4a3f43e876a16f842709d00a6bd37f2`
+reconciles exact fetched main `6fe513ee903ff2ef56279783ccbd59a0b8100788`;
+current-main review then found that encode-side integer, bulk-length, null, and
+array-count headers ignored tightened `maximumHeaderBytes`. Repaired head
+`d0a724afffae3f0db919505a531e56f5877dc709` preflights every numeric header
+before output allocation and pins oversize failures plus one-byte successes.
+Re-review issued SHIP; all thirteen tests, release build, and strict formatting
+pass. Publication remains deferred while Ruby dependency hashing PR #18555
+occupies the active-PR slot.
+
+The implementation audit enriches the existing
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` backlog owner:
+DT23 lacks a shared language-neutral fixture corpus, and its worked array
+example reports 14 consumed bytes for a 12-byte frame. The neutral owner must
+correct that receipt and freeze valid, malformed, incomplete, fragmentation,
+and error-precedence fixtures across established lanes without widening the
+bounded Swift package.
 ### PR #18544 merge and TypeScript graph/diff selection
 
 All 38 final-head checks for Elixir graph/diff PR #18544 completed acceptably
@@ -19641,3 +19674,131 @@ receipt is committed, pushed, and independently reviewed. Then mark the PR
 ready and require a completely fresh exact-head hosted matrix; guarded squash
 auto-merge remains disabled until every check is terminal and acceptable and
 GitHub still reports the reviewed head mergeable.
+
+Independent focused review approves the durable PR-number receipt at
+`eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18548's identity, creation time,
+publication head/base, current remote head, mergeability, state graph, diff,
+and artifact hygiene all match live evidence. Mark the PR ready and require
+every fresh hosted check on the final exact head to finish acceptably before
+enabling guarded auto-merge.
+
+### PR #18548 merge and parallel Swift/Ruby progress
+
+All 42 final-head checks for TypeScript graph/diff PR #18548 completed
+terminal acceptable at `dd18418d69cbb88fbc1ad1149e4b1fc593bf9a81`:
+31 successes, 10 expected path-gated skips, and one neutral CodeQL aggregate.
+GitHub reported the reviewed head clean and mergeable. Guarded squash
+auto-merge landed `6fe513ee903ff2ef56279783ccbd59a0b8100788` at
+`2026-10-29T04:03:30Z`. The merge is present on fetched main, and the clean
+completed worktree and local branch were removed.
+
+While #18548 ran hosted qualification, dependency-free Swift RESP advanced
+locally on branch `codex/swift-resp-protocol-lane-parity`. Reviewed exact head
+`523c36c9c0a4f6803092a29c0e886fb862ef640c` implements all seven RESP2 value
+forms, binary-safe bulk data, distinct null bulk and null array values,
+allocation-free bounded line preflight, bounded numeric-header scanning,
+iterative failure-atomic fragmented decode, stable errors, and an empty
+authority profile. Twelve tests and release build pass; independent LLVM
+measurement reports 96.84% production lines with all 37 functions executed.
+Exact-head re-review issued SHIP with no findings.
+
+That audit enriches the existing
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` owner: DT23 has
+no shared language-neutral fixture corpus, and its worked array example claims
+14 consumed bytes for a 12-byte frame. The neutral owner now records the
+receipt correction plus valid, malformed, incomplete, fragmentation, and
+error-precedence fixture work rather than widening the bounded Swift package.
+
+The post-merge bounded-owner pass selects
+`build-tool-ruby-portable-dependency-hashing-conformance` on branch
+`codex/build-tool-ruby-dependency-hashing-parity`. Ruby and Lua each have three
+direct and five total unfinished descendants, but Ruby wins the tie-break: its
+existing hasher needs a smaller framing correction, and completion immediately
+makes the Ruby reverse-digest owner dependency-ready. Both Ruby prerequisites
+are merged. Reviewed candidate `3c66c9ec17f53ac74d1f78d06a078dce82e8e051`
+frames sorted canonical identities with decoded raw SHA-256 dependency digests,
+computes complete digest maps before dependency hashing, applies explicit
+identity and dependency-count bounds, fails closed on malformed digests, and
+dynamically consumes all three adversarial neutral cases. The exact BUILD runs
+395 tests and 1,091 assertions with zero failures at 92.89% line and 79.03%
+branch coverage. Repair preserves case after the lowercase language segment,
+uses lazy predecessor enumeration to abort at the first excess identity even
+for million-wide fan-in, and proves the neutral prior-cache status,
+invalidation, and diagnostic expectations. The real
+178-package Swift dry plan, shared Go routing, registry, changelog, fail-fast
+BUILD front, StandardRB, and artifact hygiene pass. Independent review first
+rejected case-erasing identity validation, post-traversal bounds, and partial
+fixture semantics, then found eager wide fan-in after the first repair. Final
+head `3c66c9ec17f53ac74d1f78d06a078dce82e8e051` closes every issue with lazy
+predecessor iteration and a million-wide regression that stops exactly at the
+4,097th identity; exact-head re-review issued SHIP with no findings. The
+lifecycle commit remains the publication gate.
+
+#### Draft PR #18555 publication receipt
+
+Publish independently reviewed exact current-main head
+`541089eefe9e22c9a0691f31749b55e81cfe2fe4` as draft PR #18555 over exact
+base `6fe513ee903ff2ef56279783ccbd59a0b8100788`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
+
+Independent focused review approves the durable PR-number receipt at
+`741ab911cb01813b3eec2ca5dee37c2cbcb12a7a` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18555's identity, creation time,
+publication head/base, current remote head, mergeability, state graph,
+changelog rank and digest, diff, and artifact hygiene all match live evidence.
+Mark the PR ready and require every fresh hosted check on the final exact head
+to finish acceptably before enabling guarded auto-merge.
+
+### PR #18555 merge, indexing-ceiling discovery, and Swift publication selection
+
+Ruby dependency-hashing PR #18555 reached 42 terminal acceptable checks at
+final reviewed head `03fe2f56503918a3ca40256fde7f714dba9b8723`: 31
+successes, 10 expected path-gated skips, and one neutral CodeQL aggregate. An
+external squash merge landed `94e8baf5cd164714732535463625e2acee33027b` at
+`2026-10-29T07:25:20Z`. The merge is present on fetched main. GitHub removed
+the remote branch, and the clean completed worktree and local branch were
+removed safely.
+
+Parallel Lua and Rust graph/diff implementations completed independent local
+review. Lua exact head `7d6faa409b5b7a6295765b025da7f7b6f3f5c382`
+passes 144 tests with 99.29% focused line coverage. Rust exact head
+`dfacf49115d56c73cfb69d29ddb0c26be274af17` passes 245 tests and
+doc tests with graph/diff at 95.29% line, 95.17% region, and 100% function
+coverage. Split reviews forced bounded snapshots, content-memoized glob
+validation, lazy one-pattern compilation, allocation-free path indexes,
+changed-only boundary expansion, indexed exclusions, stable diagnostics, and
+maximum-shape CPU and memory regressions before issuing SHIP.
+
+Those reviews register
+`build-tool-cross-runtime-diff-selection-indexing-ceiling-hardening` before the
+next prioritization. The owner must freeze neutral adversarial cases for
+zero-path repeated-glob validation, package-by-path discovery,
+boundary-input-by-consumer expansion, and exclusion applicability; repair Go,
+Lua, and TypeScript; audit the remaining readers; and place explicit CPU and
+retained-memory ceilings ahead of aggregate graph/diff closure.
+
+After merging exact fetched main
+`8035689ac23a971a4e77215a3eb651c90f441da0` as
+`5729db118d09cf28e78f2ee700cc23db161d95f1`, the Swift RESP branch
+passes all 13 tests and release build again. Lua and Rust graph/diff retain
+greater raw leverage at four direct and six total unfinished descendants,
+but both still require shared Go routing that overlaps open PR #18495. The
+dependency-free, package-path-disjoint Swift RESP item is therefore the
+highest-leverage publication-safe candidate for the newly free parity slot.
+
+#### Draft PR #18566 publication receipt
+
+Publish independently reviewed exact current-main head
+`fb29f5e68f9a668a7090e33da0baf11b52a92085` as draft PR #18566 over exact
+base `8035689ac23a971a4e77215a3eb651c90f441da0` at
+`2026-10-29T07:46:04Z`. GitHub reports the draft mergeable. Keep it draft only
+while this durable PR-number receipt is committed, pushed, and independently
+reviewed. Then mark the PR ready and require a completely fresh hosted matrix
+on the resulting exact lifecycle head; guarded squash auto-merge remains
+disabled until every exact-head check is terminal and acceptable and GitHub
+still reports the PR mergeable.

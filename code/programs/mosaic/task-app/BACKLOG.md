@@ -69,10 +69,19 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18394 — Qt due-date editor width floor.**
-Preserve the existing 150-pixel non-shrink intent on the control itself, using
-the conservative static-width bridge and both-theme emitted-control tests.
-Feature composition and signing remain outside scope; flex diagnostics stay intact.
+**Next: #18550 — prepare, publish, and audit v0.5.14.**
+The P0 lifecycle gates are complete. Prioritize this compatible release under
+#13543 after #18394 merged in #18396. Include all authoritative Unreleased Notes
+changes, preserve substantive release notes, and require every existing payload
+validation. Preparation is not publication: dispatch only after merge and audit
+immutable provenance, assets, checksums, and notes before closing #18550.
+Artifact coverage is unchanged; signing remains blocked in #13977.
+
+**Completed fidelity slice: #18394 — Qt due-date editor width floor.**
+Merged in #18396 with all required checks successful on
+`84f9e0f4f69b7ce46d05855b9797fd7d92ab55d8`; TaskApp payload run 40645495547
+passed. Both themes retain the 150-pixel control floor through conservative
+static-width validation. Shared styles and flex diagnostics are unchanged.
 
 **Published and audited: #18334 — v0.5.13.**
 Run 40340262448 passed all six payloads and publication from
