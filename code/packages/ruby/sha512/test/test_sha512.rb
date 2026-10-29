@@ -10,6 +10,70 @@ require "coding_adventures_sha512"
 
 SHA512 = CodingAdventures::Sha512
 
+class TestPortableConformance < Minitest::Test
+  FIXTURE = File.expand_path("../../../../specs/fixtures/sha512-v1/cases.txt", __dir__)
+
+  def fixture_lines
+    raw = File.binread(FIXTURE)
+    assert_operator raw.bytesize, :>, 0
+    assert_operator raw.bytesize, :<=, 4096
+    lines = raw.lines(chomp: true).reject { |line| line.empty? || line.start_with?("#") }
+    assert_operator lines.length, :<=, 64
+    lines
+  end
+
+  def test_portable_digest_corpus
+    fixture_lines.grep(/^V\|/).each do |line|
+      _, id, input_hex, chunk_csv, expected = line.split("|", -1)
+      assert_operator input_hex.length, :<=, 8192
+      assert_equal 128, expected.length
+      data = [input_hex].pack("H*")
+      assert_operator data.bytesize, :<=, 4096
+      assert_equal expected, SHA512.sha512_hex(data), id
+      hasher = SHA512::Digest.new
+      offset = 0
+      chunks = chunk_csv.empty? ? [] : chunk_csv.split(",").map(&:to_i)
+      assert_operator chunks.length, :<=, 64
+      chunks.each do |size|
+        assert_operator size, :>, 0
+        assert_operator offset + size, :<=, data.bytesize
+        hasher.update(data.byteslice(offset, size))
+        offset += size
+      end
+      assert_equal data.bytesize, offset
+      assert_equal expected, hasher.hexdigest, id
+    end
+  end
+
+  def test_portable_length_corpus
+    fixture_lines.grep(/^L\|/).each do |line|
+      _, id, high_hex, low_hex, expected = line.split("|", -1)
+      byte_count = (high_hex.to_i(16) << 64) | low_hex.to_i(16)
+      if expected == "ERROR"
+        error = assert_raises(RangeError) { SHA512.encode_bit_length(byte_count) }
+        assert_match(/less than 2\^128 bits/, error.message)
+      else
+        assert_equal expected, SHA512.encode_bit_length(byte_count).unpack1("H*"), id
+      end
+    end
+  end
+
+  def test_update_consumes_input_without_aliasing
+    input = "abc".b
+    hasher = SHA512::Digest.new.update(input)
+    input.setbyte(0, "z".ord)
+    assert_equal SHA512.sha512("abc"), hasher.digest
+  end
+
+  def test_invalid_update_is_atomic
+    assert_raises(TypeError) { SHA512.sha512(123) }
+    hasher = SHA512::Digest.new.update("ab")
+    error = assert_raises(TypeError) { hasher.update(123) }
+    assert_match(/expected binary String/, error.message)
+    assert_equal SHA512.sha512("abc"), hasher.update("c").digest
+  end
+end
+
 class TestVersion < Minitest::Test
   def test_version_exists
     refute_nil SHA512::VERSION

@@ -7,6 +7,80 @@ import Foundation
 
 final class SHA512Tests: XCTestCase {
 
+    private func fixtureLines() throws -> [String] {
+        let url = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .appendingPathComponent("../../../../../specs/fixtures/sha512-v1/cases.txt")
+            .standardizedFileURL
+        let data = try Data(contentsOf: url)
+        XCTAssertGreaterThan(data.count, 0)
+        XCTAssertLessThanOrEqual(data.count, 4096)
+        let lines = String(decoding: data, as: UTF8.self).split(separator: "\n", omittingEmptySubsequences: true)
+            .map(String.init).filter { !$0.hasPrefix("#") }
+        XCTAssertGreaterThan(lines.count, 0)
+        XCTAssertLessThanOrEqual(lines.count, 64)
+        return lines
+    }
+
+    private func decodeHex(_ value: String) -> Data {
+        precondition(value.count % 2 == 0)
+        var result = Data()
+        var index = value.startIndex
+        while index < value.endIndex {
+            let end = value.index(index, offsetBy: 2)
+            result.append(UInt8(value[index..<end], radix: 16)!)
+            index = end
+        }
+        return result
+    }
+
+    func testPortableCorpus() throws {
+        for line in try fixtureLines().filter({ $0.hasPrefix("V|") }) {
+            let fields = line.split(separator: "|", omittingEmptySubsequences: false).map(String.init)
+            XCTAssertEqual(fields.count, 5)
+            XCTAssertLessThanOrEqual(fields[2].count, 8192)
+            XCTAssertEqual(fields[4].count, 128)
+            let data = decodeHex(fields[2])
+            XCTAssertLessThanOrEqual(data.count, 4096)
+            XCTAssertEqual(sha512Hex(data), fields[4], fields[1])
+            var hasher = SHA512Hasher()
+            var offset = 0
+            let chunks = fields[3].isEmpty ? [] : fields[3].split(separator: ",").map { Int($0)! }
+            XCTAssertLessThanOrEqual(chunks.count, 64)
+            for size in chunks {
+                XCTAssertGreaterThan(size, 0)
+                XCTAssertLessThanOrEqual(offset + size, data.count)
+                hasher.update(data[offset..<offset + size])
+                offset += size
+            }
+            XCTAssertEqual(offset, data.count)
+            XCTAssertEqual(hasher.hexDigest(), fields[4], fields[1])
+        }
+    }
+
+    func testPortableLengthCorpus() throws {
+        for line in try fixtureLines().filter({ $0.hasPrefix("L|") }) {
+            let fields = line.split(separator: "|", omittingEmptySubsequences: false).map(String.init)
+            let high = UInt64(fields[2], radix: 16)!
+            let low = UInt64(fields[3], radix: 16)!
+            if fields[4] == "ERROR" {
+                XCTAssertThrowsError(try encodeBitLength(byteCountHigh: high, byteCountLow: low))
+            } else {
+                let encoded = try encodeBitLength(byteCountHigh: high, byteCountLow: low)
+                    .map { String(format: "%02x", $0) }.joined()
+                XCTAssertEqual(encoded, fields[4])
+            }
+        }
+    }
+
+    func testUpdateConsumesInputWithoutAliasing() {
+        var input = Data("abc".utf8)
+        var hasher = SHA512Hasher()
+        hasher.update(input)
+        input[0] = 0x7a
+        XCTAssertEqual(hasher.digest(), sha512(Data("abc".utf8)))
+    }
+
     // ========================================================================
     // One-Shot sha512() -- FIPS 180-4 Test Vectors
     // ========================================================================

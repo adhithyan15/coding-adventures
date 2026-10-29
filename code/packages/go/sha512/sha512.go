@@ -31,7 +31,11 @@ package sha512
 import (
 	"encoding/binary"
 	"encoding/hex"
+	"errors"
 )
+
+// ErrMessageTooLong reports a byte count outside SHA-512's 128-bit bit-length domain.
+var ErrMessageTooLong = errors.New("sha512: message length must be less than 2^128 bits")
 
 // ---- Initial Hash Values (FIPS 180-4 section 5.3.5) ----
 //
@@ -130,18 +134,25 @@ func maj(x, y, z uint64) uint64 {
 //  2. Append zeros until length == 112 (mod 128).
 //  3. Append 128-bit big-endian length (upper 64 bits = 0 for practical sizes).
 func pad(data []byte) []byte {
-	bitLen := uint64(len(data)) * 8
 	padded := append([]byte{}, data...)
 	padded = append(padded, 0x80)
 	for len(padded)%128 != 112 {
 		padded = append(padded, 0x00)
 	}
 	// 128-bit length: upper 64 bits = 0, lower 64 bits = bit length
-	var lenBuf [16]byte
-	binary.BigEndian.PutUint64(lenBuf[0:8], 0)
-	binary.BigEndian.PutUint64(lenBuf[8:16], bitLen)
+	lenBuf, _ := encodeBitLength(0, uint64(len(data)))
 	padded = append(padded, lenBuf[:]...)
 	return padded
+}
+
+func encodeBitLength(byteCountHigh, byteCountLow uint64) ([16]byte, error) {
+	var result [16]byte
+	if byteCountHigh&0xe000000000000000 != 0 {
+		return result, ErrMessageTooLong
+	}
+	binary.BigEndian.PutUint64(result[0:8], byteCountHigh<<3|byteCountLow>>61)
+	binary.BigEndian.PutUint64(result[8:16], byteCountLow<<3)
+	return result, nil
 }
 
 // ---- Message Schedule ----
@@ -242,9 +253,10 @@ func HexString(data []byte) string {
 //	h.Write([]byte("c"))
 //	fmt.Println(h.HexDigest())
 type Digest struct {
-	state     [8]uint64
-	buf       []byte
-	byteCount uint64
+	state         [8]uint64
+	buf           []byte
+	byteCountHigh uint64
+	byteCountLow  uint64
 }
 
 // New returns a new streaming SHA-512 Digest initialized with the starting constants.
@@ -258,16 +270,38 @@ func New() *Digest {
 
 // Write feeds more bytes into the hash computation. Always returns len(p), nil.
 func (d *Digest) Write(p []byte) (int, error) {
+	added := uint64(len(p))
+	nextLow := d.byteCountLow + added
+	nextHigh := d.byteCountHigh
+	if nextLow < d.byteCountLow {
+		nextHigh++
+	}
+	if _, err := encodeBitLength(nextHigh, nextLow); err != nil {
+		return 0, err
+	}
 	return StartNew[int]("sha512.Digest.Write", 0,
 		func(op *Operation[int], rf *ResultFactory[int]) *OperationResult[int] {
 			op.AddProperty("pLen", len(p))
-			d.buf = append(d.buf, p...)
-			d.byteCount += uint64(len(p))
-			for len(d.buf) >= 128 {
-				d.state = compress(d.state, d.buf[:128])
-				d.buf = d.buf[128:]
+			d.byteCountHigh, d.byteCountLow = nextHigh, nextLow
+
+			if len(d.buf) > 0 {
+				needed := 128 - len(d.buf)
+				if needed > len(p) {
+					needed = len(p)
+				}
+				d.buf = append(d.buf, p[:needed]...)
+				p = p[needed:]
+				if len(d.buf) == 128 {
+					d.state = compress(d.state, d.buf)
+					d.buf = d.buf[:0]
+				}
 			}
-			return rf.Generate(true, false, len(p))
+			for len(p) >= 128 {
+				d.state = compress(d.state, p[:128])
+				p = p[128:]
+			}
+			d.buf = append(d.buf, p...)
+			return rf.Generate(true, false, int(added))
 		}).GetResult()
 }
 
@@ -278,15 +312,12 @@ func (d *Digest) Write(p []byte) (int, error) {
 func (d *Digest) Sum512() [64]byte {
 	result, _ := StartNew[[64]byte]("sha512.Digest.Sum512", [64]byte{},
 		func(op *Operation[[64]byte], rf *ResultFactory[[64]byte]) *OperationResult[[64]byte] {
-			bitLen := d.byteCount * 8
 			tail := append([]byte{}, d.buf...)
 			tail = append(tail, 0x80)
 			for len(tail)%128 != 112 {
 				tail = append(tail, 0x00)
 			}
-			var lenBuf [16]byte
-			binary.BigEndian.PutUint64(lenBuf[0:8], 0)
-			binary.BigEndian.PutUint64(lenBuf[8:16], bitLen)
+			lenBuf, _ := encodeBitLength(d.byteCountHigh, d.byteCountLow)
 			tail = append(tail, lenBuf[:]...)
 
 			state := d.state

@@ -5,6 +5,63 @@ namespace CodingAdventures.Sha512.Tests;
 
 public sealed class Sha512Tests
 {
+    private static string[] FixtureLines()
+    {
+        const string path = "../../../../../../../../specs/fixtures/sha512-v1/cases.txt";
+        var info = new FileInfo(path);
+        Assert.InRange(info.Length, 1, 4096);
+        var lines = File.ReadAllLines(path).Where(line => line.Length > 0 && line[0] != '#').ToArray();
+        Assert.InRange(lines.Length, 1, 64);
+        return lines;
+    }
+
+    [Fact]
+    public void PortableCorpusMatchesOneShotAndStreaming()
+    {
+        foreach (var line in FixtureLines().Where(line => line.StartsWith("V|", StringComparison.Ordinal)))
+        {
+            var fields = line.Split('|');
+            Assert.Equal(5, fields.Length);
+            Assert.InRange(fields[2].Length, 0, 8192);
+            Assert.Equal(128, fields[4].Length);
+            var data = Convert.FromHexString(fields[2]);
+            Assert.InRange(data.Length, 0, 4096);
+            Assert.Equal(fields[4], Sha512Algorithm.HashHex(data));
+
+            var hasher = new Sha512Hasher();
+            var offset = 0;
+            var chunks = fields[3].Length == 0 ? Array.Empty<int>() : fields[3].Split(',').Select(int.Parse).ToArray();
+            Assert.InRange(chunks.Length, 0, 64);
+            foreach (var size in chunks)
+            {
+                Assert.True(size > 0 && offset + size <= data.Length);
+                hasher.Update(data.AsSpan(offset, size).ToArray());
+                offset += size;
+            }
+            Assert.Equal(data.Length, offset);
+            Assert.Equal(fields[4], hasher.HexDigest());
+        }
+    }
+
+    [Fact]
+    public void PortableLengthCorpusExercisesFull128BitField()
+    {
+        foreach (var line in FixtureLines().Where(line => line.StartsWith("L|", StringComparison.Ordinal)))
+        {
+            var fields = line.Split('|');
+            var high = Convert.ToUInt64(fields[2], 16);
+            var low = Convert.ToUInt64(fields[3], 16);
+            if (fields[4] == "ERROR")
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => Sha512Algorithm.EncodeBitLength(high, low));
+            }
+            else
+            {
+                Assert.Equal(fields[4], Convert.ToHexString(Sha512Algorithm.EncodeBitLength(high, low)).ToLowerInvariant());
+            }
+        }
+    }
+
     [Theory]
     [InlineData("", "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")]
     [InlineData("abc", "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f")]
@@ -102,5 +159,14 @@ public sealed class Sha512Tests
     public void UpdateRejectsNull()
     {
         Assert.Throws<ArgumentNullException>(() => new Sha512Hasher().Update(null!));
+    }
+
+    [Fact]
+    public void UpdateConsumesInputWithoutAliasing()
+    {
+        var input = "abc"u8.ToArray();
+        var hasher = new Sha512Hasher().Update(input);
+        input[0] = (byte)'z';
+        Assert.Equal(Sha512Algorithm.Hash("abc"u8.ToArray()), hasher.Digest());
     }
 }

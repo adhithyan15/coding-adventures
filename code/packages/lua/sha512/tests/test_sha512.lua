@@ -6,7 +6,72 @@
 package.path = "../src/?.lua;" .. "../src/?/init.lua;" .. package.path
 local m = require("coding_adventures.sha512")
 
+local function fixture_lines()
+    local handle = assert(io.open("../../../../specs/fixtures/sha512-v1/cases.txt", "rb"))
+    local raw = assert(handle:read("*a"))
+    handle:close()
+    assert.is_true(#raw > 0 and #raw <= 4096)
+    local lines = {}
+    for line in raw:gmatch("[^\r\n]+") do
+        if line:sub(1, 1) ~= "#" then lines[#lines + 1] = line end
+    end
+    assert.is_true(#lines > 0 and #lines <= 64)
+    return lines
+end
+
+local function fields(line)
+    local result, start = {}, 1
+    while true do
+        local stop = line:find("|", start, true)
+        if not stop then result[#result + 1] = line:sub(start); return result end
+        result[#result + 1] = line:sub(start, stop - 1)
+        start = stop + 1
+    end
+end
+
+local function decode_hex(value)
+    assert.equals(0, #value % 2)
+    return (value:gsub("..", function(pair) return string.char(tonumber(pair, 16)) end))
+end
+
+local function bytes_hex(bytes)
+    local parts = {}
+    for _, byte in ipairs(bytes) do parts[#parts + 1] = string.format("%02x", byte) end
+    return table.concat(parts)
+end
+
 describe("sha512", function()
+
+    it("matches the bounded HF04 portable corpus", function()
+        for _, line in ipairs(fixture_lines()) do
+            if line:sub(1, 2) == "V|" then
+                local row = fields(line)
+                assert.equals(5, #row)
+                assert.is_true(#row[3] <= 8192 and #row[5] == 128)
+                local input = decode_hex(row[3])
+                assert.is_true(#input <= 4096)
+                assert.equals(row[5], m.hex(input), row[2])
+            end
+        end
+    end)
+
+    it("encodes the full 128-bit length field without huge allocation", function()
+        for _, line in ipairs(fixture_lines()) do
+            if line:sub(1, 2) == "L|" then
+                local row = fields(line)
+                local w3 = assert(tonumber(row[3]:sub(1, 8), 16))
+                local w2 = assert(tonumber(row[3]:sub(9, 16), 16))
+                local w1 = assert(tonumber(row[4]:sub(1, 8), 16))
+                local w0 = assert(tonumber(row[4]:sub(9, 16), 16))
+                if row[5] == "ERROR" then
+                    assert.has_error(function() m._encode_bit_length_words(w3, w2, w1, w0) end,
+                        "sha512: message length must be less than 2^128 bits")
+                else
+                    assert.equals(row[5], bytes_hex(m._encode_bit_length_words(w3, w2, w1, w0)), row[2])
+                end
+            end
+        end
+    end)
 
     -- -----------------------------------------------------------------------
     -- Meta / version

@@ -1,4 +1,5 @@
 defmodule CodingAdventures.Sha512Test do
+  import Bitwise
   @moduledoc """
   Tests for the SHA-512 implementation.
 
@@ -12,6 +13,41 @@ defmodule CodingAdventures.Sha512Test do
   use ExUnit.Case, async: true
 
   alias CodingAdventures.Sha512, as: S
+
+  @fixture Path.expand("../../../../specs/fixtures/sha512-v1/cases.txt", __DIR__)
+
+  defp fixture_lines do
+    raw = File.read!(@fixture)
+    assert byte_size(raw) in 1..4096
+    lines = raw |> String.split("\n", trim: true) |> Enum.reject(&String.starts_with?(&1, "#"))
+    assert length(lines) in 1..64
+    lines
+  end
+
+  test "HF04 portable digest corpus" do
+    for line <- Enum.filter(fixture_lines(), &String.starts_with?(&1, "V|")) do
+      ["V", id, input_hex, _chunks, expected] = String.split(line, "|", trim: false)
+      assert byte_size(input_hex) <= 8192
+      assert byte_size(expected) == 128
+      data = Base.decode16!(input_hex, case: :lower)
+      assert byte_size(data) <= 4096
+      assert S.sha512_hex(data) == expected, id
+    end
+  end
+
+  test "HF04 portable length corpus" do
+    for line <- Enum.filter(fixture_lines(), &String.starts_with?(&1, "L|")) do
+      ["L", id, high_hex, low_hex, expected] = String.split(line, "|", trim: false)
+      {high, ""} = Integer.parse(high_hex, 16)
+      {low, ""} = Integer.parse(low_hex, 16)
+      byte_count = high <<< 64 ||| low
+      if expected == "ERROR" do
+        assert_raise ArgumentError, ~r/less than 2\^128 bits/, fn -> S.encode_bit_length(byte_count) end
+      else
+        assert Base.encode16(S.encode_bit_length(byte_count), case: :lower) == expected, id
+      end
+    end
+  end
 
   # ─── FIPS 180-4 Test Vectors ─────────────────────────────────────────────
 

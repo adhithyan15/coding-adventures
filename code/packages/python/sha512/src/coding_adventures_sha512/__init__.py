@@ -237,16 +237,19 @@ def _maj(x: int, y: int, z: int) -> int:
 
 def _pad(data: bytes) -> bytes:
     """Pad data to a multiple of 128 bytes per FIPS 180-4 section 5.1.2."""
-    bit_len = len(data) * 8
     msg = bytearray(data) + bytearray([0x80])
     # Pad to 112 mod 128 (leaving 16 bytes for the length)
     while len(msg) % 128 != 112:
         msg.append(0x00)
-    # Append 128-bit big-endian length.  For practical purposes the message
-    # length fits in 64 bits, so the upper 64 bits are zero.
-    msg += struct.pack(">Q", 0)           # upper 64 bits of bit length
-    msg += struct.pack(">Q", bit_len)     # lower 64 bits of bit length
+    msg += _encode_bit_length(len(data))
     return bytes(msg)
+
+
+def _encode_bit_length(byte_count: int) -> bytes:
+    """Encode a checked byte count as SHA-512's 128-bit bit-length field."""
+    if not isinstance(byte_count, int) or byte_count < 0 or byte_count >= 1 << 125:
+        raise ValueError("sha512: message length must be less than 2^128 bits")
+    return (byte_count * 8).to_bytes(16, "big")
 
 
 # ---- Message Schedule ----
@@ -340,6 +343,8 @@ def sha512(data: bytes) -> bytes:
         >>> len(sha512(b""))
         64
     """
+    if not isinstance(data, (bytes, bytearray, memoryview)):
+        raise TypeError("sha512: expected a bytes-like object")
     padded = _pad(data)
     state = _INIT
     for offset in range(0, len(padded), 128):
@@ -392,12 +397,23 @@ class SHA512Hasher:
 
     def update(self, data: bytes) -> "SHA512Hasher":
         """Feed more bytes into the hash.  Returns self for chaining."""
-        self._buffer.extend(data)
-        self._byte_count += len(data)
-        # Compress any complete 128-byte blocks now to limit buffer size
-        while len(self._buffer) >= 128:
-            self._state = _compress(self._state, bytes(self._buffer[:128]))
-            self._buffer = self._buffer[128:]
+        if not isinstance(data, (bytes, bytearray, memoryview)):
+            raise TypeError("sha512.update: expected a bytes-like object")
+        next_count = self._byte_count + len(data)
+        _encode_bit_length(next_count)
+        self._byte_count = next_count
+        offset = 0
+        if self._buffer:
+            copied = min(128 - len(self._buffer), len(data))
+            self._buffer.extend(data[:copied])
+            offset = copied
+            if len(self._buffer) == 128:
+                self._state = _compress(self._state, bytes(self._buffer))
+                self._buffer.clear()
+        while offset + 128 <= len(data):
+            self._state = _compress(self._state, bytes(data[offset : offset + 128]))
+            offset += 128
+        self._buffer.extend(data[offset:])
         return self
 
     def digest(self) -> bytes:
@@ -407,12 +423,10 @@ class SHA512Hasher:
         you can continue calling update() after digest().
         """
         # Pad the remaining buffer using the TOTAL byte count (not buffer size)
-        bit_len = self._byte_count * 8
         tail = bytearray(self._buffer) + bytearray([0x80])
         while len(tail) % 128 != 112:
             tail.append(0x00)
-        tail += struct.pack(">Q", 0)           # upper 64 bits
-        tail += struct.pack(">Q", bit_len)     # lower 64 bits
+        tail += _encode_bit_length(self._byte_count)
         # Compress the padding tail against a copy of the live state
         state = self._state
         for offset in range(0, len(tail), 128):

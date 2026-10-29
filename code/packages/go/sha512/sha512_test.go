@@ -2,8 +2,130 @@ package sha512
 
 import (
 	"encoding/hex"
+	"errors"
+	"os"
+	"strconv"
+	"strings"
 	"testing"
 )
+
+func fixtureLines(t *testing.T) []string {
+	t.Helper()
+	data, err := os.ReadFile("../../../specs/fixtures/sha512-v1/cases.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(data) == 0 || len(data) > 4096 {
+		t.Fatalf("fixture size %d outside bounds", len(data))
+	}
+	var lines []string
+	for _, line := range strings.Split(string(data), "\n") {
+		if line != "" && !strings.HasPrefix(line, "#") {
+			lines = append(lines, line)
+		}
+	}
+	if len(lines) == 0 || len(lines) > 64 {
+		t.Fatalf("fixture row count %d outside bounds", len(lines))
+	}
+	return lines
+}
+
+func TestPortableCorpus(t *testing.T) {
+	for _, line := range fixtureLines(t) {
+		if !strings.HasPrefix(line, "V|") {
+			continue
+		}
+		fields := strings.Split(line, "|")
+		if len(fields) != 5 || len(fields[2]) > 8192 || len(fields[4]) != 128 {
+			t.Fatalf("malformed vector row %q", line)
+		}
+		data, err := hex.DecodeString(fields[2])
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(data) > 4096 {
+			t.Fatal("decoded input exceeds bound")
+		}
+		if got := HexString(data); got != fields[4] {
+			t.Fatalf("%s one-shot: %s", fields[1], got)
+		}
+		d := New()
+		offset := 0
+		if fields[3] != "" {
+			chunks := strings.Split(fields[3], ",")
+			if len(chunks) > 64 {
+				t.Fatal("too many chunks")
+			}
+			for _, raw := range chunks {
+				size, err := strconv.Atoi(raw)
+				if err != nil || size <= 0 || offset+size > len(data) {
+					t.Fatalf("invalid chunk %q", raw)
+				}
+				if _, err := d.Write(data[offset : offset+size]); err != nil {
+					t.Fatal(err)
+				}
+				offset += size
+			}
+		}
+		if offset != len(data) {
+			t.Fatalf("%s chunks cover %d of %d bytes", fields[1], offset, len(data))
+		}
+		if got := d.HexDigest(); got != fields[4] {
+			t.Fatalf("%s streaming: %s", fields[1], got)
+		}
+	}
+}
+
+func TestPortableLengthCorpus(t *testing.T) {
+	for _, line := range fixtureLines(t) {
+		if !strings.HasPrefix(line, "L|") {
+			continue
+		}
+		fields := strings.Split(line, "|")
+		hi, err := strconv.ParseUint(fields[2], 16, 64)
+		if err != nil {
+			t.Fatal(err)
+		}
+		lo, err := strconv.ParseUint(fields[3], 16, 64)
+		if err != nil {
+			t.Fatal(err)
+		}
+		encoded, err := encodeBitLength(hi, lo)
+		if fields[4] == "ERROR" {
+			if !errors.Is(err, ErrMessageTooLong) {
+				t.Fatalf("%s: %v", fields[1], err)
+			}
+			continue
+		}
+		if err != nil || hex.EncodeToString(encoded[:]) != fields[4] {
+			t.Fatalf("%s length encoding", fields[1])
+		}
+	}
+}
+
+func TestWriteConsumesInputWithoutAliasing(t *testing.T) {
+	input := []byte("abc")
+	d := New()
+	if _, err := d.Write(input); err != nil {
+		t.Fatal(err)
+	}
+	input[0] = 'z'
+	if d.Sum512() != Sum512([]byte("abc")) {
+		t.Fatal("digest changed after caller mutation")
+	}
+}
+
+func TestLengthOverflowWriteIsAtomic(t *testing.T) {
+	d := New()
+	d.byteCountHigh, d.byteCountLow = 0x1fffffffffffffff, 0xffffffffffffffff
+	beforeState, beforeBuf := d.state, append([]byte(nil), d.buf...)
+	if n, err := d.Write([]byte{1}); n != 0 || !errors.Is(err, ErrMessageTooLong) {
+		t.Fatalf("Write overflow = %d, %v", n, err)
+	}
+	if d.state != beforeState || string(d.buf) != string(beforeBuf) {
+		t.Fatal("overflowing Write mutated digest state")
+	}
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FIPS 180-4 Test Vectors

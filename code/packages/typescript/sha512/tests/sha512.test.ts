@@ -10,9 +10,70 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { sha512, sha512Hex, toHex, SHA512Hasher, VERSION } from "../src/index.js";
+import { readFileSync } from "node:fs";
+import { sha512, sha512Hex, toHex, SHA512Hasher, VERSION, encodeBitLength } from "../src/index.js";
 
 const enc = new TextEncoder();
+
+const fixtureText = readFileSync(
+  new URL("../../../../specs/fixtures/sha512-v1/cases.txt", import.meta.url),
+  "utf8",
+);
+if (fixtureText.length === 0 || fixtureText.length > 4096) throw new Error("SHA-512 fixture exceeds bounds");
+const fixtureLines = fixtureText.split("\n").filter((line) => line.length > 0 && !line.startsWith("#"));
+if (fixtureLines.length === 0 || fixtureLines.length > 64) throw new Error("SHA-512 fixture row count exceeds bounds");
+
+describe("HF04 portable corpus", () => {
+  it("matches one-shot and streaming APIs", () => {
+    for (const line of fixtureLines.filter((row) => row.startsWith("V|"))) {
+      const fields = line.split("|");
+      expect(fields).toHaveLength(5);
+      expect(fields[2].length).toBeLessThanOrEqual(8192);
+      expect(fields[4]).toHaveLength(128);
+      const data = Uint8Array.from(fields[2].match(/../g) ?? [], (pair) => Number.parseInt(pair, 16));
+      expect(data.length).toBeLessThanOrEqual(4096);
+      expect(sha512Hex(data)).toBe(fields[4]);
+      const hasher = new SHA512Hasher();
+      let offset = 0;
+      const chunks = fields[3] === "" ? [] : fields[3].split(",").map(Number);
+      expect(chunks.length).toBeLessThanOrEqual(64);
+      for (const size of chunks) {
+        expect(size).toBeGreaterThan(0);
+        expect(offset + size).toBeLessThanOrEqual(data.length);
+        hasher.update(data.slice(offset, offset + size));
+        offset += size;
+      }
+      expect(offset).toBe(data.length);
+      expect(hasher.hexDigest()).toBe(fields[4]);
+    }
+  });
+
+  it("encodes the full 128-bit length field without allocating messages", () => {
+    for (const line of fixtureLines.filter((row) => row.startsWith("L|"))) {
+      const fields = line.split("|");
+      const byteCount = (BigInt(`0x${fields[2]}`) << 64n) | BigInt(`0x${fields[3]}`);
+      if (fields[4] === "ERROR") {
+        expect(() => encodeBitLength(byteCount)).toThrow(RangeError);
+      } else {
+        expect(toHex(encodeBitLength(byteCount))).toBe(fields[4]);
+      }
+    }
+  });
+
+  it("consumes update input without aliasing", () => {
+    const input = enc.encode("abc");
+    const hasher = new SHA512Hasher().update(input);
+    input[0] = 0x7a;
+    expect(hasher.digest()).toEqual(sha512(enc.encode("abc")));
+  });
+
+  it("rejects invalid update input without changing state", () => {
+    expect(() => sha512("not bytes" as unknown as Uint8Array)).toThrow(TypeError);
+    const hasher = new SHA512Hasher().update(enc.encode("ab"));
+    expect(() => hasher.update("not bytes" as unknown as Uint8Array)).toThrow(TypeError);
+    expect(hasher.update(enc.encode("c")).digest()).toEqual(sha512(enc.encode("abc")));
+  });
+});
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 

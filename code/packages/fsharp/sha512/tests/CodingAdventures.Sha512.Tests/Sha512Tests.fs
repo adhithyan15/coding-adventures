@@ -1,11 +1,51 @@
 namespace CodingAdventures.Sha512.Tests
 
 open System
+open System.Globalization
+open System.IO
 open System.Text
 open Xunit
 open CodingAdventures.Sha512.FSharp
 
 module Sha512Tests =
+    let fixtureLines () =
+        let path = "../../../../../../../../specs/fixtures/sha512-v1/cases.txt"
+        Assert.InRange(FileInfo(path).Length, 1L, 4096L)
+        let lines = File.ReadAllLines(path) |> Array.filter (fun line -> line.Length > 0 && line[0] <> '#')
+        Assert.InRange(lines.Length, 1, 64)
+        lines
+
+    [<Fact>]
+    let ``portable corpus matches one shot and streaming`` () =
+        for line in fixtureLines () |> Array.filter (fun line -> line.StartsWith("V|", StringComparison.Ordinal)) do
+            let fields = line.Split('|')
+            Assert.Equal(5, fields.Length)
+            let data = Convert.FromHexString(fields[2])
+            Assert.InRange(data.Length, 0, 4096)
+            Assert.Equal(128, fields[4].Length)
+            Assert.Equal(fields[4], Sha512.hashHex data)
+            let hasher = Sha512Hasher()
+            let mutable offset = 0
+            let chunks = if fields[3].Length = 0 then [||] else fields[3].Split(',') |> Array.map int
+            Assert.InRange(chunks.Length, 0, 64)
+            for size in chunks do
+                Assert.True(size > 0 && offset + size <= data.Length)
+                hasher.Update(data[offset .. offset + size - 1]) |> ignore
+                offset <- offset + size
+            Assert.Equal(data.Length, offset)
+            Assert.Equal(fields[4], hasher.HexDigest())
+
+    [<Fact>]
+    let ``portable length corpus exercises full 128 bit field`` () =
+        for line in fixtureLines () |> Array.filter (fun line -> line.StartsWith("L|", StringComparison.Ordinal)) do
+            let fields = line.Split('|')
+            let high = UInt64.Parse(fields[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture)
+            let low = UInt64.Parse(fields[3], NumberStyles.HexNumber, CultureInfo.InvariantCulture)
+            if fields[4] = "ERROR" then
+                Assert.Throws<ArgumentException>(fun () -> Sha512.encodeBitLength high low |> ignore) |> ignore
+            else
+                Assert.Equal(fields[4], Convert.ToHexString(Sha512.encodeBitLength high low).ToLowerInvariant())
+
     [<Theory>]
     [<InlineData("", "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e")>]
     [<InlineData("abc", "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f")>]
@@ -88,3 +128,10 @@ module Sha512Tests =
     [<Fact>]
     let ``update rejects null`` () =
         Assert.Throws<ArgumentNullException>(fun () -> Sha512Hasher().Update(null) |> ignore) |> ignore
+
+    [<Fact>]
+    let ``update consumes input without aliasing`` () =
+        let input = "abc"B
+        let hasher = Sha512Hasher().Update(input)
+        input[0] <- byte 'z'
+        Assert.Equal<byte array>(Sha512.hash "abc"B, hasher.Digest())

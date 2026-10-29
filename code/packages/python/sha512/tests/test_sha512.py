@@ -8,9 +8,77 @@ same results as the one-shot sha512() function, and test edge cases like empty
 input, exact block boundaries, and very long inputs.
 """
 
+from pathlib import Path
+
 import pytest
 
-from coding_adventures_sha512 import SHA512Hasher, sha512, sha512_hex
+from coding_adventures_sha512 import SHA512Hasher, _encode_bit_length, sha512, sha512_hex
+
+
+_FIXTURE = Path(__file__).resolve().parents[4] / "specs/fixtures/sha512-v1/cases.txt"
+
+
+def _fixture_lines() -> list[str]:
+    raw = _FIXTURE.read_bytes()
+    assert 0 < len(raw) <= 4096
+    lines = [line for line in raw.decode("ascii").splitlines() if line and not line.startswith("#")]
+    assert 0 < len(lines) <= 64
+    return lines
+
+
+def test_portable_corpus() -> None:
+    for line in (row for row in _fixture_lines() if row.startswith("V|")):
+        _, case_id, input_hex, chunk_csv, expected = line.split("|")
+        assert len(input_hex) <= 8192 and len(expected) == 128
+        data = bytes.fromhex(input_hex)
+        assert len(data) <= 4096
+        assert sha512_hex(data) == expected, case_id
+        hasher = SHA512Hasher()
+        offset = 0
+        chunks = [] if not chunk_csv else [int(raw) for raw in chunk_csv.split(",")]
+        assert len(chunks) <= 64
+        for size in chunks:
+            assert size > 0 and offset + size <= len(data)
+            hasher.update(data[offset : offset + size])
+            offset += size
+        assert offset == len(data)
+        assert hasher.hex_digest() == expected, case_id
+
+
+def test_portable_length_corpus() -> None:
+    for line in (row for row in _fixture_lines() if row.startswith("L|")):
+        _, case_id, high_hex, low_hex, expected = line.split("|")
+        byte_count = (int(high_hex, 16) << 64) | int(low_hex, 16)
+        if expected == "ERROR":
+            with pytest.raises(ValueError, match="less than 2\\^128 bits"):
+                _encode_bit_length(byte_count)
+        else:
+            assert _encode_bit_length(byte_count).hex() == expected, case_id
+
+
+def test_update_consumes_input_without_aliasing() -> None:
+    data = bytearray(b"abc")
+    hasher = SHA512Hasher().update(data)
+    data[0] = ord("z")
+    assert hasher.digest() == sha512(b"abc")
+
+
+def test_invalid_update_is_atomic() -> None:
+    with pytest.raises(TypeError, match="bytes-like object"):
+        sha512("not bytes")  # type: ignore[arg-type]
+    hasher = SHA512Hasher().update(b"ab")
+    with pytest.raises(TypeError, match="bytes-like object"):
+        hasher.update("not bytes")  # type: ignore[arg-type]
+    assert hasher.update(b"c").digest() == sha512(b"abc")
+
+
+def test_length_overflow_update_is_atomic() -> None:
+    hasher = SHA512Hasher()
+    hasher._byte_count = (1 << 125) - 1
+    before = (hasher._state, bytes(hasher._buffer), hasher._byte_count)
+    with pytest.raises(ValueError, match="less than 2\\^128 bits"):
+        hasher.update(b"x")
+    assert (hasher._state, bytes(hasher._buffer), hasher._byte_count) == before
 
 
 # ---- FIPS 180-4 Test Vectors ----
