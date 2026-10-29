@@ -19865,3 +19865,28 @@ SHA-512 lanes; emerging C/C++/OCaml lanes, Java/Kotlin/Dart ports, HMAC
 composition, host-crypto substitution, secret custody, and authority remain
 separately owned or out of scope. No live PR or prepared graph/diff branch
 overlaps the selected implementation paths.
+
+### SHA-512 HF04 local implementation
+
+The selected owner is locally complete at exact implementation head
+`ead3c5829b6df9c97c7edb48ece0e3e13e89f596`, following bounded-contract and
+fixture commit `8b3c1073806618de1547537ff3d0a1f77674e864`. The revised HF04 contract and
+3,220-byte neutral corpus carry nine byte-exact digest vectors with portable
+chunk plans plus six allocation-free 128-bit length-field vectors. All twelve
+established lanes consume the digest witnesses dynamically; each lane also
+checks the full length-field transformation without allocating an enormous
+message. Streaming lanes exercise incremental updates, non-destructive
+finalization, continuation, ownership, and copy independence where exposed.
+
+The audit repaired truncated high length words in C#, F#, Go, Lua, Perl,
+Python, Ruby, Swift, and streaming Rust; unsafe Number-based streaming counts
+in TypeScript; and update-sized retained buffers in C#, F#, Go, Python, Ruby,
+Rust, and Swift. Native suites pass in C#, Elixir, F#, Go, Haskell, Lua, Perl,
+Python, Ruby, Rust, Swift, and TypeScript, including the repository coverage
+gates and Rust doc tests. Existing capability profiles remain empty, no new
+dependency or authority is introduced, and Java/Kotlin/Dart ports, emerging
+C/C++/OCaml lanes, HMAC, secret custody, and host-crypto substitution remain
+outside this owner. No additional backlog identity was discovered: every
+repair belongs to this selected owner, so no new work needs registration
+before exact-head review. This branch remains local and unpublished pending
+that review.
