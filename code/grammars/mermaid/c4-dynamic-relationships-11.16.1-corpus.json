@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 dynamic relationship numbering and RelIndex compatibility",
+  "fixtures": [
+    {
+      "name": "dynamic-relationship-order",
+      "source": "C4Dynamic\nPerson(customer, \"Customer\")\nSystem(api, \"API\")\nSystemDb(database, \"Database\")\nRel(customer, api, \"Submits request\")\nRel(api, database, \"Stores record\", \"SQL\")"
+    },
+    {
+      "name": "dynamic-rel-index-compatibility",
+      "source": "C4Dynamic\nPerson(customer, \"Customer\")\nSystem(api, \"API\")\nRelIndex(42, customer, api, \"Submits request\", \"HTTPS\", \"Calls the public API\")"
+    }
+  ]
+}

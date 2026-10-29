@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.32.0";
+pub const VERSION: &str = "0.33.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -1438,12 +1438,14 @@ fn layout_relationships(
                     parallel_relationship_lane(diagram, relationship_index),
                 )
             };
-            let label = structural_relationship_label(rel).map(|label| {
-                let mut position = path_midpoint(&points);
-                position.x += rel.label_offset_x;
-                position.y += rel.label_offset_y;
-                (position, label)
-            });
+            let label = structural_relationship_label(diagram, rel, relationship_index).map(
+                |label| {
+                    let mut position = path_midpoint(&points);
+                    position.x += rel.label_offset_x;
+                    position.y += rel.label_offset_y;
+                    (position, label)
+                },
+            );
             Some(LayoutedStructuralRelationship {
                 from_id: rel.from.clone(),
                 to_id: rel.to.clone(),
@@ -1465,9 +1467,19 @@ fn layout_relationships(
         .collect()
 }
 
-fn structural_relationship_label(relationship: &StructuralRelationship) -> Option<String> {
+fn structural_relationship_label(
+    diagram: &StructuralDiagram,
+    relationship: &StructuralRelationship,
+    relationship_index: usize,
+) -> Option<String> {
     let label = relationship.label.as_ref()?;
-    let mut lines = vec![label.clone()];
+    let label =
+        if diagram.render_config.c4_diagram_type == Some(diagram_ir::C4DiagramType::Dynamic) {
+            format!("{}: {label}", relationship_index + 1)
+        } else {
+            label.clone()
+        };
+    let mut lines = vec![label];
     if let Some(StructuralRelationshipMetadata::C4(metadata)) = relationship.metadata.as_ref() {
         if let Some(technology) = metadata.technology.as_ref().filter(|value| !value.is_empty()) {
             lines.push(format!("[{technology}]"));
@@ -1570,7 +1582,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.32.0");
+        assert_eq!(crate::VERSION, "0.33.0");
     }
 
     #[test]
