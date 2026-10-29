@@ -483,6 +483,242 @@ fn add_130(a_lo: u128, a_hi: u8, b_lo: u128, b_hi: u8) -> (u128, u8) {
     (lo, hi)
 }
 
+const POLY1305_MASK_26: u64 = (1 << 26) - 1;
+const POLY1305_HIBIT: u64 = 1 << 24;
+
+const POLY_R0: usize = 0;
+const POLY_R1: usize = 1;
+const POLY_R2: usize = 2;
+const POLY_R3: usize = 3;
+const POLY_R4: usize = 4;
+const POLY_S1: usize = 5;
+const POLY_S2: usize = 6;
+const POLY_S3: usize = 7;
+const POLY_S4: usize = 8;
+const POLY_H0: usize = 9;
+const POLY_H1: usize = 10;
+const POLY_H2: usize = 11;
+const POLY_H3: usize = 12;
+const POLY_H4: usize = 13;
+const POLY_PAD0: usize = 14;
+const POLY_PAD1: usize = 15;
+const POLY_PAD2: usize = 16;
+const POLY_PAD3: usize = 17;
+const POLY_D0: usize = 18;
+const POLY_D1: usize = 19;
+const POLY_D2: usize = 20;
+const POLY_D3: usize = 21;
+const POLY_D4: usize = 22;
+const POLY_CARRY: usize = 23;
+
+/// Wipe-on-drop ownership for Poly1305's clamped key limbs, accumulator,
+/// addition pad, multiplication products, and carry workspace.
+struct SecretPoly1305State([u64; 24]);
+
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_poly1305_state_wipe_ir_audit")]
+#[inline(never)]
+fn wipe_poly1305_state(words: &mut [u64; 24]) {
+    for word in words {
+        word.zeroize();
+    }
+}
+
+impl Drop for SecretPoly1305State {
+    fn drop(&mut self) {
+        wipe_poly1305_state(&mut self.0);
+    }
+}
+
+fn read_u32_le_from_block(block: &[u8; 16], offset: usize) -> u64 {
+    u64::from(u32::from_le_bytes([
+        block[offset],
+        block[offset + 1],
+        block[offset + 2],
+        block[offset + 3],
+    ]))
+}
+
+fn initialize_poly1305_state(state: &mut SecretPoly1305State, key: &[u8; 32]) {
+    state.0[POLY_R0] = u64::from(read_u32_le(key, 0)) & 0x3ff_ffff;
+    state.0[POLY_R1] = (u64::from(read_u32_le(key, 3)) >> 2) & 0x3ff_ff03;
+    state.0[POLY_R2] = (u64::from(read_u32_le(key, 6)) >> 4) & 0x3ff_c0ff;
+    state.0[POLY_R3] = (u64::from(read_u32_le(key, 9)) >> 6) & 0x3f0_3fff;
+    state.0[POLY_R4] = (u64::from(read_u32_le(key, 12)) >> 8) & 0x00f_ffff;
+
+    state.0[POLY_S1] = state.0[POLY_R1] * 5;
+    state.0[POLY_S2] = state.0[POLY_R2] * 5;
+    state.0[POLY_S3] = state.0[POLY_R3] * 5;
+    state.0[POLY_S4] = state.0[POLY_R4] * 5;
+
+    state.0[POLY_PAD0] = u64::from(read_u32_le(key, 16));
+    state.0[POLY_PAD1] = u64::from(read_u32_le(key, 20));
+    state.0[POLY_PAD2] = u64::from(read_u32_le(key, 24));
+    state.0[POLY_PAD3] = u64::from(read_u32_le(key, 28));
+}
+
+/// Absorb one already-padded Poly1305 block with a caller-selected high bit.
+///
+/// `hibit` is `1 << 24` for a complete 16-byte message block and zero for the
+/// final partial block, whose explicit `0x01` byte is already present in
+/// `block`. The arithmetic schedule and instruction count do not depend on
+/// key, message-byte, or accumulator values.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_poly1305_process_block_ir_audit")]
+#[inline(never)]
+fn process_poly1305_block(state: &mut SecretPoly1305State, block: &[u8; 16], hibit: u64) {
+    state.0[POLY_H0] += read_u32_le_from_block(block, 0) & POLY1305_MASK_26;
+    state.0[POLY_H1] += (read_u32_le_from_block(block, 3) >> 2) & POLY1305_MASK_26;
+    state.0[POLY_H2] += (read_u32_le_from_block(block, 6) >> 4) & POLY1305_MASK_26;
+    state.0[POLY_H3] += (read_u32_le_from_block(block, 9) >> 6) & POLY1305_MASK_26;
+    state.0[POLY_H4] += (read_u32_le_from_block(block, 12) >> 8) | hibit;
+
+    state.0[POLY_D0] = state.0[POLY_H0] * state.0[POLY_R0]
+        + state.0[POLY_H1] * state.0[POLY_S4]
+        + state.0[POLY_H2] * state.0[POLY_S3]
+        + state.0[POLY_H3] * state.0[POLY_S2]
+        + state.0[POLY_H4] * state.0[POLY_S1];
+    state.0[POLY_D1] = state.0[POLY_H0] * state.0[POLY_R1]
+        + state.0[POLY_H1] * state.0[POLY_R0]
+        + state.0[POLY_H2] * state.0[POLY_S4]
+        + state.0[POLY_H3] * state.0[POLY_S3]
+        + state.0[POLY_H4] * state.0[POLY_S2];
+    state.0[POLY_D2] = state.0[POLY_H0] * state.0[POLY_R2]
+        + state.0[POLY_H1] * state.0[POLY_R1]
+        + state.0[POLY_H2] * state.0[POLY_R0]
+        + state.0[POLY_H3] * state.0[POLY_S4]
+        + state.0[POLY_H4] * state.0[POLY_S3];
+    state.0[POLY_D3] = state.0[POLY_H0] * state.0[POLY_R3]
+        + state.0[POLY_H1] * state.0[POLY_R2]
+        + state.0[POLY_H2] * state.0[POLY_R1]
+        + state.0[POLY_H3] * state.0[POLY_R0]
+        + state.0[POLY_H4] * state.0[POLY_S4];
+    state.0[POLY_D4] = state.0[POLY_H0] * state.0[POLY_R4]
+        + state.0[POLY_H1] * state.0[POLY_R3]
+        + state.0[POLY_H2] * state.0[POLY_R2]
+        + state.0[POLY_H3] * state.0[POLY_R1]
+        + state.0[POLY_H4] * state.0[POLY_R0];
+
+    state.0[POLY_CARRY] = state.0[POLY_D0] >> 26;
+    state.0[POLY_H0] = state.0[POLY_D0] & POLY1305_MASK_26;
+    state.0[POLY_D1] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D1] >> 26;
+    state.0[POLY_H1] = state.0[POLY_D1] & POLY1305_MASK_26;
+    state.0[POLY_D2] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D2] >> 26;
+    state.0[POLY_H2] = state.0[POLY_D2] & POLY1305_MASK_26;
+    state.0[POLY_D3] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D3] >> 26;
+    state.0[POLY_H3] = state.0[POLY_D3] & POLY1305_MASK_26;
+    state.0[POLY_D4] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D4] >> 26;
+    state.0[POLY_H4] = state.0[POLY_D4] & POLY1305_MASK_26;
+    state.0[POLY_H0] += state.0[POLY_CARRY] * 5;
+    state.0[POLY_CARRY] = state.0[POLY_H0] >> 26;
+    state.0[POLY_H0] &= POLY1305_MASK_26;
+    state.0[POLY_H1] += state.0[POLY_CARRY];
+}
+
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_poly1305_finalize_ir_audit")]
+#[inline(never)]
+fn finalize_poly1305(state: &mut SecretPoly1305State, output: &mut [u8; 16]) {
+    state.0[POLY_CARRY] = state.0[POLY_H1] >> 26;
+    state.0[POLY_H1] &= POLY1305_MASK_26;
+    state.0[POLY_H2] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_H2] >> 26;
+    state.0[POLY_H2] &= POLY1305_MASK_26;
+    state.0[POLY_H3] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_H3] >> 26;
+    state.0[POLY_H3] &= POLY1305_MASK_26;
+    state.0[POLY_H4] += state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_H4] >> 26;
+    state.0[POLY_H4] &= POLY1305_MASK_26;
+    state.0[POLY_H0] += state.0[POLY_CARRY] * 5;
+    state.0[POLY_CARRY] = state.0[POLY_H0] >> 26;
+    state.0[POLY_H0] &= POLY1305_MASK_26;
+    state.0[POLY_H1] += state.0[POLY_CARRY];
+
+    state.0[POLY_D0] = state.0[POLY_H0] + 5;
+    state.0[POLY_CARRY] = state.0[POLY_D0] >> 26;
+    state.0[POLY_D0] &= POLY1305_MASK_26;
+    state.0[POLY_D1] = state.0[POLY_H1] + state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D1] >> 26;
+    state.0[POLY_D1] &= POLY1305_MASK_26;
+    state.0[POLY_D2] = state.0[POLY_H2] + state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D2] >> 26;
+    state.0[POLY_D2] &= POLY1305_MASK_26;
+    state.0[POLY_D3] = state.0[POLY_H3] + state.0[POLY_CARRY];
+    state.0[POLY_CARRY] = state.0[POLY_D3] >> 26;
+    state.0[POLY_D3] &= POLY1305_MASK_26;
+    state.0[POLY_D4] = state.0[POLY_H4]
+        .wrapping_add(state.0[POLY_CARRY])
+        .wrapping_sub(1 << 26);
+
+    let select_reduced = (state.0[POLY_D4] >> 63).wrapping_sub(1);
+    let select_original = !select_reduced;
+    state.0[POLY_H0] = (state.0[POLY_H0] & select_original) | (state.0[POLY_D0] & select_reduced);
+    state.0[POLY_H1] = (state.0[POLY_H1] & select_original) | (state.0[POLY_D1] & select_reduced);
+    state.0[POLY_H2] = (state.0[POLY_H2] & select_original) | (state.0[POLY_D2] & select_reduced);
+    state.0[POLY_H3] = (state.0[POLY_H3] & select_original) | (state.0[POLY_D3] & select_reduced);
+    state.0[POLY_H4] = (state.0[POLY_H4] & select_original) | (state.0[POLY_D4] & select_reduced);
+
+    state.0[POLY_D0] = ((state.0[POLY_H0] | (state.0[POLY_H1] << 26)) & 0xffff_ffff)
+        .wrapping_add(state.0[POLY_PAD0]);
+    state.0[POLY_D1] = (((state.0[POLY_H1] >> 6) | (state.0[POLY_H2] << 20)) & 0xffff_ffff)
+        .wrapping_add(state.0[POLY_PAD1])
+        .wrapping_add(state.0[POLY_D0] >> 32);
+    state.0[POLY_D2] = (((state.0[POLY_H2] >> 12) | (state.0[POLY_H3] << 14)) & 0xffff_ffff)
+        .wrapping_add(state.0[POLY_PAD2])
+        .wrapping_add(state.0[POLY_D1] >> 32);
+    state.0[POLY_D3] = (((state.0[POLY_H3] >> 18) | (state.0[POLY_H4] << 8)) & 0xffff_ffff)
+        .wrapping_add(state.0[POLY_PAD3])
+        .wrapping_add(state.0[POLY_D2] >> 32);
+
+    output[0..4].copy_from_slice(&(state.0[POLY_D0] as u32).to_le_bytes());
+    output[4..8].copy_from_slice(&(state.0[POLY_D1] as u32).to_le_bytes());
+    output[8..12].copy_from_slice(&(state.0[POLY_D2] as u32).to_le_bytes());
+    output[12..16].copy_from_slice(&(state.0[POLY_D3] as u32).to_le_bytes());
+}
+
+/// Compute a Poly1305 tag into caller-owned fixed memory.
+///
+/// This boundary performs no allocation. It uses the standard five 26-bit
+/// limb construction, one reusable 16-byte block, and a fixed arithmetic
+/// schedule for every admitted block. The conditional reduction is expressed
+/// as mask selection rather than a branch on key-derived accumulator values.
+/// All clamped key limbs, accumulator limbs, addition-pad words, multiplication
+/// products, and carry workspace are retained in one wipe-on-drop owner. The
+/// original one-time key and message remain caller-owned.
+///
+/// Poly1305 is a one-time authenticator: callers must never reuse `key` for a
+/// different message. This primitive does not reserve keys, compare tags,
+/// encrypt data, compose ChaCha20-Poly1305 AEAD, or authorize TLS record use.
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_poly1305_mac_fixed_ir_audit")]
+pub fn poly1305_mac_fixed(message: &[u8], key: &[u8; 32], output: &mut [u8; 16]) {
+    let mut state = SecretPoly1305State([0; 24]);
+    initialize_poly1305_state(&mut state, key);
+
+    let mut block = Zeroizing::new([0u8; 16]);
+    let mut offset = 0;
+    while message.len() - offset >= 16 {
+        block.copy_from_slice(&message[offset..offset + 16]);
+        process_poly1305_block(&mut state, &block, POLY1305_HIBIT);
+        offset += 16;
+    }
+
+    let remaining = message.len() - offset;
+    if remaining != 0 {
+        block.fill(0);
+        block[..remaining].copy_from_slice(&message[offset..]);
+        block[remaining] = 1;
+        process_poly1305_block(&mut state, &block, 0);
+    }
+
+    finalize_poly1305(&mut state, output);
+}
+
 /// Compute a Poly1305 MAC tag for a message.
 ///
 /// The key is split into two halves:
@@ -969,6 +1205,80 @@ mod tests {
 
         let tag = poly1305_mac(message, &key);
         assert_eq!(tag, expected_tag);
+    }
+
+    #[test]
+    fn fixed_poly1305_matches_rfc8439_section_2_5_2() {
+        let key: [u8; 32] =
+            hex::decode("85d6be7857556d337f4452fe42d506a80103808afb0db2fd4abff6af4149f51b")
+                .unwrap()
+                .try_into()
+                .unwrap();
+        let expected_tag: [u8; 16] = hex::decode("a8061dc1305136c6c22b8baf0c0127a9")
+            .unwrap()
+            .try_into()
+            .unwrap();
+        let mut tag = [0xa5; 16];
+
+        poly1305_mac_fixed(b"Cryptographic Forum Research Group", &key, &mut tag);
+
+        assert_eq!(tag, expected_tag);
+    }
+
+    #[test]
+    fn fixed_poly1305_matches_legacy_across_block_edges() {
+        let mut key = [0u8; 32];
+        for (index, byte) in key.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(29).wrapping_add(7);
+        }
+        let mut message = [0u8; 257];
+        for (index, byte) in message.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(113).wrapping_add(19);
+        }
+
+        for length in [0, 1, 15, 16, 17, 31, 32, 33, 63, 64, 65, 255, 256, 257] {
+            let expected = poly1305_mac(&message[..length], &key);
+            let mut actual = [0x5a; 16];
+            poly1305_mac_fixed(&message[..length], &key, &mut actual);
+            assert_eq!(actual, expected, "fixed tag differs at length {length}");
+        }
+    }
+
+    #[test]
+    fn fixed_poly1305_matches_independent_long_vector() {
+        let mut key = [0u8; 32];
+        for (index, byte) in key.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(29).wrapping_add(7);
+        }
+        let mut message = [0u8; 257];
+        for (index, byte) in message.iter_mut().enumerate() {
+            *byte = (index as u8).wrapping_mul(113).wrapping_add(19);
+        }
+        // Independently cross-checked with OpenSSL's POLY1305 EVP_MAC.
+        let expected: [u8; 16] = hex::decode("4860feab5f510294db900e656daee7b3")
+            .unwrap()
+            .try_into()
+            .unwrap();
+        let mut actual = [0; 16];
+
+        poly1305_mac_fixed(&message, &key, &mut actual);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn fixed_poly1305_changes_with_the_one_time_key() {
+        let message = b"one admitted message";
+        let first_key = [0x3c; 32];
+        let mut second_key = first_key;
+        second_key[31] ^= 0x80;
+        let mut first_tag = [0; 16];
+        let mut second_tag = [0; 16];
+
+        poly1305_mac_fixed(message, &first_key, &mut first_tag);
+        poly1305_mac_fixed(message, &second_key, &mut second_tag);
+
+        assert_ne!(first_tag, second_tag);
     }
 
     #[test]

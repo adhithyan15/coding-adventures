@@ -1,10 +1,12 @@
-//! Release-codegen regression gate for the fixed-memory ChaCha20 boundary.
+//! Release-codegen regression gate for the fixed-memory ChaCha20 and Poly1305
+//! boundaries.
 //!
 //! Source ownership alone cannot prove that optimized code retains the wipes
 //! for the reusable keystream and both key-derived word states. This test asks
 //! the active Rust compiler for optimized LLVM IR and checks the exact exported
-//! boundary, block helper, and word-state drop path. It deliberately makes no
-//! claim about the allocation-returning compatibility APIs or Poly1305.
+//! boundaries, fixed-schedule core helpers, and secret-state drop paths. It
+//! deliberately makes no claim about the allocation-returning compatibility
+//! APIs or combined AEAD composition.
 
 use std::fs;
 use std::path::Path;
@@ -13,9 +15,13 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 const EXPORTED_SYMBOL: &str = "coding_adventures_chacha20_xor_fixed_ir_audit";
 const WORD_WIPE_SYMBOL: &str = "coding_adventures_chacha20_secret_words_wipe_ir_audit";
+const POLY1305_EXPORTED_SYMBOL: &str = "coding_adventures_poly1305_mac_fixed_ir_audit";
+const POLY1305_BLOCK_SYMBOL: &str = "coding_adventures_poly1305_process_block_ir_audit";
+const POLY1305_FINALIZE_SYMBOL: &str = "coding_adventures_poly1305_finalize_ir_audit";
+const POLY1305_WIPE_SYMBOL: &str = "coding_adventures_poly1305_state_wipe_ir_audit";
 
 #[test]
-fn optimized_fixed_boundary_scrubs_secret_owners_without_allocating() {
+fn optimized_fixed_boundaries_scrub_secret_owners_without_allocating() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let workspace_dir = manifest_dir
         .parent()
@@ -70,8 +76,20 @@ fn optimized_fixed_boundary_scrubs_secret_owners_without_allocating() {
     let fixed = exported_function_body(&ir, EXPORTED_SYMBOL);
     let block = rust_function_body(&ir, "chacha20_block_into");
     let word_wipe = exported_function_body(&ir, WORD_WIPE_SYMBOL);
+    let poly1305_fixed = exported_function_body(&ir, POLY1305_EXPORTED_SYMBOL);
+    let poly1305_block = exported_function_body(&ir, POLY1305_BLOCK_SYMBOL);
+    let poly1305_finalize = exported_function_body(&ir, POLY1305_FINALIZE_SYMBOL);
+    let poly1305_wipe = exported_function_body(&ir, POLY1305_WIPE_SYMBOL);
 
-    for function in [fixed, block, word_wipe] {
+    for function in [
+        fixed,
+        block,
+        word_wipe,
+        poly1305_fixed,
+        poly1305_block,
+        poly1305_finalize,
+        poly1305_wipe,
+    ] {
         assert_no_allocator(function);
     }
 
@@ -107,6 +125,49 @@ fn optimized_fixed_boundary_scrubs_secret_owners_without_allocating() {
         word_wipes, 16,
         "word-state wipe must scrub all 16 words:\n{word_wipe}"
     );
+
+    assert!(
+        poly1305_fixed.starts_with("define void"),
+        "fixed Poly1305 must write its tag through caller-owned output:\n{poly1305_fixed}"
+    );
+    assert_eq!(
+        alloca_names(poly1305_fixed, 16, 1),
+        ["%block"],
+        "fixed Poly1305 must have exactly one reusable 16-byte block owner:\n{poly1305_fixed}"
+    );
+    assert_eq!(
+        alloca_names(poly1305_fixed, 192, 8),
+        ["%state"],
+        "fixed Poly1305 must have exactly one 24-word secret-state owner:\n{poly1305_fixed}"
+    );
+    assert!(
+        poly1305_fixed.contains(POLY1305_BLOCK_SYMBOL),
+        "fixed Poly1305 must absorb through the audited block helper:\n{poly1305_fixed}"
+    );
+    assert_eq!(
+        zeroize_calls(poly1305_fixed, "%block", 16),
+        2,
+        "Poly1305 block owner must be scrubbed on normal and unwind paths:\n{poly1305_fixed}"
+    );
+    let poly1305_state_drops = poly1305_fixed
+        .lines()
+        .filter(|line| is_call(line) && line.contains(POLY1305_WIPE_SYMBOL))
+        .count();
+    assert_eq!(
+        poly1305_state_drops, 2,
+        "Poly1305 state must be scrubbed on normal and unwind paths:\n{poly1305_fixed}"
+    );
+    assert_no_conditional_control_flow(poly1305_block);
+    assert_no_conditional_control_flow(poly1305_finalize);
+
+    let poly1305_word_wipes = poly1305_wipe
+        .lines()
+        .filter(|line| is_call(line) && line.contains("zeroize"))
+        .count();
+    assert_eq!(
+        poly1305_word_wipes, 24,
+        "Poly1305 state wipe must scrub all 24 words:\n{poly1305_wipe}"
+    );
 }
 
 fn assert_no_allocator(function: &str) {
@@ -120,6 +181,15 @@ fn assert_no_allocator(function: &str) {
         assert!(
             !function.contains(forbidden),
             "fixed-memory boundary unexpectedly references allocator symbol {forbidden}:\n{function}"
+        );
+    }
+}
+
+fn assert_no_conditional_control_flow(function: &str) {
+    for forbidden in ["br i1", "switch "] {
+        assert!(
+            !function.contains(forbidden),
+            "fixed-schedule core unexpectedly contains conditional control flow {forbidden}:\n{function}"
         );
     }
 }
