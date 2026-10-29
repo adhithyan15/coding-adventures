@@ -122,9 +122,22 @@ model-card parameter, or a UI artifact is not a completion signal.
      available so the UI does not invent a second result schema.
 
 6. **Post-Berkeley product tracks** (not Berkeley completion blockers).
-   - ngspice and vendor-dialect compatibility, nested sweeps and raw-format
-   interchange, advanced nonlinear convergence work, mixed-signal coupling,
-     and the Mosaic/LTspice-style UI move only after item 5 is green.
+   - **Tool compatibility inventory foundation** (in progress):
+     `code/grammars/spice/tool-compatibility-v1.json` is the version-pinned,
+     cross-language compatibility register for Berkeley SPICE3f3, ngspice 47,
+     and LTspice 24.1. It is enforced in every parser suite and records deck,
+     preprocessing, element/model, analysis, control, numerical, output,
+     interchange, integration, and workflow surfaces. A profile remains
+     ineligible for a drop-in claim until every reference feature is classified
+     and every `supported` entry has corpus evidence across Python, Rust, and
+     TypeScript. The companion `spice-tool-compatibility.md` specifies this
+     completion rule and names current gaps rather than treating the v1 pass
+     count as vendor compatibility.
+   - Expand the ngspice and LTspice reference sections into the register before
+     implementing a feature family. Batch nested/parameter sweeps, raw-format
+     interchange, advanced nonlinear convergence, mixed-signal coupling, and
+     Mosaic/LTspice-style workflow compatibility by contract family rather than
+     by individual parameter or presentation detail.
    - Discovery: align the Rust Mosaic app facade's runnable-analysis inventory
      with parser-plan `.tf` execution during the UI/API phase. This is not a
      Berkeley corpus blocker because the cross-language parser plans already
