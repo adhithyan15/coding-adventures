@@ -1431,7 +1431,7 @@ impl Compiler {
                 // lookup), never a call to a user `(define (and a b) …)`.
                 if let Some(f) = apply
                     .fn_name()
-                    .filter(|f| !shadowed.contains(*f) && !matches!(*f, "and" | "or"))
+                    .filter(|f| !shadowed.contains(*f) && !apply.is_short_circuit_form())
                 {
                     if let Some(slots) = evidence.get_mut(f) {
                         if apply.args().len() == slots.len() {
@@ -2636,6 +2636,16 @@ impl Compiler {
                 );
                 ctx.record_type(&zero, "i64");
 
+                // The comparison against 0 is the boolean result, so it is
+                // written `[bool]` — the same hint `(< a b)` gets from the
+                // typed-arithmetic path.  It used to be written `[i64]` but
+                // recorded as `bool`, so a typed `mov` / `ret [bool]` read a
+                // register whose only writer claimed `i64` (#18453).  The
+                // three-way `str_cmp` above is a real integer and stays `i64`.
+                //
+                //   (string<? "a" "b")   _r1 = str_cmp _s1, _s2   [i64]   ; -1
+                //                        _n2 = const 0            [i64]
+                //                        _r3 = cmp_lt _r1, _n2    [bool]  ; #t
                 let dest = ctx.fresh_var("r");
                 let op = if name == "string<?" { "cmp_lt" } else { "cmp_gt" };
                 ctx.emit(
@@ -2643,7 +2653,7 @@ impl Compiler {
                         op,
                         Some(dest.clone()),
                         vec![Operand::Var(cmp), Operand::Var(zero)],
-                        "i64",
+                        "bool",
                     ),
                     loc,
                 );
@@ -2730,13 +2740,16 @@ impl Compiler {
         // name lookup: neither a local nor a top-level `define` named `and`
         // changes what `(and …)` means (TW00 "Name resolution").  A define
         // of that name is still what `and` means as a *value*.
-        if let Some(fn_name) = expr.fn_name() {
-            if fn_name == "and" {
-                return self.compile_and(args, ctx, loc);
-            }
-            if fn_name == "or" {
-                return self.compile_or(args, ctx, loc);
-            }
+        //
+        // `crate::cst::is_short_circuit_form` names exactly these two heads;
+        // the lambda free-variable walk asks the same predicate, so it never
+        // mistakes them for captured names (#18453).
+        if let Some(fn_name) = expr.fn_name().filter(|n| crate::cst::is_short_circuit_form(n)) {
+            return if fn_name == "and" {
+                self.compile_and(args, ctx, loc)
+            } else {
+                self.compile_or(args, ctx, loc)
+            };
         }
 
         // Direct call: fn is a VarRef whose name is a top-level

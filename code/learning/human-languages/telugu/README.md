@@ -181,6 +181,23 @@ Everything below this line is about how the track is built and checked. It is
 here for people working on the curriculum; nothing in it is needed to learn the
 language.
 
+## B2 task-shape status
+
+[`task-shapes/b2.json`](./task-shapes/b2.json) makes the track's project-defined
+B2 reading, listening, writing, and speaking envelope executable. Its exact
+part counts, timings, input speed, text and response lengths, replay rule,
+regional-voice quota, interaction protocol, aid rules, and scoring weights are
+transparent project choices: neither the CEFR Companion Volume nor the checked
+PSTU-affiliated ManaBadi page publishes a CEFR-mapped Telugu B2 paper with those
+measurements.
+
+The shape keeps Telugu-specific writing controls — talakattu, vowel-sign
+placement, and the subscript vattu below its base — without borrowing Kannada
+claims. Its independently owned reading-reach floor begins at zero. Publication
+therefore makes the target measurable; it does not establish external
+certification, complete mocks, calibration, human validation, learner
+readiness, or learner attainment.
+
 ## Chapter capabilities
 
 [`chapters.json`](./chapters.json) is the track's

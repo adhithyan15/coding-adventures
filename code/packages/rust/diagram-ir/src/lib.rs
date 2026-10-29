@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 
-pub const VERSION: &str = "0.87.0";
+pub const VERSION: &str = "0.89.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -2440,6 +2440,38 @@ pub enum StructuralRouting {
     Orthogonal,
 }
 
+#[derive(Clone, Debug, PartialEq, Default)]
+pub struct C4RelationshipMetadata {
+    pub technology: Option<String>,
+    pub description: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum StructuralRelationshipMetadata {
+    C4(C4RelationshipMetadata),
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum C4DiagramType {
+    Context,
+    Container,
+    Component,
+    Dynamic,
+    Deployment,
+}
+
+impl C4DiagramType {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Context => "C4Context",
+            Self::Container => "C4Container",
+            Self::Component => "C4Component",
+            Self::Dynamic => "C4Dynamic",
+            Self::Deployment => "C4Deployment",
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct StructuralRelationship {
     pub from: String,
@@ -2457,6 +2489,7 @@ pub struct StructuralRelationship {
     pub label: Option<String>,
     pub label_offset_x: f64,
     pub label_offset_y: f64,
+    pub metadata: Option<StructuralRelationshipMetadata>,
     pub style: Option<DiagramStyle>,
 }
 
@@ -2476,6 +2509,7 @@ pub struct StructuralAlignment {
 pub struct StructuralRenderConfig {
     pub use_max_width: bool,
     pub html_labels: bool,
+    pub c4_diagram_type: Option<C4DiagramType>,
     pub c4_shape_in_row: Option<usize>,
     pub c4_boundary_in_row: Option<usize>,
 }
@@ -2485,6 +2519,7 @@ impl Default for StructuralRenderConfig {
         Self {
             use_max_width: true,
             html_labels: true,
+            c4_diagram_type: None,
             c4_shape_in_row: None,
             c4_boundary_in_row: None,
         }
@@ -3205,7 +3240,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.87.0");
+        assert_eq!(VERSION, "0.89.0");
     }
     #[test]
     fn default_direction_is_tb() {

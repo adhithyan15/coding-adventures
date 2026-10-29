@@ -1,5 +1,70 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18453: `and` / `or` inside a lambda; `string<?` is a `bool`
+
+### Fixed
+
+- **`and` / `or` inside an anonymous lambda compile.** `free_vars` walked
+  the head of every application as a name reference. `(and …)` / `(or …)`
+  parse as applications, so their head looked like a free variable called
+  `and` / `or`, and
+
+  ```scheme
+  (let ((f (lambda () (or "a" 1)))) (f))
+  ; unbound name "or" captured by lambda
+  ```
+
+  failed to compile. The walk now skips the head of an `(and …)` /
+  `(or …)` and still walks the arguments. An `and` / `or` in value
+  position is still a name: `(let ((or 7)) ((lambda () (or #f or))))`
+  captures the local `or`, and `((lambda () or))` with nothing bound is
+  still an "unbound name" error. A new predicate,
+  `cst::is_short_circuit_form` (and `ApplyView::is_short_circuit_form`),
+  names the two heads. `compile_apply`, `free_vars` and the call-site
+  string-evidence walk all ask it, so they cannot disagree. Every other special form is a lexer keyword with
+  its own grammar rule, so it never parses as an application, and
+  `free_vars` already handled it as syntax. As a side effect,
+  `lambda_captured_globals` no longer counts a `(or …)` inside a lambda as
+  a capture of a top-level value named `or`. Such a value now stays in a
+  register when nothing captures it in value position.
+- **`string<?` / `string>?` write their result as a `bool`.** The E4 fast
+  path lowers them to a three-way `str_cmp [i64]` and then a `cmp_lt` /
+  `cmp_gt` against 0. That comparison was emitted `[i64]` but recorded as
+  `bool`, so a typed `mov` / `ret [bool]` read a register whose only
+  writer claimed `i64`. It is now emitted `[bool]`, the same hint that
+  `(< a b)` gets. `str_cmp` is a real three-way integer and stays `i64`.
+  On x86-64 and AArch64 this hint selects the comparison's signedness
+  (`cmp_lt_bool`). Those backends used to treat `bool` as unsigned, so they
+  needed the matching fix in this change: there, `-1 < 0` would otherwise
+  have been false (see their changelogs). The IR of the 826-program corpus
+  changes in only the two programs that use `string<?` / `string>?`, by that
+  hint. One of them is a
+  `lang_matrix` program. The strengthened soundness check now finds 0
+  problems across the corpus (it found 1 before).
+
+### Not changed
+
+- `str_eq` (`string=?`) is still typed `i64`. Its writer hint and its
+  recorded type agree, so the soundness check has nothing to report. The
+  wasm, JVM, CLR and BEAM validators all require an `i32` / `i64` result
+  hint on `str_eq`, so a `bool` hint would be rejected by every backend.
+
+### Tests
+
+- `and_or_inside_a_lambda_compile_and_capture_nothing`,
+  `and_or_arguments_inside_a_lambda_are_still_captured`,
+  `a_local_named_and_or_is_captured_in_value_position`,
+  `an_unbound_and_or_value_inside_a_lambda_is_still_an_error`,
+  `string_order_result_is_written_as_a_bool` and
+  `string_order_in_a_join_agrees_with_other_bools_only`. `free_vars` has
+  three new unit tests for `and` / `or` heads, `and` / `or` in value
+  position, and `lambda_captured_globals`.
+- `JOIN_PROGRAMS` gains 7 programs with joins inside lambdas (nested joins,
+  a lambda inside a lambda, and a lambda returned from a function) and 5
+  `string<?` / `string>?` joins. `assert_registers_sound` now covers them.
+  Before the fix, the lambda programs failed to compile and the `string<?`
+  programs failed the typed `mov` / `ret` check.
+
 ## Unreleased — #18438: a top-level definition shadows a builtin
 
 ### Fixed

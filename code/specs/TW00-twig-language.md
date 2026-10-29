@@ -295,6 +295,11 @@ source position. `and` and `or` lex as ordinary names, so
 `(define (and a b) …)` is accepted, and `and` in value position is that
 function. But `(and …)` and `(or …)` in call position are always the
 short-circuit special forms, whatever is defined or bound with that name.
+This includes inside a lambda: the head of `(or …)` is not a free variable,
+so `(lambda () (or "a" 1))` captures nothing. In value position, as in
+`(let ((or 7)) (lambda () (or #f or)))`, `or` is still a name, and the
+lambda captures the local. (Before issue #18453 was fixed, a lambda that
+used `and` or `or` failed with `unbound name "or" captured by lambda`.)
 
 ### Type hints
 

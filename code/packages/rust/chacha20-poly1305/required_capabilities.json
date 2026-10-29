@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/chacha20-poly1305",
   "capabilities": [],
-  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
+  "justification": "Pure in-process computation using only the repository-owned zeroize primitive for secret-memory scrubbing. No filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, audit, provider action, or external effect."
 }

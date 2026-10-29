@@ -1871,6 +1871,21 @@ mod tests {
         "(let ((y (and #f 5))) y)",
         "(let ((s (and (< 1 2) \"abc\"))) (string-length s))",
         "(define (f) (and #f 5)) (f)",
+        // Joins inside anonymous lambdas (#18453), which did not compile
+        // before: `free_vars` took the `and` / `or` heads for names.
+        "(let ((f (lambda () (or \"a\" 1)))) (f))",
+        "(let ((f (lambda () (or \"a\" 1)))) (string-length (f)))",
+        "((lambda (c) (+ (and c 5) 1)) #t)",
+        "((lambda (c) (let ((s (or (and c \"a\") 7))) (string-length s))) #t)",
+        "(let ((y 5)) ((lambda () (+ (or #f y) 1))))",
+        "((lambda () ((lambda (x) (+ (or (< x 2) 5) 1)) 1)))",
+        "(define (mk) (lambda (c) (or (and c (< 1 2)) \"s\"))) ((mk) #t)",
+        // `string<?` / `string>?` results in joins: a `bool` like `(< a b)`.
+        "(if (and (string<? \"ALPHA\" \"BETA\") (string>? \"BETA\" \"ALPHA\")) 42 0)",
+        "(+ (or (string<? \"b\" \"a\") 5) 1)",
+        "(let ((y (or (string>? \"a\" \"b\") (< 1 2)))) y)",
+        "(let ((y (if (string<? \"a\" \"b\") (string>? \"a\" \"b\") 7))) y)",
+        "(define (f s) (string<? s \"m\")) (f \"a\")",
     ];
 
     #[test]
@@ -1949,6 +1964,137 @@ mod tests {
             );
             assert_registers_sound(src);
         }
+    }
+
+    // ---- `and` / `or` inside a lambda (#18453) ---------------------------
+    //
+    // `and` / `or` are special forms written in call position, so the
+    // parser hands them over as an ordinary application whose head is the
+    // name `and`.  The lambda free-variable walk used to visit that head
+    // like any other name, decide `or` was free, and fail the compile:
+    //
+    // ```text
+    // (let ((f (lambda () (or "a" 1)))) (f))
+    //   before: unbound name "or" captured by lambda
+    //   after:  __lambda_0 captures nothing; its body is the usual `or` join
+    // ```
+
+    /// The anonymous lambda `src` compiles to.
+    fn lambda_fn(src: &str) -> IIRFunction {
+        module(src)
+            .functions
+            .into_iter()
+            .find(|f| f.name.starts_with("__lambda_"))
+            .unwrap_or_else(|| panic!("{src}: no lambda"))
+    }
+
+    #[test]
+    fn and_or_inside_a_lambda_compile_and_capture_nothing() {
+        for src in [
+            "(let ((f (lambda () (or \"a\" 1)))) (f))",
+            "(let ((f (lambda () (and #t 5)))) (f))",
+            // Nested joins, and a lambda inside a lambda.
+            "((lambda (c) (let ((s (or (and c \"a\") 7))) (string-length s))) #t)",
+            "((lambda () ((lambda (x) (and (< x 2) (or #f x))) 1)))",
+        ] {
+            let f = lambda_fn(src);
+            assert!(
+                f.params.iter().all(|(p, _)| p != "and" && p != "or"),
+                "{src}: {f:#?}"
+            );
+            assert!(f.instructions.iter().any(|i| i.op == "jmp_if_false"), "{src}: {f:#?}");
+            assert_registers_sound(src);
+        }
+        // The empty forms are constants, and capture nothing either.
+        for src in ["((lambda () (or)))", "((lambda () (and)))"] {
+            assert!(lambda_fn(src).params.is_empty(), "{src}");
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn and_or_arguments_inside_a_lambda_are_still_captured() {
+        // The head is syntax, but the arguments are ordinary expressions.
+        let f = lambda_fn("(let ((y 5)) ((lambda () (or #f y))))");
+        assert_eq!(f.params[0].0, "y", "{f:#?}");
+        let f = lambda_fn("(let ((a 1) (b 2)) ((lambda () (and a (or b #f)))))");
+        let names: Vec<&str> = f.params.iter().map(|(p, _)| p.as_str()).collect();
+        assert_eq!(names, ["a", "b"], "{f:#?}");
+    }
+
+    #[test]
+    fn a_local_named_and_or_is_captured_in_value_position() {
+        // A local may be named `and` / `or` (#18457): in value position it
+        // is that local, and a lambda captures it — even when the same
+        // lambda also uses the special form of that name.
+        for src in [
+            "(let ((or 7)) ((lambda () (+ or 1))))",
+            "(let ((or 7)) ((lambda () (or #f or))))",
+            "(let ((and 3)) ((lambda () (and 1 and))))",
+            "(define (f and) (lambda () and)) ((f 4))",
+        ] {
+            let f = lambda_fn(src);
+            assert!(
+                f.params.iter().any(|(p, _)| p == "and" || p == "or"),
+                "{src}: {f:#?}"
+            );
+            assert_registers_sound(src);
+        }
+        // A top-level value define is a global, not a capture; the lambda
+        // reads it from the global table.
+        let src = "(define or 7) ((lambda () (or #f or)))";
+        assert!(lambda_fn(src).params.is_empty(), "{src}");
+        assert_registers_sound(src);
+    }
+
+    #[test]
+    fn an_unbound_and_or_value_inside_a_lambda_is_still_an_error() {
+        // In value position `or` is a name like any other; with nothing
+        // bound to it, the lambda's capture of it is unbound.
+        let e = compile_source("((lambda () or))", "test").unwrap_err();
+        assert!(e.message.contains("\"or\""), "{e:?}");
+    }
+
+    // ---- `string<?` / `string>?` produce a `bool` (#18453) ---------------
+    //
+    // `(string<? a b)` lowers to a three-way `str_cmp` and a `cmp_lt` of
+    // that against 0.  The `cmp_lt` was emitted `[i64]` while its register
+    // was recorded as `bool`, so a typed `mov` / `ret [bool]` read a
+    // register whose only writer said `i64`.  It is now `[bool]`, as
+    // `(< a b)` is; `str_cmp` itself stays a three-way `i64`.
+
+    #[test]
+    fn string_order_result_is_written_as_a_bool() {
+        for (src, op) in [
+            ("(string<? \"a\" \"b\")", "cmp_lt"),
+            ("(string>? \"a\" \"b\")", "cmp_gt"),
+        ] {
+            let main = main_instrs(src);
+            let cmp = main.iter().find(|i| i.op == op).unwrap();
+            assert_eq!(cmp.type_hint, "bool", "{src}: {main:#?}");
+            let three_way = main.iter().find(|i| i.op == "str_cmp").unwrap();
+            assert_eq!(three_way.type_hint, "i64", "{src}: {main:#?}");
+            assert_eq!(main_ret_type(src), "bool", "{src}");
+            assert_registers_sound(src);
+        }
+    }
+
+    #[test]
+    fn string_order_in_a_join_agrees_with_other_bools_only() {
+        // With `(< a b)`: both `bool`, so the join stays `bool`.
+        for src in [
+            "(or (string<? \"b\" \"a\") (< 1 2))",
+            "(and (string>? \"b\" \"a\") (string<? \"a\" \"b\"))",
+            "(if (< 1 2) (string<? \"a\" \"b\") #f)",
+        ] {
+            assert_eq!(main_ret_type(src), "bool", "{src}");
+            assert_registers_sound(src);
+        }
+        // With an integer: no consensus, so `+` is the dynamic builtin.
+        let src = "(+ (or (string<? \"b\" \"a\") 5) 1)";
+        assert!(!main_instrs(src).iter().any(|i| i.op == "add"), "{src}");
+        assert_eq!(main_ret_type("(if (string<? \"a\" \"b\") (string>? \"a\" \"b\") 7)"), "any");
+        assert_registers_sound(src);
     }
 
     // ---- A top-level definition shadows a builtin (#18438) -------------
