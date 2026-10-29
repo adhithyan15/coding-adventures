@@ -471,4 +471,37 @@ describe("process-free graph and diff selection", () => {
     ).toEqual({ ok: false, code: "DIFF_BOUNDARY_INVALID" });
     expect(traps).toBe(0);
   });
+
+  it("rejects a Proxy boundary digest without invoking any trap", () => {
+    let traps = 0;
+    const digest = new Proxy(
+      {},
+      {
+        get() {
+          traps += 1;
+          return "0".repeat(64);
+        },
+        getOwnPropertyDescriptor() {
+          traps += 1;
+          return undefined;
+        },
+        getPrototypeOf() {
+          traps += 1;
+          return Object.prototype;
+        },
+        ownKeys() {
+          traps += 1;
+          return [];
+        },
+      },
+    );
+    const base = simpleDiff([packagePrefix("fixture/a", "code/a")]);
+    expect(
+      evaluateDiffSelection({
+        ...base,
+        boundarySha256: digest as unknown as string,
+      }),
+    ).toEqual({ ok: false, code: "DIFF_INPUT_INVALID" });
+    expect(traps).toBe(0);
+  });
 });

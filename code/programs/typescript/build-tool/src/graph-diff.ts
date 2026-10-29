@@ -288,6 +288,10 @@ function snapshotDiffInput(input: DiffSelectionInput): SnapshottedDiffInput {
     "boundarySha256",
     "DIFF_INPUT_INVALID",
   );
+  requireContract(
+    !boundarySha256.present || typeof boundarySha256.value === "string",
+    "DIFF_INPUT_INVALID",
+  );
   const boundary = optionalDataProperty(
     record,
     "boundary",
