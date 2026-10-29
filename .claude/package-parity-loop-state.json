@@ -14878,10 +14878,13 @@
     {
       "id": "sha512-existing-lane-hf04-conformance-audit",
       "title": "Reconcile existing SHA-512 lanes with HF04",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/sha512-hf04-conformance-audit",
       "pr_number": null,
+      "selected_at": "2026-10-29T10:07:04Z",
+      "selection_revision": "16d1607e3a784a732e9a3580f7669e6180526460",
+      "selection_notes": "Selected only after the exact Swift RESP merge receipt, full 93-root post-inventory classification, and independent review of the durable reconciliation. This bounded portable owner has zero unfinished prerequisites, two direct unfinished children, and eighteen total unfinished descendants, the strongest safe leverage among dependency-ready items. Its HF04 spec, new shared fixture, and twelve established SHA-512 package paths have no exact overlap with open PR #18495, prepared Lua/Rust graph-diff work, or other live PRs. Keep C, C++, and OCaml emerging lanes, Java/Kotlin/Dart ports, HMAC composition, host-crypto substitution, secret custody, and authority outside this audit.",
       "notes": "Audit all twelve established SHA-512 implementations against shared HF04 vectors, incremental/finalization behavior, large-length accounting, input ownership, exact output, empty capability profiles, and stable bounded errors before using them as the HMAC-family foundation.",
       "postmerge_prioritization_notes": "After verified Swift RESP merge and the exact 9d0843dc inventory reconciliation, this remains the highest-leverage dependency-ready bounded portable owner: zero unfinished prerequisites, two direct unfinished children, and eighteen total unfinished descendants. Its HF04, shared-fixture, and twelve established SHA-512 package paths are disjoint from open PR #18495 and the prepared Lua/Rust graph-diff work. The newly registered inventory owners have no unfinished descendants yet; broader CPU, TLS, X.509, secure-channel, VM, and singleton umbrellas require decomposition or carry higher authority/coordination risk. Advance only in a dedicated worktree after the reconciliation commit is reviewed; package presence and installed toolchains are not conformance credit.",
       "postmerge_preparation_evidence": [

@@ -19850,3 +19850,18 @@ SHA-512 package paths do not overlap open PR #18495 or the prepared Lua/Rust
 graph-diff work. It is recommended but not selected here; create its dedicated
 worktree only after this reconciliation is independently reviewed. The active
 PR list remains empty, and this reconciliation does not publish or push.
+
+### SHA-512 HF04 conformance selection
+
+Independent review issued SHIP for exact reconciliation head
+`16d1607e3a784a732e9a3580f7669e6180526460`: the 93-root mapping, 69 new
+identities, owner registrations, inventory counts, 1,562-owner DAG, Swift RESP
+merge receipt, and priority graph all reproduce. Select
+`sha512-existing-lane-hf04-conformance-audit` from that reviewed head on branch
+`codex/sha512-hf04-conformance-audit`. It has no unfinished prerequisite, two
+direct unfinished children, and eighteen total unfinished descendants. Scope
+stays bounded to HF04, one neutral fixture corpus, and the twelve established
+SHA-512 lanes; emerging C/C++/OCaml lanes, Java/Kotlin/Dart ports, HMAC
+composition, host-crypto substitution, secret custody, and authority remain
+separately owned or out of scope. No live PR or prepared graph/diff branch
+overlaps the selected implementation paths.
