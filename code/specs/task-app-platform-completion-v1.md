@@ -1,5 +1,15 @@
 # TaskApp platform completion v1
 
+## Selected fidelity slice: Qt empty Board drop-target floor (#18559)
+
+Preserve both themes' existing col-drop min-height 60 on Qt's outer
+HostDropTarget Item so an empty Board column retains a drop zone. Accept
+only finite nonnegative static numeric lengths; skip min-height state
+overrides. Keep drag callbacks, acceptance, shared styles, diagnostic budgets,
+and release coverage unchanged. Require emitter positive/negative regressions
+and package-expanded assertions in both themes. General flex and root-scroll
+work remains in #18481. Record the audited v0.5.14 receipt in product docs.
+
 ## Selected release checkpoint: v0.5.14 (#18550)
 
 The due-date editor width floor merged in #18396. Prepare a compatible patch
