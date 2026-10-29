@@ -310,6 +310,6 @@
   "limits": [
     "Reporter inventory is structural evidence only; it does not grant behavior, native execution, coverage, security, authority, or reviewed-exception credit.",
     "C, C++, and OCaml remain emerging and do not change the established 15-language denominator.",
-    "No source package, BUILD front, dependency metadata, branch, remote ref, pull request, or worktree was created or modified by this reconciliation."
+    "No source package, BUILD front, dependency metadata, remote ref, pull request, or implementation worktree was created or modified by this reconciliation; only the dedicated local documentary reconciliation branch and worktree changed."
   ]
 }
