@@ -7,7 +7,8 @@
 //!
 //! See [SIR25](../../../specs/SIR25-semantic-ir-to-ruby.md) for the design.
 
-use std::collections::HashSet;
+use std::cell::RefCell;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
@@ -25,11 +26,22 @@ use crate::runtime::RUNTIME;
 /// these can never clash with a program's own names.
 static LOOP_TEMP_ID: AtomicUsize = AtomicUsize::new(0);
 
+thread_local! {
+    /// Function name → [`Function::exact_arity`], for the strict-closure
+    /// marker (see [`emit_strict_closure`]).  Filled at the start of every
+    /// [`emit_module`], because the expression emitters see one expression at
+    /// a time and have no handle on the module.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+}
+
 /// Builtins the v0 backend lowers.  A `BuiltinCall` to anything else is
 /// rejected by [`first_scan_issue`] (mirroring the C backend), so a
 /// module using e.g. the `__method__` collection-dispatch protocol fails
 /// cleanly rather than emitting a call with no lowering.
 const SUPPORTED_BUILTINS: &[&str] = &[
+    // SIR10 strict closure — `BuiltinCall("lambda", [MakeClosure])`, see
+    // [`emit_strict_closure`].
+    "lambda",
     "+",
     "-",
     "*",
@@ -158,6 +170,11 @@ const SUPPORTED_BUILTINS: &[&str] = &[
 
 /// Emit a complete self-contained Ruby source file for `m`.
 pub fn emit_module(m: &Module) -> String {
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     let mut out = String::new();
     emit_banner(&mut out, m);
 
@@ -1833,7 +1850,43 @@ fn emit_var_ref(name: &str, scope: Scope) -> String {
     }
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* (a Ruby lambda, every Twig closure):
+///
+/// ```text
+/// (lambda (x y) (+ x y))  →  ->(*__sir_args) { sir_check_arity(__sir_args, 2); __lambda_0(*__sir_args) }
+/// ```
+///
+/// Every closure this backend builds already forwards to a fixed-arity
+/// method, so a wrong count did raise — but from inside the forwarding call,
+/// counting the captured values too ("given 2, expected 3" for a one-capture,
+/// two-parameter closure called with one argument).  `sir_check_arity`
+/// raises the same `ArgumentError` with the closure's own count, worded like
+/// every other backend's ("arity mismatch: …", issue #18461).
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`Function::exact_arity`] is `None`: defaults, `*rest`, …), the
+/// inner expression is emitted unchanged.
+fn emit_strict_closure(inner: &Expr) -> String {
+    let Expr::MakeClosure { fn_name, captures, .. } = inner else {
+        return emit_expr(inner);
+    };
+    let Some(n) = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied()) else {
+        return emit_expr(inner);
+    };
+    let mut fixed: Vec<String> = captures.iter().map(|c| emit_expr(&c.value)).collect();
+    fixed.push("*__sir_args".to_string());
+    format!(
+        "->(*__sir_args) {{ sir_check_arity(__sir_args, {n}); {}({}) }}",
+        function_emit_name(fn_name),
+        fixed.join(", ")
+    )
+}
+
 fn emit_builtin(name: &str, args: &[Expr]) -> String {
+    if name == "lambda" && args.len() == 1 {
+        return emit_strict_closure(&args[0]);
+    }
     let a: Vec<String> = args.iter().map(emit_expr).collect();
     match name {
         // n-ary arithmetic folds to a native chained operator.

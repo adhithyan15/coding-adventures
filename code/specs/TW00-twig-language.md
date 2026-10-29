@@ -219,6 +219,43 @@ operator name as `srcs[0]`:
 
 The `TwigVM` registers the matching host callables.
 
+### Name resolution: lexical scope wins
+
+Twig is lexically scoped, like Scheme. A name refers to its innermost
+binding. The compiler resolves every name in the same order, whether the
+name is used as a value (`helper`) or called (`(helper 1)`):
+
+| Order | Binding                                                         | Call `(name args…)` lowers to |
+|-------|-----------------------------------------------------------------|-------------------------------|
+| 1     | Lexical: parameter, `let`/`let*` binding, lambda parameter, `match` binding, or a variable a lambda captured from an enclosing scope | `call_closure name, args…`    |
+| 2     | Top-level function `define`, or an extern imported from another module | `call name, args…`            |
+| 3     | Top-level value `define`                                        | `call_closure` on its value   |
+| 4     | Builtin (`+`, `cons`, `string-append`, …)                       | `call_builtin name, args…` (or a typed op) |
+
+`and` and `or` are special forms and are not in this table. A local cannot
+shadow them.
+
+There is one known gap between rows 3 and 4, tracked as issue #18438. A
+top-level *value* `define` that reuses a builtin's name, such as
+`(define car 5)`, wins in value position. In call position the builtin still
+wins. This rule is about the lexical row (row 1), which always wins.
+
+So a local hides a global, an extern or a builtin with the same name for
+the whole of the local's scope:
+
+```scheme
+(define (helper x) (* x 100))
+(define (f helper) (helper 1))   ; calls the parameter, not the global
+(f (lambda (x) (+ x 1)))         ; => 2
+```
+
+A shadowed global also gives up its static facts at that call site: its
+direct `call`, its known return type and its parameter types. Free-variable
+analysis also treats the name as local, so a nested lambda captures the
+local and does not reach the global. (Before issue #18435 was fixed, the
+compiler checked rows 2 and 4 before row 1 in call position, and this
+program returned 100.)
+
 ### Type hints
 
 Every emitted IIR instruction carries `type_hint = "any"` because Twig

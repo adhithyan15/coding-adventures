@@ -1,5 +1,33 @@
 # Changelog
 
+## Unreleased — Lambdas in callee position, strict closures (issue #18461)
+
+- **Every `MakeClosure` gets a thunk.**  `collect_closure_targets` walked
+  only some expression positions; it skipped an `IndirectCall`'s *target*,
+  so `((mk (lambda (a) 77)) 5)` referenced an undeclared
+  `_sir_thunk___lambda_1` and gcc rejected the file.  It now uses
+  `semantic_ir::Visitor`, which reaches every node (loops, conversions and
+  the SIR16+ nodes the hand-written walk also missed).
+- **Strict closures.**  The `lambda` marker (SIR10, `BuiltinCall("lambda",
+  [MakeClosure])`) is now lowered instead of refused:
+  `_sir_strict_arity(<closure>, N)` stamps the closure's exact arity, and
+  `_sir_apply` raises `ArgumentError: arity mismatch: closure expects N
+  argument(s), got M` for any other count.  A thunk pads a missing
+  argument with `nil`, so Twig's `((lambda (x y) (+ x y)) 4)` used to
+  print `4`.  `SirClosure` gains an `arity` field (`-1` = lenient, the
+  unchanged default for a bare `MakeClosure`).
+- **One way into a closure body.**  `_sir_call_closure` performs the strict
+  arity check and is now the only caller of a closure's `fn`: `_sir_apply`
+  and the four OOP dispatchers (method call, `initialize`, `super`, class
+  method) all go through it, where the dispatchers used to call `clo->fn`
+  directly and would have skipped the check (security review F3).  Today a
+  method body is always a bare, lenient `MakeClosure` (`__def_method__`
+  requires that shape), so this changes no current program; it keeps the
+  check from depending on which path reaches the closure.
+- `tests/twig_pairs_and_closures.rs` compiles and runs the #18460/#18461
+  Twig programs with the host C compiler, and checks that a closure
+  missing its capture values is refused before any C is emitted (the
+  NULL `caps` read the security review found, F1).
 ## 0.42.2 — Every `MakeClosure` gets its thunk
 
 `collect_closure_targets` decides which functions need a

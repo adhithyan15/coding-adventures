@@ -19368,6 +19368,57 @@ this durable PR-number lifecycle receipt is committed and independently
 reviewed. Then push the receipt, mark the PR ready, and require a completely
 fresh exact-head hosted matrix before guarded auto-merge.
 
+Every exact-head check for PR #18535 completed acceptably and guarded squash
+auto-merge landed `729e0b761e339bcc8d5863550da644e5b3ccec24` at
+`2026-10-28T20:46:16Z`. The clean Swift skip-list worktree and local branch
+were removed. Dart and Swift binary-tree PR #18537 is now the sole active
+parity PR at independently reviewed head
+`3d147429f868c416b2f0f18e70d4ec2c4ffe39f6`; fresh hosted CI remains its
+merge gate.
+
+## October 28, 2026: Swift data-store protocol IR selection
+
+Without waiting on #18537, reprioritization selects the independent
+`swift-in-memory-data-store-protocol-lane-parity` owner locally. It has three
+direct and five total unfinished descendants versus two/four for RESP and
+radix tree, while remaining a bounded dependency-free value-model package.
+Keep it RESP-independent: normalize only ASCII command letters, preserve owned
+binary arguments, model the complete nullable ordered response algebra, and
+validate nested responses iteratively under checked depth/element/byte budgets.
+
+Register `in-memory-data-store-protocol-existing-lanes-contract-reconciliation`
+for established binary/text, normalization, RESP-coupling, ownership, nullable
+response, integer-width, error, and budget drift. Also register
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` before selecting
+another RESP codec lane. Correct `swift-radix-tree-lane-parity` to depend on
+`radix-tree-dt14-neutral-conformance`; its Unicode and structural contract is
+not ready. Keep the selected Swift IR branch local until #18537's terminal
+lifecycle is reconciled from main.
+
+### Swift protocol IR local implementation
+
+Implementation revision `988ac240fc06960a7b0fc21455bfaa275fca1d8e`
+adds the dependency-free Swift package and an additive DT25 boundary. Commands
+use visible ASCII identity with bytewise lowercase folding and preserve ordered
+binary arguments. Responses retain exact UTF-8 identity, the complete nullable
+algebra, and deterministic order. Tighten-only command, argument, frame, depth,
+element, and payload budgets remain below fixed package ceilings; command text
+scanning stops one byte beyond its ceiling, and both response validation and
+equality use cursor stacks bounded by nesting depth.
+
+All ten native tests, the release build, strict Swift Format, the Unix BUILD,
+JSON/diff hygiene, and the empty capability profile pass; the reviewed Windows
+front awaits hosted execution. LLVM reports
+100% production line, function, and region coverage across 249 lines. A real
+bounded Go build-tool dry plan discovers 172 Swift packages, marks exactly the
+new protocol package changed and affected, and selects only
+`swift/in-memory-data-store-protocol`. Independent exact-head review approved
+the bounded command scan, iterative response operations, exact identities,
+authority boundary, tests, coverage, and artifact cleanup. Keep this validated
+work local until #18537's terminal lifecycle reconciliation; then merge current
+main, rerun the gates, and require fresh hosted qualification before guarded
+auto-merge.
+
 Every exact-head check for PR #18535 completed acceptably, including Ubuntu,
 macOS, Windows, Swift CodeQL, metadata, and the aggregate CI gate. GitHub
 reported reviewed head `9a02ab99d53e474410e3da7e3795a4739efab532`
@@ -19408,3 +19459,185 @@ main `729e0b761e339bcc8d5863550da644e5b3ccec24`. Keep it draft only while this
 durable PR-number receipt receives independent delta review, then mark it ready
 and require a completely fresh exact-head hosted matrix before guarded
 auto-merge.
+
+### PR #18537 merge and Swift protocol reconciliation
+
+Every exact-head check for Dart and Swift binary-tree PR #18537 completed
+terminal acceptable, including Ubuntu, macOS, Windows, Swift CodeQL, metadata,
+human-language books, and both aggregate gates. GitHub reported reviewed head
+`3d147429f868c416b2f0f18e70d4ec2c4ffe39f6` clean and mergeable; guarded
+squash auto-merge landed `4a32928e2f0e6ef12b9665def9602039d32364af`
+at `2026-10-28T22:09:42Z`. The completed worktree, its ignored Dart/Swift build
+artifacts, and local branch were removed.
+
+Normal merge head `8f7c055b98c7e95e4ca312e6b12f43970d91d76d`
+preserves the reviewed protocol receipt and exact new main as its two parents.
+All ten protocol tests, release build, strict formatting, Unix BUILD, JSON/diff
+checks, and empty capabilities pass with unchanged 100% production coverage
+across 249 lines. The fresh bounded build-tool plan discovers 173 Swift
+packages and selects only `swift/in-memory-data-store-protocol`. Post-merge
+prioritization keeps this three-direct/five-total-descendant item ahead of RESP
+and radix tree at two/four each. Require independent exact merge-head review
+before publication, then fresh hosted Windows and repository-wide qualification
+before guarded auto-merge.
+
+### Draft PR #18540 and live-main refresh
+
+Publish independently reviewed head
+`b9cb795db6b14b85fbe52292b3a6a68e67e74cc9` as draft PR #18540 to record its
+durable identity. At creation, GitHub records live base
+`e2119773be5b8881191bcb5b8657946d2b51ed5f`, which had advanced moments
+earlier through one path-disjoint Rust HKDF change while the draft head still
+contained prior main. Normal merge head
+`1d23920b2584877943a283eaf03770611c3fe680` preserves both reviewed
+publication history and exact live main.
+
+The protocol implementation, DT25 amendment, and changelog remain unchanged.
+All ten tests, release build, strict formatting, JSON/diff checks, and empty
+capabilities pass with 100% coverage across 249 production lines. The bounded
+build-tool plan still discovers 173 Swift packages and selects exactly
+`swift/in-memory-data-store-protocol`. Keep the PR draft until this lifecycle
+and current-main delta is independently reviewed; then push the receipt, mark
+ready, and require a completely fresh exact-head hosted matrix before guarded
+auto-merge.
+
+### PR #18540 merge and Elixir graph/diff selection
+
+All 40 final-head checks for Swift protocol IR PR #18540 completed acceptably
+at `9997c16d1f5c63994e981ef8a227e35833c6cf8d`: 10 successes, 29 expected
+path-gated skips, and one neutral CodeQL result. GitHub reported the reviewed
+head clean and mergeable. Guarded squash auto-merge was enabled only after the
+aggregate CI gate passed, and GitHub merged the PR at
+`2026-10-28T22:52:43Z` as
+`93ce1b4493a1ea5d781a047e86c658fc78483f59`. The clean completed worktree
+and local branch were removed.
+
+The fresh dependency/leverage pass selects
+`build-tool-elixir-diff-selection-match-work-ceiling-adoption` on branch
+`codex/build-tool-elixir-diff-selection-parity` from that exact merged main.
+Its seven prerequisites are merged, and its three direct and five total
+unfinished descendants rank ahead of the other bounded ready leaves. The
+existing Elixir directed graph, Git-diff mapping, and hardened memoized
+Unicode-scalar matcher keep the implementation surface narrower than the
+from-scratch canonical-CBOR and Lua alternatives. Dynamically consume exactly
+the eight graph and twelve diff-selection neutral cases, including the shared
+input multi-consumer case and the 50,000,000-unit match-work ceiling; preserve
+stable all-or-error output and process-free authority. Keep lifecycle edits
+and the program implementation on the dedicated current-main worktree, require
+native validation plus independent exact-head security review before
+publication, and do not claim execution-adapter or host authority readiness.
+
+#### Elixir graph/diff local implementation and review
+
+Reviewed implementation head `cd136e09fd595c9bdf0705252ae13ed5102a0a4b`
+adds the typed, process-free `BuildTool.GraphDiff` core and dynamically consumes
+the exact eight graph and twelve diff-selection fixtures. Normal merge head
+`121885ac4b8431a94e6c9afbba7c1e7832b8e711` preserves that reviewed lineage
+and exact current main `5ca8d638258ff7100f0c077c587846dccbd85d03`;
+the intervening Microwatt Rust package is path-disjoint. The core returns
+canonical levels and sorted closures, verifies the domain-separated repository
+boundary digest, recognizes only exact BUILD fronts, and completes the
+50,000,000-unit Unicode-scalar match-work preflight before matching or
+unknown-path policy. It accepts only caller-materialized values and gains no
+checkout, Git, filesystem, process, environment, network, clock, randomness,
+credential, or execution authority.
+
+Independent security review first rejected an unbounded decoded boundary DAG
+canonicalization path and a lexical-adjacency package-root overlap check. The
+repaired exact head validates object graphs before canonicalization under
+depth, queued-value, nonempty-container, and aggregate UTF-8 ceilings; rejects
+shared containers and non-JSON terms; preserves malformed-digest precedence;
+and uses a folded segment trie to reject ancestor and Unicode-fold collisions.
+Hostile alias, depth, non-JSON, string-byte, node, container, punctuation, and
+case-fold probes pass, and exact-head re-review issued SHIP with no findings.
+
+The final BUILD runs 282 tests with two established skips. Warnings-as-errors
+compilation, focused formatting, changelog validation, diff hygiene, current-
+main ancestry, state-graph validation, and artifact cleanup pass. The new
+module measures 90.15% coverage. Package aggregate coverage is 70.02% because
+unrelated legacy Resolver and CLI modules retain pre-existing gaps; do not
+widen this bounded contract tranche into that separate debt. Publish only
+after one final exact-head lifecycle review, then require fresh hosted
+qualification before guarded auto-merge.
+
+#### Draft PR #18544 publication receipt
+
+Publish independently reviewed exact current-main head
+`8256abf1447673df603e4c014d6fdb94300c5ddc` as draft PR #18544 over exact
+base `5ca8d638258ff7100f0c077c587846dccbd85d03`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
+
+Independent focused review approves the durable PR-number receipt at
+`eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18548's identity, creation time,
+publication head/base, current remote head, mergeability, state graph, diff,
+and artifact hygiene all match live evidence. Mark the PR ready and require
+every fresh hosted check on the final exact head to finish acceptably before
+enabling guarded auto-merge.
+
+Independent focused review approves the durable PR-number receipt at
+`852ded240b140abe1c639933f63bc66872644317` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18544's identity, creation time,
+publication head/base, mergeability, state graph, diff, and artifact hygiene
+all match live evidence. Mark the PR ready and require every fresh hosted check
+on the final exact head to finish acceptably before enabling guarded
+auto-merge.
+
+### PR #18544 merge and TypeScript graph/diff selection
+
+All 38 final-head checks for Elixir graph/diff PR #18544 completed acceptably
+at `58f1c24dba4c12c08985710b5cefea028fbf118a`: 14 successes and 24 expected
+path-gated skips, including a successful aggregate CI gate. GitHub reported
+the reviewed head clean and mergeable. Guarded squash auto-merge landed
+`92cf52368f835648df9d54be2cc41be47c82417f` at
+`2026-10-29T01:51:52Z`. The merge is present on fetched main, and the clean
+completed worktree and local branch were removed.
+
+A fresh dependency/leverage pass selects
+`build-tool-typescript-diff-selection-match-work-ceiling-adoption` on branch
+`codex/build-tool-typescript-diff-selection-parity` from that exact merged main.
+Its seven prerequisites are merged. Its three direct and five total unfinished
+descendants tie the pending Lua graph/diff leaf; TypeScript wins the tie-break
+because its existing graph, Git-diff, and hardened matcher modules make the
+implementation surface narrower. From-scratch canonical-CBOR work has lower
+near-term leverage. The tranche must dynamically consume all eight graph and
+twelve diff-selection cases, preserve deterministic all-or-error output, and
+add no Node host authority.
+
+#### TypeScript graph/diff local implementation
+
+Implementation head `775da92315c4e954cb4af3118fb176d5b40ab0bb` adds the
+bounded pure graph/diff core, exact neutral fixture consumption, Go routing,
+and the final primitive-digest guard. Its parent merge
+`8b6da2ceab9f2b3f9baba3dfb17281b24c234e55` preserves the reviewed repair
+lineage and exact selected main as its two parents. Public arrays and records
+are snapshotted from data descriptors without invoking accessors; repository-
+boundary data is cloned into a bounded descriptor-value graph before
+canonicalization, so validation never rereads live caller containers.
+
+BUILD runs 375 tests, TypeScript typechecking passes, focused Go fixture routing
+and `go vet` pass, changelog and lesson validation pass, and graph/diff line
+coverage is 98.93% with 92.86% package-wide coverage. A full Go sweep has one
+unrelated local environment failure because PowerShell is unavailable; all
+other packages pass. Independent exact-head correctness review first rejected
+live caller rereads, post-check object canonicalization, and an outdated reader
+registry. After those repairs it found that a non-string boundary digest could
+still reach property and regular-expression operations. The final primitive-
+string guard and zero-trap Proxy regression close that issue; exact-head
+re-review issued SHIP with no findings and reconfirmed every prior repair,
+current-main ancestry, routing, validation, diff, and artifact hygiene.
+
+#### Draft PR #18548 publication receipt
+
+Publish independently reviewed exact current-main head
+`1f0af52e94868f70300e2690b5510485c08934e0` as draft PR #18548 over exact
+base `92cf52368f835648df9d54be2cc41be47c82417f`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
