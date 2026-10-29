@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) used to
+fall through to `__Sir.callBuiltin("lambda", …)`.  It now emits the closure
+with its arity check inline:
+
+```js
+new __Sir.Closure((..._a) => { if (_a.length !== 2) { throw new TypeError(
+  "arity mismatch: closure expects 2 argument(s), got " + _a.length); } return __lambda_0(..._a); })
+```
+
+JavaScript binds a missing argument to `undefined`, so Twig's
+`((lambda (x y) (+ x y)) 4)` printed `NaN`.  `tests/twig_pairs_and_closures.rs`
+runs the #18460/#18461 Twig programs under `node`, and
+`tests/twig_name_resolution.rs` no longer adds `Feature::Pairs` to the
+module by hand (#18460 fixed the frontend).
+
 ## Unreleased — tests: Twig name resolution runs end to end (#18456)
 
 Test-only; the emitted JavaScript is unchanged.

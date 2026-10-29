@@ -1,5 +1,18 @@
 # TaskApp platform completion v1
 
+## Selected fidelity slice: Qt input width floor (#18394)
+
+Preserve the due-date HostInput's existing scalar width 150 plus exact
+flex-shrink: 0 intent on the Qt control itself, not only its surrounding box.
+Reuse the conservative static width bridge; fill widths, conflicting constraints,
+and geometry/shrink state overrides remain excluded. Keep shared styles and
+unsupported-flex diagnostics unchanged. Require emitted-control regressions
+and package-expanded checks for both themes before publication.
+
+The v0.5.13 checkpoint (#18334) is published and audited via run 40340262448:
+immutable source d1730421d34c9fe6ebe9cc68473f505017659a5a, 13 assets,
+12 checksum entries, and 11 manifest payloads. Coverage is unchanged.
+
 ## Selected release checkpoint: v0.5.13 (#18334)
 
 Prepare the compatible patch for the timeline-label floor merged in #18306,

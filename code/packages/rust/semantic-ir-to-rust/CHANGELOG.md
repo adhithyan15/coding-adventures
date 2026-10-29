@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — Strict closures; readable uncaught raises (issue #18461)
+
+- The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`)
+  lowers to `__sir::strict_arity(<closure>, N)`, which raises a catchable
+  `ArgumentError` ("arity mismatch: closure expects N argument(s), got M")
+  on any other count.  A plain closure drains its arguments with
+  `unwrap_or(Nil)`, so a missing one became `nil` and an extra one was
+  dropped.
+- `__sir::raise` in a module with no exception handling (no
+  `install_panic_hook`, so nothing can catch it) now reports
+  `Class: message` and exits 1, as `report_uncaught` does, instead of
+  unwinding to Rust's opaque `panicked at …: Box<dyn Any>`.
+- `tests/twig_pairs_and_closures.rs` builds and runs the #18460/#18461
+  Twig programs with `rustc`.
+
 ## 0.44.1 — Security fix: `sanitize_ident` was not injective
 
 Task #65 (`/security-review`, discovered while auditing `java-to-

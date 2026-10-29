@@ -24,6 +24,11 @@ let artifact = backend.compile(&sir_module)?;
 Accepts the full v0 feature set minus `TailCalls` (Go has no TCO) and
 `Intrinsics` (empty whitelist in v0).
 
+A *strict* closure (SIR10's `lambda` marker — a Ruby lambda, every Twig
+closure) is wrapped in `_sir_strict_arity(<closure>, N)`, which panics with
+a catchable `ArgumentError: arity mismatch: …` on any other argument count
+(a plain closure would hit Go's own index-out-of-range instead).
+
 ### SIR16 (v1) — complete
 
 The Go backend accepts **all six** SIR16 features below, reaching **full
