@@ -133,8 +133,9 @@ All notable changes to the Go build tool will be documented in this file.
     cycle among these tables is refused, as Cargo refuses it. An uncovered crate must be
     listed exactly in `code/BUILD-EXEMPTIONS`. This is how `engram-app`
     reaches `engram-core` through `engram-core-wasm`. Anything else
-    unresolvable (a case variant, a crate under `vendor/` or outside
-    `code/`, a missing, absolute or empty path) is an error. `-language` runs
+    unresolvable (a case or Unicode-normalization alias, a crate under
+    `vendor/` or outside `code/`, a missing, absolute or empty path) is an
+    error. `-language` runs
     resolve against every discovered package (`ResolveWithTestTriggersAgainst`).
   - `[patch.<source>]` tables are triggers. `[replace]` is refused, as is a
     `git` source that is not `https://` or `ssh://`, and a

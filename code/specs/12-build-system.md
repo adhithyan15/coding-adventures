@@ -284,8 +284,9 @@ would fail every package's build.
 Entries resolve **by path, not by name**: only entries with a `path` field
 count. `filepath.Join(manifest directory, path)` has every symlink resolved
 and is matched against the discovered packages' real directories, so neither
-a crate declaring the same Cargo `name` nor a symlinked or differently-cased
-spelling of the path can move or drop the trigger. The target is:
+a crate declaring the same Cargo `name` nor a symlinked, differently-cased or
+Unicode-normalization-aliased spelling of the path can move or drop the
+trigger. The target is:
 
 - a discovered package root: that package is a trigger. The chain does not
   end there, because the build graph records only a Rust or WASM package's

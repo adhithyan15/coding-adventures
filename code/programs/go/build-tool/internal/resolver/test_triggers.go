@@ -714,7 +714,9 @@ func realDirectory(path string) (string, error) {
 // hasExactPathSpelling reports whether every named component in path has the
 // same spelling as its directory entry. filepath.EvalSymlinks deliberately
 // follows the host filesystem, so on Windows (and case-insensitive macOS
-// volumes) ../Compiler can otherwise resolve to an existing ../compiler.
+// volumes) ../Compiler can otherwise resolve to an existing ../compiler;
+// normalization-insensitive volumes can likewise resolve decomposed Unicode
+// to a precomposed entry.
 // Dot and dot-dot components name no directory entry and are only traversed.
 // Missing paths are left for realDirectory to diagnose below.
 func hasExactPathSpelling(fromDir, path string) bool {
@@ -747,8 +749,17 @@ func hasExactPathSpelling(fromDir, path string) bool {
 		if !exact {
 			// Inspect the directory entries instead of asking the host whether
 			// the misspelling resolves. That makes the result identical on
-			// case-sensitive and case-insensitive filesystems.
+			// case-sensitive and case-insensitive filesystems. EqualFold catches
+			// case variants even when this host would not resolve them. It does
+			// not catch every alias the host may support, notably Unicode
+			// normalization aliases, so ask the filesystem too. A missing entry
+			// remains realDirectory's job; any other result fails closed.
 			if caseVariant {
+				return false
+			}
+			if _, err := os.Lstat(filepath.Join(current, component)); err == nil {
+				return false
+			} else if !os.IsNotExist(err) {
 				return false
 			}
 			return true

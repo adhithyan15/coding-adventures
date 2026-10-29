@@ -154,6 +154,82 @@ func TestSecurityRound2CaseMismatchedPathIsRefused(t *testing.T) {
 	}
 }
 
+func TestSecurityRound2NormalizationMismatchedPathIsRefused(t *testing.T) {
+	const (
+		precomposed = "caf\u00e9"
+		decomposed  = "cafe\u0301"
+	)
+	packages := devDepWorldWith(t,
+		devDepOn+fmt.Sprintf("nested = { path = %q }\n", "../compiler/"+decomposed),
+		map[string]string{
+			"code/packages/rust/compiler/" + precomposed + "/Cargo.toml": "[package]\nname = \"nested\"\n",
+		},
+	)
+
+	// APFS commonly resolves the decomposed spelling to the precomposed
+	// entry. Ext4 commonly does not. Both hosts must reject the manifest:
+	// the former as a non-exact alias and the latter as a missing path.
+	alias := filepath.Join(packages[1].Path, decomposed)
+	_, aliasErr := os.Lstat(alias)
+	_, _, err := ResolveWithTestTriggers(packages)
+	if err == nil {
+		t.Fatal("want an exact-spelling or missing-path error, got none")
+	}
+	if aliasErr == nil {
+		if !strings.Contains(err.Error(), `does not use the directory's exact spelling`) {
+			t.Fatalf("filesystem resolves the normalization alias, but resolver returned: %v", err)
+		}
+		return
+	}
+	if !os.IsNotExist(aliasErr) {
+		t.Fatalf("cannot probe the normalization alias: %v", aliasErr)
+	}
+	if !strings.Contains(err.Error(), `does not exist`) {
+		t.Fatalf("normalization-sensitive filesystem should report the missing path: %v", err)
+	}
+}
+
+func TestHasExactPathSpellingFailsClosedOnFilesystemErrors(t *testing.T) {
+	root := t.TempDir()
+
+	// A genuinely missing component remains true here so follow can report
+	// realDirectory's more useful "does not exist" diagnostic.
+	if !hasExactPathSpelling(root, "missing") {
+		t.Fatal("a missing component should be diagnosed by realDirectory")
+	}
+
+	// ReadDir errors are deterministic when the supposed directory is a file.
+	notDirectory := filepath.Join(root, "not-a-directory")
+	if err := os.WriteFile(notDirectory, []byte("x"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if hasExactPathSpelling(notDirectory, "child") {
+		t.Fatal("a directory-enumeration error must fail closed")
+	}
+
+	// An embedded NUL reaches the no-exact-entry Lstat branch but is not a
+	// missing path on any Go host. The invalid-name error must fail closed
+	// rather than being handed to realDirectory as an ordinary miss.
+	if hasExactPathSpelling(root, "invalid\x00component") {
+		t.Fatal("a component-stat error must fail closed")
+	}
+
+	// Permission bits do not make a directory unreadable on every host
+	// (notably Windows and privileged Unix runs). When they do, pin the same
+	// fail-closed result for the real unreadable-directory case.
+	locked := filepath.Join(root, "locked")
+	if err := os.Mkdir(locked, 0700); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Chmod(locked, 0700) })
+	if err := os.Chmod(locked, 0); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.ReadDir(locked); err != nil && hasExactPathSpelling(locked, "child") {
+		t.Fatal("an unreadable directory must fail closed")
+	}
+}
+
 // Finding C: [patch.<source>] path entries are triggers; every other
 // spelling of patch, and [replace], is refused.
 func TestSecurityRound2PatchTablesAreTriggers(t *testing.T) {
