@@ -144,7 +144,14 @@ func TestSecurityRound2SymlinkedDirectoryResolvesToItsTarget(t *testing.T) {
 }
 
 func TestSecurityRound2CaseMismatchedPathIsRefused(t *testing.T) {
-	wantRefusedWith(t, devDepOn+`compiler = { path = "../Compiler" }`+"\n", gitMarker)
+	packages := devDepWorld(t, devDepOn+`compiler = { path = "../Compiler" }`+"\n")
+	_, _, err := ResolveWithTestTriggers(packages)
+	if err == nil {
+		t.Fatal("want an exact-spelling error, got none")
+	}
+	if !strings.Contains(err.Error(), `path dependency "../Compiler" does not use the directory's exact spelling`) {
+		t.Fatalf("wrong error: %v", err)
+	}
 }
 
 // Finding C: [patch.<source>] path entries are triggers; every other
