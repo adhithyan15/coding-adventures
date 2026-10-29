@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — Strict closures (issue #18461)
+
+The `lambda` marker (SIR10, `BuiltinCall("lambda", [MakeClosure])`) lowers
+to `_sir_strict_arity(<closure>, N)`, a runtime wrapper that panics with a
+catchable `ArgumentError` ("arity mismatch: closure expects N argument(s),
+got M") on any other count.  A plain closure's adapter indexes
+`__args[i]` directly, so a missing argument died with Go's own `index out
+of range` and an extra one was silently dropped.
+`tests/twig_pairs_and_closures.rs` runs the #18460/#18461 Twig programs
+with `go run`.
+
 ## 0.43.0 — Accept `Feature::LoopControl` (task #63)
 
 Third backend (after `semantic-ir-to-javascript` task #62 and

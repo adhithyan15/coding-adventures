@@ -37,7 +37,10 @@ let artifact = backend.compile(&sir_module)?;
 
 The TypeScript backend accepts these SIR features:
 
-- `Closures` — JS function objects with bound captures.
+- `Closures` — JS function objects with bound captures.  A *strict*
+  closure (SIR10's `lambda` marker — a Ruby lambda, every Twig closure)
+  carries an inline check that throws `TypeError: arity mismatch: …` on a
+  wrong argument count.
 - `Pairs` — lowered to `__Sir.Pair` in the inlined runtime.
 - `Symbols` — interned strings via `__Sir.intern`.
 - `Strings` — TypeScript `string`.

@@ -79,7 +79,8 @@
 //! defence-in-depth that fire only on a backend bug (the accept-set
 //! drifting out of sync with what `emit` handles), never on user input.
 
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
+use std::collections::HashMap;
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -95,6 +96,12 @@ thread_local! {
     /// Reset at the start of every `emit_module` so output stays
     /// deterministic regardless of how many modules a process compiles.
     static LOOP_COUNTER: Cell<usize> = const { Cell::new(0) };
+
+    /// Function name → [`Function::exact_arity`] for every function a
+    /// strict closure can check (see [`emit_strict_closure`]).  Filled at
+    /// the start of every `emit_module`, because `emit_expr` sees one
+    /// expression at a time and has no handle on the module.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
 }
 
 fn fresh_loop_id() -> usize {
@@ -110,6 +117,11 @@ fn fresh_loop_id() -> usize {
 /// the module is valid and uses only accepted features.
 pub fn emit_module(m: &Module) -> String {
     LOOP_COUNTER.with(|c| c.set(0));
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     let mut out = String::new();
     emit_banner(&mut out, m);
     // Strict mode goes first (after the banner comment) so the whole
@@ -1613,7 +1625,55 @@ fn emit_oop_name_arg(out: &mut String, e: &Expr) {
     }
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* — as a closure that refuses a call with the
+/// wrong number of arguments:
+///
+/// ```text
+/// (lambda (x y) (+ x y))   →   new __Sir.Closure((..._a) => {
+///                                if (_a.length !== 2) { throw new TypeError(
+///                                  "arity mismatch: closure expects 2 argument(s), got " + _a.length); }
+///                                return __lambda_0(..._a); })
+/// ```
+///
+/// A plain JS function would quietly bind a missing argument to
+/// `undefined` (Twig's `(g 4)` on a two-parameter lambda printed `NaN`) and
+/// drop an extra one; the check makes this backend agree with every other
+/// one (issue #18461).  The check sits *inside* the closure's own function,
+/// so it holds however the closure is reached — `applyClosure`, or a
+/// runtime helper that unwraps `.fn`.
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`Function::exact_arity`] is `None`: defaults, `*rest`, …), the
+/// inner expression is emitted unchanged and keeps its lenient behaviour.
+fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
+    let Expr::MakeClosure { fn_name, captures, .. } = inner else {
+        emit_expr(out, inner, indent);
+        return;
+    };
+    let Some(n) = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied()) else {
+        emit_expr(out, inner, indent);
+        return;
+    };
+    let _ = write!(
+        out,
+        "new __Sir.Closure((..._a) => {{ if (_a.length !== {n}) {{ throw new TypeError(\
+         \"arity mismatch: closure expects {n} argument(s), got \" + _a.length); }} return {}(",
+        sanitize_ident(fn_name)
+    );
+    for c in captures {
+        emit_expr(out, &c.value, indent);
+        out.push_str(", ");
+    }
+    out.push_str("..._a); })");
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // The strict-closure marker (SIR10 "Strict closures").
+    if name == "lambda" && args.len() == 1 {
+        emit_strict_closure(out, &args[0], indent);
+        return;
+    }
     // Method dispatch (`recv.meth(args…)` → `BuiltinCall("__method__",
     // [recv, StrLit("meth"), args…])`, produced by the Ruby/JS frontends)
     // routes to the runtime's `callMethod(recv, name, args…)`, which applies

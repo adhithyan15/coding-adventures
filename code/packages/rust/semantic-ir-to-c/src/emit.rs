@@ -35,6 +35,49 @@ thread_local! {
     /// so the deep `emit_expr` / `emit_assign` call tree can read it without
     /// threading a context.
     static SIGNATURES: RefCell<HashMap<String, Vec<String>>> = RefCell::new(HashMap::new());
+
+    /// Per-module map from a function's RAW name to its
+    /// [`Function::exact_arity`], for the strict-closure marker (see
+    /// [`strict_closure_arity`]).  Snapshotted at the top of [`emit_module`]
+    /// like `SIGNATURES`.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+}
+
+/// The argument count the `lambda` marker's closure must be called with, or
+/// `None` when the marker leaves the closure lenient.
+///
+/// SIR10's strict closure is `BuiltinCall("lambda", [MakeClosure …])`: the
+/// Ruby frontend's `lambda { … }` and every Twig closure.  The emitted C is
+///
+/// ```text
+/// _sir_strict_arity(_sir_make_closure(_sir_thunk_f, ncap, …), N)
+/// ```
+///
+/// which stamps `N` on the closure; `_sir_apply` then refuses a call with any
+/// other argument count ("sir: arity mismatch: …", exit 1).  Without the stamp
+/// a closure body's thunk pads a missing argument with `nil` and ignores an
+/// extra one — right for a Ruby block, wrong for a lambda: Twig's `(g 4)` on
+/// a two-parameter lambda printed `4` (issue #18461).
+///
+/// `args` is the marker's own argument list, so this works even where the
+/// compound-argument path has already hoisted the closure into a temp.
+fn strict_closure_arity(args: &[Expr]) -> Option<usize> {
+    match args {
+        [Expr::MakeClosure { fn_name, .. }] => {
+            STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied())
+        }
+        _ => None,
+    }
+}
+
+/// Render the `lambda` marker around an already-rendered closure value.
+fn emit_strict_closure(out: &mut String, closure: &str, arity: Option<usize>) {
+    match arity {
+        Some(n) => {
+            let _ = write!(out, "_sir_strict_arity({closure}, {n})");
+        }
+        None => out.push_str(closure),
+    }
 }
 
 fn fresh_id() -> u64 {
@@ -90,6 +133,11 @@ pub fn emit_module(m: &Module) -> String {
                 f.params.iter().map(|p| p.name.clone()).collect(),
             );
         }
+    });
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
     });
 
     let mut out = String::new();
@@ -339,7 +387,6 @@ fn collect_closure_targets(m: &Module) -> Vec<String> {
             semantic_ir::walker::walk_expr_default(self, e, depth);
         }
     }
-
     let mut targets = Targets(std::collections::BTreeSet::new());
     targets.visit_module(m);
     targets.0.into_iter().collect()
@@ -1811,6 +1858,11 @@ fn emit_call_with_arg_names(out: &mut String, e: &Expr, names: &[String]) {
             }
             out.push(')');
         }
+        // The strict-closure marker's closure was hoisted into `names[0]`;
+        // its arity still comes from the original `MakeClosure` argument.
+        Expr::BuiltinCall { name, args, .. } if name == "lambda" && names.len() == 1 => {
+            emit_strict_closure(out, &names[0], strict_closure_arity(args));
+        }
         Expr::BuiltinCall { name, .. } => emit_builtin_with_names(out, name, names),
         _ => unreachable!("emit_call_with_arg_names on non-call"),
     }
@@ -2097,6 +2149,13 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
 
 /// A builtin call whose arguments are all simple.
 fn emit_builtin_simple(out: &mut String, name: &str, args: &[Expr], indent: usize) {
+    // SIR10 strict closure — see `strict_closure_arity`.
+    if name == "lambda" && args.len() == 1 {
+        let mut closure = String::new();
+        emit_expr(&mut closure, &args[0], indent);
+        emit_strict_closure(out, &closure, strict_closure_arity(args));
+        return;
+    }
     // SIR17 `raise`.  The FIRST argument decides the shape (mirroring the
     // Go/Rust/JS/Python backends for cross-backend parity):
     //   • no argument — re-raise the exception currently being handled.
@@ -2551,6 +2610,8 @@ fn is_supported_builtin(name: &str) -> bool {
         || matches!(
             name,
             "and" | "or"
+                // SIR10 strict closure (`emit_builtin_simple`).
+                | "lambda"
                 | "raise"
                 | "__new__"
                 | "__def_method__"
