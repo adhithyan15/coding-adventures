@@ -4,6 +4,11 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+Entries added after `task-app-v0.5.15` accumulate here until the next version is
+cut.
+
+## [0.5.15] - 2026-10-29
+
 ### Fixed
 
 - Preserve the Board empty-column drop zone's authored 60-pixel minimum height
@@ -11,9 +16,6 @@ All notable changes to the `task-app` web program are documented here.
   routing or artifact coverage. Reading its styles exposes three existing Qt
   drops (display, flex-direction, gap), each pinned to one occurrence: total
   76 to 79. Their lowering is tracked in #18563; further increases still fail.
-
-Entries added after `task-app-v0.5.14` accumulate here until the next version is
-cut.
 
 ## [0.5.14] - 2026-10-28
 
