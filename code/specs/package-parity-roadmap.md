@@ -19597,7 +19597,7 @@ bulk and null array values, strict canonical grammar, iterative bounded
 encoding and decoding, failure-atomic fragmented input, stable errors, BUILD
 fronts, package documentation, and an empty authority profile. UTF-8 line
 preflight and numeric-header scanning enforce their limits before proportional
-allocation, including fragmented unterminated headers. Thirteen tests,
+allocation, including fragmented unterminated headers. Twelve tests,
 release build, strict Swift formatting, manifest and JSON checks, lessons,
 diff, and artifact hygiene pass. Independent LLVM measurement reports 96.84%
 production lines with all 37 functions executed. Exact-head review first
@@ -19786,7 +19786,7 @@ After merging exact fetched main
 `8035689ac23a971a4e77215a3eb651c90f441da0` as
 `5729db118d09cf28e78f2ee700cc23db161d95f1`, the Swift RESP branch
 passes all 13 tests and release build again. Lua and Rust graph/diff retain
-greater raw leverage at three direct and five total unfinished descendants,
+greater raw leverage at four direct and six total unfinished descendants,
 but both still require shared Go routing that overlaps open PR #18495. The
 dependency-free, package-path-disjoint Swift RESP item is therefore the
 highest-leverage publication-safe candidate for the newly free parity slot.
