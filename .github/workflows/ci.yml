@@ -4212,6 +4212,25 @@ jobs:
             cpanm --quiet --notest Test2::V0
           fi
 
+      # GHC 9.4's bundled linker cannot parse the arm64e.x1 targets added to
+      # the moving Command Line Tools macOS 27 SDK. Select an installed,
+      # reviewed Xcode SDK before Haskell setup so cabal never inherits the
+      # incompatible CLT path from the runner image. The macOS 26 arm64 image
+      # publishes Xcode 26.0.1 with exactly the macOS 26.0 SDK.
+      - name: Select reviewed macOS SDK for Haskell
+        if: needs.detect.outputs.needs_haskell == 'true' && runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          developer_dir=/Applications/Xcode_26.0.1.app/Contents/Developer
+          test -d "$developer_dir"
+          sdk_root="$(DEVELOPER_DIR="$developer_dir" xcrun --sdk macosx --show-sdk-path)"
+          test "$(basename "$sdk_root")" = MacOSX26.0.sdk
+          {
+            echo "DEVELOPER_DIR=$developer_dir"
+            echo "SDKROOT=$sdk_root"
+          } >> "$GITHUB_ENV"
+
       - name: Set up Haskell
         if: needs.detect.outputs.needs_haskell == 'true'
         uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
