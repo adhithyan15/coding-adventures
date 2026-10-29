@@ -1370,6 +1370,7 @@ members = [
   "x509-ocsp-issuer-bound-responder",
   "x509-ocsp-authenticated-target-revocation",
   "x509-ocsp-reviewed-server-revocation-binding",
+  "tls13-extension-block",
   "tls13-record-nonce",
   "tls13-cipher-suite-policy",
   "tls13-hkdf-label",
