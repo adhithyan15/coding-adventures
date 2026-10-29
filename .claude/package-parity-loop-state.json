@@ -16907,6 +16907,17 @@
       "post17905_audit_note": "Saved documentary profile decisions, independent witnesses and validation preparation incorporated at the exact owner-notes entry. Historical pins are immutable; unresolved scope decisions, selection blocks and dependencies remain. No native qualification or reviewed exception credited."
     },
     {
+      "id": "package-parity-state-duplicate-merge-receipt-cleanup",
+      "title": "Remove duplicate package-parity merge receipt keys and enforce strict state parsing",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "discovered_at": "2026-10-29T13:07:05Z",
+      "discovered_revision": "28d11300369ab478abaa1ed33efc4cfc8835b953",
+      "notes": "Independent SHA-512 publication review confirmed that current main already contains duplicate merged_head_revision, merged_at, merge_revision, and merge_notes keys in python-gradient-descent-build-front-coverage. The receipt values agree except for equivalent merge-note wording, so graph and inventory results are unaffected, but strict duplicate-key JSON readers reject the state. Remove only the redundant keys while preserving the exact reviewed head, merge time, merge revision, and full receipt meaning; then add a strict duplicate-key validation path so later lifecycle updates fail closed. Keep implementation packages, historical receipts, and unrelated owner status unchanged."
+    },
+    {
       "id": "ruby-activation-matrix-perceptron-build-front-coverage",
       "title": "Add tested BUILD fronts for Ruby activation-functions, matrix, and perceptron",
       "status": "pending",
@@ -27236,7 +27247,7 @@
     "receipt_count": 1,
     "evidence": "code/specs/package-parity-audits/20261029-swift-resp-postmerge-inventory.json",
     "native_qualification": false,
-    "successor_selected": false,
+    "successor_selected": true,
     "external_successor_observed": null
   },
   "pending_inventory_deltas": [

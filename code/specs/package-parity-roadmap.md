@@ -19954,3 +19954,13 @@ packages; collisions and unknown buckets remain zero. The durable receipt is
 intervening BUILD identity exists, and the new blocked TLS owner does not alter
 the in-progress SHA-512 selection or its two direct/eighteen total unfinished
 descendants.
+
+Final publication review also records one inherited ledger repair before the
+next prioritization: current main contains duplicate merge-receipt keys in
+`python-gradient-descent-build-front-coverage`. The duplicate values agree
+apart from equivalent note wording, so no current graph or inventory result
+changes, but strict JSON readers reject the object. New pending owner
+`package-parity-state-duplicate-merge-receipt-cleanup` must remove only the
+redundant keys, preserve the exact receipt, and add strict duplicate-key state
+validation. The verified Swift RESP postmerge refresh now truthfully marks its
+local SHA-512 successor as selected while retaining no external successor.
