@@ -12,11 +12,11 @@ use diagram_ir::{
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
     StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
     StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRelationship,
-    StructuralRouting,
+    StructuralRelationshipMetadata, StructuralRouting,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.31.0";
+pub const VERSION: &str = "0.32.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -1438,11 +1438,11 @@ fn layout_relationships(
                     parallel_relationship_lane(diagram, relationship_index),
                 )
             };
-            let label = rel.label.as_ref().map(|label| {
+            let label = structural_relationship_label(rel).map(|label| {
                 let mut position = path_midpoint(&points);
                 position.x += rel.label_offset_x;
                 position.y += rel.label_offset_y;
-                (position, label.clone())
+                (position, label)
             });
             Some(LayoutedStructuralRelationship {
                 from_id: rel.from.clone(),
@@ -1463,6 +1463,17 @@ fn layout_relationships(
             })
         })
         .collect()
+}
+
+fn structural_relationship_label(relationship: &StructuralRelationship) -> Option<String> {
+    let label = relationship.label.as_ref()?;
+    let mut lines = vec![label.clone()];
+    if let Some(StructuralRelationshipMetadata::C4(metadata)) = relationship.metadata.as_ref() {
+        if let Some(technology) = metadata.technology.as_ref().filter(|value| !value.is_empty()) {
+            lines.push(format!("[{technology}]"));
+        }
+    }
+    Some(lines.join("\n"))
 }
 
 fn relationship_endpoint_bounds(
@@ -1551,6 +1562,7 @@ mod tests {
                 label: None,
                 label_offset_x: 0.0,
                 label_offset_y: 0.0,
+                metadata: None,
                 style: None,
             }],
         }
@@ -1558,7 +1570,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.31.0");
+        assert_eq!(crate::VERSION, "0.32.0");
     }
 
     #[test]
