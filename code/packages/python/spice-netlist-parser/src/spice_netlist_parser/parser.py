@@ -6,6 +6,7 @@ import json
 import math
 import re
 from dataclasses import dataclass, field
+from itertools import product
 from dataclasses import fields as dataclass_fields
 from typing import Literal
 
@@ -345,6 +346,15 @@ class StepCard:
 
 
 @dataclass(frozen=True, slots=True)
+class _TableParameter:
+    """A numeric LTspice ``table`` parameter driven by a stepped selector."""
+
+    parameter: str
+    selector: str
+    entries: tuple[tuple[float, float], ...]
+
+
+@dataclass(frozen=True, slots=True)
 class _SourceSpec:
     dc_value: float
     waveform: Waveform | None = None
@@ -648,13 +658,12 @@ def _parse_netlist(
     parameter_overrides: dict[str, float] | None = None,
     capture_steps: bool = True,
 ) -> ParsedNetlist:
-    parameters, step_cards = _parameter_controls(text)
-    if step_cards and len(step_cards) > 1:
-        raise NetlistParseError("LTspice v1 supports one .step param card per deck")
-    if step_cards:
-        parameters.setdefault(step_cards[0].parameter.lower(), step_cards[0].values[0])
+    parameters, step_cards, table_parameters = _parameter_controls(text)
+    for step_card in step_cards:
+        parameters.setdefault(step_card.parameter, step_card.values[0])
     if parameter_overrides:
         parameters.update({name.lower(): value for name, value in parameter_overrides.items()})
+    _resolve_table_parameters(table_parameters, parameters)
     materialized_text = _materialize_parameter_text(text, parameters)
     parsed = ParsedNetlist(
         source_text=text,
@@ -732,11 +741,14 @@ def _parse_netlist(
     return parsed
 
 
-def _parameter_controls(text: str) -> tuple[dict[str, float], list[StepCard]]:
+def _parameter_controls(
+    text: str,
+) -> tuple[dict[str, float], list[StepCard], list[_TableParameter]]:
     """Collect the narrow LTspice parameter controls before card lowering."""
 
     parameters: dict[str, float] = {}
     step_cards: list[StepCard] = []
+    table_parameters: list[_TableParameter] = []
     _, cards = _berkeley_logical_cards(_without_control_blocks(text))
     for line_number, card in cards:
         fields = _split_fields(card)
@@ -745,15 +757,43 @@ def _parameter_controls(text: str) -> tuple[dict[str, float], list[StepCard]]:
         directive = fields[0].lower()
         try:
             if directive == ".param":
-                _parse_parameter_card(fields, parameters)
+                _parse_parameter_card(card, fields, parameters, table_parameters)
             elif directive == ".step":
                 step_cards.append(_parse_step_card(fields))
         except NetlistParseError as exc:
             raise NetlistParseError(f"line {line_number}: {exc}") from exc
-    return parameters, step_cards
+    return parameters, step_cards, table_parameters
 
 
-def _parse_parameter_card(fields: list[str], parameters: dict[str, float]) -> None:
+def _parse_parameter_card(
+    card: str,
+    fields: list[str],
+    parameters: dict[str, float],
+    table_parameters: list[_TableParameter],
+) -> None:
+    table_match = re.fullmatch(
+        r"\.param\s+([A-Za-z_][A-Za-z0-9_]*)\s*=\s*table\s*\((.*)\)\s*",
+        card.strip(),
+        flags=re.IGNORECASE,
+    )
+    if table_match is not None:
+        name = _parameter_name(table_match.group(1))
+        if name in parameters or any(table.parameter == name for table in table_parameters):
+            raise NetlistParseError(f"duplicate .param definition {table_match.group(1)!r}")
+        values = [value.strip() for value in table_match.group(2).split(",")]
+        if len(values) < 3 or len(values) % 2 == 0:
+            raise NetlistParseError(".param table requires a selector and key/value pairs")
+        table_parameters.append(
+            _TableParameter(
+                parameter=name,
+                selector=_parameter_name(values[0]),
+                entries=tuple(
+                    (parse_value(values[index]), parse_value(values[index + 1]))
+                    for index in range(1, len(values), 2)
+                ),
+            )
+        )
+        return
     _require_min_fields(fields, 2, ".param")
     index = 1
     while index < len(fields):
@@ -770,6 +810,25 @@ def _parse_parameter_card(fields: list[str], parameters: dict[str, float]) -> No
         if normalized in parameters:
             raise NetlistParseError(f"duplicate .param definition {name!r}")
         parameters[normalized] = parse_value(value)
+
+
+def _resolve_table_parameters(
+    table_parameters: list[_TableParameter], parameters: dict[str, float]
+) -> None:
+    for table in table_parameters:
+        if table.selector not in parameters:
+            raise NetlistParseError(
+                f".param table selector {table.selector!r} is not a numeric parameter"
+            )
+        selector = parameters[table.selector]
+        for key, value in table.entries:
+            if math.isclose(selector, key, rel_tol=1e-12, abs_tol=1e-15):
+                parameters[table.parameter] = value
+                break
+        else:
+            raise NetlistParseError(
+                f".param table has no value for selector {table.selector!r}={selector:g}"
+            )
 
 
 def _parse_step_card(fields: list[str]) -> StepCard:
@@ -870,12 +929,11 @@ def run_analysis_plan(
     """Execute the runnable plan for a parsed netlist."""
 
     if parsed.step_cards:
-        step_card = parsed.step_cards[0]
         results: list[AnalysisExecutionResult] = []
-        for value in step_card.values:
+        for step_values in _step_value_combinations(parsed.step_cards):
             materialized = _parse_netlist(
                 parsed.source_text,
-                parameter_overrides={step_card.parameter: value},
+                parameter_overrides=step_values,
                 capture_steps=False,
             )
             for result in run_analysis_plan(materialized, plan):
@@ -886,7 +944,7 @@ def run_analysis_plan(
                         analysis=result.analysis,
                         result=result.result,
                         temperature_kelvin=result.temperature_kelvin,
-                        step_values={step_card.parameter: value},
+                        step_values=step_values,
                     )
                 )
         return results
@@ -912,6 +970,13 @@ def run_analysis_plan(
     return results
 
 
+def _step_value_combinations(step_cards: list[StepCard]) -> list[dict[str, float]]:
+    return [
+        dict(zip((card.parameter for card in step_cards), values, strict=True))
+        for values in product(*(card.values for card in step_cards))
+    ]
+
+
 def run_netlist(text: str) -> list[AnalysisExecutionResult]:
     """Parse a deck and execute its runnable `.op`, `.dc`, `.ac`, `.tran`, and `.tf` cards."""
 
@@ -934,14 +999,14 @@ def run_netlist_json(text: str) -> str:
     wrdata: list[dict[str, object]] = []
     step_runs = [(None, parsed)] if not parsed.step_cards else [
         (
-            {parsed.step_cards[0].parameter: value},
+            step_values,
             _parse_netlist(
                 parsed.source_text,
-                parameter_overrides={parsed.step_cards[0].parameter: value},
+                parameter_overrides=step_values,
                 capture_steps=False,
             ),
         )
-        for value in parsed.step_cards[0].values
+        for step_values in _step_value_combinations(parsed.step_cards)
     ]
     for step_values, materialized in step_runs:
         for temperature_kelvin in materialized.analysis_temperatures_kelvin():
