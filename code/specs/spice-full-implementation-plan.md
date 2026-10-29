@@ -138,6 +138,28 @@ model-card parameter, or a UI artifact is not a completion signal.
      interchange, advanced nonlinear convergence, mixed-signal coupling, and
      Mosaic/LTspice-style workflow compatibility by contract family rather than
      by individual parameter or presentation detail.
+   - LTspice stepping phase: `.step param` cards now execute `LIST` and
+     linear-range values as source-order Cartesian products, with static
+     numeric `.param` substitution and exact numeric
+     `table(selector, key, value, ...)` parameter mappings. Every run emits its
+     full `stepValues` map across Python, Rust, TypeScript, and CLI JSON. The
+     shared corpus covers both a four-run two-card sweep and a selector-driven
+     two-parameter table. Interpolation, file/string tables, logarithmic
+     stepping, and general expression evaluation remain explicitly partial.
+     ngspice `.control` numeric `foreach` loops now normalize one top-level
+     `.param` `alterparam` target into source-ordered runs after `reset` and
+     `run`, with the shared corpus preserving each `stepValues` map. `while`,
+     direct element `alter`, nested loops, and expressions remain explicit
+     gaps. Reprioritized next: temperature/corner/Monte Carlo sweep semantics;
+     then the remaining
+     LTspice expression/table forms. These remain separate compatibility rows
+     because ngspice's manual treats repeated parameter runs as
+     control-language work, while LTspice gives `.step` a deck-level contract.
+   - Discovery: fresh sparse verification of the TypeScript parser must include
+     the adjacent `code/packages/typescript/spice-engine` workspace dependency;
+     otherwise the package's normal file dependency cannot compile. Include it
+     in future focused SPICE worktrees before treating a missing `tsc` import as
+     a product failure.
    - Discovery: align the Rust Mosaic app facade's runnable-analysis inventory
      with parser-plan `.tf` execution during the UI/API phase. This is not a
      Berkeley corpus blocker because the cross-language parser plans already

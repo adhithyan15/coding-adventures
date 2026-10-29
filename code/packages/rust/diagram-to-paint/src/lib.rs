@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.76.0";
+pub const VERSION: &str = "0.77.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -39,7 +39,7 @@ use diagram_ir::{
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram, WardleyForceKind, WardleyLinkFlow, WardleySourceStrategy,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
     LayoutedBoardCard, LayoutedBoardDiagram, LayoutedPacketDiagram,
-    LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram,
+    LayoutedSequenceDiagram, LayoutedSequenceItem, LayoutedStructuralDiagram, LayoutedStructuralNode,
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
     GanttTaskTags, SequenceProperty, SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind,
@@ -7204,6 +7204,47 @@ fn push_architecture_icon(instructions: &mut Vec<PaintInstruction>, name: &str, 
     }
 }
 
+fn structural_database_instruction(node: &LayoutedStructuralNode) -> PaintInstruction {
+    lined_cylinder_instruction(
+        (node.x, node.y, node.width, node.height),
+        Some(node.style.fill.clone()),
+        node.style.stroke.clone(),
+        node.style.stroke_width,
+        None,
+    )
+}
+
+fn structural_queue_instruction(node: &LayoutedStructuralNode) -> PaintInstruction {
+    let curve = (node.width * 0.12).min(18.0);
+    PaintInstruction::Path(PaintPath {
+        base: PaintBase::default(),
+        commands: vec![
+            PathCommand::MoveTo { x: node.x + curve, y: node.y },
+            PathCommand::LineTo { x: node.x + node.width, y: node.y },
+            PathCommand::CubicTo {
+                cx1: node.x + node.width - curve, cy1: node.y + node.height * 0.25,
+                cx2: node.x + node.width - curve, cy2: node.y + node.height * 0.75,
+                x: node.x + node.width, y: node.y + node.height,
+            },
+            PathCommand::LineTo { x: node.x + curve, y: node.y + node.height },
+            PathCommand::CubicTo {
+                cx1: node.x, cy1: node.y + node.height * 0.75,
+                cx2: node.x, cy2: node.y + node.height * 0.25,
+                x: node.x + curve, y: node.y,
+            },
+            PathCommand::Close,
+        ],
+        fill: Some(node.style.fill.clone()),
+        fill_rule: None,
+        stroke: Some(node.style.stroke.clone()),
+        stroke_width: Some(node.style.stroke_width),
+        stroke_cap: None,
+        stroke_join: Some(StrokeJoin::Round),
+        stroke_dash: None,
+        stroke_dash_offset: None,
+    })
+}
+
 pub fn diagram_to_paint_structural<S, M, R>(
     diagram: &LayoutedStructuralDiagram,
     options: &DiagramToPaintOptions<'_, S, M, R>,
@@ -7234,6 +7275,17 @@ where
             "flowchart.htmlLabels".into(),
             diagram.render_config.html_labels.to_string(),
         );
+    }
+    if diagram.kind == diagram_ir::StructuralKind::C4 {
+        if let Some(value) = diagram.render_config.c4_diagram_type {
+            scene_metadata.insert("c4.diagramType".into(), value.as_str().into());
+        }
+        if let Some(value) = diagram.render_config.c4_shape_in_row {
+            scene_metadata.insert("c4.shapeInRow".into(), value.to_string());
+        }
+        if let Some(value) = diagram.render_config.c4_boundary_in_row {
+            scene_metadata.insert("c4.boundaryInRow".into(), value.to_string());
+        }
     }
     let lf = options.label_font.clone();
     let ls = lf.size;
@@ -7444,29 +7496,38 @@ where
         node_font.weight = node.style.font_weight;
         node_font.italic = node.style.font_italic;
         node_font.family.clone_from(&node.style.font_family);
-        // Outer rect
-        instructions.push(PaintInstruction::Rect(PaintRect {
-            base: PaintBase::default(),
-            x: node.x,
-            y: node.y,
-            width: node.width,
-            height: node.height,
-            fill: Some(node.style.fill.clone()),
-            stroke: Some(node.style.stroke.clone()),
-            stroke_width: Some(node.style.stroke_width),
-            corner_radius: Some(node.style.corner_radius),
-            stroke_dash: None,
-            stroke_dash_offset: None,
-        }));
+        let outer = match node.node_kind {
+            StructuralNodeKind::Database => structural_database_instruction(node),
+            StructuralNodeKind::Queue => structural_queue_instruction(node),
+            _ => PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height,
+                fill: Some(node.style.fill.clone()),
+                stroke: Some(node.style.stroke.clone()),
+                stroke_width: Some(node.style.stroke_width),
+                corner_radius: Some(node.style.corner_radius),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
+        };
+        instructions.push(outer);
         // Header divider
+        let divider_inset = if node.node_kind == StructuralNodeKind::Queue {
+            (node.width * 0.12).min(18.0)
+        } else {
+            0.0
+        };
         instructions.push(PaintInstruction::Path(line_path(
             &[
                 Point {
-                    x: node.x,
+                    x: node.x + divider_inset,
                     y: node.y + header_height,
                 },
                 Point {
-                    x: node.x + node.width,
+                    x: node.x + node.width - divider_inset,
                     y: node.y + header_height,
                 },
             ],
@@ -10072,7 +10133,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.76.0");
+        assert_eq!(crate::VERSION, "0.77.0");
     }
 
     #[test]
@@ -10197,6 +10258,37 @@ mod tests {
                 .count()
                 >= 2
         );
+    }
+
+    #[test]
+    fn c4_database_and_queue_nodes_lower_to_backend_neutral_paths() {
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let node = |id: &str, node_kind, x| diagram_ir::LayoutedStructuralNode {
+            id: id.into(), node_kind, x, y: 12.0, width: 160.0, height: 72.0,
+            header: id.into(), stereotype: None, icon_name: None, icon_text: None,
+            style: default_style(), compartments: vec![],
+        };
+        let layout = LayoutedStructuralDiagram {
+            kind: diagram_ir::StructuralKind::C4,
+            width: 380.0, height: 100.0, title: None,
+            accessibility_title: None, accessibility_description: None,
+            architecture_config: None, render_config: Default::default(), groups: vec![],
+            nodes: vec![
+                node("Database", StructuralNodeKind::Database, 20.0),
+                node("Queue", StructuralNodeKind::Queue, 200.0),
+            ],
+            relationships: vec![],
+        };
+
+        let scene = diagram_to_paint_structural(&layout, &opts);
+        assert!(matches!(scene.instructions[0], PaintInstruction::Group(_)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::Close))
+        )));
     }
 
     #[test]
@@ -10358,6 +10450,9 @@ mod tests {
             render_config: diagram_ir::StructuralRenderConfig {
                 use_max_width: false,
                 html_labels: false,
+                c4_diagram_type: None,
+                c4_shape_in_row: None,
+                c4_boundary_in_row: None,
             },
             groups: vec![],
             nodes: vec![],

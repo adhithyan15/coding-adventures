@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed — the `(Qt, "flex-grow")` pin outlived UI21 §2.2
+
+The Qt emitter now lowers `flex-grow` on a direct `Row` / `Column` child to
+`Layout.fillWidth` / `Layout.fillHeight`. `deck-option-button` is such a
+child, so this package no longer drops `flex-grow` on Qt (its Qt drop report
+falls from 2 to 1). Without this change, the inverse ratchet
+(`no_pinned_style_drop_has_silently_been_fixed`) would fail. Removed the pin.
+
 - Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
 
 ### Fixed — the `(Qt, "width")` pin outlived #17915

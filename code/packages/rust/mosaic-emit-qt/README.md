@@ -1,5 +1,8 @@
 # mosaic-emit-qt
 
+HostDropTarget retains a finite nonnegative static `min-height` on its outer
+Item, which owns the DropArea bounds. State-dependent minima remain excluded.
+
 Host controls also retain a static scalar non-shrinking width floor, using the
 same conservative bridge as text and containers. Fill widths, conflicts, and
 state geometry remain excluded; general flex support is not claimed.
@@ -87,8 +90,8 @@ import QtQuick.Layouts
 Item {
     id: mosaicRoot
     // Component: ProfileCard
-    implicitWidth: childrenRect.x + childrenRect.width
-    implicitHeight: childrenRect.y + childrenRect.height
+    implicitWidth: mosaicLayoutRoot.implicitWidth
+    implicitHeight: mosaicLayoutRoot.implicitHeight
     property var mosaicHost: null
 
     function applyMosaicProps(props) {
@@ -107,6 +110,9 @@ Item {
     onAvatarClick: mosaicEvent({ "event": "onAvatarClick" })
 
     ColumnLayout {
+        id: mosaicLayoutRoot
+        anchors.left: parent.left
+        anchors.right: parent.right
         Text {
             text: displayName
         }
@@ -130,7 +136,12 @@ Three things to notice:
    `implicitWidth`/`implicitHeight`. That is the channel `RowLayout`,
    `ColumnLayout`, and `GridLayout` read to decide how much room to give
    a child; without it every generated component reports `0 x 0` and
-   siblings collapse on top of each other.
+   siblings collapse on top of each other. A `Row` / `Column` layout root
+   is also **bound to the root** (UI21 §2.2). A `Column` takes the root's
+   width always, and its height when a child grows into it. A `Row` takes
+   the width when a child grows. The root then reads the layout's
+   *implicit* size, never `childrenRect`, which would loop through those
+   anchors. Other root tags keep the content-derived `childrenRect` form.
 3. **Slots become `property` declarations**, **emits become `signal`
    declarations**. This is the QML analogue of React's `props` and
    event dispatch — the host application binds the properties and
@@ -488,7 +499,15 @@ Each deferred item is intentionally a focused, additive PR.
 - `HostScroll` lowers to `ScrollView { ... children ... }`. UI61's `axis`
   pins the cross-axis content extent as well as hiding that scrollbar --
   `ScrollBar.policy: AlwaysOff` removes only the bar, and leaves the content
-  flickable on the axis it was meant to disable.
+  flickable on the axis it was meant to disable. Pinning leaves the viewport
+  no implicit size on that axis, so a vertical `HostScroll` in a `Column`
+  gets `Layout.fillWidth: true` (a horizontal one in a `Row`,
+  `Layout.fillHeight: true`).
+- `flex-grow` on a direct child of a `Row` / `Column` lowers to
+  `Layout.fillWidth` / `Layout.fillHeight` (UI21 §2.2). A `Column` shell
+  whose `HostScroll` grows therefore gets a bounded viewport, which
+  `fixtures/host-scroll-column-shell` and
+  `code/scripts/qt-column-shell-scroll-render-check.qml` measure in CI.
 - The versionless `QtQuick.Controls` import is added only when needed.
 - `If` and `For` lower to conditional `Loader`s and model-backed delegates.
 - Canonical dynamic `HostTable` lowers to `HorizontalHeaderView` + `TableView`

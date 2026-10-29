@@ -1399,11 +1399,11 @@ mod tests {
             &[Feature::Loops, Feature::MutableBindings],
         );
         let a = compile(&m).expect("compile");
-        assert!(a.source.contains("def __block_0():"), "expected lifted def; got:\n{}", a.source);
+        assert!(a.source.contains("def _sir_block_0():"), "expected lifted def; got:\n{}", a.source);
         assert!(a.source.contains("nonlocal k"), "got:\n{}", a.source);
         assert!(a.source.contains("nonlocal total"), "got:\n{}", a.source);
         // The def is called from the ternary, and the loop lives inside it.
-        assert!(a.source.contains("__block_0() if _sir_truthy(True)"), "got:\n{}", a.source);
+        assert!(a.source.contains("_sir_block_0() if _sir_truthy(True)"), "got:\n{}", a.source);
         assert!(a.source.contains("while _sir_truthy(_sir_lt(k, 2)):"), "got:\n{}", a.source);
     }
 

@@ -88,9 +88,30 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 29,
         "swiftui": 57,
         "compose": 40,
-        "qt": 76,  # Notes 0.3.0 (E3): two Qt text-align drops gone
+        # Notes 0.3.0 (E3): two Qt text-align drops gone (78 -> 76).
+        # #18559 exposes three existing Board drop-target styles (+3).
+        # UI21 §2.2 then removes task-name flex-grow (-1) and exposes
+        # calendar-cell-drop gap and width (+2), for a combined total of 80.
+        "qt": 80,
         "flutter": 69,
     }
+
+
+@pytest.mark.parametrize(
+    ("primitive", "baseline"),
+    [("display", 1), ("flex-direction", 1), ("gap", 2)],
+)
+def test_qt_newly_reached_board_styles_reject_further_increases(
+    primitive: str, baseline: int
+) -> None:
+    report = _report("qt")
+    report["styleDegradations"].append(_style_entry("qt", primitive))
+    errors = validate_style_degradations("qt", report, "report.json")
+    assert any(
+        f"style drop '{primitive}' increased from at most {baseline} to {baseline + 1}"
+        in error
+        for error in errors
+    )
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
@@ -233,7 +254,9 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     [
         ("qt", "align", 1, "unbaselined style drop 'align'"),
         ("qt", "height", 1, "unbaselined style drop 'height'"),
-        ("qt", "width", 1, "unbaselined style drop 'width'"),
+        # Qt allows the one calendar-cell-drop width (UI21 §2.2); a second
+        # width drop is still a regression.
+        ("qt", "width", 2, "style drop 'width' increased from at most 1 to 2"),
         ("flutter", "align", 1, "unbaselined style drop 'align'"),
         (
             "flutter",

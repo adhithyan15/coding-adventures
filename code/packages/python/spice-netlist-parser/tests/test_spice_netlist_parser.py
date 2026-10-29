@@ -56,6 +56,7 @@ from spice_netlist_parser import (
     build_analysis_plan,
     parse_netlist,
     run_netlist,
+    run_netlist_json,
 )
 from spice_netlist_parser.parser import parse_value
 
@@ -178,6 +179,48 @@ def test_runs_two_axis_dc_sweep_with_second_source_as_outer_axis() -> None:
     assert [(row.axis_value, row.secondary_axis_value) for row in rows] == [
         tuple(point) for point in case["expected"]["points"]
     ]
+
+
+def test_runs_shared_ltspice_step_v1_corpus() -> None:
+    corpus_path = Path(__file__).resolve().parents[4] / "grammars/spice/ltspice-step-v1-corpus.json"
+    corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+
+    assert corpus["suite"] == "ltspice-step-v1"
+    for case in corpus["cases"]:
+        expected = case["expected"]
+        parsed = parse_netlist(case["deck"])
+        assert [
+            {"parameter": card.parameter, "values": list(card.values)}
+            for card in parsed.step_cards
+        ] == expected["stepCards"]
+        results = parsed.run_analysis_plan()
+        assert [result.step_values for result in results] == expected["stepValues"]
+        assert [result.result.node_voltages["out"] for result in results] == pytest.approx(expected["out"])
+        cli_payload = json.loads(run_netlist_json(case["deck"]))
+        assert [analysis["stepValues"] for analysis in cli_payload["analyses"]] == expected["stepValues"]
+
+
+def test_runs_shared_ngspice_control_parameter_corpus() -> None:
+    corpus_path = Path(__file__).resolve().parents[4] / "grammars/spice/ngspice-control-parameter-v1-corpus.json"
+    for case in json.loads(corpus_path.read_text(encoding="utf-8"))["cases"]:
+        expected = case["expected"]
+        parsed = parse_netlist(case["deck"])
+        assert [
+            {"parameter": card.parameter, "values": list(card.values)}
+            for card in parsed.step_cards
+        ] == expected["stepCards"]
+        results = parsed.run_analysis_plan()
+        assert [result.step_values for result in results] == expected["stepValues"]
+        assert [result.result.node_voltages["out"] for result in results] == pytest.approx(expected["out"])
+        payload = json.loads(run_netlist_json(case["deck"]))
+        assert [analysis["stepValues"] for analysis in payload["analyses"]] == expected["stepValues"]
+
+
+def test_ngspice_control_parameter_runs_require_alter_reset_run_order() -> None:
+    with pytest.raises(NetlistParseError, match="alterparam followed by reset and run"):
+        parse_netlist(
+            ".param RLOAD=1k\n.control\nforeach load 1k 3k\n  reset\n  alterparam RLOAD=$load\n  run\nend\n.endc\n.end\n"
+        )
 
 
 def test_runs_shared_berkeley_v1_core_corpus() -> None:

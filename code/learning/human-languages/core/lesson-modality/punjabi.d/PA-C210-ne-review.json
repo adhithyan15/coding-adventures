@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C210-ne-review",
+    "language": "punjabi",
+    "chapter": 210,
+    "sequence": 11400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc1f7a29838d2ded"
+  },
+  "findings": []
+}

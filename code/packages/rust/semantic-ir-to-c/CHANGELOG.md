@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased — User names kept apart from libc and the runtime; `lambda` arity (issue #18466)
+
+- **Every user function is `sir_fn_<name>`.**  A C function shares the
+  symbol namespace of the C library and the headers the file includes, so
+  `(define (free x) x)` was "conflicting types for 'free'" and
+  `(define (SirValue x) x)` redeclared the runtime's value type.  SIR's
+  `main` and `_init` are now `sir_user_main` and `sir_user_init`.
+- **`sanitize_ident` reserves more.**  Besides C keywords and `min`/`max`:
+  every name starting `sir`/`_sir` in any case (the runtime's `_sir_*`,
+  `Sir*` types and `SIR_*` macros, and the `sir_fn_` prefix itself), `main`,
+  every name with no lower-case letter (the headers' object-like macros:
+  `EOF`, `NAN`, `INT64_MAX`, …), names C reserves for the implementation
+  (`__x`, `_X`), and `errno`, `math_errhandling`, `stdin`, `stdout`,
+  `stderr`, `L_tmpnam`.  A local named `EOF` or `errno` used to expand into
+  garbage.  `user_main` is no longer generated, so it is an ordinary name.
+- **A `lambda` marker without exactly one argument is refused** at compile
+  time instead of compiling to a runtime `_sir_unknown_builtin("lambda")`.
+- `tests/twig_generated_names.rs` runs the cross-backend table of programs
+  that spell other backends' generated names, checks a strict closure's
+  error is caught by `rescue ArgumentError` and not by `rescue TypeError`,
+  and checks the `lambda`-arity refusal.
+
+Security-review follow-up: `sanitize_ident` also reserves every name ending
+in `_t` (the headers' typedefs, which POSIX reserves as a family) and the
+`<setjmp.h>`/`<stdarg.h>` names `setjmp`, `longjmp`, `jmp_buf`, `va_list`,
+`va_start`, `va_arg`, `va_end`, `va_copy`.  A counted loop declares
+`int64_t` counters inside the user's function, so a parameter named
+`int64_t` made the file fail to compile; the emitted `rescue` calls
+`setjmp(…)` inline, and on MSVC `setjmp` is a macro.
+
 ## Unreleased — Lambdas in callee position, strict closures (issue #18461)
 
 - **Every `MakeClosure` gets a thunk.**  `collect_closure_targets` walked

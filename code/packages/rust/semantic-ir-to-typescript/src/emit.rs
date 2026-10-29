@@ -569,6 +569,12 @@ thread_local! {
     /// the start of every `emit_module`, because `emit_expr` sees one
     /// expression at a time and has no handle on the module.
     static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
+
+    /// Whether the current module imports the exception runtime as
+    /// `__SirExc` — i.e. whether a `rescue` can exist to catch a strict
+    /// closure's `ArgumentError` (see [`emit_strict_closure`]).  Set at the
+    /// start of every `emit_module`.
+    static EXCEPTIONS_IMPORTED: Cell<bool> = const { Cell::new(false) };
 }
 
 fn fresh_loop_id() -> usize {
@@ -583,6 +589,7 @@ fn fresh_loop_id() -> usize {
 /// for prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
     LOOP_COUNTER.with(|c| c.set(0));
+    EXCEPTIONS_IMPORTED.with(|c| c.set(uses_exceptions(m)));
     STRICT_ARITY.with(|t| {
         let mut t = t.borrow_mut();
         t.clear();
@@ -1727,9 +1734,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             );
         }
         // ── SIR16 expression kinds — native TypeScript ─────────────
-        Expr::FloatLit { value, .. } => {
-            let _ = write!(out, "{:?}", value);
-        }
+        Expr::FloatLit { value, .. } => out.push_str(&ts_float_literal(*value)),
         Expr::SeqLit { items, .. } => {
             out.push('[');
             emit_args(out, items, indent);
@@ -2337,8 +2342,9 @@ fn is_keyword_arg(a: &Expr) -> bool {
 ///
 /// ```text
 /// (lambda (x y) (+ x y))   →   new __Sir.Closure((..._a: __Sir.Val[]) => {
-///                                if (_a.length !== 2) { throw new TypeError(
-///                                  "arity mismatch: closure expects 2 argument(s), got " + _a.length); }
+///                                if (_a.length !== 2) { throw Object.assign(new Error(
+///                                  "arity mismatch: closure expects 2 argument(s), got " + _a.length),
+///                                  { name: "ArgumentError" }); }
 ///                                return __lambda_0(..._a); })
 /// ```
 ///
@@ -2363,10 +2369,29 @@ fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
         emit_expr(out, inner, indent);
         return;
     };
+    // The error is SIR's `ArgumentError` (SIR10, "Strict closures"), the
+    // class every backend raises — a native `TypeError` is classed as a
+    // plain `StandardError` by `rescueMatches`, so `rescue ArgumentError`
+    // missed it on this backend alone (issue #18466).  `rescueMatches`
+    // recognises only its own package's `SirError`, so when the module
+    // imports that package (it has a `rescue` to reach) the error is raised
+    // through it.  Otherwise nothing can catch it, and an `Error` named
+    // `ArgumentError` keeps the uncaught report the same without adding a
+    // runtime import to every program with a lambda.
+    let raise = if EXCEPTIONS_IMPORTED.with(Cell::get) {
+        "__SirExc.raiseError(\"ArgumentError\", "
+    } else {
+        "throw Object.assign(new Error("
+    };
+    let close = if EXCEPTIONS_IMPORTED.with(Cell::get) {
+        ")"
+    } else {
+        "), { name: \"ArgumentError\" })"
+    };
     let _ = write!(
         out,
-        "new __Sir.Closure((..._a: __Sir.Val[]) => {{ if (_a.length !== {n}) {{ throw new TypeError(\
-         \"arity mismatch: closure expects {n} argument(s), got \" + _a.length); }} return {}(",
+        "new __Sir.Closure((..._a: __Sir.Val[]) => {{ if (_a.length !== {n}) {{ {raise}\
+         \"arity mismatch: closure expects {n} argument(s), got \" + _a.length{close}; }} return {}(",
         sanitize_ident(fn_name)
     );
     for c in captures {
@@ -2792,11 +2817,19 @@ const TAG_ESCAPED: &str = "e";
 /// The fix: every `_` is now escaped too, as a fixed-width `_u{6-hex}_`
 /// token; `$` needed no change, since it plays no role in the token's
 /// own shape.
+///
+/// # Generated names are reserved too (#18466)
+///
+/// As in the JavaScript backend, the closure wrapper `(..._a) => …`
+/// evaluates its captured values inside the arrow, so a user variable named
+/// `_a` read the wrapper's argument array.  Every name in
+/// [`is_generated_name`] now takes the marker branch (`_a` →
+/// `_$sir_esc_v_a`), so no user name can spell a generated one.
 pub fn sanitize_ident(s: &str) -> String {
     if s.is_empty() {
         return format!("{ESCAPE_MARKER}{TAG_ESCAPED}");
     }
-    if is_valid_ts_ident(s) && !s.starts_with(ESCAPE_MARKER) {
+    if is_valid_ts_ident(s) && !s.starts_with(ESCAPE_MARKER) && !is_generated_name(s) {
         return s.to_string();
     }
     if is_valid_ts_ident(s) {
@@ -2832,6 +2865,54 @@ fn sanitize_comment(s: &str) -> String {
         }
     }
     out
+}
+
+/// Names the emitted TypeScript binds or reads around the user's code that a
+/// user name must never spell (#18466).  [`sanitize_ident`] escapes every one
+/// of them.
+///
+/// | reserved               | where the emitter writes it                                  |
+/// |------------------------|--------------------------------------------------------------|
+/// | `__sir…` (any case)    | the runtime imports `__Sir`, `__SirOop`, `__SirExc`, …, the entry's `__sir_result`, loop temporaries `__sir_stop_N`/`__sir_step_N` |
+/// | `_a`                   | a closure wrapper's argument array, `(..._a) => …`; the captured values are evaluated inside it |
+/// | `__l`                  | the arrow that evaluates a short-circuit `and`/`or` operand once |
+/// | `__kw`                 | a function's keyword-argument options object                 |
+/// | `__exc`                | the caught value in a `try`/`catch` lowering                 |
+/// | `Map`, `Object`, `Error` | globals the emitted code calls inline: a map literal's `new Map(…)`, a strict closure's `Object.assign(new Error(…), …)` |
+///
+/// The runtime itself lives in imported modules, which a user declaration
+/// in this module cannot reach.
+/// `__sir_block__` is the one exception to the `__sir` family: it is not
+/// generated here but is the SIR-level name the Ruby frontend gives a
+/// method's block parameter, shared by every frontend and backend, so it
+/// keeps its spelling.
+fn is_generated_name(s: &str) -> bool {
+    (s.get(..5).is_some_and(|p| p.eq_ignore_ascii_case("__sir")) && s != "__sir_block__")
+        || matches!(s, "_a" | "__l" | "__kw" | "__exc" | "Map" | "Object" | "Error")
+}
+
+/// A TypeScript expression for the `f64` `v` that names nothing.
+///
+/// A finite value is its shortest round-tripping decimal (`{:?}` keeps the
+/// `.0` of an integral float).  `{:?}` spells the non-finite values `inf`,
+/// `-inf` and `NaN` — the first two are not JavaScript at all, and `NaN`
+/// (like `Infinity`) is a global *name* a user declaration could shadow.
+/// So they are written as arithmetic on literals, which no binding can
+/// reach (security review of #18466):
+///
+/// ```text
+/// f64::INFINITY      ->  1e999            (overflows to Infinity)
+/// f64::NEG_INFINITY  ->  (-1e999)
+/// f64::NAN           ->  (0 / 0)
+/// ```
+fn ts_float_literal(v: f64) -> String {
+    if v.is_nan() {
+        "(0 / 0)".to_string()
+    } else if v.is_infinite() {
+        if v > 0.0 { "1e999" } else { "(-1e999)" }.to_string()
+    } else {
+        format!("{v:?}")
+    }
 }
 
 fn is_valid_ts_ident(s: &str) -> bool {
@@ -2902,6 +2983,11 @@ fn is_ts_reserved(s: &str) -> bool {
             | "symbol"
             | "type"
             | "namespace"
+            // `await` is reserved in an ES module (which every emitted file
+            // is), `implements` in strict mode; both were missing until the
+            // security review of #18466.
+            | "await"
+            | "implements"
             | "interface"
             | "package"
             | "private"
@@ -3014,6 +3100,42 @@ mod tests {
             "comment injection — got: {:?}",
             after_span
         );
+    }
+
+    /// The names the emitter binds around user code, and the globals it
+    /// calls inline, are escaped; ordinary names are not (#18466).
+    #[test]
+    fn generated_names_are_escaped_and_ordinary_names_are_not() {
+        for name in [
+            "_a", "__l", "__kw", "__exc", "__Sir", "__SirExc", "__sir_result", "__sir_stop_0",
+            "Map", "Object", "Error",
+        ] {
+            assert_eq!(sanitize_ident(name), format!("_$sir_esc_v{name}"), "{name}");
+        }
+        for name in ["a", "_b", "__lambda_0", "__sir_block__", "map", "Errors"] {
+            assert_eq!(sanitize_ident(name), name, "{name}");
+        }
+    }
+
+    /// Every emitted file is an ES module in strict mode, where `await` and
+    /// `implements` are reserved (security review of #18466).  The node
+    /// harness runs the stripped output as a plain script, where both are
+    /// legal, so only this check can see them.
+    #[test]
+    fn module_and_strict_mode_reserved_words_are_escaped() {
+        for name in ["await", "implements", "interface", "package", "let", "static", "yield"] {
+            assert!(sanitize_ident(name).starts_with("_$sir_esc_"), "{name}");
+        }
+    }
+
+    /// A non-finite float is literal arithmetic, never a name a user binding
+    /// could shadow, and never Rust's `inf` (security review of #18466).
+    #[test]
+    fn non_finite_floats_are_literal_arithmetic() {
+        assert_eq!(ts_float_literal(f64::INFINITY), "1e999");
+        assert_eq!(ts_float_literal(f64::NEG_INFINITY), "(-1e999)");
+        assert_eq!(ts_float_literal(f64::NAN), "(0 / 0)");
+        assert_eq!(ts_float_literal(2.0), "2.0");
     }
 
     #[test]

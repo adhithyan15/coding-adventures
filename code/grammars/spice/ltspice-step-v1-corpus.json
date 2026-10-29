@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "suite": "ltspice-step-v1",
+  "dialect": "ltspice",
+  "cases": [
+    {
+      "id": "single-parameter-list-op",
+      "form": "list",
+      "deck": "* LTspice .step list\nV1 in 0 DC 10\nR1 in out {RLOAD}\nR2 out 0 1k\n.step param RLOAD list 1k 3k\n.op\n.end\n",
+      "expected": {
+        "stepCards": [{ "parameter": "rload", "values": [1000.0, 3000.0] }],
+        "stepValues": [{ "rload": 1000.0 }, { "rload": 3000.0 }],
+        "out": [5.0, 2.5]
+      }
+    },
+    {
+      "id": "single-parameter-linear-range-op",
+      "form": "linear-range",
+      "deck": "* LTspice .step range\n.param RLOAD=1k\nV1 in 0 DC 10\nR1 in out {RLOAD}\nR2 out 0 1k\n.step param RLOAD 1k 3k 1k\n.op\n.end\n",
+      "expected": {
+        "stepCards": [{ "parameter": "rload", "values": [1000.0, 2000.0, 3000.0] }],
+        "stepValues": [{ "rload": 1000.0 }, { "rload": 2000.0 }, { "rload": 3000.0 }],
+        "out": [5.0, 3.3333333333333335, 2.5]
+      }
+    },
+    {
+      "id": "two-parameter-cartesian-list-op",
+      "form": "cartesian-list",
+      "deck": "* LTspice Cartesian .step\nV1 in 0 DC 10\nR1 in mid {RLOAD}\nR2 mid out {RBIAS}\nR3 out 0 1k\n.step param RLOAD list 1k 3k\n.step param RBIAS list 1k 2k\n.op\n.end\n",
+      "expected": {
+        "stepCards": [
+          { "parameter": "rload", "values": [1000.0, 3000.0] },
+          { "parameter": "rbias", "values": [1000.0, 2000.0] }
+        ],
+        "stepValues": [
+          { "rload": 1000.0, "rbias": 1000.0 },
+          { "rload": 1000.0, "rbias": 2000.0 },
+          { "rload": 3000.0, "rbias": 1000.0 },
+          { "rload": 3000.0, "rbias": 2000.0 }
+        ],
+        "out": [3.3333333333333335, 2.5, 2.0, 1.6666666666666667]
+      }
+    },
+    {
+      "id": "table-parameter-combination-op",
+      "form": "parameter-table",
+      "deck": "* LTspice table parameter sweep\n.step param n list 1 2\n.param RLOAD=table(n, 1, 1k, 2, 3k)\n.param RBIAS=table(n, 1, 1k, 2, 2k)\nV1 in 0 DC 10\nR1 in mid {RLOAD}\nR2 mid out {RBIAS}\nR3 out 0 1k\n.op\n.end\n",
+      "expected": {
+        "stepCards": [{ "parameter": "n", "values": [1.0, 2.0] }],
+        "stepValues": [{ "n": 1.0 }, { "n": 2.0 }],
+        "out": [3.3333333333333335, 1.6666666666666667]
+      }
+    }
+  ]
+}

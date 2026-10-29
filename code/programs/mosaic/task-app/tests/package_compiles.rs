@@ -148,6 +148,12 @@ fn qt_board_columns_keep_their_width_floor_in_both_themes() {
             theme: Some(theme.to_string()),
         }).unwrap();
         let qml = fs::read_to_string(out.path().join("qt/TaskApp.qml")).unwrap();
+        let key = qml.lines().find(|line| line.contains("property string mosaicDropKey:")
+            && line.chars().filter(|c| !c.is_whitespace()).collect::<String>().contains("col[1]"))
+            .unwrap_or_else(|| panic!("Board drop target geometry: {}", qml.lines().filter(|line| line.contains("mosaicDropKey:")).collect::<Vec<_>>().join("\n")));
+        let board_drop = qml.split_once(key).unwrap().0;
+        assert!(board_drop.rsplit("id: mosaicDropTarget").next().unwrap()
+            .contains("Layout.minimumHeight: 60"), "{theme}: empty Board drop zone must retain its floor");
         assert!(qml.contains("Layout.minimumWidth: 236"), "{theme}: rail must not shrink");
         assert!(qml.contains("Layout.minimumWidth: 150"), "{theme}: timeline labels must not shrink");
         let due = qml.split("TextField {")
@@ -177,6 +183,26 @@ fn board_floor_does_not_add_swiftui_min_width_drops() {
         }, BuildProfile::NativeComplete).unwrap();
         let count = report.style_degradations.iter().filter(|d| d.primitive.as_deref() == Some("min-width")).count();
         assert_eq!(count, 2, "{theme}: SwiftUI release min-width budget");
+    }
+}
+
+/// Reading the Board minimum exposes its existing unsupported layout styles.
+/// Do not silently activate calendar targets that do not author that minimum.
+#[test]
+fn qt_board_drop_floor_reports_only_its_newly_reached_style_debt() {
+    use mosaic_package_artifact_builder::{analyze_package_degradations, Backend, BuildOptions, BuildProfile};
+    for theme in ["light", "dark"] {
+        let out = tempfile::TempDir::new().unwrap();
+        let report = analyze_package_degradations(&BuildOptions {
+            package_root: PathBuf::from(env!("CARGO_MANIFEST_DIR")),
+            output_root: out.path().to_path_buf(), backend: Backend::Qt,
+            emit_project: false, theme: Some(theme.to_string()),
+        }, BuildProfile::NativeComplete).unwrap();
+        assert_eq!(report.style_degradations.len(), 79, "{theme}: measured Qt drop total");
+        for (property, expected) in [("display", 1), ("flex-direction", 1), ("gap", 1), ("flex-grow", 6), ("width", 0)] {
+            let count = report.style_degradations.iter().filter(|d| d.primitive.as_deref() == Some(property)).count();
+            assert_eq!(count, expected, "{theme}: {property}");
+        }
     }
 }
 

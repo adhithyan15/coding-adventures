@@ -15,6 +15,7 @@ import {
   parseNetlist,
   parseValue,
   runNetlist,
+  runNetlistJson,
 } from "../src/index.js";
 
 describe("parseNetlist", () => {
@@ -149,6 +150,68 @@ R2 out 0 1k
     expect(points.at(-1)?.result.voltage("out")).toBeCloseTo(testCase.expected.finalOut, 9);
     expect(parsed.selectOutputs(results)[0].rows.map((row) => [row.axisValue, row.secondaryAxisValue]))
       .toEqual(testCase.expected.points);
+  });
+
+  it("runs the shared LTspice .step v1 corpus", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/ltspice-step-v1-corpus.json", import.meta.url),
+      "utf8",
+    )) as { suite: string; cases: readonly { deck: string; expected: {
+      stepCards: readonly { parameter: string; values: readonly number[] }[];
+      stepValues: readonly Record<string, number>[];
+      out: readonly number[];
+    } }[] };
+    expect(corpus.suite).toBe("ltspice-step-v1");
+    for (const testCase of corpus.cases) {
+      const parsed = parseNetlist(testCase.deck);
+      expect(parsed.stepCards).toEqual(testCase.expected.stepCards);
+      const results = parsed.runAnalysisPlan();
+      expect(results.map((result) => Object.fromEntries(result.stepValues ?? []))).toEqual(
+        testCase.expected.stepValues,
+      );
+      for (const [index, result] of results.entries()) {
+        expect((result.result as { voltage(node: string): number | undefined }).voltage("out"))
+          .toBeCloseTo(testCase.expected.out[index]!, 12);
+      }
+      const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+        analyses: readonly { stepValues: Record<string, number> }[];
+      };
+      expect(payload.analyses.map((analysis) => analysis.stepValues)).toEqual(testCase.expected.stepValues);
+    }
+  });
+
+  it("runs the shared ngspice control parameter corpus", () => {
+    const corpus = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/ngspice-control-parameter-v1-corpus.json", import.meta.url),
+      "utf8",
+    )) as { suite: string; cases: readonly { deck: string; expected: {
+      stepCards: readonly { parameter: string; values: readonly number[] }[];
+      stepValues: readonly Record<string, number>[];
+      out: readonly number[];
+    } }[] };
+    expect(corpus.suite).toBe("ngspice-control-parameter-v1");
+    for (const testCase of corpus.cases) {
+      const parsed = parseNetlist(testCase.deck);
+      expect(parsed.stepCards).toEqual(testCase.expected.stepCards);
+      const results = parsed.runAnalysisPlan();
+      expect(results.map((result) => Object.fromEntries(result.stepValues ?? []))).toEqual(
+        testCase.expected.stepValues,
+      );
+      for (const [index, result] of results.entries()) {
+        expect((result.result as { voltage(node: string): number | undefined }).voltage("out"))
+          .toBeCloseTo(testCase.expected.out[index]!, 12);
+      }
+      const payload = JSON.parse(runNetlistJson(testCase.deck)) as {
+        analyses: readonly { stepValues: Record<string, number> }[];
+      };
+      expect(payload.analyses.map((analysis) => analysis.stepValues)).toEqual(testCase.expected.stepValues);
+    }
+  });
+
+  it("requires ngspice control parameter runs to alter, reset, then run", () => {
+    expect(() => parseNetlist(
+      ".param RLOAD=1k\n.control\nforeach load 1k 3k\n  reset\n  alterparam RLOAD=$load\n  run\nend\n.endc\n.end\n",
+    )).toThrow("alterparam followed by reset and run");
   });
 
   it("runs the shared Berkeley v1 core corpus", () => {
