@@ -93,6 +93,14 @@ const C4_ELEMENT_TECHNOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-element-technology-11.16.1-visual-corpus.json"
 ));
+const C4_ELEMENT_SHAPES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-shapes-11.16.1-corpus.json"
+));
+const C4_ELEMENT_SHAPES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-shapes-11.16.1-visual-corpus.json"
+));
 const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -2725,6 +2733,19 @@ fn pinned_c4_element_technology_reaches_semantic_ir() {
         assert_eq!(metadata.technology.as_deref(), Some(expected));
         assert_eq!(diagram.nodes[0].compartments[0].entries[0], format!("[{expected}]"));
     }
+}
+
+#[test]
+fn pinned_c4_element_shapes_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ELEMENT_SHAPES_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_ELEMENT_SHAPES_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixture = &syntax["fixtures"][0];
+    assert_eq!(visual["fixtures"][0], fixture["name"]);
+    let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.nodes[0].node_kind, diagram_ir::StructuralNodeKind::Database);
+    assert_eq!(diagram.nodes[1].node_kind, diagram_ir::StructuralNodeKind::Queue);
+    assert_eq!(diagram.nodes[2].node_kind, diagram_ir::StructuralNodeKind::Database);
 }
 
 #[test]
