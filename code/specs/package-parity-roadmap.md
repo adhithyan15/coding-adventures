@@ -19869,8 +19869,8 @@ overlaps the selected implementation paths.
 ### SHA-512 HF04 local implementation
 
 The selected owner is locally complete at exact implementation head
-`ead3c5829b6df9c97c7edb48ece0e3e13e89f596`, following bounded-contract and
-fixture commit `8b3c1073806618de1547537ff3d0a1f77674e864`. The revised HF04 contract and
+`ead3c5829b6d7463c7c2f16d88b3efc53c823ed0`, following bounded-contract and
+fixture commit `8b3c1073806ba431a47a4bb6daf15de66ca0e83b`. The revised HF04 contract and
 3,220-byte neutral corpus carry nine byte-exact digest vectors with portable
 chunk plans plus six allocation-free 128-bit length-field vectors. All twelve
 established lanes consume the digest witnesses dynamically; each lane also
