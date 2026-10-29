@@ -566,7 +566,7 @@ end
 local function validate_diff_input(input, graph)
     local package_count = dense_count(rawget(input, "packages"), MAX_PACKAGES,
         "DIFF_PACKAGE_INVALID", "DIFF_PACKAGE_INVALID")
-    local packages, names = {}, {}
+    local packages, names, validated_globs = {}, {}, {}
     for index = 1, package_count do
         local raw_package = inert_record(rawget(rawget(input, "packages"), index),
             "DIFF_PACKAGE_INVALID")
@@ -580,12 +580,19 @@ local function validate_diff_input(input, graph)
             "DIFF_SOURCE_MODE_INVALID")
         local glob_count = dense_count(source_globs, MAX_SOURCE_GLOBS,
             "DIFF_GLOB_INVALID", "DIFF_GLOB_INVALID")
-        local globs, seen_globs = {}, {}
+        local globs, seen_globs, pattern_factor = {}, {}, 0
         for glob_index = 1, glob_count do
             local glob = rawget(source_globs, glob_index)
-            require_contract(valid_portable_glob(glob) and not seen_globs[glob],
+            require_contract(type(glob) == "string" and not seen_globs[glob],
                 "DIFF_GLOB_INVALID")
-            validate_glob_syntax(glob)
+            local factor = validated_globs[glob]
+            if factor == nil then
+                require_contract(valid_portable_glob(glob), "DIFF_GLOB_INVALID")
+                validate_glob_syntax(glob)
+                factor = scalar_length(glob) + 1
+                validated_globs[glob] = factor
+            end
+            pattern_factor = pattern_factor + factor
             seen_globs[glob] = true
             globs[#globs + 1] = glob
         end
@@ -594,7 +601,8 @@ local function validate_diff_input(input, graph)
         require_contract(not names[name], "DIFF_PACKAGE_DUPLICATE")
         names[name] = true
         packages[#packages + 1] = {name = name, rel_path = rel_path,
-            source_mode = source_mode, source_globs = globs}
+            source_mode = source_mode, source_globs = globs,
+            pattern_factor = pattern_factor}
     end
     require_contract(same_set(names, graph.names), "DIFF_PACKAGE_INVALID")
     validate_root_identities(packages)
@@ -890,23 +898,21 @@ local function basename(path)
 end
 
 local function preflight_match_work(packages, changed_paths, changed_count)
+    if changed_count == 0 then return end
     local total = 0
     for _, package in ipairs(packages) do
         if package.source_mode == "strict_globs" then
-            local pattern_factor = 0
-            for _, glob in ipairs(package.source_globs) do
-                pattern_factor = pattern_factor + scalar_length(glob) + 1
-            end
             for index = 1, changed_count do
                 local path = rawget(changed_paths, index)
                 if inside(path, package.rel_path) then
                     local relative = relative_path(path, package.rel_path)
                     if not BUILD_FRONTS[basename(relative)] then
                         local path_factor = scalar_length(relative) + 1
-                        require_contract(pattern_factor == 0
-                            or pattern_factor <= (MAX_MATCH_WORK - total) // path_factor,
+                        require_contract(package.pattern_factor == 0
+                            or package.pattern_factor
+                                <= (MAX_MATCH_WORK - total) // path_factor,
                             "DIFF_MATCH_LIMIT_EXCEEDED")
-                        total = total + pattern_factor * path_factor
+                        total = total + package.pattern_factor * path_factor
                     end
                 end
             end

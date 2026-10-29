@@ -78,9 +78,11 @@ The build tool follows a pipeline:
    prerequisite closures, recognizes only exact BUILD fronts, and supports
    package-prefix and strict portable-glob source modes.
 
-   Strict glob syntax is validated with a linear, allocation-light scalar scan.
-   Matching then compiles one pattern at a time, reuses it across the candidate
-   paths for that package, and releases it before compiling the next pattern.
+   Strict glob syntax is validated with a linear, allocation-light scalar scan;
+   one operation-local string cache reuses that complete validation and its
+   scalar work factor across packages. Matching then compiles one pattern at a
+   time, reuses it across the candidate paths for that package, and releases it
+   before compiling the next pattern.
    Empty package-relative paths contain zero components, so only a whole `**`
    segment can match a package root. Folded package roots are sorted with
    separator-aware ordering and checked adjacently, avoiding both pairwise

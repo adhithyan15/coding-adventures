@@ -334,18 +334,26 @@ describe("process-free Lua graph and diff selection", function()
             globs[index] = string.format("%03d", index) .. string.rep("a", 509)
         end
         local packages = {}
-        for index = 1, 4 do
+        for index = 1, 50 do
             packages[index] = {name = string.format("fixture/p%d", index),
                 rel_path = string.format("code/p%d", index), source_mode = "strict_globs",
                 source_globs = globs}
         end
+        local started = os.clock()
         local actual, retained = retained_kibibytes(function()
             return GraphDiff.evaluate_diff_selection(simple_diff(packages))
         end)
+        local elapsed = os.clock() - started
         assert.same({ok = true, value = {changed_packages = {}, affected_packages = {},
             prerequisite_packages = {}}}, actual)
         assert.is_true(retained < 24576,
             string.format("glob validation retained %.1f MiB", retained / 1024))
+        assert.is_true(elapsed < 2,
+            string.format("shared glob validation took %.2f seconds", elapsed))
+
+        packages[50].source_globs = {globs[1], globs[1]}
+        assert.same({ok = false, code = "DIFF_GLOB_INVALID"},
+            GraphDiff.evaluate_diff_selection(simple_diff(packages)))
     end)
 
     it("ignores hostile extra fields without weakening metatable rejection", function()

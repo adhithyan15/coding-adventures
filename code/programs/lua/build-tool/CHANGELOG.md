@@ -53,6 +53,9 @@
   reused across a package's candidate paths. Folded-root validation now uses a
   compact separator-aware sorted list instead of per-segment trie tables, and
   ignored record fields no longer trigger unbounded pre-snapshot enumeration.
+- Complete glob validation and scalar match-work factors are memoized by
+  immutable pattern string across packages, while duplicate detection remains
+  package-local and an empty changed-path set skips match preflight entirely.
 - Package discovery now classifies the emerging `ocaml` bucket while continuing
   to prune only exact case-sensitive `_build` output; `_Build` and
   `_build-example` remain discoverable source paths.
