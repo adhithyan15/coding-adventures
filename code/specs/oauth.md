@@ -711,6 +711,20 @@ out-of-range signature representatives, and recovers the exact modulus-width
 RSAVP1 encoded message with repository-owned arithmetic. It adds no private-key
 operation, hashing, padding interpretation, certificate-signature verdict,
 path trust, or transport readiness; it is not by itself a verifier.
+A bounded, data-driven `rsa-pss-encoded-message-layout` prerequisite now
+validates the public outer layout consumed by a future RFC 8017 EMSA-PSS
+verifier. Caller policy supplies the selected hash length, salt length, and an
+encoded-message byte ceiling. The gate derives `emLen` from the exact public
+`emBits`, requires the complete recovered message at that width, proves the
+selected parameters fit, requires trailer byte `0xbc`, rejects forbidden
+high bits in `maskedDB`, and returns borrowed non-copyable slices for the exact
+masked data block and `H`. All size arithmetic is checked before slicing.
+
+This layout evidence does not unmask or validate `DB`, run MGF1, hash the
+message or `M'`, compare `H`, parse or operate on an RSA key, apply RSAVP1,
+select an algorithm, or establish a signature verdict. Certificate processing,
+path and hostname validation, trust roots, revocation, TLS, HTTP, OAuth
+transport, and network effects remain unavailable.
 A bounded `x509-rsa-pkcs1-v1-5-sha256-signature` composition now verifies one
 exact certificate signature with repository-owned primitives. It requires the
 canonical `sha256WithRSAEncryption` identifier with present NULL parameters,
