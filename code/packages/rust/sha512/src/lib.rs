@@ -480,7 +480,8 @@ impl Default for Digest {
 mod tests {
     use super::*;
 
-    const PORTABLE_FIXTURE: &str = include_str!("../../../../specs/fixtures/sha512-v1/cases.txt");
+    const PORTABLE_FIXTURE: &[u8] =
+        include_bytes!("../../../../specs/fixtures/sha512-v1/cases.txt");
 
     fn is_lower_hex(value: &str, length: usize) -> bool {
         value.len() == length
@@ -499,10 +500,11 @@ mod tests {
             && !value.contains("--")
     }
 
-    fn parse_fixture(value: &str) -> Result<Vec<&str>, &'static str> {
+    fn parse_fixture(value: &[u8]) -> Result<Vec<&str>, &'static str> {
         if value.is_empty() || value.len() > 4096 {
             return Err("fixture byte size outside bounds");
         }
+        let value = std::str::from_utf8(value).map_err(|_| "fixture is not UTF-8")?;
         let rows: Vec<_> = value
             .lines()
             .filter(|line| !line.is_empty() && !line.starts_with('#'))
@@ -631,7 +633,7 @@ mod tests {
             "L|bad|000000000000000G|0000000000000000|ERROR".to_owned(),
             "L|bad|0000000000000000|0000000000000000|ABC".to_owned(),
         ] {
-            assert!(parse_fixture(&row).is_err(), "accepted {row}");
+            assert!(parse_fixture(row.as_bytes()).is_err(), "accepted {row}");
         }
     }
 
