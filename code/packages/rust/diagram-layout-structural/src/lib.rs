@@ -390,6 +390,7 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
     let architecture_config = diagram.architecture_config.as_ref();
     let mut positioned: Vec<(usize, LayoutedStructuralNode)> = Vec::with_capacity(nodes.len());
     let placement_order = seeded_placement_order(nodes, architecture_config);
+    let columns = diagram.render_config.c4_shape_in_row.unwrap_or(COLS);
     // Track max height per row so rows don't overlap.
     let padding = outer_padding(architecture_config);
     let mut row_y: Vec<f64> = vec![padding];
@@ -398,8 +399,8 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
     let mut previous_index = None;
     for (slot, node_index) in placement_order.into_iter().enumerate() {
         let node = &nodes[node_index];
-        let col = slot % COLS;
-        let row = slot / COLS;
+        let col = slot % columns;
+        let row = slot / columns;
         let nw = node_width(node, architecture_config);
         let nh = node_height(node, architecture_config);
 

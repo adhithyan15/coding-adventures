@@ -2467,6 +2467,8 @@ pub struct StructuralAlignment {
 pub struct StructuralRenderConfig {
     pub use_max_width: bool,
     pub html_labels: bool,
+    pub c4_shape_in_row: Option<usize>,
+    pub c4_boundary_in_row: Option<usize>,
 }
 
 impl Default for StructuralRenderConfig {
@@ -2474,6 +2476,8 @@ impl Default for StructuralRenderConfig {
         Self {
             use_max_width: true,
             html_labels: true,
+            c4_shape_in_row: None,
+            c4_boundary_in_row: None,
         }
     }
 }

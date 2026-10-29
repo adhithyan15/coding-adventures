@@ -263,6 +263,47 @@ R2 out 0 1k
     }
   });
 
+  it("keeps an explicit cross-tool compatibility backlog", () => {
+    const register = JSON.parse(readFileSync(
+      new URL("../../../../grammars/spice/tool-compatibility-v1.json", import.meta.url),
+      "utf8",
+    )) as {
+      schemaVersion: number;
+      suite: string;
+      compatibilityClaim: { dropInEligible: boolean };
+      profiles: readonly { id: string; inventoryStatus: string }[];
+      families: readonly string[];
+      features: readonly {
+        id: string;
+        family: string;
+        profiles: readonly string[];
+        state: string;
+        evidence: readonly string[];
+      }[];
+    };
+
+    expect(register.schemaVersion).toBe(1);
+    expect(register.suite).toBe("spice-tool-compatibility");
+    expect(register.compatibilityClaim.dropInEligible).toBe(false);
+    const profileIds = new Set(register.profiles.map((profile) => profile.id));
+    expect(profileIds).toEqual(new Set(["berkeley-spice3f3", "ngspice-47", "ltspice-24"]));
+    const inventoryStatuses = new Set(register.profiles.map((profile) => profile.inventoryStatus));
+    expect(inventoryStatuses.has("complete-core")).toBe(true);
+    expect(inventoryStatuses.has("in-progress")).toBe(true);
+
+    expect(register.features.length).toBeGreaterThanOrEqual(45);
+    expect(new Set(register.features.map((feature) => feature.family)))
+      .toEqual(new Set(register.families));
+    expect(new Set(register.features.map((feature) => feature.id)).size)
+      .toBe(register.features.length);
+    for (const feature of register.features) {
+      expect(feature.profiles.length).toBeGreaterThan(0);
+      expect(feature.profiles.every((profile) => profileIds.has(profile))).toBe(true);
+      expect(["supported", "partial", "planned", "out-of-scope"]).toContain(feature.state);
+      expect(feature.evidence.length).toBeGreaterThan(0);
+    }
+  });
+
   it("parses reactive elements, VCCS, source waveforms, and analysis cards", () => {
     const parsed = parseNetlist(`
 Vstep in 0 PULSE(0 1 0 1n 1n 10n 20n)

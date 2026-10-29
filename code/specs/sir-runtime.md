@@ -113,7 +113,11 @@ The base every emitted program needs.
 - closure-handle helpers (`Closure`, `apply`, `make_closure`) and the global
   store (`global_set`/`global_get`/`global_get_static`) used by `IndirectCall`,
   builtin-as-value, and `Globals`.
-- `as_lambda(c) -> c` (Python) — marks a closure strict-arity (a Ruby lambda);
+- `ArityError` (Python) — raised by `apply` for a strict closure called with
+  the wrong argument count; SIR's `ArgumentError` (SIR10 "Strict closures").
+- `as_lambda(c, exact_arity=None) -> c` (Python) — marks a closure strict-arity (a Ruby lambda);
+  `exact_arity`, given only when the lambda's function has one, is the count
+  `apply` enforces;
   see the proc-vs-lambda arity item under "Out of scope". `make_closure`
   records each block's arity so `apply` can apply proc/block leniency.
 - `doubleSplatMerge(...maps) -> Map` (TypeScript only) — merges call-position
@@ -224,7 +228,11 @@ v0 eight). `TailCalls` and `Intrinsics` remain rejected.
   are strict (`ArgumentError` on mismatch). In **Python** the runtime models
   this: `make_closure` records each block's fixed-positional arity and `apply`
   reshapes a block's arguments to it; the `lambda` builtin wraps its closure in
-  `as_lambda(...)` so a lambda stays strict (mismatch raises). In **TypeScript**
+  `as_lambda(...)` so a lambda stays strict: `apply` checks its argument
+  count first and raises `ArityError` (a `TypeError` subclass tagged
+  `sir_class = "ArgumentError"`, which `sir-runtime-exceptions`'
+  `class_of_thrown` reads from any exception — issue #18466; it used to be
+  Python's own `TypeError`, which `rescue ArgumentError` missed). In **TypeScript**
   the JS calling convention is *already* proc-lenient (extra args ignored,
   missing → `undefined`), so block arity needs no runtime work.  Strict-lambda
   enforcement no longer needs the runtime either: since issue #18461 the

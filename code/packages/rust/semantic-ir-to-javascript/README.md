@@ -66,8 +66,16 @@ natively (arrays, `Map`, `while`/`for`, reassignable `let`), so each
 lowering is direct.
 
 A *strict* closure (SIR10's `lambda` marker — a Ruby lambda, every Twig
-closure) carries an inline check that throws `TypeError: arity mismatch: …`
-on a wrong argument count, where a plain JS function would bind `undefined`.
+closure) carries an inline check that raises SIR's `ArgumentError`
+(`__Sir.raiseError("ArgumentError", "arity mismatch: …")`, so `rescue
+ArgumentError` catches it) on a wrong argument count, where a plain JS
+function would bind `undefined`.
+
+`sanitize_ident` escapes every name the emitter binds around user code —
+`__Sir`, the closure wrapper's `_a`, `__l`, `__kw`, `__exc` — and the
+JavaScript/Node globals the runtime uses (`Map`, `Math`, `console`, …),
+which a hoisted user `function` would otherwise replace for the whole file
+(SIR10 "Generated names", issue #18466).
 
 | Accepted (v0 + SIR16 + E1 + O3 + MX4) | Rejected (deferred / unsupported)  |
 |---------------------------------|------------------------------------------|

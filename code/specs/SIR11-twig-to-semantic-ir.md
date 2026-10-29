@@ -156,8 +156,12 @@ bare `MakeClosure`:
 
 ```scheme
 (define g (begin (lambda (x y) (+ x y))))
-(print (g 4))   ; arity error on every backend
+(print (g 4))   ; ArgumentError on every backend
 ```
+
+The error is the same `ArgumentError` everywhere (SIR10 "Strict
+closures"; JavaScript, TypeScript and Python raised a native `TypeError`
+until issue #18466).
 
 > **Revision (issue #18461).** This frontend used to emit the bare
 > `MakeClosure`, and each backend then did its own thing with the
@@ -250,6 +254,16 @@ reserved:
 > called itself until the stack ran out.  Mangling the generated names
 > instead was rejected: `main` / `_init` are the SIR-wide entry-point
 > convention every backend looks up by name.
+
+Names a *backend* generates are not this frontend's concern: Twig accepts
+`_sir_user_main`, `__cap_A`, `_a`, `free` or `Map` as ordinary names, and
+every backend escapes the names it reserves for itself (SIR10, "Generated
+names").  Before issue #18466 those spellings reached the emitted code
+unchanged and collided there — `(define (_sir_user_main) 42)` recursed
+forever on Python, and `(define (f A __cap_A) (lambda () (+ A __cap_A)))`
+returned 2 instead of 11 on Rust.  Reserving them here instead would have
+covered Twig only, leaving every other frontend's programs exposed, and
+would have had to track seven backends' private naming schemes.
 
 ### Global initialization model
 

@@ -291,6 +291,34 @@ def test_runs_shared_berkeley_v1_syntax_corpus() -> None:
         assert [step.kind for step in parsed.analysis_plan()] == expected["analysisKinds"], case["id"]
 
 
+def test_tool_compatibility_register_has_an_explicit_cross_tool_backlog() -> None:
+    register_path = (
+        Path(__file__).resolve().parents[4]
+        / "grammars/spice/tool-compatibility-v1.json"
+    )
+    register = json.loads(register_path.read_text(encoding="utf-8"))
+
+    assert register["schemaVersion"] == 1
+    assert register["suite"] == "spice-tool-compatibility"
+    assert register["compatibilityClaim"]["dropInEligible"] is False
+    profiles = {profile["id"] for profile in register["profiles"]}
+    assert profiles == {"berkeley-spice3f3", "ngspice-47", "ltspice-24"}
+    assert {profile["inventoryStatus"] for profile in register["profiles"]} >= {
+        "complete-core",
+        "in-progress",
+    }
+
+    features = register["features"]
+    assert len(features) >= 45
+    assert {feature["family"] for feature in features} == set(register["families"])
+    assert len({feature["id"] for feature in features}) == len(features)
+    for feature in features:
+        assert feature["profiles"]
+        assert set(feature["profiles"]) <= profiles
+        assert feature["state"] in {"supported", "partial", "planned", "out-of-scope"}
+        assert feature["evidence"]
+
+
 def test_parse_reactive_elements_and_analysis_cards() -> None:
     parsed = parse_netlist(
         """

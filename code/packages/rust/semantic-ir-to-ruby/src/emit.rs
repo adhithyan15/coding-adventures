@@ -1026,12 +1026,29 @@ impl Scan {
 // ---------------------------------------------------------------------------
 
 /// The Ruby name for a SIR function.  `main`/`_init` are renamed so the entry
-/// points are explicit and uniform with the other backends.
+/// points are explicit and uniform with the other backends; every other
+/// function lives in the `sir_fn_` namespace (#18466).
+///
+/// A top-level Ruby `def` is a private method on `Object` — and so on every
+/// object, *ahead of* `Kernel`.  The runtime calls `Kernel` methods by bare
+/// name (`raise`, `format`, `Integer`, `loop`, `lambda`, …), so a user
+/// function spelled like one replaced it for the whole program:
+/// `(define (raise a b) 0)` turned every runtime error, a strict closure's
+/// arity error included, into a quiet `0`.  Prefixing every user function
+/// keeps the user's methods and Ruby's apart; the prefix sits inside the
+/// reserved `sir_` namespace ([`sanitize_ident`] escapes every `sir_…`
+/// name), so no user name can spell one, and [`sanitize_ident`] being
+/// one-to-one keeps the map one-to-one:
+///
+/// ```text
+/// main   ->  sir_user_main        raise  ->  sir_fn_raise
+/// _init  ->  sir_user_init        Dog    ->  sir_fn_sir_esc_vDog
+/// ```
 fn function_emit_name(name: &str) -> String {
     match name {
         "main" => "sir_user_main".to_string(),
         "_init" => "sir_user_init".to_string(),
-        other => sanitize_ident(other),
+        other => format!("sir_fn_{}", sanitize_ident(other)),
     }
 }
 
@@ -1464,9 +1481,14 @@ fn emit_expr(e: &Expr) -> String {
             // A closure body's fn takes (captures…, params…).  The lambda binds
             // the capture VALUES now and splats the call args at call time.
             let mut fixed: Vec<String> = captures.iter().map(|c| emit_expr(&c.value)).collect();
-            fixed.push("*__sir_args".to_string());
+            // `sir_args`, inside the reserved `sir_` namespace (#18466): the
+            // captured values are evaluated inside this lambda, so its
+            // parameter must be a name no user variable can have.  It was
+            // `__sir_args`, which a user could spell — and then read the
+            // argument array in place of their own variable.
+            fixed.push("*sir_args".to_string());
             format!(
-                "->(*__sir_args) {{ {}({}) }}",
+                "->(*sir_args) {{ {}({}) }}",
                 function_emit_name(fn_name),
                 fixed.join(", ")
             )
@@ -1854,7 +1876,7 @@ fn emit_var_ref(name: &str, scope: Scope) -> String {
 /// SIR10's *strict closure* (a Ruby lambda, every Twig closure):
 ///
 /// ```text
-/// (lambda (x y) (+ x y))  →  ->(*__sir_args) { sir_check_arity(__sir_args, 2); __lambda_0(*__sir_args) }
+/// (lambda (x y) (+ x y))  →  ->(*sir_args) { sir_check_arity(sir_args, 2); sir_fn___lambda_0(*sir_args) }
 /// ```
 ///
 /// Every closure this backend builds already forwards to a fixed-arity
@@ -1875,9 +1897,9 @@ fn emit_strict_closure(inner: &Expr) -> String {
         return emit_expr(inner);
     };
     let mut fixed: Vec<String> = captures.iter().map(|c| emit_expr(&c.value)).collect();
-    fixed.push("*__sir_args".to_string());
+    fixed.push("*sir_args".to_string());
     format!(
-        "->(*__sir_args) {{ sir_check_arity(__sir_args, {n}); {}({}) }}",
+        "->(*sir_args) {{ sir_check_arity(sir_args, {n}); {}({}) }}",
         function_emit_name(fn_name),
         fixed.join(", ")
     )
@@ -1983,13 +2005,21 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // (`raise "boom"`); with an exception object it re-raises that.  Each
         // argument is an already-emitted expression (a `StrLit` is quoted, so no
         // source can inject).  `retry` restarts the enclosing `begin` body.
-        "raise" => {
-            if a.is_empty() {
-                "raise".to_string()
-            } else {
-                format!("raise({})", a.join(", "))
-            }
-        }
+        // `raise()` / `raise(args)`, always with parentheses — never a bare
+        // `raise`.  Ruby reads a bare `raise` as a *local variable* whenever
+        // one of that name is in scope, so a user local `raise` turned a
+        // re-raise into a read of that local (security review of #18466).
+        // A parenthesised name is always a method call, so neither a local
+        // nor a constant can capture it.  (The first fix emitted
+        // `::Kernel.raise`, but a user `module Kernel` — which this backend
+        // installs with `Object.const_set(:Kernel, Module.new)` — replaces
+        // the `Kernel` constant, and every raise became a `NoMethodError`.)
+        // `BuiltinCall("raise")` is always the raise operation in SIR: a
+        // frontend lowers a Ruby source local named `raise` to a `VarRef`,
+        // never to this builtin.  `raise()` with no arguments re-raises `$!`
+        // exactly as the bare form does inside a `rescue`; a user *function*
+        // named `raise` is `sir_fn_raise`, so it cannot intercept the call.
+        "raise" => format!("raise({})", a.join(", ")),
         "retry" => "retry".to_string(),
         // OOP classes slice 1: `Foo.new(args…)`.  `args[0]` is a `StrLit`
         // holding the class name, emitted VERBATIM as the constant receiver
@@ -2019,7 +2049,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
         // OOP classes slice 2 — register a hoisted instance method on the class.
         // `args[0]` = class name (`StrLit`, a bare validated constant receiver),
         // `args[1]` = method name (`StrLit`), `args[2]` = a `MakeClosure` (already
-        // emitted in `a[2]` as `->(*__sir_args){ Class__m(*__sir_args) }`).  The
+        // emitted in `a[2]` as `->(*sir_args){ sir_fn_sir_esc_vClass__m(*sir_args) }`).  The
         // method name is rendered under a RESERVED `sir_um_` prefix as a quoted
         // symbol via `emit_symbol` (so it cannot inject and never collides with a
         // built-in), then installed with `define_method`.  `define_method` binds
