@@ -51,7 +51,15 @@ module Sha512Tests =
         Assert.Equal(6, lines |> Array.filter (fun line -> line.StartsWith("L|", StringComparison.Ordinal)) |> Array.length)
         lines
 
-    let fixtureLines () = fixtureLinesFrom "../../../../../../../../specs/fixtures/sha512-v1/cases.txt"
+    let private findFixture () =
+        let rec search (directory: DirectoryInfo) =
+            if isNull directory then
+                raise (FileNotFoundException("sha512-v1 fixture not found"))
+            let candidate = Path.Combine(directory.FullName, "code", "specs", "fixtures", "sha512-v1", "cases.txt")
+            if File.Exists(candidate) then candidate else search directory.Parent
+        search (DirectoryInfo(AppContext.BaseDirectory))
+
+    let fixtureLines () = findFixture () |> fixtureLinesFrom
 
     [<Fact>]
     let ``fixture reader rejects oversized file`` () =

@@ -23,9 +23,19 @@ public sealed class Sha512Tests
         return lines;
     }
 
-    private static string[] FixtureLines(string path = "../../../../../../../../specs/fixtures/sha512-v1/cases.txt")
+    private static string FindFixture()
     {
-        using var stream = File.OpenRead(path);
+        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
+        {
+            var candidate = Path.Combine(directory.FullName, "code", "specs", "fixtures", "sha512-v1", "cases.txt");
+            if (File.Exists(candidate)) return candidate;
+        }
+        throw new FileNotFoundException("sha512-v1 fixture not found");
+    }
+
+    private static string[] FixtureLines(string? path = null)
+    {
+        using var stream = File.OpenRead(path ?? FindFixture());
         var raw = new byte[4097];
         var length = 0;
         while (length < raw.Length)
