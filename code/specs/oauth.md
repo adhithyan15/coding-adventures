@@ -1632,6 +1632,27 @@ validate certificates, select trust roots, check revocation, perform I/O, open
 a socket, authorize HTTP or OAuth transport, or replace `tls-platform`.
 Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-alert-message` prerequisite now owns the exact
+two-octet RFC 8446 section 6 alert message and its TLS 1.3 disposition. The
+decoder retains the legacy level byte without trusting it, recognizes every
+standard alert description, preserves unknown description values, and
+classifies only `close_notify` and `user_canceled` as closure dispositions;
+every defined error alert and every unknown description is an error regardless
+of the received legacy level. Exact decoding rejects both truncated and padded
+messages. The encoder admits only standard descriptions, requires `fatal` for
+every section 6.2 error alert, validates complete output capacity before
+writing, and leaves extra caller-owned capacity untouched. Stable failures
+retain no caller bytes or alert values.
+
+This message layer receives already authenticated alert content. It does not
+sequence alerts, remember sent or received closure, suppress later data, wipe
+connection secrets, log or audit an alert, choose an alert for another
+failure, protect a record, perform I/O, close a transport, authorize HTTP or
+OAuth traffic, or open a network connection. Alert state and connection
+shutdown policy, complete handshake processing, repository-owned record
+protection, certificate-path validation, revocation policy, TLS transport, and
+HTTP composition remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-record-nonce` prerequisite now specifies record
 sequence consumption and nonce derivation for one TLS 1.3 traffic key in one
 direction. A caller-selected policy fixes the exact static-IV length from 8
