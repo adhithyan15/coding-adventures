@@ -144,6 +144,11 @@ struct BoundarySelection {
     known_paths: Vec<bool>,
 }
 
+struct MatchingBoundaryRule<'a> {
+    path_indexes: Vec<usize>,
+    excluded_roots: BTreeSet<&'a str>,
+}
+
 /// Validate and evaluate canonical graph edges and prerequisite-first levels.
 pub fn evaluate_graph(input: &GraphInput) -> Evaluation<GraphResult> {
     let graph = match validate_graph(&input.packages, &input.edges) {
@@ -371,6 +376,7 @@ fn validate_diff_input<'a>(
     let mut packages = Vec::with_capacity(input.packages.len());
     let mut names = BTreeSet::new();
     let mut root_identities = Vec::with_capacity(input.packages.len());
+    let mut glob_factors = BTreeMap::<&'a str, u64>::new();
     for package in &input.packages {
         if !valid_portable_path(&package.rel_path) {
             return Err("DIFF_PATH_INVALID");
@@ -382,24 +388,30 @@ fn validate_diff_input<'a>(
         }
         if package.source_globs.len() > MAX_SOURCE_GLOBS
             || has_duplicates(&package.source_globs)
-            || package
-                .source_globs
-                .iter()
-                .any(|pattern| !valid_portable_glob(pattern) || validate_pattern(pattern).is_err())
             || (package.source_mode != "strict_globs" && !package.source_globs.is_empty())
         {
             return Err("DIFF_GLOB_INVALID");
+        }
+        let mut pattern_factor = 0;
+        for pattern in &package.source_globs {
+            let factor = if let Some(factor) = glob_factors.get(pattern.as_str()) {
+                *factor
+            } else {
+                if !valid_portable_glob(pattern) || validate_pattern(pattern).is_err() {
+                    return Err("DIFF_GLOB_INVALID");
+                }
+                let factor = pattern.chars().count() as u64 + 1;
+                glob_factors.insert(pattern, factor);
+                factor
+            };
+            pattern_factor += factor;
         }
         if !names.insert(package.name.clone()) {
             return Err("DIFF_PACKAGE_DUPLICATE");
         }
         packages.push(ValidatedPackage {
             spec: package,
-            pattern_factor: package
-                .source_globs
-                .iter()
-                .map(|pattern| pattern.chars().count() as u64 + 1)
-                .sum(),
+            pattern_factor,
         });
     }
     root_identities.sort_unstable_by(|left, right| left.split('/').cmp(right.split('/')));
@@ -555,30 +567,63 @@ fn select_boundary_changes(
         .enumerate()
         .map(|(index, path)| (path.as_str(), index))
         .collect::<BTreeMap<_, _>>();
-    let matching_rules = boundary
-        .boundaries
-        .iter()
-        .filter_map(|rule| {
-            let path_indexes = rule
-                .inputs
+    let mut exact_roots = BTreeMap::<&str, Vec<usize>>::new();
+    let mut descendant_roots = BTreeMap::<&str, Vec<usize>>::new();
+    let mut matching_rules = Vec::new();
+    for rule in &boundary.boundaries {
+        let path_indexes = rule
+            .inputs
+            .iter()
+            .filter_map(|boundary_input| {
+                changed_path_indexes
+                    .get(boundary_input.path.as_str())
+                    .copied()
+            })
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        if path_indexes.is_empty() {
+            continue;
+        }
+        let rule_index = matching_rules.len();
+        for root in &rule.applies_to.exact_roots {
+            exact_roots.entry(root).or_default().push(rule_index);
+        }
+        for root in &rule.applies_to.descendant_roots {
+            descendant_roots.entry(root).or_default().push(rule_index);
+        }
+        matching_rules.push(MatchingBoundaryRule {
+            path_indexes,
+            excluded_roots: rule
+                .applies_to
+                .excluded_roots
                 .iter()
-                .filter_map(|boundary_input| {
-                    changed_path_indexes
-                        .get(boundary_input.path.as_str())
-                        .copied()
-                })
-                .collect::<Vec<_>>();
-            (!path_indexes.is_empty()).then_some((rule, path_indexes))
-        })
-        .collect::<Vec<_>>();
+                .map(String::as_str)
+                .collect(),
+        });
+    }
 
     for package in packages {
-        for (rule, path_indexes) in &matching_rules {
-            if boundary_applies(&rule.applies_to, &package.spec.rel_path) {
-                selection.changed_packages.insert(package.spec.name.clone());
-                for path_index in path_indexes {
-                    selection.known_paths[*path_index] = true;
+        let root = package.spec.rel_path.as_str();
+        let mut applicable_rules = exact_roots
+            .get(root)
+            .into_iter()
+            .flatten()
+            .copied()
+            .collect::<BTreeSet<_>>();
+        for (slash, _) in root.match_indices('/') {
+            for rule_index in descendant_roots.get(&root[..slash]).into_iter().flatten() {
+                if !matching_rules[*rule_index].excluded_roots.contains(root) {
+                    applicable_rules.insert(*rule_index);
                 }
+            }
+        }
+        if !applicable_rules.is_empty() {
+            selection.changed_packages.insert(package.spec.name.clone());
+        }
+        for rule_index in applicable_rules {
+            for path_index in &matching_rules[rule_index].path_indexes {
+                selection.known_paths[*path_index] = true;
             }
         }
     }
@@ -825,7 +870,9 @@ fn valid_portable_glob(value: &str) -> bool {
     valid_portable_prefix(value, "<>:\"|")
         && value.split('/').all(|segment| {
             !invalid_segment(segment)
-                && (segment.chars().any(|character| "*[]{}".contains(character))
+                && (segment
+                    .chars()
+                    .any(|character| "*?[]{}".contains(character))
                     || !reserved_segment(segment))
         })
 }
@@ -904,18 +951,6 @@ fn valid_generated_component(value: &str) -> bool {
 fn has_duplicates(values: &[String]) -> bool {
     let mut seen = BTreeSet::new();
     values.iter().any(|value| !seen.insert(value))
-}
-
-fn boundary_applies(value: &BoundaryApplicability, root: &str) -> bool {
-    value.exact_roots.iter().any(|candidate| candidate == root)
-        || (!value
-            .excluded_roots
-            .iter()
-            .any(|candidate| candidate == root)
-            && value.descendant_roots.iter().any(|parent| {
-                root.strip_prefix(parent)
-                    .is_some_and(|suffix| suffix.starts_with('/'))
-            }))
 }
 
 fn is_build_front(path: &str) -> bool {
@@ -1068,6 +1103,21 @@ mod tests {
     }
 
     #[test]
+    fn question_wildcard_exempts_reserved_stem_glob_end_to_end() {
+        let mut input = base_diff_input(vec![package(
+            "typescript/question-reserved",
+            "p",
+            "strict_globs",
+            &["CON.?.txt"],
+        )]);
+        input.forced_packages = vec!["typescript/question-reserved".to_owned()];
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("a question wildcard must make a reserved stem pattern portable");
+        };
+        assert_eq!(result.changed_packages, ["typescript/question-reserved"]);
+    }
+
+    #[test]
     fn root_identity_validation_handles_full_scale_many_segment_roots() {
         let suffix = format!("{}leaf", "segment/".repeat(60));
         let packages = (0..MAX_GRAPH_PACKAGES)
@@ -1088,11 +1138,14 @@ mod tests {
     }
 
     #[test]
-    fn zero_path_validation_does_not_retain_all_compiled_glob_trees() {
+    fn shared_glob_validation_is_memoized_without_retaining_compiled_trees() {
         let globs = (0..MAX_SOURCE_GLOBS)
             .map(|index| format!("src/file-{index:03}.rs"))
             .collect::<Vec<_>>();
-        let packages = (0..1_024)
+        // This declares the same 256 immutable patterns 1,048,576 times.
+        // Validation must be proportional to distinct pattern text while each
+        // package still independently rejects duplicate declarations.
+        let packages = (0..MAX_GRAPH_PACKAGES)
             .map(|index| PackageSpec {
                 name: format!("fixture/p-{index}"),
                 rel_path: format!("roots/p-{index}"),
@@ -1215,6 +1268,59 @@ mod tests {
             panic!("zero-path boundary must not expand input-consumer pairs");
         };
         assert!(result.changed_packages.is_empty());
+    }
+
+    #[test]
+    fn max_shape_relevant_boundary_indexes_large_exclusion_sets() {
+        // Exclusions are bounded by the inert-value node ceiling rather than
+        // the scope/authorization ceilings. A linear exclusion scan for each
+        // package and matching rule performs hundreds of millions of long
+        // comparisons for this otherwise-valid shape.
+        let boundaries = (0..56)
+            .map(|rule| {
+                let excluded_roots = (0..1_024)
+                    .map(|excluded| format!("excluded/rule-{rule}/root-{excluded}"))
+                    .collect::<Vec<_>>();
+                json!({
+                    "id": format!("rule-{rule}"),
+                    "input_origin": "repository",
+                    "applies_to": {
+                        "exact_roots": [],
+                        "descendant_roots": ["roots"],
+                        "excluded_roots": excluded_roots
+                    },
+                    "inputs": [{
+                        "path": "shared/relevant-input",
+                        "role": "cross_package_exact"
+                    }],
+                    "reason": "large exclusion index regression",
+                    "owner": "test-owner"
+                })
+            })
+            .collect::<Vec<_>>();
+        let boundary = json!({
+            "schema_version": 1,
+            "language_source_input_registry_sha256": "0".repeat(64),
+            "boundaries": boundaries
+        });
+        let packages = (0..MAX_GRAPH_PACKAGES)
+            .map(|index| {
+                package(
+                    &format!("fixture/p-{index}"),
+                    &format!("roots/p-{index}"),
+                    "package_prefix",
+                    &[],
+                )
+            })
+            .collect();
+        let mut input = base_diff_input(packages);
+        input.changed_paths = vec!["shared/relevant-input".to_owned()];
+        input.boundary_sha256 = digest_for_test(&boundary);
+        input.boundary = Some(boundary);
+        let Evaluation::Success(result) = evaluate_diff_selection(&input) else {
+            panic!("relevant max-shape boundary must remain bounded");
+        };
+        assert_eq!(result.changed_packages.len(), MAX_GRAPH_PACKAGES);
     }
 
     #[test]
