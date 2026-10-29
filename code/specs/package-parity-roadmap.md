@@ -19973,3 +19973,11 @@ intervening paths are confined to existing Mermaid grammar, Rust diagram and
 Mermaid packages, tests, and DG04; no BUILD root, package identity, SHA-512
 path, state path, roadmap path, or changelog rank changed. The refreshed
 inventory and priority receipts therefore remain exact.
+
+Immediately before publication, main advanced again to
+`c807d952a36a9c3ff7aefad2c8cfe91e2dd4044e` through the powered ALGOL
+normalizer merge. Normal merge
+`8089de7dffeebb3f5faaec4651a77416eba0d51a` changes only existing Rust ALGOL
+compiler, lang-aot, package changelog, and language-matrix paths. It adds no
+BUILD root or identity and overlaps no SHA-512, state, roadmap, or root
+changelog-rank path, so the reviewed inventory and selection remain exact.
