@@ -3669,17 +3669,66 @@ impl Compiler {
         if actuals.len() != 1 {
             return None;
         }
-        let value = if self.contains_procedure_call(actuals[0]) {
-            self.exact_static_integer_normalizer_value(actuals[0])?
-        } else {
-            self.static_integer_scalar_value(actuals[0])?
-        };
+        let value = self.exact_static_integer_normalizer_operand_value(actuals[0])?;
         match target_name.as_str() {
             "abs" => value.checked_abs(),
             "sign" => Some(value.signum()),
             "entier" => Some(value),
             _ => None,
         }
+    }
+
+    /// Evaluate checked integer arithmetic around nested static normalizers.
+    /// Call-free subtrees use the ordinary exact-integer evaluator; subtrees
+    /// containing calls admit only recursively proven normalizers.
+    fn exact_static_integer_normalizer_operand_value(
+        &self,
+        node: &GrammarASTNode,
+    ) -> Option<i64> {
+        if !self.contains_procedure_call(node) {
+            return self.static_integer_scalar_value(node);
+        }
+        if node.rule_name == "proc_call" {
+            return self.exact_static_integer_normalizer_value(node);
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.exact_static_integer_normalizer_operand_value(child);
+        }
+
+        let sequence = pieces(node);
+        let mut index = 0;
+        let mut negate = false;
+        if let Some(Piece::Op(operator)) = sequence.first() {
+            negate = match operator.as_str() {
+                "+" => false,
+                "-" => true,
+                _ => return None,
+            };
+            index += 1;
+        }
+        let Piece::Node(first) = sequence.get(index)? else {
+            return None;
+        };
+        let first = self.exact_static_integer_normalizer_operand_value(first)?;
+        let mut value = if negate { first.checked_neg()? } else { first };
+        index += 1;
+        while index < sequence.len() {
+            let Piece::Op(operator) = sequence.get(index)? else {
+                return None;
+            };
+            let Piece::Node(rhs) = sequence.get(index + 1)? else {
+                return None;
+            };
+            let rhs = self.exact_static_integer_normalizer_operand_value(rhs)?;
+            value = match operator.as_str() {
+                "+" => value.checked_add(rhs)?,
+                "-" => value.checked_sub(rhs)?,
+                "*" => value.checked_mul(rhs)?,
+                _ => return None,
+            };
+            index += 2;
+        }
+        Some(value)
     }
 
     /// Evaluate deterministic real standard-function calls inside the static
@@ -16883,6 +16932,31 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "unreduced, overflowing, shadowed, and effectful signed normalizer chains must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_arithmetic_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(2)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) - abs(-2) * entier(1)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "checked arithmetic may compose between exact integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(abs(entier(-9007199254740993) - entier(2)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(9223372036854775807) + entier(1)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure entier(x); value x; real x; entier := x; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + abs(2)) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure offset; offset := 2; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + offset()) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, overflowing, shadowed, and procedure-calling arithmetic normalizers must fail closed",
             );
         }
     }
