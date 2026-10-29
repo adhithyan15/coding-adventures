@@ -704,6 +704,18 @@ DigestInfo` form, at least eight `ff` padding bytes, the canonical SHA-256 DER
 trailer with present NULL parameters, and the complete caller-supplied digest.
 It performs no RSA arithmetic or hashing, and arbitrary caller-supplied bytes
 do not become an authenticated signature by passing this formatting gate.
+A bounded `rsa-pss-mgf1-sha256` prerequisite now implements only the RFC 8017
+MGF1 expansion required by the future SHA-256 EMSA-PSS verification path. It
+accepts the exact 32-byte PSS hash value as its seed, validates both the
+standard's `2^32 * 32` maximum and a smaller caller-selected nonzero work
+ceiling before changing caller-owned output, encodes each counter as four
+network-order octets, and fills the requested mask directly without allocation.
+The repository-owned SHA-256 implementation is its only production dependency.
+This primitive does not parse parameters or keys, perform RSA arithmetic,
+validate an EMSA-PSS encoded message, choose a salt policy, verify a signature,
+process a certificate, or grant path, trust, revocation, TLS, HTTP, OAuth
+transport, or network authority. RSA-PSS support remains unavailable until
+those separate boundaries are implemented, composed, and tested.
 A bounded `rsa-public-operation` prerequisite now consumes only a previously
 validated RSA public key, enforces a separate caller-owned modulus-byte ceiling
 before arbitrary-precision conversion, rejects non-modulus-width or
