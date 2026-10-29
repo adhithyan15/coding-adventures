@@ -1,5 +1,90 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18439: every binding owns its register
+
+### Fixed
+
+- **A nested binding with the same name no longer overwrites the outer
+  one.** A local's IIR register was its source name, so every binding of a
+  name shared one register. An inner `let` / `let*` / lambda / `match`
+  binding wrote over the outer binding, and the outer value was gone when
+  the inner scope ended:
+
+  ```scheme
+  (define (f x) (begin (let ((x 5)) x) x)) (f 1)                ; 5, now 1
+  (define (f helper) (begin (let ((helper (lambda (x) 0))) (helper 1))
+                            (helper 2)))                         ; called the inner lambda
+  ```
+
+  Through E4 aliases this was type confusion, not just a wrong value: in
+  `(let* ((x "abc") (y x) (x 5)) (string-length y))` and
+  `(define (g x) (let ((y x)) (let ((x 5)) (string-length y)))) (g "abc")`,
+  `y` read register `x`, which held 5, and the native backends trusted the
+  `str_len`'s `[str]` hint. The VM raised a `TypeError`.
+
+  `FnCtx` now keeps a **name → stack of registers** map (`scope`) instead of
+  the `locals` set and the `local_aliases` map. Every binder pushes onto it
+  and pops on scope exit: top-level and lambda parameters, closure captures,
+  `let`, `let*`, `match` variant fields and `match` binding arms. Every
+  reader resolves through `FnCtx::lookup`: `compile_var_ref`, the
+  call-position check in `compile_apply`, the E4 checks
+  (`is_known_value_type`, `is_known_main_value_type`, `unshadowed_apply`)
+  and lambda captures. An E4 string binding pushes its producer's register,
+  so an alias is just a stack entry.
+- **Closure captures read the alias register.** `alloc_closure` passed the
+  raw register named after each captured variable and ignored aliases, so
+  `(let ((s (string-append "a" "b"))) ((lambda () s)))` captured register
+  `s`, which nothing had written. Captures now pass `lookup(name)`.
+- **Register names are collision-free.** The first binding of a name in a
+  function keeps the name as its register; any later binding, nested or
+  sibling, gets `__r{n}_{name}`. A new per-function `claimed` set holds
+  every register handed out (parameters, bindings, temporaries). A binding
+  takes its own name only if it is free, a rebinding skips any taken
+  `__r{n}_{name}`, and `fresh_var` skips a temporary name that a user
+  binding already holds. So `(define (f _r1) (+ (g) (string-length _r1)))`
+  no longer overwrites the parameter `_r1` with `(g)`'s result. This does
+  not rely on #18444 reserving the `__` prefix.
+- **Duplicate parameter names** (`(define (f x x) x)`) get distinct
+  registers, and the body reads the last one, as before.
+
+### Changed
+
+- **The `shadow` / `unshadow` write-counter machinery from #18435 is
+  removed.** It existed because bindings shared registers: at scope exit it
+  had to decide whether a nested binding had overwritten the register an
+  outer type fact described. Now every binding register has exactly one
+  writer, so the type recorded at that write is true for the register's
+  whole life, and a scope exit is a plain `pop_binding`. `OuterBinding`,
+  `FnCtx::writes`, `write_count`, `shadow` and `unshadow` are gone.
+- **Sound typed ops come back.** Four #18435 follow-up tests asserted *no*
+  `str_len`, because the old fix could only forget the outer `str` type.
+  Each program's `(string-length x)` reads the `str` parameter, whose
+  register is now never overwritten, so the typed `str_len` is emitted and
+  sound. The tests now assert both: the fast path fires and every typed op
+  is sound.
+
+### Tests
+
+- 8 new IR-shape tests, including `SHADOWING_PROGRAMS`: every program from
+  #18439, nested lambdas capturing a shadowed name, `match` shadowing a
+  parameter (binding arm and variant field), recursion through shadowed
+  names, and the #18435 review programs. Two whole-IR checks run on them:
+  `assert_typed_ops_sound` (every register a typed op reads is only ever
+  written with that kind) and `assert_binding_registers_written_once`
+  (only `if` / `and` / `or` / `match` join temporaries have several
+  writers). All 8 failed before the fix. twig-vm runs the same programs
+  end to end.
+- **IIR diff.** Over 728 Twig programs harvested from the twig, twigc and
+  lang-aot test sources (including all `lang_matrix` Twig programs), 679
+  compile to byte-identical IIR to `origin/main`. Of the 49 that differ, 14
+  differ only because of #18435 and are identical to this branch's base, 29
+  bind a name more than once, and 6 are the alias-capture and
+  user-names-like-temporaries test programs. All 49 are shadowing test
+  programs. Run over the same corpus, the (flow-insensitive)
+  `assert_typed_ops_sound` check flags 18 programs on `origin/main`, 3 on
+  the #18435 branch (one a real temporary-name collision) and none now; 31
+  programs had a binding register with several writers before, none now.
+
 ## Unreleased — #18435: lexical scope wins in call position
 
 ### Fixed

@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.30.0";
+pub const VERSION: &str = "0.31.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -1439,7 +1439,10 @@ fn layout_relationships(
                 )
             };
             let label = rel.label.as_ref().map(|label| {
-                (path_midpoint(&points), label.clone())
+                let mut position = path_midpoint(&points);
+                position.x += rel.label_offset_x;
+                position.y += rel.label_offset_y;
+                (position, label.clone())
             });
             Some(LayoutedStructuralRelationship {
                 from_id: rel.from.clone(),
@@ -1546,6 +1549,8 @@ mod tests {
                 from_mult: None,
                 to_mult: None,
                 label: None,
+                label_offset_x: 0.0,
+                label_offset_y: 0.0,
                 style: None,
             }],
         }
@@ -1553,7 +1558,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.30.0");
+        assert_eq!(crate::VERSION, "0.31.0");
     }
 
     #[test]

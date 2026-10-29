@@ -1,5 +1,21 @@
 # Changelog — twig-vm
 
+## Unreleased — #18439: end-to-end tests for per-binding registers
+
+### Tests
+
+- 9 new dispatch tests run programs in which a nested binding reuses an
+  outer binding's name. Before the `twig-ir-compiler` fix, both bindings
+  shared one register, so the inner one overwrote the outer:
+  `(define (f x) (begin (let ((x 5)) x) x)) (f 1)` returned 5, not 1. The
+  tests cover value and call position, an E4 string alias to a rebound name
+  (which raised a `TypeError` on the VM and was type confusion on native
+  backends), a closure capturing an aliased string, a sibling scope's live
+  result, nested lambdas, `match` binding arms and variant fields shadowing
+  a parameter, recursion through shadowed names, and user locals spelled
+  like compiler registers (`__r1_x`, `_n1`). Eight failed before the fix;
+  the recursion test is a regression guard and passed either way.
+
 ## Unreleased — #18435: end-to-end tests for lexical shadowing
 
 ### Tests

@@ -50,11 +50,18 @@ separate product decision before it can be described as supported.
 
 1. Expand each profile's manual sections into feature-level rows and attach
    reference-section identifiers.
-2. Batch corpus work by coherent feature family, starting with nested and
-   parameter sweeps, then raw interchange and output semantics.
-3. Add execution and numerical parity cases across all three ports for each
+2. Batch corpus work by coherent feature family. The first LTspice stepping
+   phase supports one `.step param` card with `LIST` or linear-range values,
+   static numeric `.param` substitution, repeated analyses, and per-result
+   `stepValues` metadata. It intentionally excludes multiple `.step` cards,
+   Cartesian products, `table()` and expression evaluation, temperature/corner
+   sweeps, and ngspice `.control` loops. Those are separate register rows so a
+   passing simple step deck cannot be mistaken for broad sweep compatibility.
+3. Complete Cartesian/table parameter sweeps, then ngspice control-loop
+   semantics, before temperature, corner, and Monte Carlo contracts.
+4. Add execution and numerical parity cases across all three ports for each
    feature moved to `supported`.
-4. Add CLI, interactive, model-library, and UI workflow parity after the
+5. Add CLI, interactive, model-library, and UI workflow parity after the
    underlying parser and engine contracts are green.
-5. Mark a profile drop-in eligible only after the register and its corpus gates
+6. Mark a profile drop-in eligible only after the register and its corpus gates
    are complete; do not infer the claim from a broad test count.

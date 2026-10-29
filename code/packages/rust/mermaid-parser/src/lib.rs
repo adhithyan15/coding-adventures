@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.147.0";
+pub const VERSION: &str = "0.149.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -587,7 +587,7 @@ fn token_name(token: &Token) -> &str {
 // ============================================================================
 
 use diagram_ir::{
-    ArchitectureConfig, ArchitectureServiceMetadata, Axis, AxisKind, ChartDataPoint, ChartDiagram,
+    ArchitectureConfig, ArchitectureServiceMetadata, Axis, AxisKind, C4NodeMetadata, ChartDataPoint, ChartDiagram,
     ChartKind,
     ChartOrientation, ChartSeries,
     Compartment, CompartmentKind, GanttConfig, GanttDateFormat, GanttDateFormatPart, GanttDiagram, GanttDisplayMode, GanttDuration, GanttDurationUnit, GanttSection, GanttTask, GitBranch, GitCommitType,
@@ -1626,6 +1626,7 @@ fn parse_architecture_edge(
         to_port: Some(parse_architecture_port(to_direction)),
         routing: StructuralRouting::Orthogonal,
         from_mult: None, to_mult: None, label,
+        label_offset_x: 0.0, label_offset_y: 0.0,
         style: None,
     })
 }
@@ -3965,6 +3966,8 @@ fn parse_requirement_relationship(token: &Token) -> Result<StructuralRelationshi
         from_mult: None,
         to_mult: None,
         label: Some(label),
+        label_offset_x: 0.0,
+        label_offset_y: 0.0,
         style: None,
     })
 }
@@ -4589,6 +4592,8 @@ fn parse_class_relationship(line: &str) -> Option<StructuralRelationship> {
                     from_mult: None,
                     to_mult: None,
                     label,
+                    label_offset_x: 0.0,
+                    label_offset_y: 0.0,
                     style: None,
                 });
             }
@@ -13685,6 +13690,8 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
                 label: Some(label),
+                label_offset_x: 0.0,
+                label_offset_y: 0.0,
                 style: None,
             });
         } else {
@@ -14148,21 +14155,11 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     &mut node_indices,
                     id,
                     label,
-                    macro_token.value,
+                    macro_token.value.clone(),
+                    c4_node_metadata(&macro_token.value, &args),
                     group_stack.last().cloned(),
                 );
-                let details: Vec<String> = args
-                    .iter()
-                    .skip(2)
-                    .filter(|value| !value.is_empty() && !value.starts_with('$'))
-                    .cloned()
-                    .collect();
-                if !details.is_empty() {
-                    nodes[index].compartments.push(Compartment {
-                        kind: CompartmentKind::Fields,
-                        entries: details,
-                    });
-                }
+                rebuild_c4_compartments(&mut nodes[index]);
             }
             "RELATION_MACRO" => {
                 let macro_token = cursor.advance().clone();
@@ -14192,6 +14189,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     from_mult: None,
                     to_mult: None,
                     label: Some(args[2].clone()),
+                    label_offset_x: 0.0,
+                    label_offset_y: 0.0,
                     style: None,
                 });
             }
@@ -14275,6 +14274,7 @@ fn apply_c4_element_style(
         let mut style = nodes[index].style.clone().unwrap_or_default();
         apply_c4_element_color_arguments(args, &mut style);
         nodes[index].style = Some(style);
+        apply_c4_element_technology_arguments(args, &mut nodes[index]);
         return;
     }
     let Some(group) = groups.iter_mut().find(|group| group.id == *id) else {
@@ -14283,6 +14283,56 @@ fn apply_c4_element_style(
     let mut style = group.style.clone().unwrap_or_default();
     apply_c4_element_color_arguments(args, &mut style);
     group.style = Some(style);
+}
+
+fn apply_c4_element_technology_arguments(args: &[String], node: &mut StructuralNode) {
+    let technology = args.iter().skip(1).enumerate().find_map(|(position, argument)| {
+        let (key, value) = argument
+            .split_once('=')
+            .map_or((None, argument.as_str()), |(key, value)| (Some(key), value));
+        let is_technology = key == Some("$techn") || (key.is_none() && position == 6);
+        (is_technology && !value.is_empty()).then(|| value.to_string())
+    });
+    let Some(technology) = technology else { return };
+    let Some(StructuralNodeMetadata::C4(metadata)) = node.metadata.as_mut() else { return };
+    metadata.technology = Some(technology);
+    rebuild_c4_compartments(node);
+}
+
+fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata {
+    let uses_technology = macro_name.starts_with("Container") || macro_name.starts_with("Component");
+    let positional = |position: usize| {
+        args.get(position)
+            .filter(|value| !value.is_empty() && !value.starts_with('$'))
+            .cloned()
+    };
+    let keyed = |key: &str| {
+        args.iter().find_map(|argument| {
+            argument
+                .split_once('=')
+                .filter(|(argument_key, value)| *argument_key == key && !value.is_empty())
+                .map(|(_, value)| value.to_string())
+        })
+    };
+    StructuralNodeMetadata::C4(C4NodeMetadata {
+        technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
+        description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
+    })
+}
+
+fn rebuild_c4_compartments(node: &mut StructuralNode) {
+    let Some(StructuralNodeMetadata::C4(metadata)) = node.metadata.as_ref() else { return };
+    let entries = metadata
+        .technology
+        .iter()
+        .map(|technology| format!("[{technology}]"))
+        .chain(metadata.description.iter().cloned())
+        .collect::<Vec<_>>();
+    node.compartments = if entries.is_empty() {
+        Vec::new()
+    } else {
+        vec![Compartment { kind: CompartmentKind::Fields, entries }]
+    };
 }
 
 fn apply_c4_layout_config(args: &[String], config: &mut StructuralRenderConfig) {
@@ -14334,6 +14384,18 @@ fn apply_c4_relationship_style(args: &[String], relationships: &mut [StructuralR
         let (key, value) = argument
             .split_once('=')
             .map_or_else(|| (None, argument.as_str()), |(key, value)| (Some(key), value));
+        if key == Some("$offsetX") || (key.is_none() && position == 2) {
+            if let Ok(offset) = value.parse::<i64>() {
+                relationship.label_offset_x = offset as f64;
+            }
+            continue;
+        }
+        if key == Some("$offsetY") || (key.is_none() && position == 3) {
+            if let Ok(offset) = value.parse::<i64>() {
+                relationship.label_offset_y = offset as f64;
+            }
+            continue;
+        }
         let color = sanitize_railroad_color(Some(value), "");
         if color.is_empty() {
             continue;
@@ -14361,6 +14423,7 @@ fn upsert_c4_node(
     id: String,
     label: String,
     stereotype: String,
+    metadata: StructuralNodeMetadata,
     parent_group: Option<String>,
 ) -> usize {
     if let Some(index) = indices.get(&id).copied() {
@@ -14373,7 +14436,7 @@ fn upsert_c4_node(
         label,
         stereotype: Some(stereotype),
         node_kind: StructuralNodeKind::Class,
-        metadata: None,
+        metadata: Some(metadata),
         style: None,
         compartments: Vec::new(),
         parent_group,
@@ -19793,7 +19856,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.147.0");
+        assert_eq!(crate::VERSION, "0.149.0");
     }
 
     #[test]

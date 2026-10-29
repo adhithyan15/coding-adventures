@@ -279,9 +279,30 @@ then evaluate `body`.  Bindings are mutually independent (no
 sequential like `let*`).  Scope is lexical: the `body` sees `x`/`y`
 plus the surrounding scope.
 
-Implementation: each binding becomes a fresh assignment; the IIR
-register file handles scoping naturally because `frame.assign(name,
-val)` reuses slots.
+Implementation: each binding gets **a register of its own** (#18439).
+Reusing the source name as the register does *not* handle scoping: two
+bindings of the same name would share one slot, and the inner binding
+would overwrite the outer one, so
+`(define (f x) (begin (let ((x 5)) x) x)) (f 1)` would return 5 instead
+of 1 (and a typed op could be handed a value of the wrong kind).
+
+The compiler keeps, per function, a map from each name to a stack of
+registers — the innermost binding on top. Every binder pushes onto it
+and pops on scope exit: parameters, `let`, `let*`, lambda parameters,
+closure captures and `match` bindings. Every use of the name reads the
+register on top.
+
+| Binding of `x` in a function           | Register            |
+|-----------------------------------------|---------------------|
+| the first one                           | `x`                 |
+| any later one (nested or sibling)       | `__r1_x`, `__r2_x`, … |
+
+The first binding keeps the source name so programs that never reuse a
+name compile exactly as before. The compiler also tracks every register
+name it has used in the function, so a generated name never collides with
+a user local (a user local spelled `__r1_x` just pushes the generated
+name to the next free one), and a compiler temporary never collides with a
+user local spelled like one (`_n1`).
 
 ## The `Heap` class (the GC playground)
 
