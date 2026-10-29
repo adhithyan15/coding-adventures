@@ -1020,18 +1020,43 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
-    // A negative argument. Not on Vm / Jit: the `<` on the parameter reaches
-    // vm-core as `call_builtin "<"`, which it does not register
-    // (`UnknownOpcode("builtin \"<\"")`, with or without an `(x : int)`
-    // annotation) — a capability gap, not a sign bug. Not on Clr / Beam: not
-    // probed (no `dotnet` / `erl` where this row was added), and no other row
-    // proves a comparison on a function parameter there.
+    // A negative argument. #18463 registers vm-core's dynamic ordering
+    // builtins, so the `<` on the unannotated parameter also runs on Vm / Jit.
+    // Not on Clr / Beam: not probed (no `dotnet` / `erl` where this row was
+    // added), and no other row proves a comparison on a function parameter
+    // there.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (f x) (if (< x 0) 42 7)) (f -5)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Twig — the other three dynamic ordering builtins on Vm / Jit (#18463),
+    // nested so each has its own wrong answer: a broken `<=` gives 3, `>`
+    // gives 2, and `>=` gives 1. `-5` sits on the boundary of `>=`
+    // (non-strict) and below zero (sign).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (<= x 0) (if (> x -10) (if (>= x -5) 42 1) 2) 3)) (f -5)",
+        expect: Expect::Exit(42),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // `pair?` on a parameter (#18463): the shared lowering turns `cons`/`car`/
+    // `cdr`/`null?` into heap ops but leaves `pair?` a `call_builtin`, which
+    // vm-core now registers. A cell answers 40, an integer 2: a `pair?` stuck
+    // at true gives 80, and one stuck at false gives 4.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (f x) (if (pair? x) 40 2)) (+ (f (cons 1 2)) (f 5))",
+        expect: Expect::Exit(42),
+        backends: &[Vm, Jit],
         release: None,
         case: None,
     },
@@ -15386,9 +15411,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
     let expected = [
         // Twig: 49 rows on all eight columns, #18453's four negative-operand
         // comparison rows (three on all eight and one on NativeAot / Llvm /
-        // Wasm / Jvm), then #18483's five negative-operand comparison rows on
-        // six columns (all but Clr / Beam).
-        (Language::Twig, 58, 450),
+        // Wasm / Jvm / Vm / Jit), #18463's two extra dynamic compare / `pair?`
+        // rows on Vm and Jit only, then #18483's five negative-operand
+        // comparison rows on six columns (all but Clr / Beam).
+        (Language::Twig, 60, 456),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),
