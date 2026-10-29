@@ -1,0 +1,315 @@
+{
+  "kind": "postmerge-package-parity-inventory-reconciliation",
+  "observed_at": "2026-10-29T09:06:45Z",
+  "inventory_revision": "9d0843dc86975a0442bcc86c9ccd765eed3c20a8",
+  "previous_inventory_revision": "83f1871e3d61e8151b0e9313337f5dc2c842a3e6",
+  "merge_receipt": {
+    "pr_number": 18566,
+    "reviewed_head": "8bfb4d692d74f305d47398c6cc51ea6e60d5f916",
+    "merged_at": "2026-10-29T09:06:45Z",
+    "merge_revision": "9d0843dc86975a0442bcc86c9ccd765eed3c20a8",
+    "checks": {
+      "total": 40,
+      "success": 10,
+      "skipped": 29,
+      "neutral": 1,
+      "pending": 0,
+      "failed": 0
+    },
+    "manual_merge": false
+  },
+  "reporter": {
+    "schema_version": 3,
+    "established_languages": 15,
+    "implementation_identities": 1605,
+    "implementation_package_slots": 4904,
+    "all_reported_identities": 1647,
+    "completion_bands": {
+      "1": {
+        "packages": 1122,
+        "missing_slots": 15708
+      },
+      "2-4": {
+        "packages": 181,
+        "missing_slots": 2282
+      },
+      "5-9": {
+        "packages": 123,
+        "missing_slots": 937
+      },
+      "10-15": {
+        "packages": 179,
+        "missing_slots": 244
+      }
+    },
+    "ocaml_packages": 5,
+    "canonical_collisions": 0,
+    "unknown_language_buckets": 0
+  },
+  "build_root_delta": {
+    "added_roots": 93,
+    "removed_roots": 0,
+    "identity_names_touched": 84,
+    "new_implementation_identities": 69,
+    "implementation_slots_added": 86,
+    "note": "The pre-merge observation was 92 roots and 83 names. Swift RESP adds the ninety-third root and eighty-fourth touched name on the exact merged revision. BUILD-root additions are not identical to reporter slot additions: four bounded-json/neural-framework roots are emerging C/C++, and three established directories already existed before their BUILD fronts landed."
+  },
+  "existing_identity_mappings": [
+    {
+      "identity": "binary-tree",
+      "roots": [
+        "code/packages/dart/binary-tree",
+        "code/packages/swift/binary-tree"
+      ],
+      "owner": "binary-tree-dart-swift-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "bloom-filter",
+      "roots": [
+        "code/packages/swift/bloom-filter"
+      ],
+      "owner": "swift-bloom-filter-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "bounded-json",
+      "roots": [
+        "code/packages/c/bounded-json",
+        "code/packages/cpp/bounded-json"
+      ],
+      "owner": "bounded-json-rfc8259-portable-core-classification-and-conformance",
+      "classification": "emerging-lane BUILD roots; denominator unchanged"
+    },
+    {
+      "identity": "document-ast-to-html",
+      "roots": [
+        "code/packages/csharp/document-ast-to-html",
+        "code/packages/fsharp/document-ast-to-html"
+      ],
+      "owners": [
+        "document-ast-to-html-csharp-lane-parity",
+        "document-ast-to-html-fsharp-lane-parity"
+      ],
+      "classification": "merged established-lane additions"
+    },
+    {
+      "identity": "gradient-descent",
+      "roots": [
+        "code/packages/python/gradient-descent"
+      ],
+      "owner": "python-gradient-descent-build-front-coverage",
+      "classification": "BUILD-front addition to a pre-existing slot"
+    },
+    {
+      "identity": "hash-functions",
+      "roots": [
+        "code/packages/swift/hash-functions"
+      ],
+      "owner": "swift-hash-functions-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "hash-map",
+      "roots": [
+        "code/packages/swift/hash-map"
+      ],
+      "owner": "swift-hash-map-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "hash-set",
+      "roots": [
+        "code/packages/swift/hash-set"
+      ],
+      "owner": "swift-hash-set-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "hyperloglog",
+      "roots": [
+        "code/packages/swift/hyperloglog"
+      ],
+      "owner": "swift-hyperloglog-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "in-memory-data-store-protocol",
+      "roots": [
+        "code/packages/swift/in-memory-data-store-protocol"
+      ],
+      "owner": "swift-in-memory-data-store-protocol-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "matrix",
+      "roots": [
+        "code/packages/ruby/matrix"
+      ],
+      "owner": "ruby-activation-matrix-perceptron-build-front-coverage",
+      "classification": "BUILD-front addition to a pre-existing slot"
+    },
+    {
+      "identity": "micro-qr",
+      "roots": [
+        "code/packages/kotlin/micro-qr"
+      ],
+      "owner": "kotlin-micro-qr-build-front-and-gradle-metadata-coverage",
+      "classification": "BUILD-front addition to a pre-existing slot"
+    },
+    {
+      "identity": "resp-protocol",
+      "roots": [
+        "code/packages/swift/resp-protocol"
+      ],
+      "owner": "swift-resp-protocol-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "skip-list",
+      "roots": [
+        "code/packages/swift/skip-list"
+      ],
+      "owner": "swift-skip-list-lane-parity",
+      "classification": "merged established-lane addition"
+    },
+    {
+      "identity": "starlark-compiler",
+      "roots": [
+        "code/packages/haskell/starlark-compiler"
+      ],
+      "owner": "starlark-ast-to-bytecode-haskell-lane-parity",
+      "classification": "established-lane addition under the neutral Starlark compiler family"
+    }
+  ],
+  "new_identity_groups": [
+    {
+      "owner": "historical-architecture-aot-target-family-portable-conformance",
+      "identity_count": 51,
+      "identities": [
+        "arm7tdmi-gatelevel",
+        "arm7tdmi-simulator",
+        "avr-classic-simulator",
+        "cdp1802-gatelevel",
+        "cdp1802-simulator",
+        "cortex-m0-gatelevel",
+        "cortex-m0-simulator",
+        "cortex-m23-gatelevel",
+        "cortex-m23-simulator",
+        "cortex-m33-simulator",
+        "cortex-m3-gatelevel",
+        "cortex-m3-simulator",
+        "cortex-m4-gatelevel",
+        "cortex-m4-simulator",
+        "cortex-m7-gatelevel",
+        "cortex-m7-simulator",
+        "data-general-nova-simulator",
+        "edsac-gatelevel",
+        "edsac-simulator",
+        "ias-gatelevel",
+        "ias-simulator",
+        "ibm-system360-gatelevel",
+        "ibm-system360-simulator",
+        "ibm-system370-gatelevel",
+        "ibm-system370-simulator",
+        "intel8085-gatelevel",
+        "intel8085-simulator",
+        "latticemico32-simulator",
+        "microwatt-powerisa-simulator",
+        "motorola6800-gatelevel",
+        "motorola6800-simulator",
+        "motorola68020-simulator",
+        "motorola6809-gatelevel",
+        "motorola6809-simulator",
+        "msp430-simulator",
+        "openrisc1000-gatelevel",
+        "openrisc1000-simulator",
+        "opensparc-t1-gatelevel",
+        "opensparc-t1-simulator",
+        "pa-risc11-gatelevel",
+        "pa-risc11-simulator",
+        "pdp10-simulator",
+        "pdp8-gatelevel",
+        "pic16f84a-simulator",
+        "sparc-v9-simulator",
+        "superh2-simulator",
+        "vax11-780-gatelevel",
+        "vax11-780-simulator",
+        "xtensa-lx6-simulator",
+        "zipcpu-simulator",
+        "zpu-simulator"
+      ],
+      "classification": "Rust-only deterministic architecture families mapped to the existing umbrella; per-ISA fixtures and decomposition remain required"
+    },
+    {
+      "owner": "neural-framework-existing-lane-portable-conformance",
+      "identity_count": 1,
+      "identities": [
+        "neural-framework"
+      ],
+      "established_languages": [
+        "go",
+        "python",
+        "ruby",
+        "rust",
+        "typescript"
+      ],
+      "emerging_languages": [
+        "c",
+        "cpp"
+      ],
+      "classification": "portable shared-fixture identity; no root-presence conformance credit"
+    },
+    {
+      "owner": "sha384-language-neutral-conformance",
+      "identity_count": 1,
+      "identities": [
+        "sha384"
+      ],
+      "classification": "portable Rust singleton requiring neutral primitive conformance before lane expansion"
+    },
+    {
+      "owner": "tls13-fixed-memory-record-prerequisite-stack-classification",
+      "identity_count": 5,
+      "identities": [
+        "tls13-cipher-suite-policy",
+        "tls13-hkdf-label",
+        "tls13-inner-plaintext",
+        "tls13-record",
+        "tls13-record-nonce"
+      ],
+      "classification": "bounded pure prerequisites grouped for inventory ownership; delivery blocked until contract and dependency decomposition"
+    },
+    {
+      "owner": "x509-ocsp-authenticated-revocation-binding-stack-classification",
+      "identity_count": 11,
+      "identities": [
+        "x509-authority-information-access",
+        "x509-ocsp-aia-locator-policy",
+        "x509-ocsp-authenticated-responder",
+        "x509-ocsp-authenticated-target-revocation",
+        "x509-ocsp-cert-id-binding",
+        "x509-ocsp-issuer-bound-responder",
+        "x509-ocsp-responder-certificate-policy",
+        "x509-ocsp-responder-id-binding",
+        "x509-ocsp-reviewed-server-revocation-binding",
+        "x509-ocsp-revocation-policy",
+        "x509-ocsp-rsa-pkcs1-v1-5-sha256-signature"
+      ],
+      "classification": "supplied-input structural and policy stack; authority-bearing delivery remains excluded from autonomous selection"
+    }
+  ],
+  "priority": {
+    "owner": "sha512-existing-lane-hf04-conformance-audit",
+    "unfinished_prerequisites": 0,
+    "direct_unfinished_descendants": 2,
+    "total_unfinished_descendants": 18,
+    "status": "recommended-not-selected",
+    "reason": "Highest-leverage bounded dependency-ready portable owner after classification. Newly registered owners have no unfinished descendants; broader umbrellas require decomposition or carry authority and coordination risk."
+  },
+  "limits": [
+    "Reporter inventory is structural evidence only; it does not grant behavior, native execution, coverage, security, authority, or reviewed-exception credit.",
+    "C, C++, and OCaml remain emerging and do not change the established 15-language denominator.",
+    "No source package, BUILD front, dependency metadata, branch, remote ref, pull request, or worktree was created or modified by this reconciliation."
+  ]
+}

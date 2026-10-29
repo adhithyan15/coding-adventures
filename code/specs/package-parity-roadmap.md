@@ -19802,3 +19802,51 @@ reviewed. Then mark the PR ready and require a completely fresh hosted matrix
 on the resulting exact lifecycle head; guarded squash auto-merge remains
 disabled until every exact-head check is terminal and acceptable and GitHub
 still reports the PR mergeable.
+
+### PR #18566 merge and exact post-inventory reconciliation
+
+GitHub records Swift RESP PR #18566 merged at exact reviewed head
+`8bfb4d692d74f305d47398c6cc51ea6e60d5f916`. The live rollup contains 40
+terminal acceptable checks: 10 successes, 29 expected path-gated skips, and one
+neutral CodeQL aggregate. The squash merge landed at
+`2026-10-29T09:06:45Z` as
+`9d0843dc86975a0442bcc86c9ccd765eed3c20a8`. No check or review was bypassed,
+and the active parity publication slot is now clear.
+
+The mandatory schema-3 refresh on that exact merged main records 1,605
+established implementation identities, 4,904 established package slots, and
+1,647 all-reported identities. Its completion bands are 1,122 singletons with
+15,708 missing slots, 181 two-to-four-lane identities with 2,282 gaps, 123
+five-to-nine-lane identities with 937 gaps, and 179 ten-to-fifteen-lane
+identities with 244 gaps. OCaml remains emerging at five packages; canonical
+collisions and unknown language buckets remain zero.
+
+Relative to the stored `83f1871e` inventory, exact merged main adds 93 BUILD
+roots across 84 identity names and removes none. The earlier pre-merge count of
+92/83 was correct before Swift RESP became the final root. Fifteen touched
+names map to existing owners: Dart/Swift binary-tree; Swift bloom-filter,
+hash-functions, hash-map, hash-set, hyperloglog, data-store protocol, RESP, and
+skip-list; emerging C/C++ bounded-json; C#/F# document HTML; Python gradient
+descent; Ruby matrix; Kotlin Micro QR; and Haskell Starlark compiler.
+
+The 69 genuinely new established identities are now fully mapped before
+reprioritization. Fifty-one Rust-only functional or gate-level CPU identities,
+including ZPU and IBM System/370, extend the existing historical-architecture
+family classifier with exact package paths rather than creating duplicate
+singleton owners. Five established neural-framework roots plus emerging C/C++
+roots gain a shared-corpus conformance owner. Rust SHA-384 gains a neutral
+primitive owner. Five fixed-memory TLS 1.3 record prerequisites gain a blocked
+decomposition owner, and eleven OCSP/AIA authentication and revocation-binding
+packages gain a supplied-input/authority boundary owner excluded from
+autonomous delivery. The durable evidence is
+`package-parity-audits/20261029-swift-resp-postmerge-inventory.json`; root
+presence grants no behavioral, native, coverage, security, or authority credit.
+
+After this classification, `sha512-existing-lane-hf04-conformance-audit` is
+the highest-leverage dependency-ready bounded portable owner: it has no
+unfinished prerequisite, two direct unfinished children, and eighteen total
+unfinished descendants. Its HF04, shared-fixture, and twelve established
+SHA-512 package paths do not overlap open PR #18495 or the prepared Lua/Rust
+graph-diff work. It is recommended but not selected here; create its dedicated
+worktree only after this reconciliation is independently reviewed. The active
+PR list remains empty, and this reconciliation does not publish or push.
