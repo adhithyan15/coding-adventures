@@ -19868,9 +19868,10 @@ overlaps the selected implementation paths.
 
 ### SHA-512 HF04 local implementation
 
-The selected owner is locally complete at exact implementation head
-`ead3c5829b6d7463c7c2f16d88b3efc53c823ed0`, following bounded-contract and
-fixture commit `8b3c1073806ba431a47a4bb6daf15de66ca0e83b`. The revised HF04 contract and
+The selected owner is locally repaired and complete at exact implementation
+head `43ae6d23523632c459f001f70316b6a1f5de5894`, following bounded-contract and
+fixture commit `8b3c1073806ba431a47a4bb6daf15de66ca0e83b` and initial twelve-lane
+implementation `ead3c5829b6d7463c7c2f16d88b3efc53c823ed0`. The revised HF04 contract and
 3,220-byte neutral corpus carry nine byte-exact digest vectors with portable
 chunk plans plus six allocation-free 128-bit length-field vectors. All twelve
 established lanes consume the digest witnesses dynamically; each lane also
@@ -19881,9 +19882,22 @@ finalization, continuation, ownership, and copy independence where exposed.
 The audit repaired truncated high length words in C#, F#, Go, Lua, Perl,
 Python, Ruby, Swift, and streaming Rust; unsafe Number-based streaming counts
 in TypeScript; and update-sized retained buffers in C#, F#, Go, Python, Ruby,
-Rust, and Swift. Native suites pass in C#, Elixir, F#, Go, Haskell, Lua, Perl,
-Python, Ruby, Rust, Swift, and TypeScript, including the repository coverage
-gates and Rust doc tests. Existing capability profiles remain empty, no new
+Rust, and Swift. Follow-up review drove strict bounded whole-corpus readers in
+all twelve lanes, each enforcing exact tags/fields, lowercase even hex, digest
+and length syntax, chunk bounds and exact sums before decoding while retaining
+exactly nine digest and six length witnesses. Python now snapshots contiguous
+byte views before preflight/state mutation and handles multi-byte memoryviews;
+non-contiguous views fail atomically. Perl rejects UTF-8-flagged text with the
+stable byte-string error. Go and Rust now pin continuation after snapshot, and
+Go's `Write` contract documents overflow.
+
+Native results at the repaired head are C# 15 tests at 100% line, Elixir 25 at
+100%, F# 15 at 100% line, Go 31 at 89.2%, Haskell 6, Lua 25, Perl 64
+assertions, Python 46 at 96.52%, Ruby 42 runs/148 assertions, Rust 33 plus four
+doc tests, Swift 31, and TypeScript 44 at 100%. TypeScript build, Python mypy,
+and Rust Clippy with warnings denied pass. Package-native cleans plus exact
+artifact deletion leave no SHA-512 build/test residue, without cleaning the
+shared Rust target. Existing capability profiles remain empty, no new
 dependency or authority is introduced, and Java/Kotlin/Dart ports, emerging
 C/C++/OCaml lanes, HMAC, secret custody, and host-crypto substitution remain
 outside this owner. No additional backlog identity was discovered: every
