@@ -2005,6 +2005,24 @@ Complete transcript and handshake state, repository-owned AEAD composition,
 certificate-path validation, revocation policy, TLS transport, and HTTP
 composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-key-update-message` prerequisite now owns the exact
+one-octet RFC 8446 section 4.6.3 `KeyUpdate` handshake body. Exact decoding
+accepts only `update_not_requested` and `update_requested`, rejects truncated,
+padded, and out-of-range bodies with payload-free categories, and returns one
+typed request whose response requirement cannot be reinterpreted by a caller.
+Encoding writes the typed request into caller-owned output only after complete
+capacity validation and leaves extra capacity untouched.
+
+This body layer does not authorize `KeyUpdate` before peer `Finished`, sequence
+post-handshake messages, retain a pending response, coalesce repeated requests,
+derive or rotate read or write traffic secrets, enforce old-key protection or
+record-boundary alignment, send an alert, protect a record, perform I/O,
+authorize HTTP or OAuth transport, or open a network connection. Complete
+handshake and post-handshake state, key-update secret derivation,
+repository-owned record protection, certificate-path validation, revocation
+policy, TLS transport, and HTTP composition remain blockers. Concrete HTTPS
+remains unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire
