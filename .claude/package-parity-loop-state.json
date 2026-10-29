@@ -16,15 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18548,
+  "active_pr": 18555,
   "active_prs": [
-    18548
+    18555
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-29T02:02:36Z",
-    "pr_number": 18548,
-    "head_revision": "eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0",
-    "action": "Independent focused review approved the durable PR-number lifecycle receipt at exact head eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0 with no finding. PR #18548 was marked ready for review; GitHub reports it mergeable and fresh hosted qualification is queued. Guarded auto-merge remains disabled until every check on the final exact head is terminal and acceptable.",
+    "observed_at": "2026-10-29T04:52:06Z",
+    "pr_number": 18555,
+    "head_revision": "741ab911cb01813b3eec2ca5dee37c2cbcb12a7a",
+    "action": "Independent focused review approved the durable PR-number lifecycle receipt at exact head 741ab911cb01813b3eec2ca5dee37c2cbcb12a7a with no finding. PR #18555 was marked ready for review; GitHub reports it mergeable and fresh hosted qualification is queued. Guarded auto-merge remains disabled until every check on the final exact head is terminal and acceptable.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2836,7 +2836,7 @@
     {
       "id": "build-tool-typescript-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the TypeScript build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-neutral-graph-diff-contract-coverage-completion",
@@ -2856,6 +2856,10 @@
       "ready_at": "2026-10-29T02:02:35Z",
       "lifecycle_review_revision": "eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0",
       "lifecycle_review_notes": "Independent focused review confirmed the PR identity, URL, creation time, exact publication head/base, receipt parentage, mergeability, state graph, roadmap, diff, remote branch, and artifact hygiene. The PR is now ready for review; all hosted checks must complete acceptably on the final exact head before guarded auto-merge may be enabled.",
+      "merged_head_revision": "dd18418d69cbb88fbc1ad1149e4b1fc593bf9a81",
+      "merged_at": "2026-10-29T04:03:30Z",
+      "merge_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
+      "merge_notes": "All 42 final-head checks completed terminal acceptable: 31 successes, 10 expected path-gated skips, and one neutral CodeQL aggregate. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge. The merge commit is present on origin/main; the clean completed worktree and local branch were removed.",
       "selected_at": "2026-10-29T01:54:38Z",
       "selection_revision": "92cf52368f835648df9d54be2cc41be47c82417f",
       "selection_notes": "Selected after PR #18544 completed all 38 exact-head checks acceptably, merged through guarded squash auto-merge, and its clean worktree and local branch were removed. A fresh dependency/leverage pass places this ready process-free TypeScript build-tool leaf at three direct and five total unfinished descendants, tied with the pending Lua graph/diff leaf. TypeScript wins the tie-break because all seven prerequisites are merged and its mature directed-graph, Git-diff, and hardened matcher modules provide the narrower implementation surface; its paths are disjoint from the completed Elixir tranche. From-scratch canonical-CBOR work has lower near-term leverage.",
@@ -3762,13 +3766,30 @@
     {
       "id": "build-tool-ruby-portable-dependency-hashing-conformance",
       "title": "Complete portable dependency hashing in the Ruby build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-ruby-portable-source-hashing-conformance",
         "build-tool-neutral-dependency-hashing-adversarial-corpus"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-ruby-dependency-hashing-parity",
+      "pr_number": 18555,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18555",
+      "opened_at": "2026-10-29T04:50:00Z",
+      "publication_head": "541089eefe9e22c9a0691f31749b55e81cfe2fe4",
+      "publication_base": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
+      "publication_notes": "Draft PR #18555 records the independently reviewed exact current-main head. GitHub reports the publication head mergeable over exact base 6fe513ee903ff2ef56279783ccbd59a0b8100788. Keep it draft only while this PR-number lifecycle receipt is committed, pushed, and independently reviewed; then mark ready and require fresh hosted qualification at the resulting exact head.",
+      "ready_at": "2026-10-29T04:52:05Z",
+      "lifecycle_review_revision": "741ab911cb01813b3eec2ca5dee37c2cbcb12a7a",
+      "lifecycle_review_notes": "Independent focused review confirmed the PR identity, URL, creation time, exact publication head/base, receipt parentage, mergeability, state graph, roadmap, remote branch, changelog rank/digest, diff, and artifact hygiene. The PR is now ready for review; all hosted checks must complete acceptably on the final exact head before guarded auto-merge may be enabled.",
+      "selected_at": "2026-10-29T04:03:30Z",
+      "selection_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
+      "selection_notes": "Selected after TypeScript graph/diff PR #18548 completed all 42 exact-head checks acceptably, merged through guarded squash auto-merge, and its clean worktree and local branch were removed. Fresh bounded-owner ranking places Ruby dependency hashing at three direct and five total unfinished descendants, tied with Lua graph/diff. Ruby wins the tie-break because its existing hasher needs a smaller framing correction and completion immediately makes the Ruby reverse-digest owner dependency-ready; both explicit prerequisites are merged. The already selected path-disjoint Swift RESP package remains local and independently reviewed.",
+      "implementation_revision": "3c66c9ec17f53ac74d1f78d06a078dce82e8e051",
+      "reconciled_main_revision": "6fe513ee903ff2ef56279783ccbd59a0b8100788",
+      "current_main_merge_revision": "2519086335a516fe27469daeb028934e24f7b369",
+      "validation_notes": "The Ruby build tool now frames sorted canonical package identities with decoded raw 32-byte dependency digests under hashing-v1, combines raw package and dependency digests, validates missing, malformed, truncated, extended, uppercase, and non-hex inputs fail-closed, bounds dependency count at 4,096 and canonical identity bytes at 240, and computes the complete package-digest map before dependency hashing on both CLI paths. Package identity validation preserves case after the lowercase language segment. Lazy reverse traversal stops exactly when the 4,097th identity is discovered, including million-wide fan-in, before materializing an unbounded predecessor set. Native tests dynamically consume the exact three-case neutral adversarial roster including prior-cache state, cache status, invalidated packages, and diagnostics. The exact Ruby BUILD runs 395 tests and 1,091 assertions with zero failures; line coverage is 92.89% and branch coverage is 79.03%. The real 178-package forced Swift dry plan completes without error. Focused StandardRB, syntax, registry synchronization, Go fixture routing, go vet, lessons, root changelog, diff hygiene, and artifact cleanup pass. The BUILD front now fails fast if registry sync or dependency installation fails.",
+      "security_review_revision": "3c66c9ec17f53ac74d1f78d06a078dce82e8e051",
+      "security_review_notes": "Independent exact-head review first rejected lowercase-only package segments, post-traversal identity limits, and incomplete neutral cache-semantics assertions. Repairs preserve case after the lowercase language, prove the real Swift lane, consume all prior-cache/status/invalidation/diagnostic fields, and add bounded reverse traversal. Re-review then found wide direct fan-in still materialized through DirectedGraph#predecessors; final head 3c66c9ec17f53ac74d1f78d06a078dce82e8e051 adds lazy each_predecessor and a million-wide star regression that stops exactly at identity 4,097. Final re-review issued SHIP with no findings and confirmed routing, registry, fail-fast BUILD, changelogs, tests, coverage, stable errors, authority, exact ancestry, diff hygiene, and artifact cleanup.",
       "notes": "Discovered by the post-#13569 cross-engine hashing audit. Ruby concatenates transitive dependency digest text without hashing-v1 package-identity and decoded raw-digest frames. After its source-hashing owner lands, adopt the neutral dependency and combined digest oracle in one engine-scoped tranche.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/build-tool-ruby-portable-dependency-hashing-conformance"
@@ -17013,11 +17034,18 @@
     {
       "id": "swift-resp-protocol-lane-parity",
       "title": "Implement DT23 RESP protocol in Swift",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/swift-resp-protocol-lane-parity",
       "pr_number": null,
       "selection_blocked": false,
+      "selected_at": "2026-10-29T02:05:56Z",
+      "selection_revision": "92cf52368f835648df9d54be2cc41be47c82417f",
+      "selection_notes": "Selected for local-only parallel implementation while TypeScript graph/diff PR #18548 ran hosted CI. Fresh bounded-owner ranking placed Ruby dependency hashing first at three direct and five total unfinished descendants, tied with Lua graph/diff, but both overlapped shared routing or registry paths changed by the active PR. Dependency-free Swift RESP ranked next at two direct and four total unfinished descendants and was package-path-disjoint, so it advanced safely without exceeding the publication ceiling. Shared lifecycle reconciliation is now recorded after #18548 merged.",
+      "implementation_revision": "523c36c9c0a4f6803092a29c0e886fb862ef640c",
+      "validation_notes": "The dependency-free Swift package implements all seven distinct RESP2 value forms with binary-safe bulk data, distinct null bulk and null array values, strict canonical grammar, iterative bounded encode/decode, failure-atomic incremental decoding, fragmented-work limits, exact UTF-8 identity, stable errors, BUILD fronts, package documentation, and an empty authority profile. Simple and error encoding bounds UTF-8 scans before proportional allocation, while numeric headers enforce their tighter ceiling during terminated or fragmented scanning. Twelve package tests, release build, Swift 6.3.1 formatting lint, manifest inspection, JSON validation, lessons validation, diff hygiene, and artifact cleanup pass. Independent LLVM measurement reports 96.84% production line coverage with all 37 functions executed.",
+      "security_review_revision": "523c36c9c0a4f6803092a29c0e886fb862ef640c",
+      "security_review_notes": "Independent exact-head review first rejected proportional UTF-8 line allocation before the advertised limit and numeric-header bounds enforced only after generic line scanning. The repaired head performs allocation-free bounded UTF-8 preflight, gives numeric headers a dedicated scan ceiling for terminated and fragmented inputs, and preserves header-limit precedence over frame limits. Re-review issued SHIP with no findings and reconfirmed binary/null semantics, iterative budgets, failure atomicity, stable errors, fixtures, tests, release build, coverage, empty authority, exact ancestry, package-only scope, diff hygiene, and artifact cleanup.",
       "notes": "Implement the pure typed RESP2 codec with binary-safe bulk strings, distinct null bulk and null array values, incremental decoding across arbitrary fragmentation, stable failures, explicit resource ceilings, package-native tests, and empty capabilities.",
       "postmerge_preparation_evidence": [
         "code/specs/package-parity-audits/20261022-go-bf03-postmerge.json#owner-notes/swift-resp-protocol-lane-parity"
@@ -17085,7 +17113,9 @@
       "pr_number": null,
       "discovered_at": "2026-10-28T20:53:48Z",
       "discovered_revision": "729e0b761e339bcc8d5863550da644e5b3ccec24",
-      "notes": "Close DT23 line, buffer, bulk, array, nesting-depth, aggregate-element, and aggregate-byte ceilings for incremental decoders; specify checked arithmetic, failure atomicity, and stable hostile-input errors. Existing decoders diverge and Python explicitly permits an unbounded buffer. Require this neutral reconciliation before selecting another RESP lane, without changing the selected Swift protocol IR."
+      "latest_discovery_at": "2026-10-29T02:18:15Z",
+      "latest_discovery_revision": "523c36c9c0a4f6803092a29c0e886fb862ef640c",
+      "notes": "Close DT23 line, buffer, bulk, array, nesting-depth, aggregate-element, aggregate-byte, and fragmented-work ceilings for incremental decoders; specify checked arithmetic, failure atomicity, and stable hostile-input errors. Existing decoders diverge and Python explicitly permits an unbounded buffer. The Swift implementation audit also found that DT23 has no shared language-neutral RESP fixture corpus and that its worked array example reports 14 consumed bytes for a 12-byte frame. Correct that receipt and freeze cross-language valid, malformed, incomplete, fragmentation, and error-precedence cases. Require this neutral reconciliation before publishing another RESP lane beyond the locally implemented Swift package; do not widen the Swift package into existing-lane remediation."
     },
     {
       "id": "swift-in-memory-data-store-engine-lane-parity",

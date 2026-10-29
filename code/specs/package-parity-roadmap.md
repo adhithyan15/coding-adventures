@@ -19572,14 +19572,6 @@ auto-merge remains disabled until every check is terminal and acceptable and
 GitHub still reports the reviewed head mergeable.
 
 Independent focused review approves the durable PR-number receipt at
-`eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0` with no finding. The delta changes
-only lifecycle state and roadmap text; PR #18548's identity, creation time,
-publication head/base, current remote head, mergeability, state graph, diff,
-and artifact hygiene all match live evidence. Mark the PR ready and require
-every fresh hosted check on the final exact head to finish acceptably before
-enabling guarded auto-merge.
-
-Independent focused review approves the durable PR-number receipt at
 `852ded240b140abe1c639933f63bc66872644317` with no finding. The delta changes
 only lifecycle state and roadmap text; PR #18544's identity, creation time,
 publication head/base, mergeability, state graph, diff, and artifact hygiene
@@ -19641,3 +19633,82 @@ receipt is committed, pushed, and independently reviewed. Then mark the PR
 ready and require a completely fresh exact-head hosted matrix; guarded squash
 auto-merge remains disabled until every check is terminal and acceptable and
 GitHub still reports the reviewed head mergeable.
+
+Independent focused review approves the durable PR-number receipt at
+`eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18548's identity, creation time,
+publication head/base, current remote head, mergeability, state graph, diff,
+and artifact hygiene all match live evidence. Mark the PR ready and require
+every fresh hosted check on the final exact head to finish acceptably before
+enabling guarded auto-merge.
+
+### PR #18548 merge and parallel Swift/Ruby progress
+
+All 42 final-head checks for TypeScript graph/diff PR #18548 completed
+terminal acceptable at `dd18418d69cbb88fbc1ad1149e4b1fc593bf9a81`:
+31 successes, 10 expected path-gated skips, and one neutral CodeQL aggregate.
+GitHub reported the reviewed head clean and mergeable. Guarded squash
+auto-merge landed `6fe513ee903ff2ef56279783ccbd59a0b8100788` at
+`2026-10-29T04:03:30Z`. The merge is present on fetched main, and the clean
+completed worktree and local branch were removed.
+
+While #18548 ran hosted qualification, dependency-free Swift RESP advanced
+locally on branch `codex/swift-resp-protocol-lane-parity`. Reviewed exact head
+`523c36c9c0a4f6803092a29c0e886fb862ef640c` implements all seven RESP2 value
+forms, binary-safe bulk data, distinct null bulk and null array values,
+allocation-free bounded line preflight, bounded numeric-header scanning,
+iterative failure-atomic fragmented decode, stable errors, and an empty
+authority profile. Twelve tests and release build pass; independent LLVM
+measurement reports 96.84% production lines with all 37 functions executed.
+Exact-head re-review issued SHIP with no findings.
+
+That audit enriches the existing
+`resp-protocol-dt23-bounded-streaming-contract-reconciliation` owner: DT23 has
+no shared language-neutral fixture corpus, and its worked array example claims
+14 consumed bytes for a 12-byte frame. The neutral owner now records the
+receipt correction plus valid, malformed, incomplete, fragmentation, and
+error-precedence fixture work rather than widening the bounded Swift package.
+
+The post-merge bounded-owner pass selects
+`build-tool-ruby-portable-dependency-hashing-conformance` on branch
+`codex/build-tool-ruby-dependency-hashing-parity`. Ruby and Lua each have three
+direct and five total unfinished descendants, but Ruby wins the tie-break: its
+existing hasher needs a smaller framing correction, and completion immediately
+makes the Ruby reverse-digest owner dependency-ready. Both Ruby prerequisites
+are merged. Reviewed candidate `3c66c9ec17f53ac74d1f78d06a078dce82e8e051`
+frames sorted canonical identities with decoded raw SHA-256 dependency digests,
+computes complete digest maps before dependency hashing, applies explicit
+identity and dependency-count bounds, fails closed on malformed digests, and
+dynamically consumes all three adversarial neutral cases. The exact BUILD runs
+395 tests and 1,091 assertions with zero failures at 92.89% line and 79.03%
+branch coverage. Repair preserves case after the lowercase language segment,
+uses lazy predecessor enumeration to abort at the first excess identity even
+for million-wide fan-in, and proves the neutral prior-cache status,
+invalidation, and diagnostic expectations. The real
+178-package Swift dry plan, shared Go routing, registry, changelog, fail-fast
+BUILD front, StandardRB, and artifact hygiene pass. Independent review first
+rejected case-erasing identity validation, post-traversal bounds, and partial
+fixture semantics, then found eager wide fan-in after the first repair. Final
+head `3c66c9ec17f53ac74d1f78d06a078dce82e8e051` closes every issue with lazy
+predecessor iteration and a million-wide regression that stops exactly at the
+4,097th identity; exact-head re-review issued SHIP with no findings. The
+lifecycle commit remains the publication gate.
+
+#### Draft PR #18555 publication receipt
+
+Publish independently reviewed exact current-main head
+`541089eefe9e22c9a0691f31749b55e81cfe2fe4` as draft PR #18555 over exact
+base `6fe513ee903ff2ef56279783ccbd59a0b8100788`. GitHub reports the head
+mergeable. Keep the PR draft only while this durable PR-number lifecycle
+receipt is committed, pushed, and independently reviewed. Then mark the PR
+ready and require a completely fresh exact-head hosted matrix; guarded squash
+auto-merge remains disabled until every check is terminal and acceptable and
+GitHub still reports the reviewed head mergeable.
+
+Independent focused review approves the durable PR-number receipt at
+`741ab911cb01813b3eec2ca5dee37c2cbcb12a7a` with no finding. The delta changes
+only lifecycle state and roadmap text; PR #18555's identity, creation time,
+publication head/base, current remote head, mergeability, state graph,
+changelog rank and digest, diff, and artifact hygiene all match live evidence.
+Mark the PR ready and require every fresh hosted check on the final exact head
+to finish acceptably before enabling guarded auto-merge.

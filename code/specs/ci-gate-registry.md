@@ -274,13 +274,16 @@ Swift, and TypeScript `<language>/programs/build-tool` fronts.
 | `corrupt` | C, F, L, Y, T |
 | `hit` | C, F, L, Y |
 | `missing` | C, F, L, G, P, Y, B, S |
-| `dependency-change-after`, `dependency-order-before`, `failed-prior-record`, `local-boundary-union` | C, F, L |
+| `dependency-change-after`, `dependency-order-before`, `failed-prior-record` | C, F, L, B |
+| `local-boundary-union` | C, F, L |
 | `shared-input-conduit-after`, `shared-input-conduit-before`, `shared-input-sha256-native-after`, `shared-input-sha256-native-before` | C, F, L |
 
 C#/F# enumerate the entire checked glob; Lua lists all eleven; Python
-constructs its three state names dynamically. The relation MUST track those
-test-source references, including dynamic readers, and the checked corpus
-roster. New valid flat cases MUST fail closed until classified, not silently
+constructs its three state names dynamically; Ruby filters the checked glob by
+the exact three dependency-adversarial case IDs in addition to its existing
+missing-record case. The relation MUST track those test-source references,
+including dynamic readers, and the checked corpus roster. New valid flat cases
+MUST fail closed until classified, not silently
 fall back to the neutral gate alone. Added, modified, deleted, and renamed
 paths (including the deleted source) participate, but nested, backslash,
 case-varied, and backup lookalikes do not. The selector MUST keep ordinary
