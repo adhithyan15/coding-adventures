@@ -1847,6 +1847,32 @@ along with handshake and record processing, certificate validation, trust-root
 selection, revocation, HTTP authorization, OAuth transport, and networking.
 Concrete HTTPS remains unavailable.
 
+The fixed-memory HKDF boundary now also accepts an already-derived
+pseudorandom key through one exact-length import operation. The caller selects
+SHA-256 or SHA-384 through `FixedHkdfHash`; the borrowed input must be exactly
+that hash's 32-byte or 48-byte output length before any secret copy occurs.
+Success copies only that exact prefix into the existing fixed 48-byte
+wipe-on-drop `HkdfPrk` owner, leaving the unused SHA-256 tail zeroed. The input
+remains caller-owned and the caller retains responsibility for wiping it. A
+stable payload-free error exposes no secret bytes or caller length.
+
+Both fixed Extract and exact import retain their original PRK staging owner
+after copying into the caller-owned result, then wipe that original 48-byte
+storage before return. The release-codegen regression gate verifies those
+staging scrubs, the existing HMAC-tag and previous-block scrubs, and the absence
+of allocator calls across the fixed Extract, import, and Expand boundaries.
+
+Import is not HKDF-Extract and does not establish entropy, provenance, or
+protocol meaning. In particular, accepting arbitrary input keying material at
+this boundary would be caller misuse. This slice exists so an already-derived
+TLS secret can later re-enter the repository-owned Expand boundary without an
+allocation-backed compatibility API or an unowned long-lived copy. It performs
+no credential access, edit, signing, provider action, audit or trace emission,
+I/O, or external effect, and it does not compose the TLS key schedule, derive
+traffic keys or IVs, process handshake or records, validate certificates,
+select trust, enforce revocation, authorize HTTP or OAuth transport, or open a
+network connection. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
