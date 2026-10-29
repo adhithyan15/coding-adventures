@@ -69,13 +69,21 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next: #18550 — prepare, publish, and audit v0.5.14.**
-The P0 lifecycle gates are complete. Prioritize this compatible release under
-#13543 after #18394 merged in #18396. Include all authoritative Unreleased Notes
-changes, preserve substantive release notes, and require every existing payload
-validation. Preparation is not publication: dispatch only after merge and audit
-immutable provenance, assets, checksums, and notes before closing #18550.
-Artifact coverage is unchanged; signing remains blocked in #13977.
+**Next: #18559 — Qt empty Board drop-target height floor.**
+Preserve both themes' existing 60-pixel minimum on the outer drop target.
+Require numeric safety, state-override exclusions, and package-expanded checks.
+Keep root-scroll/flex work owned by #18481 separate; feature composition and
+signing remain outside scope.
+
+Release validation discovered three previously invisible Qt col-drop styles:
+display, flex-direction, and gap. Each is pinned to one occurrence (total
+76 to 79) and tracked for lowering in #18563; further increases fail.
+
+**Published and audited: #18550 — v0.5.14.**
+Run 40824813766 passed all six payloads and publication from
+`760775910601fc8523d9a4b5b3cbfbf9acae9e05`. The immutable tag, source,
+13 assets, 12 checksum entries, 11 manifest payloads, and substantive notes were
+audited. Coverage is unchanged; signing remains blocked in #13977.
 
 **Completed fidelity slice: #18394 — Qt due-date editor width floor.**
 Merged in #18396 with all required checks successful on
