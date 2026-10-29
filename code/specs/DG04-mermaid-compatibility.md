@@ -173,8 +173,11 @@ metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
 bidirectional and backward relationships also preserve their authored endpoint
 arrows through structural layout and backend-neutral PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
-pipeline for C4 elements and boundaries. Core `UpdateRelStyle` text and line
-colors likewise survive semantic IR, layout, and backend-neutral
+pipeline for C4 elements and boundaries. Element technology and description
+are distinct in semantic IR, and keyed or positional `UpdateElementStyle`
+technology overrides replace the rendered technology without losing the
+description. Core `UpdateRelStyle` text and line colors plus keyed or positional
+label offsets likewise survive semantic IR, layout, and backend-neutral
 PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
 semantic IR; shape row limits control structural layout while both values lower
 to backend-neutral PaintScene metadata. C4 remains partial while its remaining
