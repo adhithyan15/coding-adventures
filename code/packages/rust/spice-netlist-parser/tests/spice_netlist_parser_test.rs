@@ -372,6 +372,14 @@ fn runs_shared_ngspice_control_parameter_corpus() {
 }
 
 #[test]
+fn ngspice_control_parameter_runs_require_alter_reset_run_order() {
+    assert!(parse_netlist(
+        ".param RLOAD=1k\n.control\nforeach load 1k 3k\n  reset\n  alterparam RLOAD=$load\n  run\nend\n.endc\n.end\n"
+    )
+    .is_err());
+}
+
+#[test]
 fn runs_shared_berkeley_v1_core_corpus() {
     let corpus: serde_json::Value = serde_json::from_str(include_str!(
         "../../../../grammars/spice/berkeley-v1-op-corpus.json"

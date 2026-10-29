@@ -208,6 +208,12 @@ R2 out 0 1k
     }
   });
 
+  it("requires ngspice control parameter runs to alter, reset, then run", () => {
+    expect(() => parseNetlist(
+      ".param RLOAD=1k\n.control\nforeach load 1k 3k\n  reset\n  alterparam RLOAD=$load\n  run\nend\n.endc\n.end\n",
+    )).toThrow("alterparam followed by reset and run");
+  });
+
   it("runs the shared Berkeley v1 core corpus", () => {
     const corpus = JSON.parse(readFileSync(
       new URL("../../../../grammars/spice/berkeley-v1-op-corpus.json", import.meta.url),

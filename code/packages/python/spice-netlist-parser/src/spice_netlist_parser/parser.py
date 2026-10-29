@@ -801,14 +801,33 @@ def _control_parameter_step_cards_in_block(
         if not values:
             raise NetlistParseError(".control foreach requires at least one numeric value")
         tail = block[index + 1 :]
-        assignment = next(
-            (candidate for candidate in tail if candidate.lower().startswith(("alterparam ", ".alterparam "))),
+        assignment_index = next(
+            (
+                candidate_index
+                for candidate_index, candidate in enumerate(tail)
+                if candidate.lower().startswith(("alterparam ", ".alterparam "))
+            ),
             None,
         )
-        if assignment is None or not any(candidate.lower().removeprefix(".") == "reset" for candidate in tail):
+        if assignment_index is None:
             raise NetlistParseError(
-                ".control foreach parameter runs require alterparam followed by reset"
+                ".control foreach parameter runs require alterparam followed by reset and run"
             )
+        reset_index = next(
+            (
+                candidate_index
+                for candidate_index, candidate in enumerate(tail[assignment_index + 1 :], assignment_index + 1)
+                if candidate.lower().removeprefix(".") == "reset"
+            ),
+            None,
+        )
+        if reset_index is None or not any(
+            candidate.lower().removeprefix(".") == "run" for candidate in tail[reset_index + 1 :]
+        ):
+            raise NetlistParseError(
+                ".control foreach parameter runs require alterparam followed by reset and run"
+            )
+        assignment = tail[assignment_index]
         command, expression = assignment.split(maxsplit=1)
         del command
         if "=" not in expression:

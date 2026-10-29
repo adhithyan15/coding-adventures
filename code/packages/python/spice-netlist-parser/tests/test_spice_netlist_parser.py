@@ -216,6 +216,13 @@ def test_runs_shared_ngspice_control_parameter_corpus() -> None:
         assert [analysis["stepValues"] for analysis in payload["analyses"]] == expected["stepValues"]
 
 
+def test_ngspice_control_parameter_runs_require_alter_reset_run_order() -> None:
+    with pytest.raises(NetlistParseError, match="alterparam followed by reset and run"):
+        parse_netlist(
+            ".param RLOAD=1k\n.control\nforeach load 1k 3k\n  reset\n  alterparam RLOAD=$load\n  run\nend\n.endc\n.end\n"
+        )
+
+
 def test_runs_shared_berkeley_v1_core_corpus() -> None:
     corpus_path = (
         Path(__file__).resolve().parents[4]

@@ -1142,20 +1142,33 @@ fn control_parameter_step_cards_in_block(
             .map(|value| parse_value(value))
             .collect::<Result<Vec<_>, _>>()?;
         let tail = &block[index + 1..];
-        let assignment = tail.iter().find(|line| {
+        let assignment_index = tail.iter().position(|line| {
             line.to_ascii_lowercase().starts_with("alterparam ")
                 || line.to_ascii_lowercase().starts_with(".alterparam ")
         });
-        let Some(assignment) = assignment else {
+        let Some(assignment_index) = assignment_index else {
             return Err(NetlistParseError::new(
-                ".control foreach parameter runs require alterparam followed by reset",
+                ".control foreach parameter runs require alterparam followed by reset and run",
             ));
         };
-        if !tail.iter().any(|line| line.trim_start_matches('.').eq_ignore_ascii_case("reset")) {
+        let Some(reset_index) = tail[assignment_index + 1..]
+            .iter()
+            .position(|line| line.trim_start_matches('.').eq_ignore_ascii_case("reset"))
+            .map(|index| index + assignment_index + 1)
+        else {
             return Err(NetlistParseError::new(
-                ".control foreach parameter runs require alterparam followed by reset",
+                ".control foreach parameter runs require alterparam followed by reset and run",
+            ));
+        };
+        if !tail[reset_index + 1..]
+            .iter()
+            .any(|line| line.trim_start_matches('.').eq_ignore_ascii_case("run"))
+        {
+            return Err(NetlistParseError::new(
+                ".control foreach parameter runs require alterparam followed by reset and run",
             ));
         }
+        let assignment = tail[assignment_index];
         let expression = assignment.split_once(char::is_whitespace).map(|(_, rest)| rest.trim()).unwrap_or("");
         let Some((parameter, value)) = expression.split_once('=') else {
             return Err(NetlistParseError::new(

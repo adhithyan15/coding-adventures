@@ -763,10 +763,16 @@ function controlParameterStepCardsInBlock(
       continue;
     }
     const tail = block.slice(index + 1);
-    const assignment = tail.find((line) => /^\.?alterparam\s/i.test(line));
-    if (assignment === undefined || !tail.some((line) => line.replace(/^\./, "").toLowerCase() === "reset")) {
-      throw new NetlistParseError(".control foreach parameter runs require alterparam followed by reset");
+    const assignmentIndex = tail.findIndex((line) => /^\.?alterparam\s/i.test(line));
+    if (assignmentIndex === -1) {
+      throw new NetlistParseError(".control foreach parameter runs require alterparam followed by reset and run");
     }
+    const resetOffset = tail.slice(assignmentIndex + 1).findIndex((line) => line.replace(/^\./, "").toLowerCase() === "reset");
+    const resetIndex = resetOffset === -1 ? -1 : assignmentIndex + resetOffset + 1;
+    if (resetIndex === -1 || !tail.slice(resetIndex + 1).some((line) => line.replace(/^\./, "").toLowerCase() === "run")) {
+      throw new NetlistParseError(".control foreach parameter runs require alterparam followed by reset and run");
+    }
+    const assignment = tail[assignmentIndex]!;
     const expression = assignment.replace(/^\.?alterparam\s+/i, "");
     const [name, value] = expression.split("=", 2).map((part) => part.trim());
     if (name === undefined || value === undefined) {
