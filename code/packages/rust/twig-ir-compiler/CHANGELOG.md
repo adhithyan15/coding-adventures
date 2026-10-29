@@ -1,5 +1,97 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18448: join temporaries take the consensus of every writer
+
+### Fixed
+
+- **`and`, `or` and `match` no longer type their result with the last
+  path's type.** Each of them is a *join*: several paths `mov` a value into
+  one temporary register, and the rest of the program reads that register
+  without knowing which path ran. `emit_move` recorded the source's type on
+  the destination at every `mov`, so the temporary ended up typed with
+  whichever path was compiled **last**. A typed op then read a value of
+  another kind:
+
+  ```scheme
+  (+ (or (< 1 2) 5) 1)                                  ; add [i64] on #t
+  (let ((s (or (< 1 2) "abc"))) (string-length s))      ; str_len on #t
+  (union T (A (v : int)) (B))
+  (let ((s (match (A 1) ((A v) 7) (_ "abc")))) (string-length s))   ; str_len on 7
+  (define c #t) (and c 5)                               ; typed bool, holds 5
+  ```
+
+  The VM's typed string ops check their operand and raised a `TypeError`;
+  the native and LLVM backends trust the hint, so there it was type
+  confusion — memory-unsafe for `str_len` / `str_index`.
+
+  A join temporary's type is now the **consensus** of all its writers: the
+  common type if every writer agrees on a concrete one, otherwise none. Every
+  writer counts, including the ones with no source expression of their own:
+  the `#f` of `and`'s short-circuit path, the test value `or` returns when it
+  is truthy, and the `nil` a `match` starts from in case no arm matches.
+
+  | join                       | writers                    | type before | type now |
+  |----------------------------|----------------------------|-------------|----------|
+  | `(or (< 1 2) 5)`           | `bool`, `i64`              | `i64`       | none     |
+  | `(and c 5)`                | `i64`, `bool` (`#f`)       | `bool`      | none     |
+  | `(match 5 (x 1))`          | `ref<LispyPair>`, `i64`    | `i64`       | none     |
+  | `(and (< 1 2) (< 2 3))`    | `bool`, `bool`             | `bool`      | `bool`   |
+  | `(or 1 2)`                 | `i64`, `i64`               | `i64`       | `i64`    |
+  | `(match 5 (_ nil))`        | `ref<LispyPair>` ×2        | `ref<LispyPair>` | `ref<LispyPair>` |
+
+  When the paths agree, nothing changes, so `(+ (or 1 2) 3)` keeps its
+  typed `add` and `(if (and (< a b) (< b c)) …)` its `bool` test.
+
+### Changed
+
+- **One consensus helper for all four joins.** `compile_if` already
+  computed a consensus for its two arms by hand. That logic is now a small
+  `JoinType` fold plus two `FnCtx` methods, used by `if`, `and`, `or` and
+  `match` alike: `emit_join_move` emits a path's `mov` (still carrying the
+  source's type, which is true for that path) and counts its type, and
+  `settle_join` records the consensus — or clears the type — once the last
+  writer is in. `if`'s IR is byte-identical.
+- **IR changes only where the paths disagree.** Over a 780-program corpus
+  (every Twig program literal in the twig, twigc and lang-aot test sources),
+  47 programs' IR changed relative to the base branch, and every one of
+  them has a join whose writers disagree; the other 733 are
+  byte-identical. In the changed programs, a typed op on the join result
+  becomes the dynamic builtin (`add` → `call_builtin "+"`, `str_len` →
+  `call_builtin "string-length"`), a typed `mov` / `ret` / call / return
+  type becomes `any`, and a `let` that used to alias a `str`-typed join as
+  an E4 string binding now copies it into its own register with
+  `mov [any]`. Of the 49 Twig programs in `lang-aot`'s `lang_matrix`, 47
+  are byte-identical. The two union `match` rows,
+  `(match (Some 42) ((Some v) v) ((None) 0))` and
+  `(match (None) ((Some v) v) ((None) 42))`, now return `any` instead of
+  `i64`. Their writers are `nil` (`ref<LispyPair>`), the boxed field `v`
+  (`ref<any>`) and an `i64` literal, so `i64` was wrong whenever the `Some`
+  arm ran. Only the final `ret`'s hint and `main`'s return type change; the
+  backends' boxing passes (`dyn_repr`, `dyn_repr_structural`) already pick
+  the exit coercion from the returned register's representation, not from
+  that hint.
+
+### Tests
+
+- `JOIN_PROGRAMS`: 23 programs whose join writers disagree. They are the
+  issue's programs plus variants: `or` nested in `and` and `and` in `or`,
+  a wrong type escaping through a function's return type, a `match` whose
+  arms agree but whose `nil` initialiser does not, and `#f` short-circuit
+  paths. Each one goes through `assert_registers_sound`, and every one
+  failed before the fix.
+- `assert_typed_ops_sound` now also checks a typed `mov` or `ret`: its hint
+  is a claim about the register it reads. Without this, a wrong join type
+  that flowed through a `let` (`mov s ← _or [str]`) or a function return
+  went unnoticed, because the typed op only saw the binding register's
+  single, consistent writer.
+- `disagreeing_join_falls_back_to_the_dynamic_op` checks that the typed op is
+  gone and that `main` returns `any`. `agreeing_join_keeps_its_type` checks
+  that `and` / `or` / `match` whose paths agree keep `bool`, `i64`, `str` or
+  `ref<LispyPair>` and their typed ops. That second test is a guard against
+  over-pessimising the IR, so it passed before the fix too.
+- `twig_typed_match_wildcard_accepted_by_every_backend` now asserts that
+  `(match 1 (_ 42))` returns `any`, and its comment says why.
+
 ## Unreleased — #18439: every binding owns its register
 
 ### Fixed

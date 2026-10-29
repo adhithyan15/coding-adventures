@@ -203,6 +203,24 @@ free one.
 `and` and `or` are special forms, not bindings, so a local cannot shadow
 them.
 
+### Join temporaries take a consensus type
+
+The registers that *do* have several writers are the compiler's join
+temporaries. `if`, `and`, `or` and `match` each funnel several paths into
+one register, one `mov` per path. Code that reads the register cannot know
+which path ran, so its type is the **consensus** of every writer. That is
+the common type if they all agree, and none otherwise (#18448):
+
+```text
+(or (< 1 2) 5)   mov _or ← cond [bool]   ;  writers bool, i64 → untyped
+                 mov _or ← 5    [i64]    ;  (+ … 1) is a dynamic "+"
+(or 1 2)         writers i64, i64        →  i64: (+ … 3) stays a typed add
+```
+
+Every writer counts, including `and`'s `#f` short-circuit path and the
+`nil` that a `match` holds when no arm matches. So `(and c 5)` is untyped,
+and a `match` is typed only when every arm is `ref<LispyPair>` too.
+
 ### Typed arithmetic fold
 
 Scheme arithmetic is variadic. When every argument is statically `i64`, an

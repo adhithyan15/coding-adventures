@@ -391,15 +391,91 @@ fn typed_arith_op_for(name: &str) -> Option<&'static str> {
 // parameter), so the type recorded at that write is true for the register's
 // whole life — including after its scope closes, when the register can still
 // be a pending operand.  Only the compiler's join temporaries (`if` / `and` /
-// `or` / `match` results) have several writers.  `compile_if` computes a
-// consensus type for its result; `and`, `or` and `match` do not yet — their
-// result keeps whichever type the last write recorded, so a typed op can
-// read a join temporary that holds another kind (`(+ (or (< 1 2) 5) 1)`).
-// That is tracked as #18448 and is independent of the binding registers
-// here.  The previous design shared registers between
+// `or` / `match` results) have several writers, and their type is the
+// consensus of all of them — see "Join temporaries" below.  The previous
+// design shared registers between
 // bindings and so had to snapshot, restore and drop types at every scope
 // boundary (with a per-register write counter); with one writer per register
 // all of that disappears.
+
+// ## Join temporaries (#18448)
+//
+// `if`, `and`, `or` and `match` are *joins*: several control-flow paths
+// each produce a value, and all of them must end up in one register the
+// rest of the program reads.  The compiler allocates a fresh temporary for
+// that and has each path `mov` its value into it:
+//
+// ```text
+// (or (< 1 2) 5)         _r1 = cmp_lt 1, 2       [bool]
+//                        jmp_if_false _r1, falsy
+//                        mov _or2 ← _r1          [bool]   ; writer 1
+//                        jmp end
+//                 falsy: _n3 = const 5           [i64]
+//                        mov _or2 ← _n3          [i64]    ; writer 2
+//                   end: …
+// ```
+//
+// What type does `_or2` have?  Only one that is true on *every* path,
+// because the code that reads it cannot know which path ran.  So the
+// type is the writers' **consensus**:
+//
+// | writers' types       | `_or2`'s type |
+// |----------------------|---------------|
+// | all `i64`            | `i64`         |
+// | `bool` and `i64`     | none (`any`)  |
+// | `str` and `any`      | none (`any`)  |
+//
+// "Type" here is a promise the native backends act on without checking: an
+// `add [i64]` reads raw machine words, a `str_len` follows a pointer.  When
+// `_or2` above was typed `i64` (the type of whichever writer happened to be
+// compiled last), `(+ (or (< 1 2) 5) 1)` became an `add [i64]` on `#t`,
+// and `(let ((y (or 5 "s"))) (string-length y))` became a `str_len` that
+// reads the bytes of `5` as a string.
+//
+// Every writer counts, including the ones with no source-level expression:
+//
+// * `and`'s short-circuit path writes `#f` (`bool`), so `(and c 5)` is
+//   untyped — it can be `#f` or `5` — while `(and (< a b) (< b c))` stays
+//   `bool`;
+// * `or`'s truthy path writes the test value itself;
+// * `match` first writes `nil` (`ref<LispyPair>`), the result when no arm
+//   matches, so a `match` is typed only if every arm is `nil`-typed too.
+//
+// [`JoinType`] folds the writers' types as they are emitted, and
+// [`FnCtx::settle_join`] records the result (or clears it) once the last
+// writer is in.  Nothing reads a join temporary's type before then: the
+// paths are compiled before the join's value is used.
+
+/// The consensus type of one join temporary's writers so far (see "Join
+/// temporaries" above).
+///
+/// ```text
+/// writers:   (none)   i64    i64,i64    i64,bool    i64,any
+/// consensus:  any     i64      i64        any         any
+/// ```
+#[derive(Debug, Default)]
+struct JoinType {
+    /// `None` until the first writer; then the type every writer so far
+    /// agrees on, or `"any"` once two disagree (or one is `any`).
+    agreed: Option<String>,
+}
+
+impl JoinType {
+    /// Count one more writer of type `ty`.
+    fn add(&mut self, ty: &str) {
+        self.agreed = Some(match self.agreed.take() {
+            None => ty.to_string(),
+            Some(prev) if prev == ty => prev,
+            Some(_) => "any".to_string(),
+        });
+    }
+
+    /// The type that holds on every path: `"any"` unless all writers agree
+    /// on a concrete type.
+    fn consensus(&self) -> &str {
+        self.agreed.as_deref().unwrap_or("any")
+    }
+}
 
 /// Mutable state while lowering one [`IIRFunction`].
 ///
@@ -636,6 +712,38 @@ impl FnCtx {
         );
         if ty != "any" {
             self.record_type(dst, ty.as_str());
+        }
+    }
+
+    /// Emit `mov dst ← src` as one writer of the join temporary `dst`, and
+    /// count its type in `join`.
+    ///
+    /// The `mov` carries the *source's* type, exactly as [`Self::emit_move`]
+    /// does — that is what this path really moves.  What it does not do is
+    /// record a type for `dst`: one path's type is not the join's.  Call
+    /// [`Self::settle_join`] once every writer has been emitted.
+    fn emit_join_move(&mut self, dst: &str, src: &str, loc: SourceLoc, join: &mut JoinType) {
+        let ty = self.type_of(src).to_string();
+        self.emit(
+            IIRInstr::new(
+                "mov",
+                Some(dst.to_string()),
+                vec![Operand::Var(src.to_string())],
+                ty.as_str(),
+            ),
+            loc,
+        );
+        join.add(&ty);
+    }
+
+    /// Record the join temporary `dst`'s type now that all its writers are
+    /// in: their consensus, or no type at all when they disagree.
+    fn settle_join(&mut self, dst: &str, join: &JoinType) {
+        match join.consensus() {
+            "any" => {
+                self.var_types.remove(dst);
+            }
+            ty => self.record_type(dst, ty),
         }
     }
 }
@@ -1943,16 +2051,17 @@ impl Compiler {
             "void",
         ), loc);
 
+        // `result` is a join temporary with one writer per arm; its type is
+        // the arms' consensus (see "Join temporaries").  If both arms produce
+        // the same statically-known type, `result` ends up typed and
+        // propagates through downstream `ret` instructions; programs like
+        // `(if (< x 0) -1 1)` flow through every IIR-to-* backend.
+        let mut join = JoinType::default();
+
         // Then branch — compile and copy into `result` via typed `mov`.
-        // Path-A increment 3: replaces the legacy `call_builtin "_move"`
-        // with a typed `mov` IR opcode.  If both arms produce the same
-        // statically-known type, `result` ends up typed and propagates
-        // through downstream `ret` instructions; programs like
-        // `(if (< x 0) -1 1)` now flow through every IIR-to-* backend.
         let then_v = self.compile_expr(expr.then_branch, ctx)?;
-        let then_ty = ctx.type_of(&then_v).to_string();
         let then_loc = SourceLoc::new(expr.then_branch.pos().0, expr.then_branch.pos().1);
-        ctx.emit_move(&result, &then_v, then_loc);
+        ctx.emit_join_move(&result, &then_v, then_loc, &mut join);
         ctx.emit(IIRInstr::new(
             "jmp",
             None,
@@ -1968,32 +2077,10 @@ impl Compiler {
             "void",
         ), loc);
         let else_v = self.compile_expr(expr.else_branch, ctx)?;
-        let else_ty = ctx.type_of(&else_v).to_string();
         let else_loc = SourceLoc::new(expr.else_branch.pos().0, expr.else_branch.pos().1);
-        // `emit_move` for the else arm would overwrite `result`'s
-        // recorded type from the then-arm's `emit_move`.  Compute the
-        // consensus type up front so the recorded type reflects both
-        // arms' agreement (or `"any"` when they disagree).
-        ctx.emit(IIRInstr::new(
-            "mov",
-            Some(result.clone()),
-            vec![Operand::Var(else_v)],
-            else_ty.as_str(),
-        ), else_loc);
-        // Consensus: if both arms agree on a concrete type, that's the
-        // type of the `if` expression.  Otherwise it's `any`.
-        let consensus_ty = if then_ty == else_ty && then_ty != "any" {
-            then_ty
-        } else {
-            "any".to_string()
-        };
-        if consensus_ty != "any" {
-            ctx.record_type(&result, &consensus_ty);
-        } else {
-            // Clear any record from the then-arm's emit_move so
-            // downstream lookups don't return a stale type.
-            ctx.var_types.remove(&result);
-        }
+        ctx.emit_join_move(&result, &else_v, else_loc, &mut join);
+        // Both writers are in: `result` is typed only if they agree.
+        ctx.settle_join(&result, &join);
 
         ctx.emit(IIRInstr::new(
             "label",
@@ -2140,6 +2227,9 @@ impl Compiler {
     ///
     /// The result register holds the value of the last evaluated sub-expression,
     /// or `#f` if any sub-expression was falsy.  This matches Scheme semantics.
+    /// Its type is therefore the consensus of the last value's type and
+    /// `bool` (see "Join temporaries"): `(and (< a b) (< b c))` is `bool`,
+    /// `(and c 5)` is untyped.
     ///
     /// IIR pattern for one step (mirrors `compile_if`):
     ///   `jmp_if_false cond, else_label`
@@ -2176,7 +2266,9 @@ impl Compiler {
             return Ok(v);
         };
 
-        // Pass 1: open one step per non-final argument.
+        // Pass 1: open one step per non-final argument.  Each step's `dest`
+        // is a join temporary with two writers — the inner value and `#f` —
+        // both emitted in pass 2.
         let mut open: Vec<(String, String, String)> = Vec::with_capacity(init.len());
         for &e in init {
             let cond = self.compile_expr(e, ctx)?;
@@ -2196,13 +2288,16 @@ impl Compiler {
 
         // Pass 2: close the steps innermost-first.
         while let Some((dest, else_label, end_label)) = open.pop() {
+            let mut join = JoinType::default();
             // Then path: copy the inner value to dest via typed `mov`,
             // jump to end.  Path-A increment 4.
-            ctx.emit_move(&dest, &inner, loc);
+            ctx.emit_join_move(&dest, &inner, loc, &mut join);
             ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
 
-            // Else path: dest ← #f (typed `mov` from a `const_bool`-
-            // typed temporary so the dest carries `"bool"`).
+            // Else path: dest ← #f (typed `mov` from a `bool`-typed
+            // temporary).  This writer counts toward the consensus too, so
+            // `dest` is `bool` only when the inner value is `bool` as well:
+            // `(and c 5)` can be `#f` or `5` and stays untyped.
             ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(else_label)], "void"), loc);
             let false_tmp = ctx.fresh_var("f");
             // The false literal site uses the same typed `const`
@@ -2211,7 +2306,8 @@ impl Compiler {
             ctx.emit(IIRInstr::new("const", Some(false_tmp.clone()),
                 vec![Operand::Bool(false)], "bool"), loc);
             ctx.record_type(&false_tmp, "bool");
-            ctx.emit_move(&dest, &false_tmp, loc);
+            ctx.emit_join_move(&dest, &false_tmp, loc, &mut join);
+            ctx.settle_join(&dest, &join);
 
             ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
             inner = dest;
@@ -2228,6 +2324,8 @@ impl Compiler {
     ///
     /// The result register holds the first truthy value, or the value of the
     /// last sub-expression if all were falsy.  This matches Scheme semantics.
+    /// Its type is the consensus of every argument's type (see "Join
+    /// temporaries"): `(or 1 2)` is `i64`, `(or (< 1 2) 5)` is untyped.
     ///
     /// Lowered with the same two-pass loop as [`Self::compile_and`] (see
     /// "Why a loop, not recursion" there): each step's truthy path is
@@ -2242,8 +2340,11 @@ impl Compiler {
             return Ok(v);
         };
 
-        // Pass 1: one step per non-final argument.
-        let mut open: Vec<(String, String)> = Vec::with_capacity(init.len());
+        // Pass 1: one step per non-final argument.  Each step's `dest` is a
+        // join temporary with two writers: the truthy test value (pass 1)
+        // and the rest of the `or` (pass 2).  `open` carries the step's
+        // consensus so far from one pass to the other.
+        let mut open: Vec<(String, String, JoinType)> = Vec::with_capacity(init.len());
         for &e in init {
             let cond = self.compile_expr(e, ctx)?;
             let dest = ctx.fresh_var("or");
@@ -2257,21 +2358,25 @@ impl Compiler {
 
             // Truthy path: dest ← cond via typed `mov`, jump to end.
             // Path-A increment 4.
-            ctx.emit_move(&dest, &cond, loc);
+            let mut join = JoinType::default();
+            ctx.emit_join_move(&dest, &cond, loc, &mut join);
             ctx.emit(IIRInstr::new("jmp", None, vec![Operand::Var(end_label.clone())], "void"), loc);
 
             // Falsy path: the rest of the `or` follows this label.
             ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(falsy_label)], "void"), loc);
-            open.push((dest, end_label));
+            open.push((dest, end_label, join));
         }
 
         // Middle: the final argument.
         let mut inner = self.compile_expr(*last, ctx)?;
 
         // Pass 2: close the steps innermost-first — copy the falsy-path
-        // value via typed `mov`, then the step's end label.
-        while let Some((dest, end_label)) = open.pop() {
-            ctx.emit_move(&dest, &inner, loc);
+        // value via typed `mov`, settle `dest`'s type (the inner step's is
+        // settled already, so `inner` reads its consensus), then the
+        // step's end label.
+        while let Some((dest, end_label, mut join)) = open.pop() {
+            ctx.emit_join_move(&dest, &inner, loc, &mut join);
+            ctx.settle_join(&dest, &join);
             ctx.emit(IIRInstr::new("label", None, vec![Operand::Var(end_label)], "void"), loc);
             inner = dest;
         }
@@ -2932,13 +3037,14 @@ impl Compiler {
 
         // Evaluate the scrutinee once.
         // Path-A increment 5: convert all `call_builtin "_move"` sites
-        // in compile_match to typed `mov` via `FnCtx::emit_move`.  The
-        // `match` result's type is left as `"any"` for now — match
-        // arms can produce mixed types (variant constructors vs. raw
-        // values), so a consensus pass here is non-trivial.  Mechanical
-        // conversion of the move shape alone is enough to unblock the
-        // backend validators (which reject `call_builtin "_move"` but
-        // accept untyped `mov [any]`).
+        // in compile_match to typed `mov` via `FnCtx::emit_move`, which
+        // unblocks the backend validators (they reject `call_builtin
+        // "_move"` but accept `mov`).
+        //
+        // The `match` result is a join temporary (see "Join temporaries"):
+        // its writers are the `nil` initialiser and every arm, and its type
+        // is their consensus — so a `match` is typed only when every arm
+        // is `ref<LispyPair>` like the `nil`.
         let scrutinee = m.scrutinee().ok_or_else(|| TwigCompileError {
             message: "(match ...) missing scrutinee expression".into(),
             line: m.pos().0,
@@ -2954,9 +3060,11 @@ impl Compiler {
         // Initialise to nil (fallthrough value).
         //
         // Path A increment 6a: emit typed `const 0 [ref<LispyPair>]`
-        // instead of `call_builtin "make_nil" [any]`.  emit_move then
-        // propagates the `ref<LispyPair>` type onto `result`, so the
-        // match expression's fallthrough is also typed.
+        // instead of `call_builtin "make_nil" [any]`.  This is the first
+        // writer of `result`; it counts toward the consensus even when a
+        // catch-all arm makes it dead, because the code that reads
+        // `result` cannot tell which writer ran.
+        let mut join = JoinType::default();
         let nil_init = ctx.fresh_var("nil");
         ctx.emit(IIRInstr::new(
             "const",
@@ -2965,7 +3073,7 @@ impl Compiler {
             "ref<LispyPair>",
         ), loc);
         ctx.record_type(&nil_init, "ref<LispyPair>");
-        ctx.emit_move(&result, &nil_init, loc);
+        ctx.emit_join_move(&result, &nil_init, loc, &mut join);
 
         // Generate labels for the chain.
         // We build: if (test0) { arm0 } else { if (test1) { arm1 } else { … } }
@@ -2992,7 +3100,7 @@ impl Compiler {
                             // Unknown constructor — treat as bare binding.
                             let arm_result = self.compile_match_binding_arm(
                                 &matched, name, arm_body, ctx, arm_loc)?;
-                            ctx.emit_move(&result, &arm_result, arm_loc);
+                            ctx.emit_join_move(&result, &arm_result, arm_loc, &mut join);
                             ctx.emit(IIRInstr::new(
                                 "jmp",
                                 None,
@@ -3116,7 +3224,7 @@ impl Compiler {
                     let body_v = body_result.expect("arm body non-empty (check_cst-enforced)");
 
                     // Copy to result register via typed `mov`.
-                    ctx.emit_move(&result, &body_v, arm_loc);
+                    ctx.emit_join_move(&result, &body_v, arm_loc, &mut join);
 
                     // Unbind field names, so their outer bindings (if any)
                     // are visible again.
@@ -3144,7 +3252,7 @@ impl Compiler {
                 Pat::Binding(name) => {
                     let arm_result = self.compile_match_binding_arm(
                         &matched, name, arm_body, ctx, arm_loc)?;
-                    ctx.emit_move(&result, &arm_result, arm_loc);
+                    ctx.emit_join_move(&result, &arm_result, arm_loc, &mut join);
                     // Binding arm always matches → jump to end immediately.
                     ctx.emit(IIRInstr::new(
                         "jmp",
@@ -3161,7 +3269,7 @@ impl Compiler {
                         body_result = Some(self.compile_expr(e, ctx)?);
                     }
                     let body_v = body_result.expect("arm body non-empty");
-                    ctx.emit_move(&result, &body_v, arm_loc);
+                    ctx.emit_join_move(&result, &body_v, arm_loc, &mut join);
                     // Wildcard always matches → jump to end.
                     ctx.emit(IIRInstr::new(
                         "jmp",
@@ -3172,6 +3280,9 @@ impl Compiler {
                 }
             }
         }
+
+        // Every writer of `result` is in: keep its type only if they agree.
+        ctx.settle_join(&result, &join);
 
         // end_label: all paths converge here.
         ctx.emit(IIRInstr::new(
