@@ -1957,6 +1957,22 @@ revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
 connection. Extension-block and handshake composition remain prerequisites,
 and concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-certificate-message` prerequisite now decodes one
+already-delimited RFC 8446 Certificate handshake body under caller-owned total,
+request-context, certificate-list, entry-count, certificate, and per-entry
+extension ceilings. It preserves borrowed request-context bytes, complete
+certificate bytes, and opaque extension blocks, and exposes the validated
+entries without allocation. Structurally valid empty client certificate lists
+and non-empty post-handshake request contexts remain available for later exact
+handshake-state policy rather than being assigned one role by the framing
+layer. Stable failures retain no handshake bytes or length values.
+
+This slice does not interpret entry extensions, parse X.509, decide handshake
+role or state, authenticate a certificate, construct or validate a path,
+establish trust, check names or revocation, send alerts, derive keys, protect
+records, perform I/O, provide TLS or HTTP, authorize OAuth transport, or open a
+network connection. Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
