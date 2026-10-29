@@ -1654,6 +1654,29 @@ revocation, I/O, HTTP, OAuth transport, or network effect. Unsupported RFC 8446
 CCM suites fail closed until separately reviewed repository-owned primitives
 and limits are added. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-cipher-suite-offer` prerequisite now binds a
+caller's preference-ordered ClientHello cipher-suite identifiers to that same
+repository-owned policy. Offers contain one through 64 exact two-byte values,
+reject duplicates, and must include at least one suite authorized by the
+supplied policy. Explicitly configured unknown identifiers remain ordered data
+for a separate reserved-value or GREASE policy. Failure-atomic encoding emits
+the exact two-byte-length-prefixed ClientHello vector into caller-owned
+storage. Server selection first must match an identifier in the original
+offer and then must pass the retained policy; success returns the policy's
+existing descriptor with the suite's algorithms, lengths, and per-key record
+limit still bound together. Stable failures and diagnostics retain no offered
+or selected identifiers.
+
+This slice does not decide which suites or unknown identifiers to configure,
+construct a ClientHello, generate entropy, parse a ServerHello, select a suite
+for the peer, invoke an AEAD or hash, derive or store keys, protect records,
+advance a handshake, validate certificates, establish trust, enforce
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. ClientHello construction, ServerHello and handshake-state
+composition, reviewed cryptographic execution, certificate validation, TLS
+transport, and HTTP composition remain blockers. Concrete HTTPS remains
+unavailable.
+
 An allocation-free `tls13-hkdf-label` prerequisite now owns only the exact
 RFC 8446 section 7.1 `HkdfLabel` information framing consumed by a future
 repository-owned HKDF boundary. A validated value binds one public 16-bit
