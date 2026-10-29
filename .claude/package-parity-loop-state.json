@@ -2853,7 +2853,7 @@
       "publication_head": "1f0af52e94868f70300e2690b5510485c08934e0",
       "publication_base": "92cf52368f835648df9d54be2cc41be47c82417f",
       "publication_notes": "Draft PR #18548 records the independently reviewed exact current-main head. GitHub reports the publication head mergeable over exact base 92cf52368f835648df9d54be2cc41be47c82417f. Keep it draft only while this PR-number lifecycle receipt is committed, pushed, and independently reviewed; then mark ready and require fresh hosted qualification at the resulting exact head.",
-      "ready_at": "2026-10-29T02:02:36Z",
+      "ready_at": "2026-10-29T02:02:35Z",
       "lifecycle_review_revision": "eebbb8f8875aeab05e5d4d7e085307c54fa3cbe0",
       "lifecycle_review_notes": "Independent focused review confirmed the PR identity, URL, creation time, exact publication head/base, receipt parentage, mergeability, state graph, roadmap, diff, remote branch, and artifact hygiene. The PR is now ready for review; all hosted checks must complete acceptably on the final exact head before guarded auto-merge may be enabled.",
       "selected_at": "2026-10-29T01:54:38Z",
