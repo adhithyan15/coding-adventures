@@ -1634,6 +1634,25 @@ revocation, I/O, HTTP, OAuth transport, or network effect. Unsupported RFC 8446
 CCM suites fail closed until separately reviewed repository-owned primitives
 and limits are added. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-certificate-verify-input` prerequisite now owns only
+the exact RFC 8446 section 4.4.3 content hashed and signed for a TLS 1.3
+`CertificateVerify` message. A caller selects the server or client role and
+SHA-256 or SHA-384 transcript-hash metadata. The builder writes 64 space bytes,
+the exact role-specific context string, one zero separator, and the caller's
+exactly 32- or 48-byte transcript hash into caller-owned output. Transcript
+hash length and complete output capacity are checked before output changes;
+extra capacity is untouched. The returned borrowed value keeps role, hash
+metadata, and the exact signed bytes together while redacting bytes from debug
+output.
+
+This framing boundary does not calculate a transcript hash, bind the hash to a
+negotiated cipher suite, encode or decode a `CertificateVerify` handshake
+message, select a signature scheme, parse a key, hash, sign, verify a signature,
+process or validate certificates, build a path, verify a name, select trust
+roots, check revocation, perform I/O, or provide TLS, HTTP, or OAuth transport.
+Those bindings and effects remain future reviewed composition work. Concrete
+HTTPS remains unavailable.
+
 An allocation-free `tls13-hkdf-label` prerequisite now owns only the exact
 RFC 8446 section 7.1 `HkdfLabel` information framing consumed by a future
 repository-owned HKDF boundary. A validated value binds one public 16-bit
