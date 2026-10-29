@@ -69,6 +69,11 @@ The parser reads the flags through `.grammar` predicates such as
 `@space_before` and `@no_newline_before`
 (`code/specs/F11-grammar-token-adjacency-predicates.md`).
 
+A fourth bit, `TOKEN_SYNTHETIC` (8), is never set by the lexer. The parser
+sets it on the zero-width token that a `.grammar` `@asi(T, C…)` element
+inserts, such as an automatically inserted `;`, so consumers can tell that
+token from one written in the source.
+
 ### Line-start guards and refusals (LANG84 E1, E8)
 
 `GrammarLexer` tries a definition marked `@line_start` only at offset 0 or
