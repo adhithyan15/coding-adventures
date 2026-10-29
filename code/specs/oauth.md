@@ -1900,6 +1900,32 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `tls13-handshake` prerequisite now owns only the RFC 8446
+four-byte handshake-message envelope needed by a future repository-owned TLS
+state machine. It recognizes the ten core TLS 1.3 wire message types, while a
+caller-supplied non-empty, duplicate-free allowlist decides which recognized
+types the current protocol state may accept. A caller-selected body ceiling
+from zero through the protocol's 24-bit maximum bounds work before any body is
+borrowed. Exact decoding rejects trailing bytes; prefix decoding returns the
+unconsumed stream tail for a later reassembly loop. Successful decoding borrows
+both the declared body and the exact `type || uint24 length || body` bytes so a
+future transcript owner can hash the authenticated wire representation without
+re-encoding it. Encoding checks type policy, the complete 24-bit length, and
+caller-owned output capacity before changing output. Stable failures retain no
+message type, length, body, transcript, or output bytes.
+
+Recognition is deliberately separate from state authorization. This slice
+does not recognize synthetic transcript-only `message_hash` as a wire message,
+reassemble a message split across records, sequence handshake phases, own or
+update a transcript hash, parse any handshake body, negotiate parameters,
+derive keys, invoke an AEAD, process certificates, establish trust, enforce
+revocation, perform I/O, authorize HTTP or OAuth transport, or open a network
+connection. The caller must first authenticate protected record contents and
+must retain incomplete bytes until one complete declared message is available.
+Complete transcript and handshake state, repository-owned AEAD composition,
+certificate-path validation, revocation policy, TLS transport, and HTTP
+composition remain blockers. Concrete HTTPS remains unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire
