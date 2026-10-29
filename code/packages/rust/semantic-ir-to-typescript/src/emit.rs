@@ -17,7 +17,7 @@
 //! prepends capture values to the call's args.
 
 use std::cell::{Cell, RefCell};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -563,6 +563,12 @@ thread_local! {
     /// `const`) so the later reassignment type-checks.  Populated per
     /// function in `emit_function`; immutable bindings stay `const`.
     static MUTABLE_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+
+    /// Function name → [`Function::exact_arity`] for every function a
+    /// strict closure can check (see [`emit_strict_closure`]).  Filled at
+    /// the start of every `emit_module`, because `emit_expr` sees one
+    /// expression at a time and has no handle on the module.
+    static STRICT_ARITY: RefCell<HashMap<String, usize>> = RefCell::new(HashMap::new());
 }
 
 fn fresh_loop_id() -> usize {
@@ -577,6 +583,11 @@ fn fresh_loop_id() -> usize {
 /// for prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
     LOOP_COUNTER.with(|c| c.set(0));
+    STRICT_ARITY.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
     let mut out = String::new();
     emit_banner(&mut out, m);
     out.push_str(RUNTIME);
@@ -2320,6 +2331,51 @@ fn is_keyword_arg(a: &Expr) -> bool {
     matches!(a, Expr::KeywordArg { .. })
 }
 
+/// Emit the `lambda` marker — `BuiltinCall("lambda", [MakeClosure …])`,
+/// SIR10's *strict closure* — as a closure that refuses a call with the
+/// wrong number of arguments:
+///
+/// ```text
+/// (lambda (x y) (+ x y))   →   new __Sir.Closure((..._a: __Sir.Val[]) => {
+///                                if (_a.length !== 2) { throw new TypeError(
+///                                  "arity mismatch: closure expects 2 argument(s), got " + _a.length); }
+///                                return __lambda_0(..._a); })
+/// ```
+///
+/// JavaScript's calling convention is proc-lenient — a missing argument
+/// binds `undefined` (Twig's `(g 4)` on a two-parameter lambda printed
+/// `NaN`) and an extra one is dropped — which is right for a Ruby block and
+/// wrong for a lambda (`code/specs/sir-runtime.md` listed strict-lambda
+/// enforcement as this backend's open cut-line).  The check is emitted
+/// inline rather than added to `@coding-adventures/sir-runtime-core`, so it
+/// holds against any published runtime version; the JavaScript backend
+/// emits the identical check (issue #18461).
+///
+/// When the marker wraps something else, or a function with no single
+/// arity ([`Function::exact_arity`] is `None`: defaults, `*rest`, …), the
+/// inner expression is emitted unchanged and keeps its lenient behaviour.
+fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
+    let Expr::MakeClosure { fn_name, captures, .. } = inner else {
+        emit_expr(out, inner, indent);
+        return;
+    };
+    let Some(n) = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied()) else {
+        emit_expr(out, inner, indent);
+        return;
+    };
+    let _ = write!(
+        out,
+        "new __Sir.Closure((..._a: __Sir.Val[]) => {{ if (_a.length !== {n}) {{ throw new TypeError(\
+         \"arity mismatch: closure expects {n} argument(s), got \" + _a.length); }} return {}(",
+        sanitize_ident(fn_name)
+    );
+    for c in captures {
+        emit_expr(out, &c.value, indent);
+        out.push_str(", ");
+    }
+    out.push_str("..._a); })");
+}
+
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {
     // Reflective method dispatch: the Ruby→SIR frontend lowers
     // `recv.meth(args…)` to `BuiltinCall("__method__", [recv, "meth",
@@ -2537,13 +2593,13 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str("))");
         return;
     }
-    // `lambda` / `->{…}` lower to `BuiltinCall("lambda", [MakeClosure])`.  The
-    // lambda *is* its closure value, so we emit the inner `MakeClosure`
-    // directly (which renders `new __Sir.Closure(...)`) rather than routing
-    // through the eager `callBuiltin` dispatch — there is no separate
-    // "lambda" runtime helper, the closure already is the result.
+    // `lambda` / `->{…}` (Ruby) and every Twig closure lower to
+    // `BuiltinCall("lambda", [MakeClosure])` — SIR10's strict closure.  The
+    // lambda *is* its closure value, so there is no "lambda" runtime helper to
+    // route through `callBuiltin`: `emit_strict_closure` renders the closure
+    // itself, with its arity check inline.
     if name == "lambda" && args.len() == 1 {
-        emit_expr(out, &args[0], indent);
+        emit_strict_closure(out, &args[0], indent);
         return;
     }
     // `defined?(x)` lowers to `BuiltinCall("defined?", [operand])`.  Ruby's

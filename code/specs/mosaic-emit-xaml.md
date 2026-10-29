@@ -573,9 +573,15 @@ shape.
 ### 6.2 `If (when: <expr>) { <then> } [Else { <else> }]`
 
 Lowers to two `<ContentControl>`s whose `Visibility` is bound to the
-`when:` expression and its negation. Both branches always exist in the
-visual tree (just one is collapsed); this is cheap and matches WinUI 3's
-idiomatic conditional-rendering pattern.
+`when:` expression and its negation. Default output retains both bodies eagerly,
+preserving control-local state while hidden. Only the explicit experimental
+`EmitOptions.experimental_deferred_conditionals` option adds deferred bodies:
+each outer wrapper remains in the visual tree, and a named inner Border uses
+x:Load with the same predicate to realize only the selected subtree. Inactive
+controls are unloaded; application values remain in the owner model, while
+control-local state is recreated when the branch becomes active. This changes
+the previous retained-control lifecycle; see the conditional-editor experiment
+spec for native compatibility and performance acceptance gates.
 
 ```moslayout
 If (when: slot: editable && slot: is-editing) {
@@ -586,14 +592,18 @@ Else {
 }
 ```
 
-…lowers to:
+…with the experimental option enabled lowers to:
 
 ```xml
 <ContentControl Visibility="{x:Bind IsEditableAndEditing, Converter={StaticResource BoolToVis}}">
-  <TextBox Text="{x:Bind Value, Mode=TwoWay}" KeyDown="HostInput_KeyDown"/>
+  <Border x:Name="MosaicConditional0Then" x:Load="{x:Bind IsEditableAndEditing, Mode=OneWay}">
+    <TextBox Text="{x:Bind Value, Mode=TwoWay}" KeyDown="HostInput_KeyDown"/>
+  </Border>
 </ContentControl>
 <ContentControl Visibility="{x:Bind IsNotEditableOrEditing, Converter={StaticResource BoolToVis}}">
-  <TextBlock Text="{x:Bind Value}"/>
+  <Border x:Name="MosaicConditional0Else" x:Load="{x:Bind IsNotEditableOrEditing, Mode=OneWay}">
+    <TextBlock Text="{x:Bind Value}"/>
+  </Border>
 </ContentControl>
 ```
 
