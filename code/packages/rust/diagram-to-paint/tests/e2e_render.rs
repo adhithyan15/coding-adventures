@@ -145,6 +145,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-relationship-colors-11.16.1-visual-corpus.json"
     ));
+    const C4_RELATIONSHIP_OFFSETS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-relationship-offsets-11.16.1-corpus.json"
+    ));
+    const C4_RELATIONSHIP_OFFSETS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-relationship-offsets-11.16.1-visual-corpus.json"
+    ));
     const SWIMLANE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
@@ -5107,6 +5115,42 @@ line "Target" [35, 50, 68, 82]"##,
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_c4_relationship_colors_{index}_e2e.png");
             write_png(&pixels, &path).expect("C4 relationship color PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_relationship_offsets_to_png() {
+        let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_OFFSETS_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_RELATIONSHIP_OFFSETS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().unwrap();
+        for (index, fixture) in fixtures.iter().enumerate() {
+            assert_eq!(visual["fixtures"][index], fixture["name"]);
+            let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+            let relationship = &diagram.relationships[0];
+            let layout = layout_structural_diagram(&diagram);
+            let layouted = &layout.relationships[0];
+            let (label_position, _) = layouted.label.as_ref().unwrap();
+            let start = layouted.points.first().unwrap();
+            let end = layouted.points.last().unwrap();
+            assert_eq!(label_position.x, (start.x + end.x) / 2.0 + relationship.label_offset_x);
+            assert_eq!(label_position.y, (start.y + end.y) / 2.0 + relationship.label_offset_y);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_relationship_offsets_{index}_e2e.png");
+            write_png(&pixels, &path).unwrap();
             assert!(pixels.width > 0 && pixels.height > 0);
         }
     }
