@@ -3642,6 +3642,14 @@ impl Compiler {
             if let Some(child) = single_parenthesized_child(node) {
                 return self.exact_static_integer_normalizer_value(child);
             }
+            if let Some((sign, child)) = single_signed_child(node) {
+                let value = self.exact_static_integer_normalizer_value(child)?;
+                return match sign {
+                    "+" => Some(value),
+                    "-" => value.checked_neg(),
+                    _ => None,
+                };
+            }
             let children = direct_nodes(node);
             return (direct_tokens(node).is_empty() && children.len() == 1)
                 .then(|| self.exact_static_integer_normalizer_value(children[0]))?;
@@ -16850,6 +16858,31 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "unreduced, shadowed, and effectful normalizer chains must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_signed_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((entier(abs(+entier(-9007199254740993))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "checked unary signs may compose through an exact integer-normalizer chain for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier(abs(-entier(-9007199254740993)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(-9223372036854775807 - 1)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure entier(x); value x; real x; entier := x; real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(if choose() then -9007199254740993 else -9007199254740993)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "unreduced, overflowing, shadowed, and effectful signed normalizer chains must fail closed",
             );
         }
     }

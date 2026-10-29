@@ -6827,6 +6827,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // Checked unary signs may appear between exact integer normalizers without
+    // forcing their wide static root through binary64 before the reduction.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(-entier(-9007199254740993)) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -17598,6 +17609,31 @@ fn algol_nested_wide_static_integer_normalizers_run_on_every_available_standard_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_signed_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("abs(-entier(-9007199254740993)) * sign(pick())) mod 5")
+        })
+        .expect("the signed nested wide-static-normalizer ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but signed nested wide static integer normalizers did not complete"
             );
             continue;
         };

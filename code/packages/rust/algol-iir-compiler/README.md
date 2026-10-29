@@ -318,6 +318,8 @@ results remain conservative.
 Purely nested chains of those normalizers preserve the same exact integer
 root. A user override or any other procedure call at any level keeps the
 chain outside the proof.
+Checked unary `+` and `-` may appear between those nested normalizers without
+forcing the wide root through binary64; negation overflow still fails closed.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
