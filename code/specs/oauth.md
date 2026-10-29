@@ -1673,6 +1673,20 @@ secret handling. Reviewed fixed-output HMAC-SHA-256/HMAC-SHA-384 and HKDF
 execution remain prerequisites before the label framing can derive traffic
 keys or IVs. Concrete HTTPS remains unavailable.
 
+A bounded `rsa-pss-mgf1-sha384` prerequisite now implements only the RFC 8017
+MGF1 expansion required by the future SHA-384 EMSA-PSS verification path. It
+accepts the exact 48-byte PSS hash value as its seed, validates both the
+standard's `2^32 * 48` maximum and a smaller caller-selected nonzero work
+ceiling before changing caller-owned output, encodes each counter as four
+network-order octets, and fills the requested mask directly without allocation.
+The repository-owned SHA-384 implementation is its only production dependency.
+
+This primitive does not parse parameters or keys, perform RSA arithmetic,
+validate an EMSA-PSS encoded message, choose a salt policy, verify a signature,
+process a certificate, or grant path, trust, revocation, TLS, HTTP, OAuth
+transport, or network authority. RSA-PSS support remains unavailable until
+those separate boundaries are implemented, composed, and tested.
+
 The repository-owned `sha256` prerequisite is now hardened for that future
 fixed-output HMAC boundary. Its one-shot and streaming digest paths share
 fixed-memory 512-bit block processing, and checked streaming updates reject a
