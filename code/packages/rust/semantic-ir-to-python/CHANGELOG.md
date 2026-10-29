@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased — Value defines no longer raise `NameError` (issue #18461)
+
+**Bug fix.**  `_init` wrote each value define with `_globals["x"] = …`, but
+the store lives in the imported runtime package, and `from
+coding_adventures_sir_runtime_core import (…)` binds only the names it
+lists.  So every module with a value define — even `(define x 5) (print
+x)` — died with `NameError: name '_globals' is not defined` as soon as
+`_init` ran; it was not test-harness setup.  Global writes (`_init`,
+`Stmt::Assign` with `Scope::Global`, and its expression-position form)
+now go through the runtime's own `_sir_global_set`, the store
+`_sir_global_get_static` reads.
+
+`tests/twig_pairs_and_closures.rs` runs the #18460/#18461 Twig programs
+with `python3`.  This backend already honoured the `lambda` marker
+(`_sir_as_lambda`), so a strict closure called with the wrong count raises
+Python's own `TypeError`.
+
 ## 0.18.0 — Accept `Feature::LoopControl` (task #63)
 
 Fourth backend (after `semantic-ir-to-javascript` task #62,

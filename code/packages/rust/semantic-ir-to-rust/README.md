@@ -35,6 +35,11 @@ Accepts (v0): `Closures`, `Pairs`, `Symbols`, `Strings`,
 `DynamicTyping`, `OptionalTypeAnnotations`, `MutualRecursion`,
 `Globals`.
 
+A *strict* closure (SIR10's `lambda` marker — a Ruby lambda, every Twig
+closure) is wrapped in `__sir::strict_arity(<closure>, N)`, which raises
+`ArgumentError: arity mismatch: …` for any other argument count; a plain
+closure pads a missing argument with `nil`.
+
 Accepts (SIR16 / v1 — **all six** features, full v1 parity): `Floats`,
 `ShortCircuit`, `MutableBindings`, `Loops`, `Sequences`, `Maps`.
 

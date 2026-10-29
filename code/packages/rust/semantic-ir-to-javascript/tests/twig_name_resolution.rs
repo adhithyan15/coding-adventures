@@ -35,16 +35,11 @@ fn node_available() -> bool {
 /// Lower and compile `src`, run it under `node`, and return stdout with
 /// trailing newlines trimmed — or `None` when Node is unavailable.
 ///
-/// The module is given `Feature::Pairs` before compiling.  SIR11 says the
-/// frontend should declare it whenever it emits a `cons` / `car` / `cdr` /
-/// `pair?` builtin call, but it does not yet, and the validator then
-/// rejects the module.  That gap predates #18456 and needs its own
-/// fix; declaring the feature here keeps these tests about name
-/// resolution.  Declaring a feature a module does not use is harmless.
+/// (This used to add `Feature::Pairs` to the module by hand, because the
+/// frontend never declared it; #18460 fixed the frontend.)
 fn run(src: &str, tag: &str) -> Option<String> {
-    let mut module = twig_to_semantic_ir::compile_source(src, "shadow")
+    let module = twig_to_semantic_ir::compile_source(src, "shadow")
         .unwrap_or_else(|e| panic!("lower `{src}`: {e}"));
-    module.manifest.add(semantic_ir::Feature::Pairs);
     let artifact = compile(&module).unwrap_or_else(|e| panic!("compile `{src}`: {e:?}"));
     if !node_available() {
         eprintln!("note: `node` unavailable — skipping execution for `{tag}`");

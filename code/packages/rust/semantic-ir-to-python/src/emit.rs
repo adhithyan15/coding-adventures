@@ -901,13 +901,22 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
         }
         Stmt::ExprStmt { expr, .. } => {
             // Recognise the synthesised _init global_set pattern and
-            // emit a direct _globals[...] = ... assignment for
-            // readable output.  Otherwise emit an expression
-            // statement.
+            // emit a direct `_sir_global_set("x", …)` call for readable
+            // output.  Otherwise emit an expression statement.
+            //
+            // Issue #18461: this used to emit `_globals["x"] = …`.  The
+            // store lives in the imported runtime package
+            // (`coding_adventures_sir_runtime_core._globals`), and a
+            // `from … import (…)` never binds a name the list does not
+            // spell — so every value define died with `NameError: name
+            // '_globals' is not defined` the moment `_init` ran, and the
+            // reads (`_sir_global_get_static`) could never have seen the
+            // write anyway.  Writing through the runtime's own setter puts
+            // the value where the reads look.
             if let Some((global, value)) = pick_global_set(expr) {
-                let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(global));
+                let _ = write!(out, "{}_sir_global_set({}, ", pad, quote_py_string(global));
                 emit_expr(out, value, indent, env);
-                out.push('\n');
+                out.push_str(")\n");
             } else if let Expr::If {
                 cond,
                 then_branch,
@@ -955,8 +964,8 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
         // ── SIR16 mutation ──────────────────────────────────────────
         // `Assign` re-binds an already-declared name.  Local/Param/
         // Capture all resolve to a bare identifier; Global writes the
-        // module-level `_globals` dict (matching how `_init` and
-        // `VarRef::Global` reads are rendered).  Instance/ClassVar/Const
+        // runtime's global store through `_sir_global_set` (matching how
+        // `_init` writes and `VarRef::Global` reads are rendered).  Instance/ClassVar/Const
         // belong to features this backend does not accept yet, so they
         // fall through to the panic guard below.
         Stmt::Assign {
@@ -975,9 +984,9 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
             value,
             ..
         } => {
-            let _ = write!(out, "{}_globals[{}] = ", pad, quote_py_string(name));
+            let _ = write!(out, "{}_sir_global_set({}, ", pad, quote_py_string(name));
             emit_expr(out, value, indent, env);
-            out.push('\n');
+            out.push_str(")\n");
         }
         // `seq[index] = value`
         Stmt::SeqSet {
@@ -2374,7 +2383,7 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                 value,
                 ..
             } => {
-                let _ = write!(out, "(_globals.__setitem__({}, ", quote_py_string(name));
+                let _ = write!(out, "(_sir_global_set({}, ", quote_py_string(name));
                 emit_expr(out, value, indent, env);
                 out.push_str(")), ");
             }
