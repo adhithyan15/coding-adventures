@@ -1900,6 +1900,29 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+The repository-owned ChaCha20 implementation now exposes a bounded
+`chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
+It accepts exact caller-owned input and output buffers, validates the entire
+RFC 8439 32-bit block-counter range before changing output, and derives through
+one reusable fixed wipe-on-drop keystream owner. Each block's original and
+working 16-word key-derived states are wiped on return. Its 20 rounds and ARX
+operations do not branch on secret values, output does not cross the ABI return
+slot, and the boundary performs no allocation. RFC 8439 evidence, block-edge
+equivalence, failure atomicity, and final-counter tests cover the admitted
+surface. The caller remains responsible for preventing key, nonce, and counter
+position reuse; this primitive neither reserves nor persists nonce state.
+
+This is only an unauthenticated stream-cipher primitive. It does not provide a
+reviewed fixed-memory Poly1305 implementation or combined AEAD boundary, own
+traffic keys, construct or reserve record nonces, enforce the selected suite's
+per-key record ceiling, frame or protect records, process a handshake, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. The allocation-returning
+legacy ChaCha20, Poly1305, AEAD, and XChaCha20 APIs remain compatibility and
+educational surfaces rather than production TLS composition. Fixed-memory
+Poly1305 and combined AEAD review remain prerequisites, and concrete HTTPS
+remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
