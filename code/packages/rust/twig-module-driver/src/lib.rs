@@ -1358,7 +1358,6 @@ mod tests {
         );
     }
 
-
     // ── Issue #18421: per-module lambda names must survive linking ───────────
     //
     // Every module is compiled by a fresh `twig-ir-compiler::Compiler`, so
