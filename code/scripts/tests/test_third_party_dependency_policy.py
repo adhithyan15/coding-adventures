@@ -138,9 +138,7 @@ class NpmManifestTests(unittest.TestCase):
                             "renamed": "npm:actual-package@^1.0.0",
                         },
                         "devDependencies": {"typescript": "^5.0.0"},
-                        "peerDependencies": {
-                            "scoped-alias": "npm:@scope/actual@2"
-                        },
+                        "peerDependencies": {"scoped-alias": "npm:@scope/actual@2"},
                         "optionalDependencies": {"optional-tool": "3"},
                     }
                 ),
@@ -245,6 +243,102 @@ class NpmManifestTests(unittest.TestCase):
 
             self.assertEqual(manifests, [path])
             self.assertEqual(inventory, {"typescript": ["nested/package.json"]})
+
+
+class NpmToolTests(unittest.TestCase):
+    def test_collects_npx_exec_and_named_install_tools(self) -> None:
+        commands = """
+npx --prefix tools tsx scripts/build.ts && npx --yes @vscode/vsce package
+npm exec --package=typescript -- tsc -p .
+npm install --global npm@11.13.0 jest@29
+npm install --silent 2>/dev/null
+if sudo env CI=1 npm add alias@npm:actual-tool@3; then (npx wrapped-tool); fi
+echo "npm install imaginary-package"
+# Error: npm install imaginary-package
+# note; npx imaginary-package
+cmd = "npx vitest run"
+"""
+
+        self.assertEqual(
+            policy.npm_tool_names(commands),
+            {
+                "@vscode/vsce",
+                "actual-tool",
+                "jest",
+                "npm",
+                "tsx",
+                "typescript",
+                "vitest",
+                "wrapped-tool",
+            },
+        )
+
+    def test_normalizes_scoped_and_unscoped_versions(self) -> None:
+        self.assertEqual(policy.npm_package_name("npm@11.13.0"), "npm")
+        self.assertEqual(policy.npm_package_name("@scope/tool@2"), "@scope/tool")
+        self.assertEqual(
+            policy.npm_package_name("alias@npm:@scope/actual@2"),
+            "@scope/actual",
+        )
+        self.assertIsNone(policy.npm_package_name("file:../local-tool"))
+
+    def test_rejects_unnamed_remote_tool_acquisition(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "must use a package name"):
+            policy.npm_tool_names("npm install https://example.invalid/tool.tgz")
+
+    def test_rejects_missing_option_values(self) -> None:
+        with self.assertRaisesRegex(policy.PolicyError, "requires a value"):
+            policy.npm_tool_names("npx --prefix")
+        with self.assertRaisesRegex(policy.PolicyError, "requires an npm package"):
+            policy.npm_tool_names("npx --package")
+
+    def test_sparse_inventory_reads_sources_and_package_scripts_from_index(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            workflow = root / ".github" / "workflows" / "ci.yml"
+            manifest = root / "app" / "package.json"
+            workflow.parent.mkdir(parents=True)
+            manifest.parent.mkdir()
+            workflow.write_text(
+                "steps:\n  - run: npm install --global npm@11\n",
+                encoding="utf-8",
+            )
+            manifest.write_text(
+                json.dumps({"scripts": {"build": "npx esbuild src.ts"}}),
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            workflow.unlink()
+            manifest.unlink()
+
+            sources = policy.git_npm_tool_sources(root)
+            manifests = policy.git_npm_manifests(root)
+            inventory = policy.build_npm_tool_inventory(root, sources, manifests)
+
+            self.assertEqual(sources, [workflow])
+            self.assertEqual(manifests, [manifest])
+            self.assertEqual(
+                inventory,
+                {
+                    "esbuild": ["app/package.json"],
+                    "npm": [".github/workflows/ci.yml"],
+                },
+            )
+
+    def test_rejects_non_string_package_scripts(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "package.json"
+            manifest.write_text(
+                json.dumps({"scripts": {"test": 42}}),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(policy.PolicyError, "map strings to strings"):
+                policy.build_npm_tool_inventory(root, [], [manifest])
 
 
 class DependencyPolicyTests(unittest.TestCase):

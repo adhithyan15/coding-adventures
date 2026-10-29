@@ -486,7 +486,8 @@ reviewable:
 - [x] npm manifests: runtime, development, peer and optional dependency tables
   are checked against the exact current name set; only tracked in-repository
   path edges are treated as local.
-- [ ] npm tool installs in scripts and workflows.
+- [x] npm tool installs in workflows, build definitions, shell entrypoints and
+  package scripts are checked against an exact current command-name set.
 - [ ] Python project files and tool installs.
 - [ ] Ruby Gemfiles and gemspecs.
 - [ ] Go modules and tool installs.
