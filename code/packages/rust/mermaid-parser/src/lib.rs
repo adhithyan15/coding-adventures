@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.150.0";
+pub const VERSION: &str = "0.151.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -19,7 +19,7 @@ use diagram_ir::{
     PacketTheme, RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneIconForm,
     SwimlaneIconNode, SwimlaneImageNode, SwimlaneLabelPosition, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
-    StructuralRenderConfig,
+    C4DiagramType, StructuralRenderConfig,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -13802,6 +13802,7 @@ fn parse_er_render_config(source: &str) -> diagram_ir::StructuralRenderConfig {
     diagram_ir::StructuralRenderConfig {
         c4_shape_in_row: None,
         c4_boundary_in_row: None,
+        c4_diagram_type: None,
         use_max_width: parse_mermaid_boolean_config(
             source,
             "er",
@@ -14048,15 +14049,26 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
 
     let mut cursor = TokenCursor::new(tokenize_mermaid_c4(source));
     cursor.skip_terminators();
-    cursor
+    let header = cursor
         .consume_if("HEADER")
         .ok_or_else(|| token_error(cursor.current(), "expected C4 diagram header"))?;
+    let c4_diagram_type = match header.value.as_str() {
+        "C4Context" => C4DiagramType::Context,
+        "C4Container" => C4DiagramType::Container,
+        "C4Component" => C4DiagramType::Component,
+        "C4Dynamic" => C4DiagramType::Dynamic,
+        "C4Deployment" => C4DiagramType::Deployment,
+        _ => return Err(token_error(&header, "unsupported C4 diagram header")),
+    };
     cursor.skip_terminators();
 
     let mut title = None;
     let mut accessibility_title = None;
     let mut accessibility_description = None;
-    let mut render_config = StructuralRenderConfig::default();
+    let mut render_config = StructuralRenderConfig {
+        c4_diagram_type: Some(c4_diagram_type),
+        ..StructuralRenderConfig::default()
+    };
     let mut nodes = Vec::new();
     let mut node_indices = HashMap::new();
     let mut groups = Vec::new();
@@ -14170,7 +14182,18 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
             "RELATION_MACRO" => {
                 let macro_token = cursor.advance().clone();
                 let args = parse_c4_arguments(&mut cursor)?;
-                if args.len() < 3 {
+                let relationship_args = if macro_token.value == "RelIndex" {
+                    if args.len() < 4 {
+                        return Err(token_error(
+                            &macro_token,
+                            "C4 RelIndex requires an index, source, target, and label",
+                        ));
+                    }
+                    &args[1..]
+                } else {
+                    &args[..]
+                };
+                if relationship_args.len() < 3 {
                     return Err(token_error(
                         &macro_token,
                         "C4 relationship requires source, target, and label",
@@ -14182,8 +14205,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     _ => (false, true),
                 };
                 relationships.push(StructuralRelationship {
-                    from: args[0].clone(),
-                    to: args[1].clone(),
+                    from: relationship_args[0].clone(),
+                    to: relationship_args[1].clone(),
                     kind: RelKind::Association,
                     start_arrow,
                     end_arrow,
@@ -14194,10 +14217,10 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     routing: StructuralRouting::Direct,
                     from_mult: None,
                     to_mult: None,
-                    label: Some(args[2].clone()),
+                    label: Some(relationship_args[2].clone()),
                     label_offset_x: 0.0,
                     label_offset_y: 0.0,
-                    metadata: Some(c4_relationship_metadata(&args)),
+                    metadata: Some(c4_relationship_metadata(relationship_args)),
                     style: None,
                 });
             }
@@ -19883,7 +19906,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.150.0");
+        assert_eq!(crate::VERSION, "0.151.0");
     }
 
     #[test]
