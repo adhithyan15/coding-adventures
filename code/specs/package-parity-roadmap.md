@@ -19611,7 +19611,10 @@ diff, and artifact hygiene pass. Independent LLVM measurement reports 96.84%
 production lines with all 37 functions executed. Exact-head review first
 rejected proportional UTF-8 line allocation and late numeric-header limits;
 the repaired bounded scans close both defects, and re-review issued SHIP with
-no findings. Current-main reconciliation and publication remain deferred.
+no findings. Merge `aec006f2c4a3f43e876a16f842709d00a6bd37f2`
+reconciles exact fetched main `6fe513ee903ff2ef56279783ccbd59a0b8100788`;
+all twelve tests and the release build pass again. Publication remains deferred
+while Ruby dependency hashing PR #18555 occupies the active-PR slot.
 
 The implementation audit enriches the existing
 `resp-protocol-dt23-bounded-streaming-contract-reconciliation` backlog owner:
