@@ -1564,6 +1564,26 @@ trust roots, check revocation, perform I/O, open a socket, authorize HTTP or
 OAuth transport, or replace `tls-platform`. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-extension-block` prerequisite now decodes the generic
+two-byte-length-prefixed extension-vector syntax shared by TLS 1.3 handshake
+messages. Caller-owned limits bound the complete payload and retained entry
+count, the exact declared length must consume all remaining input, and each
+entry retains one exact unclassified type plus borrowed opaque data in wire
+order. Duplicate extension types, truncated headers or data, trailing bytes,
+and resource-limit exhaustion fail closed with payload-free categories.
+Unknown types remain data rather than becoming implicitly supported, and
+diagnostics omit extension-data bytes.
+
+This syntax layer embeds no extension registry, decodes no extension value,
+and does not authorize, require, or forbid an extension in ClientHello,
+ServerHello, EncryptedExtensions, or another handshake context. It does not
+process a handshake, select a suite, derive keys, invoke cryptography, validate
+certificates, establish trust, enforce revocation, perform I/O, authorize HTTP
+or OAuth transport, or open a network connection. Context-specific extension
+policy and decoding, handshake state, repository-owned record protection,
+certificate-path validation, revocation, TLS transport, and HTTP composition
+remain blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-inner-plaintext` prerequisite now specifies the
 authenticated cleartext syntax inside a protected TLS 1.3 record. Its decoder
 first bounds the complete caller-supplied cleartext, scans backward only within
