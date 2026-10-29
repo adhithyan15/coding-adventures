@@ -4,13 +4,10 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-### Fixed
-
-- Preserve the Qt due-date editor's authored 150-pixel non-shrinking width on
-  the control itself (#18394), without changing shared styles or flex diagnostics.
-
-Entries added after `task-app-v0.5.13` accumulate here until the next version is
+Entries added after `task-app-v0.5.14` accumulate here until the next version is
 cut.
+
+## [0.5.14] - 2026-10-28
 
 ### Changed
 
@@ -28,6 +25,8 @@ cut.
 
 ### Fixed
 
+- Preserve the Qt due-date editor's authored 150-pixel non-shrinking width on
+  the control itself (#18394), without changing shared styles or flex diagnostics.
 - **A refused note Save says why (E5).** Saving a note whose *Attach to task*
   field names no task in the project did nothing visible: the web host logged
   to the console and the native hosts did nothing at all. TaskApp gains a
