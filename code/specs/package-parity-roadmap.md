@@ -19578,3 +19578,47 @@ publication head/base, mergeability, state graph, diff, and artifact hygiene
 all match live evidence. Mark the PR ready and require every fresh hosted check
 on the final exact head to finish acceptably before enabling guarded
 auto-merge.
+
+### PR #18544 merge and TypeScript graph/diff selection
+
+All 38 final-head checks for Elixir graph/diff PR #18544 completed acceptably
+at `58f1c24dba4c12c08985710b5cefea028fbf118a`: 14 successes and 24 expected
+path-gated skips, including a successful aggregate CI gate. GitHub reported
+the reviewed head clean and mergeable. Guarded squash auto-merge landed
+`92cf52368f835648df9d54be2cc41be47c82417f` at
+`2026-10-29T01:51:52Z`. The merge is present on fetched main, and the clean
+completed worktree and local branch were removed.
+
+A fresh dependency/leverage pass selects
+`build-tool-typescript-diff-selection-match-work-ceiling-adoption` on branch
+`codex/build-tool-typescript-diff-selection-parity` from that exact merged main.
+Its seven prerequisites are merged. Its three direct and five total unfinished
+descendants tie the pending Lua graph/diff leaf; TypeScript wins the tie-break
+because its existing graph, Git-diff, and hardened matcher modules make the
+implementation surface narrower. From-scratch canonical-CBOR work has lower
+near-term leverage. The tranche must dynamically consume all eight graph and
+twelve diff-selection cases, preserve deterministic all-or-error output, and
+add no Node host authority.
+
+#### TypeScript graph/diff local implementation
+
+Implementation head `775da92315c4e954cb4af3118fb176d5b40ab0bb` adds the
+bounded pure graph/diff core, exact neutral fixture consumption, Go routing,
+and the final primitive-digest guard. Its parent merge
+`8b6da2ceab9f2b3f9baba3dfb17281b24c234e55` preserves the reviewed repair
+lineage and exact selected main as its two parents. Public arrays and records
+are snapshotted from data descriptors without invoking accessors; repository-
+boundary data is cloned into a bounded descriptor-value graph before
+canonicalization, so validation never rereads live caller containers.
+
+BUILD runs 375 tests, TypeScript typechecking passes, focused Go fixture routing
+and `go vet` pass, changelog and lesson validation pass, and graph/diff line
+coverage is 98.93% with 92.86% package-wide coverage. A full Go sweep has one
+unrelated local environment failure because PowerShell is unavailable; all
+other packages pass. Independent exact-head correctness review first rejected
+live caller rereads, post-check object canonicalization, and an outdated reader
+registry. After those repairs it found that a non-string boundary digest could
+still reach property and regular-expression operations. The final primitive-
+string guard and zero-trap Proxy regression close that issue; exact-head
+re-review issued SHIP with no findings and reconfirmed every prior repair,
+current-main ancestry, routing, validation, diff, and artifact hygiene.
