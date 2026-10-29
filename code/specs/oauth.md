@@ -1900,6 +1900,30 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+The repository-owned `tls13-key-schedule` boundary now composes the no-PSK
+RFC 8446 section 7.1 base-secret transitions for a full ephemeral key exchange.
+One caller-policy-selected cipher suite remains the sole source of SHA-256 or
+SHA-384 policy. The composition derives the Early Secret from the required
+Hash-length zero input, derives the Handshake Secret from a non-empty bounded
+caller-owned shared secret, and derives the Master Secret from the required
+Hash-length zero input. Both `"derived"` transitions use the canonical empty
+transcript hash for the suite-selected algorithm. All intermediate derived
+secrets occupy fixed wipe-on-drop storage, and the three resulting secrets are
+copied into non-cloneable caller-owned wipe-on-drop storage only after the full
+schedule succeeds. A success-only borrowed view binds the secrets to the
+selected suite; stable failures retain no secret bytes or caller lengths.
+
+This bounded slice deliberately excludes PSKs, 0-RTT, binders, traffic-secret
+labels, exporter and resumption secrets, transcript sequencing, Finished,
+record protection, handshake processing, certificate validation, trust-root
+selection, revocation, I/O, HTTP, and OAuth. The caller remains responsible for
+supplying a group-valid shared secret from a separately reviewed key-exchange
+boundary, binding the peer through the later authenticated handshake, and
+wiping that borrowed input. It performs no credential access,
+edit, signing, provider action, audit or trace emission, or external effect.
+Complete key-schedule, AEAD, handshake, certificate, transport, and HTTP
+composition remain blockers; concrete HTTPS remains unavailable.
+
 The repository-owned ChaCha20 implementation now exposes a bounded
 `chacha20_xor_fixed` prerequisite for the `TLS_CHACHA20_POLY1305_SHA256` path.
 It accepts exact caller-owned input and output buffers, validates the entire
