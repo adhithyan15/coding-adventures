@@ -88,17 +88,17 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 29,
         "swiftui": 57,
         "compose": 40,
-        "qt": 79,  # #18559 exposes three existing Board drop-target styles
+        "qt": 76,  # #18563 lowers three Board drop-target styles
         "flutter": 69,
     }
 
 
 @pytest.mark.parametrize("primitive", ["display", "flex-direction", "gap"])
-def test_qt_newly_reached_board_styles_reject_further_increases(primitive: str) -> None:
+def test_qt_board_layout_styles_reject_regression(primitive: str) -> None:
     report = _report("qt")
     report["styleDegradations"].append(_style_entry("qt", primitive))
     errors = validate_style_degradations("qt", report, "report.json")
-    assert any(f"style drop '{primitive}' increased from at most 1 to 2" in error for error in errors)
+    assert any(f"unbaselined style drop '{primitive}'" in error for error in errors)
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Lower the static column-flex/gap trio on minimum-height HostDropTargets to
+  their existing ColumnLayout spacing (#18563). Unsupported values and state
+  overrides remain reported; targets without min-height remain unchanged.
+
 - Preserve finite nonnegative static `min-height` on the outer HostDropTarget
   Item so empty landing zones retain their layout floor (#18559). Skip state
   overrides; drag acceptance and callback routing are unchanged.

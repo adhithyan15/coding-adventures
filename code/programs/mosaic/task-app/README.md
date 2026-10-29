@@ -16,8 +16,8 @@ the authoritative Notes changes, is published and audited via run 40824813766
 from `760775910601fc8523d9a4b5b3cbfbf9acae9e05`: 13 assets, 12 checksum
 entries, and 11 manifest payloads. The Qt empty Board drop-zone floor (#18559)
 merged in #18562 with all payload validations passing in run 40836764807.
-The v0.5.15 checkpoint (#18581) is prepared; publication and immutable audit
-remain pending. It retains the explicit three-drop reporting change and #18563.
+The v0.5.15 checkpoint (#18581) is published and audited. Its notes retain
+the explicit three-drop reporting change and follow-up #18563.
 Artifact coverage and unsigned-platform limitations are unchanged.
 
 A to-do app with **automatic scheduling**, built entirely on the shared `task-core`
@@ -411,3 +411,10 @@ above, and dispatch the workflow with a new matching version and tag.
 - `mosaic-package.toml` — the package manifest.
 - `tests/package_compiles.rs` — `cargo test` verifies the Mosaic sources compile.
 - `scripts/build-web.{sh,ps1}` — build wasm + emit the component into `host/web`.
+# Qt Board spacing checkpoint
+
+The next fidelity slice (#18563) preserves the Board drop target's authored
+9-pixel card gap and removes its three layout-style drops (Qt total 79 to 76).
+This is source work pending CI and publication. v0.5.15 is published and audited
+under #18581: source `8819839dc63d78c4c5eeda21f833f51364746420`, 13 assets,
+12 checksums, and 11 manifest payloads. Artifact and signing limits are unchanged.
