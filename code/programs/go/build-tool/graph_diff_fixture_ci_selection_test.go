@@ -32,6 +32,7 @@ var graphDiffFixtureConsumers = []struct{ name, path, language string }{
 	{"perl/programs/build-tool", "code/programs/perl/build-tool", "perl"},
 	{"python/programs/build-tool", "code/programs/python/build-tool", "python"},
 	{"swift/programs/build-tool", "code/programs/swift/build-tool", "swift"},
+	{"typescript/programs/build-tool", "code/programs/typescript/build-tool", "typescript"},
 }
 
 func graphDiffPackages(root string) []discovery.Package {
@@ -274,6 +275,7 @@ func TestGraphDiffFixtureCheckedCorpusAndNativeReaders(t *testing.T) {
 		{"perl/build-tool/t/15-graph-diff.t", []string{"graph-empty.json", "diff-selection-"}},
 		{"python/build-tool/tests/test_graph_diff.py", []string{"graph-empty.json", "diff-selection-"}},
 		{"swift/build-tool/Tests/BuildToolCoreTests/GraphDiffConformanceTests.swift", []string{"graph-empty.json", "diff-selection-"}},
+		{"typescript/build-tool/tests/graph-diff.test.ts", []string{"graph/empty", "diff-selection/"}},
 	}
 	if len(readers) != len(graphDiffFixtureConsumers) {
 		t.Fatalf("native reader roster %d differs from selected roots %d", len(readers), len(graphDiffFixtureConsumers))
@@ -309,7 +311,7 @@ func TestGraphDiffFixtureCheckedCorpusAndNativeReaders(t *testing.T) {
 			return nil
 		}
 		switch filepath.Ext(entry.Name()) {
-		case ".go", ".cs", ".fs", ".java", ".kt", ".dart", ".ml", ".hs", ".t", ".py", ".swift":
+		case ".go", ".cs", ".fs", ".java", ".kt", ".dart", ".ml", ".hs", ".t", ".py", ".swift", ".ts":
 		default:
 			return nil
 		}

@@ -207,15 +207,17 @@ The exact flat `code/specs/fixtures/build-tool-v1/cases/graph-*.json` and
 `code/specs/fixtures/build-tool-v1/cases/diff-selection-*.json` families have
 eight and twelve checked cases respectively. Any added, modified, deleted,
 or renamed path in either family, including the deleted source of a rename,
-MUST seed their eleven direct native readers before affected/prerequisite
+MUST seed their twelve direct native readers before affected/prerequisite
 closure: `dotnet/programs/build-tool-csharp`,
 `dotnet/programs/build-tool-fsharp`, and `<language>/programs/build-tool` for
-Java, Kotlin, Dart, OCaml, Go, Haskell, Perl, Python, and Swift. Java, Kotlin,
-Dart, and OCaml tests discover `cases/*.json` by decoded `graph` and
+Java, Kotlin, Dart, OCaml, Go, Haskell, Perl, Python, Swift, and TypeScript.
+Java, Kotlin, Dart, and OCaml tests discover `cases/*.json` by decoded `graph` and
 `diff_selection` domains and pin all twenty IDs; they are real native readers
 even without literal fixture filenames. OCaml is still an emerging lane, and
-these fixtures exercise process-free cores only in Java/Kotlin/Dart/OCaml, not
-complete build-tool front doors or neutral adapters.
+these fixtures exercise process-free cores only in
+Java/Kotlin/Dart/OCaml/TypeScript, not complete build-tool front doors or
+neutral adapters. TypeScript adopts both closed fixture families through its
+pure graph/diff-selection seam and the same bounded match-work contract.
 
 Classify raw Git paths without OS cleanup. Only the exact prefix, a nonempty
 flat stem, and a final lower-case `.json` extension belong to either family;
