@@ -4274,7 +4274,7 @@ mod tests {
     #[test]
     fn user_names_spelled_like_compiler_registers_are_kept_apart() {
         assert_eq!(
-            run_int("(let ((__r1_x 7)) (let ((x 1)) (let ((x 2)) (+ x __r1_x))))"),
+            run_int("(let ((_r1_x 7)) (let ((x 1)) (let ((x 2)) (+ x _r1_x))))"),
             Some(9),
         );
         assert_eq!(run_int("(let ((_n1 \"s\")) (+ 1 (string-length _n1)))"), Some(2));

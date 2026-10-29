@@ -144,12 +144,29 @@ def raise_error(class_name: str = "RuntimeError", message: Val = None) -> NoRetu
 def class_of_thrown(exc: object) -> str:
     """The SIR class name of a caught value.
 
-    A :class:`SirError` reports its tag; any other exception (a native Python
-    error) is treated as a ``StandardError`` so ``rescue StandardError`` /
-    ``rescue => e`` catches Python runtime errors too.
+    A :class:`SirError` reports its tag.  So does any other exception that
+    carries a string ``sir_class`` — the core runtime's ``ArityError`` (a
+    strict closure called with the wrong argument count) is tagged
+    ``"ArgumentError"`` that way, because the core package cannot import this
+    one to subclass :class:`SirError`.  Without the tag a ``rescue
+    ArgumentError`` missed that error on Python alone (issue #18466).  Any
+    other exception (a native Python error) is treated as a
+    ``StandardError`` so ``rescue StandardError`` / ``rescue => e`` catches
+    Python runtime errors too.
+
+    ==============================  ==================
+    caught value                    class
+    ==============================  ==================
+    ``SirError("KeyError")``        ``KeyError``
+    core ``ArityError``             ``ArgumentError``
+    native ``ZeroDivisionError``    ``StandardError``
+    ==============================  ==================
     """
     if isinstance(exc, SirError):
         return exc.sir_class
+    tag = getattr(exc, "sir_class", None)
+    if isinstance(tag, str):
+        return tag
     return "StandardError"
 
 

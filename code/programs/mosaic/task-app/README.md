@@ -10,7 +10,10 @@ The compatible v0.5.13 checkpoint (#18334) is published and audited via
 run 40340262448 from `d1730421d34c9fe6ebe9cc68473f505017659a5a`:
 13 assets, 12 checksum entries, and 11 manifest payloads, with unchanged
 coverage and unsigned limits. It also includes the toolkit dependency-pin change.
-The next bounded Qt fix (#18394) preserves the due-date editor's own width floor.
+The Qt due-date editor width floor (#18394) merged in #18396 with all payload
+validations passing. The v0.5.14 checkpoint (#18550) is prepared, including
+the authoritative Notes changes; publication and immutable audit remain pending.
+Artifact coverage and unsigned-platform limitations are unchanged.
 
 A to-do app with **automatic scheduling**, built entirely on the shared `task-core`
 engine. Add tasks (with optional due dates), complete or delete them — and the engine

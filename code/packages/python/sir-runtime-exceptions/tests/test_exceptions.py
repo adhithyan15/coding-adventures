@@ -53,6 +53,22 @@ class TestClassOfThrown:
         assert class_of_thrown(ValueError("native")) == "StandardError"
         assert class_of_thrown(RuntimeError()) == "StandardError"
 
+    def test_reads_a_string_sir_class_tag_from_any_exception(self) -> None:
+        # Issue #18466: core's ArityError cannot subclass SirError (core
+        # cannot import this package), so it carries the tag as an attribute.
+        class Tagged(TypeError):
+            sir_class = "ArgumentError"
+
+        assert class_of_thrown(Tagged("arity")) == "ArgumentError"
+        assert rescue_matches(Tagged("arity"), ["ArgumentError"]) is True
+        assert rescue_matches(Tagged("arity"), ["TypeError"]) is False
+
+    def test_ignores_a_non_string_sir_class(self) -> None:
+        class Odd(Exception):
+            sir_class = 42
+
+        assert class_of_thrown(Odd()) == "StandardError"
+
 
 class TestRescueMatches:
     def test_empty_list_is_catch_all(self) -> None:

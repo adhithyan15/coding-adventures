@@ -9,8 +9,11 @@
 //! (print (car (cons 1 2)))                                 refused: no `pairs`             1
 //! (define x 5) (print x)                                   NameError: name '_globals'      5
 //! (define (h x) (* x 3)) (define g h) (print (g 4))        NameError: undefined global: h  12
-//! (define g (begin (lambda (x y) (+ x y)))) (print (g 4))  TypeError                       TypeError
+//! (define g (begin (lambda (x y) (+ x y)))) (print (g 4))  TypeError                       ArgumentError
 //! ```
+//!
+//! The last row was Python's own `TypeError` until #18466 made every
+//! backend raise SIR's `ArgumentError` with the same "arity mismatch" text.
 //!
 //! The `_globals` failure was a real emitter bug, not test-harness setup:
 //! `_init` wrote a module-level `_globals` dict this file never defines,
@@ -73,11 +76,11 @@ fn run(src: &str, tag: &str) -> Option<Output> {
 }
 
 /// What this backend's runtime prints when a strict closure is called with
-/// the wrong number of arguments.  The `lambda` marker makes the runtime
-/// pass arguments through unadjusted (`as_lambda`), so Python's own
-/// `TypeError` ("missing 1 required positional argument" / "takes 1
-/// positional argument but 2 were given") is the arity check.
-const ARITY_ERROR_TEXT: &str = "positional argument";
+/// the wrong number of arguments.  The `lambda` marker makes the closure
+/// strict (`as_lambda`), and the runtime's `apply` checks the count before
+/// the call, raising `ArityError` — SIR's `ArgumentError` — with the message
+/// every backend prints (#18466; it used to be Python's own `TypeError`).
+const ARITY_ERROR_TEXT: &str = "arity mismatch";
 
 /// `(tag, program, expected stdout)` — programs that must run and print.
 const PRINTS: &[(&str, &str, &str)] = &[

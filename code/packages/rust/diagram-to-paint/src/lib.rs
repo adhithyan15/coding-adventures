@@ -7235,6 +7235,14 @@ where
             diagram.render_config.html_labels.to_string(),
         );
     }
+    if diagram.kind == diagram_ir::StructuralKind::C4 {
+        if let Some(value) = diagram.render_config.c4_shape_in_row {
+            scene_metadata.insert("c4.shapeInRow".into(), value.to_string());
+        }
+        if let Some(value) = diagram.render_config.c4_boundary_in_row {
+            scene_metadata.insert("c4.boundaryInRow".into(), value.to_string());
+        }
+    }
     let lf = options.label_font.clone();
     let ls = lf.size;
 
@@ -10358,6 +10366,8 @@ mod tests {
             render_config: diagram_ir::StructuralRenderConfig {
                 use_max_width: false,
                 html_labels: false,
+                c4_shape_in_row: None,
+                c4_boundary_in_row: None,
             },
             groups: vec![],
             nodes: vec![],
