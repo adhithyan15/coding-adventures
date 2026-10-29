@@ -19964,3 +19964,12 @@ changes, but strict JSON readers reject the object. New pending owner
 redundant keys, preserve the exact receipt, and add strict duplicate-key state
 validation. The verified Swift RESP postmerge refresh now truthfully marks its
 local SHA-512 successor as selected while retaining no external successor.
+
+A final pre-publication fetch advanced main once more to
+`3657ab050dbc879c5c8f4b6a68f5c24ebc9bd02f` through the Mermaid C4
+relationship-details merge. Normal merge
+`fc0aba1a337b6d4ab883188123f29c612dbe9459` preserves both histories. The
+intervening paths are confined to existing Mermaid grammar, Rust diagram and
+Mermaid packages, tests, and DG04; no BUILD root, package identity, SHA-512
+path, state path, roadmap path, or changelog rank changed. The refreshed
+inventory and priority receipts therefore remain exact.
