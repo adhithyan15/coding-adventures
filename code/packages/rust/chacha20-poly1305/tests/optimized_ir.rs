@@ -12,6 +12,7 @@ use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const EXPORTED_SYMBOL: &str = "coding_adventures_chacha20_xor_fixed_ir_audit";
+const WORD_WIPE_SYMBOL: &str = "coding_adventures_chacha20_secret_words_wipe_ir_audit";
 
 #[test]
 fn optimized_fixed_boundary_scrubs_secret_owners_without_allocating() {
@@ -68,9 +69,9 @@ fn optimized_fixed_boundary_scrubs_secret_owners_without_allocating() {
 
     let fixed = exported_function_body(&ir, EXPORTED_SYMBOL);
     let block = rust_function_body(&ir, "chacha20_block_into");
-    let word_drop = rust_function_body(&ir, "SecretWords$u20$as$u20$core..ops..drop");
+    let word_wipe = exported_function_body(&ir, WORD_WIPE_SYMBOL);
 
-    for function in [fixed, block, word_drop] {
+    for function in [fixed, block, word_wipe] {
         assert_no_allocator(function);
     }
 
@@ -91,20 +92,20 @@ fn optimized_fixed_boundary_scrubs_secret_owners_without_allocating() {
 
     let state_drop_calls = block
         .lines()
-        .filter(|line| is_call(line) && line.contains("SecretWords") && line.contains("drop"))
+        .filter(|line| is_call(line) && line.contains(WORD_WIPE_SYMBOL))
         .count();
     assert!(
         state_drop_calls >= 3,
         "block helper must scrub both word states and its unwind path:\n{block}"
     );
 
-    let word_wipes = word_drop
+    let word_wipes = word_wipe
         .lines()
-        .filter(|line| is_call(line) && line.contains("Zeroize$GT$7zeroize"))
+        .filter(|line| is_call(line) && line.contains("zeroize"))
         .count();
     assert_eq!(
         word_wipes, 16,
-        "word-state drop must scrub all 16 words:\n{word_drop}"
+        "word-state wipe must scrub all 16 words:\n{word_wipe}"
     );
 }
 

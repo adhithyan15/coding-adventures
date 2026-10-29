@@ -97,11 +97,18 @@ impl core::ops::DerefMut for SecretWords {
     }
 }
 
+#[allow(unsafe_code)]
+#[unsafe(export_name = "coding_adventures_chacha20_secret_words_wipe_ir_audit")]
+#[inline(never)]
+fn wipe_secret_words(words: &mut [u32; 16]) {
+    for word in words {
+        word.zeroize();
+    }
+}
+
 impl Drop for SecretWords {
     fn drop(&mut self) {
-        for word in &mut self.0 {
-            word.zeroize();
-        }
+        wipe_secret_words(&mut self.0);
     }
 }
 
