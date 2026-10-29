@@ -1979,6 +1979,27 @@ review and composition, complete key-schedule and transcript state, handshake
 processing, certificate-path validation, revocation policy, TLS transport, and
 HTTP composition remain blockers. Concrete HTTPS remains unavailable.
 
+A bounded `tls13-traffic-secret-update` prerequisite now owns the exact RFC
+8446 section 7.2 derivation from one application traffic secret to its
+successor. It accepts the existing fixed-memory `HkdfPrk`, takes the selected
+SHA-256 or SHA-384 output length only from that owner, and invokes
+`HKDF-Expand-Label` with the internal label `"traffic upd"` and empty context.
+The caller supplies the destination buffer; its length must equal Hash.length
+before any output changes. Successful secret bytes remain caller-owned, while
+the underlying fixed-memory HKDF boundary preserves its output wipe on an
+unexpected PRF failure. The current secret is only borrowed and is never
+modified.
+
+This derivation does not decide whether a `KeyUpdate` message is authorized,
+sequence post-handshake messages, retain current or next traffic secrets,
+import the result into a new PRK owner, derive a traffic key or IV, reset record
+sequence state, enforce old-key record protection, send a reciprocal update,
+protect a record, emit an audit event, perform I/O, authorize HTTP or OAuth
+transport, or open a network connection. Atomic traffic-secret installation,
+post-handshake state, repository-owned record protection, certificate-path
+validation, revocation policy, TLS transport, and HTTP composition remain
+blockers. Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-handshake` prerequisite now owns only the RFC 8446
 four-byte handshake-message envelope needed by a future repository-owned TLS
 state machine. It recognizes the ten core TLS 1.3 wire message types, while a
