@@ -1564,6 +1564,24 @@ trust roots, check revocation, perform I/O, open a socket, authorize HTTP or
 OAuth transport, or replace `tls-platform`. Concrete HTTPS remains
 unavailable.
 
+An allocation-free `tls13-certificate-verify-message` prerequisite now owns
+only the RFC 8446 section 4.4.3 `CertificateVerify` message body. Its exact
+decoder borrows one uninterpreted two-byte signature-scheme identifier and the
+following two-byte-length-prefixed signature, rejecting a truncated header,
+short or long payload, and trailing bytes. Its encoder validates the complete
+body and caller-owned capacity before changing output and leaves extra capacity
+untouched. The structural RFC vector range of zero through 65,535 signature
+bytes is preserved; an empty vector is syntax only and must fail later
+cryptographic verification. Stable diagnostics retain no algorithm, signature,
+or caller-length data.
+
+This body codec does not frame the outer handshake header, authorize a
+signature scheme, construct the signed input, hash, sign, verify a signature,
+parse a key or certificate, validate a path or name, select trust roots, check
+revocation, perform I/O, or provide TLS, HTTP, or OAuth transport. Those policy,
+cryptographic, certificate, and composition boundaries remain separate.
+Concrete HTTPS remains unavailable.
+
 An allocation-free `tls13-inner-plaintext` prerequisite now specifies the
 authenticated cleartext syntax inside a protected TLS 1.3 record. Its decoder
 first bounds the complete caller-supplied cleartext, scans backward only within
