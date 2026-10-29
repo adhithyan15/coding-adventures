@@ -254,7 +254,7 @@ class TestReturnType:
         h2 = sha512(b"helo")  # one character different
         assert h1 != h2
         # Statistically, about half the bits should differ
-        xor_bytes = bytes(a ^ b for a, b in zip(h1, h2))
+        xor_bytes = bytes(a ^ b for a, b in zip(h1, h2, strict=True))
         bits_different = sum(bin(b).count("1") for b in xor_bytes)
         assert bits_different > 100  # at least 100 of 512 bits should differ
 
@@ -326,7 +326,7 @@ class TestEdgeCases:
 
     def test_utf8_text(self) -> None:
         """Works correctly on UTF-8 encoded text."""
-        text = "Hello, 世界!".encode("utf-8")
+        text = "Hello, 世界!".encode()
         result = sha512(text)
         assert len(result) == 64
 

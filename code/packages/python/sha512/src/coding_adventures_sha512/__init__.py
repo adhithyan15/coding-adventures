@@ -411,7 +411,7 @@ class SHA512Hasher:
         self._buffer: bytearray = bytearray()
         self._byte_count: int = 0  # total bytes seen (used in padding)
 
-    def update(self, data: bytes) -> "SHA512Hasher":
+    def update(self, data: bytes) -> SHA512Hasher:
         """Feed more bytes into the hash.  Returns self for chaining."""
         owned = _owned_bytes(data, "sha512.update")
         next_count = self._byte_count + len(owned)
@@ -452,7 +452,7 @@ class SHA512Hasher:
         """Return the 128-character hex string of the digest."""
         return self.digest().hex()
 
-    def copy(self) -> "SHA512Hasher":
+    def copy(self) -> SHA512Hasher:
         """Return an independent copy of the current hasher state.
 
         Useful for computing multiple hashes that share a common prefix::
