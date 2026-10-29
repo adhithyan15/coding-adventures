@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/tls13-hkdf-label",
   "capabilities": [],
-  "justification": "Pure fixed-memory TLS 1.3 HKDF-Expand-Label composition into caller-owned storage using repository-owned SHA-256/SHA-384 HKDF. It performs no filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, certificate, trust-root, revocation, AEAD, audit, or external effect."
+  "justification": "Pure fixed-memory TLS 1.3 HKDF-Expand-Label and Derive-Secret composition into caller-owned storage using repository-owned SHA-256/SHA-384 HKDF. It performs no filesystem, network, DNS, process, environment, clock, entropy, credential access, signing, certificate, trust-root, revocation, AEAD, audit, or external effect."
 }

@@ -2,7 +2,7 @@
 name = "tls13-hkdf-label"
 version = "0.1.0"
 edition = "2021"
-description = "Bounded allocation-free TLS 1.3 HKDF-Expand-Label composition"
+description = "Bounded allocation-free TLS 1.3 HKDF label and Derive-Secret composition"
 license = "MIT"
 
 [dependencies]
