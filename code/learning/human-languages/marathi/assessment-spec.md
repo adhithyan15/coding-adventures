@@ -4,8 +4,9 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; pre-A1 and A1 task inventories are checked in,
-while A2-C2 inventories, mocks, calibration, and human validation remain backlog
+**Status:** target specified; pre-A1 and A1 task inventories and two structural
+pre-A1 mocks are checked in, while later inventories, remaining mocks,
+calibration, and human validation remain backlog
 
 This specification names the assessment that the complete Marathi book must
 eventually prepare a book-only learner to pass. It is not an external
