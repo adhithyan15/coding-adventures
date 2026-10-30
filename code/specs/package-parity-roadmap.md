@@ -20046,3 +20046,27 @@ projection. Its four `x509-rsa-signature-routing` paths and OAuth specification
 note have no overlap with the Lua/Go graph-diff tranche or lifecycle surfaces.
 Normal merge `5969ce059fd4ab31f500bb033d8fed95a86395c5` preserves both histories;
 the resulting exact lifecycle head requires fresh review and hosted CI.
+
+#### PR #18725 Windows launcher repair and current-main refresh
+
+The first ready-head hosted matrix failed only in Windows job `124084701753`
+from run `41058702707` at exact head
+`c2cd37d6170e6b461307d1d6e31fa81a22c77e19`. The other 150 Lua tests passed.
+The existing UTF-8 CLI regression expected malformed input to return exit 2,
+but it spawned the name `lua`; `cmd.exe` resolved that name to a Unix-oriented
+PATH wrapper, whose `mkdir -p` bootstrap failed before the intended interpreter
+ran, and the wrapper returned exit 0. The graph/diff implementation itself was
+not implicated.
+
+Main independently advanced to
+`bd5bb1174c095310e2508e66181ba67b0ea8f9b4` through unrelated Rust X.509,
+ALGOL, and OAuth work. Normal merge
+`2930e41685c0ae06023c17ac0c20be79520f1b58` preserves both histories and has
+no exact Lua/Go graph-diff implementation overlap. Repair commit
+`b5fd64ee75f2ee8da84a2e88d2e7f8f7d5c7338e` makes the regression re-exec the
+active Lua interpreter found at the lowest contiguous negative `arg` index,
+including LuaRocks/Busted `-e` launcher layouts, with host-correct shell quoting.
+The focused UTF-8 suite passes 6/6, the canonical complete Lua suite passes
+152/152, every Lua source parses, and the new lesson validates. Auto-merge stays
+disabled until the final lifecycle head receives independent review and a
+completely fresh hosted matrix is terminal acceptable and mergeable.
