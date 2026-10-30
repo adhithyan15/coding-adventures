@@ -1383,4 +1383,5 @@ members = [
   "tls13-traffic-key-material",
   "tls13-named-group-policy",
   "tls13-key-update-message",
+  "rsa-pkcs1-v1-5-sha512",
 ]
