@@ -1009,6 +1009,14 @@ work. A route naming a verifier inconsistent with the child certificate fails
 that fixed verifier's exact AlgorithmIdentifier checks. Success retains both
 non-copyable policy inputs and the exact fixed-verifier evidence, preventing a
 detached child certificate or issuer key from entering after policy.
+The routed success enum now projects the exact retained child algorithm policy
+and issuer RSA algorithm/key policy through one verifier-independent API. Each
+projection internally matches on the fixed-verifier variant and borrows the
+same non-copyable evidence already retained by that variant; it does not clone,
+re-decode, rerun policy, choose a new algorithm, or expose secret material.
+Downstream path and reviewed-anchor composition can therefore verify exact
+child and issuer object identity without reopening SHA-256, SHA-384, and
+SHA-512 variants or accepting detached certificates and keys.
 
 This is public-data signature composition only. It does not decide issuer
 Name linkage or role, recognize certificate extensions, construct or validate
