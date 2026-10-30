@@ -1056,6 +1056,16 @@ authenticate either adjacent link, advance path-length state, apply name
 constraints, construct or validate a certification path, recognize or
 constrain a trust anchor, check revocation, perform TLS or HTTP, authorize
 OAuth transport, or open a network connection.
+A bounded follow-up now consumes that exact intermediate-certificate policy
+and structurally decodes the optional NameConstraints extension retained by
+the same decoded certificate. Absence is recorded explicitly; a present value
+must be critical and must decode as one exact supported DNS/IP NameConstraints
+SEQUENCE under a separate caller-owned ASN.1 budget. Non-copyable success
+retains the complete intermediate policy and borrowed decoded constraints for
+later path processing. This gate does not evaluate those constraints against
+any certificate, traverse or authenticate a path, apply reviewed-anchor
+constraints, select trust, check revocation, or provide TLS, HTTP, OAuth
+transport, or network authority.
 The path-length state can now consume that complete intermediate-certificate
 policy evidence directly. It derives both issuing-CA role evidence and the
 self-issued transition bit from the one retained certificate-bound policy,
