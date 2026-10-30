@@ -419,7 +419,20 @@ The delivery order is:
    injected or caller-owned authorities.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
-   before any socket is opened.
+   before any socket is opened. A strict allocation-free response body-framing
+   policy now rejects transfer coding until a reviewed decoder exists, rejects
+   duplicate or noncanonical `Content-Length`, binds explicit body limits to
+   fixed-length and optionally close-delimited consumption, and handles
+   bodyless, HEAD, and CONNECT framing precedence without reading a body. It
+   requires request semantics from the exact emitted request and permits
+   close-delimited framing only through trusted caller policy, never response
+   data. It does not retrofit or authorize the existing permissive `http1` or
+   `http1-client` packages; later composition must use a separately reviewed
+   strict CRLF response-head decoder and preserve exact request binding before
+   applying this policy. It performs no I/O, credential interpretation or
+   release, provider action, audit, trace, or external effect. Response syntax
+   decoding, transfer decoding, body reads, TLS, sockets, and live-provider
+   transport remain unavailable.
 9. **Provider data fixtures:** a language-neutral, zero-dependency conformance
    contract now drives synthetic public RFC 9207, distinct-redirect, device,
    confidential, user-defined, and fail-closed metadata profiles through the
