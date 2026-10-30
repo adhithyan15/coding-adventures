@@ -1,7 +1,7 @@
 use der_asn1::{Asn1Decoder, Asn1ErrorKind, Asn1Limits};
 use x509_name_constraints::{
     decode_name_constraints, decode_name_constraints_contents, NameConstraintsErrorKind,
-    MAX_DNS_SUBTREES, NAME_CONSTRAINTS_OID,
+    MAX_DNS_SUBTREES, MAX_GENERAL_SUBTREES, NAME_CONSTRAINTS_OID,
 };
 
 fn der_length(length: usize) -> Vec<u8> {
@@ -25,6 +25,14 @@ fn element(tag: u8, value: &[u8]) -> Vec<u8> {
 
 fn general_subtree(base: &[u8], trailing_fields: &[Vec<u8>]) -> Vec<u8> {
     let mut fields = element(0x82, base);
+    for field in trailing_fields {
+        fields.extend_from_slice(field);
+    }
+    element(0x30, &fields)
+}
+
+fn ip_subtree(base: &[u8], trailing_fields: &[Vec<u8>]) -> Vec<u8> {
+    let mut fields = element(0x87, base);
     for field in trailing_fields {
         fields.extend_from_slice(field);
     }
@@ -95,6 +103,97 @@ fn full_der_decoder_retains_permitted_and_excluded_dns_subtrees() {
 }
 
 #[test]
+fn full_der_decoder_retains_ipv4_and_ipv6_subtrees_by_constraint_class() {
+    let ipv4 = [192, 0, 2, 0, 255, 255, 255, 0];
+    let mut ipv6 = [0u8; 32];
+    ipv6[..4].copy_from_slice(&[0x20, 0x01, 0x0d, 0xb8]);
+    ipv6[16..24].fill(0xff);
+    let fields = [
+        permitted(&[
+            general_subtree(b"example.test", &[]),
+            ip_subtree(&ipv4, &[]),
+        ]),
+        excluded(&[
+            ip_subtree(&ipv6, &[]),
+            general_subtree(b"private.example.test", &[]),
+        ]),
+    ]
+    .concat();
+    let encoded = element(0x30, &fields);
+    let constraints = decode_der_with_limits(&encoded, Asn1Limits::default()).unwrap();
+
+    assert_eq!(constraints.permitted_dns_subtrees(), &["example.test"]);
+    assert_eq!(constraints.permitted_ip_subtrees(), &[ipv4.as_slice()]);
+    assert_eq!(
+        constraints.excluded_dns_subtrees(),
+        &["private.example.test"]
+    );
+    assert_eq!(constraints.excluded_ip_subtrees(), &[ipv6.as_slice()]);
+    assert_eq!(constraints.permitted_len(), 1);
+    assert_eq!(constraints.permitted_ip_len(), 1);
+    assert_eq!(constraints.excluded_len(), 1);
+    assert_eq!(constraints.excluded_ip_len(), 1);
+    assert_eq!(constraints.len(), 4);
+    assert_eq!(
+        format!("{constraints:?}"),
+        "NameConstraints { permitted_dns_subtrees: 1, permitted_ip_subtrees: 1, excluded_dns_subtrees: 1, excluded_ip_subtrees: 1 }"
+    );
+}
+
+#[test]
+fn full_der_decoder_rejects_every_non_constraint_ip_width() {
+    for length in 0..=33 {
+        if length == 8 || length == 32 {
+            continue;
+        }
+        let encoded = element(0x30, &permitted(&[ip_subtree(&vec![0; length], &[])]));
+        let error = decode_der_with_limits(&encoded, Asn1Limits::default()).unwrap_err();
+        assert_eq!(
+            error.kind(),
+            NameConstraintsErrorKind::InvalidIpSubtreeLength
+        );
+    }
+}
+
+#[test]
+fn reviewed_snapshot_contents_remain_dns_only() {
+    let ipv4 = [192, 0, 2, 0, 255, 255, 255, 0];
+    let encoded = permitted(&[ip_subtree(&ipv4, &[])]);
+    let error = decode(&encoded).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        NameConstraintsErrorKind::UnsupportedGeneralName
+    );
+}
+
+#[test]
+fn mixed_subtrees_share_one_capacity_per_top_level_field() {
+    let ipv4 = [192, 0, 2, 0, 255, 255, 255, 0];
+    let mut entries = Vec::with_capacity(MAX_GENERAL_SUBTREES + 1);
+    for index in 0..MAX_GENERAL_SUBTREES {
+        entries.push(if index % 2 == 0 {
+            general_subtree(b"example.test", &[])
+        } else {
+            ip_subtree(&ipv4, &[])
+        });
+    }
+    let encoded = element(0x30, &permitted(&entries));
+    let constraints = decode_der_with_limits(&encoded, Asn1Limits::default()).unwrap();
+    assert_eq!(constraints.len(), MAX_GENERAL_SUBTREES);
+    assert_eq!(constraints.permitted_len(), MAX_GENERAL_SUBTREES / 2);
+    assert_eq!(constraints.permitted_ip_len(), MAX_GENERAL_SUBTREES / 2);
+
+    entries.push(ip_subtree(&ipv4, &[]));
+    let encoded = element(0x30, &permitted(&entries));
+    assert_eq!(
+        decode_der_with_limits(&encoded, Asn1Limits::default())
+            .unwrap_err()
+            .kind(),
+        NameConstraintsErrorKind::TooManySubtrees
+    );
+}
+
+#[test]
 fn full_der_decoder_accepts_excluded_only_but_snapshot_contents_do_not() {
     let field = excluded(&[general_subtree(b"private.example.test", &[])]);
     let encoded = element(0x30, &field);
@@ -151,14 +250,16 @@ fn full_der_decoder_rejects_empty_duplicate_and_reversed_fields() {
 }
 
 #[test]
-fn excluded_subtrees_reject_non_dns_bases_and_distance_fields() {
-    let non_dns = element(0x30, &element(0x87, &[192, 0, 2, 1]));
-    let error =
-        decode_der_with_limits(&element(0x30, &excluded(&[non_dns])), Asn1Limits::default())
-            .unwrap_err();
+fn excluded_subtrees_reject_invalid_ip_bases_and_distance_fields() {
+    let invalid_ip = element(0x30, &element(0x87, &[192, 0, 2, 1]));
+    let error = decode_der_with_limits(
+        &element(0x30, &excluded(&[invalid_ip])),
+        Asn1Limits::default(),
+    )
+    .unwrap_err();
     assert_eq!(
         error.kind(),
-        NameConstraintsErrorKind::UnsupportedGeneralName
+        NameConstraintsErrorKind::InvalidIpSubtreeLength
     );
 
     let distance = general_subtree(b"private.example.test", &[element(0x80, &[0])]);
@@ -229,7 +330,7 @@ fn decodes_the_exact_reviewed_constraint_bytes() {
     assert!(!constraints.is_empty());
     assert_eq!(
         format!("{constraints:?}"),
-        "NameConstraints { permitted_dns_subtrees: 1, excluded_dns_subtrees: 0 }"
+        "NameConstraints { permitted_dns_subtrees: 1, permitted_ip_subtrees: 0, excluded_dns_subtrees: 0, excluded_ip_subtrees: 0 }"
     );
 }
 
@@ -314,6 +415,14 @@ fn general_subtrees_must_be_exact_sequences() {
         );
         assert_eq!(error.offset(), 2);
     }
+
+    let empty_sequence = element(0x30, &[]);
+    let error = decode(&permitted(&[empty_sequence])).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        NameConstraintsErrorKind::UnsupportedGeneralName
+    );
+    assert_eq!(error.offset(), 4);
 }
 
 #[test]
@@ -370,6 +479,14 @@ fn malformed_nested_values_report_contents_local_offsets() {
         NameConstraintsErrorKind::Structure(Asn1ErrorKind::Framing(_))
     ));
     assert_eq!(error.offset(), encoded.len());
+
+    let malformed_trailing = element(0x30, &[element(0x82, b"a"), vec![0x05]].concat());
+    let encoded = permitted(&[malformed_trailing]);
+    let error = decode(&encoded).unwrap_err();
+    assert!(matches!(
+        error.kind(),
+        NameConstraintsErrorKind::Structure(Asn1ErrorKind::Framing(_))
+    ));
 }
 
 #[test]
