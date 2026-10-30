@@ -2222,6 +2222,30 @@ open a network connection. Reviewed key-agreement execution, key-share and
 handshake-state composition, TLS transport, and HTTP composition remain
 blockers. Concrete HTTPS remains unavailable.
 
+An allocation-free `http1-response-head` prerequisite now decodes one strict
+HTTP/1.0 or HTTP/1.1 response head from a caller-borrowed byte stream. Explicit
+caller limits bound the complete head, every line, and the retained header
+count before values are exposed. The parser requires CRLF line endings, an
+exact three-digit status code from 100 through 599 and status-line separator,
+token-only field names, no whitespace before a colon, no obsolete line
+folding, and field values containing only the HTTP field-value octet profile.
+Success retains the
+exact encoded head, a borrowed reason phrase, ordered borrowed header fields,
+and the unconsumed body bytes without allocation or normalization. Stable
+errors retain no response bytes, header names or values, reason text, status,
+lengths, or offsets; Debug output redacts header values and reason text.
+
+This syntax boundary does not classify response-body framing, reconcile
+duplicate fields, decode transfer codings, parse a body, authorize redirects,
+bind a request method, perform TLS, read or write a socket, interpret or release
+a credential, emit provider or trace audit events, or authorize OAuth transport.
+Callers must apply those separate policies before any external effect or
+credential release.
+It does not retrofit or authorize the existing general-purpose `http1` or
+`http1-client` packages; a later reviewed composition must select this strict
+syntax boundary and add the remaining response and transport policies.
+Concrete HTTPS remains unavailable.
+
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
 audited secret lifecycle, the sealed-store adapter owns only encrypted storage,
