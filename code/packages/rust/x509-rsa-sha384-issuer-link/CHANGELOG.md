@@ -5,6 +5,20 @@ All notable changes to `x509-rsa-sha384-issuer-link` will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added a stronger issuer-link entry point that consumes exact certificate-
+  wide critical-extension/issuing-CA evidence and certificate-bound RSA
+  algorithm/key evidence before Name or signature work.
+
+### Security
+
+- Rejects byte-equal evidence from another decoded certificate object before
+  invoking caller policy or RSA verification. Algorithm-policy data does not
+  route the fixed SHA-384 verifier.
+
 ## [0.1.0] - 2026-10-29
 
 ### Added

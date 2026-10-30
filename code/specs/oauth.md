@@ -837,6 +837,20 @@ external effect. It does not route algorithms, process all critical
 extensions, validate time or path length, apply name constraints, select or
 validate trust, check revocation, perform TLS or HTTP, or authorize OAuth
 transport. Concrete HTTPS remains unavailable.
+A stronger bounded entry point now requires the exact SHA-384 candidate issuer
+to be retained by both certificate-wide critical-extension/issuing-CA role
+evidence and certificate-bound, data-driven RSA algorithm/key-policy evidence
+before any Name comparison or signature work begins. Object identity, rather
+than encoded-byte equality, binds both non-copyable inputs to that exact
+candidate. The existing fixed RSA PKCS #1 v1.5 SHA-384 verifier then
+authenticates only the supplied child-to-issuer pair with the already validated
+key, and success retains the role, algorithm, key, and signature evidence
+together. The algorithm profile remains caller policy data and does not route
+to or enable the fixed verifier. This pure public-data composition performs no
+credential access, signing, storage, clock acquisition, audit event, trace
+emission, or external effect. It does not validate issuer time, path length,
+name constraints, a complete path, trust, revocation, TLS, HTTP, OAuth
+transport, or network authority; concrete HTTPS remains unavailable.
 A bounded sibling `x509-rsa-sha512-issuer-link` composition now authenticates
 one directed child-to-candidate-issuer link for the exact RSA PKCS #1 v1.5
 SHA-512 certificate algorithm. Caller-owned Name policy is invoked exactly once
