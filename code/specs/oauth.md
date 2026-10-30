@@ -879,6 +879,18 @@ access, signing, storage, clock acquisition, audit event, trace emission, or
 external effect. It does not validate issuer time, path length, name
 constraints, a complete path, trust, revocation, TLS, HTTP, OAuth transport,
 or network authority; concrete HTTPS remains unavailable.
+A bounded `x509-rsa-sha512-reviewed-anchor-link` follow-up now consumes that
+strongest RSA SHA-512 issuer-policy link together with reviewed-root selection
+evidence. It fails closed unless both non-copyable inputs retain the same exact
+decoded issuer certificate object, then retains both proofs in one distinct
+non-copyable result. This proves only that the authenticated fixed-algorithm
+link terminates at a certificate identity occurring exactly once in the
+reviewed Mozilla snapshot. The pure public-data binding performs no credential
+access, signing, storage, clock acquisition, audit event, trace emission, or
+external effect. It does not apply anchor constraints, validate target role,
+purpose, validity, or identity, construct or validate a multi-hop path, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection; concrete HTTPS remains unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each
